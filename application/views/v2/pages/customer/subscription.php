@@ -395,6 +395,7 @@ add_css(array(
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
+                                                            <!-- note: mmr -->
                                                             <!-- <input type="number" step="0.01" class="form-control input_select" name="transaction_amount" value="<?php //echo $billing_info->transaction_amount != null ? number_format((float)$billing_info->transaction_amount ,2,'.',',') : '0.00'; ?>"> -->
                                                             <input type="number" step="0.01" class="form-control input_select" name="transaction_amount" value="<?= $billing_info->mmr != null ? number_format((float)$billing_info->mmr ,2,'.',',') : '0.00'; ?>">
                                                         </div>
