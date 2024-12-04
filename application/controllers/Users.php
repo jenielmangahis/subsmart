@@ -1149,7 +1149,6 @@ class Users extends MY_Controller
 					}
 				}
 				
-
 		        if( $create_portal_access ){
 		        	//Create portal access 
 		        	$data_portal = [
@@ -1200,7 +1199,14 @@ class Users extends MY_Controller
 
 		            echo json_encode(1);
 		        }else{
-		            echo json_encode(0);
+
+					$isUserExist = $this->db->get_where('users', array('email'=>$add['email'],'username'=>$add['username']))->num_rows();
+					if($isUserExist > 0) {
+						echo json_encode(6);
+					} else {
+						echo json_encode(0);
+					}
+		            
 		        }
         	}
         }

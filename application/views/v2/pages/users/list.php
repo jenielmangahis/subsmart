@@ -313,9 +313,7 @@
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            //if (result.value) {
-                                location.reload();
-                            //}
+                            location.reload();
                         });
                     } else if (result == 3) {
                         Swal.fire({
@@ -325,9 +323,7 @@
                             showCancelButton: false,
                             confirmButtonText: 'Purchase License'
                         }).then((result) => {
-                            //if (result.value) {
-                                window.location.href = base_url + 'mycrm/membership';
-                            //}
+                            window.location.href = base_url + 'mycrm/membership';
                         });
                     } else if (result == 4) {
                         Swal.fire({
@@ -345,6 +341,14 @@
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         });
+                    } else if (result == 6) {
+                        Swal.fire({
+                            title: 'Failed',
+                            text: "Username already exists",
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });                        
                     } else {
                         Swal.fire({
                             title: 'Failed',
@@ -356,7 +360,7 @@
                     }
 
                     //$("#add_employee_modal").modal('hide');
-                    _this.trigger("reset");
+                    //_this.trigger("reset");
 
                     _this.find("button[type=submit]").html("Save");
                     _this.find("button[type=submit]").prop("disabled", false);
