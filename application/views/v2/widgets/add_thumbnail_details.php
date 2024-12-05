@@ -15,24 +15,24 @@ foreach ($widgets as $widget) {
                 <div class="form-check form-switch">
                     <?php
                         $isJobThumbnail = '';
-    if ($checkedCount < 8) {
-        $isChecked = $this->wizardlib->isWidgetGlobal($widget->w_id) ? 'checked' : '';
-        if ($isChecked) {
-            ++$checkedCount;
-        }
-        $isDisabled = '';
-        $isNotSelected = '';
-        $onClick = "manipulateThumbnail(this,'{$widget->w_id}','{$widget->w_view_link}')";
-    } else {
-        $isChecked = '';
-        $isDisabled = 'disabled';
-        $isNotSelected = 'isnotselected';
-    }
+                    if ($checkedCount < 8) {
+                        $isChecked = $this->wizardlib->isWidgetGlobal($widget->w_id) ? 'checked' : '';
+                        if ($isChecked) {
+                            ++$checkedCount;
+                        }
+                        $isDisabled = '';
+                        $isNotSelected = '';
+                        $onClick = "manipulateThumbnail(this,'{$widget->w_id}','{$widget->w_view_link}')";
+                    } else {
+                        $isChecked = '';
+                        $isDisabled = 'disabled';
+                        $isNotSelected = 'isnotselected';
+                    }
 
-    if ($widget->w_view_link == 'widgets/jobs_counter') {
-        $isJobThumbnail = 'isjobthumnail';
-    }
-    ?>
+                    if ($widget->w_view_link == 'widgets/jobs_counter') {
+                        $isJobThumbnail = 'isjobthumnail';
+                    }
+                    ?>
                     <input class="form-check-input ms-0 add_tumbnail_checkbox" type="checkbox"
                         <?php echo $isNotSelected; ?> <?php echo $isDisabled; ?> <?php echo $isJobThumbnail; ?>
                         onclick="<?php echo $onClick; ?>" <?php echo $isChecked; ?> data-addon-delete-modal="open"

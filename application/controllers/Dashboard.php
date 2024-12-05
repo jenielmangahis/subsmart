@@ -132,8 +132,8 @@ class Dashboard extends Widgets
     public function getThumbnailsList()
     {
         $this->load->model('widgets_model');
-        $user_id = logged('id');
-        $this->page_data['widgets'] = $this->widgets_model->getThumbnailsList($user_id);
+        $companyId = logged('company_id');
+        $this->page_data['widgets'] = $this->widgets_model->getThumbnailsList($companyId);
         $this->load->view('v2/widgets/add_thumbnail_details', $this->page_data);
     }
 
@@ -230,6 +230,12 @@ class Dashboard extends Widgets
         $this->page_data['invoices_count'] = count($past_due);
         $this->page_data['invoices_total_due'] = $invoices_total_due;
 
+        $nsmart_sales_count = $this->widgets_model->getNsmartSales();
+        $nsmart_sales_total = $this->widgets_model->getNsmartSalesTotal();
+
+        $this->page_data['nsmart_sales_count'] = count($nsmart_sales_count);
+        $this->page_data['nsmart_sales_total'] = $nsmart_sales_total->total;
+
         // $this->page_data['leadSources']=$this->event_model->getLeadSourceWithCount(); // fetch Lead Sources
 
         $latestJobs = $this->event_model->getLatestJobs();
@@ -313,10 +319,15 @@ class Dashboard extends Widgets
         // $this->page_data['mmr']=$this->AcsProfile_model->getCustomerMMR(logged('company_id'));
         // $mmr = $this->AcsProfile_model->getCustomerMMR(logged('company_id'));
         // $this->page_data['acct_banks']=$this->accounting_bank_accounts->getAllBanks();
+
+    
         $this->page_data['widgets'] = $this->widgets_model->getWidgetsByCompanyId($companyId);
         $this->page_data['main_widgets'] = array_filter($this->page_data['widgets'], function ($widget) {
             return $widget->wu_is_main == true;
         });
+
+      
+
         $this->page_data['status_arr'] = $status_arr;
 
         // fetch open estimates
@@ -481,6 +492,7 @@ class Dashboard extends Widgets
         // }
         $this->page_data['deposits'] = $payments;
 
+    
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
     }
@@ -788,36 +800,6 @@ class Dashboard extends Widgets
                 break;
 
             case 'invoices':
-                
-                /*
-                    // $total_query = [
-                    //     'where' => ['invoices.company_id' => logged('company_id'),
-                    //      'invoices.status !=' => 'Paid',
-                    //      'invoices.status !=' => "",
-                    //     'DATE(invoices.date_issued) >=' => date('Y-m-d', strtotime($date_from)), 
-                    //     'invoices.due_date <' => date('Y-m-d', strtotime($date_to))
-                    //     ],
-                    //     'table' => 'invoices',
-                    //     'join' => [
-                    //         [
-                    //             'table' => 'acs_profile',
-                    //             'statement' => 'acs_profile.prof_id = invoices.customer_id',
-                    //             'join_as' => 'left',
-                    //         ],
-                    //     ],
-                    //     'select' => ' invoices.id,
-                    //     invoices.invoice_number,
-                    //     invoices.due_date,
-                    //     invoices.status,
-                    //     acs_profile.email AS customer_email,
-                    //     acs_profile.first_name, 
-                    //     acs_profile.last_name,
-                    //     acs_profile.fk_user_id as user_id,
-                    //     invoices.grand_total,
-                    //     invoices.grand_total  as balance',
-                    // ];
-                    // $past_due = $this->general->get_data_with_param($total_query);
-                */
 
                 $company_id = logged('company_id');
                 $this->db->from('invoices');
@@ -857,6 +839,24 @@ class Dashboard extends Widgets
                 $mmr = $this->AcsProfile_model->getSubscriptionFilter(logged('company_id'), $date_from, $date_to);
                 $this->output->set_output(json_encode(['first' => count($past_due), 'second' => number_format($invoices_total_due, 2, ".", ","),  'mmr' => $mmr, 'past_due' => $past_due]));
 
+                break;
+            case 'nsmart_sales':
+                $this->db->from('clients');
+                $this->db->select('*');
+                $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'left');
+                if(  $date_to !== '0000-00-00 23:59:59'){
+                    $this->db->where('clients.plan_date_registered >=',date('Y-m-d', strtotime($date_from)));
+                    $this->db->where('clients.plan_date_registered <=',date('Y-m-d', strtotime($date_to)));
+                }
+                $query = $this->db->get();
+
+                $nsmart_sales = $query->result();
+
+                $nsmart_sales_total = 0;
+                foreach ($nsmart_sales as $total) {
+                    $nsmart_sales_total += $total->price - $total->discount;
+                }
+                $this->output->set_output(json_encode(['first' => count($nsmart_sales), 'second' => number_format($nsmart_sales_total, 2, ".", ","),  'nsmart_sales' => $nsmart_sales]));
                 break;
             case 'open_invoices':
                 $company_id = logged('company_id');
@@ -1717,6 +1717,16 @@ class Dashboard extends Widgets
         $data_arr = ['Success' => true, 'past_due' => $past_due];
         exit(json_encode($data_arr));
     }
+
+    public function nsmart_sales()
+    {
+        $this->load->model('widgets_model');
+        $nsmart_sales = $this->widgets_model->getNsmartSales();
+
+        $data_arr = ['Success' => true, 'nsmart_sales' => $nsmart_sales];
+        exit(json_encode($data_arr));
+    }
+
 
     public function open_invoices_graph()
     {
