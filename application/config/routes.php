@@ -1960,3 +1960,6 @@ $route['customers/_create_customer_status'] = 'Customer/ajax_create_customer_sta
 $route['customers/_create_customer_group'] = 'Customer/ajax_create_customer_group';
 $route['customers/_create_sales_area'] = 'Customer/ajax_create_sales_area';
 $route['customers/_create_accounting_terms'] = 'Customer/ajax_create_accounting_terms';
+$route['customers/_create_rate_plan'] = 'Customer/ajax_create_rate_plan';
+$route['customers/_create_system_package_type'] = 'Customer/ajax_create_system_package_type';
+$route['customers/_create_activation_fee'] = 'Customer/ajax_create_activation_fee';
