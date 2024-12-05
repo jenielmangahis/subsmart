@@ -836,5 +836,129 @@
             });
         });
 
+        $('#btn-quick-add-customer-status').on('click', function(){
+            $('#frm-quick-add-customer-status')[0].reset();
+            $('#quick_add_customer_status').modal('show');
+        });
+
+        $('#frm-quick-add-customer-status').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_customer_status',
+                dataType: 'json',
+                data: $('#frm-quick-add-customer-status').serialize(),
+                success: function(data) {    
+                    $('#btn-save-customer-status').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_customer_status').modal('hide');
+                        $('#status').append($('<option>', {
+                            value: data.status_name,
+                            text: data.status_name
+                        }));
+                        $('#status').val(data.status_name);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-customer-status').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#btn-quick-add-customer-group').on('click', function(){
+            $('#frm-quick-add-customer-group')[0].reset();
+            $('#quick_add_customer_group').modal('show');
+        });
+
+        $('#frm-quick-add-customer-group').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_customer_group',
+                dataType: 'json',
+                data: $('#frm-quick-add-customer-group').serialize(),
+                success: function(data) {    
+                    $('#btn-save-customer-group').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_customer_group').modal('hide');
+                        $('#customer_group').append($('<option>', {
+                            value: data.group_id,
+                            text: data.group_name,
+                        }));
+                        $('#customer_group').val(data.group_id);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-customer-group').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#btn-quick-add-sales-area').on('click', function(){
+            $('#frm-quick-add-sales-area')[0].reset();
+            $('#quick_add_sales_area').modal('show');
+        });
+
+        $('#frm-quick-add-sales-area').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_sales_area',
+                dataType: 'json',
+                data: $('#frm-quick-add-sales-area').serialize(),
+                success: function(data) {    
+                    $('#btn-save-sales-area').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_sales_area').modal('hide');
+                        $('#sales-area').append($('<option>', {
+                            value: data.sa_id,
+                            text: data.sa_name,
+                        }));
+                        $('#sales-area').val(data.sa_id);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-sales-area').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#btn-quick-add-rate-plan').on('click', function(){
+            $('#frm-quick-add-rate-plan')[0].reset();
+            $('#quick_add_rate_plan').modal('show');
+        });        
     });
 </script>
