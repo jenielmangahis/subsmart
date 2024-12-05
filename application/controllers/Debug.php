@@ -2866,6 +2866,50 @@ class Debug extends MYF_Controller {
 
         echo 'Total Created : ' . $total;
     }
+
+    public function createAdiAccountingTerms()
+    {
+        $this->load->model('AccountingTerm_model');
+        
+        $data = [
+            '0' => 'Due on Receipt',
+            '5' => 'Net 5',
+            '10' => 'Net 10',
+            '14' => 'Net 14',
+            '15' => 'Net 15',
+            '21' => 'Net 21',
+            '30' => 'Net 30',
+        ];
+
+        $company_id = 31;
+
+        $total = 0;
+        foreach( $data as $key => $value ){
+            $isExists = $this->AccountingTerm_model->getByNameAndCompanyId($value, $company_id);
+            if( !$isExists ){
+                $data = [
+                    'company_id' => $company_id,
+                    'qbid' => NULL,
+                    'name' => $value,
+                    'type' => 1,
+                    'net_due_days' => $key,
+                    'day_of_month_due' => 0,
+                    'discount_percentage' => 0,
+                    'discount_days' => 0,
+                    'discount_on_day_of_month' => 0,
+                    'minimum_days_to_pay' => $key,
+                    'status' => 1,
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->AccountingTerm_model->create($data);
+                $total++;
+            }
+        }
+
+        echo 'Total Created : ' . $total;
+    }
 }
 /* End of file Debug.php */
 
