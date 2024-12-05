@@ -3086,12 +3086,15 @@ class Customer extends MY_Controller
 
     public function add_advance($id = null)
     {
+        $this->load->model('FinancingPaymentCategory_model');
         $this->load->model('IndustryType_model');
 
         $this->hasAccessModule(9);
 
         $userid = $id;
         $user_id = logged('id');
+        $company_id = logged('company_id');
+
         if (isset($userid) || !empty($userid)) {
             $billing = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
             $customer = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
@@ -3238,6 +3241,8 @@ class Customer extends MY_Controller
             }
         }
 
+        $financingCategories = $this->FinancingPaymentCategory_model->getAllByCompanyId($company_id);
+
         add_footer_js([
             'assets/js/customer/add_advance/add_advance.js',
             'assets/js/customer/lib/bday-picker.js',
@@ -3247,6 +3252,7 @@ class Customer extends MY_Controller
             'assets/css/customer/add_advance/add_advance.css',
         ]);
 
+        $this->page_data['financingCategories'] = $financingCategories;
         $this->page_data['sales_tech_paid'] = $this->customer_ad_model->getJobSalesTechPaid($id);
         $this->page_data['sales_tech_commission'] = $this->customer_ad_model->getJobSalesTechCommission($id)[0];
         $this->page_data['industryTypes'] = $this->IndustryType_model->getAll();
@@ -9778,6 +9784,257 @@ class Customer extends MY_Controller
         $msg = '';
 
         $return = ['is_success' => $is_success, 'msg' => $msg, 'name' => $name, 'value' => $value];
+        echo json_encode($return);
+    }
+
+    public function settings_financing_categories()
+    {
+        $this->load->model('FinancingPaymentCategory_model');
+
+        $cid = logged('company_id');
+        $financingCategories = $this->FinancingPaymentCategory_model->getAllByCompanyId($cid);
+
+        $this->page_data['financingCategories'] = $financingCategories;
+        $this->page_data['page']->title = 'Financing Categories';
+        $this->page_data['page']->parent = 'Financing Categories';
+        $this->load->view('v2/pages/customer/settings_financing_categories', $this->page_data);
+    }
+
+    public function ajax_update_financing_category()
+    {
+        $this->load->model('FinancingPaymentCategory_model');
+
+        $is_success = 0;
+        $msg   = 'Cannot save data';
+        $name  = '';
+        $value = '';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();        
+
+        $financingCategory = $this->FinancingPaymentCategory_model->getByIdAndCompanyId($post['catid'], $company_id);
+        if( $financingCategory ){
+            $data = [
+                'name' => $post['category_name'],
+                'value' => $post['category_value'],
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $this->FinancingPaymentCategory_model->update($financingCategory->id, $data);
+
+            $name  = $post['category_name'];
+            $value = $post['category_value'];
+
+            //Activity Logs
+            $activity_name = 'Financing Payment Category : Updated ' . $financingCategory->name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'name' => $name, 'value' => $value];
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_financing_category()
+    {
+        $this->load->model('FinancingPaymentCategory_model');
+
+        $is_success = 0;
+        $msg   = 'Cannot save data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();        
+
+        $financingCategory = $this->FinancingPaymentCategory_model->getByIdAndCompanyId($post['catid'], $company_id);
+        if( $financingCategory ){
+            //Activity Logs
+            $activity_name = 'Financing Payment Category : Deleted ' . $financingCategory->name; 
+            createActivityLog($activity_name);
+
+            $this->FinancingPaymentCategory_model->delete($financingCategory->id);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_create_customer_status()
+    {
+        $this->load->model('CustomerStatus_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $status_name = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->CustomerStatus_model->getByNameAndCompanyId($post['status_name'], $company_id);
+        if( $isExists ){
+            $msg = 'Status name already exists.';
+        }else{
+            if ($post['status_name'] != '') {
+                $data = [
+                    'company_id' => $company_id,
+                    'name' => $post['status_name'],
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->CustomerStatus_model->create($data);
+    
+                //Activity Logs
+                $activity_name = 'Customer Status : Created ' . $post['status_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+    
+                $status_name = $post['status_name'];
+                
+            }else{
+                $msg = 'Please enter status name.';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'status_name' => $status_name];
+        echo json_encode($return);
+    }
+
+    public function ajax_create_customer_group()
+    {
+        $this->load->model('CustomerGroup_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $group_name = '';
+        $group_id   = 0;
+
+        $company_id = logged('company_id');
+        $user_id    = logged('id');
+        $post = $this->input->post();
+
+        $isExists = $this->CustomerGroup_model->getByNameAndCompanyId($post['group_name'], $company_id);
+        if( $isExists ){
+            $msg = 'Group name already exists.';
+        }else{
+            if ($post['group_name'] != '') {
+                $data = [
+                    'company_id' => $company_id,
+                    'user_id' => $user_id,
+                    'name' => $post['group_name'],
+                    'title' => $post['group_name'],
+                    'description' => $post['group_description'],
+                    'date_added' => date("Y-m-d H:i:s")
+                ];
+    
+                $group_id = $this->CustomerGroup_model->create($data);
+    
+                //Activity Logs
+                $activity_name = 'Customer Group : Created ' . $post['group_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+    
+                $group_name = $post['group_name'];
+                
+            }else{
+                $msg = 'Please enter group name.';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'group_id' => $group_id, 'group_name' => $group_name];
+        echo json_encode($return);
+    }
+
+    public function ajax_create_sales_area()
+    {
+        $this->load->model('SalesArea_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $sa_name = '';
+        $sa_id   = 0;
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->SalesArea_model->getByNameAndCompanyId($post['sa_name'], $company_id);
+        if( $isExists ){
+            $msg = 'Sales area name already exists.';
+        }else{
+            if ($post['sa_name'] != '') {
+                $data = [
+                    'fk_comp_id' => $company_id,
+                    'sa_name' => $post['sa_name'],
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+    
+                $sa_id = $this->SalesArea_model->createSalesArea($data);
+    
+                //Activity Logs
+                $activity_name = 'Sales Area : Created ' . $post['sa_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+    
+                $sa_name = $post['sa_name'];
+                
+            }else{
+                $msg = 'Please enter sales area name.';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'sa_id' => $sa_id, 'sa_name' => $sa_name];
+        echo json_encode($return);
+    }
+
+    public function ajax_create_accounting_terms()
+    {
+        $this->load->model('SalesArea_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $sa_name = '';
+        $sa_id   = 0;
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->SalesArea_model->getByNameAndCompanyId($post['sa_name'], $company_id);
+        if( $isExists ){
+            $msg = 'Sales area name already exists.';
+        }else{
+            if ($post['sa_name'] != '') {
+                $data = [
+                    'fk_comp_id' => $company_id,
+                    'sa_name' => $post['sa_name'],
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+    
+                $sa_id = $this->SalesArea_model->createSalesArea($data);
+    
+                //Activity Logs
+                $activity_name = 'Sales Area : Created ' . $post['sa_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+    
+                $sa_name = $post['sa_name'];
+                
+            }else{
+                $msg = 'Please enter sales area name.';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'sa_id' => $sa_id, 'sa_name' => $sa_name];
         echo json_encode($return);
     }
 

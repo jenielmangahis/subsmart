@@ -2828,6 +2828,44 @@ class Debug extends MYF_Controller {
 
         echo 'Total Updated : ' . $total_updated;
     }
+
+    public function createAdiFinancingCategoriesData()
+    {
+        $this->load->model('FinancingPaymentCategory_model');
+        
+        $data = [
+            'E' => 'Equipment',
+            'MMR' => 'MMR',
+            'RMR' => 'RMR',
+            'MS' => 'Monthly Subscription',
+            'AF' => 'Activation Fee',
+            'FM' => 'First Month',
+            'AFM' => 'Activation + First Month',
+            'D' => 'Deposit',
+            'O' => 'Other'
+        ];
+
+        $company_id = 1;
+
+        $total = 0;
+        foreach( $data as $key => $value ){
+            $isExists = $this->FinancingPaymentCategory_model->getByNameAndCompanyId($value, $company_id);
+            if( !$isExists ){
+                $data = [
+                    'company_id' => $company_id,
+                    'name' => $value,
+                    'value' => $key,
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->FinancingPaymentCategory_model->create($data);
+                $total++;
+            }
+        }
+
+        echo 'Total Created : ' . $total;
+    }
 }
 /* End of file Debug.php */
 
