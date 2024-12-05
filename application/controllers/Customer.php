@@ -2171,6 +2171,7 @@ class Customer extends MY_Controller
     public function subscription($customer_id = null)
     {        
         $this->load->model('AccountingTerm_model');
+        $this->load->model('FinancingPaymentCategory_model');
 
         $this->hasAccessModule(9);
 
@@ -2206,16 +2207,22 @@ class Customer extends MY_Controller
         
         $accountingTerms = $this->AccountingTerm_model->getAllByCompanyId($company_id);
 
+        $financingCategories = $this->FinancingPaymentCategory_model->getAllByCompanyId($company_id);
+        $this->page_data['financingCategories'] = $financingCategories;    
+
         $this->page_data['accountingTerms'] = $accountingTerms;
         $this->load->view('v2/pages/customer/subscription', $this->page_data);
     }
 
     public function subscription_new($id = null)
     {
+        $this->load->model('FinancingPaymentCategory_model');
+
         $this->page_data['page']->parent = 'Customers';
         $this->page_data['page']->title = 'New Subscription Plan';
         $userid = $id;
         $user_id = logged('id');
+        $company_id = logged('company_id');
         $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
         $get_login_user = [
             'where' => ['id' => $user_id],
@@ -2223,6 +2230,8 @@ class Customer extends MY_Controller
             'select' => 'id,FName,LName',
         ];
         $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
+        $financingCategories = $this->FinancingPaymentCategory_model->getAllByCompanyId($company_id);
+        $this->page_data['financingCategories'] = $financingCategories;   
         $this->load->view('v2/pages/customer/subscription_new', $this->page_data);
     }
 

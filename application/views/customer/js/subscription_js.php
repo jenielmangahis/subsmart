@@ -232,39 +232,39 @@
     });
 
     $('#frm-quick-add-transaction-category').on('submit', function(e){
-            e.preventDefault();
+        e.preventDefault();
 
-            $.ajax({
-                type: "POST",
-                url: base_url + 'customers/_create_financing_category',
-                dataType: 'json',
-                data: $('#frm-quick-add-transaction-category').serialize(),
-                success: function(data) {    
-                    $('#btn-save-transaction-category').html('Save');                   
-                    if (data.is_success) {
-                        $('#quick_add_transaction_category').modal('hide');
-                        $('#transaction_category').append($('<option>', {
-                            value: data.value,
-                            text: data.name
-                        }));
-                        $('#transaction_category').val(data.value);
-                    }else{
-                        Swal.fire({
-                            title: 'Error',
-                            text: data.msg,
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            
-                        });
-                    }
-                },
-                beforeSend: function() {
-                    $('#btn-save-transaction-category').html('<span class="bx bx-loader bx-spin"></span>');
+        $.ajax({
+            type: "POST",
+            url: base_url + 'customers/_create_financing_category',
+            dataType: 'json',
+            data: $('#frm-quick-add-transaction-category').serialize(),
+            success: function(data) {    
+                $('#btn-save-transaction-category').html('Save');                   
+                if (data.is_success) {
+                    $('#quick_add_transaction_category').modal('hide');
+                    $('#transaction_category').append($('<option>', {
+                        value: data.value,
+                        text: data.name
+                    }));
+                    $('#transaction_category').val(data.value);
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
                 }
-            });
-        });    
+            },
+            beforeSend: function() {
+                $('#btn-save-transaction-category').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });    
 
     function sweetalert($title,information,$icon){
         Swal.fire({
