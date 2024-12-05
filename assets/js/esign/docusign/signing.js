@@ -52,6 +52,12 @@ function Signing(hash) {
     if( window.__esigndata.is_finished == 1 ){
       $('.btn-finish-text').text('Finish');
     }
+
+    const jid = window.__esigndata.job_id;
+    const endpointA = `${prefixURL}/DocuSign/getUserdate?jid=${jid}`;
+    const responseA = await fetch(endpointA);
+    companyDataTime = await responseA.json();   
+    window._companyDateTime = moment(companyDataTime.current_date_time).format("MMMM Do YYYY, h:mm:ss A");
   }
 
   async function renderPage({ canvas, page, document }) {
@@ -1136,8 +1142,8 @@ function Signing(hash) {
               <div class="fillAndSign__signatureContainer">
                 <img class="fillAndSign__signatureDraw" src="${value}"/>
                 ${
-                  dateTime
-                    ? `<span class="fillAndSign__signatureTime">${dateTime}</span>`
+                  window._companyDateTime
+                    ? `<span class="fillAndSign__signatureTime">${window._companyDateTime}</span>`
                     : ""
                 }
               </div>

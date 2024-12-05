@@ -399,18 +399,24 @@
                             $data['id'] = $wids->w_id;
                             $data['isListView'] = $wids->w_list_view;
                             $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
-
+                            
                             if ($wids->w_name === 'Expense') {
                                 $data = set_expense_graph_data($data);
-                            }
-
-                            if ($wids->w_name === 'Bank') {
+                            } elseif ($wids->w_name === 'Bank') {
                                 $data = set_bank_widget_data($data);
                             }
-                            // if($wids->w_view_link != 'widgets/lead_source'){
-                            //     $this->load->view("v2/" . $wids->w_view_link, $data);
-                            // }
-                            $this->load->view('v2/'.$wids->w_view_link, $data);
+                
+
+                            if ($wids->wu_company_id == 1) {
+                            
+                                $this->load->view('v2/' . $wids->w_view_link, $data);
+                            } else {
+                                if ($wids->w_name === 'nSmart Sales') {
+                                    break; 
+                                }
+                    
+                                $this->load->view('v2/' . $wids->w_view_link, $data);
+                            }
                         }
                     }
                 ?> 
@@ -1557,6 +1563,110 @@ function salesGraphThumbnail() {
     })
 }
 
+nsmartSales();
+
+function nsmartSales() {
+
+    fetch('<?php echo base_url('Dashboard/nsmart_sales'); ?>', {}).then(response => response.json()).then(
+        response => {
+            //var monthlyAmounts = new Array(12).fill(0);
+            var currentDate    = new Date();
+            var month_index    = currentDate.getMonth() + 1;
+            var monthlyAmounts = new Array(month_index).fill(0);            
+
+            var {
+                success,
+                nsmart_sales
+            } = response;
+
+            console.log('nsmart_sales',nsmart_sales)
+
+         
+
+            if (nsmart_sales) {
+                for (var x = 0; x < nsmart_sales.length; x++) {
+
+                    var insA = new Date(nsmart_sales[x].plan_date_registered);
+                    if( insA.getFullYear() < currentDate.getFullYear() ){    
+                        var installDate = '2024-01-01';
+                    }else if( insA > currentDate ){        
+                        var installDate = moment(currentDate).format('YYYY-MM-DD');
+                    }else{
+                        var installDate = nsmart_sales[x].plan_date_registered;
+                    }                    
+
+                    if (installDate) {
+                        var due = new Date(installDate);
+                        var month = due.getMonth();
+                        monthlyAmounts[month] += parseFloat(nsmart_sales[x].price - nsmart_sales[x].discount );
+                    }
+                }
+
+                var start = 0;
+                var prev_amount = 0;
+                for (i = 0; i < monthlyAmounts.length; ++i) {
+                    if( start == 0 ){
+                        var amount = monthlyAmounts[i];
+                    }else{
+                        var amount = monthlyAmounts[i] + prev_amount;
+                    }
+
+                    prev_amount = amount;
+                    monthlyAmounts[i] = amount;                
+                    start++;
+                }                
+            }
+
+            var nsmart_sales_data = {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Total Balance',
+                    backgroundColor: 'rgb(223 38 5)',
+                    borderColor: 'rgb(220, 53, 69 ,0.79)',
+                    data: monthlyAmounts
+                }]
+            };
+            $('#nsmartSalesLoader').hide()
+
+            const nsmartSalesGraph = new Chart($('#nsmartSalesGraph'), {
+                type: 'bar',
+                data: nsmart_sales_data,
+                options: {
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem, data) {
+                                    const amount = tooltipItem.formattedValue;
+                                    return '$' + amount.toLocaleString(undefined, {minimumFractionDigits: 2});
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                        },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 10,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return '$' + value.toLocaleString(undefined, {minimumFractionDigits: 2});
+                                }
+                            }
+                        },
+                    },
+                    aspectRatio: 1.2,
+                },
+            });
+
+            window.nsmartSalesGraph = nsmartSalesGraph;
+        }).catch((error) => {
+        console.log(error);
+    })
+}
+
+
 pastDueGraphThumbnail();
 
 function pastDueGraphThumbnail() {
@@ -1669,6 +1779,7 @@ function pastDueGraphThumbnail() {
         console.log(error);
     })
 }
+
 
 estimateGraphThumbnail();
 

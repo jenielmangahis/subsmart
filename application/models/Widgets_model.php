@@ -86,6 +86,22 @@ class Widgets_model extends MY_Model
       
     }
 
+    public function getNsmartSales(){
+        $this->db->from('clients');
+        $this->db->select('nsmart_plans.price AS price , nsmart_plans.discount AS discount, clients.plan_date_registered');
+        $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'left');
+        $query = $this->db->get();
+        return $results = $query->result();
+    }
+
+    public function getNsmartSalesTotal(){
+        $this->db->from('clients');
+        $this->db->select('SUM(nsmart_plans.price - nsmart_plans.discount) AS total');
+        $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'left');
+        $query = $this->db->get();
+        return $results = $query->row();
+    }
+
     public function getTags()
     {
         $this->db->where('company_id', getLoggedCompanyID());
@@ -246,17 +262,38 @@ class Widgets_model extends MY_Model
         return $query->result();
     }
 
-    public function getThumbnailsList()
+
+
+    public function getThumbnailsList($companyId)
     {
-        //        $query = "Select * FROM widgets WHERE NOT EXISTS(SELECT * FROM widgets_users WHERE widgets.w_id = widgets_users.wu_widget_id AND wu_user_id = $user_id)";
-        //        return $this->db->query($query)->result();
-        //   return $this->db->get('widgets')->result();
-
-        $this->db->where('w_main !=', 0);
+        $this->db->where('widgets.w_main !=', 0);
+        $this->db->order_by('widgets.w_name', 'ASC');
         $query = $this->db->get('widgets');
-
-        return $query->result();
+    
+        $widgets = $query->result();
+    
+        usort($widgets, function ($a, $b) {
+            if ($a->w_sort == 1 && $b->w_sort != 1) {
+                return -1;
+            }
+            if ($a->w_sort != 1 && $b->w_sort == 1) {
+                return 1;
+            }
+            return strcmp($a->w_name, $b->w_name);
+        });
+    
+        $filtered_widgets = array_filter($widgets, function ($widget) use ($companyId) {
+            // Convert $companyId to string for proper comparison
+            if ($widget->w_name === 'nSmart Sales' && $companyId !== '1') {
+                return false; 
+            }
+            return true; 
+        });
+    
+        return $filtered_widgets;
     }
+    
+
 
     public function getWidgetListPerUser($user_id)
     {
