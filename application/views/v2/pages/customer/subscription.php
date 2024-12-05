@@ -218,7 +218,7 @@
                                         <div class="col-md-2">
                                             Email 
                                         </div>
-                                        <div class="col-md-10">
+                                        <div class="col-md-4">
                                             <input type="email" readonly class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
                                         </div>
                                     </div>
@@ -226,7 +226,7 @@
                                         <div class="col-md-2">
                                             Phone 
                                         </div>
-                                        <div class="col-md-10">
+                                        <div class="col-md-4">
                                             <!-- <input type="text" readonly class="form-control phone_number" name="phone" id="phone" value="<?php //if(isset($profile_info)){ echo $profile_info->phone_m; } ?>" /> -->
                                             <input type="text" readonly class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone" id="phone" value="<?php if(isset($profile_info)){ echo $profile_info->phone_h; } ?>" />
                                         </div>
@@ -282,13 +282,10 @@
                                             <div class="row">
                                                 <div class="col-md-8">
                                                     <select id="invoice_term" name="invoice_term" data-customer-source="dropdown" class="input_select" style="display:inline-block;width:50%;">
-                                                        <option  value="Due On Receipt">Due On Receipt</option>
-                                                        <option  value="Net 5">Net 5</option>
-                                                        <option  value="Net 10">Net 10</option>
-                                                        <option  value="Net 14">Net 14</option>
-                                                        <option  value="Net 15">Net 15</option>
-                                                        <option  value="Net 21">Net 21</option>
-                                                        <option  value="Net 30">Net 30</option>
+                                                        <option value="0" selected="">Select Term</option>
+                                                        <?php foreach($accountingTerms as $term){ ?>
+                                                            <option value="<?= $term->net_due_days; ?>"><?= $term->name; ?></option>
+                                                        <?php } ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">
@@ -543,83 +540,6 @@
 
     </div>
 </div>
-<script>
-    $('#btn-edit-customer-information').click(function () {
-        $('.subs-payment-form-container .container-left .form_line input[type=text]').removeAttr('readonly');
-        $('.subs-payment-form-container .container-left .form_line input[type=email]').removeAttr('readonly');
-        $('#btn-update-customer-information').show();
-        $('#btn-cancel-customer-information').show();
-        $('#btn-edit-customer-information').hide();
-    })    
-
-    $('#btn-cancel-customer-information').click(function () {
-        $('.subs-payment-form-container .container-left .form_line input[type=text]').prop('readonly', true);
-        $('.subs-payment-form-container .container-left .form_line input[type=email]').prop('readonly', true);
-        $('#btn-update-customer-information').hide();
-        $('#btn-cancel-customer-information').hide();
-        $('#btn-edit-customer-information').show();
-    });
-
-    $(function () {
-
-        $('.phone_number').keydown(function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            $text = $(this);
-            if (key !== 8 && key !== 9) {
-                if ($text.val().length === 3) {
-                    $text.val($text.val() + '-');
-                }
-                if ($text.val().length === 7) {
-                    $text.val($text.val() + '-');
-                }
-            }
-            return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
-        });
-
-        $('#btn-quick-add-term').on('click', function(){
-            $('#quick_add_terms').modal('show');
-            $('#frm-quick-add-term')[0].reset();
-        });
-
-        $('#frm-quick-add-term').on('submit', function(e){
-            e.preventDefault();
-
-            $.ajax({
-                type: "POST",
-                url: base_url + 'customers/_create_accounting_terms',
-                dataType: 'json',
-                data: $('#frm-quick-add-term').serialize(),
-                success: function(data) {    
-                    $('#btn-save-terms').html('Save');                   
-                    if (data.is_success) {
-                        $('#quick_add_terms').modal('hide');
-                        $('#invoice_term').append($('<option>', {
-                            value: data.net_due_days,
-                            text: data.name,
-                        }));
-                        $('#invoice_term').val(data.net_due_days);
-                    }else{
-                        Swal.fire({
-                            title: 'Error',
-                            text: data.msg,
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            
-                        });
-                    }
-                },
-                beforeSend: function() {
-                    $('#btn-save-terms').html('<span class="bx bx-loader bx-spin"></span>');
-                }
-            });
-        });
-
-    });    
-
-</script>
-    
 <?php include viewPath('v2/includes/footer'); ?>
 <?php include viewPath('customer/js/subscription_js'); ?>
 <script src="https://www.paypal.com/sdk/js?client-id=AR9qwimIa4-1uYwa5ySNmzFnfZOJ-RQ2LaGdnUsfqdLQDV-ldcniSVG9uNnlVqDSj_ckrKSDmMIIuL-M&currency=USD"></script>
