@@ -30,13 +30,33 @@
         $(".invoicing_field").hide("slow");
     });
 
+    $('#btn-add-subscription-plan').on('click', function(){
+        location.href = '<?= base_url('customer/subscription_new/'.$this->uri->segment(3)); ?>';
+    });
+
+    $('#invoice_term').on('change', function(){
+        var selected = $(this).val();
+        var selected = selected.replace('Net ', '');
+
+        if( selected == 'Due On Receipt' ){
+            var new_date = moment(moment(), "YYYY-MM-DD");
+        }else{
+            var days = parseFloat(selected);
+            var new_date = moment(moment(), "YYYY-MM-DD").add(days, 'days');
+        }
+        
+        $('#invoice_date').val(new_date.format('YYYY-MM-DD'));
+    });
+
     $('.payment_method').on( 'change', function () {
         var method = this.value;
         $('#method').val(method);
         remove_required();
 
+        $('#payment-button').show();
+
         if(method !== 'PP'){
-            document.getElementById('payment-button').style.display = "flex";
+            //document.getElementById('payment-button').style.display = "flex";
             document.getElementById('paypal-button-container').style.display = "none";
         }
 
@@ -73,6 +93,7 @@
             $("#docu_signed").show('slow');
         }else if(method === 'Invoicing'){
             hide_all();
+            $('#payment-button').hide();
             $(".invoicing_field").show("slow");
         }
     });
@@ -114,6 +135,26 @@
                 console.log(data);
             }
         });
+    });
+
+    $("#subs_payment_cust_info_update_form").submit(function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer/_update_sub_payment_customer_info",
+            data: form.serialize(),
+            success: function(o)
+            {
+                if(o === 'true'){
+                    sweetalert('Good Job!','Customer Info has been updated.','success')
+                }else{
+                    sweetalert('Sorry',o,'error')
+                }
+                console.log(o);
+            }
+        });        
     });
 
     function sweetalert($title,information,$icon){

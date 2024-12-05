@@ -26,6 +26,15 @@ add_css(array(
         .hgt-row{
             height: 120%;
         }
+
+        .subs-payment-form-container .container-left .form_line {
+            margin-bottom: 5px !important;
+        }
+
+        .subs-payment-form-container .container-right .form_line {
+            margin-bottom: 5px !important;
+        }        
+
     </style>
     <div class="nsm-fab-container">
         <div class="nsm-fab nsm-fab-icon nsm-bxshadow" data-bs-toggle="modal" data-bs-target="#new_system_package_modal">
@@ -83,8 +92,8 @@ add_css(array(
                                     <span>Others</span>
                                 </div>
                                 <br>
-                                <div class="row pl-0 pr-0">
-                                    <div class="col-md-6">
+                                <div class="row pl-0 pr-0 subs-payment-form-container" id="subs-payment-form-container">
+                                    <div class="col-md-6 container-left" id="container-left">
                                         <div class="card">
                                             <div class="card-header">
                                                 <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Customer Information</h6>
@@ -156,7 +165,7 @@ add_css(array(
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 container-right" id="container-right">
                                         <div class="card">
                                             <div class="card-header">
                                                 <h6 ><span class="fa fa-money"></span>&nbsp; &nbsp;Payment Information</h6>
@@ -377,18 +386,29 @@ add_css(array(
                                                     </div>
                                                     <div class="row form_line">
                                                         <div class="col-md-4">
-                                                            <label for="">Notes
+                                                            <label for="">Notes</label>
                                                         </div>
                                                         <div class="col-md-8">
                                                             <textarea type="text" style="background-color: #fdeac3;width: 100%;" class="form-controls" rows="3" cols="50" name="notes" id="notes" ></textarea>
                                                         </div>
                                                     </div>
-                                                    <div style="position: absolute; margin: 0;right: 40px;display: block;" >
+                                                    <div class="row form_line">
+                                                      <div class="col-md-4">
+                                                            <label for="">&nbsp;</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <button type="button" class="nsm-button primary"><span class="fa fa-times"></span> Cancel</button>
+                                                            <button type="submit" class="nsm-button primary"><span class="fa fa-paper-plane-o"></span> Save Subcription</button>
+                                                            <input type="hidden" name="customer_id" id="customer_id" value="<?= $this->uri->segment(3); ?>"/>
+                                                            <input type="hidden" name="method" id="method" value="CC"/>                                                            
+                                                        </div>                                                        
+                                                    </div>
+                                                    <!-- <div style="position: absolute; margin: 0;right: 40px;display: block;" >
                                                         <button type="button" class="btn btn-primary"><span class="fa fa-times"></span> Cancel</button>
                                                         <button type="submit" class="btn btn-primary"><span class="fa fa-paper-plane-o"></span> Save Subcription</button>
                                                         <input type="hidden" name="customer_id" id="customer_id" value="<?= $this->uri->segment(3); ?>"/>
                                                         <input type="hidden" name="method" id="method" value="CC"/>
-                                                    </div>
+                                                    </div> -->
                                                 </form>
                                             </div>
                                         </div>

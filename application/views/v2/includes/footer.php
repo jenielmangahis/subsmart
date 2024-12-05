@@ -770,7 +770,7 @@ function filterThumbnail(val, id, table,filter) {
     switch (val) {
         case 'all':
             var from_date = '0000-00-00  00:00:00';
-            if(table == 'acs_billing' || table == 'collection'){
+            if(table == 'acs_billing' || table == 'collection'|| table == 'nsmart_sales'){
                 var to_date = '0000-00-00 23:59:59';
             }else{
                 var to_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date
@@ -951,6 +951,11 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
             if (table == 'invoices') {
                 $(`#second_content_${id}`).html("$ " + data['second']);
                 filterPastDueThumbnailGraph(data['past_due'])
+            }
+
+            if (table == 'nsmart_sales') {
+                $(`#second_content_${id}`).html("$ " + data['second']);
+                filterNsmartSalesGraph(data['nsmart_sales'])
             }
             if (table == 'open_invoices') {
                 filterOpenInvoicesThumbnailGraph(data['open_invoices'])
@@ -1416,6 +1421,48 @@ function filterPastDueThumbnailGraph(past_due) {
 
     pastDueGraph.data.datasets[0].data = monthlyAmounts;
     pastDueGraph.update();
+}
+
+function filterNsmartSalesGraph(nsmart_sales){
+    var currentDate    = new Date();
+    var month_index    = currentDate.getMonth() + 1;
+    var monthlyAmounts = new Array(month_index).fill(0);    
+    
+    for (var x = 0; x < nsmart_sales.length; x++) {
+
+        var insA = new Date(nsmart_sales[x].plan_date_registered);
+        if( insA.getFullYear() < currentDate.getFullYear() ){    
+            var installDate = '2024-01-01';
+        }else if( insA > currentDate ){        
+            var installDate = moment(currentDate).format('YYYY-MM-DD');
+        }else{
+            var installDate = nsmart_sales[x].plan_date_registered;
+        }                    
+
+        if (installDate) {
+            var due = new Date(installDate);
+            var month = due.getMonth();
+            monthlyAmounts[month] += parseFloat(nsmart_sales[x].price - nsmart_sales[x].discount );
+        }
+    }    
+
+    var start = 0;
+    var prev_amount = 0;
+    for (i = 0; i < monthlyAmounts.length; ++i) {
+        if( start == 0 ){
+            var amount = monthlyAmounts[i];
+        }else{
+            var amount = monthlyAmounts[i] + prev_amount;
+        }
+
+        prev_amount = amount;
+        monthlyAmounts[i] = amount;                
+        start++;
+    }    
+
+    nsmartSalesGraph.data.datasets[0].data = monthlyAmounts;
+    nsmartSalesGraph.update();
+
 }
 
 

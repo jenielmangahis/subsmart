@@ -98,10 +98,7 @@
                         <select data-value="<?=$billing_info->mmr?>" name="mmr" data-type="billing_rate_plan" class="form-control" >
                             <option><?=isset($billing_info) ? $billing_info->mmr : ""?></option>
                         </select>
-                    </div>
-                    <div class="col-md-12">
-                        <a href="<?= base_url() ?>customer/settings_rate_plans" target="_blank"  style="color:#58bc4f;margin-top:5px;font-size: 12px;position: absolute;">
-                            <span class="fa fa-plus"></span> Manage Rate Plan </a>&nbsp;&nbsp;
+                        <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-rate-plan"><span class="fa fa-plus"></span> Add Rate Plan</a>        
                     </div>
                 </div>
             </div>
@@ -421,17 +418,11 @@
                 Category
             </div>
             <div class="col-md-6">
-                <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select" >
-                    <option  value=""></option>
-                    <option <?= isset($billing_info) && $billing_info->transaction_category == 'E' ?  'selected' : '';?> value="E">Equipment</option>
-                    <option <?= isset($billing_info) && $billing_info->transaction_category == 'MMR' ?  'selected' : '';?> value="MMR">MMR</option>
-                    <option <?= isset($billing_info) && $billing_info->transaction_category == 'RMR' ?  'selected' : '';?> value="RMR">RMR</option>
-                    <option <?= isset($billing_info) && $billing_info->transaction_category == 'MS' ?  'selected' : '';?> value="MS">Monthly Subscription</option>
-                    <option <?= isset($billing_info) && $billing_info->transaction_category == 'AF' ?  'selected' : '';?> value="AF">Activation Fee</option>
-                    <option <?= isset($billing_info) && $billing_info->transaction_category == 'FM' ?  'selected' : '';?> value="FM">First Month</option>
-                    <option <?= isset($billing_info) && $billing_info->transaction_category == 'AFM' ?  'selected' : '';?> value="AFM">Activation + First Month</option>
-                    <option <?= isset($billing_info) && $billing_info->transaction_category == 'D' ?  'selected' : '';?> value="D">Deposit</option>
-                    <option <?= isset($billing_info) && $billing_info->transaction_category == 'O' ?  'selected' : '';?> value="O">Other</option>
+                <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select" required="">
+                    <option  value="">Select Category</option>
+                    <?php foreach($financingCategories as $cat){ ?>
+                        <option <?= isset($billing_info) && $billing_info->transaction_category ==  $cat->value ? 'selected' : '';?> value="<?= $cat->value; ?>"><?= $cat->name; ?></option>    
+                    <?php } ?>
                 </select>
                 <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-financing-category"><span class="fa fa-plus"></span> Add Category</a>
             </div>
