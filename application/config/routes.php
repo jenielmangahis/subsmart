@@ -1959,3 +1959,4 @@ $route['customers/_delete_financing_category'] = 'Customer/ajax_delete_financing
 $route['customers/_create_customer_status'] = 'Customer/ajax_create_customer_status';
 $route['customers/_create_customer_group'] = 'Customer/ajax_create_customer_group';
 $route['customers/_create_sales_area'] = 'Customer/ajax_create_sales_area';
+$route['customers/_create_accounting_terms'] = 'Customer/ajax_create_accounting_terms';
