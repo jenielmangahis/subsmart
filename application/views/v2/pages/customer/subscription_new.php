@@ -384,17 +384,25 @@ add_css(array(
                                                             <label for="">Transaction Category
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select" >
-                                                                <option  value=""></option>
-                                                                <?php
-                                                                $transaction_category = transaction_categories();
-                                                                foreach($transaction_category as $category):
-                                                                    ?>
-                                                                    <option <?= $category['name'] == $billing_info->transaction_category ? 'selected' : ''; ?> value="<?= $category['name']; ?>"><?= $category['description']; ?></option>
-                                                                <?php
-                                                                endforeach;
-                                                                ?>
-                                                            </select>
+                                                            <div class="row">
+                                                                <div class="col-md-7">
+                                                                    <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select" >
+                                                                        <option value=""></option>
+                                                                        <?php
+                                                                            //$transaction_category = transaction_categories();
+                                                                            //foreach($transaction_category as $category):
+                                                                        ?>
+                                                                            <!-- <option <?php //echo $category['name'] == $billing_info->transaction_category ? 'selected' : ''; ?> value="<?php //echo $category['name']; ?>"><?php //echo $category['description']; ?></option> -->
+                                                                        <?php //endforeach; ?>
+                                                                        <?php foreach($financingCategories as $cat){ ?>
+                                                                            <option <?= isset($billing_info) && $billing_info->transaction_category ==  $cat->value ? 'selected' : '';?> value="<?= $cat->value; ?>"><?= $cat->name; ?></option>    
+                                                                        <?php } ?>                                                                  
+                                                                    </select>                                                                    
+                                                                </div>
+                                                                <div class="col-md-5 mt-1">
+                                                                    <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-transaction-category"><span class="fa fa-plus"></span> Add Category</a>  
+                                                                </div>                                                            
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line">
@@ -437,6 +445,8 @@ add_css(array(
     </div>
  
 </div>
+
+<?php include viewPath('v2/pages/customer/advance_customer_forms/quick_add_modal_forms'); ?>
 
 <?php
     // JS to add only Customer module
