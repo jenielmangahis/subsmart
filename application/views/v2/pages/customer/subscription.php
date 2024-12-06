@@ -307,7 +307,7 @@
                                             Due Date
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="number" class="form-control" name="invoice_due_date" id="invoice_due_date" />
+                                            <input type="date" class="form-control" value="<?= date("Y-m-d", strtotime("+5 days")); ?>" name="invoice_due_date" id="invoice_due_date" />
                                         </div>
                                     </div>
                                 <div id="credit_card">
