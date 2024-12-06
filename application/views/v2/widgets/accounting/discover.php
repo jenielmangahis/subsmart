@@ -5,7 +5,7 @@
 ?>
 
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
-    <div class="nsm-card-header">
+    <div class="nsm-card-header" id="discover_more_widget">
         <div class="nsm-card-title">
             <span>Discover More</span>
         </div>
@@ -21,97 +21,102 @@
             </div>
         </div>
     </div>
-    <div class="nsm-card-content">
+
+    <style>
+        .carousel-indicators [data-bs-target] {
+            border-radius: 100%;
+            width: 12px;
+            height: 12px;
+        }
+    </style>
+
+    <div class="nsm-card-content adbanner_card">
         <div id="discover_carousel" class="carousel slide h-100 pb-4" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#discover_carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#discover_carousel" data-bs-slide-to="1" aria-current="true" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#discover_carousel" data-bs-slide-to="2" aria-current="true" aria-label="Slide 3"></button>
-                <button type="button" data-bs-target="#discover_carousel" data-bs-slide-to="3" aria-current="true" aria-label="Slide 4"></button>
-                <button type="button" data-bs-target="#discover_carousel" data-bs-slide-to="4" aria-current="true" aria-label="Slide 5"></button>
-                <button type="button" data-bs-target="#discover_carousel" data-bs-slide-to="5" aria-current="true" aria-label="Slide 6"></button>
-            </div>
-            <div class="carousel-inner h-100">
-                <div class="carousel-item h-100 active">
-                    <div class="row h-100">
-                        <div class="col-12 col-md-6 order-last order-md-first">
-                            <span class="content-title mb-2">Keep your signs with the times</span>
-                            <span class="content-subtitle d-block mb-2">Your team will know their rights. You'll be complaint. Update your labor law posters.</span>
-                            <a href="#" class="content-subtitle nsm-link d-block">Get your posters</a>
-                        </div> 
-                        <div class="col-12 col-md-6">
-                            <div class="nsm-img" style="background-image: url('https://plugin.intuitcdn.net/designsystem/assets/2019/03/27132646/Energy-Beam_Payroll.svg')"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item h-100">
-                    <div class="row h-100">
-                        <div class="col-12 col-md-6 order-last order-md-first">
-                            <span class="content-title mb-2">Share securely with others</span>
-                            <span class="content-subtitle d-block mb-2">New present custom roles help you delegate access, only in nSmartrac Online Advance.</span>
-                            <a href="#" class="content-subtitle nsm-link d-block">See how it works</a>
-                            <div class="nsm-divider green"></div>
-                            <div class="nsm-divider dot green"></div>
-                        </div> 
-                        <div class="col-12 col-md-6">
-                            <div class="nsm-img" style="background-image: url('https://plugin.intuitcdn.net/designsystem/assets/2019/07/09104533/2_new-Bolt_lifestyle_TIPS_ACCOUNTING.svg')"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item h-100">
-                    <div class="row h-100">
-                        <div class="col-12 col-md-6 order-last order-md-first">
-                            <span class="content-title mb-2">Goodbye, paper timesheets!</span>
-                            <span class="content-subtitle d-block mb-2">Employees track time on any device, and it automatically appears in nSmartrac.</span>
-                            <a href="#" class="content-subtitle nsm-link d-block">Try TSheets for Free</a>
-                            <div class="nsm-divider orange"></div>
-                            <div class="nsm-divider dot orange"></div>
-                        </div> 
-                        <div class="col-12 col-md-6">
-                            <div class="nsm-img" style="background-image: url('https://plugin.intuitcdn.net/designsystem/assets/2019/07/09104804/2_new-Bolt_lifestyle_TIPS_TIMETRACKING.svg')"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item h-100">
-                    <div class="row h-100">
-                        <div class="col-12 col-md-6 order-last order-md-first">
-                            <span class="content-title mb-2">Work even smarter</span>
-                            <span class="content-subtitle d-block mb-2">Easily track KPI is with automated performance dashboards in nSmartrac Online Advanced.</span>
-                            <a href="#" class="content-subtitle nsm-link d-block">See how it works</a>
-                        </div> 
-                        <div class="col-12 col-md-6">
-                            <div class="nsm-img" style="background-image: url('https://plugin.intuitcdn.net/designsystem/assets/2019/03/27132407/Energy-Beam_QuickBooks.svg')"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item h-100">
-                    <div class="row h-100">
-                        <div class="col-12 col-md-6 order-last order-md-first">
-                            <span class="content-title mb-2">Pay worker's comp as you go</span>
-                            <span class="content-subtitle d-block mb-2">Do you know workers' comp can be automatically paid with payroll?</span>
-                            <a href="#" class="content-subtitle nsm-link d-block">Get started</a>
-                        </div> 
-                        <div class="col-12 col-md-6">
-                            <div class="nsm-img" style="background-image: url('https://plugin.intuitcdn.net/designsystem/assets/2019/03/27132646/Energy-Beam_Payroll.svg')"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item h-100">
-                    <div class="row h-100">
-                        <div class="col-12 col-md-6 order-last order-md-first">
-                            <span class="content-title mb-2">Find the right insurance</span>
-                            <span class="content-subtitle d-block mb-2">Explore affordable coverage options and protect your business right from nSmartrac.</span>
-                            <a href="#" class="content-subtitle nsm-link d-block">See coverage option</a>
-                        </div> 
-                        <div class="col-12 col-md-6">
-                            <div class="nsm-img" style="background-image: url('https://plugin.intuitcdn.net/designsystem/assets/2019/03/27132407/Energy-Beam_QuickBooks.svg')"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="carousel-indicators d-flex"></div>
+            <div class="carousel-inner h-100"></div>
         </div>
     </div>
+
 </div>
+
+<script>
+    var BASE_URL = window.origin;
+    $(document).ready(function() {
+        $.ajax({
+            type: "POST",
+            url: BASE_URL + "/AdBanner/getAllBanners",
+            dataType: "JSON",
+            success: function(response) {
+                if (response == 0) {
+                    $('.adbanner_card').parent().hide();
+                } else {
+                    let indicators = $(".carousel-indicators");
+                    let inner = $(".carousel-inner");
+
+                    // Accepted file extensions
+                    const acceptedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov', 'wmv'];
+
+                    response.forEach((banner, index) => {
+                        let activeClass = index === 0 ? "active" : "";
+                        indicators.append(`
+                            <button type="button" data-bs-target="#discover_carousel" 
+                                    data-bs-slide-to="${index}" class="${activeClass}" 
+                                    aria-label="Slide ${index + 1}"></button>
+                        `);
+
+                        let duration = parseInt(banner.duration.replace("duration_", "").replace("sec", "")) * 1000 || 3000;
+
+                        let link = banner.link;
+                        if (!link.startsWith("http://") && !link.startsWith("https://")) {
+                            link = "https://" + link;
+                        }
+
+                        // Extract file extension
+                        let fileExtension = banner.file.split('.').pop().toLowerCase();
+
+                        // Check if file extension is valid
+                        if (acceptedExtensions.includes(fileExtension)) {
+                            let mediaContent;
+
+                            // Use <img> for images, <video> for videos
+                            if (['mp4', 'avi', 'mov', 'wmv'].includes(fileExtension)) {
+                                mediaContent = `
+                                    <video class="rounded mx-auto d-block w-100" autoplay muted loop>
+                                        <source src="${BASE_URL}/uploads/BusinessBanner/${banner.file}" type="video/${fileExtension}">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                `;
+                            } else {
+                                mediaContent = `
+                                    <img src="${BASE_URL}/uploads/BusinessBanner/${banner.file}" 
+                                         class="rounded mx-auto d-block w-100" alt="${banner.title}">
+                                `;
+                            }
+
+                            inner.append(`
+                                <div class="carousel-item h-100 ${activeClass}" data-bs-interval="${duration}">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            ${mediaContent}
+                                        </div>
+                                    </div>
+                                    <div class="row h-100 mt-3 mb-3">
+                                        <div class="col-12 col-md-7 order-last order-md-first">
+                                            <span class="content-title mb-2">${banner.title}</span>
+                                            <span class="content-subtitle d-block mb-2">${banner.description}</span>
+                                            <a href="${link}" target="_blank" class="content-subtitle nsm-link d-block">${banner.url_alias}</a>
+                                        </div> 
+                                    </div>
+                                </div>
+                            `);
+                        }
+                    });
+                }
+            },
+        });
+    });   
+</script>
+
 
 <?php
     if(!is_null($dynamic_load) && $dynamic_load == true):
