@@ -1,4 +1,4 @@
-<?php
+z<?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Demo extends MY_Controller {
@@ -42,5 +42,12 @@ class Demo extends MY_Controller {
 		$this->page_data['date'] = $date;
 		$this->page_data['schedules'] =  $schedules;
 		$this->load->view('demo/time_schedule', $this->page_data);
+	}
+
+	public function request_demo()
+	{
+		$post = $this->input->post();
+		echo "<pre>";
+		print_r($post);		
 	}
 }
