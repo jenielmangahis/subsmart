@@ -2168,18 +2168,22 @@ class Customer extends MY_Controller
         return $return;
     }
 
-    public function subscription($id = null)
+    public function subscription($customer_id = null)
     {        
+        $this->load->model('AccountingTerm_model');
+        $this->load->model('FinancingPaymentCategory_model');
+
         $this->hasAccessModule(9);
 
         $this->page_data['page']->parent = 'Customers';
         $this->page_data['page']->title = 'Subscription Payment';
 
-        $userid = $id;
+        $company_id = logged('company_id');
         $user_id = logged('id');
-        if (isset($userid) || !empty($userid)) {
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
-            $this->page_data['billing_info'] = $bill_info = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
+        
+        if (isset($customer_id) || !empty($customer_id)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $customer_id, 'acs_profile');
+            $this->page_data['billing_info'] = $bill_info = $this->customer_ad_model->get_data_by_id('fk_prof_id', $customer_id, 'acs_billing');
 
             $get_login_user = [
                 'where' => [
@@ -2193,7 +2197,7 @@ class Customer extends MY_Controller
             // get customer subscription history
             $subscriptions_query = [
                 'where' => [
-                    'customer_id' => $userid,
+                    'customer_id' => $customer_id,
                 ],
                 'table' => 'acs_subscriptions',
                 'select' => '*',
@@ -2201,15 +2205,24 @@ class Customer extends MY_Controller
             $this->page_data['subscriptions'] = $this->general->get_data_with_param($subscriptions_query);
         }
         
+        $accountingTerms = $this->AccountingTerm_model->getAllByCompanyId($company_id);
+
+        $financingCategories = $this->FinancingPaymentCategory_model->getAllByCompanyId($company_id);
+        $this->page_data['financingCategories'] = $financingCategories;    
+
+        $this->page_data['accountingTerms'] = $accountingTerms;
         $this->load->view('v2/pages/customer/subscription', $this->page_data);
     }
 
     public function subscription_new($id = null)
     {
+        $this->load->model('FinancingPaymentCategory_model');
+
         $this->page_data['page']->parent = 'Customers';
         $this->page_data['page']->title = 'New Subscription Plan';
         $userid = $id;
         $user_id = logged('id');
+        $company_id = logged('company_id');
         $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
         $get_login_user = [
             'where' => ['id' => $user_id],
@@ -2217,6 +2230,8 @@ class Customer extends MY_Controller
             'select' => 'id,FName,LName',
         ];
         $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
+        $financingCategories = $this->FinancingPaymentCategory_model->getAllByCompanyId($company_id);
+        $this->page_data['financingCategories'] = $financingCategories;   
         $this->load->view('v2/pages/customer/subscription_new', $this->page_data);
     }
 
@@ -9997,44 +10012,175 @@ class Customer extends MY_Controller
 
     public function ajax_create_accounting_terms()
     {
-        $this->load->model('SalesArea_model');
+        $this->load->model('AccountingTerm_model');
 
         $is_success = 0;
         $msg = 'Cannot save data';
-        $sa_name = '';
-        $sa_id   = 0;
+        $term_name     = '';
+        $term_due_days = 0;
 
         $company_id = logged('company_id');
         $post = $this->input->post();
 
-        $isExists = $this->SalesArea_model->getByNameAndCompanyId($post['sa_name'], $company_id);
+        $isExists = $this->AccountingTerm_model->getByNameAndCompanyId($post['term_name'], $company_id);
         if( $isExists ){
-            $msg = 'Sales area name already exists.';
+            $msg = 'Accounting term name already exists.';
         }else{
-            if ($post['sa_name'] != '') {
+            if ($post['term_name'] != '') {
                 $data = [
-                    'fk_comp_id' => $company_id,
-                    'sa_name' => $post['sa_name'],
-                    'date_created' => date("Y-m-d H:i:s")
+                    'company_id' => $company_id,
+                    'qbid' => NULL,
+                    'name' => $post['term_name'],
+                    'type' => 1,
+                    'net_due_days' => $post['term_number_days_due'],
+                    'day_of_month_due' => 0,
+                    'discount_percentage' => 0,
+                    'discount_days' => 0,
+                    'discount_on_day_of_month' => 0,
+                    'minimum_days_to_pay' => $post['term_number_days_due'],
+                    'status' => 1,
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
                 ];
     
-                $sa_id = $this->SalesArea_model->createSalesArea($data);
+                $this->AccountingTerm_model->create($data);
     
                 //Activity Logs
-                $activity_name = 'Sales Area : Created ' . $post['sa_name']; 
+                $activity_name = 'Accounting Term : Created ' . $post['term_name']; 
                 createActivityLog($activity_name);
     
                 $is_success = 1;
                 $msg = '';
     
-                $sa_name = $post['sa_name'];
+                $term_name     = $post['term_name'];
+                $term_due_days = $post['term_number_days_due'];
                 
             }else{
-                $msg = 'Please enter sales area name.';
+                $msg = 'Please enter accounting term name.';
             }
         }
 
-        $return = ['is_success' => $is_success, 'msg' => $msg, 'sa_id' => $sa_id, 'sa_name' => $sa_name];
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'term_name' => $term_name, 'term_due_days' => $term_due_days];
+        echo json_encode($return);
+    }
+
+    public function ajax_create_rate_plan()
+    {
+        $this->load->model('RatePlan_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $plan_id = 0;
+        $plan_amount = 0;
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->RatePlan_model->getByNameAndCompanyId($post['plan_name'], $company_id);
+        if( $isExists ){
+            $msg = 'Plan name already exists.';
+        }else{
+            if ($post['plan_name'] != '') {
+                $data = [
+                    'company_id' => $company_id,
+                    'plan_name' => $post['plan_name'],
+                    'amount' => $post['plan_amount'],
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+    
+                $plan_id = $this->RatePlan_model->create($data);
+                $plan_amount = number_format($post['plan_amount'],2,".","");
+    
+                //Activity Logs
+                $activity_name = 'Rate Plan : Created ' . $post['plan_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+                
+            }else{
+                $msg = 'Please enter accounting term name.';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'plan_id' => $plan_id, 'plan_amount' => $plan_amount];
+        echo json_encode($return);
+    }
+
+    public function ajax_create_system_package_type()
+    {
+        $this->load->model('SystemPackageType_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $package_name = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->SystemPackageType_model->getByNameAndCompanyId($post['package_name'], $company_id);
+        if( $isExists ){
+            $msg = 'System package already exists.';
+        }else{
+            if ($post['package_name'] != '') {
+                $data = [
+                    'company_id' => $company_id,
+                    'name' => $post['package_name'],
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->SystemPackageType_model->create($data);
+                $package_name = $post['package_name'];
+    
+                //Activity Logs
+                $activity_name = 'System Package : Created ' . $post['package_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+                
+            }else{
+                $msg = 'Please enter package name.';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'package_name' => $package_name];
+        echo json_encode($return);
+    }
+
+    public function ajax_create_activation_fee()
+    {
+        $this->load->model('ActivationFee_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $amount = 0;
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        if ($post['amount'] >= 0 ) {
+            $data = [
+                'company_id' => $company_id,
+                'amount' => $post['amount'],
+                'date_created' => date("Y-m-d H:i:s")
+            ];
+
+            $this->ActivationFee_model->create($data);
+            $amount = number_format($post['amount'],2,".","");
+
+            //Activity Logs
+            $activity_name = 'Activation Fee : Created amount ' . $post['amount']; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+            
+        }else{
+            $msg = 'Please enter amount.';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'amount' => $amount];
         echo json_encode($return);
     }
 

@@ -28,6 +28,76 @@
         $(".CNRN").hide("slow");
         $(".account_cred").hide("slow");
         $(".invoicing_field").hide("slow");
+
+        $('.phone_number').keydown(function (e) {
+            var key = e.charCode || e.keyCode || 0;
+            $text = $(this);
+            if (key !== 8 && key !== 9) {
+                if ($text.val().length === 3) {
+                    $text.val($text.val() + '-');
+                }
+                if ($text.val().length === 7) {
+                    $text.val($text.val() + '-');
+                }
+            }
+            return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+        });
+
+        $('#btn-quick-add-term').on('click', function(){
+            $('#quick_add_terms').modal('show');
+            $('#frm-quick-add-term')[0].reset();
+        });
+
+        $('#frm-quick-add-term').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_accounting_terms',
+                dataType: 'json',
+                data: $('#frm-quick-add-term').serialize(),
+                success: function(data) {    
+                    $('#btn-save-terms').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_terms').modal('hide');
+                        $('#invoice_term').append($('<option>', {
+                            value: data.term_due_days,
+                            text: data.term_name,
+                        }));
+                        $('#invoice_term').val(data.term_due_days);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-terms').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#btn-edit-customer-information').click(function () {
+            $('.subs-payment-form-container .container-left .form_line input[type=text]').removeAttr('readonly');
+            $('.subs-payment-form-container .container-left .form_line input[type=email]').removeAttr('readonly');
+            $('#btn-update-customer-information').show();
+            $('#btn-cancel-customer-information').show();
+            $('#btn-edit-customer-information').hide();
+        })    
+
+        $('#btn-cancel-customer-information').click(function () {
+            $('.subs-payment-form-container .container-left .form_line input[type=text]').prop('readonly', true);
+            $('.subs-payment-form-container .container-left .form_line input[type=email]').prop('readonly', true);
+            $('#btn-update-customer-information').hide();
+            $('#btn-cancel-customer-information').hide();
+            $('#btn-edit-customer-information').show();
+        });
     });
 
     $('#btn-add-subscription-plan').on('click', function(){
@@ -36,9 +106,8 @@
 
     $('#invoice_term').on('change', function(){
         var selected = $(this).val();
-        var selected = selected.replace('Net ', '');
 
-        if( selected == 'Due On Receipt' ){
+        if( selected == '0' || selected == '' || selected == null ){
             var new_date = moment(moment(), "YYYY-MM-DD");
         }else{
             var days = parseFloat(selected);
@@ -156,6 +225,46 @@
             }
         });        
     });
+
+    $('#btn-quick-add-transaction-category').on('click', function(){
+        $('#frm-quick-add-transaction-category')[0].reset();
+        $('#quick_add_transaction_category').modal('show');
+    });
+
+    $('#frm-quick-add-transaction-category').on('submit', function(e){
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: base_url + 'customers/_create_financing_category',
+            dataType: 'json',
+            data: $('#frm-quick-add-transaction-category').serialize(),
+            success: function(data) {    
+                $('#btn-save-transaction-category').html('Save');                   
+                if (data.is_success) {
+                    $('#quick_add_transaction_category').modal('hide');
+                    $('#transaction_category').append($('<option>', {
+                        value: data.value,
+                        text: data.name
+                    }));
+                    $('#transaction_category').val(data.value);
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-save-transaction-category').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });    
 
     function sweetalert($title,information,$icon){
         Swal.fire({
