@@ -27,6 +27,17 @@
         display:inline-block;
         margin:5px 0px;
     }
+    .customer-inputs .form-control, .customer-inputs .select2, .customer-inputs .input-group-text{
+        margin:2px 0px !important;
+    }
+    .customer-inputs .input-group-text{
+        border-radius: .25rem .25rem 0px 0.25rem;
+        position: relative;
+        left: 1px;
+    }
+    .btn-fixed-width{
+        width:18% !important;
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
@@ -66,21 +77,21 @@
                                     <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_papers'); ?>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 customer-inputs">
                                 <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_profile'); ?>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 customer-inputs">
                                 <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_office_info'); ?>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 customer-inputs">
                                 <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_alarm_info'); ?>
                             </div>
                         <?php }else{ ?>                            
-                            <div class="col-md-6">
+                            <div class="col-md-6 customer-inputs">
                                 <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_profile_non_adi'); ?>
                                 <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_office_info_no_funding'); ?>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 customer-inputs">
                                 <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_billing_info'); ?>
                             </div>
                         <?php } ?>
