@@ -838,11 +838,19 @@
                         </li>
                     </ul>
                 </li>
+                <!-- Only allow company id 1 (NSMART LLC) to access this settings -->
+                <?php if ($company_id == 1 && $user_type == 7): ?>
                 <li class="li-third-sub-menu">
                     <a href="<?php echo base_url('chatbot/settings'); ?>">
                         <i class='bx bx-bot'></i> Chatbot Settings
                     </a>
                 </li>
+                <li class="li-third-sub-menu">
+                    <a href="<?php echo base_url('adBanner/settings'); ?>">
+                        <i class='bx bx-news' ></i> Ad Banner Settings
+                    </a>
+                </li>
+                <?php endif; ?>
             </ul>
         </li>
 

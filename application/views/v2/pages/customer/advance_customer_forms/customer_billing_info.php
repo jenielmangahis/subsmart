@@ -409,7 +409,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
                     </div>
-                    <input data-type="subscription_amount" type="number" step="0.01" class="form-control input_select" name="mmr" value="<?= isset($billing_info) ? $billing_info->mmr : ''; ?>">
+                    <input data-type="subscription_amount" type="number" step="0.01" class="form-control input_select" name="mmr" value="<?= isset($billing_info) ? $billing_info->mmr : '0.00'; ?>">
                 </div>
             </div>
         </div>
