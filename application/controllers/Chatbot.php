@@ -10,41 +10,40 @@ class Chatbot extends CI_Controller
     private $company_id = 31;
 
     private function findPreset($userInput, $predefinedQuestions) 
-{
-    // Function to normalize a string: remove punctuation, convert to lowercase, and trim spaces
-    function normalize($str) {
-        return strtolower(trim(preg_replace('/[^a-z0-9 ]/i', '', $str)));
-    }
-
-    // Step 1: Exact match with normalization to remove special characters and spaces
-    $normalizedInput = normalize($userInput);
-
-    foreach ($predefinedQuestions as $question => $response) {
-        $normalizedQuestion = normalize($question);
-
-        if ($normalizedInput === $normalizedQuestion) { // Exact match after normalization
-            return $response; // Return immediately if an exact match is found
+    {
+        // Function to normalize a string: remove punctuation, convert to lowercase, and trim spaces
+        function normalize($str) {
+            return strtolower(trim(preg_replace('/[^a-z0-9 ]/i', '', $str)));
         }
-    }
 
-    // Step 2: Fallback to normalized pattern matching if exact match fails
-    foreach ($predefinedQuestions as $question => $response) {
-        $normalizedQuestion = normalize($question); // Normalize predefined question
+        // Step 1: Exact match with normalization to remove special characters and spaces
+        $normalizedInput = normalize($userInput);
 
-        // Create a regex pattern with word boundaries to match keywords in the predefined question
-        $keywords = explode(' ', $normalizedQuestion);  
-        $regexPattern = '/\\b(' . implode('|', $keywords) . ')\\b/i';  
+        foreach ($predefinedQuestions as $question => $response) {
+            $normalizedQuestion = normalize($question);
 
-        // Check if regex matches normalized user input
-        if (preg_match($regexPattern, $normalizedInput)) {  
-            return $response; // Return if there's a pattern match
+            if ($normalizedInput === $normalizedQuestion) { // Exact match after normalization
+                return $response; // Return immediately if an exact match is found
+            }
         }
+
+        // Step 2: Fallback to normalized pattern matching if exact match fails
+        foreach ($predefinedQuestions as $question => $response) {
+            $normalizedQuestion = normalize($question); // Normalize predefined question
+
+            // Create a regex pattern with word boundaries to match keywords in the predefined question
+            $keywords = explode(' ', $normalizedQuestion);  
+            $regexPattern = '/\\b(' . implode('|', $keywords) . ')\\b/i';  
+
+            // Check if regex matches normalized user input
+            if (preg_match($regexPattern, $normalizedInput)) {  
+                return $response; // Return if there's a pattern match
+            }
+        }
+
+        // Default response when no match is found
+        return "My apologies, I could not find an appropriate match for this. Could you please help rephrase your question?";
     }
-
-    // Default response when no match is found
-    return "My apologies, I could not find an appropriate match for this. Could you please help rephrase your question?";
-}
-
     
     public function request() 
     {
