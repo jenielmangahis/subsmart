@@ -87,7 +87,11 @@
 	<script src="<?php echo $url->assets ?>frontend/js/fullcalendar/list.js"></script>
 	<script src="<?php echo $url->assets ?>frontend/js/fullcalendar/timegrid.js"></script>
 	<script src="<?php echo $url->assets ?>frontend/js/main.js"></script>
-
+	
+	<!-- Sweetalert JS -->
+	<script src="https://nsmartrac-development.com/assets/js/v2/sweetalert2.min.js"></script>
+	<script type="text/javascript" src="https://nsmartrac-development.com/assets/js/accounting/sweetalert2@9.js"></script>
+	
 	<?php
 		if (isset($footerBottomScripts)) {
 			echo $footerBottomScripts;

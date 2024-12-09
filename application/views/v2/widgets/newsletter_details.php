@@ -2,13 +2,13 @@
 .news-details .content-title{
     width: 650px;
     white-space: nowrap;
-    overflow: hidden;
+    /* overflow: hidden; */
     text-overflow: ellipsis;
 }
 .news-details .content-subtitle{
     width: 650px;
     white-space: nowrap;
-    overflow: hidden;
+    /* overflow: hidden; */
     text-overflow: ellipsis;
 }
 .content-news-date{

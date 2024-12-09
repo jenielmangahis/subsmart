@@ -102,6 +102,11 @@ class Widgets_model extends MY_Model
         return $results = $query->row();
     }
 
+    public function getDemoSchedule(){
+        
+
+    }
+
     public function getTags()
     {
         $this->db->where('company_id', getLoggedCompanyID());
@@ -284,7 +289,7 @@ class Widgets_model extends MY_Model
     
         $filtered_widgets = array_filter($widgets, function ($widget) use ($companyId) {
             // Convert $companyId to string for proper comparison
-            if ($widget->w_name === 'nSmart Sales' && $companyId !== '1') {
+            if (($widget->w_name === 'nSmart Sales' || $widget->w_name === 'Demo Schedules') && $companyId !== '1') {
                 return false; 
             }
             return true; 
