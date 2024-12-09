@@ -275,7 +275,7 @@
                 System Package Type
             </div>
             <div class="col-md-6">
-                <select data-value="<?= isset($alarm_info) ? $alarm_info->system_type : "" ?>" name="system_type" data-type="alarm_info_system_type" class="form-control">
+                <select data-value="<?= isset($alarm_info) ? $alarm_info->system_type : "" ?>" name="system_type" id="system-type" data-type="alarm_info_system_type" class="form-control">
                     <option><?= isset($alarm_info) ? $alarm_info->system_type : "" ?></option>
                 </select>
                 <!-- <select name="system_type" id="system_type" class="input_select">
@@ -302,7 +302,7 @@
                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive w/Access Control'){echo "selected";} } ?> value="Interactive w/Access Control">Interactive w/Access Control</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive w/Access Control w/Automn'){echo "selected";} } ?> value="Interactive w/Access Control w/Automn">Interactive w/Access Control w/Automn</option>
                 </select> -->
-                <a href="<?= base_url() ?>customer/settings_system_package" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage System Type</a>&nbsp;&nbsp;
+                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-system-package-type"><span class="fa fa-plus"></span> Add System Package Type</a>
             </div>
         </div>
     </div>
@@ -411,10 +411,10 @@
                 <field-custom-name default="Activation Fee" form="funding_info"></field-custom-name>
             </div>
             <div class="col-md-5">
-                <select data-value="<?= isset($office_info) ? $office_info->activation_fee : "" ?>" name="activation_fee" data-type="funding_info_activation_fee" class="form-control">
+                <select data-value="<?= isset($office_info) ? $office_info->activation_fee : "" ?>" name="activation_fee" id="activation-fee" data-type="funding_info_activation_fee" class="form-control">
                     <option><?= isset($office_info) ? $office_info->activation_fee : "" ?></option>
                 </select>
-                <a href="<?= base_url() ?>customer/settings_activation_fee" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Fee</a>&nbsp;&nbsp;
+                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-activation-fee"><span class="fa fa-plus"></span> Add Activation Fee</a>
             </div>
             <div class="col-md-12">
                 <input type="radio" class="form-controls" name="way_of_pay" value="None" <?php if(isset($office_info)){ echo $office_info->way_of_pay == 'None' || $office_info->way_of_pay == '' || $office_info->way_of_pay == 'Email' ? 'checked': ''; }else {echo 'checked'; } ?>  id="way_of_pay_none">

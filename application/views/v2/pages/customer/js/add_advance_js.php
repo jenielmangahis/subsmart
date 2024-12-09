@@ -801,6 +801,13 @@
             $('#quick_add_financing_category').modal('show');
         });
 
+        $('#btn-manage-financing-category').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_financing_categories',
+                '_blank' 
+            );
+        });
+
         $('#frm-quick-add-financing-category').on('submit', function(e){
             e.preventDefault();
 
@@ -839,6 +846,13 @@
         $('#btn-quick-add-customer-status').on('click', function(){
             $('#frm-quick-add-customer-status')[0].reset();
             $('#quick_add_customer_status').modal('show');
+        });
+
+        $('#btn-manage-customer-status').on('click', function(){
+            window.open(
+                base_url + 'customer/status',
+                '_blank' 
+            );
         });
 
         $('#frm-quick-add-customer-status').on('submit', function(e){
@@ -881,6 +895,13 @@
             $('#quick_add_customer_group').modal('show');
         });
 
+        $('#btn-manage-customer-group').on('click', function(){
+            window.open(
+                base_url + 'customer/group',
+                '_blank' 
+            );
+        });
+
         $('#frm-quick-add-customer-group').on('submit', function(e){
             e.preventDefault();
 
@@ -921,6 +942,13 @@
             $('#quick_add_sales_area').modal('show');
         });
 
+        $('#btn-manage-sales-area').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_sales_area',
+                '_blank' 
+            );
+        });
+
         $('#frm-quick-add-sales-area').on('submit', function(e){
             e.preventDefault();
 
@@ -959,6 +987,155 @@
         $('#btn-quick-add-rate-plan').on('click', function(){
             $('#frm-quick-add-rate-plan')[0].reset();
             $('#quick_add_rate_plan').modal('show');
-        });        
+        });  
+        
+        $('#btn-manage-rate-plan').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_system_package',
+                '_blank' 
+            );
+        });
+
+        $('#frm-quick-add-rate-plan').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_rate_plan',
+                dataType: 'json',
+                data: $('#frm-quick-add-rate-plan').serialize(),
+                success: function(data) {    
+                    $('#btn-save-rate-plan').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_rate_plan').modal('hide');
+                        $('#mmr').append($('<option>', {
+                            value: data.plan_amount,
+                            text: data.plan_amount,
+                        }));
+                        $('#mmr').val(data.plan_amount);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-rate-plan').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#btn-quick-add-system-package-type').on('click', function(){
+            $('#frm-quick-add-system-package')[0].reset();
+            $('#quick_add_system_package').modal('show');
+        });  
+
+        $('#btn-manage-system-package').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_system_package',
+                '_blank' 
+            );
+        });
+
+        $('#frm-quick-add-system-package').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_system_package_type',
+                dataType: 'json',
+                data: $('#frm-quick-add-system-package').serialize(),
+                success: function(data) {    
+                    $('#btn-save-system-package').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_system_package').modal('hide');
+                        $('#system-type').append($('<option>', {
+                            value: data.package_name,
+                            text: data.package_name,
+                        }));
+                        $('#system-type').val(data.package_name);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-system-package').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#btn-quick-add-activation-fee').on('click', function(){
+            $('#frm-quick-add-activation-fee')[0].reset();
+            $('#quick_add_activation_fee').modal('show');
+        });  
+
+        $('#btn-manage-activation-fee').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_activation_fee',
+                '_blank' 
+            );
+        });
+
+        $('#frm-quick-add-activation-fee').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_activation_fee',
+                dataType: 'json',
+                data: $('#frm-quick-add-activation-fee').serialize(),
+                success: function(data) {    
+                    $('#btn-save-activation-fee').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_activation_fee').modal('hide');
+                        $('#activation-fee').append($('<option>', {
+                            value: data.amount,
+                            text: data.amount,
+                        }));
+                        $('#activation-fee').val(data.amount);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-activation-fee').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#btn-quick-add-communication-type').on('click', function(){
+            $('#frm-quick-add-activation-fee')[0].reset();
+            $('#quick_add_activation_fee').modal('show');
+        });  
+
+        $('#btn-manage-communication-type').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_solar_lender_type',
+                '_blank' 
+            );
+        });
+
     });
 </script>

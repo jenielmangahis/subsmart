@@ -1573,7 +1573,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="text" name="installationCost" id="installationCost" class="nsm-field form-control text-end total-price total-price-click" value="0.00">
+                                                    <input type="number" step="any" name="installationCost" id="installationCost" class="nsm-field form-control text-end total-price total-price-click" value="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1582,7 +1582,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="text" name="otps" id="otps" class="nsm-field form-control text-end total-price total-price-click" value="0.00">
+                                                    <input type="number" step="any" name="otps" id="otps" class="nsm-field form-control text-end total-price total-price-click" value="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1591,7 +1591,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="text" name="monthlyMonitoring" id="monthlyMonitoring" class="nsm-field form-control text-end total-price total-price-click" value="0.00">
+                                                    <input type="number" step="any" name="monthlyMonitoring" id="monthlyMonitoring" class="nsm-field form-control text-end total-price total-price-click" value="0.00">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -2385,9 +2385,12 @@ $(".nsm-subtitle").html(function() {
         let overAllTotal = parseFloat(val2) + parseFloat(salesTax) + parseFloat(installationCost) + parseFloat(otps) + parseFloat(monthlyMonitoring);
 
         let val3 = overAllTotal;
+        if( isNaN(val3) ){
+            val3 = 0;
+        }
 
         let val4 = $('#totalDue').html(val3.toFixed(2));
-        console.log(val3);
+
         $('.totalDue').val(val3.toFixed(2));
         $('#payment_amount_grand').val(val3.toFixed(2));
         $('#payment_amount').val(val3.toFixed(2));

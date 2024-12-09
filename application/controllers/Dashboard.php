@@ -145,6 +145,7 @@ class Dashboard extends Widgets
         $this->load->model('Job_tags_model');
 
         $this->load->model('widgets_model');
+        $this->load->model('Demo_model');
         $this->load->helper('functions');
         $this->load->helper('functions_helper');
         $this->load->model('widgets_model');
@@ -235,6 +236,10 @@ class Dashboard extends Widgets
 
         $this->page_data['nsmart_sales_count'] = count($nsmart_sales_count);
         $this->page_data['nsmart_sales_total'] = $nsmart_sales_total->total;
+
+        $demo_schedule_count = $this->Demo_model->getlist();
+        $this->page_data['demo_schedule_count'] = count($demo_schedule_count);
+
 
         // $this->page_data['leadSources']=$this->event_model->getLeadSourceWithCount(); // fetch Lead Sources
 
@@ -857,6 +862,17 @@ class Dashboard extends Widgets
                     $nsmart_sales_total += $total->price - $total->discount;
                 }
                 $this->output->set_output(json_encode(['first' => count($nsmart_sales), 'second' => number_format($nsmart_sales_total, 2, ".", ","),  'nsmart_sales' => $nsmart_sales]));
+                break;
+            case 'demo_schedule':
+                $company_id = logged('company_id');
+                $this->db->from('demo_schedule');
+                $this->db->select('*');
+                $this->db->where('demo_date >=',date('Y-m-d', strtotime($date_from)));
+                $this->db->where('demo_date <=',date('Y-m-d', strtotime($date_to)));
+                $query = $this->db->get();
+                $demo_schedule = $query->result();
+             
+                $this->output->set_output(json_encode(['first' => count($demo_schedule), ]));
                 break;
             case 'open_invoices':
                 $company_id = logged('company_id');

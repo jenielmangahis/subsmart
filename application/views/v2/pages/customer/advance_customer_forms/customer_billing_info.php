@@ -95,7 +95,7 @@
             <div class="col-md-6">
                 <div class="row">
                     <div class="col-md-12">
-                        <select data-value="<?=$billing_info->mmr?>" name="mmr" data-type="billing_rate_plan" class="form-control" >
+                        <select data-value="<?=$billing_info->mmr?>" id="mmr" name="mmr" data-type="billing_rate_plan" class="form-control" >
                             <option><?=isset($billing_info) ? $billing_info->mmr : ""?></option>
                         </select>
                         <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-rate-plan"><span class="fa fa-plus"></span> Add Rate Plan</a>        
@@ -409,7 +409,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
                     </div>
-                    <input data-type="subscription_amount" type="number" step="0.01" class="form-control input_select" name="mmr" value="<?= isset($billing_info) ? $billing_info->mmr : ''; ?>">
+                    <input data-type="subscription_amount" type="number" step="0.01" class="form-control input_select" name="mmr" value="<?= isset($billing_info) ? $billing_info->mmr : '0.00'; ?>">
                 </div>
             </div>
         </div>

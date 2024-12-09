@@ -23,7 +23,7 @@
     </div>
 
     <style>
-        .carousel-indicators [data-bs-target] {
+        .adCarouselIndicators [data-bs-target] {
             border-radius: 100%;
             width: 12px;
             height: 12px;
@@ -32,8 +32,8 @@
 
     <div class="nsm-card-content adbanner_card">
         <div id="discover_carousel" class="carousel slide h-100 pb-4" data-bs-ride="carousel">
-            <div class="carousel-indicators d-flex"></div>
-            <div class="carousel-inner h-100"></div>
+            <div class="carousel-indicators adCarouselIndicators d-flex"></div>
+            <div class="carousel-inner adCarouselContent h-100"></div>
         </div>
     </div>
 
@@ -50,10 +50,9 @@
                 if (response == 0) {
                     $('.adbanner_card').parent().hide();
                 } else {
-                    let indicators = $(".carousel-indicators");
-                    let inner = $(".carousel-inner");
+                    let indicators = $(".adCarouselIndicators");
+                    let inner = $(".adCarouselContent");
 
-                    // Accepted file extensions
                     const acceptedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov', 'wmv'];
 
                     response.forEach((banner, index) => {
@@ -71,14 +70,11 @@
                             link = "https://" + link;
                         }
 
-                        // Extract file extension
                         let fileExtension = banner.file.split('.').pop().toLowerCase();
 
-                        // Check if file extension is valid
                         if (acceptedExtensions.includes(fileExtension)) {
                             let mediaContent;
 
-                            // Use <img> for images, <video> for videos
                             if (['mp4', 'avi', 'mov', 'wmv'].includes(fileExtension)) {
                                 mediaContent = `
                                     <video class="rounded mx-auto d-block w-100" autoplay muted loop>

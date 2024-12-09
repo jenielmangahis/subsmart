@@ -10,11 +10,11 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="nsm-card-header">
                 <div class="nsm-card-title summary-report-header">
                     <div class="summary-report-header-sub ">
-                    <div class="icon-summary-income">
-                        <i class="bx bx-box "></i>
+                    <div class="icon-summary-estimate">
+                        <i class="bx bx-calendar-star "></i>
                         </div>
-                        <a role="button" class=" btn-sm m-0 me-2" href="invoice" style="color:#df2605 !important ">
-                            nSmart Sales
+                        <a role="button" class=" btn-sm m-0 me-2" href="demo/list" style="color:#6a4a86  !important ">
+                            Demo Schedules
                         </a>
                     </div>
                 </div>
@@ -50,7 +50,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
     </div>
     <div class="mb-2">
         <select class="nsm-field form-select" style='width: 55%;
-    border: none;' onChange="filterThumbnail(this.value, '<?php echo $id; ?>', 'nsmart_sales')">
+    border: none;' onChange="filterThumbnail(this.value, '<?php echo $id; ?>', 'demo_schedule')">
             <option value="all">All time</option>
             <option value="week">Last 7 days </option>
             <option value="two-week">last 14 days</option>
@@ -72,13 +72,10 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
                     <div>
-                        <label for="">Total Subscribers</label>
-                        <h1 id="first_content_<?php echo $id; ?>"><?php echo number_format($nsmart_sales_count); ?></h1>
+                        <label for="">Total </label>
+                        <h1 id="first_content_<?php echo $id; ?>"><?php echo number_format($demo_schedule_count); ?></h1>
                     </div>
-                    <div>
-                        <label for="">Total Subscription</label>
-                        <h1 id="second_content_<?php echo $id; ?>">$ <?php echo number_format($nsmart_sales_total, 2, ".", ","); ?></h1>
-                    </div>
+                 
                 </div>
             </div>
         </div>

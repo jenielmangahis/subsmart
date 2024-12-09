@@ -109,12 +109,15 @@
 
         if( selected == '0' || selected == '' || selected == null ){
             var new_date = moment(moment(), "YYYY-MM-DD");
+            var new_due_date = moment(moment(), "YYYY-MM-DD").add(5, 'days');
         }else{
             var days = parseFloat(selected);
             var new_date = moment(moment(), "YYYY-MM-DD").add(days, 'days');
+            var new_due_date = moment(moment(), "YYYY-MM-DD").add(days + 5, 'days');
         }
         
         $('#invoice_date').val(new_date.format('YYYY-MM-DD'));
+        $('#invoice_due_date').val(new_due_date.format('YYYY-MM-DD'));
     });
 
     $('.payment_method').on( 'change', function () {
