@@ -72,32 +72,6 @@
                                 <div class="nsm-card primary">
                                     <div class="nsm-card-header d-block">
                                         <div class="nsm-card-title">
-                                            <span>Payment Fee</span>
-                                        </div>
-                                        <label class="nsm-subtitle">Add a payment fee (percent or fixed) to online payments.</label>
-                                    </div>
-                                    <div class="nsm-card-content">
-                                        <div class="row g-2">
-                                            <div class="col-12 col-md-6">
-                                                <div class="input-group mb-3">
-                                                    <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Payment Fee Percent %" name="payment_fee_percent" id="payment_fee_percent" value="<?php echo ($setting) ? $setting->payment_fee_percent : '0.00' ?>">
-                                                    <span class="input-group-text" id="">%</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="input-group mb-3">
-                                                    <span class="input-group-text" id="">$</span>
-                                                    <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Payment Fee Fixed $" name="payment_fee_amount" id="payment_fee_amount" value="<?php echo ($setting) ? $setting->payment_fee_amount : '0.00' ?>">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="nsm-card primary">
-                                    <div class="nsm-card-header d-block">
-                                        <div class="nsm-card-title">
                                             <span>Invoice PDF</span>
                                         </div>
                                         <label class="nsm-subtitle">Select invoice template you want to use.</label>
@@ -118,6 +92,72 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12">
+                                <div class="nsm-card primary">
+                                    <div class="nsm-card-header d-block">
+                                        <div class="nsm-card-title">
+                                            <span>Payment Fee</span>
+                                        </div>
+                                        <label class="nsm-subtitle">Add a payment fee (percent or fixed) to online payments.</label>
+                                    </div>
+                                    <div class="nsm-card-content">
+                                        <div class="row g-2">
+                                            <div class="col-12 col-md-6">
+                                                <div class="input-group mb-3">
+                                                    <span class="input-group-text" id="">%</span>
+                                                    <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Payment Fee Percent %" name="payment_fee_percent" id="payment_fee_percent" value="<?php echo ($setting) ? $setting->payment_fee_percent : '0.00' ?>">                                                    
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <div class="input-group mb-3">
+                                                    <span class="input-group-text" id="">$</span>
+                                                    <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Payment Fee Fixed $" name="payment_fee_amount" id="payment_fee_amount" value="<?php echo ($setting) ? $setting->payment_fee_amount : '0.00' ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="nsm-card primary">
+                                    <div class="nsm-card-header d-block">
+                                        <div class="nsm-card-title">
+                                            <span>Late Fee</span>
+                                        </div>
+                                        <label class="nsm-subtitle">Amount per day when invoice is overdue</label>
+                                    </div>
+                                    <div class="nsm-card-content">
+                                        <div class="row g-2">
+                                            <div class="col-12 col-md-6">
+                                                <div class="input-group mb-3">
+                                                    <span class="input-group-text" id="">$</span>
+                                                    <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Amount" name="late_fee_amount_per_day" id="late_fee_amount_per_day" value="<?php echo ($setting) ? $setting->late_fee_amount_per_day : '0.00' ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="nsm-card primary">
+                                    <div class="nsm-card-header d-block">
+                                        <div class="nsm-card-title">
+                                            <span>Activate Late Fee</span>
+                                        </div>
+                                        <label class="nsm-subtitle">Grace period before activating late fee charges</label>
+                                    </div>
+                                    <div class="nsm-card-content">
+                                        <div class="row g-2">
+                                            <div class="col-12 col-md-6">
+                                                <div class="input-group mb-3">
+                                                    <span class="input-group-text" id=""><i class='bx bx-alarm' ></i></span>
+                                                    <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Number of days" name="num_days_activate_late_fee" id="num_days_activate_late_fee" value="<?php echo ($setting) ? $setting->num_days_activate_late_fee : '0'; ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
                             <!-- <div class="col-12">
                                 <div class="nsm-card">
                                     <div class="nsm-card-content text-center">
