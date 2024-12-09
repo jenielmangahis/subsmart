@@ -183,6 +183,9 @@ class Invoice extends MY_Controller
             }
         }
 
+        $invoiceSettings = $this->invoice_settings_model->getByCompanyId($comp_id);
+
+        $this->page_data['invoiceSettings'] = $invoiceSettings;
         $this->page_data['unpaid_last_365'] = $receivable_payment - $total_amount_received;
         $this->page_data['unpaid_last_30'] = $receivable_last30_days - $total_amount_received_last30_days;
         $this->page_data['due_last_365'] = $total_overdue;
@@ -1956,6 +1959,8 @@ class Invoice extends MY_Controller
                     'accept_credit' => 0,
                     'mobile_payment' => post('payment_mobile_status') ? post('payment_mobile_status') : 0,
                     'invoice_template' => post('invoice_template') ? post('invoice_template') : 0,
+                    'late_fee_amount_per_day' => post('late_fee_amount_per_day') ? post('late_fee_amount_per_day') : 0,
+                    'num_days_activate_late_fee' => post('num_days_activate_late_fee') ? post('invoinum_days_activate_late_feece_template') : 0,
                 ]);
     
                 $this->activity_model->add('Created Invoice Settings ' . $user->id . ' Created by User:' . logged('name'), logged('id'));
@@ -1994,6 +1999,8 @@ class Invoice extends MY_Controller
                     'accept_credit' => 0,
                     'mobile_payment' => post('payment_mobile_status') ? post('payment_mobile_status') : 0,
                     'invoice_template' => post('invoice_template') ? post('invoice_template') : 0,
+                    'late_fee_amount_per_day' => post('late_fee_amount_per_day') ? post('late_fee_amount_per_day') : 0,
+                    'num_days_activate_late_fee' => post('num_days_activate_late_fee') ? post('invoinum_days_activate_late_feece_template') : 0,
                 ]);
     
                 $this->activity_model->add('Updated Invoice Settings ' . $user->id . ' Updated by User:' . logged('name'), logged('id'));
