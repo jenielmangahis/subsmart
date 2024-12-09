@@ -129,9 +129,10 @@ class Payment_terms extends MY_Controller {
 
             $this->page_data['search'] = $search;
         }
-
+        
         $this->page_data['terms'] = $terms;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page']->title = 'Payment Terms';
         $this->load->view('v2/pages/accounting/lists/payment_terms/list', $this->page_data);
     }
 
