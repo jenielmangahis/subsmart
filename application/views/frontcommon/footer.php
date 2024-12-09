@@ -86,6 +86,9 @@
 	<script type="text/javascript">
 	window.base_url = <?php echo json_encode(base_url()); ?>;
 	</script>
+
+	<!-- Sweetalert JS -->
+	<script src="<?php echo base_url('assets/js/v2/sweetalert2.min.js'); ?>"></script>
 <script>
 
 jQuery(document).ready(function() {

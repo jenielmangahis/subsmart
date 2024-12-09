@@ -469,6 +469,7 @@ class Widgets extends MY_Controller
         $this->load->library('wizardlib');
         $this->load->model('widgets_model');
         $this->load->model('General_model', 'general');
+        $this->load->model('Demo_model');
         $this->load->model('event_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('invoice_model');
@@ -559,6 +560,9 @@ class Widgets extends MY_Controller
                     $deposits += floatval($payment->invoice_amount);
                 }
                 $data['deposits'] = $deposits;
+
+                $demo_schedule_count = $this->Demo_model->getlist();
+                $data['demo_schedule_count'] = count($demo_schedule_count);
 
                 return $this->load->view("v2/" . $widget->w_view_link, $data);
             endif;

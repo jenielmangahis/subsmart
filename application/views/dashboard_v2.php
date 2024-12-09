@@ -411,7 +411,7 @@
                             
                                 $this->load->view('v2/' . $wids->w_view_link, $data);
                             } else {
-                                if ($wids->w_name === 'nSmart Sales') {
+                                if ($wids->w_name === 'nSmart Sales' || $wids->w_name === 'Demo Schedules' ) {
                                     break; 
                                 }
                     

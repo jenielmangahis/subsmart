@@ -15,7 +15,7 @@
                     </div>
                     <div class="container-fluid mt-5">
                         <div class="row justify-content-center">
-                            <div class="col-lg-12">
+                            <div class="col-lg-12 mb-3">
                                 <ul class="nav nav-pills nav-fill" id="myTab" role="tablist">
                                     <li class="nav-item">
                                         <a class="nav-link active" id="tab1-tab" data-toggle="tab" href="#tab1"
