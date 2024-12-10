@@ -21,7 +21,7 @@
     <?php foreach($schedules_12hr as $index => $schedule_12hr): ?>
       <li>
         <button type="button" 
-           class="btn btn-info btn-time-schedule" 
+           class="btn btn-info btn-time-schedule nsmart-button primary" 
            data-key="<?php echo $schedules_24hr[$index]; ?>" data-date="<?php echo $schedule_12hr; ?>" id="demo_time_schedule">
           <?php echo $schedule_12hr; ?>
         </button>

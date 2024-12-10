@@ -77,6 +77,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   width: 32px;
   height: 32px;
 }
+
+.nsmart-button.primary{
+  background-color: #6a4a86 !important;
+  color: #fff !important;
+  border-color: unset !important;
+}
+
+.nsmart-button.default{
+    color: #fff;
+    background-color: #808080;
+}
+
+.swal2-styled.swal2-confirm{
+  background-color: #7367f0 !important;
+  color: #fff !important;
+}
 </style>
 <section id="main" class="main-content-div">
       <section class="ccontainer cust-hero-container">
@@ -129,7 +145,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-md-6 form-group">
                                 <input type="email" class="form-control" name="email" id="email" placeholder="Email *" required />
-                                <a class="btn btn-info btn-add-guests pt-2 pb-2" href="javascript:void(0);">Add Guests</a>
+                                <a class="btn btn-info btn-add-guests pt-2 pb-2 nsmart-button primary" href="javascript:void(0);">Add Guests</a>
                             </div>
                             <div class="col-md-6 form-group hidden grp-guest-emails time-grp">
                                 <textarea class="form-control mtc-13" name="guest_emails" id="guest_emails" placeholder="Guest Email(s)"></textarea>
@@ -144,8 +160,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <textarea class="form-control vr-cs" name="key_features" id="key_features" placeholder="Please let us know the key features you are interested to know. *" required></textarea>
                                 </div>
                                 <div class="col-sm-12 mt-3 calendar-btn align-center">
-                                    <button type="submit" class="btn btn-flat btn-primary">Schedule Event</button>
-                                    <a href="javascript:void(0);" class="btn btn-info btn-change-schedule">Change Schedule</a>
+                                    <button type="submit" class="btn btn-flat btn-primary nsmart-button primary">Schedule Event</button>
+                                    <a href="javascript:void(0);" class="btn nsmart-button default btn-change-schedule">Change Schedule</a>
                                 </div>
                             </div>
                         </form>
@@ -182,8 +198,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         // alert('Event scheduled successfully!');
                         Swal.fire({
                           icon: 'success',
-                          title: 'Success!',
-                          text:'Demo scheduled successfully!'
+                          title:'We will contact you soonest. Thank you.'
                         }).then((item)=> {
                           $('#event-form')[0].reset(); 
                           // window.location.href='<?= base_url('demo/list') ?>'
@@ -280,9 +295,6 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
               const date = new Date(o.data.date);
               const options = { weekday: 'long', month: 'short', day: '2-digit' }; 
               const formattedDate = date.toLocaleDateString('en-US', options);
-
-              console.log('formattedDate',formattedDate)
-              console.log('o',o)
 
               $("#schedule-date").html(formattedDate);
 

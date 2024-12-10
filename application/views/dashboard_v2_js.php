@@ -171,7 +171,9 @@ $(document).ready(function() {
             companies,
             recentCustomers
         } = response;
-        $("#").html(recentCustomers.length);
+
+        $(".recent-customer-container-count").html(recentCustomers.length);
+        $("#total_customer_graph").html(recentCustomers.length);
 
     }).catch((error) => {
         console.log('Error:', error);
