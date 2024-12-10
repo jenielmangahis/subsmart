@@ -1963,3 +1963,6 @@ $route['customers/_create_accounting_terms'] = 'Customer/ajax_create_accounting_
 $route['customers/_create_rate_plan'] = 'Customer/ajax_create_rate_plan';
 $route['customers/_create_system_package_type'] = 'Customer/ajax_create_system_package_type';
 $route['customers/_create_activation_fee'] = 'Customer/ajax_create_activation_fee';
+
+//Benchmark for Testing
+$route['benchmark/cron_customer_subscription'] = 'Benchmark/cron_customer_subscription';

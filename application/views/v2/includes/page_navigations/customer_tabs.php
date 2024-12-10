@@ -13,7 +13,7 @@
 </style>
 <div class="nsm-page-nav">
     <ul>
-        <li class="<?php if($page->title == 'Customers' || $page->title == 'Subscription Payment'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Customers' || $page->title == 'Subscription Payment' || $page->title == 'New Subscription Plan'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('customer') ?>">
                 <i class='bx bx-fw bx-user'></i>
                 <span>My Customers</span>

@@ -1412,4 +1412,18 @@ class Customer_advance_model extends MY_Model
 
         return $options;
     }
+
+    public function get_all_active_subscriptions()
+    {   
+        $date = date("Y-m-d");
+        $this->db->select('acs_profile.*,acs_billing.*');
+        $this->db->from('acs_billing');
+        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_billing.bill_start_date <=', $date);
+        $this->db->where('acs_billing.bill_end_date >=', $date);
+        // $this->db->limit(20);
+        $query = $this->db->get();
+
+        return $query->result();
+    }    
 }

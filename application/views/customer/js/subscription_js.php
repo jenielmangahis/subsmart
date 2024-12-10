@@ -121,7 +121,8 @@
     });
 
     $('.payment_method').on( 'change', function () {
-        var method = this.value;
+        var method = this.value;;
+
         $('#method').val(method);
         remove_required();
 

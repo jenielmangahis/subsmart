@@ -53,8 +53,8 @@ add_css(array(
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                                 Make it easy for your customers by offering additional ways to pay.  The payments landscape is ever-changing.
-                                 Simply select the payment method and hit the button to save the new subscription plan.
+                                Make it easy for your customers by offering additional ways to pay.  The payments landscape is ever-changing.
+                                Simply select the payment method and hit the button to save the new subscription plan.
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -92,13 +92,16 @@ add_css(array(
                                     <span>Others</span>
                                 </div>
                                 <br>
-                                <div class="row pl-0 pr-0 subs-payment-form-container" id="subs-payment-form-container">
-                                    <div class="col-md-6 container-left" id="container-left">
-                                        <form id="subs_payment_cust_info_update_form" class="subs_payment_cust_info_update_form" method="post">
-                                            <input type="hidden" name="prof_id" id="prof_id" value="<?php echo isset($profile_info->prof_id) ? $profile_info->prof_id : 0; ?>" />
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Customer Information</h6>
+                                <div class="row g-3 subs-payment-form-container" id="subs-payment-form-container">
+                                    <div class="col-md-7 container-left" id="container-left">
+                                        <div class="nsm-card primary"> 
+                                            <form id="subs_payment_cust_info_update_form" class="subs_payment_cust_info_update_form" method="post">
+                                                <input type="hidden" name="prof_id" id="prof_id" value="<?php echo isset($profile_info->prof_id) ? $profile_info->prof_id : 0; ?>" />
+                                             
+                                                <div class="nsm-card-header">
+                                                    <div class="nsm-card-title">
+                                                        <span class="custom-ticket-header"><i class='bx bx-user'></i> Customer Information</span>
+                                                    </div>                                                        
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="row form_line">
@@ -133,7 +136,7 @@ add_css(array(
                                                             <input type="text" readonly class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" />
                                                         </div>
 
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-2" style="text-align: right;">
                                                             <label for="">State </label>
                                                         </div>
                                                         <div class="col-md-4">
@@ -152,7 +155,7 @@ add_css(array(
                                                         <div class="col-md-2">
                                                             <label for="">Email </label>
                                                         </div>
-                                                        <div class="col-md-10">
+                                                        <div class="col-md-4">
                                                             <input type="email" readonly class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
                                                         </div>
                                                     </div>
@@ -160,7 +163,7 @@ add_css(array(
                                                         <div class="col-md-2">
                                                             <label for="">Phone </label>
                                                         </div>
-                                                        <div class="col-md-10">
+                                                        <div class="col-md-4">
                                                             <!-- <input type="text" readonly class="form-control" name="phone" id="phone" value="<?php //if(isset($profile_info)){ echo $profile_info->phone_m; } ?>" /> -->
                                                             <input type="text" readonly class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone" id="phone" value="<?php if(isset($profile_info)){ echo $profile_info->phone_h; } ?>" />
                                                         </div>
@@ -175,14 +178,17 @@ add_css(array(
                                                         </div>
                                                     </div>                                                
                                                 </div>
-                                            </div>
-                                        </form>
+                                               
+                                            </form>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6 container-right" id="container-right">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h6 ><span class="fa fa-money"></span>&nbsp; &nbsp;Payment Information</h6>
-                                            </div>
+                                    <div class="col-md-5 nsm-card-content container-right" id="container-right">
+                                        <div class="nsm-card primary"> 
+                                            <div class="nsm-card-header">
+                                                <div class="nsm-card-title">
+                                                    <span class="custom-ticket-header"><i class='bx bx-credit-card' ></i>Payment Information</span>
+                                                </div>
+                                            </div>                                            
                                             <div class="card-body">
                                                 <form id="pay_billing" method="post">
                                                     <div class="row form_line">
@@ -414,7 +420,7 @@ add_css(array(
                                                         </div>
                                                     </div>
                                                     <div class="row form_line">
-                                                      <div class="col-md-4">
+                                                    <div class="col-md-4">
                                                             <label for="">&nbsp;</label>
                                                         </div>
                                                         <div class="col-md-8">
@@ -424,6 +430,7 @@ add_css(array(
                                                             <input type="hidden" name="method" id="method" value="CC"/>                                                            
                                                         </div>                                                        
                                                     </div>
+                                                    <div id="paypal-button-container" style="display: none;"></div>
                                                     <!-- <div style="position: absolute; margin: 0;right: 40px;display: block;" >
                                                         <button type="button" class="btn btn-primary"><span class="fa fa-times"></span> Cancel</button>
                                                         <button type="submit" class="btn btn-primary"><span class="fa fa-paper-plane-o"></span> Save Subcription</button>
@@ -432,7 +439,9 @@ add_css(array(
                                                     </div> -->
                                                 </form>
                                             </div>
+                                            
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -457,6 +466,14 @@ add_css(array(
         'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
     ));
     ?>
+
+<script>
+
+$(function(){
+
+});
+
+</script>
 
 <!-- <script type="text/javascript">
     $(document).ready(function() {
