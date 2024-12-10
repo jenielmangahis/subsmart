@@ -1421,6 +1421,7 @@ class Customer_advance_model extends MY_Model
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_billing.bill_start_date <=', $date);
         $this->db->where('acs_billing.bill_end_date >=', $date);
+        $this->db->where('acs_billing.next_billing_date =', $date);
         //$this->db->limit(21);
         $query = $this->db->get();
 

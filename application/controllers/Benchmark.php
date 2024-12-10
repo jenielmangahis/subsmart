@@ -23,10 +23,11 @@ class Benchmark extends MY_Controller {
 		$success_count = 0;
 
         $activeSubscriptions = $this->customer_ad_model->get_all_active_subscriptions();	
-		foreach( $activeSubscriptions as $as ) {
 
+		foreach( $activeSubscriptions as $as ) {
             $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);
             if( $as->mmr > 0 && $customer ){
+
                 $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($customer->company_id);
 
                 if( $invoiceSettings ){            
@@ -43,20 +44,23 @@ class Benchmark extends MY_Controller {
                 }
 
 				/**
-				 * Note: before creating invoice, please check if invoice for the month is already exist
+				 * Note: before creating invoice, check customer subscription billing if already exist
+				 *   - table 'acs_customer_subscription_billing'
+				 *   - recurring_date
+				 *   - billing_id
 				 *   - customer_id
-				 *   - invoice_type = 'Total Due'
-				 *   - total_due
-				 *   - check for month
 				 */
 
-				$filter['customer_id']  = $customer->prof_id;
-				$filter['invoice_type'] = 'Total Due';
-				$filter['total_due']    = $as->mmr;
+				$recurring_date            = $as->next_billing_date;
+				$filter['recurring_date']  = $as->next_billing_date;
+				$filter['billing_id']      = $as->bill_id;
+				$filter['customer_id']     = $customer->prof_id;
+				$filter['company_id']      = $customer->company_id;
 
-				$isInvoiceDuplicate = $this->Invoice_model->getInvoiceByFilter($filter);
+				//$isInvoiceDuplicate = $this->Invoice_model->getInvoiceByFilter($filter);
+				$isCustomerSubscriptionBillingDuplicate = $this->AcsCustomerSubscriptionBilling_model->getCustomerSubscriptionBillingByFilter($filter);	
 
-				if(!$isInvoiceDuplicate) {
+				if(!$isCustomerSubscriptionBillingDuplicate) {
 					/**
 					 *  Note: no records founds, proceed to add invoice
 					 */
@@ -79,8 +83,8 @@ class Benchmark extends MY_Controller {
 						'invoice_type' => 'Total Due',
 						'work_order_number' => '',
 						'invoice_number' => $invoice_number,
-						'date_issued' => date("Y-m-d"),
-						'due_date' => date("Y-m-d"),
+						'date_issued' => $as->next_billing_date,
+						'due_date' => $as->next_billing_date,
 						'status' => 'Unpaid',
 						'customer_email' => $customer->email,
 						'total_due' => $as->mmr,
@@ -144,7 +148,6 @@ class Benchmark extends MY_Controller {
 							'residential_message' => 'Thank you for your business.',
 							'residential_terms_and_conditions' => 'Thank you for your business.'
 						];
-
 						$this->Invoice_settings_model->create($invoice_settings_data);
 					}		
 					
@@ -153,23 +156,36 @@ class Benchmark extends MY_Controller {
 						'customer_id' 	 => $customer->prof_id,
 						'billing_id'  	 => $as->bill_id,
 						'invoice_id'  	 => $invoice_id,
-						'recurring_date' => date("Y-m-d"),
+						'recurring_date' => $recurring_date ? $recurring_date : date("Y-m-d"),
 						'amount'         => $as->mmr,
 						'date_created'   => date("Y-m-d H:i:s")
 					];
 	
-					$this->AcsCustomerSubscriptionBilling_model->create($data_subscription_billing);					
+					$this->AcsCustomerSubscriptionBilling_model->create($data_subscription_billing);	
+					
+					/**
+					 * Note: after adding subscription billing, update the 'acs_billing' next subscription date
+					 */
+					$current_bill_date = strtotime($as->next_billing_date);
+					$next_month_bill_date = date("Y-m-d", strtotime("+1 month", $current_bill_date));			
+					$data = [
+						'bill_id' => $as->bill_id,
+						'next_billing_date' => $next_month_bill_date,
+					];
+					$this->customer_ad_model->update_data($data, 'acs_billing', 'bill_id');					
 
 					$success_count++;
 				} else {
 					/**
 					 * Note: already exist & will not add invoice
 					 */
-					echo 'Invoice already exist';
 					$error_count++;
 				}
 			}
 		}
+
+		echo 'Success count: ' . $success_count . '<br />';
+		echo 'Fail count: ' . $error_count . '<br />';
 	}
 
 }

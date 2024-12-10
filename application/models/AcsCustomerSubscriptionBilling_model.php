@@ -51,6 +51,31 @@ class AcsCustomerSubscriptionBilling_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getCustomerSubscriptionBillingByFilter($filter = [])
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        if($filter['recurring_date']) {
+            $this->db->where('recurring_date', $filter['recurring_date']);
+        }
+
+        if($filter['billing_id']) {
+            $this->db->where('billing_id', $filter['billing_id']);
+        }
+
+        if($filter['customer_id']) {
+            $this->db->where('customer_id', $filter['customer_id']);
+        }
+
+        if($filter['company_id']) {
+            $this->db->where('company_id', $filter['company_id']);
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }    
 }
 
 /* End of file AcsCustomerSubscriptionBilling_model.php */
