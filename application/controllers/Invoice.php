@@ -2071,6 +2071,7 @@ class Invoice extends MY_Controller
         $msg = '';
 
         $post     = $this->input->post();
+        $cid      = logged('company_id');
         $invoice  = get_invoice_by_id($post['invoice_id']);
         $customer = $this->AcsProfile_model->getByProfId($invoice->customer_id);
         if( !$customer ){
@@ -2084,8 +2085,28 @@ class Invoice extends MY_Controller
         }
         
         if( $is_success == 1 ){
-            //Record late fee
-            $grand_total = $invoice->grand_total + $post['late_fee'];
+            $datetime1 = new DateTime($invoice->due_date);
+            $datetime2 = new DateTime();
+            $difference = $datetime1->diff($datetime2);
+            $days_diff  = $difference->d > 0 ? $difference->d : 0;            
+
+            //Compute late fee
+            $invoiceSettings = $this->invoice_settings_model->getByCompanyId($cid);
+            $late_fee_amount = $invoiceSettings && $invoiceSettings->late_fee_amount_per_day > 0 ? $invoiceSettings->late_fee_amount_per_day : 0;
+            $total_late_fee  = $late_fee_amount * $days_diff;
+
+            $payment_fee = 0;
+            if( $invoiceSettings ){
+                if( $invoiceSettings->payment_fee_percentage > 0 ){
+                    $payment_fee = $invoice->grand_total * ($invoiceSettings->payment_fee_percentage/100);
+                }else{
+                    $payment_fee = $invoiceSettings->payment_fee_amount;
+                }
+            }
+
+            $total_late_fee = $total_late_fee + $payment_fee;
+
+            $grand_total     = $invoice->grand_total + $total_late_fee;
             $data = ['late_fee' => $post['late_fee'], 'grand_total' => $grand_total];
             $this->invoice_model->update($invoice->id, $data);
 

@@ -2910,6 +2910,39 @@ class Debug extends MYF_Controller {
 
         echo 'Total Created : ' . $total;
     }
+
+    public function fixAcsBillingNextBillingDate()
+    {
+        $this->load->model('AcsBilling_model');
+
+        $total_updated = 0;
+        $limit = 1000;
+        $billing = $this->AcsBilling_model->getAllNotChecked($limit);
+        foreach( $billing as $b ){
+            $next_subscription_billing_date = NULL;            
+            if( $b->next_subscription_billing_date != '' ){
+                $next_subscription_billing_date = date("Y-m-d",strtotime($b->next_subscription_billing_date));
+            }
+
+            $next_billing_date = NULL;            
+            if( $b->next_billing_date != '' ){
+                $next_billing_date = date("Y-m-d",strtotime($b->next_billing_date));
+            }
+
+            $data = [
+                'is_checked' => 1,
+                'next_billing_date' => $next_billing_date,
+                'next_subscription_billing_date' => $next_subscription_billing_date
+            ];
+
+            $this->AcsBilling_model->updateRecord($b->bill_id, $data);
+
+            $total_updated++;
+
+        } 
+
+        echo 'Total updated : ' . $total_updated;
+    }
 }
 /* End of file Debug.php */
 
