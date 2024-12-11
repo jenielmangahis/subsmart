@@ -411,54 +411,14 @@
                             
                                 $this->load->view('v2/' . $wids->w_view_link, $data);
                             } else {
-                                if ($wids->w_name === 'nSmart Sales' || $wids->w_name === 'Demo Schedules' ) {
-                                    break; 
+                                if ($wids->w_name !== 'nSmart Sales' || $wids->w_name !== 'Demo Schedules' || $wids->w_name !== 'Coupon Codes' || $wids->w_name !== 'nSmart Companies' ) {
+                                    $this->load->view('v2/' . $wids->w_view_link, $data);
                                 }
-                    
-                                $this->load->view('v2/' . $wids->w_view_link, $data);
                             }
                         }
                     }
                 ?> 
             </div>
-        </div>
-
-        <div class="row  g-3 grid-row-mb nsm-draggable-container-sortable-main" id="nsm_widgets">
-         
-
-            <?php
-                usort($widgets, function ($a, $b) {
-                    if ($a->w_sort == 1 && $b->w_sort != 1) {
-                        return -1;
-                    }
-                    if ($a->w_sort != 1 && $b->w_sort == 1) {
-                        return 1;
-                    }
-                    return strcmp($a->w_name, $b->w_name);
-                });
-
-                foreach ($widgets as $wids) {
-                    if ($wids->w_main) {
-                        $data['class'] = 'nsm-card nsm-grid2 main-widget-container';
-                        $data['isMain'] = false;
-                        $data['id'] = $wids->w_id;
-                        $data['isListView'] = $wids->w_list_view;
-                        $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
-
-                        if ($wids->w_name === 'Expense') {
-                            $data = set_expense_graph_data($data);
-                        }
-
-                        if ($wids->w_name === 'Bank') {
-                            $data = set_bank_widget_data($data);
-                        }
-                        // if($wids->w_view_link != 'widgets/lead_source'){
-                        //     $this->load->view("v2/" . $wids->w_view_link, $data);
-                        // }
-                        $this->load->view('v2/'.$wids->w_view_link, $data);
-                    }
-                }
-?> </div>
         </div>
 
         <div class="row  g-3 grid-row-mb nsm-draggable-container-sortable-main" id="nsm_widgets">
