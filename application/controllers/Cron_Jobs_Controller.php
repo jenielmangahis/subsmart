@@ -3066,7 +3066,7 @@ class Cron_Jobs_Controller extends CI_Controller
 
 		//echo 'Success count: ' . $success_count . '<br />';
 		//echo 'Fail count: ' . $error_count . '<br />';
-	}    
+	}     
 
     public function cron_cashflow_planned()
     {
