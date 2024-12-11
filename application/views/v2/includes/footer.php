@@ -616,6 +616,14 @@ function fetchCount(thumbnail) {
             var filter    = '';
             loadDataFilter(from_date, to_date, table, id,filter);
             break        
+        case 'widgets/nsmart_companies_counter':
+            var from_date = '0000-00-00  00:00:00';
+            var to_date   = '2024-12-11';
+            var table     = 'nsmart_companies';
+            var id        = 53;
+            var filter    = '';
+            loadDataFilter(from_date, to_date, table, id,filter);
+            break        
         default:
             return;
     }
@@ -1040,8 +1048,12 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
             }
 
             if (table == 'coupon_codes') {
-                $(`#first_content_${id}`).html("$ " + data['first']);
-                $(`#second_content_${id}`).html("$ " + data['second']);
+                $(`#first_content_${id}`).html(data['first']);
+                $(`#second_content_${id}`).html(data['second']);
+            }
+
+            if (table == 'nsmart_companies') {
+                $(`#first_content_${id}`).html(data['first']);
             }
         }
     });
