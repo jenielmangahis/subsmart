@@ -144,7 +144,7 @@
                                         <div class="nsm-card-title">
                                             <span>Activate Late Fee</span>
                                         </div>
-                                        <label class="nsm-subtitle">Grace period before activating late fee charges</label>
+                                        <label class="nsm-subtitle">Number of business days before activating late fee charges</label>
                                     </div>
                                     <div class="nsm-card-content">
                                         <div class="row g-2">
