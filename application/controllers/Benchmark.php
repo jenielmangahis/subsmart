@@ -188,5 +188,20 @@ class Benchmark extends MY_Controller {
 		echo 'Fail count: ' . $error_count . '<br />';
 	}
 
+	public function fetch_query_test() {
+		echo 'QUERY TEST <hr />';
+
+		$this->load->model('AcsCustomerSubscriptionBilling_model');
+		$this->load->model('Customer_advance_model', 'customer_ad_model');
+
+		$results = $this->AcsCustomerSubscriptionBilling_model->getPaymentSubscriptionHistory();	 
+
+		echo '<pre>';
+		print_r($results);
+		echo '</pre>';
+
+
+	}
+
 }
 ?>
