@@ -1,4 +1,4 @@
-          </div>
+</div>
           <br><br>
           <div class="nsm-footer">
               <div class="row">
@@ -606,6 +606,21 @@ function fetchGraphs(thumbnail) {
     }
 }
 
+function fetchCount(thumbnail) {
+    switch (thumbnail) {
+        case 'widgets/coupon_code_counter':
+            var from_date = '0000-00-00  00:00:00';
+            var to_date   = '2024-12-11';
+            var table     = 'coupon_codes';
+            var id        = 52;
+            var filter    = '';
+            loadDataFilter(from_date, to_date, table, id,filter);
+            break        
+        default:
+            return;
+    }
+}
+
 function updateListView(id, val) {
     $.ajax({
         url: base_url + 'dashboard/updateListView',
@@ -684,7 +699,7 @@ function filterSubscriptionStatus(status) {
             mmr
         } = response;
 
-        console.log('mmr.length',mmr.length)
+        //console.log('mmr.length',mmr.length)
 
         if (mmr) {
             for (var x = 0; x < mmr.length; x++) {
@@ -1024,14 +1039,16 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
                 filterIncomeThumbnailGraph(data['income'])
             }
 
-
-
+            if (table == 'coupon_codes') {
+                $(`#first_content_${id}`).html("$ " + data['first']);
+                $(`#second_content_${id}`).html("$ " + data['second']);
+            }
         }
     });
 }
 
 function filterEsignThumbnailGraph(esign) {
-    console.log('goes here')
+    //console.log('goes here')
     var $output = '';
     if (esign.length > 0) {
         $.each(esign, function(index, data) {
@@ -1295,10 +1312,20 @@ function filterLeadsThumbnailGraph(leads) {
 }
 
 function filterSalesThumbnailGraph(sales) {
-    var amountsByMonth = new Array(12).fill(0);
+    var currentDate    = new Date();
+    var month_index    = currentDate.getMonth() + 1;
+    var amountsByMonth = new Array(month_index).fill(0);
 
     for (var x = 0; x < sales.length; x++) {
-        var dueDate = sales[x].due_date;
+        var dateA = new Date(sales[x].due_date);
+        if( dateA.getFullYear() < currentDate.getFullYear() ){    
+            var dueDate = '2024-01-01';
+        }else if( dateA > currentDate ){        
+            var dueDate = moment(currentDate).format('YYYY-MM-DD');
+        }else{
+            var dueDate = sales[x].due_date;
+        }
+        
         if (dueDate) {
             var due = new Date(dueDate);
             var month = due.getMonth();
@@ -1525,8 +1552,7 @@ function filterEstimateThumbnailGraph(first, second) {
 function manipulateThumbnail(dis, id, link) {
     var count = $('#check_count_thumbnails').val();
 
-    if ($(dis).is(":checked")) {
-        console.log('count', count)
+    if ($(dis).is(":checked")) {        
         count++;
 
         if (count < 8) {
@@ -1649,7 +1675,7 @@ function fetchJobs() {
 
             }
         }
-        console.log('goes here ', previousJob + prevJob + curJob)
+        //console.log('goes here ', previousJob + prevJob + curJob)
         $('#jobs_count_thumbnail').html(previousJob + prevJob + curJob);
 
     });
@@ -1689,6 +1715,7 @@ function addThumbnail(id, link) {
 
             setTimeout(function() {
                 fetchGraphs(link);
+                fetchCount(link);
             }, 1000);
         }
     });
