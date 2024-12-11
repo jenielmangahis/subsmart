@@ -246,6 +246,9 @@ class Dashboard extends Widgets
         $this->page_data['used_offer_codes'] = $used_offer_codes;
         $this->page_data['not_used_offer_codes'] = $not_used_offer_codes;
 
+        $clients = $this->widgets_model->getClients();
+        $this->page_data['nsmart_total_clients'] = count($clients);
+
         // $this->page_data['leadSources']=$this->event_model->getLeadSourceWithCount(); // fetch Lead Sources
 
         $latestJobs = $this->event_model->getLatestJobs();
@@ -868,13 +871,13 @@ class Dashboard extends Widgets
                 }
                 $this->output->set_output(json_encode(['first' => count($nsmart_sales), 'second' => number_format($nsmart_sales_total, 2, ".", ","),  'nsmart_sales' => $nsmart_sales]));
                 break;
-            case 'coupon_codes':
-                $company_id = logged('company_id');
-                $this->db->from('offer_codes');
+            case 'coupon_codes':                
                 $this->db->select('*');
-                $this->db->where('date_modified >=',date('Y-m-d', strtotime($date_from)));
-                $this->db->where('date_modified <=',date('Y-m-d', strtotime($date_to)));
-                $this->db->where('date_modified <=',date('Y-m-d', strtotime($date_to)));
+                $this->db->from('offer_codes');
+                if( $date_from != '0000-00-00  00:00:00' ){
+                    $this->db->where('date_modified >=',date('Y-m-d', strtotime($date_from)));
+                    $this->db->where('date_modified <=',date('Y-m-d', strtotime($date_to)));
+                }
                 $query = $this->db->get();
                 $coupons = $query->result();
 
@@ -890,24 +893,36 @@ class Dashboard extends Widgets
 
                 $this->output->set_output(json_encode(['first' => $total_used, 'second' => $total_available]));
                 break;
-                case 'nsmart_sales':
-                    $this->db->from('clients');
+            case 'nsmart_companies':                    
                     $this->db->select('*');
-                    $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'left');
-                    if(  $date_to !== '0000-00-00 23:59:59'){
-                        $this->db->where('clients.plan_date_registered >=',date('Y-m-d', strtotime($date_from)));
-                        $this->db->where('clients.plan_date_registered <=',date('Y-m-d', strtotime($date_to)));
+                    $this->db->from('clients');
+                    if( $date_from != '0000-00-00  00:00:00' ){
+                        $this->db->where('plan_date_registered >=',date('Y-m-d', strtotime($date_from)));
+                        $this->db->where('plan_date_registered <=',date('Y-m-d', strtotime($date_to)));
                     }
                     $query = $this->db->get();
+                    $clients = $query->result();
     
-                    $nsmart_sales = $query->result();
-    
-                    $nsmart_sales_total = 0;
-                    foreach ($nsmart_sales as $total) {
-                        $nsmart_sales_total += $total->price - $total->discount;
-                    }
-                    $this->output->set_output(json_encode(['first' => count($nsmart_sales), 'second' => number_format($nsmart_sales_total, 2, ".", ","),  'nsmart_sales' => $nsmart_sales]));
+                    $this->output->set_output(json_encode(['first' => count($clients)]));
                     break;
+            case 'nsmart_sales':
+                $this->db->from('clients');
+                $this->db->select('*');
+                $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'left');
+                if(  $date_to !== '0000-00-00 23:59:59'){
+                    $this->db->where('clients.plan_date_registered >=',date('Y-m-d', strtotime($date_from)));
+                    $this->db->where('clients.plan_date_registered <=',date('Y-m-d', strtotime($date_to)));
+                }
+                $query = $this->db->get();
+
+                $nsmart_sales = $query->result();
+
+                $nsmart_sales_total = 0;
+                foreach ($nsmart_sales as $total) {
+                    $nsmart_sales_total += $total->price - $total->discount;
+                }
+                $this->output->set_output(json_encode(['first' => count($nsmart_sales), 'second' => number_format($nsmart_sales_total, 2, ".", ","),  'nsmart_sales' => $nsmart_sales]));
+                break;
             case 'open_invoices':
                 $company_id = logged('company_id');
                 $this->db->select('*');
@@ -1913,6 +1928,23 @@ class Dashboard extends Widgets
     public function getLeadSource()
     {
         // $this->page_data['leadSources']=$this->event_model->getLeadSourceWithCount(); // fetch Lead Sources
+    }
+
+    public function ajax_coupon_codes($type)
+    {
+        $this->load->model('OfferCodes_model');
+
+        $is_used = 0;
+        if( $type == 'used' ){  
+            $coupon_codes = $this->OfferCodes_model->getAllUsed();
+            $is_used = 1;
+        }else{
+            $coupon_codes = $this->OfferCodes_model->getAllNotUsed();
+        }
+
+        $this->page_data['coupon_codes'] = $coupon_codes;
+        $this->page_data['is_used']      = $is_used;
+        $this->load->view('v2/pages/offer_codes/ajax_coupon_codes', $this->page_data);
     }
 }
 
