@@ -252,7 +252,7 @@
                                                     <a class="dropdown-item" href="<?php echo base_url('invoice/send/' . $invoice->id) ?>">Send Invoice</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" id="resend-invoice-late-fee" href="javascript:void(0);" data-id="<?= $invoice->id; ?>">Resend Invoice with Late Fee</a>
+                                                    <a class="dropdown-item" id="resend-invoice-late-fee" href="javascript:void(0);" data-number="<?= $invoice->invoice_number; ?>" data-id="<?= $invoice->id; ?>">Resend Invoice with Late Fee</a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>">Edit</a>
@@ -276,7 +276,7 @@
                                                     <a class="dropdown-item" href="<?= base_url('job/invoice_job/'. $invoice->id); ?>">Convert to Job</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>">Delete</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -394,17 +394,60 @@
         });
 
         $(document).on('click touchstart', '#resend-invoice-late-fee', function(){
-            var invoice_id = $(this).attr('data-id');    
-            $('#invoice-id').val(invoice_id);
-            $('#modal-resend-invoice-late-fee').modal('show');
+            var invoice_id = $(this).attr('data-id');   
+            var invoice_number  = $(this).attr('data-number');
+            var late_fee_amount = "<?= $invoiceSettings ? $invoiceSettings->late_fee_amount_per_day : 0; ?>"
+            Swal.fire({
+                title: 'Resend Invoice',
+                html: `Are you sure you want to resend invoice number <b>${invoice_number}</b>? This will add late fee amount of $${late_fee_amount} per day.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + "invoice/_send_invoice_email_with_late_fee",
+                        data: {
+                            invoice_id: invoice_id
+                        },
+                        dataType:"json",
+                        success: function(result) {
+                            if( result.is_success == 1 ){
+                                Swal.fire({
+                                    title: 'Resend Invoice',
+                                    text: "Invoice was successfully sent to customer",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        
+                                    }
+                                });
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    html: result.msg
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+            // $('#invoice-id').val(invoice_id);
+            // $('#modal-resend-invoice-late-fee').modal('show');
         });
 
         $(document).on("click", ".delete-item", function(){
             let id = $(this).attr('data-id');
+            let invoice_number = $(this).attr('data-number');
 
             Swal.fire({
                 title: 'Delete Invoice',
-                text: "Are you sure you want to delete this Invoice?",
+                html: `Are you sure you want to delete invoice number <b>${invoice_number}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -419,8 +462,8 @@
                         },
                         success: function(result) {
                             Swal.fire({
-                                title: 'Good job!',
-                                text: "Data Deleted Successfully!",
+                                title: 'Delete Invoice',
+                                text: "Data deleted successfully",
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
