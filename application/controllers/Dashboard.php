@@ -152,6 +152,7 @@ class Dashboard extends Widgets
         $this->load->model('Invoice_model');
         $this->load->model('expenses_model');
         $this->load->model('Customer_advance_model');
+        $this->load->model('OfferCodes_model');
 
         add_css([
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
@@ -240,6 +241,10 @@ class Dashboard extends Widgets
         $demo_schedule_count = $this->Demo_model->getlist();
         $this->page_data['demo_schedule_count'] = count($demo_schedule_count);
 
+        $used_offer_codes     = $this->OfferCodes_model->getAllUsed();
+        $not_used_offer_codes = $this->OfferCodes_model->getAllNotUsed();
+        $this->page_data['used_offer_codes'] = $used_offer_codes;
+        $this->page_data['not_used_offer_codes'] = $not_used_offer_codes;
 
         // $this->page_data['leadSources']=$this->event_model->getLeadSourceWithCount(); // fetch Lead Sources
 
@@ -863,17 +868,46 @@ class Dashboard extends Widgets
                 }
                 $this->output->set_output(json_encode(['first' => count($nsmart_sales), 'second' => number_format($nsmart_sales_total, 2, ".", ","),  'nsmart_sales' => $nsmart_sales]));
                 break;
-            case 'demo_schedule':
+            case 'coupon_codes':
                 $company_id = logged('company_id');
-                $this->db->from('demo_schedule');
+                $this->db->from('offer_codes');
                 $this->db->select('*');
-                $this->db->where('demo_date >=',date('Y-m-d', strtotime($date_from)));
-                $this->db->where('demo_date <=',date('Y-m-d', strtotime($date_to)));
+                $this->db->where('date_modified >=',date('Y-m-d', strtotime($date_from)));
+                $this->db->where('date_modified <=',date('Y-m-d', strtotime($date_to)));
+                $this->db->where('date_modified <=',date('Y-m-d', strtotime($date_to)));
                 $query = $this->db->get();
-                $demo_schedule = $query->result();
-             
-                $this->output->set_output(json_encode(['first' => count($demo_schedule), ]));
+                $coupons = $query->result();
+
+                $total_used = 0;
+                $total_available = 0;
+                foreach( $coupons as $c ){
+                    if( $c->client_id > 0 ){
+                        $total_used++;
+                    }else{
+                        $total_available++;
+                    }
+                }
+
+                $this->output->set_output(json_encode(['first' => $total_used, 'second' => $total_available]));
                 break;
+                case 'nsmart_sales':
+                    $this->db->from('clients');
+                    $this->db->select('*');
+                    $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'left');
+                    if(  $date_to !== '0000-00-00 23:59:59'){
+                        $this->db->where('clients.plan_date_registered >=',date('Y-m-d', strtotime($date_from)));
+                        $this->db->where('clients.plan_date_registered <=',date('Y-m-d', strtotime($date_to)));
+                    }
+                    $query = $this->db->get();
+    
+                    $nsmart_sales = $query->result();
+    
+                    $nsmart_sales_total = 0;
+                    foreach ($nsmart_sales as $total) {
+                        $nsmart_sales_total += $total->price - $total->discount;
+                    }
+                    $this->output->set_output(json_encode(['first' => count($nsmart_sales), 'second' => number_format($nsmart_sales_total, 2, ".", ","),  'nsmart_sales' => $nsmart_sales]));
+                    break;
             case 'open_invoices':
                 $company_id = logged('company_id');
                 $this->db->select('*');
