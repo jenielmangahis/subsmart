@@ -44,15 +44,14 @@ class Customer_model extends MY_Model
     public function getAllByCompany($company_id, $filter = array())
     {
 
-        $this->db->select('*');
+        $this->db->select("*");
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
 
         if (!empty($filter)) {
             if (isset($filter['q'])) {
                 $this->db->group_start();
-                    $this->db->or_like('first_name', $filter['q'], 'both');
-                    $this->db->or_like('last_name', $filter['q'], 'both');
+                    $this->db->or_like("CONCAT(first_name, ' ', last_name)", $filter['q'], 'both');                    
                     //$this->db->like('email', $filter['q'], 'both');
                 $this->db->group_end();
             }
