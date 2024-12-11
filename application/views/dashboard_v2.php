@@ -1579,9 +1579,7 @@ function nsmartSales() {
                 nsmart_sales
             } = response;
 
-            console.log('nsmart_sales',nsmart_sales)
-
-         
+            //console.log('nsmart_sales',nsmart_sales)         
 
             if (nsmart_sales) {
                 for (var x = 0; x < nsmart_sales.length; x++) {
