@@ -1960,7 +1960,7 @@ class Invoice extends MY_Controller
                     'mobile_payment' => post('payment_mobile_status') ? post('payment_mobile_status') : 0,
                     'invoice_template' => post('invoice_template') ? post('invoice_template') : 0,
                     'late_fee_amount_per_day' => post('late_fee_amount_per_day') ? post('late_fee_amount_per_day') : 0,
-                    'num_days_activate_late_fee' => post('num_days_activate_late_fee') ? post('invoinum_days_activate_late_feece_template') : 0,
+                    'num_days_activate_late_fee' => post('num_days_activate_late_fee') ? post('num_days_activate_late_fee') : 0,
                 ]);
     
                 $this->activity_model->add('Created Invoice Settings ' . $user->id . ' Created by User:' . logged('name'), logged('id'));
@@ -2000,7 +2000,7 @@ class Invoice extends MY_Controller
                     'mobile_payment' => post('payment_mobile_status') ? post('payment_mobile_status') : 0,
                     'invoice_template' => post('invoice_template') ? post('invoice_template') : 0,
                     'late_fee_amount_per_day' => post('late_fee_amount_per_day') ? post('late_fee_amount_per_day') : 0,
-                    'num_days_activate_late_fee' => post('num_days_activate_late_fee') ? post('invoinum_days_activate_late_feece_template') : 0,
+                    'num_days_activate_late_fee' => post('num_days_activate_late_fee') ? post('num_days_activate_late_fee') : 0,
                 ]);
     
                 $this->activity_model->add('Updated Invoice Settings ' . $user->id . ' Updated by User:' . logged('name'), logged('id'));
