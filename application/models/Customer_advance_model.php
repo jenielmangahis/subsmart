@@ -462,10 +462,9 @@ class Customer_advance_model extends MY_Model
           
             if ($param['search'] != '') {
                 $this->db->group_start();
-                $this->db->or_like('acs_profile.last_name', $param['search'], 'both');
-                $this->db->or_like('acs_profile.first_name', $param['search'], 'both');
+                $this->db->or_like("CONCAT(acs_profile.first_name, ' ', acs_profile.last_name)", $param['search'], 'both');                
                 // $this->db->or_like('acs_profile.email', $param['search'], 'both');
-                $this->db->or_like('acs_profile.business_name', $param['search'], 'both');
+                //$this->db->or_like('acs_profile.business_name', $param['search'], 'both');
                 $this->db->group_end();
             }
             $query = $this->db->get();
@@ -525,10 +524,9 @@ class Customer_advance_model extends MY_Model
 
         if ($param['search'] != '') {
             $this->db->group_start();
-            $this->db->or_like('acs_profile.last_name', $param['search'], 'both');
-            $this->db->or_like('acs_profile.first_name', $param['search'], 'both');
+            $this->db->or_like("CONCAT(acs_profile.first_name, ' ', acs_profile.last_name)", $param['search'], 'both');           
             // $this->db->or_like('acs_profile.email', $param['search'], 'both');
-            $this->db->or_like('acs_profile.business_name', $param['search'], 'both');
+            //$this->db->or_like('acs_profile.business_name', $param['search'], 'both');
             $this->db->group_end();
         }
     
@@ -1419,9 +1417,10 @@ class Customer_advance_model extends MY_Model
         $this->db->select('acs_profile.*,acs_billing.*');
         $this->db->from('acs_billing');
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
-        $this->db->where('acs_billing.bill_start_date <=', $date);
-        $this->db->where('acs_billing.bill_end_date >=', $date);
-        // $this->db->limit(20);
+        //$this->db->where('acs_billing.bill_start_date <=', $date);
+        //$this->db->where('acs_billing.bill_end_date >=', $date);
+        $this->db->where('acs_billing.next_billing_date =', $date);
+        //$this->db->limit(21);
         $query = $this->db->get();
 
         return $query->result();

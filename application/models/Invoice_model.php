@@ -307,7 +307,6 @@ class Invoice_model extends MY_Model
         return $query->row();
     }
 
-
     public function getCompanyPaidInvoices($cid, $date_range = array())
     {
         $this->db->select('invoices.*');        
@@ -567,10 +566,8 @@ class Invoice_model extends MY_Model
         return $query;
     }
 
-
     public function getCompanyOverDueInvoices($cid, $date_range = array())
     {
-
         $this->db->select('COUNT(*) AS total');        
         $this->db->from('invoices');   
         $this->db->where('invoices.status !=', "Paid");
@@ -1739,6 +1736,32 @@ class Invoice_model extends MY_Model
         $this->db->where('id', $id);      
         $this->db->update($this->table, array("view_flag" => 1, 'date_updated' => date("Y-m-d H:i:s")));        
     }
+
+    public function getInvoiceByFilter($filter = [])
+    {
+        if($filter['customer_id']) {
+            $this->db->where('customer_id', $filter['customer_id']);
+        }
+        if($filter['invoice_type']) {
+            $this->db->where('invoice_type', $filter['invoice_type']);
+        }
+        if($filter['total_due']) {
+            $this->db->where('total_due', $filter['total_due']);
+        }
+
+        $month = date('m');
+        $year  = date('Y');
+
+        $this->db->where('MONTH(due_date)',$month);
+        $this->db->where('YEAR(due_date)',$year);    
+        
+        if($filter['due_date']) {
+            $this->db->orWhere('due_date', $filter['due_date']);
+        }
+        
+        $query = $this->db->get('invoices');
+        return $query->row();
+    }    
 }
 
 /* End of file Invoice_model.php */

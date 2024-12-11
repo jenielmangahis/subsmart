@@ -2,7 +2,7 @@
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/invoce_tabs_v2'); ?>
     </div>
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/invoice_subtabs'); ?>
@@ -124,7 +124,7 @@
                                         <div class="nsm-card-title">
                                             <span>Late Fee</span>
                                         </div>
-                                        <label class="nsm-subtitle">Amount per day when invoice is overdue</label>
+                                        <label class="nsm-subtitle">Late fee amount per day when invoice is overdue</label>
                                     </div>
                                     <div class="nsm-card-content">
                                         <div class="row g-2">
@@ -144,7 +144,7 @@
                                         <div class="nsm-card-title">
                                             <span>Activate Late Fee</span>
                                         </div>
-                                        <label class="nsm-subtitle">Grace period before activating late fee charges</label>
+                                        <label class="nsm-subtitle">Number of business days before activating late fee charges</label>
                                     </div>
                                     <div class="nsm-card-content">
                                         <div class="row g-2">
