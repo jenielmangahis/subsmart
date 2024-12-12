@@ -95,6 +95,17 @@ class AcsCustomerSubscriptionBilling_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getByInvoiceId($invoice_id)
+    {
+        $this->db->select('acs_customer_subscription_billing.*, acs_billing.bill_start_date, acs_billing.bill_end_date');
+        $this->db->from($this->table);
+        $this->db->join('acs_billing', 'acs_customer_subscription_billing.billing_id = acs_billing.bill_id', 'left');
+        $this->db->where('acs_customer_subscription_billing.invoice_id', $invoice_id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
 
 /* End of file AcsCustomerSubscriptionBilling_model.php */
