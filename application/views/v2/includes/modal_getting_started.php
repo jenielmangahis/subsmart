@@ -95,7 +95,8 @@
             </td>
             <td>&nbsp;</td>
         </tr>
-        <tr>
+
+        <tr style="cursor: pointer;" onclick="location.href='<?php echo base_url('job/new_job1'); ?>'">
             <td style="width: 15%">
                 <div class="row">
                     <div class="col d-flex justify-content-center align-items-center">
@@ -142,8 +143,7 @@
             <td>&nbsp;</td>
         </tr>
 
-        <!-- 
-        <tr>
+        <tr style="cursor: pointer;">
             <td style="width: 15%">
                 <div class="row">
                     <div class="col d-flex justify-content-center align-items-center">
@@ -171,7 +171,6 @@
                 </div>                   
             </td>
         </tr>
-        -->
 
         <tr>
             <td style="width: 15%">
@@ -232,7 +231,7 @@
         </tr>
         -->
 
-        <tr>
+        <tr id="nsmart-online-booking" class="nsmart-online-booking" onclick="location.href='<?php echo base_url('more/addon/booking'); ?>'" style="cursor: pointer;">
             <td style="width: 15%">
                 <div class="row">
                     <div class="col d-flex justify-content-center align-items-center">
