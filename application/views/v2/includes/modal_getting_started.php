@@ -52,6 +52,10 @@
     padding: 0.8rem 0 0 0;
     }
 
+    .check-purple{
+        color:#6a4a86 !important;
+    }
+
     .getting-started-table td .bx {
     color: #888888;
     }
@@ -65,7 +69,7 @@
 
     .getting-started-table .nsm-button.btn-sm {
     padding: 0.5rem;
-    }    
+    }        
 
 </style>
 
@@ -77,7 +81,7 @@
                     <div class="col d-flex justify-content-center align-items-center">
                         <i class='bx bx-building' style="font-size: 55px;"></i>
                     </div>
-                    <i class='bx bxs-check-circle' style="font-size: 25px; margin-left: 55px; margin-top: -16px;"></i>
+                    <i class='bx bxs-check-circle check-purple' style="font-size: 25px; margin-left: 55px; margin-top: -16px;"></i>
                 </div>                                
             </td>
             <td>                    

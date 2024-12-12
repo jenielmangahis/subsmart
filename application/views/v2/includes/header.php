@@ -120,6 +120,11 @@ if ($this->session->userdata('usertimezone') == null) {
             padding: 10px;
             margin-top: 7px;
         }
+        .getting-started-big-btn{
+            width:100%;
+            display:block;
+            font-size:19px;
+        }
     </style>
     <script>
         var baseURL = '<?php echo base_url(); ?>';
@@ -913,23 +918,44 @@ if (is_null($image)) {
 
 <!-- Getting Started -->
 <div class="modal fade nsm-modal fade" id="modal-getting-started" tabindex="-1" aria-labelledby="modal-customize-menuLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md modal-lg">
+    <div class="modal-dialog modal-md modal-lg" style="max-width:690px !important;">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="">Getting Started</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>            
-            <div class="modal-body">
-            <!-- Getting Started Content - Start -->
-                <?php include viewPath('v2/includes/modal_getting_started'); ?>             
-            <!-- Getting Started Content - End -->
-            </div>
+            <div class="modal-body" id="getting-started-container"></div>
             <br /><br />
         </div>
     </div>
 </div>
+<!-- Getting Started : Job Schedule -->
+<div class="modal fade nsm-modal fade" id="modal-getting-started-job-schedule" aria-labelledby="modal-getting-started-job-scheduleLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="">Job Schedule</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>            
+            <div class="modal-body" id="getting-started-container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <a class="nsm-button primary getting-started-big-btn" href="javascript:void(0);">
+                            <i class='bx bx-fw bx-calendar-plus'></i> User Calendar 
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a class="nsm-button primary getting-started-big-btn" href="javascript:void(0);">
+                            <i class='bx bx-fw bx-list-plus' ></i> User Job Form 
+                        </a>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
 
-<script>
+<script>    
     $('.openChatbotButton').click(function (e) { 
         $('.techSupportMenu').hide();
         $('.chatBotMessenger').fadeIn();
@@ -970,12 +996,27 @@ if (is_null($image)) {
             }
         });
 
+        $(document).on('click', '#getting-started-schedule-job', function(){
+            $('#modal-getting-started-job-schedule').modal('show');
+        });
+
         $(document).on('click', '#left-nav-customer-search', function(){
             $('#modal-quick-customer-search').modal('show');
         });
 
         $(document).on('click', '#left-getting-started', function(){
             $('#modal-getting-started').modal('show');
+            $.ajax({
+                type: "POST",
+                url: base_url + "dashboard/_getting_started",
+                beforeSend: function() {
+                    $('#getting-started-container').html('<span class="bx bx-loader bx-spin"></span>');
+                    
+                },
+                success: function(html) {
+                    $('#getting-started-container').html(html);
+                }
+            });
         });
 
         $(document).on('submit', '#frm-left-nav-quick-search-customer', function(e){
