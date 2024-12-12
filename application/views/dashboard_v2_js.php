@@ -842,23 +842,10 @@ $(document).ready(function() {
     //     console.log(error);
     // })
 
-
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    $('#dashboard-btn-add-customer').on('click', function(){
+        $('#modal-quick-add-customer').modal('show');
+    });
+});
 $('#quick_links_modal .shortcut-item.print-check').on('click', function() {
     $.get(GET_OTHER_MODAL_URL + 'print_checks_modal', function(res) {
         if ($('div#modal-container').length > 0) {

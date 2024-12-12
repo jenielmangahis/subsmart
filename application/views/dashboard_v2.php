@@ -244,6 +244,11 @@
 .nav-pills .nav-link.active {
     background-color: #6a4a86 !important;
 }
+.modal-big-btn{
+    height: 53px !important;
+    display: block;
+    font-size: 20px;
+}
 </style>
 
 <div class="nsm-fab-container">
@@ -344,8 +349,7 @@
         <button name="button" type="button" class="nsm-button btn-add-task">
             <i class='bx bx-fw bx-task'></i> New Task
         </button>
-        <button name="button" type="button" class="nsm-button"
-            onclick="location.href='<?php echo base_url('customer/add_advance'); ?>'">
+        <button name="button" type="button" class="nsm-button" id="dashboard-btn-add-customer">
             <i class='bx bx-fw bx-user-plus'></i> Add Customer
         </button>
         <button name="button" type="button" class="nsm-button"
@@ -681,6 +685,30 @@ foreach ($widgets as $wids) {
                         <small class="form-text text-muted"></small>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="modal-quick-add-customer">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Customer</h5>
+                <button name="button" type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-fw bx-x m-0"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="padding:24px;">
+                <h3 style="font-size:16px;margin-bottom:33px;">Select which type of customer you want to create</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <a class="nsm nsm-button primary modal-big-btn" target="_new" href="<?= base_url('customer/add_advance'); ?>"><i class="bx bx-fw bx-user"></i> Customer</a>
+                    </div>
+                    <div class="col-md-6">
+                        <a class="nsm nsm-button primary modal-big-btn" target="_new" href="<?= base_url('customer/add_lead'); ?>"><i class="bx bx-fw bxs-contact"></i> Leads</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
