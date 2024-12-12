@@ -1815,6 +1815,7 @@ $route['widgets/_load_job_chart_data'] = 'Widgets/ajax_load_job_chart_data';
 $route['widgets/_load_taskhub_summary'] = 'Widgets/ajax_load_taskhub_summary';
 $route['widgets/_load_customer_group_chart'] = 'Widgets/ajax_load_customer_group_chart';
 $route['widgets/_update_sort'] = 'Widgets/ajax_update_sort';
+$route['dashboard/_coupon_codes/(:any)?'] = 'Dashboard/ajax_coupon_codes/$1';
 
 $route['Dashboard/past_due_invoices'] = 'Dashboard/past_due_invoices';
 
