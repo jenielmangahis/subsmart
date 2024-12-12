@@ -161,6 +161,11 @@ $hdrCompanyData = getCompanyData($cid, $fields);
                         <i class='bx bx-fw bx-search'></i> Search Customer
                     </a>
                 </li>
+                <li>
+                    <a href="javascript:void(0);" id="left-getting-started">
+                        <i class='bx bx-fw bx-rocket'></i> Getting Started
+                    </a>
+                </li>
                 <?php 
                     if( $hdr_menu_settings ){
                         include viewPath('v2/includes/left_nav_settings');
@@ -906,6 +911,24 @@ if (is_null($image)) {
     </div>
 </div>
 
+<!-- Getting Started -->
+<div class="modal fade nsm-modal fade" id="modal-getting-started" tabindex="-1" aria-labelledby="modal-customize-menuLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="">Getting Started</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>            
+            <div class="modal-body">
+            <!-- Getting Started Content - Start -->
+                <?php include viewPath('v2/includes/modal_getting_started'); ?>             
+            <!-- Getting Started Content - End -->
+            </div>
+            <br /><br />
+        </div>
+    </div>
+</div>
+
 <script>
     $('.openChatbotButton').click(function (e) { 
         $('.techSupportMenu').hide();
@@ -949,6 +972,10 @@ if (is_null($image)) {
 
         $(document).on('click', '#left-nav-customer-search', function(){
             $('#modal-quick-customer-search').modal('show');
+        });
+
+        $(document).on('click', '#left-getting-started', function(){
+            $('#modal-getting-started').modal('show');
         });
 
         $(document).on('submit', '#frm-left-nav-quick-search-customer', function(e){
