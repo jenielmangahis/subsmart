@@ -940,13 +940,13 @@ if (is_null($image)) {
             <div class="modal-body" id="getting-started-container">
                 <div class="row">
                     <div class="col-md-6">
-                        <a class="nsm-button primary getting-started-big-btn" href="javascript:void(0);">
-                            <i class='bx bx-fw bx-calendar-plus'></i> User Calendar 
+                        <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('workcalender'); ?>">
+                            <i class='bx bx-fw bx-calendar-plus'></i> Use Calendar 
                         </a>
                     </div>
                     <div class="col-md-6">
-                        <a class="nsm-button primary getting-started-big-btn" href="javascript:void(0);">
-                            <i class='bx bx-fw bx-list-plus' ></i> User Job Form 
+                        <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('job/new_job1'); ?>">
+                            <i class='bx bx-fw bx-list-plus' ></i> Use Job Form 
                         </a>
                     </div>
                 </div>
