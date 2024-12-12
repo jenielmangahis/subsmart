@@ -310,6 +310,8 @@ $route['invoice/_send_invoice_email_with_late_fee'] = 'Invoice/ajax_send_invoice
 $route['invoice/_update_invoice'] = 'Invoice/ajax_update_invoice';
 $route['invoice/_archived_list'] = 'Invoice/ajax_archived_list';
 $route['invoice/_restore_archived'] = 'Invoice/ajax_restore_archived';
+$route['invoice/_update_status/(:any)'] = 'Invoice/ajax_update_status/$1';
+$route['invoice/recurring/(:any)'] = 'Invoice/recurring/$1';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 
@@ -1968,3 +1970,6 @@ $route['customers/_create_activation_fee'] = 'Customer/ajax_create_activation_fe
 
 //Benchmark for Testing
 $route['benchmark/cron_customer_subscription'] = 'Benchmark/cron_customer_subscription';
+
+//Role Access Modules
+$route['users/role_access_modules'] = 'Users/role_access_modules';
