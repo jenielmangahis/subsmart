@@ -51,7 +51,7 @@
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Suite/Unit</label>
-                                                <input type="text" name="unit_nbr" id="unit_nbr" class="nsm-field form-control" autocomplete="off" value="<?php echo $profiledata->unit_nbr ?>" placeholder="e.g. Ap #12" required/>
+                                                <input type="text" name="unit_nbr" id="unit_nbr" class="nsm-field form-control" autocomplete="off" value="<?php echo $profiledata->unit_nbr ?>" placeholder="e.g. Ap #12" />
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">City <span class="nsm-text-error">*</span></label>

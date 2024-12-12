@@ -1483,6 +1483,7 @@ $route['cron/acs_billing_method_cc_unpaid_amount'] = 'Cron_Payment/acs_billing_m
 $route['cron/acs_subscription_method_cc'] = 'Cron_Payment/acs_subscription_method_cc';
 $route['cron/company_recurring_nsmart_subscription'] = 'Cron_Payment/company_recurring_nsmart_subscription';
 $route['cron/company_recurring_nsmart_subscription_with_payment_errors'] = 'Cron_Payment/company_recurring_nsmart_subscription_with_payment_errors';
+$route['cron/customer_recurring_subscriptions'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionV2';
 
 // Admin Users
 $route['admin/_update_employee'] = 'Admin/ajaxUpdateEmployee';

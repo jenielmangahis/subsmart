@@ -104,10 +104,7 @@ class Customer_model extends MY_Model
     
         if (!empty($search)) {
             $this->db->group_start(); // Start grouping the OR conditions
-            $this->db->like('acs_profile.last_name', $search, 'both');
-            $this->db->or_like('acs_profile.first_name', $search, 'both');
-            $this->db->or_like('acs_profile.email', $search, 'both');
-            $this->db->or_like('acs_profile.business_name', $search, 'both');
+            $this->db->or_like("CONCAT(acs_profile.first_name, ' ', acs_profile.last_name)", $search, 'both');    
             $this->db->group_end(); // End grouping
         }
     

@@ -2172,6 +2172,7 @@ class Customer extends MY_Controller
     {        
         $this->load->model('AccountingTerm_model');
         $this->load->model('FinancingPaymentCategory_model');
+        $this->load->model('AcsCustomerSubscriptionBilling_model');
 
         $this->hasAccessModule(9);
 
@@ -2208,7 +2209,18 @@ class Customer extends MY_Controller
         $accountingTerms = $this->AccountingTerm_model->getAllByCompanyId($company_id);
 
         $financingCategories = $this->FinancingPaymentCategory_model->getAllByCompanyId($company_id);
-        $this->page_data['financingCategories'] = $financingCategories;    
+        $this->page_data['financingCategories'] = $financingCategories; 
+        
+		$keyword = '';
+        if(!empty(get('search'))) {
+			$keyword = get('search');
+            $this->page_data['search'] = $keyword;
+            $payment_subscrition_history = $this->AcsCustomerSubscriptionBilling_model->getPaymentSubscriptionHistory($keyword);
+        } else {
+            $payment_subscrition_history = $this->AcsCustomerSubscriptionBilling_model->getPaymentSubscriptionHistory($keyword);
+        }
+
+        $this->page_data['payment_subscrition_history'] = $payment_subscrition_history;
 
         $this->page_data['accountingTerms'] = $accountingTerms;
         $this->load->view('v2/pages/customer/subscription', $this->page_data);

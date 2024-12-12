@@ -244,6 +244,11 @@
 .nav-pills .nav-link.active {
     background-color: #6a4a86 !important;
 }
+.modal-big-btn{
+    height: 53px !important;
+    display: block;
+    font-size: 20px;
+}
 </style>
 
 <div class="nsm-fab-container">
@@ -344,8 +349,7 @@
         <button name="button" type="button" class="nsm-button btn-add-task">
             <i class='bx bx-fw bx-task'></i> New Task
         </button>
-        <button name="button" type="button" class="nsm-button"
-            onclick="location.href='<?php echo base_url('customer/add_advance'); ?>'">
+        <button name="button" type="button" class="nsm-button" id="dashboard-btn-add-customer">
             <i class='bx bx-fw bx-user-plus'></i> Add Customer
         </button>
         <button name="button" type="button" class="nsm-button"
@@ -411,11 +415,9 @@
                             
                                 $this->load->view('v2/' . $wids->w_view_link, $data);
                             } else {
-                                if ($wids->w_name === 'nSmart Sales' || $wids->w_name === 'Demo Schedules' ) {
-                                    break; 
+                                if ($wids->w_name !== 'nSmart Sales' || $wids->w_name !== 'Demo Schedules' || $wids->w_name !== 'Coupon Codes' || $wids->w_name !== 'nSmart Companies' ) {
+                                    $this->load->view('v2/' . $wids->w_view_link, $data);
                                 }
-                    
-                                $this->load->view('v2/' . $wids->w_view_link, $data);
                             }
                         }
                     }
@@ -424,44 +426,63 @@
         </div>
 
         <div class="row  g-3 grid-row-mb nsm-draggable-container-sortable-main" id="nsm_widgets">
-         
+            <?php
+if (count($main_widgets) > 0) {
+    foreach ($main_widgets as $wids) {
+        if ($wids->wu_is_main) {
+            if ($wids->wu_widget_id == 26) {
+                echo '<div class="col-12 col-lg-4" id="widget-'.$wids->wu_widget_id.'">';
+                $data['class'] = 'nsm-card nsm-grid large';
+            } else {
+                echo '<div class="col-12 col-lg-4" id="widget-'.$wids->wu_widget_id.'">';
+                $data['class'] = 'nsm-card nsm-grid med primary';
+            }
+
+            $data['isMain'] = true;
+            $data['id'] = $wids->w_id;
+            $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
+
+            if ($wids->w_name === 'Expense') {
+                $data = set_expense_graph_data($data);
+            }
+
+            if ($wids->w_name === 'Bank') {
+                $data = set_bank_widget_data($data);
+            }
+
+            $this->load->view('v2/'.$wids->w_view_link, $data);
+
+            echo '</div>';
+        }
+    }
+}
+?>
 
             <?php
-                usort($widgets, function ($a, $b) {
-                    if ($a->w_sort == 1 && $b->w_sort != 1) {
-                        return -1;
-                    }
-                    if ($a->w_sort != 1 && $b->w_sort == 1) {
-                        return 1;
-                    }
-                    return strcmp($a->w_name, $b->w_name);
-                });
+foreach ($widgets as $wids) {
+    if (!$wids->wu_is_main && !$wids->w_main) {
+        echo '<div class="col-12 col-lg-4" data-order="'.$wids->wu_order.'" id="widget-'.$wids->wu_widget_id.'">';
+        $data['class'] = 'nsm-card nsm-grid';
+        $data['isMain'] = false;
+        $data['id'] = $wids->w_id;
+        $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
 
-                foreach ($widgets as $wids) {
-                    if (!$wids->w_main) {
-                        // if (!$wids->wu_is_main && !$wids->w_main) {
-                        echo '<div class="col-12 col-lg-4" data-order="'.$wids->wu_order.'" id="widget-'.$wids->wu_widget_id.'">';
-                        $data['class'] = 'nsm-card nsm-grid';
-                        $data['isMain'] = false;
-                        $data['id'] = $wids->w_id;
-                        $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
+        if ($wids->w_name === 'Expense') {
+            $data = set_expense_graph_data($data);
+        }
 
-                        if ($wids->w_name === 'Expense') {
-                            $data = set_expense_graph_data($data);
-                        }
+        if ($wids->w_name === 'Bank') {
+            $data = set_bank_widget_data($data);
+        }
+        // if($wids->w_view_link != 'widgets/lead_source'){
+        //     $this->load->view("v2/" . $wids->w_view_link, $data);
+        // }
+        $this->load->view('v2/'.$wids->w_view_link, $data);
 
-                        if ($wids->w_name === 'Bank') {
-                            $data = set_bank_widget_data($data);
-                        }
-                        // if($wids->w_view_link != 'widgets/lead_source'){
-                        //     $this->load->view("v2/" . $wids->w_view_link, $data);
-                        // }
-                        $this->load->view('v2/'.$wids->w_view_link, $data);
-
-                        echo '</div>';
-                    }
-                }
-            ?>
+        echo '</div>';
+    }
+}
+?>
         </div>
     </div>
 </div>
@@ -664,6 +685,30 @@
                         <small class="form-text text-muted"></small>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="modal-quick-add-customer">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Customer</h5>
+                <button name="button" type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-fw bx-x m-0"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="padding:24px;">
+                <h3 style="font-size:16px;margin-bottom:33px;">Select which type of customer you want to create</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <a class="nsm nsm-button primary modal-big-btn" target="_new" href="<?= base_url('customer/add_advance'); ?>"><i class="bx bx-fw bx-user"></i> Customer</a>
+                    </div>
+                    <div class="col-md-6">
+                        <a class="nsm nsm-button primary modal-big-btn" target="_new" href="<?= base_url('customer/add_lead'); ?>"><i class="bx bx-fw bxs-contact"></i> Leads</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1438,9 +1483,7 @@ salesGraphThumbnail();
 function salesGraphThumbnail() {
     fetch('<?php echo base_url('Dashboard/sales_graph'); ?>', {}).then(response => response.json()).then(
         response => {
-            var currentDate    = new Date();
-            var month_index    = currentDate.getMonth() + 1;
-            var monthlyAmounts = new Array(month_index).fill(0);
+            var monthlyAmounts = new Array(12).fill(0);
 
             var {
                 success,
@@ -1449,16 +1492,7 @@ function salesGraphThumbnail() {
 
             if (open_invoices) {
                 for (var x = 0; x < open_invoices.length; x++) {
-                    var dateA = new Date(open_invoices[x].due_date);
-                    if( dateA.getFullYear() < currentDate.getFullYear() ){    
-                        var dueDate = '2024-01-01';
-                    }else if( dateA > currentDate ){        
-                        var dueDate = moment(currentDate).format('YYYY-MM-DD');
-                    }else{
-                        var dueDate = open_invoices[x].due_date;
-                    }
-
-                    
+                    var dueDate = open_invoices[x].due_date;
                     if (dueDate) {
                         var due = new Date(dueDate);
                         var month = due.getMonth();
@@ -1533,9 +1567,7 @@ function nsmartSales() {
                 nsmart_sales
             } = response;
 
-            console.log('nsmart_sales',nsmart_sales)
-
-         
+            //console.log('nsmart_sales',nsmart_sales)         
 
             if (nsmart_sales) {
                 for (var x = 0; x < nsmart_sales.length; x++) {

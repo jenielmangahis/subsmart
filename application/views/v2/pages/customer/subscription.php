@@ -510,6 +510,64 @@
                         </div>  
                     </div>
                 </div>
+                
+                <div class="col-md-7">
+                    <div class="nsm-card primary">     
+                        <div class="nsm-card-header">
+                            <div class="nsm-card-title">
+                                <span class="custom-ticket-header"><i class='bx bx-money'></i> Payment Subscription History</span>
+                            </div>
+                            <div class="col-6 col-md-4 grid-mb">
+                                <form action="<?php echo base_url('customer/subscription/' . $profile_info->prof_id) ?>" method="get">
+                                    <div class="nsm-field-group search">
+                                        <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Find By Invoice #" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                                    </div>
+                                </form>
+                            </div>                               
+                        </div>                               
+
+                        <div class="nsm-card-content container-left" id="subs-payment-form-container">   
+                                                
+                            <table class="nsm-table payment-subscription-history-list">
+                                <thead>
+                                    <tr>
+                                        <td data-name="">Invoice #</td>    
+                                        <td data-name="">Customer</td> 
+                                        <td data-name="">Recurring Date</td>           
+                                        <td data-name="">Status</td>
+                                        <td data-name="">Amount</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach($payment_subscrition_history as $psh) { ?>
+                                <tr>
+                                    <td><?php echo $psh->invoice_number; ?></td>
+                                    <td><?php echo $psh->first_name . " " . $psh->last_name; ?></td>
+                                    <td>
+                                        <?php 
+                                            $recurring_date = "--";
+                                            if($psh->recurring_date != NULL) {
+                                                $recurring_date = date("F d, Y", strtotime($psh->recurring_date));
+                                            }
+                                            echo $recurring_date;                                            
+                                        ?>
+                                    </td>
+                                    <td><?php echo $psh->status; ?></td>
+                                    <td><?php echo $psh->amount; ?></td>
+                                </tr>
+                                <?php } ?>
+                                
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>                    
+                </div>
+
+                <div class="col-md-5">
+                    &nbsp;
+                </div>
+                
             </div>
                 </div>
             </div>
@@ -557,6 +615,17 @@
 <script src="https://www.paypal.com/sdk/js?client-id=AR9qwimIa4-1uYwa5ySNmzFnfZOJ-RQ2LaGdnUsfqdLQDV-ldcniSVG9uNnlVqDSj_ckrKSDmMIIuL-M&currency=USD"></script>
 
 <script>
+    $(document).ready(function() {
+        $(".nsm-table").nsmPagination({itemsPerPage:10});
+
+        $("#search_field").on("input", debounce(function() {
+            let _form = $(this).closest("form");
+
+            _form.submit();
+        }, 1000));  
+
+    });
+
     paypal.Buttons({
         style: {
             layout: 'horizontal',

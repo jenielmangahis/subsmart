@@ -137,6 +137,15 @@ class Widgets_model extends MY_Model
         return $this->db->get('ac_leads')->result();
     }
 
+    public function getClients()
+    {
+        $this->db->select('*');
+        $this->db->from('clients');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function changeOrder($id, $user_id, $isMain, $details)
     {
         $this->db->where('wu_user_id', $user_id);
@@ -257,23 +266,14 @@ class Widgets_model extends MY_Model
 
     public function getWidgetsList()
     {
+        //        $query = "Select * FROM widgets WHERE NOT EXISTS(SELECT * FROM widgets_users WHERE widgets.w_id = widgets_users.wu_widget_id AND wu_user_id = $user_id)";
+        //        return $this->db->query($query)->result();
+        //   return $this->db->get('widgets')->result();
+
         $this->db->where('w_main =', 0);
-        $this->db->order_by('w_name', 'ASC');
         $query = $this->db->get('widgets');
-    
-        $widgets = $query->result();
-    
-        usort($widgets, function ($a, $b) {
-            if ($a->w_sort == 1 && $b->w_sort != 1) {
-                return -1;
-            }
-            if ($a->w_sort != 1 && $b->w_sort == 1) {
-                return 1;
-            }
-            return strcmp($a->w_name, $b->w_name);
-        });
-    
-        return $widgets;
+
+        return $query->result();
     }
 
 
@@ -298,8 +298,8 @@ class Widgets_model extends MY_Model
     
         $filtered_widgets = array_filter($widgets, function ($widget) use ($companyId) {
             // Convert $companyId to string for proper comparison
-            if (($widget->w_name === 'nSmart Sales' || $widget->w_name === 'Demo Schedules') && $companyId !== '1') {
-                return false; 
+            if (($widget->w_name === 'nSmart Sales' || $widget->w_name === 'Demo Schedules' || $widget->w_name === 'Coupon Codes' || $widget->w_name === 'nSmart Companies') && $companyId !== '1') {
+                 return false; 
             }
             return true; 
         });

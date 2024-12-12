@@ -127,7 +127,7 @@ $(document).ready(function() {
             $("#jobs_completed").text(jobs_completed); // total jobs completed
             $("#jobs_added").text(new_jobs); // total jobs added
             $("#lost_accounts").text(lost_accounts); // total lost account
-            $("#service_project_income").text('$' + service_project_income); 
+            $("#service_project_income").text('$' + invoice_amount); 
             $("#invoice_amount_stats").text('$' + invoice_amount); // total earned
         }
     }).catch((error) => {
@@ -842,23 +842,10 @@ $(document).ready(function() {
     //     console.log(error);
     // })
 
-
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    $('#dashboard-btn-add-customer').on('click', function(){
+        $('#modal-quick-add-customer').modal('show');
+    });
+});
 $('#quick_links_modal .shortcut-item.print-check').on('click', function() {
     $.get(GET_OTHER_MODAL_URL + 'print_checks_modal', function(res) {
         if ($('div#modal-container').length > 0) {

@@ -120,6 +120,26 @@ class OfferCodes_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllUsed()
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('client_id !=', 0);
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllNotUsed()
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('client_id', NULL);
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }    
+
 }
 
 /* End of file OfferCodes_model.php */

@@ -106,6 +106,10 @@ class Users extends MY_Controller
 		$comp_id = logged('company_id');
 		$profiledata = $this->business_model->getByCompanyId($comp_id);
 
+		// var_dump($profiledata);
+
+		// return;
+
 		if ($profiledata->profile_slug == '') {
 			$profile_slug = createSlug($profiledata->business_name, '-');
 			$profile_slug = $profile_slug . "-0";
@@ -339,19 +343,23 @@ class Users extends MY_Controller
 		$comp_id = logged('company_id');
 		if (!empty($_FILES['image']['name'])) {
 			$target_dir = "./uploads/users/business_profile/$comp_id/";
-
+		
 			if (!file_exists($target_dir)) {
 				mkdir($target_dir, 0777, true);
 			}
-
-			$business_image = $this->moveUploadedFile($bid);
-
-			$this->business_model->update($bid, ['business_image' => $business_image]);
+		
+			$target_file = $target_dir . basename($_FILES['image']['name']);
+			if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
+				$business_image = $target_file; 
+				$this->business_model->update($bid, ['business_image' => $business_image]);
+			} else {
+				log_message('error', 'File upload failed for ' . $_FILES['image']['name']);
+			}
 		} else {
 			copy(FCPATH . 'uploads/users/default.png', 'uploads/users/business_profile/' . $bid . '/default.png');
 		}
-
-		$this->business_model->update($bid, ['business_name' => $pdata['business_name'], 'business_desc' => $pdata['business_desc']]);
+		
+		$this->business_model->update($bid, ['business_name' => $pdata['business_name'], 'business_desc' => $pdata['business_desc'], 'is_show_business_cred' => $pdata['is_show_business_cred']],);
 
 		redirect('users/businessview');
 	}
