@@ -1,5 +1,29 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/business/business_modals'); ?>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+<style>
+    .uploaded-image {
+        display: block;
+        margin: 0 auto 10px;
+        border: 1px solid #ddd;
+        padding: 5px;
+        background-color: #f9f9f9;
+    }
+    .crop-image-container{
+        width: 100%;
+        max-width: 300px !important;
+        aspect-ratio: 1;
+        border: 2px dashed #c7c7c7;
+        border-radius: 5px;
+        border-radius: 100%;
+        background-position: center center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        position: relative;
+        padding: 10px;
+        height: unset !important;
+    }
+</style>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -48,6 +72,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <?php if($profiledata->is_show_business_cred): ?>
                             <div class="col-12">
                                 <div class="nsm-card">
                                     <div class="nsm-card-header">
@@ -181,6 +206,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <?php endif;?>
                             <div class="col-12">
                                 <div class="nsm-card">
                                     <div class="nsm-card-header">
@@ -481,44 +508,185 @@
     </div>
 
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+        $('#image-input').on('change',function(e){
+            e.preventDefault();
+            $('#crop-action-button').show().addClass('d-flex');
+          
+        });
+
+       
+        let cropper;
+        const imageInput = $("#image-input");
+        const imagePreviewContainer = $("#image-preview-container");
+        const imagePreviewButtons = $("#image-preview-buttons");
+        const imagePreviewChange = $("#image-preview-change");
+        
+        const imagePreview = $("#image-preview");
+        const imagePrevCrop = $("#image-prev-crop");
+        
+        const applyCropButton = $("#apply-crop");
+        const basicContainer = $("#basic-image-container");
+        const cropImageContainer = $("#crop-image-container");
+
+        $('#cancel-crop').on('click',function(e){
+            e.preventDefault();
+            $('#crop-action-button').hide().removeClass('d-flex');
+            cropper.destroy();
+            basicContainer.show();
+            imagePreviewContainer.hide(); 
+            imagePreviewButtons.hide().removeClass('d-flex');
+            $('#crop-action-button').show().addClass('d-flex');
+        });
+
+   
+        $('#crop-image').on('click', function (e) {
+        $('#crop-action-button').hide().removeClass('d-flex');
+        basicContainer.hide();
+        e.preventDefault();
+
+
+        const file = imageInput[0].files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                imagePreview.attr('src', event.target.result); 
+                imagePreviewContainer.show(); 
+                imagePreviewButtons.show().addClass('d-flex'); 
+                
+                applyCropButton.show(); 
+                
+                if (cropper) {
+                    cropper.destroy();
+                }
+                cropper = new Cropper(imagePreview[0], {
+                    aspectRatio: 1, 
+                    viewMode: 1,
+                    dragMode: "move",
+                    preview: ".img-preview",
+                });
+            };
+            reader.readAsDataURL(file);
+        } else {
+                Swal.fire({
+                    title: 'No Image Selected',
+                    text: 'Please select an image before cropping.',
+                    icon: 'error',
+                    confirmButtonText: 'Okay',
+                });
+           }
+        });
+        $('#change-image').on('click', function (e) {
+            // $('#image-input').trigger('click');
+            imagePreviewContainer.hide(); 
+            imagePreviewChange.hide().removeClass('d-flex');
+            basicContainer.show();
+            $('#crop-action-button').show().addClass('d-flex');
+        });
+        
+
+
+        $('#apply-crop').on('click', function (e) {
+            e.preventDefault();
+
+            if (cropper) {
+                cropper.getCroppedCanvas().toBlob(function (blob) {
+                    const croppedFile = new File([blob], "cropped-image.png", { type: 'image/png' });
+
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(croppedFile);
+                    imageInput[0].files = dataTransfer.files;
+
+                    const croppedImageURL = URL.createObjectURL(blob);
+                    imagePreview.attr('src', croppedImageURL);
+
+                    imagePreview.addClass('crop-image-container');
+                    imagePreviewContainer.css('height', 'unset');
+
+
+                    imagePreviewButtons.hide().removeClass('d-flex');
+                    imagePreviewChange.show().addClass('d-flex');
+                    cropper.destroy();
+                    basicContainer.hide();
+                });
+            } else {
+                Swal.fire({
+                    title: 'Crop Error',
+                    text: 'No cropper instance found. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'Okay',
+                });
+            }
+        });
+
+
+
 
         load_multi_accounts_list();
 
-        $("#form-business-details").on("submit", function(e) {
-            let _this = $(this);
-            e.preventDefault();
+        $("#form-business-details").on("submit", async function (e) {
+                e.preventDefault();
+                let _this = $(this);
 
-            var url = "<?php echo base_url('users/saveBusinessNameImage'); ?>";
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
+                // Create a new FormData object
+                let formData = new FormData(this);
 
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: _this.serialize(),
-                success: function(result) {
-                    Swal.fire({
-                        title: 'Save Successful!',
-                        text: "Basic information was successfully updated.",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        if (result.value) {
-                            location.reload();
-                        }
-                    });
-                    $("#edit_basic_info_modal").modal('hide');
-                    _this.trigger("reset");
+                // Extract the cropped image from #image-preview
+                const croppedImageSrc = $("#image-preview").attr("src");
+                if (croppedImageSrc && croppedImageSrc.startsWith("blob:")) {
+                    try {
+                        // Fetch the blob from the blob URL
+                        const response = await fetch(croppedImageSrc);
+                        const blob = await response.blob();
 
-                    _this.find("button[type=submit]").html("Save");
-                    _this.find("button[type=submit]").prop("disabled", false);
-                },
+                        // Append the fetched blob to the FormData
+                        formData.append("cropped_image", blob, "cropped-image.png");
+                    } catch (error) {
+                        console.error("Failed to fetch blob from cropped image:", error);
+                        Swal.fire({
+                            title: "Error",
+                            text: "Failed to process the cropped image. Please try again.",
+                            icon: "error",
+                            confirmButtonText: "Okay",
+                        });
+                        return; // Stop form submission
+                    }
+                }
+
+                // AJAX request
+                let url = "<?php echo base_url('users/saveBusinessNameImage'); ?>";
+                _this.find("button[type=submit]").html("Saving").prop("disabled", true);
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    processData: false,
+                    contentType: false, 
+                    success: function (result) {
+                        Swal.fire({
+                            title: "Save Successful!",
+                            text: "Basic information was successfully updated.",
+                            icon: "success",
+                            confirmButtonText: "Okay",
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });
+                        $("#edit_basic_info_modal").modal("hide");
+                        _this.trigger("reset");
+                        _this.find("button[type=submit]").html("Save").prop("disabled", false);
+                    },
+                    error: function (err) {
+                        console.error("Upload failed:", err);
+                        _this.find("button[type=submit]").html("Save").prop("disabled", false);
+                    },
+                });
             });
-        });
+
 
         $('#add-multi-account').on('click', function(){
             $('#multi-email').val('');
