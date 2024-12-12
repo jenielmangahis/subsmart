@@ -122,10 +122,12 @@ class OfferCodes_model extends MY_Model
 
     public function getAllUsed()
     {
-        $this->db->select('*');
+        $this->db->select('offer_codes.*,clients.business_name AS client_name');
         $this->db->from($this->table);
+        $this->db->join('clients', 'offer_codes.client_id = clients.id', 'left');
         $this->db->where('client_id !=', 0);
         $this->db->order_by('id', 'DESC');
+        
         $query = $this->db->get();
         return $query->result();
     }
