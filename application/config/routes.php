@@ -1973,3 +1973,6 @@ $route['benchmark/cron_customer_subscription'] = 'Benchmark/cron_customer_subscr
 
 //Role Access Modules
 $route['users/role_access_modules'] = 'Users/role_access_modules';
+
+//Getting Started
+$route['dashboard/_getting_started'] = 'Dashboard/ajax_getting_started';
