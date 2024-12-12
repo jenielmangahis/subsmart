@@ -235,42 +235,41 @@ class Invoice extends MY_Controller
         return $the_text;
     }
 
-    public function recurring($tab = '')
+    public function recurring($status = '')
     {
-		$this->page_data['page']->title = 'Recurring Invoices';
-        $this->page_data['page']->parent = 'Sales';
-        $this->page_data['page']->tab = $tab;
+        $this->load->model('AcsCustomerSubscriptionBilling_model');
 
-        $is_allowed = $this->isAllowedModuleAccess(37);
-        if (!$is_allowed) {
-            $this->page_data['module'] = 'recurring_invoices';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
+        $cid = logged('company_id');
+        if( $status != '' ){
+            $filter[] = ['field' => 'invoices.status', 'value' => ucwords($status)];
+        }else{
+            $filter = [];
         }
-
-        $role = logged('role');
-        $type = 1;
-        if ($role == 2 || $role == 3) {
-            $comp_id = logged('company_id');
-
-            if (!empty($tab)) {
-                $this->page_data['tab'] = $tab;
-                $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $comp_id, $type);
-            } else {
-
-                // search
-                if (!empty(get('search'))) {
-                    $this->page_data['search'] = get('search');
-                    $this->page_data['invoices'] = $this->invoice_model->filterBy(array('search' => get('search')), $comp_id, $type);
-                } elseif (!empty(get('order'))) {
-                    $this->page_data['search'] = get('search');
-                    $this->page_data['invoices'] = $this->invoice_model->filterBy(array('order' => get('order')), $comp_id, $type);
-                } else {
-                    $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($comp_id, $type);
-                }
+        $invoices = $this->invoice_model->getRecurringInvoiceByCompanyId($cid, $filter);
+        
+        foreach($invoices as $i){
+            $billing = $this->AcsCustomerSubscriptionBilling_model->getByInvoiceId($i->id);
+            if( $billing ){
+                $start_date = date("m/d/Y",strtotime($billing->bill_start_date));
+                $end_date   = date("m/d/Y",strtotime($billing->bill_end_date));
+            }else{
+                $start_date = '---';
+                $end_date   = '---';
             }
+
+            $i->bill_start_date = $start_date;
+            $i->bill_end_date = $end_date;
         }
 
+        $totalPaidInvoices   = $this->invoice_model->getTotalPaidRecurringInvoiceByCompanyId($cid, []);
+        $totalUnPaidInvoices = $this->invoice_model->getTotalUnpaidRecurringInvoiceByCompanyId($cid, []);
+
+        $this->page_data['invoices']            = $invoices;
+        $this->page_data['totalPaidInvoices']   = $totalPaidInvoices;
+        $this->page_data['totalUnPaidInvoices'] = $totalUnPaidInvoices;
+        $this->page_data['page']->title   = 'Recurring Invoices';
+        $this->page_data['page']->parent  = 'Sales';        
+        $this->page_data['filter_status'] = $status;
         $this->load->view('v2/pages/invoice/recurring', $this->page_data);
     }
 
@@ -2104,10 +2103,10 @@ class Invoice extends MY_Controller
                 }
             }
 
-            $total_late_fee = $total_late_fee + $payment_fee;
+            //$total_late_fee = $total_late_fee + $payment_fee;
 
-            $grand_total     = $invoice->grand_total + $total_late_fee;
-            $data = ['late_fee' => $post['late_fee'], 'grand_total' => $grand_total];
+            $grand_total     = $invoice->grand_total + $total_late_fee + $payment_fee;
+            $data = ['payment_fee' => $payment_fee, 'late_fee' => $post['late_fee'], 'grand_total' => $grand_total];
             $this->invoice_model->update($invoice->id, $data);
 
             $mail = email__getInstance();
@@ -2966,7 +2965,6 @@ class Invoice extends MY_Controller
 
     public function ajax_restore_archived()
     {
-
         $is_success = 0;
         $msg = 'Cannot find invoice data';
 
@@ -2983,6 +2981,33 @@ class Invoice extends MY_Controller
 
             $is_success = 1;
             $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_update_status($status)
+    {
+        $is_success = 0;
+        $msg = 'Cannot find invoice data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $invoice = $this->invoice_model->getById($post['invoice_id']);
+        if ($invoice && $invoice->company_id == $company_id) {    
+            if( $status == 'paid' ){
+                $data = ['status' => 'Paid', 'date_updated' => date("Y-m-d H:i:s")];
+                $this->invoice_model->update($invoice->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Update Invoice : Changed invoice number '. $invoice->invoice_number . ' status to paid'; 
+                createActivityLog($activity_name);
+
+                $is_success = 1;
+                $msg = '';
+            }                    
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
