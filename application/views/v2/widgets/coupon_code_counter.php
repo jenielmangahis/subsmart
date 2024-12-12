@@ -3,7 +3,12 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
 }
 ?>
 
-
+<style>
+#widget-used-codes, #widget-available-codes{
+    text-decoration:none;
+    color:inherit;
+}
+</style>
 <div class="<?php echo $class; ?>" data-id="<?php echo $id; ?>" id="thumbnail_<?php echo $id; ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
@@ -71,17 +76,28 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                 <div class="text-start summary-report-body">
                     <div>
                         <label for="">Total Used </label>
-                        <h1 id="first_content_<?php echo $id; ?>"><?php echo count($used_offer_codes); ?></h1>
+                        <a id="widget-used-codes" href="javascript:void(0);"><h1 id="first_content_<?php echo $id; ?>"><?php echo count($used_offer_codes); ?></h1></a>
                     </div>
                     <div>
                         <label for="">Total Unused </label>
-                        <h1 id="second_content_<?php echo $id; ?>"><?php echo count($not_used_offer_codes); ?></h1>
+                        <a id="widget-available-codes" href="javascript:void(0);"><h1 id="second_content_<?php echo $id; ?>"><?php echo count($not_used_offer_codes); ?></h1></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="modal fade nsm-modal fade" id="modal-coupon-codes" tabindex="-1" aria-labelledby="modal-coupon-codes_modal_label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Coupon Codes</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="widget-coupon-code-list-container"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -89,3 +105,36 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
 if (!is_null($dynamic_load) && $dynamic_load == true) {
 }
 ?>
+<script>
+$(function(){
+    $('#widget-used-codes').on('click', function(){
+        $('#modal-coupon-codes').modal('show');
+
+        $.ajax({
+            url: base_url + 'dashboard/_coupon_codes/used',
+            method: 'post',
+            success: function(response) {
+                $('#widget-coupon-code-list-container').html(response);
+            },
+            beforeSend: function(){
+                $('#widget-coupon-code-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $('#widget-available-codes').on('click', function(){
+        $('#modal-coupon-codes').modal('show');
+
+        $.ajax({
+            url: base_url + 'dashboard/_coupon_codes/available',
+            method: 'post',
+            success: function(response) {
+                $('#widget-coupon-code-list-container').html(response);
+            },
+            beforeSend: function(){
+                $('#widget-coupon-code-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+});
+</script>
