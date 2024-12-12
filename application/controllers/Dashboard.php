@@ -1946,6 +1946,24 @@ class Dashboard extends Widgets
         $this->page_data['is_used']      = $is_used;
         $this->load->view('v2/pages/offer_codes/ajax_coupon_codes', $this->page_data);
     }
+
+    public function ajax_getting_started()
+    {
+        $this->load->model('Jobs_model');
+        $this->load->model('Taskhub_model');
+        $this->load->model('AcsProfile_model');
+
+        $cid = logged('company_id');
+
+        $isWithJobs = $this->Jobs_model->getJob($cid);
+        $isWithTaskHub = $this->Taskhub_model->getAllByCompanyId($cid);
+        $totalCustomers = $this->AcsProfile_model->countAllCustomerByCompanyId($cid);
+
+        $this->page_data['isWithJobs'] = $isWithJobs;
+        $this->page_data['isWithTaskHub'] = $isWithTaskHub;
+        $this->page_data['totalCustomers'] = $totalCustomers;
+        $this->load->view('v2/pages/dashboard/ajax_getting_started', $this->page_data);
+    }
 }
 
 /* End of file Dashboard.php */
