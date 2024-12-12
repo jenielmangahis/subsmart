@@ -198,7 +198,7 @@
                                     </td>
                                     <td class="fw-bold nsm-text-primary"><?= //workordermodule__formatWorkOrderNumber($workorder->work_order_number) 
                                                                             $workorder->work_order_number ?></td>
-                                    <td><?php echo date('M d, Y', strtotime($workorder->date_created)) ?></td>
+                                    <td><?php echo date('m/d/Y', strtotime($workorder->date_created)) ?></td>
                                     <td>
                                         <a href="<?php echo base_url('customer/preview_/' . $workorder->customer_id) ?>" class="nsm-link">
                                             <?php
@@ -213,11 +213,11 @@
                                         <label class="d-block">Issued on:
                                             <?php //echo date_format($workorder->first_name, 'd M Y H:i:s') 
                                             if ($workorder->work_order_type_id == '4') {
-                                                echo date("M d Y", strtotime($workorder->date_created));
+                                                echo date("m/d/Y", strtotime($workorder->date_created));
                                             } else if ($workorder->work_order_type_id == '3') {
-                                                echo date("M d Y", strtotime($workorder->date_created));
+                                                echo date("m/d/Y", strtotime($workorder->date_created));
                                             } else {
-                                                echo date("M d Y", strtotime($workorder->date_issued));
+                                                echo date("m/d/Y", strtotime($workorder->date_issued));
                                             }
                                             ?>
                                         </label>
