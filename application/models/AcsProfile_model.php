@@ -807,6 +807,16 @@ class AcsProfile_model extends MY_Model
         return $query->result();
         
     }
+
+    public function countAllCustomerByCompanyId($company_id)
+    {
+        $this->db->select('COALESCE(acs_profile.prof_id)AS total');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get()->row();
+
+        return $query;
+    }
 }
 
 /* End of file AcsProfile_model.php */

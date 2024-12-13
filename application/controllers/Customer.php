@@ -3279,6 +3279,8 @@ class Customer extends MY_Controller
             'assets/css/customer/add_advance/add_advance.css',
         ]);
 
+        $this->page_data['page']->title = 'Customers';
+        $this->page_data['page']->parent = 'Customers';
         $this->page_data['financingCategories'] = $financingCategories;
         $this->page_data['sales_tech_paid'] = $this->customer_ad_model->getJobSalesTechPaid($id);
         $this->page_data['sales_tech_commission'] = $this->customer_ad_model->getJobSalesTechCommission($id)[0];

@@ -310,6 +310,8 @@ $route['invoice/_send_invoice_email_with_late_fee'] = 'Invoice/ajax_send_invoice
 $route['invoice/_update_invoice'] = 'Invoice/ajax_update_invoice';
 $route['invoice/_archived_list'] = 'Invoice/ajax_archived_list';
 $route['invoice/_restore_archived'] = 'Invoice/ajax_restore_archived';
+$route['invoice/_update_status/(:any)'] = 'Invoice/ajax_update_status/$1';
+$route['invoice/recurring/(:any)'] = 'Invoice/recurring/$1';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 
@@ -1815,6 +1817,7 @@ $route['widgets/_load_job_chart_data'] = 'Widgets/ajax_load_job_chart_data';
 $route['widgets/_load_taskhub_summary'] = 'Widgets/ajax_load_taskhub_summary';
 $route['widgets/_load_customer_group_chart'] = 'Widgets/ajax_load_customer_group_chart';
 $route['widgets/_update_sort'] = 'Widgets/ajax_update_sort';
+$route['dashboard/_coupon_codes/(:any)?'] = 'Dashboard/ajax_coupon_codes/$1';
 
 $route['Dashboard/past_due_invoices'] = 'Dashboard/past_due_invoices';
 
@@ -1967,3 +1970,9 @@ $route['customers/_create_activation_fee'] = 'Customer/ajax_create_activation_fe
 
 //Benchmark for Testing
 $route['benchmark/cron_customer_subscription'] = 'Benchmark/cron_customer_subscription';
+
+//Role Access Modules
+$route['users/role_access_modules'] = 'Users/role_access_modules';
+
+//Getting Started
+$route['dashboard/_getting_started'] = 'Dashboard/ajax_getting_started';

@@ -698,11 +698,17 @@ $(document).ready(function(){
         e.preventDefault();
         var url = base_url + 'invoice/_update_invoice';
 
+        for ( instance in CKEDITOR.instances ){
+            CKEDITOR.instances[instance].updateElement();
+        }        
+
         $.ajax({
             type: "POST",
             url: url,
             dataType: 'json',
-            data: $('#invoice_form').serialize(),
+            data:new FormData(this),
+            processData:false,
+            contentType:false,
             success: function(data) {    
                 $('#btn-update-invoice').html('Save');                   
                 if (data.is_success) {
