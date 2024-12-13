@@ -45,7 +45,7 @@ class Autocomplete extends MY_Controller
 
         $search = $this->input->get('q');
         $filter = ['search' => $search];
-        $cid    = logged('company_id');
+        $cid    = logged('company_id');        
         $customers = $this->AcsProfile_model->getAllByCompanyId($cid, array(), $filter);  
 
         $result = array(); 
