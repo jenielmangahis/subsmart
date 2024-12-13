@@ -9,9 +9,10 @@ $(document).on('click', 'a.add-to-favorites', function(e) {
     var id = e.currentTarget.dataset.id;
 
     $.get('/accounting/reports/add-to-favorites/' + id, function(res) {
-        $('.favorites-item-container').html(res);
-        Swal.close();  
-        toastr.success("Successfully added to favorites");
+        // $('.favorites-item-container').html(res);
+        // Swal.close();  
+        // toastr.success("Successfully added to favorites");
+        window.location.reload(true);
     });
 });
 
@@ -28,30 +29,29 @@ $(document).on('click','a.remove-from-favorites', function(e) {
     var id = e.currentTarget.dataset.id;
 
     $.get('/accounting/reports/remove-from-favorites/'+id, function(res) {
-        $('.favorites-item-container').html(res);
-        Swal.close();  
-        toastr.success("Successfully removed to favorites");
-
-     
+        // $('.favorites-item-container').html(res);
+        // Swal.close();  
+        // toastr.success("Successfully removed to favorites");
+        window.location.reload(true);
     });
 });
 
 $('a.remove-from-favorites').on('mouseenter', function() {
     $(this).css('color', '#888888');
-    $(this).children('i').removeClass('bxs-star').addClass('bx-star');
+    $(this).children('i').removeClass('bxs-check-square').addClass('bx-checkbox');
 });
 
 $('a.remove-from-favorites').on('mouseleave', function() {
     $(this).css('color', '#408854');
-    $(this).children('i').removeClass('bx-star').addClass('bxs-star');
+    $(this).children('i').removeClass('bx-checkbox').addClass('bxs-check-square');
 });
 
 $('a.add-to-favorites').on('mouseenter', function() {
     $(this).css('color', '#408854');
-    $(this).children('i').removeClass('bx-star').addClass('bxs-star');
+    $(this).children('i').removeClass('bx-checkbox').addClass('bxs-check-square');
 });
 
 $('a.add-to-favorites').on('mouseleave', function() {
     $(this).css('color', '#888888');
-    $(this).children('i').removeClass('bxs-star').addClass('bx-star');
+    $(this).children('i').removeClass('bxs-check-square').addClass('bx-checkbox');
 });
