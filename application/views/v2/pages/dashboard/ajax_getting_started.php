@@ -116,14 +116,17 @@
 
         <div class="row item-getting-started">
             <div class="col-md-2">
+                <a class="getting-started-item-link" id="connect-to-quickbooks-or-import-customer-list" href="javascript:void(0);">
                 <div class="row">
                     <div class="col d-flex justify-content-center align-items-center">
                         <i class='bx bx-reset' style="font-size: 55px;"></i>
                     </div>
-                    <i class='bx check-icon bxs-check-circle <?= count($totalCustomers) > 0 ? 'check-purple' : ''; ?>'></i>
-                </div>  
+                    <i class='bx check-icon bxs-check-circle <?= $totalCustomers ? 'check-purple' : ''; ?>'></i>
+                </div> 
+                </a> 
             </div>
             <div class="col-md-10">
+                <a class="getting-started-item-link" id="connect-to-quickbooks-or-import-customer-list" href="javascript:void(0);">
                 <div class="content">
                     <div class="details news-details" style="">                                                    
                         <span class="content-title">
@@ -132,6 +135,7 @@
                         <span class="content-subtitle d-block mt-2">Sync your Quickbooks account or upload your customer list.</span>
                     </div>
                 </div>
+                </a>
             </div>
         </div>
 
@@ -155,46 +159,54 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="row item-getting-started">
             <div class="col-md-2">
                 <div class="row">
-                    <div class="col d-flex justify-content-center align-items-center">
-                        <i class='bx bx-credit-card-front' style="font-size: 55px;"></i>
-                    </div>
-                    <i class='bx check-icon bxs-check-circle'></i>
+                    <a class="getting-started-item-link" id="nsmart-online-booking" target="_blank" href="<?php echo base_url('more/addon/booking'); ?>">
+                        <div class="col d-flex justify-content-center align-items-center">
+                            <i class='bx bx-credit-card-front' style="font-size: 55px;"></i>
+                        </div>
+                        <i class='bx check-icon bxs-check-circle <?= count($totalOnlineBooking) > 0 ? 'check-purple' : ''; ?>'></i>
+                    </a>
                 </div>  
             </div>
             <div class="col-md-10">
-                <div class="content">
-                    <div class="details news-details" style="">                                                    
-                        <span class="content-title">
-                        Set up nSmarTrac online booking
-                        </span>
-                        <span class="content-subtitle d-block mt-2">Sync your Quickbooks account or upload your contact list.</span>
+                <a class="getting-started-item-link" id="nsmart-online-booking" target="_blank" href="<?php echo base_url('more/addon/booking'); ?>">
+                    <div class="content">
+                        <div class="details news-details" style="">                                                    
+                            <span class="content-title">
+                            Set up nSmarTrac online booking
+                            </span>
+                            <span class="content-subtitle d-block mt-2">Sync your Quickbooks account or upload your contact list.</span>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
-
+        
         <div class="row item-getting-started">
             <div class="col-md-2">
                 <div class="row">
-                    <div class="col d-flex justify-content-center align-items-center">
-                        <i class='bx bx-credit-card' style="font-size: 55px;"></i>
-                    </div>
-                    <i class='bx check-icon bxs-check-circle'></i>
+                    <a class="getting-started-item-link" id="nsmart-online-connector" target="_blank" href="<?php echo base_url('tools/api_connectors'); ?>">
+                        <div class="col d-flex justify-content-center align-items-center">
+                            <i class='bx bx-credit-card' style="font-size: 55px;"></i>
+                        </div>
+                        <i class='bx check-icon bxs-check-circle <?= $isWithOnlinePayments ? 'check-purple' : ''; ?>'></i>
+                    </a>
                 </div>  
             </div>
             <div class="col-md-10">
-                <div class="content">
-                    <div class="details news-details" style="">                                                    
-                        <span class="content-title">
-                        Set up online payments
-                        </span>
-                        <span class="content-subtitle d-block mt-2">Sync your Quickbooks account or upload your contact list.</span>
+                <a class="getting-started-item-link" id="nsmart-online-connector" target="_blank" href="<?php echo base_url('tools/api_connectors'); ?>">
+                    <div class="content">
+                        <div class="details news-details" style="">                                                    
+                            <span class="content-title">
+                            Set up online payments
+                            </span>
+                            <span class="content-subtitle d-block mt-2">Sync your Quickbooks account or upload your contact list.</span>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </div>
