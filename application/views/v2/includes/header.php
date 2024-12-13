@@ -929,6 +929,7 @@ if (is_null($image)) {
         </div>
     </div>
 </div>
+
 <!-- Getting Started : Job Schedule -->
 <div class="modal fade nsm-modal fade" id="modal-getting-started-job-schedule" aria-labelledby="modal-getting-started-job-scheduleLabel" aria-hidden="true">
     <div class="modal-dialog modal-md modal-md modal-dialog-centered">
@@ -948,6 +949,31 @@ if (is_null($image)) {
                         <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('job/new_job1'); ?>">
                             <i class='bx bx-fw bx-list-plus' ></i> Use Job Form 
                         </a>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
+
+<!-- Getting Started : Connect to Quickbooks -->
+<div class="modal fade nsm-modal fade" id="modal-connect-to-quickbooks-or-import-customer-list" aria-labelledby="modal-connect-to-quickbooks-or-import-customer-listLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="">Import Your Clients</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>            
+            <div class="modal-body" id="getting-started-container">
+                <div class="row">
+                    <div class="col-md-6" style="text-align: center;">
+                        <!-- <i class='bx bx-circle' style="font-size: 100px;"></i> -->
+                        <img class="nsm-logo" src="<?php echo base_url('assets/img/api-tools/thumb_quickbooks_payroll.png'); ?>" style="height: 100px;">
+                        <a class="nsm-button primary getting-started-big-btn" href="javascript:void(0);">From Quickbooks</a>
+                    </div>
+                    <div class="col-md-6" style="text-align: center;">
+                        <i class='bx bxs-spreadsheet' style="font-size: 100px;"></i>
+                        <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('customer/import_customer'); ?>">From Spreadsheet</a>
                     </div>
                 </div>
             </div>            
@@ -998,6 +1024,10 @@ if (is_null($image)) {
 
         $(document).on('click', '#getting-started-schedule-job', function(){
             $('#modal-getting-started-job-schedule').modal('show');
+        });
+ 
+        $(document).on('click', '#connect-to-quickbooks-or-import-customer-list', function(){
+            $('#modal-connect-to-quickbooks-or-import-customer-list').modal('show');
         });
 
         $(document).on('click', '#left-nav-customer-search', function(){
