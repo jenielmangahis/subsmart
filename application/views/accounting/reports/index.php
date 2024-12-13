@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
 <style>
 .row-report-name{
     width:80%;
@@ -6,6 +7,16 @@
 }
 .accordion-body{
     
+}
+
+.hoverSelection:hover {
+    outline: 1px solid #80808036;
+    background: #6a4a860d;
+    border-radius: 5px;
+}
+
+.headerColor {
+    background: #6a4a8624;
 }
 </style>
 <div class="row page-content g-0">
@@ -26,71 +37,51 @@
                         </div>
                     </div>
                 </div>
-                <div class="row g-3 grid-mb favorites-item-container">
+                <div id="masonryContainer" class="row favorites-item-container">
                 <?php foreach ($reportGroups as $reportGroup) { ?>                
-                    <div class="<?= $reportGroup->description == 'Favorites' ? 'col-12' : 'col-6'; ?>">
-                        <div class="accordion">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button content-title" type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#collapse-<?php echo $reportGroup->id; ?>" aria-expanded="true"
-                                        aria-controls="collapse-<?php echo $reportGroup->id; ?>">
-                                        <?php echo $reportGroup->description; ?>
-                                    </button>
-                                </h2>
-                                <div id="collapse-<?php echo $reportGroup->id; ?>"
-                                    class="accordion-collapse collapse show">
-                                    <div class="accordion-body">
-                                        <div class="row">
+                    <div class="<?= $reportGroup->description == 'Favorites' ? 'col-6 mb-3' : 'col-6 mb-3'; ?>">
+                        <div class="card">
+                            <div class="card-header headerColor"><strong><?php echo $reportGroup->description; ?></strong></div>
+                            <div class="card-body">
+                                <?php $reportTypesColumns = count($reportGroup->report_types) > 8 ? array_chunk($reportGroup->report_types, ceil(count($reportGroup->report_types) / 2)) : [$reportGroup->report_types]; ?>
+                                <?php $favorite = $this->accounting_report_types_model->get_favorite_report_by_report_type_id($reportType->id, logged('company_id')); ?>
+                                <div class="row">
+                                <?php foreach ($reportTypesColumns as $colRepTypes) { ?>
+                                    <div class="col-md-6">
+                                        <ul class="list-unstyled m-0">
+                                            <?php foreach ($colRepTypes as $reportType) { ?>
+                                            <?php $favorite = $this->accounting_report_types_model->get_favorite_report_by_report_type_id($reportType->id, logged('company_id')); ?>
+                                            <li class="p-2 cursor-pointer hoverSelection">
+                                                <span class="row-report-name" onclick="location.href='<?php echo is_null($reportType->url) ? base_url('/accounting/reports/view-report/'.$reportType->id) : base_url($reportType->url); ?>'"><?php echo $reportType->name; ?>
+                                                    <a href="#" style="color: #888888" data-bs-toggle="collapse" data-bs-target="#<?php echo str_replace(' ', '-', strtolower($reportGroup->description)); ?>-<?php echo $reportType->id; ?>-collapse" aria-expanded="false" aria-controls="<?php echo str_replace(' ', '-', strtolower($reportGroup->description)); ?>-<?php echo $reportType->id; ?>-collapse">
+                                                        <i class="bx bx-info-circle report-help-popover" data-toggle="popover" data-bs-content="<?= $reportType->description; ?>"></i>
+                                                    </a>
+                                                </span>
 
-                                            <?php $reportTypesColumns = count($reportGroup->report_types) > 8 ? array_chunk($reportGroup->report_types, ceil(count($reportGroup->report_types) / 2)) : [$reportGroup->report_types]; ?>
-                                            <?php foreach ($reportTypesColumns as $colRepTypes) { ?>
-                                            <div class="col-12 col-md-6">
-                                                <ul class="list-unstyled m-0">
-                                                    <?php foreach ($colRepTypes as $reportType) { ?>
-                                                    <?php $favorite = $this->accounting_report_types_model->get_favorite_report_by_report_type_id($reportType->id, logged('company_id')); ?>
-                                                    <li class="p-3 cursor-pointer">
-                                                        <span class="row-report-name" 
-                                                            onclick="location.href='<?php echo is_null($reportType->url) ? base_url('/accounting/reports/view-report/'.$reportType->id) : base_url($reportType->url); ?>'"><?php echo $reportType->name; ?>
-                                                            <a href="#" style="color: #888888" data-bs-toggle="collapse"
-                                                                data-bs-target="#<?php echo str_replace(' ', '-', strtolower($reportGroup->description)); ?>-<?php echo $reportType->id; ?>-collapse"
-                                                                aria-expanded="false"
-                                                                aria-controls="<?php echo str_replace(' ', '-', strtolower($reportGroup->description)); ?>-<?php echo $reportType->id; ?>-collapse">
-                                                                <i class="bx bx-fw bx-help-circle report-help-popover" data-toggle="popover" data-bs-content="<?= $reportType->description; ?>"></i>
-                                                            </a>
-                                                        </span>
-
-                                                        <div class="dropdown float-end d-inline-block"
-                                                            style="min-width: 23px; min-height: 1px">                                                            
-                                                            <a href="#" class="dropdown-toggle"
-                                                                data-bs-toggle="dropdown" style="color: #888888">
-                                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                            </a>
-                                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                                <?php if ($reportType->customizable) { ?>
-                                                                    <li><a class="dropdown-item" href="#">Customize</a></li>
-                                                                <?php } ?>
-                                                                <li><a class="dropdown-item btn-add-to-management-reports" href="javascript:void(0);" data-name="<?= $reportType->name; ?>" data-id="<?= $reportType->id; ?>">Add to Management Reports</a></li>
-                                                            </ul>                                                            
-                                                        </div>
-                                                        <?php if ($reportType->favoritable === '1') { ?>
-                                                        <a href="#" data-id="<?php echo $reportType->id; ?>"
-                                                            class="float-end <?php echo is_null($favorite) ? 'add-to-favorites' : 'remove-from-favorites'; ?>"
-                                                            style="color: <?php echo is_null($favorite) ? '#888888' : '#408854'; ?>">
-                                                            <i
-                                                                class="bx bx-fw <?php echo is_null($favorite) ? 'bx-star' : 'bxs-star'; ?>"></i>
-                                                        </a>
+                                                <div class="dropdown float-end d-inline-block" style="min-width: 23px; min-height: 1px">
+                                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" style="color: #888888">
+                                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu dropdown-menu-end">
+                                                        <?php if ($reportType->customizable) { ?>
+                                                        <li><a class="dropdown-item" href="#">Customize</a></li>
                                                         <?php } ?>
+                                                        <li><a class="dropdown-item btn-add-to-management-reports" href="javascript:void(0);" data-name="<?= $reportType->name; ?>" data-id="<?= $reportType->id; ?>">Add to Management Reports</a></li>
+                                                    </ul>
+                                                </div>
+                                                <?php if ($reportType->favoritable === '1') { ?>
+                                                <a href="#" data-id="<?php echo $reportType->id; ?>" class="float-end <?php echo is_null($favorite) ? 'add-to-favorites' : 'remove-from-favorites'; ?>" style="color: <?php echo is_null($favorite) ? '#888888' : '#408854'; ?>">
+                                                    <i class="bx bx-fw <?php echo is_null($favorite) ? 'bx-checkbox' : 'bxs-check-square'; ?>"></i>
 
-                                                      
-                                                    </li>
-                                                    <?php } ?>
-                                                </ul>
-                                            </div>
+                                                </a>
+                                                <?php } ?>
+
+
+                                            </li>
                                             <?php } ?>
-                                        </div>
+                                        </ul>
                                     </div>
+                                <?php } ?>
                                 </div>
                             </div>
                         </div>
@@ -103,6 +94,8 @@
 </div>
 <script>
 $(function(){
+    var masonry = new Masonry(document.getElementById('masonryContainer'), {percentPosition: true,});
+
     $('.report-help-popover').popover({
         placement: 'top',
         html : true, 
