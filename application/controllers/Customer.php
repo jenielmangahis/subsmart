@@ -2215,9 +2215,9 @@ class Customer extends MY_Controller
         if(!empty(get('search'))) {
 			$keyword = get('search');
             $this->page_data['search'] = $keyword;
-            $payment_subscrition_history = $this->AcsCustomerSubscriptionBilling_model->getPaymentSubscriptionHistory($keyword);
+            $payment_subscrition_history = $this->AcsCustomerSubscriptionBilling_model->getPaymentSubscriptionHistoryByCustomerId($customer_id,$keyword);
         } else {
-            $payment_subscrition_history = $this->AcsCustomerSubscriptionBilling_model->getPaymentSubscriptionHistory($keyword);
+            $payment_subscrition_history = $this->AcsCustomerSubscriptionBilling_model->getPaymentSubscriptionHistoryByCustomerId($customer_id,$keyword);
         }
 
         $this->page_data['payment_subscrition_history'] = $payment_subscrition_history;
