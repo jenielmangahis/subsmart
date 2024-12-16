@@ -104,24 +104,6 @@ $(document).ready(function () {
 
 	});
 
-	$(document).on("change", ".nsm-img-upload .nsm-upload", function (e) {
-		let _this = $(this);
-		let _parent = _this.closest(".nsm-img-upload");
-		let _isFileDocument = _parent.hasClass("file-upload");
-		let reader = new FileReader();
-
-		if (_isFileDocument) {
-			console.log(_this.val().split('\\').pop());
-			_parent.find(".nsm-upload-label").html(_this.val().split('\\').pop());
-		}
-		else {
-			reader.onload = function () {
-				let imgPreview = _parent;
-				imgPreview.css("background-image", "url('" + reader.result + "')");
-			};
-			reader.readAsDataURL(e.target.files[0]);
-		}
-	});
 
 	$(document).on("click", ".nsm-color-picker li", function () {
 		let _this = $(this);

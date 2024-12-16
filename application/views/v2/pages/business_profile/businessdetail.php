@@ -22,7 +22,7 @@
                                     <div class="nsm-card-content">
                                         <div class="row g-3">
                                             <div class="col-12">
-                                                <div class="nsm-img-upload circle m-auto" style="background-image: url('<?= businessProfileImage($profiledata->id); ?>');">
+                                                <div class="nsm-img-upload circle m-auto" style="background-image:url('<?php echo base_url($profiledata->business_image); ?>');background-size:contain;">
                                                     <span class="nsm-upload-label disable-select">Drop or click image to upload</span>
                                                     <input type="file" name="image" id="company-logo" class="nsm-upload" accept="image/*">
                                                 </div>

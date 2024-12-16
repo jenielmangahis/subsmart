@@ -765,6 +765,32 @@ if (is_null($image)) {
     .offcanvas-end {
         border-left: unset;
     }
+    
+    .cursorPointer {
+        cursor: pointer;
+    }
+
+    #previewBinder_table > tbody {
+        font-size: unset;
+    }
+    
+    .playCirleSize {
+        font-size: 25px;
+    }
+
+    .watchClip {
+        margin-bottom: -6px;
+        margin-top: -2px;
+    }
+
+    .watchClip:hover {
+        font-weight: bold;
+        color: #ff00009e;
+    }
+
+    #previewBinder_table_info {
+        display: none;
+    }
 </style>
 
 <!-- <div class="row d-flex position-relative">
@@ -774,50 +800,10 @@ if (is_null($image)) {
 <div class="offcanvas offcanvas-end" tabindex="-1" id="helpSupportSidebar" aria-labelledby="helpSupportSidebarLabel">
     <div class="offcanvas-header" style="background: #6a4a86;">
         <h5 id="helpSupportSidebarLabel" style="font-weight: bold; margin: 0; color: white;">Tech Support</h5>
-        <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Close" style="color: white !important;float: left;padding: 0;"><span class="float-start">Back &gt;</span></button>
+        <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Close" style="color: white !important;float: left;padding: 0;"><span class="float-start"><small>Close</small></span></button>
     </div>
     <div class="offcanvas-body">
         <div class="container">
-            <div class="row chatBotMessenger" style="display: none;">
-            <div class="col-md-8 col-lg-6 col-xl-4 chatbox_container">
-                <div id="chatbox" class="card">
-                    <div class="card-header chatbox_header d-flex align-items-center p-3 text-white border-bottom-0">
-                        <img class="chatbot_image" src="https://cdn-icons-png.flaticon.com/512/8943/8943377.png">
-                        <p class="mb-0 chatbot_name_section"><span class="chatbot_name">Chatbot</span><br><small>Chatbot</small></p>
-                        <i class="fas fa-times chatbot_minimize"></i>
-                    </div>
-                    <div class="card-body chatbot_body">
-                        <div class="table-responsive chat_content">
-                            <div class="receive_container position-relative">
-                                <small class="receiver_name position-absolute">🤖 <span class="chatbot_name">Chatbot</span></small>
-                                <div class="receive_chat d-flex flex-row justify-content-start">
-                                    <div class="p-3 me-3 border receive_chat_container">
-                                        <p class="mb-0">Hi, I'm <u class="chatbot_name fw-normal">Chatbot</u>, a chatbot from nSmarTrac, who can help you with your queries.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="receive_container position-relative">
-                                <small class="receiver_name position-absolute">🤖 <span class="chatbot_name">Chatbot</span></small>
-                                <div class="receive_chat d-flex flex-row justify-content-start">
-                                    <div class="p-3 me-3 border receive_chat_container">
-                                        <p class="mb-0">How can I help you today?</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="typing_status"><small class="text-muted"><span class="chatbot_name fw-normal">Chatbot</span> is typing...</small></div>
-                        <form id="sendchat_form">
-                            <div class="input-group message_form_container">
-                                <input name="request" class="form-control" type="text" placeholder="Type your message here..." required>
-                                <button type="submit" class="btn message_form_button">
-                                    <strong><i class='bx bxs-send message_form_button_icon'></i></strong>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            </div>
             <div class="row techSupportMenu">
                 <div class="col-12-md mb-3">
                     <h4 class="fw-bold">How do you prefer to get in touch with us?</h4>
@@ -853,7 +839,7 @@ if (is_null($image)) {
                         <div class="card-body">
                             <h5 class="card-title fw-bold">Video Binder</h5>
                             <p class="card-text">Access our video binder for comprehensive pre-recorded information about the system.</p>
-                            <a href="#" class="btn btn-primary fw-bold"><i class="fas fa-folder"></i>&nbsp;&nbsp;Open Video Binder</a>
+                            <a href="#" class="btn btn-primary fw-bold openVideoBinder"><i class="fas fa-folder"></i>&nbsp;&nbsp;Open Video Binder</a>
                         </div>
                         <div class="card-footer text-muted"><i class="fas fa-info-circle"></i>&nbsp;&nbsp;The video binder is a collection of pre-recorded videos providing detailed information about the system.</div>
                     </div>
@@ -867,6 +853,79 @@ if (is_null($image)) {
                         </div>
                         <div class="card-footer text-muted"><i class="fas fa-info-circle"></i>&nbsp;&nbsp;Our chatbot is available 24/7 to help answer questions on system-related inquiries.</div>
                     </div>
+                </div>
+            </div>
+            <div class="row videoBinder" style="display: none;">
+                <div class="col-12-md">
+                    <h4 class="fw-bold float-start">Video Binder</h4>
+                    <span class="text-muted float-end cursorPointer returnToMenu"><i class='bx bxs-left-top-arrow-circle'></i> Return to Menu</span>
+                </div>
+                <div class="col-12-md mb-3">
+                    <span>The video binder is a collection of pre-recorded videos providing detailed information about the system.</span>
+                </div>
+                <div class="col-12-md">
+                    <input id="previewBinder_table_search" class="form-control mt-0 mb-2 w-100" type="text" placeholder="Search...">
+                    <table id="previewBinder_table" class="table table-bordered table-hover table-sm w-100">
+                        <thead><tr><th></th></tr></thead>
+                        <tbody><tr></tr></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row chatBotMessenger" style="display: none;">
+                <div class="col-md-8 col-lg-6 col-xl-4 chatbox_container">
+                    <div id="chatbox" class="card">
+                        <div class="card-header chatbox_header d-flex align-items-center p-3 text-white border-bottom-0">
+                            <img class="chatbot_image" src="https://cdn-icons-png.flaticon.com/512/8943/8943377.png">
+                            <p class="mb-0 chatbot_name_section"><span class="chatbot_name">Chatbot</span><br><small>Chatbot</small></p>
+                            <i class="fas fa-times chatbot_minimize"></i>
+                        </div>
+                        <div class="card-body chatbot_body">
+                            <div class="table-responsive chat_content">
+                                <div class="receive_container position-relative">
+                                    <small class="receiver_name position-absolute">🤖 <span class="chatbot_name">Chatbot</span></small>
+                                    <div class="receive_chat d-flex flex-row justify-content-start">
+                                        <div class="p-3 me-3 border receive_chat_container">
+                                            <p class="mb-0">Hi, I'm <u class="chatbot_name fw-normal">Chatbot</u>, a chatbot from nSmarTrac, who can help you with your queries.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="receive_container position-relative">
+                                    <small class="receiver_name position-absolute">🤖 <span class="chatbot_name">Chatbot</span></small>
+                                    <div class="receive_chat d-flex flex-row justify-content-start">
+                                        <div class="p-3 me-3 border receive_chat_container">
+                                            <p class="mb-0">How can I help you today?</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="typing_status"><small class="text-muted"><span class="chatbot_name fw-normal">Chatbot</span> is typing...</small></div>
+                            <form id="sendchat_form">
+                                <div class="input-group message_form_container">
+                                    <input name="request" class="form-control" type="text" placeholder="Type your message here..." required>
+                                    <button type="submit" class="btn message_form_button">
+                                        <strong><i class='bx bxs-send message_form_button_icon'></i></strong>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- preview Video in video Binder -->
+<div class="modal fade viewVideoFromBinderModal" data-bs-backdrop="static" role="dialog" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Preview Video File</span>
+                <i class="bx bx-fw bx-x m-0 text-muted exit_preview_modal" data-bs-dismiss="modal" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <div id="viewVideoContent" class="text-center">
+                    <p class="text-muted">No file selected for preview.</p>
                 </div>
             </div>
         </div>
@@ -929,6 +988,7 @@ if (is_null($image)) {
         </div>
     </div>
 </div>
+
 <!-- Getting Started : Job Schedule -->
 <div class="modal fade nsm-modal fade" id="modal-getting-started-job-schedule" aria-labelledby="modal-getting-started-job-scheduleLabel" aria-hidden="true">
     <div class="modal-dialog modal-md modal-md modal-dialog-centered">
@@ -955,13 +1015,102 @@ if (is_null($image)) {
     </div>
 </div>
 
-<script>    
-    $('.openChatbotButton').click(function (e) { 
+<!-- Getting Started : Connect to Quickbooks -->
+<div class="modal fade nsm-modal fade" id="modal-connect-to-quickbooks-or-import-customer-list" aria-labelledby="modal-connect-to-quickbooks-or-import-customer-listLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="">Import Your Clients</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>            
+            <div class="modal-body" id="getting-started-container">
+                <div class="row">
+                    <div class="col-md-6" style="text-align: center;">
+                        <!-- <i class='bx bx-circle' style="font-size: 100px;"></i> -->
+                        <img class="nsm-logo" src="<?php echo base_url('assets/img/api-tools/thumb_quickbooks_payroll.png'); ?>" style="height: 100px;">
+                        <a class="nsm-button primary getting-started-big-btn" href="javascript:void(0);">From Quickbooks</a>
+                    </div>
+                    <div class="col-md-6" style="text-align: center;">
+                        <i class='bx bxs-spreadsheet' style="font-size: 100px;"></i>
+                        <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('customer/import_customer'); ?>">From Spreadsheet</a>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
+
+<script>   
+    var BASE_URL = window.origin;
+    $(document).ready(function () {
+        // DataTable Configuration ===============
+        const previewBinder_table = $('#previewBinder_table').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ordering": false,
+            "pageLength": 20, // Sets default rows per page
+            "ajax": {
+                "url": BASE_URL + "/VideoBinder/getAllVideos",
+                "type": "POST",
+            },
+            "language": {
+                "infoFiltered": "",
+            },
+            "order": [] // Disable default ordering
+        });
+
+        $('#previewBinder_table_search').keyup(function() {
+            previewBinder_table.search($(this).val()).draw();
+        });        
+    });
+    
+    $('.openVideoBinder').click(function (e) { 
         $('.techSupportMenu').hide();
-        $('.chatBotMessenger').fadeIn();
+        $('.videoBinder').fadeIn();
+        $('.chatBotMessenger').hide();
     });
 
-    var BASE_URL = window.origin;
+    $('.openChatbotButton').click(function (e) { 
+        // $('.techSupportMenu').hide();
+        // $('.videoBinder').hide();
+        // $('.chatBotMessenger').fadeIn();
+    });
+
+    $('.returnToMenu').click(function (e) { 
+        $('.techSupportMenu').fadeIn();
+        $('.videoBinder').hide();
+        $('.chatBotMessenger').hide();
+    });
+    
+
+        $(document).on('click', '.watchClip', function () {
+            const fileName = $(this).attr('data-filename');
+            const fileUrl = `${BASE_URL}/uploads/files/${fileName}`;
+            const fileType = fileName.split('.').pop().toLowerCase();
+            const previewContent = $('#viewVideoContent');
+
+            let content = '';
+            if (['jpg', 'jpeg', 'png', 'gif'].includes(fileType)) {
+                content = `<img src="${fileUrl}" class="img-fluid" alt="Video Image">`;
+            } else if (['mp4', 'avi', 'mov', 'wmv'].includes(fileType)) {
+                content = `
+                    <video controls class="w-100">
+                        <source src="${fileUrl}" type="video/${fileType}">
+                        Your browser does not support the video tag.
+                    </video>`;
+            } else {
+                content = `<p class="text-danger">Unsupported file format for preview.</p>`;
+            }
+
+            previewContent.html(content);
+            $('.viewVideoFromBinderModal').modal('show');
+        });
+
+        $(document).on('hidden.bs.modal', '.viewVideoFromBinderModal', function () {
+            $(this).find('video').remove(); 
+        });
+
+
     // Custom Function ===============
     function formDisabler(selector, state) {
         const element = $(selector);
@@ -998,6 +1147,10 @@ if (is_null($image)) {
 
         $(document).on('click', '#getting-started-schedule-job', function(){
             $('#modal-getting-started-job-schedule').modal('show');
+        });
+ 
+        $(document).on('click', '#connect-to-quickbooks-or-import-customer-list', function(){
+            $('#modal-connect-to-quickbooks-or-import-customer-list').modal('show');
         });
 
         $(document).on('click', '#left-nav-customer-search', function(){

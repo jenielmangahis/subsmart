@@ -184,7 +184,7 @@ if ($this->session->userdata('usertimezone') == null) {
     <div class="offcanvas offcanvas-end" tabindex="-1" id="helpSupportSidebar" aria-labelledby="helpSupportSidebarLabel">
         <div class="offcanvas-header" style="background: #6a4a86;">
             <h5 id="helpSupportSidebarLabel" style="font-weight: bold; margin: 0; color: white;">Tech Support</h5>
-            <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Close" style="color: white !important;float: left;padding: 0;"><span class="float-start">Back &gt;</span></button>
+            <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Close" style="color: white !important;float: left;padding: 0;"><span class="float-start"><small>Close</small></span></button>
         </div>
         <div class="offcanvas-body">
             <div class="container">

@@ -26,8 +26,7 @@ class AcsProfile_model extends MY_Model
         if (!empty($filters)) {
             if ($filters['search'] != '') {
                 $this->db->group_start();
-                $this->db->like('first_name', $filters['search'], 'both');
-                $this->db->or_like('last_name', $filters['search'], 'both');
+                $this->db->like('CONCAT(first_name, " ", last_name)', $filters['search'], 'both');                
                 $this->db->group_end();
             }
         }

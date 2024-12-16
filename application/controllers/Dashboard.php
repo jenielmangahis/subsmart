@@ -174,6 +174,9 @@ class Dashboard extends Widgets
         $companyId = logged('company_id');
         $type = 0;
 
+        $user_type = logged('user_type');
+        $this->page_data['user_type'] = $user_type;
+
         $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6, 0], 0);
         $this->page_data['activity_list_count'] = sizeof($this->page_data['activity_list']);
         if ($this->page_data['activity_list_count'] > 5) {
@@ -1952,16 +1955,25 @@ class Dashboard extends Widgets
         $this->load->model('Jobs_model');
         $this->load->model('Taskhub_model');
         $this->load->model('AcsProfile_model');
+        $this->load->model('BookingCategory_model');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
 
         $cid = logged('company_id');
+        $user_id = logged('id');
 
-        $isWithJobs = $this->Jobs_model->getJob($cid);
-        $isWithTaskHub = $this->Taskhub_model->getAllByCompanyId($cid);
+        $isWithJobs     = $this->Jobs_model->getJob($cid);
+        $isWithTaskHub  = $this->Taskhub_model->getAllByCompanyId($cid);
         $totalCustomers = $this->AcsProfile_model->countAllCustomerByCompanyId($cid);
 
-        $this->page_data['isWithJobs'] = $isWithJobs;
-        $this->page_data['isWithTaskHub'] = $isWithTaskHub;
+        $args = array('company_id' => logged('company_id'));
+		$totalOnlineBooking   = $this->BookingCategory_model->getByWhere($args);
+        $isWithOnlinePayments = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($cid); 
+
+        $this->page_data['isWithJobs']     = $isWithJobs;
+        $this->page_data['isWithTaskHub']  = $isWithTaskHub;
         $this->page_data['totalCustomers'] = $totalCustomers;
+        $this->page_data['totalOnlineBooking'] = $totalOnlineBooking;
+        $this->page_data['isWithOnlinePayments'] = $isWithOnlinePayments;
         $this->load->view('v2/pages/dashboard/ajax_getting_started', $this->page_data);
     }
 }

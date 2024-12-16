@@ -850,6 +850,11 @@
                         <i class='bx bx-news' ></i> Ad Banner Settings
                     </a>
                 </li>
+                <li class="li-third-sub-menu">
+                    <a href="<?php echo base_url('videoBinder/settings'); ?>">
+                        <i class='bx bx-news' ></i> Video Binder
+                    </a>
+                </li>
                 <?php endif; ?>
             </ul>
         </li>
