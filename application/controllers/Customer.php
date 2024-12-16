@@ -2325,9 +2325,20 @@ class Customer extends MY_Controller
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
+
+		$keyword         = '';
+        $param['search'] = '';
+        if(!empty(get('search'))) {
+			$keyword = get('search');
+            $this->page_data['search'] = $keyword;
+            $param['search'] = $keyword;
+            $this->page_data['customerStatus'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id, [], $param);
+        } else {
+            $this->page_data['customerStatus'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id);
+        }          
         
         // $default_ids = defaultCompanyCustomerStatusIds();
-        $this->page_data['customerStatus'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id);
+        
         $this->load->view('v2/pages/customer/settings_customer_status', $this->page_data);
     }
 
@@ -7388,7 +7399,16 @@ class Customer extends MY_Controller
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
-        $this->page_data['lead_types'] = $this->customer_ad_model->getAllSettingsLeadTypesByCompanyId($company_id);
+		$keyword         = '';
+        $param['search'] = '';
+        if(!empty(get('search'))) {
+			$keyword = get('search');
+            $this->page_data['search'] = $keyword;
+            $param['search'] = $keyword;
+            $this->page_data['lead_types'] = $this->customer_ad_model->getAllSettingsLeadTypesByCompanyId($company_id, $param);
+        } else {
+            $this->page_data['lead_types'] = $this->customer_ad_model->getAllSettingsLeadTypesByCompanyId($company_id);
+        }          
 
         $this->load->view('v2/pages/customer/settings_lead_types', $this->page_data);
     }
