@@ -1041,7 +1041,8 @@ if (is_null($image)) {
 </div>
 
 <script>   
-    var BASE_URL = window.origin;
+    //var BASE_URL = window.origin;
+    var BASE_URL = "<?php echo base_url();?>";
     $(document).ready(function () {
         // DataTable Configuration ===============
         const previewBinder_table = $('#previewBinder_table').DataTable({
@@ -1050,7 +1051,7 @@ if (is_null($image)) {
             "ordering": false,
             "pageLength": 20, // Sets default rows per page
             "ajax": {
-                "url": BASE_URL + "/VideoBinder/getAllVideos",
+                "url": BASE_URL + "VideoBinder/getAllVideos",
                 "type": "POST",
             },
             "language": {
@@ -1135,7 +1136,7 @@ if (is_null($image)) {
     $(document).ready(function() {
         $.ajax({
             type: "POST",
-            url: BASE_URL + "/chatbot/preference",
+            url: BASE_URL + "chatbot/preference",
             dataType: "JSON",
             success: function(response) {
                 $('.chatbot_name').text(response[0]['chatbot_name']);
