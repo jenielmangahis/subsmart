@@ -1058,7 +1058,7 @@ if (is_null($image)) {
                     <div class="col-md-6" style="text-align: center;">
                         <!-- <i class='bx bx-circle' style="font-size: 100px;"></i> -->
                         <img class="nsm-logo" src="<?php echo base_url('assets/img/api-tools/thumb_quickbooks_payroll.png'); ?>" style="height: 100px;">
-                        <a class="nsm-button primary getting-started-big-btn" href="javascript:void(0);">From Quickbooks</a>
+                        <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('tools/quickbooks_accounting'); ?>">From Quickbooks</a>
                     </div>
                     <div class="col-md-6" style="text-align: center;">
                         <i class='bx bxs-spreadsheet' style="font-size: 100px;"></i>
