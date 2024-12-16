@@ -7322,7 +7322,16 @@ class Customer extends MY_Controller
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
-        $this->page_data['sales_area'] = $this->customer_ad_model->getAllSettingsSalesAreaByCompanyId($company_id);
+		$keyword         = '';
+        $param['search'] = '';
+        if(!empty(get('search'))) {
+			$keyword = get('search');
+            $this->page_data['search'] = $keyword;
+            $param['search'] = $keyword;
+            $this->page_data['sales_area'] = $this->customer_ad_model->getAllSettingsSalesAreaByCompanyId($company_id, $param);
+        } else {
+            $this->page_data['sales_area'] = $this->customer_ad_model->getAllSettingsSalesAreaByCompanyId($company_id);
+        }        
 
         $this->load->view('v2/pages/customer/settings_sales_area', $this->page_data);
     }
@@ -7346,7 +7355,16 @@ class Customer extends MY_Controller
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
-        $this->page_data['lead_source'] = $this->customer_ad_model->getAllSettingsLeadSourceByCompanyId($company_id);
+		$keyword         = '';
+        $param['search'] = '';
+        if(!empty(get('search'))) {
+			$keyword = get('search');
+            $this->page_data['search'] = $keyword;
+            $param['search'] = $keyword;
+            $this->page_data['lead_source'] = $this->customer_ad_model->getAllSettingsLeadSourceByCompanyId($company_id, $param);
+        } else {
+            $this->page_data['lead_source'] = $this->customer_ad_model->getAllSettingsLeadSourceByCompanyId($company_id);
+        }        
 
         $this->load->view('v2/pages/customer/settings_lead_source', $this->page_data);
     }

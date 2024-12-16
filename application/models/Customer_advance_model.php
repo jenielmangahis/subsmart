@@ -65,10 +65,15 @@ class Customer_advance_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllSettingsSalesAreaByCompanyId($company_id)
+    public function getAllSettingsSalesAreaByCompanyId($company_id, $param = null)
     {
         $this->db->select('*');
         $this->db->where('fk_comp_id', $company_id);
+        
+        if ($param['search'] != '') {
+            $this->db->like('ac_salesarea.sa_name', $param['search'], 'both');
+        }
+
         $this->db->order_by('sa_id', 'DESC');
         $query = $this->db->get('ac_salesarea');
 
@@ -84,11 +89,18 @@ class Customer_advance_model extends MY_Model
         return $query->row();
     }
 
-    public function getAllSettingsLeadSourceByCompanyId($company_id)
+    public function getAllSettingsLeadSourceByCompanyId($company_id, $param = null)
     {
         $this->db->select('*');
-        $this->db->where('fk_company_id', $company_id);
-        $this->db->or_where('fk_company_id', 0);
+
+        if ($param['search'] != '') {
+            $this->db->where('fk_company_id', $company_id);
+            $this->db->like('ac_leadsource.ls_name', $param['search'], 'both');
+        } else {
+            $this->db->where('fk_company_id', $company_id);
+            $this->db->or_where('fk_company_id', 0);
+        }
+        
         $this->db->order_by('ls_id', 'DESC');
         $query = $this->db->get('ac_leadsource');
 

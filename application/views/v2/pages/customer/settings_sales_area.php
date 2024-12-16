@@ -25,7 +25,16 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+
+                    <div class="col-6 grid-mb">
+                        <form action="<?php echo base_url('customer/settings_sales_area') ?>" method="get">
+                            <div class="nsm-field-group search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                            </div>
+                        </form>   
+                    </div>               
+
+                    <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#new_sales_area_modal">
                                 <i class='bx bx-fw bx-bar-chart-square'></i> New Sales Area
@@ -99,6 +108,11 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
+
+        $("#search_field").on("input", debounce(function() {
+            let _form = $(this).closest("form");
+            _form.submit();
+        }, 1000));          
 
         $("#new_sales_area_form").on("submit", function(e) {
             let _this = $(this);
