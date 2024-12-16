@@ -989,6 +989,36 @@ if (is_null($image)) {
     </div>
 </div>
 
+<!-- Getting Started : Download Mobile App -->
+<div class="modal fade nsm-modal fade" id="modal-getting-started-download-mobile-app" tabindex="-1" aria-labelledby="modal-getting-started-download-mobile-app-menuLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-lg modal-dialog-centered" style="max-width:633px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="">Download Mobile App</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>            
+            <div class="modal-body">
+                <form id="frm-getting-started-send-download-app-link">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4>Manage Your Business & Connect with Your Team in the field</h4>
+                        <p class="mt-2">This app is perfect for your team/techs in the field. View your schedule, invoice client on the spot, clock in and out, send estimates and more…</p>
+                        <div class="mb-3 mt-4">
+                            <label for="gettingStartedSendDownloadAppLink" class="form-label">Get the download link sent to your phone</label>
+                            <input type="text" class="form-control" id="gettingStartedSendDownloadAppLink" name="download_app_phone_number" placeholder="Your Phone" required="">
+                            <button type="submit" class="nsm-button primary mt-2" id="btn-send-download-link">Send</button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="<?= base_url('assets\frontend\images\mobile-app.jpg'); ?>" style="height:258px;" />
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Getting Started : Job Schedule -->
 <div class="modal fade nsm-modal fade" id="modal-getting-started-job-schedule" aria-labelledby="modal-getting-started-job-scheduleLabel" aria-hidden="true">
     <div class="modal-dialog modal-md modal-md modal-dialog-centered">
@@ -1149,6 +1179,10 @@ if (is_null($image)) {
         $(document).on('click', '#getting-started-schedule-job', function(){
             $('#modal-getting-started-job-schedule').modal('show');
         });
+
+        $(document).on('click', '#getting-started-download-mobile-app', function(){
+            $('#modal-getting-started-download-mobile-app').modal('show');
+        });
  
         $(document).on('click', '#connect-to-quickbooks-or-import-customer-list', function(){
             $('#modal-connect-to-quickbooks-or-import-customer-list').modal('show');
@@ -1186,6 +1220,39 @@ if (is_null($image)) {
                 },
                 success: function(html) {
                     $('#quick-customer-search-result-container').html(html);
+                }
+            });
+        });
+
+        $('#frm-getting-started-send-download-app-link').on('submit', function(e){
+            e.preventDefault();
+            
+            $.ajax({
+                type: "POST",
+                url: base_url + "dashboard/_send_download_app_link",
+                data: $('#frm-getting-started-send-download-app-link').serialize(),
+                dataType: "JSON",
+                beforeSend: function() {
+                    $('#btn-send-download-link').html('<span class="bx bx-loader bx-spin"></span>');
+                },
+                success: function(result) {
+                    $('#modal-getting-started-download-mobile-app').modal('hide');
+                    $('#btn-send-download-link').html('Send');
+                    if( result.is_success == 1 ) {
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'Download Mobile App',
+                        text: 'A text message will be sent to you in a short while.',
+                        }).then((result) => {
+                            //window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.msg,
+                        });
+                    }
                 }
             });
         });
