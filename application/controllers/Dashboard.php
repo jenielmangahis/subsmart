@@ -174,6 +174,9 @@ class Dashboard extends Widgets
         $companyId = logged('company_id');
         $type = 0;
 
+        $user_type = logged('user_type');
+        $this->page_data['user_type'] = $user_type;
+
         $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [6, 0], 0);
         $this->page_data['activity_list_count'] = sizeof($this->page_data['activity_list']);
         if ($this->page_data['activity_list_count'] > 5) {

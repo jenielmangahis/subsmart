@@ -79,6 +79,10 @@ class Users extends MY_Controller
         $ip_address = $this->input->ip_address();
         $this->Business_model->customerDeviceLookup("business_profile_visit", $ip_address, $user_agent);
 
+		// var_dump($profiledata);
+
+		// return;
+		
 		$this->page_data['dealsSteals'] = $dealsSteals;
 		$this->page_data['profiledata'] = $profiledata;
 		$this->page_data['selectedCategories'] = $selectedCategories;
@@ -359,7 +363,7 @@ class Users extends MY_Controller
 			copy(FCPATH . 'uploads/users/default.png', 'uploads/users/business_profile/' . $bid . '/default.png');
 		}
 		
-		$this->business_model->update($bid, ['business_name' => $pdata['business_name'], 'business_desc' => $pdata['business_desc'], 'is_show_business_cred' => $pdata['is_show_business_cred']],);
+		$this->business_model->update($bid, ['business_name' => $pdata['business_name'], 'business_desc' => $pdata['business_desc']],);
 
 		redirect('users/businessview');
 	}
@@ -531,7 +535,11 @@ class Users extends MY_Controller
 				'bbb_link' => $pdata['bbb_url'],
 				'license_image' => $license_image_name,
 				'bond_image' => $bond_image_name,
-				'insurance_image'=> $insurance_image
+				'insurance_image'=> $insurance_image,
+				'is_show_licensed' => $pdata['is_show_licensed'],
+				'is_show_bonded' => $pdata['is_show_bonded'],
+				'is_show_business_insured' => $pdata['is_show_business_insured'],
+				'is_show_bbb_acredited' => $pdata['is_show_bbb_acredited'],
 			];
 
 			$this->business_model->updateByCompanyId($cid, $data_availability);
@@ -2476,6 +2484,11 @@ class Users extends MY_Controller
 
 		$cid  = logged('company_id');
 		$post = $this->input->post();
+
+		if (!isset($post['is_show_links'])) {
+			$post['is_show_links'] = 0;
+		}
+
 		$profiledata = $this->business_model->getByCompanyId($cid);
 		if( $profiledata ){
 			$this->business_model->updateByCompanyId($cid, $post);

@@ -27,7 +27,8 @@
                             <button type="button" id="apply-crop" class="nsm-button primary mt-3">Apply Crop</button>
                         </div>
                         <div  id="image-preview-change" class="align-items-center justify-content-center" style="display:none ;">
-                            <button type="button" id="change-image" class="nsm-button  mt-3">Reset Image</button>
+                            <button type="button" id="reset-image" class="nsm-button  mt-3">Reset Image</button>
+                            <button type="button" id="change-image" class="nsm-button primary  mt-3">Change Image</button>
                         </div>
                         <div id="crop-action-button" class="mt-3 align-items-center justify-content-center"
                             style="display:none;">
@@ -51,15 +52,7 @@
                             actually does. Describe your company's values and goals. Minimum 25 characters.</label>
                         <textarea class="nsm-field form-control" cols="40" rows="8" name="business_desc" placeholder="Description"><?php echo $profiledata ? $profiledata->business_desc : ''; ?></textarea>
                     </div>
-                    <div class="col-12">
-                        <div class="form-check form-switch"
-                            style="display: flex; align-items: center;gap: 10px;padding-left: 10px;">
-                            <label class="content-subtitle fw-bold d-block">Show Business Credentials</label>
-                            <input class="form-check-input ms-0" name="is_show_business_cred" type="checkbox"
-                                value="1" <?php echo $profiledata && $profiledata->is_show_business_cred == 1 ? 'checked' : ''; ?>>
-
-                        </div>
-                    </div>
+                
 
 
                 </div>
