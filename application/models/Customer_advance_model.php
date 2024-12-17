@@ -125,11 +125,18 @@ class Customer_advance_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllSettingsCustomerGroupByCompanyId($company_id)
+    public function getAllSettingsCustomerGroupByCompanyId($company_id, $param = null)
     {
         $this->db->select('*');
         $this->db->where('company_id', $company_id);
-        $this->db->or_where('company_id', 0);
+
+        if ($param['search'] != '') {
+            $this->db->like('customer_groups.title', $param['search'], 'both');
+            $this->db->or_like('customer_groups.description', $param['search'], 'both');
+        } else {
+            $this->db->or_where('company_id', 0);
+        }
+        
         $this->db->order_by('id', 'DESC');
         $query = $this->db->get('customer_groups');
 
