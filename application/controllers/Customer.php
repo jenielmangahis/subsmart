@@ -6445,7 +6445,18 @@ class Customer extends MY_Controller
         // pass the $this so that we can use it to load view, model, library or helper classes
         // $customerGroup = new CustomerGroup($this);
         // $this->page_data['customerGroups'] =  $this->customer_ad_model->get_all_by_id('user_id',logged('id'),'customer_groups');
-        $this->page_data['customerGroups'] = $this->customer_ad_model->getAllSettingsCustomerGroupByCompanyId($company_id);
+
+		$keyword         = '';
+        $param['search'] = '';
+        if(!empty(get('search'))) {
+			$keyword = get('search');
+            $this->page_data['search'] = $keyword;
+            $param['search'] = $keyword;
+            $this->page_data['customerGroups'] = $this->customer_ad_model->getAllSettingsCustomerGroupByCompanyId($company_id, $param);
+        } else {
+            $this->page_data['customerGroups'] = $this->customer_ad_model->getAllSettingsCustomerGroupByCompanyId($company_id);
+        }  
+        
         // $this->load->view('customer/group/list', $this->page_data);
         $this->load->view('v2/pages/customer/group/list', $this->page_data);
     }

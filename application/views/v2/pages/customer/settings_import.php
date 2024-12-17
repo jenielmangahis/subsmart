@@ -19,7 +19,7 @@
                 </div>
                 <div class="row g-3">
                     <div class="col-12">
-                        <div class="nsm-card">
+                        <div class="nsm-card primary">
                             <div class="nsm-card-content">
                                 <div class="row g-2">
                                     <div class="col-12">
@@ -30,7 +30,6 @@
                                         <form id="customer_headers_form" method="POST">
                                             <?php $fieldsValue = $importFields->value ? explode(',', $importFields->value) : array() ; ?>
                                            <div class="row">
-
                                                 <div class="col-md-2">
                                                     <h5>Customer Information</h5>
                                                     <?php foreach ($importFieldsList as $header): ?>

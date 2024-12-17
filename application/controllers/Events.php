@@ -412,11 +412,13 @@ class Events extends MY_Controller
                 $data = json_decode($data);
                 if( $data && isset($data->results[0] )){ 
                     $default_lon = $data->results[0]->lon;
-                    $default_lat = $data->results[0]->lat;                    
+                    $default_lat = $data->results[0]->lat;      
+                    $address_line2 = $data->results[0]->address_line2;                  
                 }               
 
                 $this->page_data['default_lon'] = $default_lon;
                 $this->page_data['default_lat'] = $default_lat;
+                $this->page_data['address_line2'] = $address_line2;
                 $this->page_data['jobs_data']   = $event;
                 $this->page_data['event_items'] = $this->event_model->get_specific_event_items($id);
                 //print_r($this->page_data['jobs_data_items'] );

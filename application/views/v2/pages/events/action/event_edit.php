@@ -371,13 +371,15 @@
 //Start Map
 var myAPIKey = "<?= GEOAPIKEY ?>"; 
 <?php if($jobs_data){ ?>
-var default_lat = '<?= $default_lat; ?>';
-var default_lon = '<?= $default_lon; ?>';
-var map_zoom_level = '11'; 
+    var default_lat = '<?= $default_lat; ?>';
+    var default_lon = '<?= $default_lon; ?>';
+    var address_line2  = '<?php echo $address_line2; ?>';
+    var map_zoom_level = '11'; 
 <?php }else{ ?>
-var default_lat = '39.7837304';
-var default_lon = '-100.445882';
-var map_zoom_level = '5'; 
+    var default_lat = '39.7837304';
+    var default_lon = '-100.445882';
+    var map_zoom_level = '5'; 
+    var address_line2  = '<?php echo $address_line2; ?>';
 <?php } ?>
 
 var map_style = 'osm-bright';
@@ -412,10 +414,40 @@ var markerIcon = L.icon({
     iconSize: [38, 56], // size of the icon
     iconAnchor: [19, 51], // point of the icon which will correspond to marker's location
     popupAnchor: [0, -60] // point from which the popup should open relative to the iconAnchor
-});      
+});   
+
+/**
+ * Add default marker - start
+ */
+var coordinates = [default_lon, default_lat]
+var marker_color = 'mediumpurple';
+let map_icon = `https://api.geoapify.com/v1/icon?size=large&type=material&icon=business_center&noWhiteCircle=0&color=${marker_color}&apiKey=${myAPIKey}`;
+const el = document.createElement('div');
+el.className = 'marker';    
+el.style.width = '30px';
+el.style.color = marker_color;
+el.style.height = '50px';
+el.style.backgroundSize = "contain";
+el.style.backgroundImage = `url(${map_icon})`;    
+
+// create the popup
+const popup = new maplibregl.Popup({offset: 25}).setHTML(
+    address_line2
+);
+
+// add marker to map
+var marker = new maplibregl.Marker({element: el})
+    .setLngLat(coordinates)
+    .setPopup(popup)
+    .addTo(geoMap);
+
+currentMarkers.push(marker); 
+/**
+ * Add default marker - end
+ */
 
 let zooMarker;
-let marker;
+//let marker;
 
 autocompleteInput.on('select', (location) => {
     // Add marker with the selected location

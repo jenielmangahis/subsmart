@@ -112,9 +112,13 @@
         $(".nsm-table").nsmPagination();
 
         $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));        
+        }, 1000));
+
+        /*$("#search_field").on("input", debounce(function() {
             let _form = $(this).closest("form");
             _form.submit();
-        }, 1000));            
+        }, 1000));*/        
 
         $("#new_customer_status_form").on("submit", function(e) {
             let _this = $(this);
