@@ -437,6 +437,7 @@ class Widgets extends MY_Controller
         $idCount = count($this->widgets_model->getWidgetsByCompanyId($cid));
 
 
+
         $details = array(
             'wu_user_id' => $user_id,
             'wu_widget_id' => $id,
@@ -449,7 +450,6 @@ class Widgets extends MY_Controller
         if (!$isExists) :
             if ($this->widgets_model->addWidgets($details, $user_id, $id)) :
                 $widget = $this->widgets_model->getWidgetByID($id);
-
                 $data['class'] = 'nsm-card nsm-grid';
                 $data['id'] = $id;
                 $data['dynamic_load'] = true;
@@ -509,7 +509,13 @@ class Widgets extends MY_Controller
                 $data['expired_estimates'] = $this->estimate_model->getExpiredEstimatesByCompanyId(logged('company_id'));
                 $data['estimates'] = $this->estimate_model->getAllOpenEstimatesByCompanyId(logged('company_id'));
                 $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices();
-                
+
+                $nsmart_sales_count = $this->widgets_model->getNsmartSales();
+                $nsmart_sales_total = $this->widgets_model->getNsmartSalesTotal();
+        
+                $data['nsmart_sales_count'] = count($nsmart_sales_count);
+                $data['nsmart_sales_total'] = $nsmart_sales_total->total;
+           
                 $invoices = $this->invoice_model->get_all_company_invoice(logged('company_id'));
                 $openInvoices = array_filter($invoices, function ($v, $k) {
                     return !in_array($v->status, ['Draft', 'Declined', 'Paid']);
