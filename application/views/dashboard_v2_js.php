@@ -163,21 +163,21 @@ $(document).ready(function() {
     });
 
 
-    fetch('<?php echo base_url('dashboard/_recent_customers_thumbnail'); ?>', {
-        method: 'GET',
-    }).then(response => response.json()).then(response => {
-        var {
-            success,
-            companies,
-            recentCustomers
-        } = response;
+    // fetch('<?php echo base_url('dashboard/_recent_customers_thumbnail'); ?>', {
+    //     method: 'GET',
+    // }).then(response => response.json()).then(response => {
+    //     var {
+    //         success,
+    //         companies,
+    //         recentCustomers
+    //     } = response;
 
-        $(".recent-customer-container-count").html(recentCustomers.length);
-        $("#total_customer_graph").html(recentCustomers.length);
+    //     $(".recent-customer-container-count").html(recentCustomers.length);
+    //     $("#total_customer_graph").html(recentCustomers.length);
 
-    }).catch((error) => {
-        console.log('Error:', error);
-    });
+    // }).catch((error) => {
+    //     console.log('Error:', error);
+    // });
 
     fetch('<?php echo base_url('dashboard/_recent_customers'); ?>', {
         method: 'GET',

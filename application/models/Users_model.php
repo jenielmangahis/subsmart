@@ -365,7 +365,7 @@ class Users_model extends MY_Model
 
     public function countAllCompanyUsers($company_id)
     {
-        $this->db->select('COUNT(id) as totalUsers');
+        $this->db->select('COALESCE(COUNT(id),0) as totalUsers');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
         $query = $this->db->get()->row();
@@ -908,7 +908,7 @@ class Users_model extends MY_Model
     public function userRolesList()
     {
         $roles = [
-            //7 => ['name' => 'Admin', 'description' => 'All Access'],
+            7 => ['name' => 'Admin', 'description' => 'All Access'],
             1 => ['name' => 'Office Manager', 'description' => 'ALL except high security file vault'],
             2 => ['name' => 'Partner', 'description' => 'ALL base on plan type'],
             3 => ['name' => 'Team Leader', 'description' => 'No accounting or any changes to company profile or deletion'],
@@ -918,6 +918,12 @@ class Users_model extends MY_Model
         ];
 
         return $roles;
+    }
+
+    public function getUserRole($role_id)
+    {
+        $roles = self::userRolesList();
+        return $roles[$role_id] ? $roles[$role_id]['name'] : '---';
     }
 
     public function getByOfficeId($fname, $lname)

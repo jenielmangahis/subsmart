@@ -2,7 +2,8 @@
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/customer_settings_tabs'); ?>
+        <?php //include viewPath('v2/includes/page_navigations/customer_settings_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/customer_tabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
@@ -43,8 +44,8 @@
                                                         <div class="col-12">
                                                             <div class="d-block">
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
-                                                                    <label class="form-check-label" for=""><?= $header->field_description; ?></label>
+                                                                    <input class="form-check-input" id="fieldCustomerInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                    <label class="form-check-label" for="fieldCustomerInfo<?= $header->id; ?>"><?= $header->field_description; ?></label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -65,8 +66,8 @@
                                                             <div class="col-12">
                                                                 <div class="d-block">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
-                                                                        <label class="form-check-label" for=""><?= $header->field_description; ?></label>
+                                                                        <input class="form-check-input" id="fieldBilling<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                        <label class="form-check-label" for="fieldBilling<?= $header->id; ?>"><?= $header->field_description; ?></label>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -87,8 +88,8 @@
                                                             <div class="col-12">
                                                                 <div class="d-block">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
-                                                                        <label class="form-check-label" for=""><?= $header->field_description; ?></label>
+                                                                        <input class="form-check-input" id="fieldOfficeInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                        <label class="form-check-label" for="fieldOfficeInfo<?= $header->id; ?>"><?= $header->field_description; ?></label>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -109,8 +110,8 @@
                                                             <div class="col-12">
                                                                 <div class="d-block">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
-                                                                        <label class="form-check-label" for=""><?= $header->field_description; ?></label>
+                                                                        <input class="form-check-input" id="fieldAlarmInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                        <label class="form-check-label" for="fieldAlarmInfo<?= $header->id; ?>"><?= $header->field_description; ?></label>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -132,8 +133,8 @@
                                                             <div class="col-12">
                                                                 <div class="d-block">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
-                                                                        <label class="form-check-label" for=""><?= $header->field_description; ?></label>
+                                                                        <input class="form-check-input" id="fieldContactInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                        <label class="form-check-label" for="fieldContactInfo<?= $header->id; ?>"><?= $header->field_description; ?></label>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -179,7 +180,7 @@
                 var { message, success }  = response;
                 console.log(response);
                 if(success){
-                    sweetAlert('Awesome!', 'success', message, 1);
+                    sweetAlert('', 'success', message, 1);
                 }else{
                     sweetAlert('Sorry!','error',message);
                 }

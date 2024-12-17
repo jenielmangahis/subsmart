@@ -2952,6 +2952,96 @@ class Users extends MY_Controller
 
         echo json_encode($json_data);
 	}
+
+	public function role_access_modules()
+	{
+		$this->load->model('Users_model');
+		$this->load->model('CompanyRoleAccessModule_model');
+
+		$cid = logged('company_id');
+
+		$roles = $this->Users_model->userRolesList();
+		$modules = $this->CompanyRoleAccessModule_model->modules();
+		$roleAccessModules = $this->CompanyRoleAccessModule_model->getAllByCompanyId($cid);
+		
+		$this->page_data['roles'] = $roles;
+		$this->page_data['modules'] = $modules;
+		$this->page_data['roleAccessModules'] = $roleAccessModules;
+		$this->page_data['page']->title = 'Role Access Modules';
+		$this->load->view('v2/pages/users/access_role_modules/index', $this->page_data);
+	}
+
+	public function ajax_save_role_access_module()
+	{
+		$this->load->model('CompanyRoleAccessModule_model');
+
+		$is_success  = 0;		
+		$msg = 'Cannot find data';
+
+		$post = $this->input->post();
+		$cid  = logged('company_id');
+
+		if( $post['access_type'] == 'access-all' ){
+			$data = [
+				'company_id' => $cid,
+				'role_id' => $post['role'],
+				'module' => 'access-all',
+				'allow_write' => 1,
+				 'allow_delete' => 1,
+				'allow_read' => 1,
+				'date_created' => date("Y-m-d H:i:s"),
+				'date_modified' => date("Y-m-d H:i:s"),
+			];
+
+			$this->CompanyRoleAccessModule_model->create($data);
+
+			$is_success = 1;
+			$msg = '';
+
+		}else{
+			if( $post['permission'] ){
+				foreach( $post['permission'] as $module => $permission ){
+					$data = [
+						'company_id' => $cid,
+						'role_id' => $post['role'],
+						'module' => $module,
+						'allow_write' => $permission['read'] ? 1 : 0,
+						 'allow_delete' => $permission['delete'] ? 1 : 0,
+						'allow_read' => $permission['read'] ? 1 : 0,
+						'date_created' => date("Y-m-d H:i:s"),
+						'date_modified' => date("Y-m-d H:i:s"),
+					];
+		
+					$this->CompanyRoleAccessModule_model->create($data);
+					
+				}
+
+				$is_success = 1;
+				$msg = '';
+			}else{
+				$msg = 'Please define at least 1 module permission.';
+			}
+		}
+
+		$json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+	}
+
+	public function ajax_edit_role_access_module()
+	{
+		$this->load->model('CompanyRoleAccessModule_model');
+		
+		$roles = $this->Users_model->userRolesList();
+		$modules = $this->CompanyRoleAccessModule_model->modules();
+		
+		$this->page_data['roles'] = $roles;
+		$this->page_data['modules'] = $modules;
+		$this->load->view('v2/pages/users/access_role_modules/ajax_edit_role_access_module', $this->page_data);
+	}
 }
 /* End of file Users.php */
 /* Location: ./application/controllers/Users.php */
