@@ -97,19 +97,46 @@
             <div class="col-md-2">
                 <div class="row">
                     <div class="col d-flex justify-content-center align-items-center">
-                        <i class='bx bx-shape-circle' style="font-size: 55px;"></i>
+                        <i class='bx bx-group' style="font-size: 55px;"></i>
                     </div>
-                    <i class='bx check-icon bxs-check-circle <?= count($isWithTaskHub) > 0 ? 'check-purple' : ''; ?>'></i>
+                    <i class='bx check-icon bxs-check-circle <?= $totalCompanyUsers > 0 ? 'check-purple' : ''; ?>'></i>
                 </div>  
             </div>
             <div class="col-md-10">
                 <div class="content">
+                    <a class="getting-started-item-link" id="nsmart-online-booking" target="_blank" href="<?php echo base_url('users'); ?>">
+                    <div class="details news-details" style="">                                                    
+                        <span class="content-title">
+                            Invite Team Members
+                        </span>
+                        <span class="content-subtitle d-block mt-2">Assign jobs and communicate with your team</span>
+                    </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row item-getting-started">
+            <div class="col-md-2">
+                <a class="getting-started-item-link" id="nsmart-online-booking" target="_blank" href="<?php echo base_url('taskhub'); ?>">
+                <div class="row">
+                    <div class="col d-flex justify-content-center align-items-center">
+                        <i class='bx bx-shape-circle' style="font-size: 55px;"></i>
+                    </div>
+                    <i class='bx check-icon bxs-check-circle <?= count($isWithTaskHub) > 0 ? 'check-purple' : ''; ?>'></i>
+                </div>  
+                </a>
+            </div>
+            <div class="col-md-10">
+                <div class="content">
+                    <a class="getting-started-item-link" id="nsmart-online-booking" target="_blank" href="<?php echo base_url('taskhub'); ?>">
                     <div class="details news-details" style="">                                                    
                         <span class="content-title">
                             Taskhub - Project Management
                         </span>
-                        <span class="content-subtitle d-block mt-2">Assign tasks to team members and communicate with your team.</span>
+                        <span class="content-subtitle d-block mt-2">Assign tasks to team members</span>
                     </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -141,14 +168,17 @@
 
         <div class="row item-getting-started">
             <div class="col-md-2">
+                <a class="getting-started-item-link" id="getting-started-download-mobile-app" href="javascript:void(0);">
                 <div class="row">
                     <div class="col d-flex justify-content-center align-items-center">
                         <i class='bx bx-mobile-alt' style="font-size: 55px;"></i>
                     </div>
-                    <i class='bx check-icon bxs-check-circle'></i>
+                    <i class='bx check-icon bxs-check-circle check-purple'></i>
                 </div>  
+                </a>
             </div>
             <div class="col-md-10">
+                <a class="getting-started-item-link" id="getting-started-download-mobile-app" href="javascript:void(0);">
                 <div class="content">
                     <div class="details news-details" style="">                                                    
                         <span class="content-title">
@@ -157,6 +187,7 @@
                         <span class="content-subtitle d-block mt-2">Sync your Quickbooks account or upload your contact list.</span>
                     </div>
                 </div>
+                </a>
             </div>
         </div>
         
