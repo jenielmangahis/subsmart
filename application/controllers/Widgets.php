@@ -230,6 +230,68 @@ class Widgets extends MY_Controller
         $this->load->view('v2/widgets/tech_leaderboard_details', $data);
     }
 
+    public function loadTechScorecard()
+    {        
+        $this->load->model('widgets_model');
+        $this->load->model('Users_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('Tickets_model');
+        $companyID = logged('company_id');
+
+        $technician = post('filter_by_technician');
+        $companyID = logged('company_id');
+
+
+        $query = $this->db->query("
+            SELECT 
+                combined.id AS id,
+                combined.company_id AS company_id,
+                combined.tech_rep AS tech_rep,
+                combined.email AS email,
+                SUM(combined.jobs) AS total_jobs,
+                SUM(combined.total) AS total_amount
+            FROM (
+                SELECT 
+                    users.id AS id,
+                    users.company_id AS company_id,
+                    CONCAT(users.FName, ' ', users.LName) AS tech_rep,
+                    users.email as email,
+                    COUNT(DISTINCT COALESCE(jobs2.id, jobs3.id, jobs4.id, jobs5.id, jobs6.id)) AS jobs,
+                    SUM(COALESCE(job_payments.amount, 0)) AS total
+                FROM 
+                    users
+                    LEFT JOIN jobs jobs2 ON jobs2.employee2_id = users.id 
+                    LEFT JOIN jobs jobs3 ON jobs3.employee3_id = users.id
+                    LEFT JOIN jobs jobs4 ON jobs4.employee4_id = users.id
+                    LEFT JOIN jobs jobs5 ON jobs5.employee5_id = users.id
+                    LEFT JOIN jobs jobs6 ON jobs6.employee6_id = users.id
+                    LEFT JOIN job_payments ON job_payments.job_id = COALESCE(jobs2.id, jobs3.id, jobs4.id, jobs5.id, jobs6.id)
+                WHERE 
+                    users.id = $technician AND (
+                        (jobs2.status = 'Finished' OR jobs2.status = 'Completed')
+                        OR (jobs3.status = 'Finished' OR jobs3.status = 'Completed')
+                        OR (jobs4.status = 'Finished' OR jobs4.status = 'Completed')
+                        OR (jobs5.status = 'Finished' OR jobs5.status = 'Completed')
+                        OR (jobs6.status = 'Finished' OR jobs6.status = 'Completed')
+                    ) 
+                GROUP BY users.id
+            ) AS combined
+            GROUP BY combined.id
+        ");
+
+        $techLeaderBoards = $query->result();    
+
+        // var_dump($techLeaderBoards);
+
+        // return;
+
+    
+
+        $data['techLeaderBoards'] = $techLeaderBoards;
+        $this->load->view('v2/widgets/tech_scorecard_details', $data);
+    }
+
+
     public function loadV2SalesLeaderboard()
     {        
         $this->load->model('widgets_model');

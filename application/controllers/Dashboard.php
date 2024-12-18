@@ -143,7 +143,7 @@ class Dashboard extends Widgets
         $this->hasAccessModule(39);
         $this->load->model('AcsProfile_model');
         $this->load->model('Job_tags_model');
-
+        $this->load->model('Users_model');
         $this->load->model('widgets_model');
         $this->load->model('Demo_model');
         $this->load->helper('functions');
@@ -507,6 +507,7 @@ class Dashboard extends Widgets
         //     $deposits += floatval($payment->invoice_amount);
         // }
         $this->page_data['deposits'] = $payments;
+        $this->page_data['technician_items'] = $this->Users_model->getCompanyUsersTech($company_id);
 
     
         // $this->load->view('dashboard', $this->page_data);
@@ -1957,6 +1958,7 @@ class Dashboard extends Widgets
         $this->load->model('AcsProfile_model');
         $this->load->model('BookingCategory_model');
         $this->load->model('CompanyOnlinePaymentAccount_model');
+        $this->load->model('Users_model');
 
         $cid = logged('company_id');
         $user_id = logged('id');
@@ -1967,14 +1969,50 @@ class Dashboard extends Widgets
 
         $args = array('company_id' => logged('company_id'));
 		$totalOnlineBooking   = $this->BookingCategory_model->getByWhere($args);
-        $isWithOnlinePayments = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($cid); 
+        $isWithOnlinePayments = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($cid);         
+        $totalCompanyUsers    = $this->Users_model->countAllCompanyUsers($cid);
 
         $this->page_data['isWithJobs']     = $isWithJobs;
         $this->page_data['isWithTaskHub']  = $isWithTaskHub;
         $this->page_data['totalCustomers'] = $totalCustomers;
         $this->page_data['totalOnlineBooking'] = $totalOnlineBooking;
         $this->page_data['isWithOnlinePayments'] = $isWithOnlinePayments;
+        $this->page_data['totalCompanyUsers'] = $totalCompanyUsers;
         $this->load->view('v2/pages/dashboard/ajax_getting_started', $this->page_data);
+    }
+
+    public function ajax_send_download_app_link()
+    {
+        $is_success = 1;
+        $msg = '';
+
+        $post = $this->input->post();
+
+        $body = $this->sendDownloadAppLink($post);
+        $mail = email__getInstance();
+        $recipient_name = $post['test_email_recipient'];
+        $mail->addAddress('bryannrevina@nsmartrac.com', 'bryannrevina@nsmartrac.com');
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body = $body;
+        
+        if(!$mail->Send()){
+            $is_success = 1;
+            $msg = 'Cannot process request. Please try again later.';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function sendDownloadAppLink($post)
+    {
+        $this->page_data['data'] = $post;
+        return $this->load->view('v2/pages/dashboard/send_download_link_app_template', $this->page_data, true);
     }
 }
 

@@ -2774,11 +2774,20 @@ class Cron_Jobs_Controller extends CI_Controller
         $activeSubscriptions = $this->customer_ad_model->get_all_active_subscriptions();
         foreach( $activeSubscriptions as $as ){
             $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);
+            $totalUnpaidSubscriptions = $this->AcsCustomerSubscriptionBilling_model->getTotalAmountUnpaidByCustomerId($as->fk_prof_id);
+
             if( $as->mmr > 0 && $customer ){
                 $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($customer->company_id);
                 if( $invoiceSettings ){            
                     $next_number = (int) $invoiceSettings->invoice_num_next;     
-                    $prefix      = $invoiceSettings->invoice_num_prefix;        
+                    $prefix      = $invoiceSettings->invoice_num_prefix;  
+
+                    if( $invoiceSettings->payment_fee_percentage > 0  ){
+                        $payment_fee = $total_amount * ($invoiceSettings->payment_fee_percentage/100);
+                    }else{
+                        $payment_fee = $invoiceSettings->payment_fee_amount;
+                    }
+                    
                 }else{
                     $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($customer->company_id);
                     $prefix     = 'INV-';
@@ -2787,9 +2796,16 @@ class Cron_Jobs_Controller extends CI_Controller
                     }else{
                         $next_number   = 1;
                     }
+
+                    $payment_fee = 0;
                 }
 
+                if( $totalUnpaidSubscriptions['total_amount'] <= 0 ){
+                    $payment_fee = 0;
+                }
+                
                 $invoice_number = formatInvoiceNumberV2($prefix, $next_number);
+                $total_amount   = $totalUnpaidSubscriptions['total_amount'] + $as->mmr + $payment_fee;
 
                 //Create invoice
                 $address = $customer->mail_add . ' ' . $customer->city . ', ' . $customer->state . ' ' . $customer->zip_code; 
@@ -2811,22 +2827,23 @@ class Cron_Jobs_Controller extends CI_Controller
                     'due_date' => date("Y-m-d"),
                     'status' => 'Unpaid',
                     'customer_email' => $customer->email,
-                    'total_due' => $as->mmr,
-                    'balance' => $as->mmr,
+                    'total_due' => $total_amount,
+                    'balance' => $total_amount,
                     'date_created' => date("Y-m-d H:i:s"),
                     'date_updated' => date("Y-m-d H:i:s"),
                     'company_id' => $customer->company_id,
                     'is_recurring' => 1,
-                    'invoice_totals' => $as->mmr,
+                    'invoice_totals' => $total_amount,
                     'user_id' => 0,
                     'adjustment_name' => 'Customer Subscription',
-                    'adjustment_value' => $as->mmr,
-                    'sub_total' => $as->mmr,
+                    'adjustment_value' => $total_amount,
+                    'sub_total' => $total_amount,
                     'taxes' => 0,
-                    'grand_total' => $as->mmr,
+                    'grand_total' => $total_amount,
                     'view_flag' => 0,
                     'no_tax' => 0,
-                    'late_fee' => 0
+                    'late_fee' => 0,
+                    'payment_fee' => $payment_fee
                 ];
 
                 $invoice_id = $this->Invoice_model->create($data_invoice);
@@ -2865,13 +2882,15 @@ class Cron_Jobs_Controller extends CI_Controller
                         'commercial_message' => 'Thank you for your business.',
                         'commercial_terms_and_conditions' => 'Thank you for your business.',
                         'logo' => '',
-                        'payment_fee_percent' => '',
-                        'payment_fee_amount' => '',
+                        'payment_fee_percent' => 0,
+                        'payment_fee_amount' => 0,
                         'recurring' => '',
                         'invoice_template' => 1,
                         'residential_message' => 'Thank you for your business.',
-                        'residential_terms_and_conditions' => 'Thank you for your business.'
-
+                        'residential_terms_and_conditions' => 'Thank you for your business.',
+                        'invoice_template' => 0,
+                        'late_fee_amount_per_day' => 0,
+                        'num_days_activate_late_fee' => 0,
                     ];
 
                     $this->Invoice_settings_model->create($invoice_settings_data);
@@ -2905,14 +2924,23 @@ class Cron_Jobs_Controller extends CI_Controller
         $activeSubscriptions = $this->customer_ad_model->get_all_active_subscriptions();	
 
 		foreach( $activeSubscriptions as $as ) {
-            $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);
+            $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);            
+
             if( $as->mmr > 0 && $customer ){
-
+                $totalUnpaidSubscriptions = $this->AcsCustomerSubscriptionBilling_model->getTotalAmountUnpaidByCustomerId($as->fk_prof_id);
+                $total_amount             = $totalUnpaidSubscriptions->total_amount + $as->mmr;
+                
                 $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($customer->company_id);
-
                 if( $invoiceSettings ){            
                     $next_number = (int) $invoiceSettings->invoice_num_next;     
-                    $prefix      = $invoiceSettings->invoice_num_prefix;        
+                    $prefix      = $invoiceSettings->invoice_num_prefix;     
+                    
+                    if( $invoiceSettings->payment_fee_percent > 0  ){                        
+                        $payment_fee = $total_amount * ($invoiceSettings->payment_fee_percent/100);
+                    }else{
+                        $payment_fee = $invoiceSettings->payment_fee_amount;
+                    }
+
                 }else{
                     $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($customer->company_id);
                     $prefix     = 'INV-';
@@ -2921,7 +2949,11 @@ class Cron_Jobs_Controller extends CI_Controller
                     }else{
                         $next_number   = 1;
                     }
+
+                    $payment_fee = 0;
                 }
+
+                $total_amount   = $total_amount + $payment_fee;
 
 				/**
 				 * Note: before creating invoice, check customer subscription billing if already exist
@@ -2967,22 +2999,23 @@ class Cron_Jobs_Controller extends CI_Controller
 						'due_date' => $as->next_billing_date,
 						'status' => 'Unpaid',
 						'customer_email' => $customer->email,
-						'total_due' => $as->mmr,
-						'balance' => $as->mmr,
+						'total_due' => $total_amount,
+						'balance' => $total_amount,
 						'date_created' => date("Y-m-d H:i:s"),
 						'date_updated' => date("Y-m-d H:i:s"),
 						'company_id' => $customer->company_id,
 						'is_recurring' => 1,
-						'invoice_totals' => $as->mmr,
+						'invoice_totals' => $total_amount,
 						'user_id' => 0,
 						'adjustment_name' => 'Customer Subscription',
-						'adjustment_value' => $as->mmr,
-						'sub_total' => $as->mmr,
+						'adjustment_value' => $total_amount,
+						'sub_total' => $total_amount,
 						'taxes' => 0,
-						'grand_total' => $as->mmr,
+						'grand_total' => $total_amount,
 						'view_flag' => 0,
 						'no_tax' => 0,
-						'late_fee' => 0
+						'late_fee' => 0,
+                        'payment_fee' => $payment_fee
 					];		
 
 					$invoice_id = $this->Invoice_model->create($data_invoice);
@@ -3026,7 +3059,10 @@ class Cron_Jobs_Controller extends CI_Controller
 							'recurring' => '',
 							'invoice_template' => 1,
 							'residential_message' => 'Thank you for your business.',
-							'residential_terms_and_conditions' => 'Thank you for your business.'
+							'residential_terms_and_conditions' => 'Thank you for your business.',
+                            'invoice_template' => 0,
+                            'late_fee_amount_per_day' => 0,
+                            'num_days_activate_late_fee' => 0,
 						];
 						$this->Invoice_settings_model->create($invoice_settings_data);
 					}		
@@ -3064,8 +3100,8 @@ class Cron_Jobs_Controller extends CI_Controller
 			}
 		}
 
-		//echo 'Success count: ' . $success_count . '<br />';
-		//echo 'Fail count: ' . $error_count . '<br />';
+		echo 'Success count: ' . $success_count . '<br />';
+		echo 'Fail count: ' . $error_count . '<br />';
 	}     
 
     public function cron_cashflow_planned()

@@ -128,6 +128,18 @@ class AcsCustomerSubscriptionBilling_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function getTotalAmountUnpaidByCustomerId($prof_id)
+    {
+        $this->db->select('COALESCE(SUM(invoices.grand_total),0)AS total_amount');
+        $this->db->from($this->table);
+        $this->db->join('invoices', 'acs_customer_subscription_billing.invoice_id = invoices.id', 'left');
+        $this->db->where('acs_customer_subscription_billing.customer_id', $prof_id);
+        $this->db->where('invoices.status', 'Unpaid');
+
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
 
 /* End of file AcsCustomerSubscriptionBilling_model.php */

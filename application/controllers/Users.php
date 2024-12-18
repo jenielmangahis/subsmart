@@ -2815,46 +2815,32 @@ class Users extends MY_Controller
 		echo json_encode($json);			
 	}
 
-	public function ajax_update_business_details()
+	public function updateBusinessDetailsInfo()
 	{
-		$this->load->model('Business_model');
+		$pdata = $_POST;
+		$bid   = $pdata['id'];
+		$comp_id = logged('company_id');
 
-		$is_success = 0;
-		$msg = 'Cannot update data';
-
-		$post = $this->input->post();
-		$cid  = logged('company_id');
-		$businessDetails = $this->Business_model->getByCompanyId($cid);
-
-		if( $businessDetails ){			
-			if (!empty($_FILES['image']['name'])) {
-				$target_dir = "./uploads/users/business_profile/".$businessDetails->id."/";
-				if (!file_exists($target_dir)) {
-					mkdir($target_dir, 0777, true);
-				}
-				$business_image = $this->moveUploadedFile($businessDetails->id);
-				$this->business_model->update($businessDetails->id, ['business_image' => $business_image]);
+		if (!empty($_FILES['image']['name'])) {
+			$target_dir = "./uploads/users/business_profile/$comp_id/";
+		
+			if (!file_exists($target_dir)) {
+				mkdir($target_dir, 0777, true);
 			}
+		
+			$target_file = $target_dir . basename($_FILES['image']['name']);
+			if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
+				$business_image = $target_file; 
+				$this->business_model->update($bid, ['business_image' => $business_image]);
+			} else {
+				log_message('error', 'File upload failed for ' . $_FILES['image']['name']);
+			}
+		} else {
+			copy(FCPATH . 'uploads/users/default.png', 'uploads/users/business_profile/' . $bid . '/default.png');
+		}
+		$this->business_model->update($bid, $pdata);
 
-			unset($post['image']);
-			$this->business_model->update($businessDetails->id, $post);
-
-			//Activity Logs
-			$activity_name = 'Updated business profile'; 
-			createActivityLog($activity_name);
-
-			$is_success = 1;
-			$msg = '';
-		}else{
-			$msg = 'Cannot find data';
-		} 
-
-		$json_data = [
-            'is_success' => $is_success,
-            'msg' => $message
-        ];
-
-        echo json_encode($json_data);
+		redirect('users/businessdetail');
 	}
 
 	public function getUserInfo() {
@@ -2962,7 +2948,7 @@ class Users extends MY_Controller
 
 		$roles = $this->Users_model->userRolesList();
 		$modules = $this->CompanyRoleAccessModule_model->modules();
-		$roleAccessModules = $this->CompanyRoleAccessModule_model->getAllByCompanyId($cid);
+		$roleAccessModules = $this->CompanyRoleAccessModule_model->getAllRolesByCompanyId($cid);
 		
 		$this->page_data['roles'] = $roles;
 		$this->page_data['modules'] = $modules;
@@ -3035,12 +3021,111 @@ class Users extends MY_Controller
 	{
 		$this->load->model('CompanyRoleAccessModule_model');
 		
+		$post = $this->input->post();
+		$cid  = logged('company_id');
+
 		$roles = $this->Users_model->userRolesList();
 		$modules = $this->CompanyRoleAccessModule_model->modules();
+		$roleAccessModule = $this->CompanyRoleAccessModule_model->getAllByCompanyIdAndRoleId($cid, $post['rid']);
+
+		$groupRoleAccessModules = [];
+		foreach($roleAccessModule as $rm){
+			$groupRoleAccessModules[$rm->module] = $rm;	
+		}
 		
 		$this->page_data['roles'] = $roles;
 		$this->page_data['modules'] = $modules;
+		$this->page_data['rid'] = $post['rid'];
+		$this->page_data['groupRoleAccessModules'] = $groupRoleAccessModules;
 		$this->load->view('v2/pages/users/access_role_modules/ajax_edit_role_access_module', $this->page_data);
+	}
+
+	public function ajax_update_role_access_module()
+	{
+		$this->load->model('CompanyRoleAccessModule_model');
+
+		$is_success  = 1;		
+		$msg = '';
+
+		$post = $this->input->post();
+		$cid  = logged('company_id');
+		
+		if( !$post['permission'] && $post['access_type'] != 'access-all' ){
+			$is_success = 0;
+			$msg = 'Please define at least 1 module permission.';
+		}
+
+		if( $post['role'] <= 0 ){
+			$is_success = 0;
+			$msg = 'Cannot save data';
+		}
+
+		if( $is_success == 1 ){
+			$this->CompanyRoleAccessModule_model->deleteAllByCompanyIdAndRoleId($cid, $post['role']);
+
+			if( $post['access_type'] == 'access-all' ){
+				$data = [
+					'company_id' => $cid,
+					'role_id' => $post['role'],
+					'module' => 'access-all',
+					'allow_write' => 1,
+					'allow_delete' => 1,
+					'allow_read' => 1,
+					'date_created' => date("Y-m-d H:i:s"),
+					'date_modified' => date("Y-m-d H:i:s"),
+				];
+
+				$this->CompanyRoleAccessModule_model->create($data);
+
+				$is_success = 1;
+				$msg = '';
+
+			}else{
+				foreach( $post['permission'] as $module => $permission ){
+					$data = [
+						'company_id' => $cid,
+						'role_id' => $post['role'],
+						'module' => $module,
+						'allow_write' => $permission['read'] ? 1 : 0,
+						'allow_delete' => $permission['delete'] ? 1 : 0,
+						'allow_read' => $permission['read'] ? 1 : 0,
+						'date_created' => date("Y-m-d H:i:s"),
+						'date_modified' => date("Y-m-d H:i:s"),
+					];
+		
+					$this->CompanyRoleAccessModule_model->create($data);
+					
+				}
+
+				$is_success = 1;
+				$msg = '';
+			}
+		}			
+
+		$json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+	}
+
+	public function ajax_delete_role_access_module()
+	{
+		$this->load->model('CompanyRoleAccessModule_model');
+
+		$is_success  = 1;		
+		$msg = '';
+
+		$post = $this->input->post();
+		$cid  = logged('company_id');
+		
+		$json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
 	}
 }
 /* End of file Users.php */
