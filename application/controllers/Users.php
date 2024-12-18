@@ -2815,46 +2815,32 @@ class Users extends MY_Controller
 		echo json_encode($json);			
 	}
 
-	public function ajax_update_business_details()
+	public function updateBusinessDetailsInfo()
 	{
-		$this->load->model('Business_model');
+		$pdata = $_POST;
+		$bid   = $pdata['id'];
+		$comp_id = logged('company_id');
 
-		$is_success = 0;
-		$msg = 'Cannot update data';
-
-		$post = $this->input->post();
-		$cid  = logged('company_id');
-		$businessDetails = $this->Business_model->getByCompanyId($cid);
-
-		if( $businessDetails ){			
-			if (!empty($_FILES['image']['name'])) {
-				$target_dir = "./uploads/users/business_profile/".$businessDetails->id."/";
-				if (!file_exists($target_dir)) {
-					mkdir($target_dir, 0777, true);
-				}
-				$business_image = $this->moveUploadedFile($businessDetails->id);
-				$this->business_model->update($businessDetails->id, ['business_image' => $business_image]);
+		if (!empty($_FILES['image']['name'])) {
+			$target_dir = "./uploads/users/business_profile/$comp_id/";
+		
+			if (!file_exists($target_dir)) {
+				mkdir($target_dir, 0777, true);
 			}
+		
+			$target_file = $target_dir . basename($_FILES['image']['name']);
+			if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
+				$business_image = $target_file; 
+				$this->business_model->update($bid, ['business_image' => $business_image]);
+			} else {
+				log_message('error', 'File upload failed for ' . $_FILES['image']['name']);
+			}
+		} else {
+			copy(FCPATH . 'uploads/users/default.png', 'uploads/users/business_profile/' . $bid . '/default.png');
+		}
+		$this->business_model->update($bid, $pdata);
 
-			unset($post['image']);
-			$this->business_model->update($businessDetails->id, $post);
-
-			//Activity Logs
-			$activity_name = 'Updated business profile'; 
-			createActivityLog($activity_name);
-
-			$is_success = 1;
-			$msg = '';
-		}else{
-			$msg = 'Cannot find data';
-		} 
-
-		$json_data = [
-            'is_success' => $is_success,
-            'msg' => $message
-        ];
-
-        echo json_encode($json_data);
+		redirect('users/businessdetail');
 	}
 
 	public function getUserInfo() {

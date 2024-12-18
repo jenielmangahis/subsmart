@@ -24,6 +24,81 @@
         padding: 10px;
         height: unset !important;
     }
+
+    .credential-badge {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+    }
+
+    .credential .credential-badge .badge-label.bond {
+        font-size: 16px;
+        font-weight: 600;
+        color: #f4902f;
+    }
+
+    .credential .credential-badge .badge-label.insurance {
+        font-size: 16px;
+        font-weight: 600;
+        color: #102243;
+    }
+
+    .credential .credential-badge .badge-label.license {
+        font-size: 16px;
+        font-weight: 600;
+        color: #6a4a85;
+    }
+
+    .credential .credential-badge .badge-label.accreditation {
+        font-size: 16px;
+        font-weight: 600;
+        color: #bb2844;
+    }
+
+    .credential .credential-badge .badge-label.accreditation {
+        font-size: 16px;
+        font-weight: 600;
+        color: #bb2844;
+    }
+
+    .credential .credential-badge .badge-label.since {
+        color: #03a8dd;
+        font-weight: 600;
+    }
+
+    .credential .credential-badge .badge-label.verifications {
+        color: #27b05f;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+
+    .credential-badge-year-text {
+        position: absolute;
+        bottom: 11px;
+        left: 0;
+        width: 100%;
+        font-size: 19px;
+        text-align: center;
+        font-weight: 600;
+        color: #4881c7;
+    }
+
+
+    .credential-verification {
+        margin-bottom: 6px;
+    }
+
+    .credential-verification .fa.active {
+        color: #2ab363;
+    }
+
+    .credential-verification .fa {
+        color: #888;
+        margin-right: 8px;
+    }
 </style>
 
 <div class="row page-content g-0">
@@ -92,17 +167,19 @@
                                     <div class="nsm-card-content">
                                         <div class="row g-3">
                                             <div class="col-12 col-md-6">
-                                                <div class="row g-3 mt-1 align-items-center">
-                                                    <div class="col-12 col-md-2 text-center">
+                                                <div class="row g-3 mt-1 align-items-center credential">
+                                                    <div class="col-12 col-md-4 text-center credential-badge">
                                                         <img src="<?= $url->assets . 'img/badge_1.png' ?>"
                                                             style="width: 100%; max-width: 60px;">
-                                                        <label class="content-subtitle fw-bold mt-2">License</label>
+                                                        <label
+                                                            class="content-subtitle fw-bold mt-2 badge-label license ">License</label>
                                                     </div>
-                                                    <div class="col-12 col-md-10">
-                                                        <?php if ($profiledata->is_licensed == 1) { ?>
+                                                    <div class="col-12 col-md-8">
+                                                        <?php if ($profiledata->is_licensed  == 1) { ?>
                                                         <label class="content-title fw-normal d-block"><span
                                                                 class="fw-bold">State/Province :</span>
-                                                            <?= $profiledata->license_state ?>, Expires on:
+                                                            <?= $profiledata->license_state ?><br><span
+                                                            class="fw-bold">Expires on :</span>
                                                             <?= date('m/d/Y', strtotime($profiledata->license_expiry_date)) ?></label>
                                                         <label class="content-title fw-normal d-block"><span
                                                                 class="fw-bold">Class :</span>
@@ -125,13 +202,14 @@
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <div class="row g-3 mt-1 align-items-center">
-                                                    <div class="col-12 col-md-2 text-center">
-                                                        <img src="<?= $url->assets . 'img/badge_2.png' ?>"
+                                                <div class="row g-3 mt-1 align-items-center credential">
+                                                    <div class="col-12 col-md-4 text-center credential-badge">
+                                                        <img src="<?= $url->assets . 'img/bond-icon.png' ?>"
                                                             style="width: 100%; max-width: 60px;">
-                                                        <label class="content-subtitle fw-bold mt-2">Bond</label>
+                                                        <label
+                                                            class="content-subtitle fw-bold mt-2 bond badge-label bond">Bond</label>
                                                     </div>
-                                                    <div class="col-12 col-md-10">
+                                                    <div class="col-12 col-md-8">
                                                         <?php if ($profiledata->is_bonded == 1) { ?>
                                                         <label class="content-title fw-normal d-block"><span
                                                                 class="fw-bold">Insured Amount :</span>
@@ -156,13 +234,14 @@
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <div class="row g-3 mt-1 align-items-center">
-                                                    <div class="col-12 col-md-2 text-center">
-                                                        <img src="<?= $url->assets . 'img/badge_3.png' ?>"
+                                                <div class="row g-3 mt-1 align-items-center credential">
+                                                    <div class="col-12 col-md-4 text-center credential-badge">
+                                                        <img src="<?= $url->assets . 'img/insurance-icon.png' ?>"
                                                             style="width: 100%; max-width: 60px;">
-                                                        <label class="content-subtitle fw-bold mt-2">Insurance</label>
+                                                        <label
+                                                            class="content-subtitle fw-bold mt-2 badge-label insurance">Insurance</label>
                                                     </div>
-                                                    <div class="col-12 col-md-10">
+                                                    <div class="col-12 col-md-8">
                                                         <?php if ($profiledata->is_business_insured == 1) { ?>
                                                         <label class="content-title fw-normal d-block"><span
                                                                 class="fw-bold">Insured Amount :</span>
@@ -178,14 +257,14 @@
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <div class="row g-3 mt-1 align-items-center">
-                                                    <div class="col-12 col-md-2 text-center">
-                                                        <img src="<?= $url->assets . 'img/badge_4.png' ?>"
+                                                <div class="row g-3 mt-1 align-items-center credential">
+                                                    <div class="col-12 col-md-4 text-center credential-badge">
+                                                        <img src="<?= $url->assets . 'img/accreditation-logo.png' ?>"
                                                             style="width: 100%; max-width: 60px;">
                                                         <label
-                                                            class="content-subtitle fw-bold mt-2">Accreditation</label>
+                                                            class="content-subtitle fw-bold mt-2 badge-label accreditation">Accreditation</label>
                                                     </div>
-                                                    <div class="col-12 col-md-10">
+                                                    <div class="col-12 col-md-8">
                                                         <?php if ($profiledata->is_bbb_accredited == 1) { ?>
                                                         <label class="content-title fw-normal d-block"><span
                                                                 class="fw-bold">BBB Accredited</span></label>
@@ -200,45 +279,74 @@
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <div class="row g-3 mt-1 align-items-center">
-                                                    <div class="col-12 col-md-2 text-center">
+                                                <div class="row g-3 mt-1 align-items-center credential">
+                                                    <div class="col-12 col-md-4 text-center credential-badge">
                                                         <img src="<?= $url->assets . 'img/badge_6.png' ?>"
                                                             style="width: 100%; max-width: 60px;">
                                                         <label
-                                                            class="content-subtitle fw-bold mt-2">Verifications</label>
+                                                            class="content-subtitle fw-bold mt-2 badge-label verifications">Verifications</label>
                                                     </div>
-                                                    <div class="col-12 col-md-10">
-                                                        <div class="row g-3">
-                                                            <div class="col-12 col-md-6">
-                                                                <label class="content-title fw-normal d-block mb-2"><i
-                                                                        class='bx bx-fw bx-check-circle nsm-text-success'></i>
-                                                                    Phone</label>
-                                                                <label class="content-title fw-normal d-block"><i
-                                                                        class='bx bx-fw bx-circle'></i>
-                                                                    Facebook</label>
+                                                    <div class="credential-cnt col-md-8">
+                                                        <div class="row credential-verification">
+                                                            <div class="col-md-6">
+                                                                <span
+                                                                    class="<?= $profiledata->sm_facebook ? 'fa fa-check active' : 'fa fa-circle-o' ?>"></span>
+                                                                Facebook
                                                             </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <label class="content-title fw-normal d-block mb-2"><i
-                                                                        class='bx bx-fw bx-check-circle nsm-text-success'></i>
-                                                                    Email</label>
-                                                                <label class="content-title fw-normal d-block"><i
-                                                                        class='bx bx-fw bx-check-circle nsm-text-success'></i>
-                                                                    Google</label>
+                                                            <div class="col-md-6">
+                                                                <span
+                                                                    class="<?= $profiledata->sm_twitter ? 'fa fa-check active' : 'fa fa-circle-o' ?>"></span>
+                                                                Twitter
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row credential-verification">
+                                                            <div class="col-md-6">
+                                                                <span
+                                                                    class="<?= $profiledata->sm_google ? 'fa fa-check active' : 'fa fa-circle-o' ?>"></span>
+                                                                Google
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <span
+                                                                    class="<?= $profiledata->sm_youtube ? 'fa fa-check active' : 'fa fa-circle-o' ?>"></span>
+                                                                Youtube
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row credential-verification">
+                                                            <div class="col-md-6">
+                                                                <span
+                                                                    class="<?= $profiledata->sm_instagram ? 'fa fa-check active' : 'fa fa-circle-o' ?>"></span>
+                                                                Instagram
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <span
+                                                                    class="<?= $profiledata->sm_pinterest ? 'fa fa-check active' : 'fa fa-circle-o' ?>"></span>
+                                                                Pinterest
+                                                            </div>
+                                                        </div>
+                                                        <div class="row credential-verification">
+                                                            <div class="col-md-6">
+                                                                <span
+                                                                    class="<?= $profiledata->sm_linkedin ? 'fa fa-check active' : 'fa fa-circle-o' ?>"></span>
+                                                                LinkedIn
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <div class="row g-3 mt-1 align-items-center">
-                                                    <div class="col-12 col-md-2 text-center position-relative">
-                                                        <img src="<?= $url->assets . 'img/badge_5.png' ?>"
+                                                <div class="row g-3 mt-1 align-items-center credential">
+                                                    <div
+                                                        class="col-12 col-md-4 text-center position-relative credential-badge">
+                                                        <img src="<?= $url->assets . 'img/since-icon.png' ?>"
                                                             style="width: 100%; max-width: 60px;">
-                                                        <span class="position-absolute fw-bold"
-                                                            style="top: 14px; left: 0; right: 0; color: #f69342;"><?= $profiledata->year_est > 0 ? $profiledata->year_est : '' ?></span>
-                                                        <label class="content-subtitle fw-bold mt-2">Since</label>
+                                                        <span
+                                                            class=" credential-badge-year-text"><?= $profiledata->year_est > 0 ? $profiledata->year_est : '' ?></span>
+                                                        <label
+                                                            class="content-subtitle fw-bold mt-2 badge-label since">Since</label>
                                                     </div>
-                                                    <div class="col-12 col-md-10">
+                                                    <div class="col-12 col-md-8">
                                                         <?php if ($profiledata->year_est > 0) { ?>
                                                         <label class="content-title fw-normal d-block"><span
                                                                 class="fw-bold">Business Since :</span>
@@ -276,7 +384,7 @@
                                             $slug = createSlug($ds->title, '-');
                                             $deal_url = url('deal/' . $slug . '/' . $ds->id);
                                             ?>
-                                            <div class="col-12 col-md-2 col-image-<?= $key ?> text-center"
+                                            <div class="col-12 col-md-4 col-image-<?= $key ?> text-center"
                                                 role="button" onclick="window.open('<?= $deal_url ?>')">
                                                 <?php
                                                 if ($ds->photos != '') {
@@ -585,7 +693,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        
+
         let cropper;
         const imageInput = $("#image-input");
         const imagePreviewContainer = $("#image-preview-container");
@@ -605,59 +713,59 @@
 
         $('#image-input').on('change', function(e) {
             e.preventDefault();
-           cropActionButton.show().addClass('d-flex');
+            cropActionButton.show().addClass('d-flex');
             let _parent = $(this).closest(".nsm-img-upload");
             let reader = new FileReader();
 
-        
-            console.log('$(this)[0].files[0]',$(this)[0].files[0])
 
-            if($(this)[0].files[0]){
+            console.log('$(this)[0].files[0]', $(this)[0].files[0])
+
+            if ($(this)[0].files[0]) {
                 reader.readAsDataURL($(this)[0].files[0]);
-                reader.onload = function () {
+                reader.onload = function() {
                     let imgPreview = _parent;
                     imgPreview.css("background-image", "url('" + reader.result + "')");
                     imagePreviewChange.hide().removeClass('d-flex');
 
-                    if(triggerChange){
+                    if (triggerChange) {
                         basicContainer.show();
                         imagePreviewContainer.hide();
                     }
-                   
+
 
                 };
-            }else{
-               cropActionButton.hide().removeClass('d-flex');
+            } else {
+                cropActionButton.hide().removeClass('d-flex');
             }
 
         });
 
-       
+
 
 
         $('#cancel-crop').on('click', function(e) {
             e.preventDefault();
-           cropActionButton.hide().removeClass('d-flex');
+            cropActionButton.hide().removeClass('d-flex');
             cropper.destroy();
             basicContainer.show();
             imagePreviewContainer.hide();
             imagePreviewButtons.hide().removeClass('d-flex');
-           cropActionButton.show().addClass('d-flex');
+            cropActionButton.show().addClass('d-flex');
         });
 
-     
+
 
 
         $('#crop-image').on('click', function(e) {
-      
+
             e.preventDefault();
 
 
             const file = imageInput[0].files[0];
-            console.log('file',file);
+            console.log('file', file);
 
             if (file) {
-               cropActionButton.hide().removeClass('d-flex');
+                cropActionButton.hide().removeClass('d-flex');
                 basicContainer.hide();
                 const reader = new FileReader();
                 reader.onload = function(event) {
@@ -667,7 +775,7 @@
 
                     applyCropButton.show();
 
-                    
+
                     cropper = new Cropper(imagePreview[0], {
                         aspectRatio: 1,
                         viewMode: 1,
@@ -686,17 +794,17 @@
             basicContainer.show();
 
             const file = imageInput[0].files[0]
-            if(file){
+            if (file) {
                 cropActionButton.show().addClass('d-flex');
 
             }
         });
 
-        $('#change-image').on('click',function(e){
+        $('#change-image').on('click', function(e) {
             imageInput.trigger('click');
             triggerChange = true;
 
-           
+
         });
 
 

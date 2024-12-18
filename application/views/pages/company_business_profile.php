@@ -90,12 +90,13 @@
       color: #102243;
     }
 
-    .credential .credential-badge .badge-label.accreditation {
+    .credential .credential-badge .badge-label.license {
       font-size: 16px;
       font-weight: 600;
-      color: #bb2844;
+      color: #6a4a85 ;
     }
 
+ 
     .credential .credential-badge .badge-label.accreditation {
       font-size: 16px;
       font-weight: 600;
@@ -430,16 +431,16 @@
                     <div class="profile-content-section" id="profile-nav-credentials">
                         <h3 class="profile-subtitle">Business Credentials</h3>
                         <div class="row mt-4">
-                            <?php if($profiledata->license_class == 1): ?>
+                            <?php if($profiledata->is_show_licensed == 1): ?>
                             <div class="col-md-6 mb-5">
                                 <div class="credential">
                                     <div class="credential-badge">
                                         <img src="<?= $url->assets . 'img/badge_1.png' ?>"> <span
-                                            class="badge-label">License</span>
+                                            class="badge-label license">License</span>
                                     </div>
                                     <?php if( $profiledata->is_licensed == 1 ){ ?>
                                     <div class="credential-cnt">
-                                        <span>State/Province : <?= $profiledata->license_state ?>, Expires on:
+                                        <span>State/Province : <?= $profiledata->license_state ?><br>Expires on:
                                             <b><?= date('m/d/Y', strtotime($profiledata->license_expiry_date)) ?></b></span>
                                         <span>Class : <?= $profiledata->license_class ?>,
                                             Nr:<?= $profiledata->license_number ?></span>
