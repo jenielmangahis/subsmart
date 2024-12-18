@@ -218,6 +218,27 @@ class Users_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getCompanyUsersTech($company_id)
+    {
+        $this->db->select('id, CONCAT(FName, " ", LName) AS technician');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('user_type', 6);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getCompanyUsersById($user_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('id', $user_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+    
     
     public function getActiveCompanyUsers($company_id)
     {

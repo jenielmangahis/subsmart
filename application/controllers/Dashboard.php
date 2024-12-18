@@ -143,7 +143,7 @@ class Dashboard extends Widgets
         $this->hasAccessModule(39);
         $this->load->model('AcsProfile_model');
         $this->load->model('Job_tags_model');
-
+        $this->load->model('Users_model');
         $this->load->model('widgets_model');
         $this->load->model('Demo_model');
         $this->load->helper('functions');
@@ -507,6 +507,7 @@ class Dashboard extends Widgets
         //     $deposits += floatval($payment->invoice_amount);
         // }
         $this->page_data['deposits'] = $payments;
+        $this->page_data['technician_items'] = $this->Users_model->getCompanyUsersTech($company_id);
 
     
         // $this->load->view('dashboard', $this->page_data);

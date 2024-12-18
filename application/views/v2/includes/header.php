@@ -769,10 +769,6 @@ if (is_null($image)) {
     .cursorPointer {
         cursor: pointer;
     }
-
-    #previewBinder_table > tbody {
-        font-size: unset;
-    }
     
     .playCirleSize {
         font-size: 25px;
@@ -790,6 +786,33 @@ if (is_null($image)) {
 
     #previewBinder_table_info {
         display: none;
+    }
+
+    #previewBinder_table.dataTable.no-footer {
+    border-bottom: 0px solid #dee2e6 !important;
+    }
+
+    #previewBinder_table.dataTable thead th,
+    #previewBinder_table.dataTable thead td,
+    #previewBinder_table.dataTable tbody td {
+        padding: 6px;
+    }
+
+    #previewBinder_table.dataTable tbody td {
+        border-bottom: 1px solid lightgray !important;
+    }
+
+    #previewBinder_table.dataTable > thead > tr > th {
+        border: 1px solid lightgray !important;
+    }
+
+    #previewBinder_table_wrapper .dataTables_length,
+    #previewBinder_table_wrapper .dataTables_filter {
+        display: none;
+    }
+
+    #previewBinder_table > tbody {
+        font-size: unset;
     }
 </style>
 
@@ -865,7 +888,7 @@ if (is_null($image)) {
                 </div>
                 <div class="col-12-md">
                     <input id="previewBinder_table_search" class="form-control mt-0 mb-2 w-100" type="text" placeholder="Search...">
-                    <table id="previewBinder_table" class="table table-bordered table-hover table-sm w-100">
+                    <table id="previewBinder_table" class="table table-bordered table-hover table-sm w-100 mb-2">
                         <thead><tr><th></th></tr></thead>
                         <tbody><tr></tr></tbody>
                     </table>
@@ -1071,8 +1094,7 @@ if (is_null($image)) {
 </div>
 
 <script>   
-    //var BASE_URL = window.origin;
-    var BASE_URL = "<?php echo base_url();?>";
+    var BASE_URL = window.origin;
     $(document).ready(function () {
         // DataTable Configuration ===============
         const previewBinder_table = $('#previewBinder_table').DataTable({
@@ -1081,7 +1103,7 @@ if (is_null($image)) {
             "ordering": false,
             "pageLength": 20, // Sets default rows per page
             "ajax": {
-                "url": BASE_URL + "VideoBinder/getAllVideos",
+                "url": BASE_URL + "/VideoBinder/getAllVideos",
                 "type": "POST",
             },
             "language": {
@@ -1166,7 +1188,7 @@ if (is_null($image)) {
     $(document).ready(function() {
         $.ajax({
             type: "POST",
-            url: BASE_URL + "chatbot/preference",
+            url: BASE_URL + "/chatbot/preference",
             dataType: "JSON",
             success: function(response) {
                 $('.chatbot_name').text(response[0]['chatbot_name']);
