@@ -1095,6 +1095,7 @@ if (is_null($image)) {
 
 <script>   
     var BASE_URL = window.origin;
+    //var BASE_URL = "<?php //echo base_url(); ?>";
     $(document).ready(function () {
         // DataTable Configuration ===============
         const previewBinder_table = $('#previewBinder_table').DataTable({
