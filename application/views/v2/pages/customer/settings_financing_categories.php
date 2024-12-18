@@ -167,7 +167,7 @@
         $(".nsm-table").nsmPagination();
         $("#search_field").on("input", debounce(function() {
             tableSearch($(this));        
-        }, 1000));
+        }, 1000)); 
 
         $('#btn-add-new-category').on('click', function(){
             $('#modal_add_financing_category').modal('show');
