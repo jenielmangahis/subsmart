@@ -637,7 +637,8 @@
         </div>
     </div>
     <div class="nsm-card-content" id="custom_field" data-section="custom_field"><hr>
-        <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 12px;"><span class="fa fa-plus"></span> Add Field</a>
+        <a href="javascript:void;" id="add_field" class="nsm-button btn-small pull-right"><span class="fa fa-plus"></span> Add Field</a>
+        <br style="clear:both;" />
         <?php if(isset($profile_info)):  ?>
             <?php $custom_fields = json_decode($profile_info->custom_fields); ?>
             <?php if(!empty($custom_fields)): ?>
@@ -652,7 +653,7 @@
                         <input type="text" class="form-control" name="custom_value[]" value="<?= $field->value; ?>" />
                     </div>
                     <div class="col-md-2">
-                        <button style="margin-top: 22px; font-size:12px;" type="button" class="nsm-button primary items_remove_btn remove_item_row"><i class='bx bx-trash'></i></button>
+                        <button style="margin-top: 24px; font-size:12px;" type="button" class="nsm-button primary items_remove_btn remove_item_row"><i class='bx bx-trash'></i></button>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -668,7 +669,7 @@
                     <input type="text" class="form-control" name="custom_value[]" value="" />
                 </div>
                 <div class="col-md-2">
-                    <button style="margin-top: 30px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row"><i class='bx bx-trash'></i></button>
+                    <button style="margin-top: 24px; font-size:12px;" type="button" class="nsm-button primary items_remove_btn remove_item_row"><i class='bx bx-trash'></i></button>
                 </div>
             </div>
         <?php endif; ?>

@@ -321,27 +321,44 @@ $payment_link = base_url('/invoice/customer_view/' . $invoice->id);
                     </td>
                     <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->taxes, 2, '.', ','); ?></td>
                 </tr>
-
+                <tr>
+                    <td colspan="2" style="padding: 8px; border: 1px solid;">
+                        <b>LATE FEE</b>
+                    </td>
+                    <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->late_fee , 2, '.', ','); ?></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="padding: 8px; border: 1px solid;">
+                        <b>PAYMENT FEE</b>
+                    </td>
+                    <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->payment_fee , 2, '.', ','); ?></td>
+                </tr>
+                <?php if( $invoice->installation_cost > 0 ){ ?>
                 <tr>
                     <td colspan="2" style="padding: 8px; border: 1px solid;">
                         <b>INSTALLATION COST</b>
                     </td>
                     <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->installation_cost , 2, '.', ','); ?></td>
                 </tr>
-
+                <?php } ?>
+                
+                <?php if( $invoice->otp_setup > 0 ){ ?>
                 <tr>
                     <td colspan="2" style="padding: 8px; border: 1px solid;">
                         <b>ONE TIME (PROGRAM AND SETUP)</b>
                     </td>
                     <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->otp_setup, 2, '.', ','); ?></td>
                 </tr>
-
+                <?php } ?>
+                
+                <?php if( $invoice->monthly_monitoring > 0 ){ ?>
                 <tr>
                     <td colspan="2" style="padding: 8px; border: 1px solid;">
                         <b>MONTHLY MONITORING</b>
                     </td>
                     <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->monthly_monitoring, 2, '.', ','); ?></td>
                 </tr>
+                <?php } ?>             
                 <?php if( $invoice->adjustment_value > 0 ){ ?>
                     <tr>
                         <td colspan="2" style="padding: 8px; border: 1px solid;text-transform: uppercase;">
