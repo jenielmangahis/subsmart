@@ -25,12 +25,12 @@
                     Commercial
                 </label>
             </div>
-            <div class="form-check d-inline-block">
+            <!-- <div class="form-check d-inline-block">
                 <input class="form-check-input customer_type" type="radio" name="customer_type" id="customer_type_advance" value="Advance">
                 <label class="form-check-label" for="customer_type_advance">
                     Other
                 </label>
-            </div>
+            </div> -->
         </div>
         <div class="col-12" id="business_name_area" style="display:none;">
             <label class="content-subtitle fw-bold d-block mb-2">Business Name</label>
