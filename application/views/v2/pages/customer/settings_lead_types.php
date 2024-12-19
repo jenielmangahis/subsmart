@@ -108,10 +108,14 @@
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
 
-        $("#search_field").on("input", debounce(function() {
+        /*$("#search_field").on("input", debounce(function() {
             let _form = $(this).closest("form");
             _form.submit();
-        }, 1000));            
+        }, 1000));*/    
+        
+        $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));        
+        }, 1000));
 
         $(document).on("click", ".edit-item", function(){
             let id = $(this).attr("data-id");

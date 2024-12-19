@@ -1,49 +1,99 @@
 <style>
-    .tech-info .first {
-        background-color: #FFFFFF;
-        color: rgb(47 43 61 / 0.9);
-        -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-        transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    .tech-info {
+        padding: 0 !important;
+        background-color: #281c2d;
         border-radius: 6px;
-        background-image: none;
-        overflow: hidden;
-        box-shadow: 0px 3px 12px rgb(47 43 61/ 0.14);
-        padding: 30px 10px;
+        padding: 10px;
+        height: 240px;
     }
 
-    .tech-info .first .profile {
+    .tech-info .content {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+        padding: 0 20px;
+    }
+
+    .col-md-2 {
+        overflow: visible !important;
+    }
+
+    .tech-info .profile-wrapper {
+        position: relative;
+        display: inline-block;
+        /* Ensures it wraps tightly around the profile */
+    }
+
+    .tech-info .profile {
         margin: auto;
-        width: 100px;
-        height: 100px;
+        width: 90px;
+        height: 90px;
         min-width: 40px;
         background-color: #6a4a86;
         color: #fff;
-        border-radius: 100%;
+        border-radius: 50%;
         display: flex;
+        justify-content: center;
+        align-items: center;
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
+        border: 2px solid #fff;
+        /* Inner white border */
+        position: relative;
+        z-index: 1;
     }
 
-    .tech-info .first .profile span {
-        margin: auto;
-        font-weight: 600;
-        font-size: 24px;
+    .tech-info .profile-wrapper::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: -6px;
+        width: calc(100% + 12px);
+        height: calc(100% + 12px);
+        background: linear-gradient(135deg, #FEA303, #695E93);
+        border-radius: 50%;
+        z-index: 0;
     }
 
-    .tech-info .tech-badge {
-        background: #6a4a86 !important;
-        font-size: 12px !important;
-        border-radius: 25px;
-        padding: 5px !important;
-        width: 90% !important;
-        margin: auto;
+    .tech-info .profile-badge {
+        width: 60px;
+        height: 50px;
+        position: absolute;
+        bottom: -3px;
+        z-index: 2;
+        right: -19px;
     }
 
-    .details {
-        width: 100%;
-        text-align: center;
-        margin-top: 20px;
+    .tech-info .profile-badge span {
+        position: inherit;
+        left: 16px;
+        bottom: 16px;
+        font-weight: bold;
+        color: #281C2D;
+    }
+
+    .tech-info .profile-badge img {
+        width: 60px;
+        height: 50px;
+    }
+
+    .tech-info .number-rating {
+        font-size: 64px;
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .tech-info .rating-details label {
+        color: #fff;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+
+    .tech-info .rating-details p {
+        color: #A58CB3;
     }
 
     .details .tech-name {
@@ -55,45 +105,57 @@
         display: block
     }
 
-    .tech-info-second .card-items {
-        height: 20%;
-        background-color: #FFFFFF;
+    .tech-info .card-items {
         color: rgb(47 43 61 / 0.9);
-        -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-        transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
         border-radius: 6px;
-        background-image: none;
-        overflow: hidden;
-        box-shadow: 0px 3px 12px rgb(47 43 61 / 0.14);
-        margin-bottom: 10px;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 20px;
+        padding: 5px;
+        color: #FEA303;
     }
 
-    .tech-info-second .card-items .jobs {
+
+
+    .tech-info .card-items .jobs {
         font-weight: 600;
         font-size: 12px;
+        text-align: center;
+        margin-bottom: 5px;
+
     }
 
-    .tech-info-second .card-items .count {
+    .tech-info .card-items .count {
         text-align: center;
         font-size: 22px;
         font-weight: bold;
     }
 
-    .tech-info-second .progress-bar {
-        background-color: #6a4a86 !important;
+    .tech-info .progress {
+        height: 3px !important;
+    }
+
+    .tech-info .progress-bar {
+        background-color: #FEA303 !important;
+    }
+
+    .tech-info .card-items.service {
+        color: #d9a1a0 !important;
+        padding: 10px 5px;
+        border: 1px solid #d9a1a01a;
+    }
+
+    .tech-info .service .progress-bar {
+        background-color: #d9a1a0 !important;
     }
 
     .separator {
-        width: 100%;
-        height: 2px;
-        background: #6a4a8673;
-        margin-top: 30px;
+        width: 20%;
+        height: 5px;
+        background: #281C2D;
         margin-bottom: 10px;
         border-radius: 25px;
+        transform: translateY(-14px);
     }
 
     .chart-card {
@@ -151,14 +213,14 @@
     }
 
     .text-label {
-        color: #6a4a86;
+        color: #281C2D;
         font-weight: bold;
         font-size: 18px;
         letter-spacing: 1.5px;
     }
 
     .performance .progress .progress-bar {
-        background-color: #6a4a86 !important;
+        background-color: #BEAFC2 !important;
     }
 
     .performance label {
@@ -176,7 +238,7 @@
     }
 
     .star.selected {
-        color: #6a4a86;
+        color: #FEA303;
     }
 
     .performance-card {
@@ -194,6 +256,7 @@
         padding: 10px;
         height: 100%;
         width: 100%;
+        transform: translateY(-25px);
     }
 
     .performance-card .filter select {
@@ -227,124 +290,86 @@
 <?php if (count($techLeaderBoards) > 0) : foreach ($techLeaderBoards as $tech):?>
 <div class="col-12">
     <div class="row">
-        <div class="col-md-6 tech-info ">
-            <div class="first mb-2">
-                <?php $image = userProfilePicture($tech->id); ?>
-                <?php if (is_null($image)){ ?>
-                <div class="profile">
-                    <span><?php echo getLoggedNameInitials($tech->id); ?></span>
-                </div>
-                <?php }else{ ?>
-                <div class="profile" style="background-image: url('<?php echo $image; ?>');"></div>
-                <?php } ?>
-                <div class="details">
-                    <span class="tech-name"><?= $tech->tech_rep ?></span>
-                    <span class="tech-email"><?= $tech->email ?></span>
-                </div>
-                <div class="mt-3">
-                    <span class="badge bg-success fs-6 p-2 tech-badge">
-                        Member since <span id="startYear">2018</span>
-                    </span>
-                </div>
-            </div>
-
-            <div class="col-md-12 chart-card-empty second">
-                <label class="mb-3">Reviews</label>
-                <canvas id="total_amount_jobs_chart" class="nsm-chart" data-chart-type="customer-groups"
-                    style="width:100px; height: 100px; margin: auto;" value="<?= $tech->total_amount ?>"></canvas>
-
-            </div>
-        </div>
-
-        <div class="col-md-6 tech-info-second">
-            <div class="card-items">
-                <div class="col-md-12">
-                    <div class="row align-items-center">
-
-                        <div class="col-md-8 jobs">
-                            <label class="">Completed Jobs</label>
-                        </div>
-                        <div class="col-md-4 count">
-                            <label>70</label>
+        <div class="col-md-12 tech-info ">
+            <div class="col-md-12 content">
+                <div class="row h-100">
+                    <div class="col-md-2 d-flex align-items-center ">
+                        <div class=" mb-2 position-relative">
+                            <div class="profile-wrapper">
+                                <?php $image = userProfilePicture($tech->id); ?>
+                                <?php if (is_null($image)){ ?>
+                                <div class="profile">
+                                    <span><?php echo getLoggedNameInitials($tech->id); ?></span>
+                                </div>
+                                <?php }else{ ?>
+                                <div class="profile" style="background-image: url('assets/img/sample-profile.jpg');">
+                                </div>
+                                <?php } ?>
+                            </div>
+                            <div class="profile-badge">
+                                <img src="<?= url('assets/img/gold-badge.png') ?>" />
+                                <span>2019</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25"
-                        aria-valuemin="0" aria-valuemax="100">
-                        <div class="progress-bar" style="width: 25%"></div>
+                    <div class="col-md-7 d-flex align-items-center justify-content-center gap-3">
+                        <div class="number-rating">
+                            <label for="">87</label>
+                        </div>
+                        <div class="rating-details">
+                            <label>Your learning level <br> points </label>
+                            <p>Lauren you did a great job</p>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="card-items">
-                <div class="col-md-12">
-                    <div class="row align-items-center">
+                    <div class="col-md-3 d-flex align-items-center flex-column justify-content-center">
+                        <div class="card-items mb-3">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12 count">
+                                        <label>70</label>
+                                    </div>
+                                    <div class="col-md-12 jobs">
+                                        <label class="">Completed Jobs</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar" style="width: 25%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-items service">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12  count">
+                                        <label>65</label>
+                                    </div>
+                                    <div class="col-md-12 jobs ">
+                                        <label class="">Completed Service</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar" style="width: 25%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                        <div class="col-md-8 jobs">
-                            <label class="">Completed Service</label>
-                        </div>
-                        <div class="col-md-4 count">
-                            <label>90</label>
-                        </div>
-                    </div>
                 </div>
-                <div class="col-md-12">
-                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25"
-                        aria-valuemin="0" aria-valuemax="100">
-                        <div class="progress-bar" style="width: 50%"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 chart-card">
-                <label for="">Revenue</label>
-                <canvas id="revenue_chart" class="nsm-chart" style="width: 95%; height: 300px; margin: auto;"></canvas>
-                <!-- <div class="d-flex align-center justify-content-between chart-revenue-value">
-                    <div class="text-end">
-                        <span>28k</span>
-                    </div>
-                    <div class="text-start">
-                        <span>28k</span>
-                    </div>
-                </div> -->
             </div>
 
         </div>
+
+
     </div>
-    <div class="separator"></div>
-
     <div class="row performance">
         <div class="col-md-12">
-
             <div class="row">
-                <div class="col-md-5 ">
-                    <div class="text-label mb-3">
-                        <span>PERFORMANCE</span>
-                    </div>
-                    <div class="mb-3">
-                        <label for="">Attendance</label>
-                        <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25"
-                            aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar bg-success" style="width: 70%">70%</div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="">Overall Performance</label>
-                        <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25"
-                            aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar bg-success" style="width: 80%">80%</div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="">Customer Reviews</label>
-                        <div id="star-rating" class="d-flex mb-3">
-                            <i class="bx bxs-star star selected" data-value="1"></i>
-                            <i class="bx bxs-star star selected" data-value="2"></i>
-                            <i class="bx bxs-star star selected" data-value="3"></i>
-                            <i class="bx bxs-star star selected" data-value="4"></i>
-                            <i class="bx bxs-star star " data-value="5"></i>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-md-7">
                     <div class="performance-card">
                         <div class="col-md-12 filter mb-3">
@@ -382,70 +407,42 @@
                                     <td>1500</td>
                                     <td>20%</td>
                                 </tr>
-
-
                             </tbody>
                         </table>
                     </div>
+                    <div class="separator"></div>
+
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="separator"></div>
-    <div class="row teammate">
-        <div class="col-md-12">
-            <div class="text-label mb-3">
-                <span>TECH LEADER</span>
-            </div>
-            <div class="col-md-12">
-                <table class="table  table-borderless">
-                    <thead>
-                        <tr>
-                            <th>
-                                Name
-                            </th>
-                            <th style="text-align:center">Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <div class="nsm-profile">
-                                        <span>BN</span>
-                                    </div>
-                                    <label for="">Brannon Nguyen</label>
-                                </div>
-                            </td>
-                            <td class="score"><span>87</span></td>
+                <div class="col-md-5 ">
+                    <div class="text-label mt-3">
+                        <span>PERFORMANCE</span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="">Attendance</label>
+                        <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25"
+                            aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar bg-success" style="width: 70%">70%</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="">Overall Performance</label>
+                        <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25"
+                            aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar bg-success" style="width: 80%">80%</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="">Customer Reviews</label>
+                        <div id="star-rating" class="d-flex mb-3">
+                            <i class="bx bxs-star star selected" data-value="1"></i>
+                            <i class="bx bxs-star star selected" data-value="2"></i>
+                            <i class="bx bxs-star star selected" data-value="3"></i>
+                            <i class="bx bxs-star star selected" data-value="4"></i>
+                            <i class="bx bxs-star star " data-value="5"></i>
+                        </div>
+                    </div>
+                </div>
 
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <div class="nsm-profile">
-                                        <span>TN</span>
-                                    </div>
-                                    <label for="">Tommy Nguyen</label>
-                                </div>
-                            </td>
-                            <td class="score"><span>100</span></td>
-
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex gap-2 align-items-center">
-                                    <div class="nsm-profile">
-                                        <span>TN</span>
-                                    </div>
-                                    <label for="">Tyler Nguyen</label>
-                                </div>
-                            </td>
-                            <td class="score"><span>90</span></td>
-
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>

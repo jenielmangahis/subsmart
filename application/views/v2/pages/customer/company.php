@@ -480,11 +480,11 @@
                         </div>
                         <div class="col-md-6">
                         <div class="row form_line">
-                                <div class="col-md-4">Country</div>
+                            <!-- <div class="col-md-4">Country</div>
                                 <div class="col-md-8">
                                     <input data-type="customer_address_country" type="text" class="form-control" name="country" id="country" value="" />
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="row form_line">
                                 <div class="col-md-4">Address <span class="required"> *</span></div>
                                 <div class="col-md-8">
@@ -522,12 +522,12 @@
                                     <textarea style="height:80px;" data-type="customer_address_street" class="form-control" name="cross_street" id="cross_street"></textarea>
                                 </div>
                             </div>                
-                            <div class="row form_line">
+                            <!-- <div class="row form_line">
                                 <div class="col-md-4">Subdivision</div>
                                 <div class="col-md-8">
                                     <textarea style="height:80px;" data-type="customer_address_subdivision" class="form-control" name="subdivision" id="subdivision"></textarea>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
 
