@@ -720,12 +720,8 @@ class Customer extends MY_Controller
         foreach($customerGroups as $g){
             $statusCounts[$g->name] = 0;
         }
+
         $statusCounts['Active Subscription'] = 0;
-
-
-        
-        
-
         
         foreach ($persons as $person) {
             $status = trim($person->status);
@@ -2338,7 +2334,8 @@ class Customer extends MY_Controller
         }          
         
         // $default_ids = defaultCompanyCustomerStatusIds();
-        
+        $this->page_data['page']->title = 'Customer Status';
+        $this->page_data['page']->parent = 'Sales';
         $this->load->view('v2/pages/customer/settings_customer_status', $this->page_data);
     }
 
@@ -3542,11 +3539,11 @@ class Customer extends MY_Controller
                 'city' => $input['city'],
                 'county' => $input['county'],
                 'state' => $input['state'],
-                'country' => $input['country'],
+                //'country' => $input['country'],
                 'industry_type_id' => $input['industry_type'],
                 'zip_code' => $input['zip_code'],
                 'cross_street' => $input['cross_street'],
-                'subdivision' => $input['subdivision'],
+                //'subdivision' => $input['subdivision'],
                 'email' => $input['email'],
                 'ssn' => $input['ssn'],
                 'date_of_birth' => $input['date_of_birth'],
@@ -7585,7 +7582,8 @@ class Customer extends MY_Controller
         $this->page_data['importFieldsList'] = $this->general->get_data_with_param($getImportFields);
         $this->page_data['importFields'] = $this->general->get_data_with_param($get_company_settings, false);
         $this->page_data['company_id'] = logged('company_id');
-
+        $this->page_data['page']->title = 'Import Settings';
+        $this->page_data['page']->parent = 'Sales';
         $this->load->view('v2/pages/customer/settings_import', $this->page_data);
     }
 
@@ -7630,7 +7628,8 @@ class Customer extends MY_Controller
         $customer_settings = $this->general->get_data_with_param($get_company_settings, false);
         $this->page_data['importFields'] = $customer_settings;
         $this->page_data['company_id'] = logged('company_id');
-
+        $this->page_data['page']->title = 'Export Settings';
+        $this->page_data['page']->parent = 'Sales';
         $this->load->view('v2/pages/customer/settings_export', $this->page_data);
     }
 
