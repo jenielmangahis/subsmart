@@ -144,9 +144,10 @@ class AcsCustomerSubscriptionBilling_model extends MY_Model
         return $query->row();
     }
 
-    public function getUnpaidDetailsByCustomerId($prof_id)
+    public function getUnpaidDetailsByCustomerId($prof_id) 
     {
-        $this->db->select('COALESCE(SUM(invoices.grand_total),0)AS total_amount, invoices.due_date as due_date, invoices.late_fee as late_fee');
+        //$this->db->select('invoices.due_date as due_date, COALESCE(SUM(invoices.grand_total),0)AS total_amount, COALESCE(SUM(invoices.late_fee),0)AS late_fee');
+        $this->db->select('*');
         $this->db->from($this->table);
         $this->db->join('invoices', 'acs_customer_subscription_billing.invoice_id = invoices.id', 'left');
         $this->db->where('acs_customer_subscription_billing.customer_id', $prof_id);
