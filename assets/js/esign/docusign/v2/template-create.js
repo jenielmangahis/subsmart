@@ -1,14 +1,16 @@
 function TemplateCreate() {
   const PDFJS = pdfjsLib;
 
-  //const prefixURL = "http://127.0.0.1/ci/nsmart_v2";
-  
+  //const prefixURL = "http://127.0.0.1/ci/nsmart_v2";  
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const tid = urlParams.get('id');
   const prefixURL = "";
   const validFileExtensions = ["pdf"];
 
   const maxRecipients = 10;
   let recipients = [];
-  let templateId = undefined;
+  let templateId = tid == null ? undefined : tid;
   let template = {};
   let files = [];
   let workorder = undefined;
@@ -49,51 +51,96 @@ function TemplateCreate() {
       return;
     }
     
-    const html = `
-      <div class="esignBuilder__docPreview h-100" data-id="${fileId}">
-        <div class="esignBuilder__docPreviewHover"></div>
+    if( docfile == 0 ){
+      var html = `
+        <div class="esignBuilder__docPreview h-100" data-id="${fileId}">
+          <div class="esignBuilder__docPreviewHover"></div>
 
-        <canvas></canvas>
-        <div class="esignBuilder__docInfo">
-            <div class="esignBuilder__docInfoText">
-              <h5 class="esignBuilder__docTitle"></h5>
-              <span class="esignBuilder__docPageCount"></span>
-            </div>
-
-            <div class="dropdown">
-              <button
-                class="btn dropdown-toggle esignBuilder__docInfoActions"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <i class="fa fa-ellipsis-v"></i>
-              </button>
-
-              <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" data-action="replace_file" data-id="${docfile.id}" href="#"><i class='bx bx-file'></i> Replace</a>
-                <a class="dropdown-item" data-action="preview" href="#"><i class='bx bx-search-alt-2'></i> Preview</a>
-                <a class="dropdown-item" data-action="download_file" data-id="${docfile.id}" href="#"><i class='bx bx-download'></i> Download</a>
-                <a class="dropdown-item" data-action="delete" href="#"><i class='bx bx-trash'></i> Delete</a>
+          <canvas></canvas>
+          <div class="esignBuilder__docInfo">
+              <div class="esignBuilder__docInfoText">
+                <h5 class="esignBuilder__docTitle"></h5>
+                <span class="esignBuilder__docPageCount"></span>
               </div>
-            </div>
-        </div>
 
-        <div class="esignBuilder__uploadProgress" width="100%">
-            <span></span>
-        </div>
+              <div class="dropdown">
+                <button
+                  class="btn dropdown-toggle esignBuilder__docInfoActions"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <i class="fa fa-ellipsis-v"></i>
+                </button>
 
-        <div class="esignBuilder__uploadProgressCheck">
-            <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <title>Check</title>
-                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                    <path d="M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z" stroke-opacity="0.198794158" stroke="#747474" fill-opacity="0.816519475" fill="#28a745"></path>
-                </g>
-            </svg>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a class="dropdown-item" data-action="delete" href="#"><i class='bx bx-trash'></i> Delete</a>
+                </div>
+              </div>
+          </div>
+
+          <div class="esignBuilder__uploadProgress" width="100%">
+              <span></span>
+          </div>
+
+          <div class="esignBuilder__uploadProgressCheck">
+              <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <title>Check</title>
+                  <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <path d="M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z" stroke-opacity="0.198794158" stroke="#747474" fill-opacity="0.816519475" fill="#28a745"></path>
+                  </g>
+              </svg>
+          </div>
         </div>
-      </div>
-    `;
+      `;
+    }else{
+      var html = `
+        <div class="esignBuilder__docPreview h-100" data-id="${fileId}">
+          <div class="esignBuilder__docPreviewHover"></div>
+
+          <canvas></canvas>
+          <div class="esignBuilder__docInfo">
+              <div class="esignBuilder__docInfoText">
+                <h5 class="esignBuilder__docTitle"></h5>
+                <span class="esignBuilder__docPageCount"></span>
+              </div>
+
+              <div class="dropdown">
+                <button
+                  class="btn dropdown-toggle esignBuilder__docInfoActions"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <i class="fa fa-ellipsis-v"></i>
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a class="dropdown-item" data-action="replace_file" data-id="${docfile.id}" href="#"><i class='bx bx-file'></i> Replace</a>
+                  <a class="dropdown-item" data-action="preview" href="#"><i class='bx bx-search-alt-2'></i> Preview</a>
+                  <a class="dropdown-item" data-action="download_file" data-id="${docfile.id}" href="#"><i class='bx bx-download'></i> Download</a>
+                  <a class="dropdown-item" data-action="delete" href="#"><i class='bx bx-trash'></i> Delete</a>
+                </div>
+              </div>
+          </div>
+
+          <div class="esignBuilder__uploadProgress" width="100%">
+              <span></span>
+          </div>
+
+          <div class="esignBuilder__uploadProgressCheck">
+              <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <title>Check</title>
+                  <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <path d="M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z" stroke-opacity="0.198794158" stroke="#747474" fill-opacity="0.816519475" fill="#28a745"></path>
+                  </g>
+              </svg>
+          </div>
+        </div>
+      `;
+    }   
 
     const $docPreview = createElementFromHTML(html);
     $(".fileupload").append($docPreview);
@@ -204,8 +251,8 @@ function TemplateCreate() {
 
   async function onChangeFile(event) {
     const { files: eventFiles } = event.target;
-    const { files: docFiles } = event.template;
-
+    const { files: docFiles }   = typeof event.template == 'undefined' ? {} : event.template;
+    console.log('test',docFiles);
     if (files && files.length) {
       for (let index = 0; index < eventFiles.length; index++) {
         const file = eventFiles[index];
@@ -220,7 +267,11 @@ function TemplateCreate() {
     // previews in order, but a lot faster.
     for (let index = 0; index < eventFiles.length; index++) {
       const file = eventFiles[index]; 
-      const docfile = docFiles[index];
+      try {
+        var docfile = docFiles[index];
+      } catch (error) {
+        var docfile = 0;
+      }
       await createFilePreview(event, file, docfile);
     }
   }
@@ -1008,7 +1059,10 @@ $(document).ready(async function () {
 
   let errorTimeout = null;
   let hasChangedUrl = false;
-  let templateId = null;
+  let queryString = window.location.search;
+  let urlParams = new URLSearchParams(queryString);
+  let tid = urlParams.get('id');
+  let templateId = tid == null ? undefined : tid;
 
   const config = new FormAutoSaveConfig({
     onChange: async () => {
