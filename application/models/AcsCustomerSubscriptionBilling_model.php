@@ -101,11 +101,14 @@ class AcsCustomerSubscriptionBilling_model extends MY_Model
         $this->db->select(
             'acs_customer_subscription_billing.*,
             invoices.invoice_number,acs_profile.first_name,
+            acs_billing.recurring_start_date,
+            acs_billing.recurring_end_date,
             acs_profile.last_name,invoices.status'
         );
         $this->db->from($this->table);
         $this->db->join('invoices', 'acs_customer_subscription_billing.invoice_id = invoices.id', 'left');
         $this->db->join('acs_profile', 'acs_customer_subscription_billing.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('acs_billing', 'acs_customer_subscription_billing.billing_id = acs_billing.bill_id', 'left');
         $this->db->where('acs_customer_subscription_billing.customer_id', $customer_id);
 
         if ( $keyword != '' ) {
