@@ -11,7 +11,13 @@
                 <div class="input-group rounded">
                     <button class="input-group-text border-0 copy-customer-public-url" id="copy-customer-public-url" onClick="javascript:copyCustomerPublicUrl();" style="background-color: #6a4a86; color: #ffffff;"><strong>COPY URL</strong></button>    
                     <input type="text" class="form-control rounded customer-public-url" id="customer-public-url" placeholder="" disabled value="<?php echo $public_url; ?>" >
-                </div>            
+                </div>     
+   
+                <div class="input-group rounded">
+                <div id="url-copied-container" class="nsm primary url-copied-container" style="background-color: #6ba77c21; width: 100%; margin-top: 5px; display:none;">Url copied..</div>      
+                <div id="url-copied-container-fail" class="nsm warning url-copied-container-fail" style="background-color: #dc3545; color:#ffffff; width: 100%; margin-top: 5px; display:none;">Url copy fail..</div>      
+                </div>
+              
             </div>
         </div>
     </div>
@@ -22,9 +28,9 @@ $(function(){
     $(document).on('click', '.copy-customer-public-url', function(){
         const copyUrl = $("#customer-public-url").val();
         navigator.clipboard.writeText(copyUrl).then(() => {
-            alert('url copied');
+            $("#url-copied-container").show();
         }).catch(() => {
-            alert('error copying url');
+            $("#url-copied-container-fail").show();
         })
     });
 });
