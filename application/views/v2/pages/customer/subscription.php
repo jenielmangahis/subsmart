@@ -533,9 +533,11 @@
                                     <tr>
                                         <td data-name="">Invoice #</td>    
                                         <td data-name="">Customer</td> 
-                                        <td data-name="">Recurring Date</td>           
+                                        <td data-name="">Subscription Date</td>           
+                                        <td data-name="">Invoice Date</td>           
                                         <td data-name="">Status</td>
                                         <td data-name="">Amount</td>
+                                        <td data-name="Action"></td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -545,18 +547,41 @@
                                     <td><?php echo $psh->first_name . " " . $psh->last_name; ?></td>
                                     <td>
                                         <?php 
-                                            $recurring_date = "--";
+                                            $subscription_date = date("m/d/Y", strtotime($psh->recurring_start_date)) . ' to ' . date("m/d/Y", strtotime($psh->recurring_end_date));
+                                            echo $subscription_date;
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php 
+                                            $recurring_date = "---";
                                             if($psh->recurring_date != NULL) {
-                                                $recurring_date = date("F d, Y", strtotime($psh->recurring_date));
+                                                $recurring_date = date("m/d/Y", strtotime($psh->recurring_date));
                                             }
                                             echo $recurring_date;                                            
                                         ?>
                                     </td>
                                     <td><?php echo $psh->status; ?></td>
                                     <td><?php echo $psh->amount; ?></td>
+                                    <td>
+                                        <div class="dropdown table-management">
+                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item" href="<?php echo base_url('invoice/genview/' . $psh->invoice_id) ?>">View Invoice</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="<?php echo base_url('invoice/preview/'. $psh->invoice_id . '?format=pdf') ?>" target="_blank">Invoice PDF</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="<?php echo base_url('invoice/preview/'. $psh->invoice_id . '?format=print') ?>" target="_blank">Print Invoice</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <?php } ?>
-                                
                                 </tbody>
                             </table>
                         </div>

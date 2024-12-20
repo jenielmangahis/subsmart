@@ -101,11 +101,14 @@ class AcsCustomerSubscriptionBilling_model extends MY_Model
         $this->db->select(
             'acs_customer_subscription_billing.*,
             invoices.invoice_number,acs_profile.first_name,
+            acs_billing.recurring_start_date,
+            acs_billing.recurring_end_date,
             acs_profile.last_name,invoices.status'
         );
         $this->db->from($this->table);
         $this->db->join('invoices', 'acs_customer_subscription_billing.invoice_id = invoices.id', 'left');
         $this->db->join('acs_profile', 'acs_customer_subscription_billing.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('acs_billing', 'acs_customer_subscription_billing.billing_id = acs_billing.bill_id', 'left');
         $this->db->where('acs_customer_subscription_billing.customer_id', $customer_id);
 
         if ( $keyword != '' ) {
@@ -132,6 +135,19 @@ class AcsCustomerSubscriptionBilling_model extends MY_Model
     public function getTotalAmountUnpaidByCustomerId($prof_id)
     {
         $this->db->select('COALESCE(SUM(invoices.grand_total),0)AS total_amount');
+        $this->db->from($this->table);
+        $this->db->join('invoices', 'acs_customer_subscription_billing.invoice_id = invoices.id', 'left');
+        $this->db->where('acs_customer_subscription_billing.customer_id', $prof_id);
+        $this->db->where('invoices.status', 'Unpaid');
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getUnpaidDetailsByCustomerId($prof_id) 
+    {
+        //$this->db->select('invoices.due_date as due_date, COALESCE(SUM(invoices.grand_total),0)AS total_amount, COALESCE(SUM(invoices.late_fee),0)AS late_fee');
+        $this->db->select('*');
         $this->db->from($this->table);
         $this->db->join('invoices', 'acs_customer_subscription_billing.invoice_id = invoices.id', 'left');
         $this->db->where('acs_customer_subscription_billing.customer_id', $prof_id);

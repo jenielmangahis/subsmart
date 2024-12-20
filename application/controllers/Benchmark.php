@@ -25,14 +25,48 @@ class Benchmark extends MY_Controller {
         $activeSubscriptions = $this->customer_ad_model->get_all_active_subscriptions();	
 
 		foreach( $activeSubscriptions as $as ) {
-            $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);
+            $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);            
+
             if( $as->mmr > 0 && $customer ){
-
+                $totalUnpaidSubscriptions   = $this->AcsCustomerSubscriptionBilling_model->getTotalAmountUnpaidByCustomerId($as->fk_prof_id);
+				$unpaidSubscriptionsDetails = $this->AcsCustomerSubscriptionBilling_model->getUnpaidDetailsByCustomerId($as->fk_prof_id);
+                $total_amount               = $totalUnpaidSubscriptions->total_amount + $as->mmr;	
+                
                 $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($customer->company_id);
+				$late_fee        = 0;
+				$payment_fee     = 0;
 
+				$current_date = date('Y-m-d');
                 if( $invoiceSettings ){            
                     $next_number = (int) $invoiceSettings->invoice_num_next;     
-                    $prefix      = $invoiceSettings->invoice_num_prefix;        
+                    $prefix      = $invoiceSettings->invoice_num_prefix;
+                    
+                    if( $invoiceSettings->payment_fee_percent > 0  ){                        
+                        $payment_fee = $total_amount * ($invoiceSettings->payment_fee_percent/100);
+                    }else{
+                        $payment_fee = $invoiceSettings->payment_fee_amount;
+                    }
+
+					if($invoiceSettings->num_days_activate_late_fee > 0) {
+						$late_fee_activated_date = date('Y-m-d', strtotime($unpaidSubscriptionsDetails->due_date . ' + ' . $invoiceSettings->num_days_activate_late_fee . ' days'));
+					} else {
+						$late_fee_activated_date = $unpaidSubscriptionsDetails->due_date;
+					}				
+					
+					//Invoice is due, need to add late fee
+					if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
+						$date1 = new DateTime($current_date);
+						$date2 = new DateTime($late_fee_activated_date);
+						$total_days = $date2->diff($date1)->format("%a");
+
+						if($total_days > 0) {
+							$late_fee = $invoiceSettings->late_fee_amount_per_day * $total_days;
+						} else {
+							$late_fee = $invoiceSettings->late_fee_amount_per_day;
+						}
+					}elseif(strtotime($current_date) == strtotime($late_fee_activated_date)) {
+						$late_fee = $invoiceSettings->late_fee_amount_per_day;
+					}
                 }else{
                     $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($customer->company_id);
                     $prefix     = 'INV-';
@@ -41,15 +75,12 @@ class Benchmark extends MY_Controller {
                     }else{
                         $next_number   = 1;
                     }
+
+                    $payment_fee = 0;
+					$late_fee    = 0;
                 }
 
-				/**
-				 * Note: before creating invoice, check customer subscription billing if already exist
-				 *   - table 'acs_customer_subscription_billing'
-				 *   - recurring_date
-				 *   - billing_id
-				 *   - customer_id
-				 */
+                $total_amount = $total_amount + $payment_fee + $late_fee;
 
 				$recurring_date            = $as->next_billing_date;
 				$filter['recurring_date']  = $as->next_billing_date;
@@ -57,7 +88,6 @@ class Benchmark extends MY_Controller {
 				$filter['customer_id']     = $customer->prof_id;
 				$filter['company_id']      = $customer->company_id;
 
-				//$isInvoiceDuplicate = $this->Invoice_model->getInvoiceByFilter($filter);
 				$isCustomerSubscriptionBillingDuplicate = $this->AcsCustomerSubscriptionBilling_model->getCustomerSubscriptionBillingByFilter($filter);	
 
 				if(!$isCustomerSubscriptionBillingDuplicate) {
@@ -87,22 +117,23 @@ class Benchmark extends MY_Controller {
 						'due_date' => $as->next_billing_date,
 						'status' => 'Unpaid',
 						'customer_email' => $customer->email,
-						'total_due' => $as->mmr,
-						'balance' => $as->mmr,
+						'total_due' => $total_amount,
+						'balance' => $total_amount,
 						'date_created' => date("Y-m-d H:i:s"),
 						'date_updated' => date("Y-m-d H:i:s"),
 						'company_id' => $customer->company_id,
 						'is_recurring' => 1,
-						'invoice_totals' => $as->mmr,
+						'invoice_totals' => $total_amount,
 						'user_id' => 0,
 						'adjustment_name' => 'Customer Subscription',
-						'adjustment_value' => $as->mmr,
-						'sub_total' => $as->mmr,
+						'adjustment_value' => $total_amount,
+						'sub_total' => $total_amount,
 						'taxes' => 0,
-						'grand_total' => $as->mmr,
+						'grand_total' => $total_amount,
 						'view_flag' => 0,
 						'no_tax' => 0,
-						'late_fee' => 0
+						'late_fee' => $late_fee,
+                        'payment_fee' => $payment_fee
 					];		
 
 					$invoice_id = $this->Invoice_model->create($data_invoice);
@@ -146,7 +177,10 @@ class Benchmark extends MY_Controller {
 							'recurring' => '',
 							'invoice_template' => 1,
 							'residential_message' => 'Thank you for your business.',
-							'residential_terms_and_conditions' => 'Thank you for your business.'
+							'residential_terms_and_conditions' => 'Thank you for your business.',
+                            'invoice_template' => 0,
+                            'late_fee_amount_per_day' => 0,
+                            'num_days_activate_late_fee' => 0,
 						];
 						$this->Invoice_settings_model->create($invoice_settings_data);
 					}		
@@ -157,7 +191,7 @@ class Benchmark extends MY_Controller {
 						'billing_id'  	 => $as->bill_id,
 						'invoice_id'  	 => $invoice_id,
 						'recurring_date' => $recurring_date ? $recurring_date : date("Y-m-d"),
-						'amount'         => $as->mmr,
+						'amount'         => $total_amount,
 						'date_created'   => date("Y-m-d H:i:s")
 					];
 	

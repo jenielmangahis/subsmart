@@ -2626,7 +2626,8 @@ function Signing(hash) {
       $(this).attr("disabled", false);
       $(this).find(".spinner-border").addClass("d-none");
       $(".loader-finishing").addClass("d-none");
-      markAsFinished();
+      location.reload();
+      //markAsFinished();
     });
   }
 
