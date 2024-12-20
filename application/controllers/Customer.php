@@ -2415,6 +2415,7 @@ class Customer extends MY_Controller
     public function module($id = null)
     {
         $this->load->helper('sms_helper');
+        $this->load->helper(array('hashids_helper'));
 
         $this->load->model('Clients_model');
 

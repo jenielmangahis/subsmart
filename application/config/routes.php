@@ -1976,3 +1976,6 @@ $route['users/role_access_modules'] = 'Users/role_access_modules';
 
 //Getting Started
 $route['dashboard/_getting_started'] = 'Dashboard/ajax_getting_started';
+
+//Getting Started
+$route['client_hub/(:any)?'] = 'ClientHub/index/$1';
