@@ -442,6 +442,13 @@
     .MAP_LOADER_CONTAINER{
         min-height: 350px;
     }
+    #items_table thead td{
+        background-color:#6a4a86;
+        color:#ffffff;
+    }
+    #items_table td:nth-child(5){
+    text-align:right !important;
+    }
 </style>
 <?php if(isset($jobs_data)): ?>
     <input type="hidden" value="<?= $jobs_data->id ?>" id="esignJobId" />
@@ -1065,6 +1072,7 @@
                                                         </div>
                                                     </div>
                                                     <?php //if( in_array($cid, adi_company_ids()) ){ ?>
+                                                        <?php if(checkIndustryAllowedSpecificField('installation_cost')){ ?>
                                                         <div class="row mt-3">
                                                             <div class="col-sm-6">
                                                                 <label>Installation Cost</label>
@@ -1073,6 +1081,8 @@
                                                                 <input type="number" step="any" min="0" class="form-control" id="adjustment_ic" name="installation_cost" value="<?= isset($jobs_data) ? $jobs_data->installation_cost : '0.00'; ?>" required="" />
                                                             </div>
                                                         </div>
+                                                        <?php } ?>
+                                                        <?php if(checkIndustryAllowedSpecificField('one_time_program_setup')){ ?>
                                                         <div class="row mt-2">
                                                             <div class="col-sm-6">
                                                                 <label>One time (Program and Setup)</label>
@@ -1081,6 +1091,8 @@
                                                                 <input type="number" step="any" min="0" class="form-control" id="adjustment_otps" name="otps" value="<?= isset($jobs_data) ? $jobs_data->program_setup : '0.00'; ?>" required="" />
                                                             </div>
                                                         </div>
+                                                        <?php } ?>
+                                                        <?php if(checkIndustryAllowedSpecificField('monitoring_rate')){ ?>
                                                         <div class="row mt-2 mb-2">
                                                             <div class="col-sm-6">
                                                                 <label>Monthly Monitoring</label>
@@ -1089,6 +1101,7 @@
                                                                 <input type="number" step="any" min="0" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="<?= isset($jobs_data) ? $jobs_data->monthly_monitoring : '0.00'; ?>" required="" />
                                                             </div>
                                                         </div>
+                                                        <?php } ?>
                                                     <?php //} ?>
                                                     <div class="row">
                                                         <hr>
@@ -1536,20 +1549,24 @@
                 <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
             <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-12 mb-2">
-                            <input id="ITEM_CUSTOM_SEARCH" style="width: 200px;" class="form-control" type="text" placeholder="Search Item...">
-                        </div>
+                    <div class="row">                        
                         <div class="col-sm-12">
-                            <table id="items_table" class="table table-hover table-sm w-100">
+                            <div class="row">
+                                <div class="col-12 col-md-12 grid-mb">
+                                    <div class="nsm-field-group search">
+                                        <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" for="items_table" placeholder="Search List">
+                                    </div>
+                                </div>
+                            </div>
+                            <table id="items_table" class="nsm-table w-100">
                                 <thead class="bg-light">
                                     <tr>
-                                        <td style="width: 0% !important;"></td>
-                                        <td><strong>Name</strong></td>
-                                        <td><strong>On Hand</strong></td>
-                                        <td><strong>Price</strong></td>
-                                        <td><strong>Type</strong></td>
-                                        <td class='d-none'><strong>Location</strong></td>
+                                        <td data-name="Action" style="width: 0% !important;"></td>
+                                        <td data-name="Name"><strong>Name</strong></td>
+                                        <td data-name="Type"><strong>Type</strong></td>
+                                        <td data-name="Stock"><strong>Stock</strong></td>
+                                        <td data-name="Price"><strong>Price</strong></td>                                        
+                                        <td data-name="Location" class='d-none'><strong>Location</strong></td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1560,17 +1577,24 @@
                                     ?>
                                     <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
                                         <td style="width: 0% !important;">
-                                            <button type="button" data-bs-dismiss="modal" class='nsm-button primary small select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-retail="<?= $item->retail; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                            <button type="button" data-bs-dismiss="modal" class='nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-retail="<?= $item->retail; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
                                         </td>
-                                        <td><?php echo $item->title; ?></td>
-                                        <td><?php foreach($itemsLocation as $itemLoc){
-                                            if($itemLoc->item_id == $item->id){
-                                                echo "<div class='data-block'>";
-                                                echo $itemLoc->name. " = " .$itemLoc->qty;
-                                                echo "</div>";
-                                            } 
-                                        }
-                                        ?></td>
+                                        <td class="nsm-text-primary"><?php echo $item->title; ?></td>
+                                        <td class="nsm-text-primary"><?php echo $item->type; ?></td>
+                                        <td>
+                                            <?php 
+                                            $total_stock = 0;
+                                            foreach($itemsLocation as $itemLoc){
+                                                if($itemLoc->item_id == $item->id){
+                                                    $total_stock += $itemLoc->qty;
+                                                    //echo "<div class='data-block'>";
+                                                    //echo $itemLoc->name. " = " .$itemLoc->qty;
+                                                    //echo "</div>";
+                                                } 
+                                            }
+                                            echo $total_stock;
+                                            ?>
+                                        </td>
                                         <td>
                                             <?php 
                                                 if( $item->retail > 0 ){
@@ -1579,8 +1603,7 @@
                                                     echo '0.00';
                                                 }                                                
                                             ?>                                                
-                                        </td>
-                                        <td><?php echo $item->type; ?></td>
+                                        </td>                                        
                                         <td class='d-none'><?php echo $item->location_name; ?></td>
                                     </tr>
                                     <?php } } ?>

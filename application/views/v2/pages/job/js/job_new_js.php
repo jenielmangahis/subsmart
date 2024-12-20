@@ -961,6 +961,9 @@ $("#attachment-file").change(function() {
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
+                    $("#select_with_data").append('<option value="5">Twitter</option>');
+                    $("#select_with_data").val('5');
+                    $("#select_with_data").trigger('change');
                     if(data === "Success"){
                         sucess_add('Customer Added Successfully!',1);
                     }else {
@@ -1118,14 +1121,19 @@ $("#attachment-file").change(function() {
             $('#end_date').val(this.value);
         });
 
-        var ITEMS_TABLE = $('#items_table').DataTable({
-            "ordering": false,
-        });
-        $("#ITEM_CUSTOM_SEARCH").keyup(function() {
-            ITEMS_TABLE.search($(this).val()).draw()
-        });
+        $("#items_table").nsmPagination({itemsPerPage:10});
+        $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));        
+        }, 1000));
+
+        // var ITEMS_TABLE = $('#items_table').DataTable({
+        //     "ordering": false,
+        // });
+        // $("#ITEM_CUSTOM_SEARCH").keyup(function() {
+        //     ITEMS_TABLE.search($(this).val()).draw()
+        // });
         
-        ITEMS_TABLE_SETTINGS = ITEMS_TABLE.settings();
+        // ITEMS_TABLE_SETTINGS = ITEMS_TABLE.settings();
 
         // $('#device_audit').DataTable({
         //     "lengthChange": false,
