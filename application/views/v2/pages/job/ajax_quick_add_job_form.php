@@ -495,7 +495,7 @@
                                 <div class="mb-3">
                                     <div class="d-flex justify-content-between">
                                         <h6 style="line-height:22px;">Job Type</h6>
-                                        <a class="btn-small nsm-button nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_types'); ?>">
+                                        <a class="btn-small nsm-button nsm-link d-flex align-items-center" id="btn-quick-add-job-type" href="javascript:void(0);">
                                             Add New
                                         </a>
                                     </div> 
@@ -511,7 +511,7 @@
                                 <div class="mb-3">
                                     <div class="d-flex justify-content-between">
                                         <h6 style="line-height:22px;">Job Tag</h6>
-                                        <a class="btn-small nsm-button nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_tags'); ?>">
+                                        <a class="btn-small nsm-button nsm-link d-flex align-items-center" id="btn-quick-add-job-tag" href="javascript:void(0);">
                                             Add New
                                         </a>
                                     </div>
@@ -685,6 +685,7 @@
                                                 <?php } ?>
                                             </select>
                                         </div>
+                                        <?php if(checkIndustryAllowedSpecificField('monitoring_rate')){ ?>
                                         <div class="col-md-12 form-group">
                                             <div class="row">
                                                 <div class="col-md-6 form-group mt-2">
@@ -701,17 +702,22 @@
                                                     <input style="display:inline-block;" type="number" step="any" id="plan-value" name="monthly_monitoring_rate_value" value="0.00" class="form-control" />
                                                 </div>
                                             </div>
-                                        </div>                                        
+                                        </div>     
+                                        <?php } ?>                                   
                                         <div class="col-md-12 form-group mt-2">
                                             <div class="row">
+                                                <?php if(checkIndustryAllowedSpecificField('installation_cost')){ ?>
                                                 <div class="col-md-6 form-group mt-2">
                                                     <label for="service-ticket-installation-cost"><b>Installation Cost</b></label>
                                                     <input type="number" step="any" class="form-control" value="0.00" name="installation_cost" id="service-ticket-installation-cost">
                                                 </div>
+                                                <?php } ?>
+                                                <?php if(checkIndustryAllowedSpecificField('one_time_program_setup')){ ?>
                                                 <div class="col-md-6 form-group mt-2">
                                                     <label for="service-ticket-otp"><b>One Time (Program and Setup)</b></label>
                                                     <input type="number" step="any" class="form-control" value="0.00" name="otp" id="service-ticket-otp">
                                                 </div>
+                                                <?php } ?>
                                             </div>
                                         </div>                        
                                     </div>
