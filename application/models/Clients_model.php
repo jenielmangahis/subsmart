@@ -218,6 +218,16 @@ class Clients_model extends MY_Model
         $this->db->update();
     }
 
+    public function getCompanyIndustryId($cid){
+        
+        $this->db->select('industry_type_id');
+        $this->db->from($this->table);
+        $this->db->where('id', $cid);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function solarIndustryId(){
         return $this->solar_industry_id;
     }
