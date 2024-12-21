@@ -2416,143 +2416,145 @@ class Customer extends MY_Controller
     {
         $this->load->helper('sms_helper');
         $this->load->helper(array('hashids_helper'));
-
         $this->load->model('Clients_model');
-
-        error_reporting(0);
-        $this->page_data['page']->title = 'Customer Dashboard';
-        $this->page_data['page']->parent = 'Customers';
-
         $this->load->model('taskhub_model');
         $this->load->library('wizardlib');
         $this->load->model('Invoice_model', 'invoice_model');
-
-        $is_allowed = $this->isAllowedModuleAccess(9);
-        if (!$is_allowed) {
-            $this->page_data['module'] = 'customer';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            exit;
-        }
-
-        $user_id = logged('id');
-        $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id', $user_id, 'ac_module_sort');
-        if (!$check_if_exist) {
-            $input = [];
-            $input['fk_user_id'] = $user_id;
-            $input['ams_values'] = 'profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute';
-            $this->customer_ad_model->add($input, 'ac_module_sort');
-        }
-        $userid = $id;
-        if (!isset($userid) || empty($userid)) {
-            $get_id = $this->customer_ad_model->get_all(1, '', 'DESC', 'acs_profile', 'prof_id');
-            if (!empty($get_id)) {
-                $userid = $get_id[0]->prof_id;
-            } else {
-                $userid = 0;
-            }
-        } else {
-            $this->qrcodeGenerator($userid);
-        }
-
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $userid;
-        if ($id != null) {
-            $office_info = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_office');
-            $assignedUser = [];
-            if( $office_info ){
-                $this->load->model('Users_model');
-                $assignedUser = $this->Users_model->getUserByID($office_info->technician);
-            }
-
-            $this->page_data['assignedUser'] = $assignedUser;
-            $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($id);
-            $this->page_data['cust_invoices'] = $this->invoice_model->getAllByCustomerId($id);
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
-
-            $this->page_data['log_info'] = $this->customer_ad_model->getCustomerActivityLogs($id);
-
-            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_access');
-            $this->page_data['office_info'] = $office_info;
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_billing');
-            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_alarm');
-            $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_audit_import');
-            // $this->page_data['minitab'] = $this->uri->segment(5);
-            $this->page_data['task_info'] = $this->taskhub_model->getAllNotCompletedTasksByCustomerId($id);
-            $this->page_data['item_details'] = $this->customer_ad_model->get_customer_item_details($id);
-            // $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$id,"acs_tasks");
-            $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id', $user_id, 'ac_module_sort');
-            $this->page_data['tasks'] = $this->customer_ad_model->get_data_by_id('prof_id', $user_id, 'tasks');
-            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-            $this->page_data['cus_id'] = $id;
-
-            if ($this->uri->segment(5) == 'mt3-cdl') {
-                $template_id = !empty($this->uri->segment(6)) ? $this->uri->segment(6) : '';
-                $this->page_data['letter_id'] = $template_id;
-                $this->page_data['letter_template'] = $this->Esign_model->get_template_by_id($template_id);
-            }
-            
-            $this->page_data['customer_id'] = $id;
-
-            $this->db->where('is_active', 1);
-            $this->db->where('customer_id', $id);
-            $customerDocuments = $this->db->get('acs_customer_documents')->result_array();
-            
-            $customer_client_agreements = array_filter($customerDocuments, function($doc){
-                if( $doc['document_type'] == 'client_agreement' ){
-                    return $doc;
-                }
-            });
-
-            $this->page_data['customer_client_agreements'] = $customer_client_agreements;
-            $this->page_data['customer_documents'] = $customerDocuments;
-            // $this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns($id);
-        } else {
-            redirect(base_url('customer/'));
-        }
-        // load job checlist model
-        $this->load->model('JobChecklist_model');
-        $jobChecklists = $this->JobChecklist_model->getAllByCompanyId(logged('company_id'));
-        $this->page_data['job_check_lists'] = $jobChecklists;
-
-        // Sms
+        error_reporting(0);       
+       
         $cid = logged('company_id');
-        $default_sms = '';
-        $enable_twilio_call = false;
-        $enable_ringcentral_call = false;
-
-        $client = $this->Clients_model->getById($cid);
-        if ($client->default_sms_api != '') {
-            $default_sms = $client->default_sms_api;
-            if ($client->default_sms_api == 'twilio') {
-                $enable_twilio_call = true;
-            } elseif ($client->default_sms_api == 'ring_central') {
-                $enable_ringcentral_call = true;
+        $customer = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
+        if( $customer && $customer->company_id == $cid ){
+            $is_allowed = $this->isAllowedModuleAccess(9);
+            if (!$is_allowed) {
+                $this->page_data['module'] = 'customer';
+                echo $this->load->view('no_access_module', $this->page_data, true);
+                exit;
             }
-        }
-        // Sms Template
-        $this->load->model('SmsTemplate_model');
-        $smsTemplates = $this->SmsTemplate_model->getAllByCompanyId($cid);
 
-        // Calls
-        $this->load->model('RingCentralAccounts_model');
-        $this->load->model('TwilioAccounts_model');
+            $user_id = logged('id');
+            $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id', $user_id, 'ac_module_sort');
+            if (!$check_if_exist) {
+                $input = [];
+                $input['fk_user_id'] = $user_id;
+                $input['ams_values'] = 'profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute';
+                $this->customer_ad_model->add($input, 'ac_module_sort');
+            }
+            $userid = $id;
+            if (!isset($userid) || empty($userid)) {
+                $get_id = $this->customer_ad_model->get_all(1, '', 'DESC', 'acs_profile', 'prof_id');
+                if (!empty($get_id)) {
+                    $userid = $get_id[0]->prof_id;
+                } else {
+                    $userid = 0;
+                }
+            } else {
+                $this->qrcodeGenerator($userid);
+            }
 
-        $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
-        $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($cid);
-        $this->page_data['twilioAccount'] = $twilioAccount;
-        $this->page_data['ringCentralAccount'] = $ringCentralAccount;
-        $this->page_data['enable_twilio_call'] = $enable_twilio_call;
-        $this->page_data['enable_ringcentral_call'] = $enable_ringcentral_call;
+            // set a global data for customer profile id
+            $this->page_data['customer_profile_id'] = $userid;
+            if ($id != null) {
+                $office_info = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_office');
+                $assignedUser = [];
+                if( $office_info ){
+                    $this->load->model('Users_model');
+                    $assignedUser = $this->Users_model->getUserByID($office_info->technician);
+                }
 
-        $this->page_data['smsTemplates'] = $smsTemplates;
-        $this->page_data['default_sms'] = $default_sms;
-        $this->page_data['cust_tab'] = $this->uri->segment(3);
-        $this->page_data['cust_active_tab'] = 'dashboard';
-        $this->page_data['users'] = $this->users_model->getUsers();
-        $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6, 0], 1);
-        $this->page_data['ringCentralAccount'] = $ringCentralAccount;
-        $this->page_data['twilioAccount'] = $twilioAccount;
-        $this->load->view('v2/pages/customer/module', $this->page_data);
+                $this->page_data['assignedUser'] = $assignedUser;
+                $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($id);
+                $this->page_data['cust_invoices'] = $this->invoice_model->getAllByCustomerId($id);
+                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
+
+                $this->page_data['log_info'] = $this->customer_ad_model->getCustomerActivityLogs($id);
+
+                $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_access');
+                $this->page_data['office_info'] = $office_info;
+                $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_billing');
+                $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_alarm');
+                $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_audit_import');
+                // $this->page_data['minitab'] = $this->uri->segment(5);
+                $this->page_data['task_info'] = $this->taskhub_model->getAllNotCompletedTasksByCustomerId($id);
+                $this->page_data['item_details'] = $this->customer_ad_model->get_customer_item_details($id);
+                // $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$id,"acs_tasks");
+                $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id', $user_id, 'ac_module_sort');
+                $this->page_data['tasks'] = $this->customer_ad_model->get_data_by_id('prof_id', $user_id, 'tasks');
+                $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+                $this->page_data['cus_id'] = $id;
+
+                if ($this->uri->segment(5) == 'mt3-cdl') {
+                    $template_id = !empty($this->uri->segment(6)) ? $this->uri->segment(6) : '';
+                    $this->page_data['letter_id'] = $template_id;
+                    $this->page_data['letter_template'] = $this->Esign_model->get_template_by_id($template_id);
+                }
+                
+                $this->page_data['customer_id'] = $id;
+
+                $this->db->where('is_active', 1);
+                $this->db->where('customer_id', $id);
+                $customerDocuments = $this->db->get('acs_customer_documents')->result_array();
+                
+                $customer_client_agreements = array_filter($customerDocuments, function($doc){
+                    if( $doc['document_type'] == 'client_agreement' ){
+                        return $doc;
+                    }
+                });
+
+                $this->page_data['customer_client_agreements'] = $customer_client_agreements;
+                $this->page_data['customer_documents'] = $customerDocuments;
+                // $this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns($id);
+            } else {
+                redirect(base_url('customer/'));
+            }
+            // load job checlist model
+            $this->load->model('JobChecklist_model');
+            $jobChecklists = $this->JobChecklist_model->getAllByCompanyId(logged('company_id'));
+            $this->page_data['job_check_lists'] = $jobChecklists;
+
+            // Sms
+            $cid = logged('company_id');
+            $default_sms = '';
+            $enable_twilio_call = false;
+            $enable_ringcentral_call = false;
+
+            $client = $this->Clients_model->getById($cid);
+            if ($client->default_sms_api != '') {
+                $default_sms = $client->default_sms_api;
+                if ($client->default_sms_api == 'twilio') {
+                    $enable_twilio_call = true;
+                } elseif ($client->default_sms_api == 'ring_central') {
+                    $enable_ringcentral_call = true;
+                }
+            }
+            // Sms Template
+            $this->load->model('SmsTemplate_model');
+            $smsTemplates = $this->SmsTemplate_model->getAllByCompanyId($cid);
+
+            // Calls
+            $this->load->model('RingCentralAccounts_model');
+            $this->load->model('TwilioAccounts_model');
+
+            $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
+            $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($cid);
+            $this->page_data['twilioAccount'] = $twilioAccount;
+            $this->page_data['ringCentralAccount'] = $ringCentralAccount;
+            $this->page_data['enable_twilio_call'] = $enable_twilio_call;
+            $this->page_data['enable_ringcentral_call'] = $enable_ringcentral_call;
+            $this->page_data['page']->title = 'Customer Dashboard';
+            $this->page_data['page']->parent = 'Customers';
+            $this->page_data['smsTemplates'] = $smsTemplates;
+            $this->page_data['default_sms'] = $default_sms;
+            $this->page_data['cust_tab'] = $this->uri->segment(3);
+            $this->page_data['cust_active_tab'] = 'dashboard';
+            $this->page_data['users'] = $this->users_model->getUsers();
+            $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6, 0], 1);
+            $this->page_data['ringCentralAccount'] = $ringCentralAccount;
+            $this->page_data['twilioAccount'] = $twilioAccount;
+            $this->load->view('v2/pages/customer/module', $this->page_data);
+        }else{
+            redirect('customer');
+        }     
     }
 
     public function jobs_list($cid)

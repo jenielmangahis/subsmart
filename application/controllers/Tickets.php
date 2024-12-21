@@ -1153,7 +1153,7 @@ class Tickets extends MY_Controller
     }
 
     public function addTicket()
-    {
+    {        
         $this->hasAccessModule(39);
         $this->load->helper('functions_helper');
         $this->load->model('AcsProfile_model');
