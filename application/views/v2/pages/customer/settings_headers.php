@@ -19,7 +19,7 @@
                 </div>
                 <div class="row g-3">
                     <div class="col-12">
-                        <div class="nsm-card">
+                        <div class="nsm-card primary">
                             <div class="nsm-card-content">
                                 <div class="row g-2">
                                     <div class="col-12">

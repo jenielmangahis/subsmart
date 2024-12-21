@@ -1981,3 +1981,6 @@ $route['users/_delete_role_access_module'] = 'Users/ajax_delete_role_access_modu
 //Getting Started
 $route['dashboard/_getting_started'] = 'Dashboard/ajax_getting_started';
 $route['dashboard/_send_download_app_link'] = 'Dashboard/ajax_send_download_app_link';
+
+//Client Hub
+$route['client_hub/(:any)?'] = 'ClientHub/index/$1';
