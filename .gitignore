@@ -13,6 +13,7 @@ application/config/profiler.php
 application/config/routes.php
 application/config/smileys.php
 application/config/user_agents.php
+assets/pdf/accounting/
 
 *application/config/database.php
 *application/cache/
