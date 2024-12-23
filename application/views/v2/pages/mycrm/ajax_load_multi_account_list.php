@@ -48,7 +48,9 @@
             </div>
             <div class="multi-action-container">
                 <a class="nsm-button btn-sm btn-resend-activation" href="javascript:void(0);" data-userid="<?= $m->link_user_id; ?>" data-email="<?= $m->user_email; ?>"><i class='bx bx-mail-send' ></i> Resend Activation</a>
+                <?php if(checkRoleCanAccessModule('company-link-accounts', 'delete')){ ?>    
                 <a class="nsm-button btn-sm btn-delete-multi-account" data-companyname="<?= $m->company_name; ?>" data-id="<?= $m->id; ?>" href="javascript:void(0);"><i class='bx bx-trash' ></i> Delete</a>                
+                <?php } ?>
             </div>
         </li>
     <?php } ?>
