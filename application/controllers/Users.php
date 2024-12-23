@@ -91,7 +91,12 @@ class Users extends MY_Controller
 
 	public function businessview()
 	{
-        $this->page_data['page']->title = 'My Profile';
+		if(!checkRoleCanAccessModule('company-my-business', 'read')){
+			show403Error();
+			return false;
+		}
+
+        $this->page_data['page']->title = 'My Business';
         $this->page_data['page']->parent = 'Company';
 
 		$this->load->model('DealsSteals_model');
@@ -134,6 +139,11 @@ class Users extends MY_Controller
 	}
 	public function businessdetail()
 	{
+		if(!checkRoleCanAccessModule('company-my-business', 'write')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Business Details';
         $this->page_data['page']->parent = 'Company';
 
@@ -150,6 +160,11 @@ class Users extends MY_Controller
 
 	public function services()
 	{
+		if(!checkRoleCanAccessModule('company-my-services', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Services';
         $this->page_data['page']->parent = 'Company';
 

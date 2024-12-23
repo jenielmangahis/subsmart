@@ -5553,6 +5553,11 @@ class Timesheet extends MY_Controller
     }
     public function settings()
     {
+        if(!checkRoleCanAccessModule('user-timesheet-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             "assets/css/timesheet/timesheet_settings.css"
