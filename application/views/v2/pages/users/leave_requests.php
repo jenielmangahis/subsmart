@@ -55,17 +55,21 @@
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 With Selected  <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end select-filter">                          
+                            <ul class="dropdown-menu dropdown-menu-end select-filter"> 
+                                <?php if(checkRoleCanAccessModule('user-settings-leave-requests', 'delete')){ ?>                            
                                 <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="delete">Delete</a></li>    
-                                <?php if( logged('user_type') == 7 ){ //Admin only ?>                            
+                                <?php } ?>
+                                <?php if(checkRoleCanAccessModule('user-settings-leave-requests', 'write')){ ?>                  
                                     <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="approve">Approve</a></li>                                
                                     <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="disapprove">Disapprove</a></li>                                
                                 <?php } ?>
                             </ul>
                         </div>
+                        <?php if(checkRoleCanAccessModule('user-settings-leave-requests', 'write')){ ?>    
                         <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary" id="btn-create-leave-request" href="javascript:void(0);"><i class='bx bx-fw bx-plus'></i> Create Leave Request</a>                            
+                            <a class="nsm-button primary" id="btn-create-leave-request" href="javascript:void(0);"><i class='bx bx-plus-medical'></i> Add New</a>                            
                         </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <form id="frm-with-selected">   
@@ -109,13 +113,17 @@
                                     <div class="dropdown table-management">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                         <ul class="dropdown-menu dropdown-menu-end">
+                                            <?php if(checkRoleCanAccessModule('user-settings-leave-requests', 'write')){ ?>          
                                             <li><a class="dropdown-item btn-edit-leave-request" href="javascript:void(0);" data-id="<?= $lr->id; ?>">Edit</a></li>
+                                            <?php } ?>
                                             <li><a class="dropdown-item btn-view-leave-request" href="javascript:void(0);" data-id="<?= $lr->id; ?>">View</a></li>
-                                            <?php if( logged('user_type') == 7 ){ //Admin only ?>
+                                            <?php if(checkRoleCanAccessModule('user-settings-leave-requests', 'write')){ ?>          
                                                 <li><a class="dropdown-item btn-approve-leave-request" href="javascript:void(0);" data-status="<?= $lr->status; ?>" data-id="<?= $lr->id; ?>">Approve</a></li>
                                                 <li><a class="dropdown-item btn-disapprove-leave-request" href="javascript:void(0);" data-status="<?= $lr->status; ?>" data-id="<?= $lr->id; ?>">Disapprove</a></li>
                                             <?php } ?>
+                                            <?php if(checkRoleCanAccessModule('user-settings-leave-requests', 'delete')){ ?>          
                                             <li><a class="dropdown-item btn-delete-leave-request" href="javascript:void(0);" data-id="<?= $lr->id; ?>">Delete</a></li>
+                                            <?php } ?>
                                         </ul>
                                     </div>
                                 </td>

@@ -6,6 +6,7 @@
         <i class="bx bx-plus"></i>
     </div>
     <ul class="nsm-fab-options">
+        <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
         <li data-bs-toggle="modal" data-bs-target="#add_employee_modal">
             <div class="nsm-fab-icon">
                 <i class="bx bx-user-plus"></i>
@@ -18,6 +19,7 @@
             </div>
             <span class="nsm-fab-label">Export List</span>
         </li>
+        <?php } ?>
         <li onclick="location.href='<?php echo url('email_automation/templates') ?>'">
             <div class="nsm-fab-icon">
                 <i class="bx bx-share-alt"></i>
@@ -50,9 +52,11 @@
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
+                            <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
                             <button type="button" name="btn_link" class="nsm-button add-employee" data-bs-toggle="modal" data-bs-target="#add_employee_modal">
                                 <i class='bx bx-fw bx-user-plus'></i> Add Employee
                             </button>
+                            <?php } ?>
                             <button type="button" name="btn_link" class="nsm-button btn-export-list">
                                 <i class='bx bx-fw bx-export'></i> Export List
                             </button>
@@ -163,28 +167,32 @@
                                                 <li>
                                                     <a class="dropdown-item" name="btn_view" href="<?php echo url('users/view/' . $row->id) ?>" data-id="<?php echo $row->id ?>">View</a>
                                                 </li>
-                                                <li>
-                                                    <a class="dropdown-item edit-item" name="btn_edit" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item commissions-list" name="" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Commissions</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item update-profile-item" name="btn_update_profile_image" href="javascript:void(0);" data-id="<?php echo $row->id ?>" data-img="<?php echo $data_img; ?>">Update Profile Image</a>
-                                                </li>
-                                                <?php if(isSolarCompany() == 1){ ?>
+                                                <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
                                                     <li>
-                                                        <a class="dropdown-item change-adt-portal-access" name="btn_adt_portal_access" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Set ADT Portal Access</a>
+                                                        <a class="dropdown-item edit-item" name="btn_edit" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Edit</a>
+                                                    </li>                                                
+                                                    <li>
+                                                        <a class="dropdown-item commissions-list" name="" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Commissions</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item update-profile-item" name="btn_update_profile_image" href="javascript:void(0);" data-id="<?php echo $row->id ?>" data-img="<?php echo $data_img; ?>">Update Profile Image</a>
+                                                    </li>                                                
+                                                    <?php if(isSolarCompany() == 1){ ?>
+                                                        <li>
+                                                            <a class="dropdown-item change-adt-portal-access" name="btn_adt_portal_access" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Set ADT Portal Access</a>
+                                                        </li>
+                                                    <?php } ?>
+                                                    <li>
+                                                        <a class="dropdown-item change-password-item" name="btn_change_pw" href="javascript:void(0);" data-name="<?php echo $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>">Change Password</a>
                                                     </li>
                                                 <?php } ?>
-                                                <li>
-                                                    <a class="dropdown-item change-password-item" name="btn_change_pw" href="javascript:void(0);" data-name="<?php echo $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>">Change Password</a>
-                                                </li>
-                                                <?php if ($row->id != 1 && logged('id') != $row->id) : ?>
-                                                    <li>
-                                                        <a class="dropdown-item delete-item" name="btn_delete" href="javascript:void(0);" data-id="<?= $row->id; ?>">Delete</a>
-                                                    </li>
-                                                <?php endif; ?>
+                                                <?php if(checkRoleCanAccessModule('users', 'delete')){ ?>
+                                                    <?php if ($row->id != 1 && logged('id') != $row->id) : ?>
+                                                        <li>
+                                                            <a class="dropdown-item delete-item" name="btn_delete" href="javascript:void(0);" data-id="<?= $row->id; ?>">Delete</a>
+                                                        </li>
+                                                    <?php endif; ?>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </td>

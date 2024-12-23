@@ -45,16 +45,20 @@
                                 With Selected  <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">                          
+                                <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'delete')){ ?>  
                                 <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="delete">Delete</a></li>    
-                                <?php if( logged('user_type') == 7 ){ //Admin only ?>                            
+                                <?php } ?>
+                                <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>                    
                                     <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="approve">Approve</a></li>                                
                                     <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="disapprove">Disapprove</a></li>                                
                                 <?php } ?>
                             </ul>
                         </div>
+                        <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>          
                         <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary" id="btn-create-overtime-request" href="javascript:void(0);"><i class='bx bx-fw bx-plus'></i> Create Overtime Request</a>                            
+                            <a class="nsm-button primary" id="btn-create-overtime-request" href="javascript:void(0);"><i class='bx bx-plus-medical'></i> Add New</a>                            
                         </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <form id="frm-with-selected">   
@@ -98,13 +102,17 @@
                                     <div class="dropdown table-management">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                         <ul class="dropdown-menu dropdown-menu-end">
+                                            <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>    
                                             <li><a class="dropdown-item btn-edit-overtime-request" href="javascript:void(0);" data-id="<?= $or->id; ?>">Edit</a></li>
+                                            <?php } ?>
                                             <li><a class="dropdown-item btn-view-leave-request" href="javascript:void(0);" data-id="<?= $or->id; ?>">View</a></li>
-                                            <?php if( logged('user_type') == 7 ){ //Admin only ?>
+                                            <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>    
                                                 <li><a class="dropdown-item btn-approve-overtime-request" href="javascript:void(0);" data-status="<?= $or->status; ?>" data-id="<?= $or->id; ?>">Approve</a></li>
                                                 <li><a class="dropdown-item btn-disapprove-overtime-request" href="javascript:void(0);" data-status="<?= $or->status; ?>" data-id="<?= $or->id; ?>">Disapprove</a></li>
                                             <?php } ?>
+                                            <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'delete')){ ?>    
                                             <li><a class="dropdown-item btn-delete-overtime-request" href="javascript:void(0);" data-id="<?= $or->id; ?>">Delete</a></li>
+                                            <?php } ?>
                                         </ul>
                                     </div>
                                 </td>
