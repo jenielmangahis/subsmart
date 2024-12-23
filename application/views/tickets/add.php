@@ -440,10 +440,10 @@ a.btn-primary.btn-md {
                                             <?php } ?>
                                         </select>
                                     </div>
-                                    <div class="col-md-3 form-group mt-3">
+                                    <!-- <div class="col-md-3 form-group mt-3">
                                         <label for="job_description"><b>Job Description</b></label>
                                         <textarea class="form-control" name="job_description" id="job_description"></textarea>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row" id="plansItemDiv" style="background-color:white;">
                                     <h6 class='card_header custom-ticket-header'>Item List</h6>
@@ -532,6 +532,7 @@ a.btn-primary.btn-md {
                                                 <!-- <td></td> -->
                                                 <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input" value="0.00"></td>
                                             </tr>
+                                            <?php if(checkIndustryAllowedSpecificField('installation_cost')){ ?>
                                             <tr>
                                                 <td colspan="2">Installation Cost</td>
                                                 <!-- <td></td> -->
@@ -539,6 +540,8 @@ a.btn-primary.btn-md {
                                                     <input type="number" step="any" min="0" class="form-control" id="adjustment_ic" name="installation_cost" value="0.00" required="" style="text-align:right;width:50%;" />
                                                 </td>
                                             </tr>
+                                            <?php } ?>
+                                            <?php if(checkIndustryAllowedSpecificField('one_time_program_setup')){ ?>
                                             <tr>
                                                 <td colspan="2">One time (Program and Setup)</td>
                                                 <!-- <td></td> -->
@@ -546,6 +549,8 @@ a.btn-primary.btn-md {
                                                     <input type="number" style="text-align:right;width:50%;" step="any" min="0" class="form-control" id="otps" name="otps" value="0.00" required="" />
                                                 </td>
                                             </tr>
+                                            <?php } ?>
+                                            <?php if(checkIndustryAllowedSpecificField('monitoring_rate')){ ?>
                                             <tr>
                                                 <td colspan="2">Monthly Monitoring</td>
                                                 <!-- <td></td> -->
@@ -553,6 +558,7 @@ a.btn-primary.btn-md {
                                                     <input type="number" style="text-align:right;width:50%;" step="any" min="0" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="0.00" required="" />
                                                 </td>
                                             </tr>
+                                            <?php } ?>
                                             <tr>
                                                 <td colspan="2">
                                                     <input type="text" class="form-control" placeholder="Adjustment" name="adjustment" value="" style="width:80%;display:inline;">

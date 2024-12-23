@@ -1572,6 +1572,14 @@ function get_event_color($work_status)
     return $CI->workstatus->getWorkStatus($work_status);
 }
 
+function getRoleName($role_id)
+{
+    $CI =& get_instance();
+    $CI->load->model('Users_model');
+
+    return $CI->Users_model->getUserRole($role_id);
+}
+
 
 /**
  * All Users
@@ -4649,7 +4657,7 @@ if (!function_exists('is_admin_logged')) {
     }
 
     function adi_company_ids(){
-        $adi_company_ids = [24,31,58, 1];
+        $adi_company_ids = [24,31,58,1];
         return $adi_company_ids;
     }
 
@@ -5416,4 +5424,63 @@ function strMask($string, $maskingCharacter = 'X') {
     $visibleCount = (int) round($length / 4);
     $hiddenCount = $length - ($visibleCount * 2);
     return substr($string, 0, $visibleCount) . str_repeat($maskingCharacter, $hiddenCount) . substr($string, ($visibleCount * -1), $visibleCount);    
+}
+
+function checkRoleCanAccessModule($module, $action){        
+    $CI =& get_instance();
+    $CI->load->model('CompanyRoleAccessModule_model');
+
+    $rid = logged('role');
+    $cid = logged('company_id');
+    $allow_access = false;
+
+    $hasAccessAll = $CI->CompanyRoleAccessModule_model->isRoleHasAccessAll($cid, $rid);
+    if( $hasAccessAll ){        
+        $allow_access = true;   
+    }else{
+        $permission   = $CI->CompanyRoleAccessModule_model->getCompanyRoleModulePermission($cid, $rid, $module);
+        if( $action == 'write' ){
+            if( $permission && $permission->allow_write == 1 ){
+                $allow_access = true;
+            }
+        }elseif( $action == 'read' ){
+            if( $permission && $permission->allow_read == 1 ){
+                $allow_access = true;
+            }
+        }elseif( $action == 'delete' ){
+            if( $permission && $permission->allow_delete == 1 ){
+                $allow_access = true;
+            }
+        }
+    }
+
+    return $allow_access;
+}
+
+function show403Error()
+{
+    $CI = &get_instance();
+    $CI->load->view('errors/html/error_403_permission');  
+}
+
+function checkIndustryAllowedSpecificField($field)
+{
+    $CI = &get_instance();
+    $CI->load->model('Clients_model');
+
+    $cid = logged('company_id');
+    $client = $CI->Clients_model->getCompanyIndustryId($cid);  
+    if( $client ){
+        $industry_id = $client->industry_type_id;
+    }
+
+    $enabled = false;
+    if( $field == 'monitoring_rate' || $field == 'one_time_program_setup' || $field == 'installation_cost' ){
+        $industries_enabled = [8, 36, 37, 38, 39, 88];
+        if( in_array($industry_id, $industries_enabled) ){
+            $enabled = true;
+        }
+    }
+
+    return $enabled;
 }

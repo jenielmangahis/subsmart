@@ -1973,6 +1973,14 @@ $route['benchmark/cron_customer_subscription'] = 'Benchmark/cron_customer_subscr
 
 //Role Access Modules
 $route['users/role_access_modules'] = 'Users/role_access_modules';
+$route['users/_save_role_access_module'] = 'Users/ajax_save_role_access_module';
+$route['users/_edit_role_access_module'] = 'Users/ajax_edit_role_access_module';
+$route['users/_update_role_access_module'] = 'Users/ajax_update_role_access_module';
+$route['users/_delete_role_access_module'] = 'Users/ajax_delete_role_access_module';
 
 //Getting Started
 $route['dashboard/_getting_started'] = 'Dashboard/ajax_getting_started';
+$route['dashboard/_send_download_app_link'] = 'Dashboard/ajax_send_download_app_link';
+
+//Client Hub
+$route['client_hub/(:any)?'] = 'ClientHub/index/$1';

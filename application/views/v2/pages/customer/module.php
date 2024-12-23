@@ -5,6 +5,10 @@
 .send-message{
     display: none;
 }
+#modules_container{
+    max-height: 650px;
+    overflow-y: auto;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -40,7 +44,7 @@
                     if ($module_sort->ams_values != "" && count($modules) > 0) :
                         foreach ($modules as $m) :
                             $view = $this->wizardlib->getModuleById($m);
-                            //echo $view;
+                            //echo $view->ac_view_link;
                             $data['id'] = $view->ac_id;
                             if ($view->ac_view_link != "") {
                                 $this->load->view('v2/pages/' . $view->ac_view_link, $data);
@@ -49,6 +53,7 @@
                     endif;
                     $datas['module_sort'] = $module_sort;
                     //$this->load->view('v2/pages/customer/adv_cust_modules/alarm-com', $datas);
+                    //$this->load->view('v2/pages/customer/adv_cust_modules/share_page', '');
                     ?>
                 </div>
                 <input type="hidden" id="custom_modules" value="<?= $module_sort->ams_values ?>" />

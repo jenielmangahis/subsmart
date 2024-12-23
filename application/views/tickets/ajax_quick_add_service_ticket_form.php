@@ -246,6 +246,7 @@
                     </div>
                 </div>
                 <div class="row mt-4" style="background-color:white;">
+                    <?php if(checkIndustryAllowedSpecificField('monitoring_rate')){ ?>
                     <div class="col-md-6 form-group">
                         <div class="row">
                             <div class="col-md-6 form-group mt-2">
@@ -262,9 +263,8 @@
                                 <input style="display:inline-block;" type="number" step="any" id="plan-value" name="monthly_monitoring_rate_value" value="0.00" class="form-control" />
                             </div>
                         </div>
-                        
-                        
                     </div>
+                    <?php } ?>
                     <div class="col-md-6 form-group mt-2" id="service-ticket-esign-template">                            
                         <label for="esign-template-list"><b>eSign Templates</b></label>
                         <select class="form-control nsm-field form-select" name="esign_template" id="esign-templates">
@@ -281,14 +281,18 @@
                     </div>
                     <div class="col-md-6 form-group mt-2">
                         <div class="row">
+                            <?php if(checkIndustryAllowedSpecificField('installation_cost')){ ?>
                             <div class="col-md-6 form-group mt-2">
                                 <label for="service-ticket-installation-cost"><b>Installation Cost</b></label>
                                 <input type="number" step="any" class="form-control" value="0.00" name="installation_cost" id="service-ticket-installation-cost">
                             </div>
+                            <?php } ?>
+                            <?php if(checkIndustryAllowedSpecificField('one_time_program_setup')){ ?>
                             <div class="col-md-6 form-group mt-2">
                                 <label for="service-ticket-otp"><b>One Time (Program and Setup)</b></label>
                                 <input type="number" step="any" class="form-control" value="0.00" name="otp" id="service-ticket-otp">
                             </div>
+                            <?php } ?>
                         </div>
                     </div>                        
                 </div>

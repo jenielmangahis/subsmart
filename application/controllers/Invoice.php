@@ -1931,7 +1931,7 @@ class Invoice extends MY_Controller
                     'invoice_num_next' => post('base'),
                     'check_payable_to' => post('payment_to'),
                     'due_terms' => post('due_terms'),
-                    'payment_fee_amount' => serialize($payment_fee),
+                    //'payment_fee_amount' => serialize($payment_fee),
                     'recurring' => post('recurring_on_add_child'),
                     'mobile_payment' => post('payment_mobile_status'),
                     'accept_tip' => post('tip_status') ? post('tip_status') : 0,

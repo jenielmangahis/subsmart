@@ -2657,6 +2657,7 @@ SQL;
             '%inviter%' => $inviterName,
             '%message%' => nl2br(htmlentities($envelope['message'], ENT_QUOTES, 'UTF-8')),
             '%inviter_email%' => $inviter->email,
+            '%document_name%' => $envelope['name'],
             '%company_logo%' => is_null($companyLogo) ? 'https://nsmartrac.com/uploads/users/business_profile/1/logo.jpg?1624851442' : $companyLogo,
         ];
 

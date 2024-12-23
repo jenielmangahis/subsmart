@@ -475,6 +475,7 @@ a.btn-primary.btn-md {
                                 <div class="row" id="plansItemDiv" style="background-color:white;">
                                     <h6 class='card_header custom-ticket-header'>Item List</h6>
                                     <div class="col-md-12 table-responsive">
+                                        <input type="hidden" id="count" value="<?= count($itemsLists); ?>" />
                                         <table class="table table-hover table-borderless">
                                             <thead style="background-color:#E9E8EA;">
                                             <tr>
@@ -521,8 +522,8 @@ a.btn-primary.btn-md {
                                                         <input id="priceM_qty<?php echo $i; ?>" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty">
                                                     </td>
                                                     <td class="hidden_mobile_view"><input type="number" step="any" class="form-control discount" name="discount[]" data-counter="<?php echo $i; ?>" id="discount_<?php echo $i; ?>" min="0"  value="<?php echo $itemL->discount; ?>"></td>
-                                                    <td class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]" data-counter="<?php echo $i; ?>" id="tax1_<?php echo $i; ?>" step="any" value="<?php echo number_format($itemL->tax,2, '.', ','); ?>" readonly=""></td>
-                                                    <td class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]" data-counter="<?php echo $i; ?>" id="item_total_<?php echo $i; ?>" min="0"  value="<?php echo $itemL->total; ?>"><span class="span-input" id="span_total_<?php echo $i; ?>"><?php echo number_format($itemL->total,2, '.', ','); ?></span></td>
+                                                    <td class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]" data-counter="<?php echo $i; ?>" id="tax1_<?php echo $i; ?>" step="any" value="<?php echo number_format($itemL->tax,2, '.', ''); ?>" readonly=""></td>
+                                                    <td class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]" data-counter="<?php echo $i; ?>" id="item_total_<?php echo $i; ?>" min="0"  value="<?php echo $itemL->total; ?>"><span class="span-input" id="span_total_<?php echo $i; ?>"><?php echo number_format($itemL->total,2, '.', ''); ?></span></td>
                                                     <td><a href="#" class="remove nsm-button" id="<?php echo $i; ?>"><i class="bx bx-fw bx-trash"></i></a></td>
                                                 </tr>
                                                 <?php  $i++; } ?>
@@ -546,6 +547,7 @@ a.btn-primary.btn-md {
                                 <div class="row">
                                     <div class="col-md-8">
                                         <?php if( $tickets->user_docfile_template_id > 0 ){ ?>
+                                            <?php if(checkIndustryAllowedSpecificField('monitoring_rate')){ ?>
                                             <div class="row">
                                                 <div class="col-md-3 form-group mt-2">
                                                     <label for="service-ticket-monthly-monitoring-rate"><b>Change Monthly Monitoring Rate</b></label>
@@ -561,15 +563,20 @@ a.btn-primary.btn-md {
                                                     <input style="display:inline-block;" type="number" id="plan-value" name="monthly_monitoring_rate_value" value="<?= $tickets->monthly_monitoring > 0 ? number_format($tickets->monthly_monitoring,2,".","") : '0.00'; ?>" class="form-control" />
                                                 </div>
                                             </div>
+                                            <?php } ?>
                                             <div class="row">
+                                                <?php if(checkIndustryAllowedSpecificField('installation_cost')){ ?>
                                                 <div class="col-md-3 form-group mt-2">
                                                     <label for="service-ticket-installation-cost"><b>Installation Cost</b></label>
                                                     <input type="number" step="any" class="form-control" value="<?= $tickets->installation_cost > 0 ? number_format($tickets->monthly_monitoring,2,".","") : '0.00'; ?>" name="installation_cost" id="service-ticket-installation-cost">
                                                 </div>
+                                                <?php } ?>
+                                                <?php if(checkIndustryAllowedSpecificField('one_time_program_setup')){ ?>
                                                 <div class="col-md-3 form-group mt-2">
                                                     <label for="service-ticket-otp"><b>One Time (Program and Setup)</b></label>
                                                     <input type="number" step="any" class="form-control" value="<?= $tickets->otp_setup > 0 ? number_format($tickets->monthly_monitoring,2,".","") : '0.00'; ?>" name="otp" id="service-ticket-otp">
                                                 </div>
+                                                <?php } ?>
                                             </div>
                                         <?php } ?>
                                         <div class="row">
@@ -830,7 +837,7 @@ a.btn-primary.btn-md {
                                     <?php //if ($item_qty[0]->total_qty > 0) { ?>
                                         <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
                                             <td class="nsm-text-primary">
-                                                <button type="button"  data-dismiss="modal" class='nsm nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
+                                                <button type="button"  data-dismiss="modal" class='nsm nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="1" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
                                             </td>
                                             <td class="nsm-text-primary"><?php echo $item->title; ?></td>
                                             <td class="nsm-text-primary"><?php echo $item->type; ?></td>
@@ -1591,6 +1598,55 @@ $(document).ready(function() {
         }
         return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
     });
+
+    $('#chk-no-tax').on('change', function(){
+        if( $(this).is(':checked') ){
+            var grand_total = $('#grand_total_input').val();
+            var adjustment  = $('#adjustment_input').val();
+
+            var tax = $("#total_tax_input").val();
+            grand_total = parseFloat(grand_total) - parseFloat(tax) + parseFloat(adjustment);
+
+            $('#grand_total_input').val(grand_total);
+            $('#grand_total').text(grand_total.toFixed(2));
+            $("#total_tax_input").val('0.00');
+            
+        }else{
+            var cnt = $("#count").val();
+            calculation(cnt);            
+        }
+    });
+
+    function reCalculateTax(){
+        var cnt = $("#count").val();        
+        var total_discount = 0;
+        var pquantity  = 0;
+        var total_cost = 0;
+        var eqpt_cost  = 0;
+        var subtotaltax = 0;
+        var stotal_cost = 0;
+
+        for (var p = 0; p <= cnt; p++) {
+            var prc = $("#price_" + p).val();
+            var quantity = $("#quantity_" + p).val();
+            var discount = $("#discount_" + p).val();
+            var pqty = $("#priceqty_" + p).val();
+            var tax = $("#tax1_" + p).val();
+            if (prc > 0) {
+            // var discount= $('#discount_' + p).val();
+            // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+            pquantity += parseFloat(pqty);
+            total_cost += parseFloat(prc);
+            eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+            total_discount += parseFloat(discount);
+            subtotaltax += parseFloat(tax);
+            stotal_cost += parseFloat(prc) * parseFloat(quantity);
+            }
+        }
+
+        $("#total_tax_").text(subtotaltax.toFixed(2));
+        $("#total_tax_input").val(subtotaltax.toFixed(2));
+    }
 }); 
 
 </script>

@@ -1917,7 +1917,7 @@ $(function(){
 
     .esignBuilder__optionsSidebar{
         background-color:#ffffff;
-        box-shadow: rgba(0, 0, 0, 0.07) -5px 5px, rgba(0, 0, 0, 0.07) -10px 10px, rgba(0, 0, 0, 0.07) -15px 15px, rgba(0, 0, 0, 0.07) -20px 20px, rgba(0, 0, 0, 0.07) -25px 25px;
+        box-shadow: -8px 0px 9px -3px rgba(0,0,0,0.1);
     }
 
     .content_sidebar.content_sidebar-left {
@@ -1948,9 +1948,12 @@ $(function(){
         color: #ffffff;
         padding: 10px;
         position: relative;
-        left: -12px;
-        width: 108%;
-        font-size:17px;
+        left: -11px;
+        width: 107%;
+        font-size: 17px;
+    }
+    .esignBuilder__optionsSidebar .footer{
+        background-color: #ffffff !important;
     }
     .esignBulder-sidebar-close{
         background: none;
