@@ -119,12 +119,14 @@
                                             <label class="content-subtitle d-block"><?php echo $profiledata->city; ?>,
                                                 <?php echo $profiledata->state; ?></label>
                                         </div>
+                                        <?php if(checkRoleCanAccessModule('company-my-business', 'write')){ ?>    
                                         <div class="nsm-card-controls align-items-baseline">
                                             <button type="button" class="nsm-button btn-sm" data-bs-toggle="modal"
                                                 data-bs-target="#edit_basic_info_modal">
                                                 <i class='bx bx-fw bx-edit'></i> Edit
                                             </button>
                                         </div>
+                                        <?php } ?>
                                     </div>
                                     <div class="nsm-card-content">
                                         <label class="content-title d-block fw-normal"><?php echo $profiledata->business_desc; ?></label>
@@ -525,10 +527,12 @@
                                         onclick="location.href='<?php echo url('users/businessprofile'); ?>'">
                                         <i class='bx bx-fw bx-edit'></i> View
                                     </button>
+                                    <?php if(checkRoleCanAccessModule('company-my-business', 'delete')){ ?>    
                                     <button type="button" class="nsm-button btn-sm"
                                         onclick="location.href='<?php echo url('users/businessdetail'); ?>'">
                                         <i class='bx bx-fw bx-edit'></i> Edit
                                     </button>
+                                    <?php } ?>
                                 </div>
                             </div>
                             <div class="nsm-card-content">
@@ -621,23 +625,25 @@
                                 </div>
                             </div>
                         </div>
-
+                        <?php if(checkRoleCanAccessModule('company-link-accounts', 'read')){ ?>    
                         <div class="nsm-card primary mt-4">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title">
                                     <span>Link Accounts</span>
                                 </div>
+                                <?php if(checkRoleCanAccessModule('company-link-accounts', 'write')){ ?>    
                                 <div class="nsm-card-controls">
                                     <button type="button" class="nsm-button btn-sm" id="add-multi-account">
                                         <i class='bx bx-fw bx-edit'></i> Add
                                     </button>
                                 </div>
+                                <?php } ?>
                             </div>
                             <div class="nsm-card-content">
                                 <div id="company-multi-accounts-container"></div>
                             </div>
-
                         </div>
+                        <?php } ?>
 
                     </div>
                 </div>
@@ -846,8 +852,9 @@
 
 
 
-
+        <?php if(checkRoleCanAccessModule('company-link-accounts', 'read')){ ?>    
         load_multi_accounts_list();
+        <?php } ?>
 
         $("#form-business-details").on("submit", async function(e) {
             e.preventDefault();
