@@ -64,7 +64,12 @@ class Timesheet extends MY_Controller
 
     public function employee()
     {
-        $this->page_data['page']->title = 'Time Employee';
+        if(!checkRoleCanAccessModule('user-timesheet', 'read')){
+			show403Error();
+			return false;
+		}
+
+        $this->page_data['page']->title = 'Employees Timesheet';
         $this->page_data['page']->parent = 'timesheet';
 
         $this->load->model('timesheet_model');
@@ -213,6 +218,11 @@ class Timesheet extends MY_Controller
     // added for tracking Time Log of employees
     public function timelog()
     {
+        if(!checkRoleCanAccessModule('user-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->load->model('timesheet_model');
         $this->load->model('users_model');
         //ifPermissions('users_list');
@@ -1393,8 +1403,12 @@ class Timesheet extends MY_Controller
     }
     public function attendance()
     {
-        $this->load->model('LeaveRequest_model');
+        if(!checkRoleCanAccessModule('user-settings-attendance', 'read')){
+			show403Error();
+			return false;
+		}
 
+        $this->load->model('LeaveRequest_model');
 
         $this->page_data['page']->title = 'Attendance';
         $this->page_data['page']->parent = 'Company';
@@ -3832,6 +3846,11 @@ class Timesheet extends MY_Controller
     }
     public function attendance_logs()
     {
+        if(!checkRoleCanAccessModule('user-settings-time-logs', 'read')){
+			show403Error();
+			return false;
+		}
+
         add_css(array(
             "assets/css/timesheet/timesheet_attendance_logs.css"
         ));
@@ -5655,6 +5674,11 @@ class Timesheet extends MY_Controller
         $this->load->model('LeaveType_model');
         $this->load->model('EmployeeLeaveCredit_model');
 
+        if(!checkRoleCanAccessModule('user-settings-leave-requests', 'read')){
+			show403Error();
+			return false;
+		}
+
         $cid = logged('company_id');
         $uid = logged('id');
         $conditions[] = ['field' => 'is_archived', 'value' => 0];
@@ -6273,6 +6297,11 @@ class Timesheet extends MY_Controller
 
     public function overtime_requests()
     {
+        if(!checkRoleCanAccessModule('user-settings-overtime-requests', 'read')){
+			show403Error();
+			return false;
+		}
+
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css'
         ));
