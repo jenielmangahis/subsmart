@@ -317,11 +317,12 @@
                                                 <span class="nsm-badge success break-out-time in-indicator" style="<?php echo $indicator_out_break ?>"><?php echo $break_out; ?></span>
                                             </td>
                                             <td>
+                                                <?php if(checkRoleCanAccessModule('user-settings', 'write')){ ?>
                                                 <div class="dropdown table-management">
                                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                                     </a>
-                                                    <ul class="dropdown-menu dropdown-menu-end">
+                                                    <ul class="dropdown-menu dropdown-menu-end">                                                        
                                                         <li>
                                                             <a class="dropdown-item employee-break" href="javascript:void(0);" style="<?php if ($break_id == "") : ?>display: none;<?php endif; ?>" id="<?php echo $break_id ?>" data-id="<?php echo $user->id ?>" data-name="<?php echo $user->FName; ?> <?php echo $user->LName; ?>" data-approved="<?php echo logged("id"); ?>" data-photo="<?php echo $user_photo; ?>" data-company="<?php echo $company_id ?>">
                                                                 Lunch In/Out
@@ -331,9 +332,10 @@
                                                             <a class="dropdown-item employee-in-out" href="javascript:void(0);" <?php echo $disabled ?> id="<?php echo $btn_action; ?>" data-attn="<?php echo $attn_id; ?>" data-name="<?php echo $user->FName; ?> <?php echo $user->LName; ?>" data-id="<?php echo $user->id; ?>" data-approved="<?php echo logged("id"); ?>" data-photo="<?php echo $user_photo; ?>" data-company="<?php echo $company_id ?>">
                                                                 Clock In/Out
                                                             </a>
-                                                        </li>
+                                                        </li>                                                        
                                                     </ul>
                                                 </div>
+                                                <?php } ?> 
                                             </td>
                                         </tr>
                                         <?php

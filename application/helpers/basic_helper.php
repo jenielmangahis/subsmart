@@ -5476,7 +5476,7 @@ function checkIndustryAllowedSpecificField($field)
 
     $enabled = false;
     if( $field == 'monitoring_rate' || $field == 'one_time_program_setup' || $field == 'installation_cost' ){
-        $industries_enabled = [8, 36, 37, 38, 39, 88];
+        $industries_enabled = [8, 36, 37, 38, 39, 88, 28];
         if( in_array($industry_id, $industries_enabled) ){
             $enabled = true;
         }

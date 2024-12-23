@@ -15,6 +15,11 @@ class LeaveType extends MY_Controller
 
     public function index()
     {
+        if(!checkRoleCanAccessModule('timesheet-leave-types', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->load->model('LeaveType_model');
 
         $cid = logged('company_id');        

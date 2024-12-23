@@ -22,41 +22,46 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-4">
                     <div class="col-12 col-md-4 grid-mb">
                         <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Payscale">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search List">
                         </div>
-                    </div>
-                    <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#add_payscale_modal">
-                                <i class='bx bx-fw bx-money'></i> Add Pay Scale
+                    </div>   
+                    <div class="col-8 grid-mb text-end">                        
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                With Selected  <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">                          
+                                <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
+                        </div>
+                        <div class="nsm-page-buttons page-button-container">
+                            <?php if(checkRoleCanAccessModule('user-payscale', 'write')){ ?>
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#add_payscale_modal"><i class='bx bx-fw bx-plus'></i> Create Payscale</button>  
+                            <?php } ?>                         
                         </div>
                     </div>
                 </div>
+                <form id="frm-with-selected">           
                 <table class="nsm-table">
                     <thead>
                         <tr>
-                            <td class="table-icon"></td>
+                            <td><input type="checkbox" class="form-check-input" id="chk-all-row" /></td>
                             <td data-name="Pay Scale" style="width:70%;">Pay Scale</td>
                             <td data-name="Pay Type" style="width:30%;">Pay Type</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        if (!empty($payscale)) :
-                        ?>
-                            <?php
-                            foreach ($payscale as $p) :
-                            ?>
+                        <?php if (!empty($payscale)) : ?>
+                            <?php foreach ($payscale as $p) : ?>
                                 <tr>
                                     <td>
-                                        <div class="table-row-icon">
-                                            <i class='bx bx-money'></i>
-                                        </div>
+                                        <?php if( $p->company_id > 0 ){ ?>
+                                        <input type="checkbox" name="row_selected[]" class="form-check-input chk-row" value="<?= $lt->id; ?>" />
+                                        <?php } ?>
                                     </td>
                                     <td class="nsm-text-primary"><?= $p->payscale_name; ?></td>
                                     <td class="nsm-text-primary"><?= $p->pay_type; ?></td>
@@ -67,19 +72,19 @@
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>                                            
                                             <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $p->id ?>" data-name="<?= $p->payscale_name; ?>" data-type="<?= $p->pay_type; ?>">Edit</a></li>
-                                                <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $p->id ?>">Delete</a></li>
+                                                <?php if(checkRoleCanAccessModule('user-payscale', 'write')){ ?>
+                                                    <li><a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $p->id ?>" data-name="<?= $p->payscale_name; ?>" data-type="<?= $p->pay_type; ?>">Edit</a></li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('user-payscale', 'delete')){ ?>
+                                                    <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $p->id ?>">Delete</a></li>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                         <?php } ?>
                                     </td>
                                 </tr>
-                            <?php
-                            endforeach;
-                            ?>
-                        <?php
-                        else :
-                        ?>
+                            <?php endforeach; ?>
+                        <?php else : ?>
                             <tr>
                                 <td colspan="3">
                                     <div class="nsm-empty">
@@ -87,11 +92,10 @@
                                     </div>
                                 </td>
                             </tr>
-                        <?php
-                        endif;
-                        ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
+                </form>
             </div>
         </div>
     </div>
@@ -104,6 +108,65 @@
         $("#search_field").on("input", debounce(function() {
             tableSearch($(this));
         }, 1000));
+
+        $('#chk-all-row').on('change', function(){
+            if( $(this).prop('checked') ){
+                $('.chk-row').prop('checked',true);
+            }else{
+                $('.chk-row').prop('checked',false);
+            }
+        });
+
+        $('.btn-with-selected').on('click', function(){
+            var action = $(this).attr('data-action');
+
+            var total_selected = $('input[name="row_selected[]"]:checked').length;
+            if( total_selected > 0 ){
+                var msg = 'Proceed with <b>deleting</b> selected rows?';
+                var url = base_url + 'users/_delete_selected_payscale';
+
+                Swal.fire({
+                    title: 'With Selected Action',
+                    html: msg,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: $('#frm-with-selected').serialize(),
+                            dataType:'json',
+                            success: function(result) {
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: result.msg,
+                                    }).then((result) => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select row',
+                });
+            }        
+        });
 
         $("#add_payscale_form").on("submit", function(e) {
             let _this = $(this);

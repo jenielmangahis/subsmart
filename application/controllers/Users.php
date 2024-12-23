@@ -91,7 +91,12 @@ class Users extends MY_Controller
 
 	public function businessview()
 	{
-        $this->page_data['page']->title = 'My Profile';
+		if(!checkRoleCanAccessModule('company-my-business', 'read')){
+			show403Error();
+			return false;
+		}
+
+        $this->page_data['page']->title = 'My Business';
         $this->page_data['page']->parent = 'Company';
 
 		$this->load->model('DealsSteals_model');
@@ -134,6 +139,11 @@ class Users extends MY_Controller
 	}
 	public function businessdetail()
 	{
+		if(!checkRoleCanAccessModule('company-my-business', 'write')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Business Details';
         $this->page_data['page']->parent = 'Company';
 
@@ -150,6 +160,11 @@ class Users extends MY_Controller
 
 	public function services()
 	{
+		if(!checkRoleCanAccessModule('company-my-services', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Services';
         $this->page_data['page']->parent = 'Company';
 
@@ -797,8 +812,12 @@ class Users extends MY_Controller
 
 	public function tracklocation()
 	{
-		$this->hasAccessModule(63);
+		if(!checkRoleCanAccessModule('user-track-location', 'read')){
+			show403Error();
+			return false;
+		}
 
+		$this->hasAccessModule(63);
 		$this->load->model('Trac360_model');
 
 		$cid           = logged('company_id');
@@ -841,7 +860,12 @@ class Users extends MY_Controller
 	}
 
 	public function index()
-	{	
+	{			
+		if(!checkRoleCanAccessModule('users', 'read')){
+			show403Error();
+			return false;
+		}
+
 		$this->page_data['page']->title = 'Employees';
         $this->page_data['page']->parent = 'Company';
 
@@ -856,17 +880,6 @@ class Users extends MY_Controller
 		$this->page_data['eid'] = $eid;
 
 		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
-
-		/*$role_id = logged('role');
-		if( $role_id == 1 || $role_id == 2 ){
-			$this->page_data['show_pass'] = 1;
-			$this->page_data['users'] = $this->users_model->getAllUsers();
-			$this->page_data['payscale'] = $this->PayScale_model->getAll();
-		}else{
-			$this->page_data['show_pass'] = 0;
-			$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
-			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
-		}*/
 		
 		$this->page_data['show_pass'] = 1;
 		$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
@@ -1447,6 +1460,10 @@ class Users extends MY_Controller
 
 	public function view($id)
 	{
+		if(!checkRoleCanAccessModule('users', 'read')){
+			redirect('dashboard');
+		}
+
 		//ifPermissions('users_view');
 		$user = $this->users_model->getById($id);		
 		$this->page_data['User'] = $this->users_model->getById($id);		
@@ -2196,6 +2213,11 @@ class Users extends MY_Controller
 
 	public function pay_scale()
 	{	
+		if(!checkRoleCanAccessModule('user-payscale', 'read')){
+			show403Error();
+			return false;
+		}
+
 		$this->page_data['page']->title = 'Pay Scale';
         $this->page_data['page']->parent = 'Company';
 		
@@ -2843,6 +2865,48 @@ class Users extends MY_Controller
 		redirect('users/businessdetail');
 	}
 
+	public function ajax_update_business_details()
+	{
+		$this->load->model('Business_model');
+
+		$is_success = 0;
+		$msg = 'Cannot update data';
+
+		$post = $this->input->post();
+		$cid  = logged('company_id');
+		$businessDetails = $this->Business_model->getByCompanyId($cid);
+
+		if( $businessDetails ){			
+			if (!empty($_FILES['image']['name'])) {
+				$target_dir = "./uploads/users/business_profile/".$businessDetails->id."/";
+				if (!file_exists($target_dir)) {
+					mkdir($target_dir, 0777, true);
+				}
+				$business_image = $this->moveUploadedFile($businessDetails->id);
+				$this->business_model->update($businessDetails->id, ['business_image' => $business_image]);
+			}
+
+			unset($post['image']);
+			$this->business_model->update($businessDetails->id, $post);
+
+			//Activity Logs
+			$activity_name = 'Updated business profile'; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg = '';
+		}else{
+			$msg = 'Cannot find data';
+		} 
+
+		$json_data = [
+            'is_success' => $is_success,
+            'msg' => $message
+        ];
+
+        echo json_encode($json_data);
+	}
+
 	public function getUserInfo() {
 		$employee_id = $this->input->post('employee_id');
 		$getInfo = $this->Users_model->getUser($employee_id);
@@ -2946,10 +3010,16 @@ class Users extends MY_Controller
 
 		$cid = logged('company_id');
 
-		$roles = $this->Users_model->userRolesList();
+		$roles = $this->Users_model->userRolesList();		
 		$modules = $this->CompanyRoleAccessModule_model->modules();
 		$roleAccessModules = $this->CompanyRoleAccessModule_model->getAllRolesByCompanyId($cid);
-		
+		$existingRoles = $this->CompanyRoleAccessModule_model->getAllRolesByCompanyId($cid);
+		foreach( $existingRoles as $r ){
+			if( isset($roles[$r->role_id]) ){
+				unset($roles[$r->role_id]);
+			};
+		}
+
 		$this->page_data['roles'] = $roles;
 		$this->page_data['modules'] = $modules;
 		$this->page_data['roleAccessModules'] = $roleAccessModules;
@@ -2991,9 +3061,9 @@ class Users extends MY_Controller
 						'company_id' => $cid,
 						'role_id' => $post['role'],
 						'module' => $module,
-						'allow_write' => $permission['read'] ? 1 : 0,
-						 'allow_delete' => $permission['delete'] ? 1 : 0,
-						'allow_read' => $permission['read'] ? 1 : 0,
+						'allow_write' => isset($permission['read']) ? 1 : 0,
+						 'allow_delete' => isset($permission['delete']) ? 1 : 0,
+						'allow_read' => isset($permission['read']) ? 1 : 0,
 						'date_created' => date("Y-m-d H:i:s"),
 						'date_modified' => date("Y-m-d H:i:s"),
 					];
@@ -3071,7 +3141,6 @@ class Users extends MY_Controller
 					'allow_write' => 1,
 					'allow_delete' => 1,
 					'allow_read' => 1,
-					'date_created' => date("Y-m-d H:i:s"),
 					'date_modified' => date("Y-m-d H:i:s"),
 				];
 
@@ -3086,10 +3155,9 @@ class Users extends MY_Controller
 						'company_id' => $cid,
 						'role_id' => $post['role'],
 						'module' => $module,
-						'allow_write' => $permission['read'] ? 1 : 0,
-						'allow_delete' => $permission['delete'] ? 1 : 0,
-						'allow_read' => $permission['read'] ? 1 : 0,
-						'date_created' => date("Y-m-d H:i:s"),
+						'allow_write' => isset($permission['write']) ? 1 : 0,
+						'allow_delete' => isset($permission['delete']) ? 1 : 0,
+						'allow_read' => isset($permission['read']) ? 1 : 0,
 						'date_modified' => date("Y-m-d H:i:s"),
 					];
 		
