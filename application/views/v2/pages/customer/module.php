@@ -5,6 +5,10 @@
 .send-message{
     display: none;
 }
+#modules_container{
+    max-height: 650px;
+    overflow-y: auto;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -49,7 +53,7 @@
                     endif;
                     $datas['module_sort'] = $module_sort;
                     //$this->load->view('v2/pages/customer/adv_cust_modules/alarm-com', $datas);
-                    $this->load->view('v2/pages/customer/adv_cust_modules/share_page', '');
+                    //$this->load->view('v2/pages/customer/adv_cust_modules/share_page', '');
                     ?>
                 </div>
                 <input type="hidden" id="custom_modules" value="<?= $module_sort->ams_values ?>" />
