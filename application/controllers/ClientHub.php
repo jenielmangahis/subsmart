@@ -8,6 +8,8 @@ class ClientHub extends MYF_Controller {
 	}
 	public function index($id){	
 		$this->load->helper(array('hashids_helper'));
+
+		$this->page_data['page']->portal_tabs = 'portal_jobs';
 		
 		$customer_id = hashids_decrypt($id, '', 45);
 		$this->load->view('v2/pages/customer/client_hub/index', $this->page_data);

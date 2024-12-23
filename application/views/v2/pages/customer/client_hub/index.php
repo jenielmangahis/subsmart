@@ -1,4 +1,4 @@
-<?php include viewPath('v2/includes/header'); ?>
+<?php include viewPath('v2/includes/header_clienthub'); ?>
 
 <style>
 
@@ -27,8 +27,6 @@
     </div>
 </div>
 
-
-
 <?php include viewPath('customer/adv_cust/js_list'); ?>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -36,4 +34,4 @@
     });
 </script>
 
-<?php include viewPath('v2/includes/footer'); ?>
+<?php include viewPath('v2/includes/footer_clienthub'); ?>
