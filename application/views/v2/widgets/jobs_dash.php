@@ -1,9 +1,201 @@
 <?php
-if (!is_null($dynamic_load) && $dynamic_load == true) :
+if (!is_null($dynamic_load) && $dynamic_load == true):
     echo '<div class="col-lg-12">';
 endif;
 ?>
 <style>
+    :root {
+        --jobs-primary: #214548;
+        --jobs-secondary: #5F8F93;
+        --jobs-tertiary: #387478;
+        --jobs-quaternary: #AFC7C9;
+        --black: #000;
+        --jobs-color1: #162E30;
+        --jobs-color2: #629584;
+        --jobs-color3: #E2F1E7;
+        --jobs-color4: #6a9c8982;
+    }
+
+
+    .row-item {
+        position: relative;
+        height: 80%;
+    }
+
+    .row-item img {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
+
+    /* .filter-item {
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(24deg, var(--jobs-secondary), var(--jobs-color3));
+        position: relative;
+        overflow: hidden;
+    } */
+    .header-banner {
+        position: relative;
+    }
+
+    .header-banner img {
+        position: absolute;
+        top: 0;
+        width: 100%;
+
+    }
+
+    .filter-item {
+        position: relative;
+        padding-top: 186px;
+        padding-bottom: 0px;
+    }
+
+
+    #STATUS_COUNT_TAB {
+        border-bottom: none !important;
+    }
+
+    #STATUS_COUNT_TAB .nav-link.active {
+        background: var(--jobs-secondary) !important;
+        border-radius: 25px !important;
+        color: #fff !important;
+        padding: 3px !important;
+        width: 100px !important;
+    }
+
+    #STATUS_COUNT_TAB .nav-link {
+        border-radius: 25px;
+        color: #000;
+        padding: 3px;
+        width: 100px;
+        border: 1px solid var(--jobs-secondary);
+        margin-right: 10px;
+    }
+
+    .jobs-separator {
+        height: 5px;
+        background: var(--jobs-primary);
+        border-radius: 25px;
+        float: left;
+        margin-left: 20px;
+        width: 14%;
+        margin: 16px 0;
+    }
+
+    .jobs-separator2 {
+        height: 5px;
+        background: var(--jobs-primary);
+        border-radius: 25px;
+        margin-left: 20px;
+        width: 32%;
+        margin: 16px 0;
+        float: right;
+        background: linear-gradient(305deg, var(--jobs-primary), var(--jobs-color3));
+    }
+
+    .jobs-separator3 {
+        height: 5px;
+        background: var(--jobs-primary);
+        border-radius: 25px;
+        float: right;
+        margin-left: 20px;
+        width: 14%;
+        margin: 16px 0;
+    }
+
+    .jobs-separator4 {
+        height: 5px;
+        background: var(--jobs-primary);
+        border-radius: 25px;
+        margin-left: 20px;
+        width: 32%;
+        margin: 16px 0;
+        float: left;
+        background: linear-gradient(305deg, var(--jobs-primary), var(--jobs-color3));
+    }
+
+
+    .jobs-status-items .item {
+        display: flex;
+        padding: 10px;
+        /* background: linear-gradient(6deg, var(--jobs-secondary), var(--jobs-color3)); */
+        color: var(--jobs-color1);
+        border-radius: 10px;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0px 3px 12px #38747859;
+    }
+
+    .jobs-status-items .item .box {
+        width: 50px;
+        height: 16px;
+        background: var(--jobs-color4);
+        offset-position: 124px -3px;
+        offset-path: ray(45deg);
+        position: absolute;
+        opacity: .2;
+        border-radius: 25px;
+    }
+
+    .jobs-status-items .item .box3 {
+        width: 100px;
+        height: 15px;
+        background: var(--jobs-color4);
+        offset-position: 141px 7px;
+        offset-path: ray(45deg);
+        position: absolute;
+        opacity: .2;
+        border-radius: 25px;
+    }
+
+    .jobs-status-items .item .box2 {
+        width: 69px;
+        height: 60px;
+        background: #6A9C89;
+        offset-position: -28px -5px;
+        offset-path: ray(-19deg);
+        position: absolute;
+        opacity: 0.2;
+        border-radius: 0%;
+    }
+
+
+    .jobs-status-items .item .icons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        height: 38px;
+        width: 75px;
+        border-radius: 100%;
+    }
+
+
+    .jobs-status-items .item .count {
+        width: 100%;
+        text-align: left;
+        color: var(--jobs-primary);
+    }
+
+    .jobs-status-items .item .count label {
+        font-size: 30px;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+    .jobs-status-items .item .count p {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+    }
+
     .js-body .row.js-row {
         background: #f6ebff;
     }
@@ -85,7 +277,7 @@ endif;
 
     .prof {
         background-size: cover;
-        background-image: url("<?php echo base_Url() ?>assets/dashboard/images/prof.jpg");
+        background-image: url("<?php echo base_Url(); ?>assets/dashboard/images/prof.jpg");
         width: 30px;
         height: 30px;
         border-radius: 15px;
@@ -165,7 +357,7 @@ endif;
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span>Jobs Status</span>
+            <span style="color:var(--jobs-primary)">Jobs Status</span>
         </div>
         <div class="nsm-card-controls">
             <!--<a role="button" class="nsm-button btn-sm m-0 me-2" id="table-modal">
@@ -179,35 +371,70 @@ endif;
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#" onclick="addToMain('<?= $id ?>',<?php echo ($isMain ? '1' : '0') ?>,'<?= $isGlobal ?>' )"><?php echo ($isMain ? 'Remove From Main' : 'Add to Main') ?></a></li>
-                    <li><a class="dropdown-item" href="#" onclick="removeWidget('<?= $id ?>');">Remove Widget</a></li>
+                    <li><a class="dropdown-item" href="#"
+                            onclick="addToMain('<?= $id ?>',<?php echo $isMain ? '1' : '0'; ?>,'<?= $isGlobal ?>' )"><?php echo $isMain ? 'Remove From Main' : 'Add to Main'; ?></a>
+                    </li>
+                    <li><a class="dropdown-item" href="#" onclick="removeWidget('<?= $id ?>');">Remove Widget</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="nsm-card-content jobs_stat">
-        <div class="nsm-widget-table">
-            <div class="stat_content">
-                <div class="row row-pad">
-                    <ul class="nav nav-tabs" id="STATUS_COUNT_TAB" role="tablist">
-                      <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="MONTH-tab" data-bs-toggle="tab" data-bs-target="#MONTH" type="button" role="tab" aria-controls="MONTH" aria-selected="true">Month</button>
-                      </li>
-                      <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="YEAR-tab" data-bs-toggle="tab" data-bs-target="#YEAR" type="button" role="tab" aria-controls="YEAR" aria-selected="false">Year</button>
-                      </li>
-                    </ul>
-                    <div class="tab-content" id="STATUS_COUNT_TABCONTENT">
-                      <div class="tab-pane fade show active" id="MONTH" role="tabpanel" aria-labelledby="MONTH-tab">
-                        <div id="MONTH_COUNT" class="mt-3"></div>
-                      </div>
-                      <div class="tab-pane fade" id="YEAR" role="tabpanel" aria-labelledby="YEAR-tab">
-                        <div id="YEAR_COUNT" class="mt-3"></div>
-                      </div>
-                    </div>
-                    
+        <div class="d-flex flex-column">
+            <div class="header-banner">
+                <img src="./assets/img/jobs-status-wave-top.svg" alt="" />
+                <img src="./assets/img/jobs-status-wave-top-2.svg" alt="" />
+            </div>
+            <div class="filter-item">
+
+                <ul class="nav nav-tabs" id="STATUS_COUNT_TAB" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="MONTH-tab" data-bs-toggle="tab" data-bs-target="#MONTH"
+                            type="button" role="tab" aria-controls="MONTH" aria-selected="true">Month</button>
+                    </li>
+                    <li class="nav-item " role="presentation">
+                        <button class="nav-link" id="YEAR-tab" data-bs-toggle="tab" data-bs-target="#YEAR"
+                            type="button" role="tab" aria-controls="YEAR" aria-selected="false">Year</button>
+                    </li>
+                </ul>
+                <div class="col-md-12">
+                    <div class="jobs-separator"></div>
                 </div>
             </div>
+        </div>
+        <div class="tab-content" id="STATUS_COUNT_TABCONTENT">
+            <div class="tab-pane fade show active" id="MONTH" role="tabpanel" aria-labelledby="MONTH-tab">
+                <div class="row row-item">
+
+
+                    <div class="col-md-12 jobs-status-items mt-3">
+                        <div class="row " id="MONTH_COUNT">
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-12">
+                                <div class="jobs-separator2"></div>
+                            </div> -->
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="YEAR" role="tabpanel" aria-labelledby="YEAR-tab">
+
+                <div class="row row-item">
+                    <!-- <div class="col-md-12">
+                                <div class="jobs-separator3"></div>
+                            </div> -->
+                    <div class="col-md-12 jobs-status-items mt-3">
+                        <div class="row" id="YEAR_COUNT"></div>
+                    </div>
+                    <!-- <div class="col-md-12">
+                                <div class="jobs-separator4"></div>
+                            </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="footer-banner">
+            <!-- <img src="./assets/img/jobs-status-wave.svg" alt=""> -->
         </div>
     </div>
 </div>
@@ -236,7 +463,7 @@ endif;
             </div>
             <div class="js-body">
 
-              
+
 
             </div>
         </div>
@@ -262,7 +489,7 @@ endif;
 </script>
 
 <?php
-if (!is_null($dynamic_load) && $dynamic_load == true) :
+if (!is_null($dynamic_load) && $dynamic_load == true):
     echo '</div>';
 endif;
 ?>

@@ -2260,8 +2260,7 @@ function loadCustomerGroupChart() {
                 labels: chart_labels,
                 datasets: [{
                     data: data.chart_data,
-                    backgroundColor: data.chart_colors,
-                    borderColor: data.chart_colors,
+                    backgroundColor: ['#FEA303','#EB5B00','#d9a1a0','#A888B5','#FA4032','#FA812F'],
                     borderWidth: 0.5,
                 }],
             };
@@ -2310,13 +2309,13 @@ function loadCustomerGroupChart() {
                     responsive: false,
                     plugins: {
                         legend: {
-                            position: 'right',
+                            position: 'bottom',
                         },
                         tooltip: {
                             enabled: true,
                         },
                     },
-                    aspectRatio: 1,
+                    aspectRatio: 1.5,
                 },
                 plugins: [centerTextPlugin], // Use the correct plugin
             });

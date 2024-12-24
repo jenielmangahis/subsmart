@@ -286,6 +286,24 @@
         color: #6a4a86 !important;
         font-size: 20px !important;
     }
+
+    .performance-card .item-value span {
+        padding: 1px 13px;
+        border-radius: 25px;
+        font-weight: bold;
+        color: #fff;
+        font-size: 12px;
+    }
+
+    .performance-card .item-title span {
+        color: #281c2d;
+    }
+
+    .performance-card .item-percent {
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+    }
 </style>
 <?php if (count($techLeaderBoards) > 0) : foreach ($techLeaderBoards as $tech):?>
 <div class="col-12">
@@ -388,24 +406,27 @@
                             <thead></thead>
                             <tbody>
                                 <tr>
-                                    <th scope="row">Platform 1:</th>
-                                    <td>1020</td>
-                                    <td>5%</td>
+                                    <th scope="row" class="item-title"><span>Platform 1:</span></th>
+                                    <td class="item-value"><span style="background:#FEA303 ">1020</span></td>
+                                    <td class="item-percent">5%</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Platform 2:</th>
-                                    <td>1226</td>
-                                    <td>10%</td>
+                                    <th scope="row" class="item-title"><span>Platform 2:</span></th>
+
+                                    <td class="item-value"><span style="background:#d9a1a0">1226</span></td>
+                                    <td class="item-percent">10%</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Platform 3:</th>
-                                    <td>1782</td>
-                                    <td>4%</td>
+                                    <th scope="row" class="item-title"><span>Platform 3:</span></th>
+
+                                    <td class="item-value"><span style="background:#BEAFC2">1782</span></td>
+                                    <td class="item-percent">4%</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Platform 4:</th>
-                                    <td>1500</td>
-                                    <td>20%</td>
+                                    <th scope="row" class="item-title"><span>Platform 4:</span></th>
+
+                                    <td class="item-value"><span style="background:#d9a1a0 ">1354</span></td>
+                                    <td class="item-percent">20%</td>
                                 </tr>
                             </tbody>
                         </table>

@@ -64,7 +64,12 @@ class Timesheet extends MY_Controller
 
     public function employee()
     {
-        $this->page_data['page']->title = 'Time Employee';
+        if(!checkRoleCanAccessModule('user-timesheet', 'read')){
+			show403Error();
+			return false;
+		}
+
+        $this->page_data['page']->title = 'Employees Timesheet';
         $this->page_data['page']->parent = 'timesheet';
 
         $this->load->model('timesheet_model');
@@ -213,6 +218,11 @@ class Timesheet extends MY_Controller
     // added for tracking Time Log of employees
     public function timelog()
     {
+        if(!checkRoleCanAccessModule('user-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->load->model('timesheet_model');
         $this->load->model('users_model');
         //ifPermissions('users_list');
@@ -1393,8 +1403,12 @@ class Timesheet extends MY_Controller
     }
     public function attendance()
     {
-        $this->load->model('LeaveRequest_model');
+        if(!checkRoleCanAccessModule('user-settings-attendance', 'read')){
+			show403Error();
+			return false;
+		}
 
+        $this->load->model('LeaveRequest_model');
 
         $this->page_data['page']->title = 'Attendance';
         $this->page_data['page']->parent = 'Company';
@@ -3478,7 +3492,7 @@ class Timesheet extends MY_Controller
         $display .= '<td class="day"><span class="week-date">' . $date_this_week['Friday'] . '- Fri</span><span>Shift Start - Shift End</span></td>';
         $display .= '<td class="day"><span class="week-date">' . $date_this_week['Saturday'] . '- Sat</span><span>Shift Start - Shift End</span></td>';
         $display .= '<td class="day"><span class="week-date">' . $date_this_week['Sunday'] . '- Sun</span><span>Shift Start - Shift End</span></td>';
-        $display .= '<td>Hours</td>';
+        $display .= '<td>Total Hours</td>';
         $display .= '</tr>';
         $display .= '</thead>';
         $display .= '<tbody>';
@@ -3496,18 +3510,18 @@ class Timesheet extends MY_Controller
             $employee_schedules = $this->timesheet_model->get_employee_shift_schedule($user->id, $date_this_check);
             if (count($employee_schedules) > 0) {
                 $image = userProfilePicture($user->id);
-                if (is_null($image)) {
+                if ($image == urlUpload('users/default.png') || $image == NULL ) {
                     $initials = getLoggedNameInitials($user->id);
                     $display .= '<td>
                                     <div style="display: table; height: 40px;">
                                         <div style="display: table-cell; vertical-align: middle;">
-                                            <div class="profile-img" style="background-color: #ccc; border-radius: 50%; width: 40px; height: 40px; text-align: center; line-height: 40px;">
+                                            <div class="profile-img" style="background-color: #6a4a86; border-radius: 50%; width: 40px; height: 40px; text-align: center; line-height: 40px;">
                                                 <span style="color: #fff; font-size: 18px;">' . $initials . '</span>
                                             </div>
                                         </div>
-                                        <div style="display: table-cell; vertical-align: middle; padding-left: 10px;">
+                                        <div style="display: block;width:121px; vertical-align: middle;margin-left:13px;">
                                             <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
-                                            <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                                            <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;"><i class="bx bxs-user-circle"></i> ' . $role_title . '</span>
                                         </div>
                                     </div>
                                  </td>';
@@ -3518,9 +3532,9 @@ class Timesheet extends MY_Controller
                                             <div class="profile-img" style="background-image: url(\'' . $image . '\'); background-size: cover; background-position: center; border-radius: 50%; width: 40px; height: 40px;">
                                             </div>
                                         </div>
-                                        <div style="display: table-cell; vertical-align: middle; padding-left: 10px;">
+                                        <div style="display: block;width:121px; vertical-align: middle;margin-left:13px;">
                                             <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
-                                            <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                                            <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;"><i class="bx bxs-user-circle"></i> ' . $role_title . '</span>
                                         </div>
                                     </div>
                                  </td>';
@@ -3596,7 +3610,7 @@ class Timesheet extends MY_Controller
                     $sun = $this->shift_schedule_td_setter($date_this_check[6], "", $date_this_check[6], "", $user->id, 7, "blank");
                 }
                 $display .= $mon . $tue . $wed . $thur . $fri . $sat . $sun;
-                $display .= '<td class="center"><label id="duration' . $user->id . '">' . round($duration, 2) . '</label></td>';
+                $display .= '<td class="center"><label class="total-hours" id="duration' . $user->id . '"><i class="bx bxs-time"></i> ' . round($duration, 2) . ' hrs</label></td>';
             } else {
                 $image = userProfilePicture($user->id);
                 if (is_null($image)) {
@@ -3604,13 +3618,13 @@ class Timesheet extends MY_Controller
                     $display .= '<td>
                                     <div style="display: table; height: 40px;">
                                         <div style="display: table-cell; vertical-align: middle;">
-                                            <div class="profile-img" style="background-color: #ccc; border-radius: 50%; width: 40px; height: 40px; text-align: center; line-height: 40px;">
+                                            <div class="profile-img" style="background-color: #6a4a86; border-radius: 50%; width: 40px; height: 40px; text-align: center; line-height: 40px;">
                                                 <span style="color: #fff; font-size: 18px;">' . $initials . '</span>
                                             </div>
                                         </div>
-                                        <div style="display: table-cell; vertical-align: middle; padding-left: 10px;">
+                                        <div style="display: block;width:121px; vertical-align: middle;margin-left:13px;">
                                             <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
-                                            <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                                            <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;"><i class="bx bxs-user-circle"></i> ' . $role_title . '</span>
                                         </div>
                                     </div>
                                  </td>';
@@ -3621,9 +3635,9 @@ class Timesheet extends MY_Controller
                                             <div class="profile-img" style="background-image: url(\'' . $image . '\'); background-size: cover; background-position: center; border-radius: 50%; width: 40px; height: 40px;">
                                             </div>
                                         </div>
-                                        <div style="display: table-cell; vertical-align: middle; padding-left: 10px;">
+                                        <div style="display: block;width:121px; vertical-align: middle;margin-left:13px;">
                                             <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
-                                            <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                                            <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;"><i class="bx bxs-user-circle"></i> ' . $role_title . '</span>
                                         </div>
                                     </div>
                                  </td>';
@@ -3635,16 +3649,16 @@ class Timesheet extends MY_Controller
                 // $display .= '<label class="copy-alert"  id="copy_all_' . $user->id . '" style="display:none;">Copied!</label></td>';
                 for ($i = 0; $i < 7; $i++) {
                     $display .= '<td class="center">';
-                    $display .= '<input type="time" data-date="' . $date_this_check[$i] . '" data-id="' . $user->id . '" data-column="' . ($i + 1) . '" class="shift-start-input blank" value="">';
-                    $display .= '<p><i class="fa fa-arrow-down" aria-hidden="true"></i></p>';
-                    $display .= '<input type="time" data-date="' . $date_this_check[$i] . '" data-id="' . $user->id . '" data-column="' . ($i + 1) . '" class="shift-end-input blank" value="">';
-                    $display .= '<label class="shift-end-day-indecator" style="display:none;"></label>';
-                    $display .= '<div style="padding-top:10px;"><a style="display:none;" class="copy-btn" title="Copy" data-column= "' . ($i + 1) . '" data-id="' . $user->id . '"><i class="fa fa-clone" aria-hidden="true"></i></a>';
-                    $display .= '<a  class="paste-btn" title="Paste"><i class="fa fa-clipboard" aria-hidden="true"></i></a></div>';
-                    $display .= '<label class="copy-alert"  id="copy_id_' . $user->id . '_' . ($i + 1) . '" style="display:none;">Copied!</label>';
+                    $display .= '<input type="time" data-date="' . $date_this_check[$i] . '" data-id="' . $user->id . '" data-column="' . ($i + 1) . '" class="shift-start-input blank popover-info-start" value="">';
+                    $display .= '';
+                    $display .= '<input type="time" data-date="' . $date_this_check[$i] . '" data-id="' . $user->id . '" data-column="' . ($i + 1) . '" class="shift-end-input blank popover-info-end" value="">';
+                    //$display .= '<label class="shift-end-day-indecator" style="display:none;"></label>';
+                    $display .= '<div class="row-action-buttons"><a class="nsm-button copy-btn" href="javascript:void(0);" data-column= "' . ($i + 1) . '" data-id="' . $user->id . '"><i class="bx bx-copy-alt"></i></a>';
+                    $display .= '<a  class="nsm-button paste-btn" href="javascript:void(0);"><i class="bx bx-paste"></i></a></div>';
+                    //$display .= '<label class="copy-alert"  id="copy_id_' . $user->id . '_' . ($i + 1) . '" style="display:none;">Copied!</label>';
                     $display .= '</td>';
                 }
-                $display .= '<td class="center"><label id="duration' . $user->id . '"></label></td>';
+                $display .= '<td class="center"><label class="total-hours" id="duration' . $user->id . '"><i class="bx bxs-time"></i> 0 hr</label></td>';
             }
             $display .= '</tr>';
         }
@@ -3661,18 +3675,18 @@ class Timesheet extends MY_Controller
             $copy_style = "display:none";
         }
         $display = '<td class="center">';
-        $display .= '<input type="time" data-date="' . $shift_start_date . '" data-id="' . $user_id . '" data-column="' . $column . '" class="shift-start-input ' . $input_style . '" value="' . $shift_start . '">';
-        $display .= '<p><i class="fa fa-arrow-down" aria-hidden="true"></i></p>';
-        $display .= '<input type="time" data-date="' . $shift_start_date . '" data-id="' . $user_id . '" data-column="' . $column . '" class="shift-end-input ' . $input_style . '" value="' . $shift_end . '">';
-        if ($shift_start_date != $shift_end_date) {
-            $display .= '<label class="shift-end-day-indecator">' . $cross_over_day . '</label>';
-        } else {
-            $display .= '<label class="shift-end-day-indecator" style="display:none;"></label>';
-            $copy_dive_style .= "padding-top:10px;";
-        }
-        $display .= '<div style="' . $copy_dive_style . '"><a style="' . $copy_style . '" class="copy-btn" title="Copy" data-column= "' . ($column) . '" data-id="' . $user_id . '"><i class="fa fa-clone" aria-hidden="true"></i></a>';
-        $display .= '<a  class="paste-btn" title="Paste"><i class="fa fa-clipboard" aria-hidden="true"></i></a></div>';
-        $display .= '<label class="copy-alert"  id="copy_id_' . $user_id . '_' . ($column) . '" style="display:none;">Copied!</label>';
+        $display .= '<input type="time" data-date="' . $shift_start_date . '" data-id="' . $user_id . '" data-column="' . $column . '" class="shift-start-input popover-info-start' . $input_style . '" value="' . $shift_start . '">';
+        //$display .= '<p><i class="fa fa-arrow-down" aria-hidden="true"></i></p>';
+        $display .= '<input type="time" data-date="' . $shift_start_date . '" data-id="' . $user_id . '" data-column="' . $column . '" class="shift-end-input popover-info-end' . $input_style . '" value="' . $shift_end . '">';
+        // if ($shift_start_date != $shift_end_date) {
+        //     $display .= '<label class="shift-end-day-indecator">' . $cross_over_day . '</label>';
+        // } else {
+        //     $display .= '<label class="shift-end-day-indecator" style="display:none;"></label>';
+        //     $copy_dive_style .= "padding-top:10px;";
+        // }
+        $display .= '<div class="row-action-buttons"><a class="nsm-button copy-btn" href="javascript:void(0);" data-column= "' . ($column) . '" data-id="' . $user_id . '"><i class="bx bx-copy-alt"></i></a>';
+        $display .= '<a class="nsm-button paste-btn" href="javascript:void(0);"><i class="bx bx-paste"></i></a></div>';
+        //$display .= '<label class="copy-alert"  id="copy_id_' . $user_id . '_' . ($column) . '" style="display:none;">Copied!</label>';
         $display .= '</td>';
         return $display;
     }
@@ -3832,6 +3846,11 @@ class Timesheet extends MY_Controller
     }
     public function attendance_logs()
     {
+        if(!checkRoleCanAccessModule('user-settings-time-logs', 'read')){
+			show403Error();
+			return false;
+		}
+
         add_css(array(
             "assets/css/timesheet/timesheet_attendance_logs.css"
         ));
@@ -5534,6 +5553,11 @@ class Timesheet extends MY_Controller
     }
     public function settings()
     {
+        if(!checkRoleCanAccessModule('user-timesheet-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             "assets/css/timesheet/timesheet_settings.css"
@@ -5654,6 +5678,11 @@ class Timesheet extends MY_Controller
         $this->load->model('LeaveRequest_model');
         $this->load->model('LeaveType_model');
         $this->load->model('EmployeeLeaveCredit_model');
+
+        if(!checkRoleCanAccessModule('user-settings-leave-requests', 'read')){
+			show403Error();
+			return false;
+		}
 
         $cid = logged('company_id');
         $uid = logged('id');
@@ -6273,6 +6302,11 @@ class Timesheet extends MY_Controller
 
     public function overtime_requests()
     {
+        if(!checkRoleCanAccessModule('user-settings-overtime-requests', 'read')){
+			show403Error();
+			return false;
+		}
+
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css'
         ));

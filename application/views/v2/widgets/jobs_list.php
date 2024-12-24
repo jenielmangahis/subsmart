@@ -1,5 +1,6 @@
 <?php
-function widgetFormatJobNumber($number) {
+function widgetFormatJobNumber($number)
+{
     $formatFunc = function ($prefix, $number) {
         $numericPart = (int) str_replace($prefix, '', $number);
         return 'JOB-' . str_pad($numericPart, 7, '0', STR_PAD_LEFT);
@@ -16,11 +17,23 @@ function widgetFormatJobNumber($number) {
     return $number;
 }
 
-if (!is_null($dynamic_load) && $dynamic_load == true) :
+if (!is_null($dynamic_load) && $dynamic_load == true):
     echo '<div class="col-lg-12">';
 endif;
 ?>
 <style>
+    :root {
+        --jobs-activities-primary: #281c2d;
+        --jobs-activities-secondary: #BEAFC2;
+        --jobs-activities-tertiary: #d9a1a0;
+        --jobs-activities-quaternary: #F5EFFF;
+        --black: #000;
+        --jobs-activities-color1: #BEAFC2;
+        --jobs-activities-color2: #FEA303;
+        --jobs-activities-color3: #281c2d;
+        --jobs-activities-color4: #214548;
+    }
+
     .js-body .row.js-row {
         background: #f6ebff;
     }
@@ -102,7 +115,7 @@ endif;
 
     .prof {
         background-size: cover;
-        background-image: url("<?php echo base_Url() ?>assets/dashboard/images/prof.jpg");
+        background-image: url("<?php echo base_Url(); ?>assets/dashboard/images/prof.jpg");
         width: 30px;
         height: 30px;
         border-radius: 15px;
@@ -177,6 +190,7 @@ endif;
             left: 13%;
         }
     }
+
     .TECH_ICON {
         width: 30px !important;
         height: 30px !important;
@@ -184,27 +198,103 @@ endif;
         font-weight: bold !important;
         border: 1px solid black !important;
     }
+
     .STACK_ICON {
-        margin-top: -30px; 
+        margin-top: -30px;
         margin-left: 23px;
     }
+
     #JOB_ACTIVITY_TABLE_length,
     #JOB_ACTIVITY_TABLE_filter,
     #JOB_ACTIVITY_TABLE_info {
         display: none;
     }
+
     /*.nsm-table {
         display: none;
     }*/
     .nsm-badge.primary-enhanced {
         background-color: #6a4a86;
     }
+
     table.dataTable.no-footer {
-         border-bottom: 1px solid #ebebeb !important; 
+        border-bottom: 1px solid #ebebeb !important;
     }
+
     .JOB_PREVIEW:hover {
         cursor: pointer;
         font-weight: bold;
+    }
+
+    .jobs-activities .table-reponsinve {
+        margin: 0 20px;
+        background-color: #FFFFFF;
+        color: rgb(47 43 61 / 0.9);
+        border-radius: 6px;
+        background-image: none;
+        overflow: hidden;
+        box-shadow: 0px 3px 12px #38747859;
+        padding: 10px;
+        transform: translateY(-60px);
+        overflow: auto;
+        height: 73%;
+    }
+
+    .jobs-activities-separator {
+        width: 12%;
+        height: 7px;
+        background: var(--jobs-activities-color4);
+        border-radius: 25px;
+        transform: translateY(-47px);
+        float: left;
+        margin-left: 20px;
+    }
+
+    #dashboard-job-activities thead tr {
+        font-size: 14px;
+        font-weight: bold;
+        color: var(--jobs-activities-color3);
+    }
+
+    #dashboard-job-activities tbody .job-number {
+        color: var(--jobs-activities-primary);
+    }
+
+    #dashboard-job-activities tbody .last-update label {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    #dashboard-job-activities tbody .amount label {
+        padding: 1px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        color: #fff;
+        font-size: 12px;
+    }
+
+    #dashboard-job-activities tbody .view button {
+        font-size: 14px;
+        padding: 5px;
+        height: 30px;
+    }
+
+    #dashboard-job-activities tbody .view button i {
+        color: var(--jobs-activities-primary);
+    }
+    #dashboard-job-activities .nsm-table-pagination .pagination { 
+        gap: 10px;
+    }
+    #dashboard-job-activities .nsm-table-pagination .pagination li a.prev,#dashboard-job-activities .nsm-table-pagination .pagination li a.next{ 
+        border: none;
+    }
+
+    #dashboard-job-activities .nsm-table-pagination .pagination li a{
+        border-radius: 50%;
+    }
+    #dashboard-job-activities .nsm-table-pagination .pagination li a.active{
+        background: var(--jobs-activities-tertiary);
+        border: 1px solid var(--jobs-activities-color1);
     }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -224,28 +314,35 @@ endif;
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#" onclick="addToMain('<?= $id ?>',<?php echo ($isMain ? '1' : '0') ?>,'<?= $isGlobal ?>' )"><?php echo ($isMain ? 'Remove From Main' : 'Add to Main') ?></a></li>
-                    <li><a class="dropdown-item" href="#" onclick="removeWidget('<?= $id ?>');">Remove Widget</a></li>
+                    <li><a class="dropdown-item" href="#"
+                            onclick="addToMain('<?= $id ?>',<?php echo $isMain ? '1' : '0'; ?>,'<?= $isGlobal ?>' )"><?php echo $isMain ? 'Remove From Main' : 'Add to Main'; ?></a>
+                    </li>
+                    <li><a class="dropdown-item" href="#" onclick="removeWidget('<?= $id ?>');">Remove Widget</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="nsm-card-content">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 jobs-activities">
+                <div class="banner">
+                    <img src="./assets/img/jobs-activities-wave-top.svg" alt="">
+                </div>
                 <div class="table-reponsinve">
-                        <table id="dashboard-job-activities" class="nsm-table mb-3">
-                            <thead>
-                                <tr>          
-                                <td class="table-icon"></td>                          
-                                    <td data-name="JobNumber">Job Number</td>
-                                    <td data-name="Updated">Last Updated</td>
-                                    <td data-name="Amount"><?php echo $company_id == 58 ? 'Proposed' : 'Amount' ?></td>
-                                    <td data-name="ViewInfo" style="width: 0%;">View&nbsp;Info</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
+                    <table id="dashboard-job-activities" class="nsm-table mb-3">
+                        <thead>
+                            <tr>
+                                <td class="table-icon"></td>
+                                <td data-name="JobNumber">Job Number</td>
+                                <td data-name="Updated" style="text-align:center">Last Updated</td>
+                                <td data-name="Amount" style="text-align:center"><?php echo $company_id == 58 ? 'Proposed' : 'Amount'; ?></td>
+                                <td data-name="ViewInfo" style="width: 0%;">View&nbsp;Info</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                    $colors = ['#FEA303', '#d9a1a0', '#BEAFC2', '#EFB6C8'];
                                     function getInitials($string = null) {
                                         return array_reduce(
                                             explode(' ', $string),
@@ -260,8 +357,10 @@ endif;
                                     $ADDRESS = "";
                                     $UPDATED = "";
                                     $JOB_PREVIEW = "";
-                                    
+                                    $colorSelected= "";
                                     foreach($latestJobs as $latestJobs_data){
+                                        $colorSelected = $colors[array_rand($colors)];
+
                                         ($latestJobs_data->TECH_1 != "") ? $TECH_BADGE .= "<li>$latestJobs_data->TECH_1</li>" : null;
                                         ($latestJobs_data->TECH_2 != "") ? $TECH_BADGE .= "<li>$latestJobs_data->TECH_2</li>" : null;
                                         ($latestJobs_data->TECH_3 != "") ? $TECH_BADGE .= "<li>$latestJobs_data->TECH_3</li>" : null;
@@ -281,42 +380,55 @@ endif;
                                         $JOB_PREVIEW = base_url('job/job_preview/').$latestJobs_data->id;
                                         $amount_format = number_format($latestJobs_data->amount,2);
                                         $VIEW_INFO = "<strong><i class='bx bx-user-pin' ></i> Customer Name:</strong> $latestJobs_data->first_name, $latestJobs_data->last_name<br><strong><i class='bx bx-map-pin' ></i> Address:</strong> $ADDRESS<br><strong><i class='bx bxs-user-check' ></i> Tech Rep</strong>:$TECH_BADGE<hr /><strong>Amount:</strong> $$amount_format";
-                                ?>  
-                                <tr>
-                                    <td class="JOB_PREVIEW" onclick="location.replace('<?php echo $JOB_PREVIEW; ?>')">
-                                        <div class="table-row-icon">
-                                            <i class='bx bx-briefcase-alt-2' ></i>
-                                        </div>                                        
-                                    </td>     
-                                    <td><b><?php echo $latestJobs_data->job_number; ?></b></td>                               
-                                    <td>
-                                        <?php echo date("M d, Y", strtotime($latestJobs_data->date_updated)); ?>
-                                    </td>                                    
-                                    <td style="text-align:right;"><?php echo ($latestJobs_data->amount ? "$" . number_format($latestJobs_data->amount,2) : '$0.00'); ?></td>
-                                    <td style="width: 0%;text-align:right;"><button class="nsm-button small" data-bs-trigger="hover focus" data-bs-toggle="popover" title="<?php echo $latestJobs_data->job_number; ?>" data-bs-content="<?php echo $VIEW_INFO; ?>" data-bs-html="true"><i class='bx bx-search-alt'></i></button></td>
-                                </tr>
-                                <?php 
+                                ?>
+                            <tr>
+                                <td class="JOB_PREVIEW" onclick="location.replace('<?php echo $JOB_PREVIEW; ?>')">
+                                    <div class="table-row-icon" style="background: <?= $colorSelected ?>;">
+                                        <i class='bx bx-briefcase-alt-2' style="color: #fff !important"></i>
+                                    </div>
+                                </td>
+                                <td class="job-number"><b><?php echo $latestJobs_data->job_number; ?></b>
+                                </td>
+                                <td class="last-update" style="text-align:center;">
+                                    <label>
+                                        <?php echo date('M d, Y', strtotime($latestJobs_data->date_updated)); ?></label>
+
+                                </td>
+                                <td style="text-align:center;" class="amount">
+                                    <label style="background: <?= $colors[array_rand($colors)] ?>">
+                                        <?php echo $latestJobs_data->amount ? "$" . number_format($latestJobs_data->amount, 2) : '$0.00'; ?>
+                                    </label>
+                                </td>
+                                <td style="width: 0%;text-align:right;" class="view"><button class="nsm-button small"
+                                        data-bs-trigger="hover focus" data-bs-toggle="popover"
+                                        title="<?php echo $latestJobs_data->job_number; ?>" data-bs-content="<?php echo $VIEW_INFO; ?>"
+                                        data-bs-html="true"><i class='bx bx-search-alt'></i></button></td>
+                            </tr>
+                            <?php 
                                     $TECH_BADGE = "";
                                     }
                                 ?>
-                            </tbody>
-                        </table>
-                    </div>  
+                        </tbody>
+                    </table>
+                </div>
+                <div class="jobs-activities-separator"></div>
             </div>
         </div>
-    </div>   
+    </div>
 </div>
 
 
 <script>
-$(function(){
-    $("#dashboard-job-activities").nsmPagination({itemsPerPage:10});
-    $('[data-bs-toggle="popover"]').popover();      
-});
+    $(function() {
+        $("#dashboard-job-activities").nsmPagination({
+            itemsPerPage: 6
+        });
+        $('[data-bs-toggle="popover"]').popover();
+    });
 </script>
 
 <?php
-if (!is_null($dynamic_load) && $dynamic_load == true) :
+if (!is_null($dynamic_load) && $dynamic_load == true):
     echo '</div>';
 endif;
 ?>

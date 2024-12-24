@@ -259,13 +259,13 @@
                                             </div>                                            
                                         </div>
                                     </div>
-
+                                    <?php if(checkRoleCanAccessModule('user-timesheet-settings', 'write')){ ?> 
                                     <div class="row g-3 mt-5">
                                         <div class="col-6">
                                             <button type="submit" class="nsm-button primary" style="float: right;">Save Changes</button>
                                         </div>                    
                                     </div>
-
+                                    <?php } ?>
                                 </div> <!-- last -->
                             </div>                                
                         </div>
@@ -284,6 +284,7 @@ $(function(){
         format: 'hh:mm A'
     });
 
+    <?php if(checkRoleCanAccessModule('user-timesheet-settings', 'write')){ ?> 
     $('#frm-timesheet-settings').on('submit', function(e){
         e.preventDefault();
 
@@ -323,6 +324,7 @@ $(function(){
             }
         });
     });
+    <?php } ?>
 
 });
 </script>
