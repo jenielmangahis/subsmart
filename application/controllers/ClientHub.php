@@ -5,6 +5,8 @@ class ClientHub extends MYF_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->page_data['page']->title = 'nSmart - Customer Public Portal';
+
+		$this->load->model('Jobs_model', 'jobs_model');
 	}
 
 	public function index($id){	
@@ -12,8 +14,10 @@ class ClientHub extends MYF_Controller {
 
 		$this->page_data['page']->portal_tabs = 'portal_jobs';
 		$this->page_data['customer_id_incrypt'] = $id;
-
 		$customer_id = hashids_decrypt($id, '', 45);
+
+		$jobs = $this->jobs_model->getAllJobsByCustomerId($customer_id);
+		$this->page_data['jobs'] = $jobs;
 		$this->load->view('v2/pages/customer/client_hub/index', $this->page_data);
 	}
 

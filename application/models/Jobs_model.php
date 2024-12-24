@@ -292,7 +292,6 @@ class Jobs_model extends MY_Model
         return $query->result();
     }
 
-
     public function get_specific_workorder_items($id)
     {   
         $this->db->select('work_order_types.name');
@@ -1212,7 +1211,7 @@ class Jobs_model extends MY_Model
     {
         $this->db->where('id', $id);      
         $this->db->update($this->table, array("is_archived" => 0, 'archived_date' => null));        
-    }
+    }   
 }
 /* End of file Jobs_model.php */
 /* Location: ./application/models/Jobs_model.php */
