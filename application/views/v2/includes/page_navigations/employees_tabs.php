@@ -8,7 +8,7 @@
             </a>
         </li>
         <?php if (logged('user_type') == 7) { ?>
-            <li class="<?php if ($page->title == 'Time Employee'): echo 'active';
+            <li class="<?php if ($page->title == 'Time Employee' || $page->title == 'Employees Timesheet'): echo 'active';
                     endif; ?>">
                 <a class="nsm-page-link" href="<?php echo base_url('timesheet/employee') ?>">
                     <i class='bx bx-fw bx-time'></i>
@@ -16,7 +16,7 @@
                 </a>
             </li>
         <?php } ?>
-        <li class="<?php if ($page->title == 'Attendance' || $page->title == 'My Schedule' || $page->title == 'Notification' || $page->title == 'Attendance Logs' || $page->title == 'Time Schedule' || $page->title == 'Requests' || $page->title == 'Shift Schedule' || $page->title == 'Timesheet Settings'): echo 'active';
+        <li class="<?php if ($page->title == 'Attendance' || $page->title == 'My Schedule' || $page->title == 'Notification' || $page->title == 'Attendance Logs' || $page->title == 'Time Schedule' || $page->title == 'Requests' || $page->title == 'Role Access Modules' || $page->title == 'Shift Schedule' || $page->title == 'Timesheet Settings'): echo 'active';
                     endif; ?>">
             <div class="dropdown" id="test_dropdown">
                 <a class="nsm-page-link dropdown-toggle" role="button" href="javascript:void(0);">
@@ -41,7 +41,8 @@
                         <li><a class="dropdown-item" href="<?php echo base_url('timesheet/overtime_requests') ?>">Overtime Requests</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('timesheet/my_schedule') ?>">My Schedule</a></li>
                         <?php if( logged('user_type') == 7 ){ //Admin only ?>
-                            <li><a class="dropdown-item" href="<?php echo base_url('timesheet/settings') ?>">Settings</a></li>
+                            <li><a class="dropdown-item" href="<?php echo base_url('users/role_access_modules') ?>">Roles Access Modules</a></li>
+                            <li><a class="dropdown-item" href="<?php echo base_url('timesheet/settings') ?>">Timesheet Settings</a></li>
                         <?php } ?>
                     <?php endif; ?>
                 </ul>
