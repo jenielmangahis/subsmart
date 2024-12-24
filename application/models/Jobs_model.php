@@ -188,7 +188,7 @@ class Jobs_model extends MY_Model
         $jobs_date_start = $date_range['from'] . ' 00:00:00';
         $jobs_date_end   = $date_range['to'] . ' 23:59:59';
 
-        $this->db->select('users.id AS uid,users.email AS email, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS name, COALESCE(invoices.status, "") AS invoice_status, SUM(invoices.grand_total) AS total_sales, invoices.date_created AS date_created, COALESCE((
+        $this->db->select('users.id AS uid,users.email AS email,users.employee_number AS employee_number, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS name, COALESCE(invoices.status, "") AS invoice_status, SUM(invoices.grand_total) AS total_sales, invoices.date_created AS date_created, COALESCE((
             SELECT COUNT(id) FROM jobs            
             WHERE employee_id = users.id
             AND jobs.date_created >="'.$jobs_date_start.'" AND jobs.date_created <="' .$jobs_date_end.'"

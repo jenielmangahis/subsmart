@@ -140,6 +140,7 @@ class Widgets extends MY_Controller
                 combined.id AS id,
                 combined.company_id AS company_id,
                 combined.tech_rep AS tech_rep,
+                combined.employee_number AS employee_number,
                 combined.email AS email,
                 SUM(combined.jobs) AS total_jobs,
                 SUM(combined.total) AS total_amount
@@ -147,6 +148,7 @@ class Widgets extends MY_Controller
                 SELECT 
                     users.id AS id,
                     users.company_id AS company_id,
+                    users.employee_number AS employee_number,
                     CONCAT(users.FName, ' ', users.LName) AS tech_rep,
                     users.email as email,
                     COUNT(DISTINCT COALESCE(jobs2.id, jobs3.id, jobs4.id, jobs5.id, jobs6.id)) AS jobs,
@@ -174,6 +176,7 @@ class Widgets extends MY_Controller
                 SELECT 
                     users.id AS id,
                     users.company_id AS company_id,
+                    users.employee_number AS employee_number,
                     CONCAT(users.FName, ' ', users.LName) AS tech_rep,
                     users.email as email,
                     COUNT(DISTINCT tickets.ticket_no) AS jobs,

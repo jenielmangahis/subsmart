@@ -16,7 +16,7 @@ endif;
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span>Technician Scorecard</span>
+            <span>Scorecard</span>
         </div>
         <div class="nsm-card-controls">
             <div class="dropdown">

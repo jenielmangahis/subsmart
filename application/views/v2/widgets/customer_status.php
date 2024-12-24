@@ -1,9 +1,80 @@
 <?php
-if (!is_null($dynamic_load) && $dynamic_load == true) :
+if (!is_null($dynamic_load) && $dynamic_load == true):
     echo '<div class="col-lg-12">';
 endif;
 ?>
+<style>
+    :root {
+        --customer-status-primary: #281c2d;
+        --customer-status-secondary: #BEAFC2;
+        --customer-status-tertiary: #d9a1a0;
+        --customer-status-quaternary: #F5EFFF;
+        --black: #000;
+        --customer-status-color1: #BEAFC2;
+        --customer-status-color2: #FEA303;
+        --customer-status-color3: #281c2d;
+        --customer-status-color4: #214548;
+    }
+    .customer-status-items {
+        height: 700px;
+    }
+    .customer-status-container {
+        background:url('./assets/img/customer-status-banner.png');
+        background-size: cover;
+    }
+    .customer-status-container .spacer{
+        padding-top: 100px;
+    }
+    .customer-status-items .item {
+        display: block;
+        padding: 10px;
+        color: var(--customer-status-color4);
+        border-radius: 10px;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0px 3px 12px #38747859;
+        height: 100%;
+    }
 
+    .customer-status-items .item .first {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        align-items: center;
+    }
+
+    .customer-status-items .item .first .icons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        height: 38px;
+        width: 40px;
+        border-radius: 100%;
+    }
+
+    .customer-status-items .item .count {
+        width: 100%;
+        text-align: left;
+        color: var(--jobs-primary);
+    }
+
+    .customer-status-items .item .first label {
+        font-size: 30px;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+    .customer-status-items .item .count p {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+        text-align: center;
+    }
+</style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
@@ -21,17 +92,22 @@ endif;
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#" onclick="addToMain('<?= $id ?>',<?php echo ($isMain ? '1' : '0') ?>,'<?= $isGlobal ?>' )"><?php echo ($isMain ? 'Remove From Main' : 'Add to Main') ?></a></li>
-                    <li><a class="dropdown-item" href="#" onclick="removeWidget('<?= $id ?>');">Remove Widget</a></li>
+                    <li><a class="dropdown-item" href="#"
+                            onclick="addToMain('<?= $id ?>',<?php echo $isMain ? '1' : '0'; ?>,'<?= $isGlobal ?>' )"><?php echo $isMain ? 'Remove From Main' : 'Add to Main'; ?></a>
+                    </li>
+                    <li><a class="dropdown-item" href="#" onclick="removeWidget('<?= $id ?>');">Remove Widget</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="nsm-card-content jobs_stat">
         <div class="nsm-widget-table">
-            <div class="stat_content">
-                <div class="row row-pad">
-                    <div id="customer_status"></div>
+            <div class="customer-status-container" >
+                <div class="spacer"></div>
+                <div class="col-md-12 row-pad customer-status-items" >
+                    <div class="row" id="customer_status">
+                    </div>
                 </div>
             </div>
         </div>
@@ -39,7 +115,7 @@ endif;
 </div>
 
 <?php
-if (!is_null($dynamic_load) && $dynamic_load == true) :
+if (!is_null($dynamic_load) && $dynamic_load == true):
     echo '</div>';
 endif;
 ?>
