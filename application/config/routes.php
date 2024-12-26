@@ -1983,6 +1983,8 @@ $route['dashboard/_getting_started'] = 'Dashboard/ajax_getting_started';
 $route['dashboard/_send_download_app_link'] = 'Dashboard/ajax_send_download_app_link';
 
 //Client Hub
+$route['client_hub/_job_view'] = 'ClientHub/ajax_view_customer_job';
 $route['client_hub/(:any)?'] = 'ClientHub/index/$1';
+$route['client_hub/jobs/(:any)?'] = 'ClientHub/jobs/$1';
 $route['client_hub/tickets/(:any)?'] = 'ClientHub/tickets/$1';
 $route['client_hub/invoice_status/(:any)?'] = 'ClientHub/invoice_status/$1';
