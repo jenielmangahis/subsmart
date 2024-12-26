@@ -20,6 +20,7 @@ class ClientHub extends MYF_Controller {
 
 		$profile_info = $this->AcsProfile_model->getByProfId($customer_id);
 		$this->page_data['profile_info'] = $profile_info;
+		$this->page_data['sales_area']   = [];
 		$this->load->view('v2/pages/customer/client_hub/profile', $this->page_data);
 	}
 
