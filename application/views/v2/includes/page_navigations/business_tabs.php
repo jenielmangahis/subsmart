@@ -1,9 +1,9 @@
 <div class="nsm-page-nav">
     <ul>
-        <li class="<?php if($page->title == 'My Profile'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'My Business'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('users/businessview') ?>">
-                <i class='bx bx-fw bx-user'></i>
-                <span>My Profile</span>
+                <i class='bx bxs-business'></i>
+                <span>My Business</span>
             </a>
         </li>
         <li class="<?php if($page->title == 'Business Details'): echo 'active'; endif; ?>">
