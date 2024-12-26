@@ -27,9 +27,10 @@
         margin-top: 9px;
     }
 
-    .cont {
+    /* Disabled: Unable to see context menu when only few items showing  */
+    /* .cont {
         overflow-x: auto;
-    }
+    } */
 
     .customerTbl>thead {
         color: #888888;
@@ -321,6 +322,10 @@
     .default_cell {
         border: 1px solid lightgray;
     }
+
+    .table > :not(:last-child) > :last-child > * {
+        border-bottom: 1px solid #dee2e6;
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
@@ -429,7 +434,7 @@
                 </div>
                 <?php if (!empty($enabled_table_headers)) : ?>
                     <div class="cont">
-                        <table class="customerTbl customer-list" id="customer-list" style="width:100%;">
+                        <table class="customerTbl customer-list table table-hover w-100 mb-3" id="customer-list">
                             <thead>
                                 <tr>
                                     <th class="table-icon"></th>
@@ -754,6 +759,9 @@
         $("#CUSTOMER_SEARCHBAR").keyup(function() {
             CUSTOMER_LIST_TABLE.search($(this).val()).draw()
         });
+
+        // Remove bug css on DataTable Serverside
+        $('#customer-list').removeClass('dataTable');
 
         $(document).on("click", ".call-item", function() {
             let phone = $(this).attr("data-id");
