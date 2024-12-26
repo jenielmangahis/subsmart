@@ -246,6 +246,22 @@ if (!function_exists('getCompanyBusinessProfileImage')) {
     }
 }
 
+if (!function_exists('getPublicCompanyBusinessProfileImage')) {
+
+    function getPublicCompanyBusinessProfileImage($company_id)
+    {
+        $CI         = &get_instance();
+        $res = $CI->business_model->getByCompanyProfileImage($company_id);
+        if( $res ){
+            $url = urlUpload('users/business_profile/' . $res->id . '/' . $res->business_image . '?' . time());
+        }else{
+            $url = urlUpload('users/business_profile/default.png');
+        }
+
+        return $url;
+    }
+}
+
 function createActivityLog($activity_name){
     $CI      = &get_instance();
     $user_id = logged('id');
