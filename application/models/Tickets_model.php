@@ -734,6 +734,17 @@ class Tickets_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getAllByCustomerId($prof_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);   
+        $this->db->where('customer_id', $prof_id);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 ?>
