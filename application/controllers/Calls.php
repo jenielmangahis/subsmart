@@ -138,4 +138,11 @@ class Calls extends Widgets {
             }
         }
     }
+
+    public function scheduled_calls()
+    {
+        $company_id = logged('company_id');
+        $this->page_data['page']->title = 'Scheduled Calls';
+        $this->load->view('v2/pages/dashboard/scheduled_calls', $this->page_data);
+    }
 }

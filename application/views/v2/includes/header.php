@@ -823,6 +823,10 @@ if (is_null($image)) {
         width: 18px;
         height: 18px;
     }
+
+    .viewVideoFromBinderModal .modal-body {
+        margin-bottom: -10px;
+    }
 </style>
 
 <!-- <div class="row d-flex position-relative">
@@ -1015,13 +1019,13 @@ if (is_null($image)) {
 </div>
 
 <!-- preview Video in video Binder -->
-<div class="modal fade viewVideoFromBinderModal" data-bs-backdrop="static" role="dialog" aria-modal="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade viewVideoFromBinderModal"  role="dialog" aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
+            <!-- <div class="modal-header d-none">
                 <span class="modal-title content-title" style="font-size: 17px;">Preview Video</span>
                 <i class="bx bx-fw bx-x m-0 text-muted exit_preview_modal" data-bs-dismiss="modal" style="cursor: pointer;"></i>
-            </div>
+            </div> -->
             <div class="modal-body">
                 <div id="viewVideoContent" class="text-center">
                     <p class="text-muted">No file selected for preview.</p>
@@ -1372,7 +1376,82 @@ if (is_null($image)) {
         //     $('.chatbox_container').slideUp();
         //     $('.chaticon').fadeIn();
         // });
+        
+        $(document).on('submit', '#scheduleCallForm', function (e) {
+            e.preventDefault();
+            let scheduledForm = $(this); 
 
+            $.ajax({
+                type: "POST",
+                url: BASE_URL + "/TechSupportSidebar/addSchedule",
+                data: scheduledForm.serialize(),
+                dataType: "JSON",
+                beforeSend: function () {
+                    formDisabler(scheduledForm, true); 
+                    Swal.fire({
+                        icon: "info",
+                        title: "Saving Entry!",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                },
+                success: function (response) {
+                    $('#scheduleCallForm')[0].reset();
+                    formDisabler(scheduledForm, false);
+                    Swal.fire({
+                        icon: "success",
+                        title: "Entry Saved!",
+                        html: "Call support has beed scheduled.",
+                        showConfirmButton: true,
+                        confirmButtonText: "Okay",
+                    });
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        html: "An unexpected error occurred: " + error,
+                        showConfirmButton: true,
+                        confirmButtonText: "Okay",
+                    });
+                    formDisabler(scheduledForm, false);
+                },
+            });
+        });
+        
+        $(document).on('submit', '#sendchat_form', function(e) {
+            e.preventDefault();
+            let sendchatData = $(this);
+            let chatMessage = sendchatData.find('input[name="request"]').val();
+            let chatbot_name = $('.chatbot_name').eq(0).text();
+            let bgcolor = $('.chatbox_header').attr('data-bgcolor');
+
+            $.ajax({
+                type: "POST",
+                url: BASE_URL + "/chatbot/request",
+                data: sendchatData.serialize(),
+                dataType: "JSON",
+                beforeSend: function() {
+                    formDisabler(sendchatData, true);
+                    $('.chat_content').append('<div class="send_container position-relative"> <small class="sender_name position-absolute">You</small> <div class="send_chat d-flex flex-row justify-content-end"> <div class="p-3 send_chat_container" style="background-color: ' + bgcolor + '21;"> <p class="mb-0 send_chat_message">' + chatMessage + '</p> </div> </div> </div>').scrollTop($('.chat_content')[0].scrollHeight);
+                    setTimeout(() => {
+                        $('.typing_status').fadeIn('fast');
+                    }, 500);
+                },
+                success: function(response) {
+                    setTimeout(() => {
+                        $('.chat_content').append('<div class="receive_container position-relative"> <small class="receiver_name position-absolute">🤖 ' + chatbot_name + '</small> <div class="receive_chat d-flex flex-row justify-content-start"> <div class="p-3 me-3 border receive_chat_container"> <p class="mb-0">' + response + '</p> </div> </div> </div>').scrollTop($('.chat_content')[0].scrollHeight);
+                        $('.typing_status').hide();
+                        sendchatData.find('input').val(null);
+                        formDisabler(sendchatData, false);
+                    }, 1000);
+                }
+            });
+        });
         // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         
         $(document).on('click', '#getting-started-schedule-job', function() {
@@ -1452,36 +1531,6 @@ if (is_null($image)) {
                             text: result.msg,
                         });
                     }
-                }
-            });
-        });
-
-        $(document).on('submit', '#sendchat_form', function(e) {
-            e.preventDefault();
-            let sendchatData = $(this);
-            let chatMessage = sendchatData.find('input[name="request"]').val();
-            let chatbot_name = $('.chatbot_name').eq(0).text();
-            let bgcolor = $('.chatbox_header').attr('data-bgcolor');
-
-            $.ajax({
-                type: "POST",
-                url: BASE_URL + "/chatbot/request",
-                data: sendchatData.serialize(),
-                dataType: "JSON",
-                beforeSend: function() {
-                    formDisabler(sendchatData, true);
-                    $('.chat_content').append('<div class="send_container position-relative"> <small class="sender_name position-absolute">You</small> <div class="send_chat d-flex flex-row justify-content-end"> <div class="p-3 send_chat_container" style="background-color: ' + bgcolor + '21;"> <p class="mb-0 send_chat_message">' + chatMessage + '</p> </div> </div> </div>').scrollTop($('.chat_content')[0].scrollHeight);
-                    setTimeout(() => {
-                        $('.typing_status').fadeIn('fast');
-                    }, 500);
-                },
-                success: function(response) {
-                    setTimeout(() => {
-                        $('.chat_content').append('<div class="receive_container position-relative"> <small class="receiver_name position-absolute">🤖 ' + chatbot_name + '</small> <div class="receive_chat d-flex flex-row justify-content-start"> <div class="p-3 me-3 border receive_chat_container"> <p class="mb-0">' + response + '</p> </div> </div> </div>').scrollTop($('.chat_content')[0].scrollHeight);
-                        $('.typing_status').hide();
-                        sendchatData.find('input').val(null);
-                        formDisabler(sendchatData, false);
-                    }, 1000);
                 }
             });
         });
