@@ -11,6 +11,7 @@ class ClientHub extends MYF_Controller {
 		$this->load->model('Tickets_model');
 		$this->load->model('AcsProfile_model');
 		$this->load->model('Business_model');
+		$this->load->model('Invoice_model', 'invoice_model');
 	}
 
 	public function index($id){	
@@ -48,8 +49,11 @@ class ClientHub extends MYF_Controller {
 	public function invoice_status($id){	
 		$this->page_data['page']->portal_tabs = 'portal_invoice_status';
 		$this->page_data['customer_id_incrypt'] = $id;
-		
+
 		$customer_id = hashids_decrypt($id, '', 45);
+		$invoices = $this->invoice_model->getAllByCustomerId($customer_id);
+		
+		$this->page_data['invoices'] = $invoices;
 		$this->load->view('v2/pages/customer/client_hub/invoice_status', $this->page_data);
 	}
 
@@ -89,5 +93,67 @@ class ClientHub extends MYF_Controller {
         $this->page_data['payment'] = $this->tickets_model->get_ticket_payments($id);
         $this->page_data['clients'] = $this->tickets_model->get_tickets_clients($tickets->company_id);
 		$this->load->view('v2/pages/customer/client_hub/ajax_quick_view_ticket_details', $this->page_data);
+    }	
+
+    public function invoice_preview_pdf($id)
+    {
+        $this->load->model('general_model');
+        $this->load->model('AcsProfile_model');
+        $invoice = get_invoice_by_id($id);
+        $user = get_user_by_id(logged('id'));
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => $invoice->company_id,
+            ),
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+        );
+
+        $company = $this->general_model->get_data_with_param($get_company_info, false);
+      
+        $this->page_data['invoice'] = $invoice;
+        $this->page_data['user'] = $user;
+        $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
+        $this->page_data['users'] = $this->invoice_model->getInvoiceCustomer($id);
+        $this->page_data['customer'] = $this->AcsProfile_model->getByProfId($invoice->customer_id);
+
+        if (!empty($invoice)) {
+            foreach ($invoice as $key => $value) {
+                if (is_serialized($value)) {
+                    $invoice->{$key} = unserialize($value);
+                }
+            }
+            $this->page_data['invoice'] = $invoice;
+            $this->page_data['user'] = $user;
+        }
+        $format = $this->input->get('format');
+        $this->page_data['company'] = $company;
+        $this->page_data['format'] = $format;
+
+        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+
+        if ($format === "pdf") {
+            $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
+            $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
+            $filename = "nSmarTrac_invoice_".$id;
+            $this->load->library('pdf');
+            if($setting[0]->invoice_template == 1){
+              $this->pdf->load_view('invoice/pdf/standard_template', $this->page_data, $filename, "portrait");
+            }
+            if($setting[0]->invoice_template == 3){
+                $this->pdf->load_view('invoice/pdf/template', $this->page_data, $filename, "portrait");
+              }
+        }elseif($format === "save_pdf"){
+            $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
+            $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
+            $filename = "nSmarTrac_invoice_".$id;
+            $this->load->library('pdf');
+            $this->pdf->save_pdf('invoice/pdf/template', $this->page_data, $filename, "P");
+            
+        } else {
+            $this->page_data['profile'] = (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets;
+            $filename = "nSmarTrac_invoice_".$id;
+            $this->load->view('invoice/pdf/template', $this->page_data, "portrait");
+        }
     }	
 }
