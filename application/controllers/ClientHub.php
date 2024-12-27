@@ -133,8 +133,8 @@ class ClientHub extends MYF_Controller {
 
         $setting = $this->invoice_settings_model->getAllByCompany($invoice->company_id);	
         if ($format === "html") {
-            $img = explode("/", parse_url((companyProfileImage($invoice->company_id)) ? companyProfileImage($invoice->company_id) : $url->assets)['path']);
-            $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
+            $img = explode("/", parse_url((getPublicCompanyBusinessProfileImage($invoice->company_id)) ? getPublicCompanyBusinessProfileImage($invoice->company_id) : $url->assets)['path']);
+			$this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
             $filename = "nSmarTrac_invoice_".$id;
             if($setting[0]->invoice_template == 1){
 			  $this->load->view('invoice/pdf/standard_template_web', $this->page_data);
@@ -181,7 +181,7 @@ class ClientHub extends MYF_Controller {
         $setting = $this->invoice_settings_model->getAllByCompany($invoice->company_id);
 
         if ($format === "pdf") {
-            $img = explode("/", parse_url((companyProfileImage($invoice->company_id)) ? companyProfileImage($invoice->company_id) : $url->assets)['path']);
+            $img = explode("/", parse_url((getPublicCompanyBusinessProfileImage($invoice->company_id)) ? getPublicCompanyBusinessProfileImage($invoice->company_id) : $url->assets)['path']);
             $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
             $filename = "nSmarTrac_invoice_".$id;
             $this->load->library('pdf');
