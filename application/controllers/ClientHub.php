@@ -12,6 +12,7 @@ class ClientHub extends MYF_Controller {
 		$this->load->model('AcsProfile_model');
 		$this->load->model('Business_model');
 		$this->load->model('Invoice_model', 'invoice_model');
+		$this->load->model('Invoice_settings_model', 'invoice_settings_model');
 	}
 
 	public function index($id){	
@@ -93,14 +94,17 @@ class ClientHub extends MYF_Controller {
         $this->page_data['payment'] = $this->tickets_model->get_ticket_payments($id);
         $this->page_data['clients'] = $this->tickets_model->get_tickets_clients($tickets->company_id);
 		$this->load->view('v2/pages/customer/client_hub/ajax_quick_view_ticket_details', $this->page_data);
-    }	
+    }
+	
+	public function ajax_view_customer_invoice_details()
+	{
+		$post   = $this->input->post();
+		$format = $post['format'];
+		$id     = $post['invoice_id'];
 
-    public function invoice_preview_pdf($id)
-    {
         $this->load->model('general_model');
         $this->load->model('AcsProfile_model');
-        $invoice = get_invoice_by_id($id);
-        $user = get_user_by_id(logged('id'));
+        $invoice = get_invoice_by_id($post['invoice_id']);
         $get_company_info = array(
             'where' => array(
                 'company_id' => $invoice->company_id,
@@ -111,10 +115,9 @@ class ClientHub extends MYF_Controller {
 
         $company = $this->general_model->get_data_with_param($get_company_info, false);
       
-        $this->page_data['invoice'] = $invoice;
-        $this->page_data['user'] = $user;
-        $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
-        $this->page_data['users'] = $this->invoice_model->getInvoiceCustomer($id);
+        $this->page_data['invoice']  = $invoice;
+        $this->page_data['items']    = $items = $this->invoice_model->getItemsInv($id);
+        $this->page_data['users']    = $this->invoice_model->getInvoiceCustomer($id);
         $this->page_data['customer'] = $this->AcsProfile_model->getByProfId($invoice->customer_id);
 
         if (!empty($invoice)) {
@@ -124,16 +127,61 @@ class ClientHub extends MYF_Controller {
                 }
             }
             $this->page_data['invoice'] = $invoice;
-            $this->page_data['user'] = $user;
+        }
+        $this->page_data['company'] = $company;
+        $this->page_data['format']  = $format;
+
+        $setting = $this->invoice_settings_model->getAllByCompany($invoice->company_id);	
+        if ($format === "html") {
+            $img = explode("/", parse_url((companyProfileImage($invoice->company_id)) ? companyProfileImage($invoice->company_id) : $url->assets)['path']);
+            $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
+            $filename = "nSmarTrac_invoice_".$id;
+            if($setting[0]->invoice_template == 1){
+			  $this->load->view('invoice/pdf/standard_template_web', $this->page_data);
+            }
+            if($setting[0]->invoice_template == 3){
+				$this->load->view('invoice/pdf/template_web', $this->page_data);
+            }
+        }		
+	}
+
+    public function invoice_preview_pdf($id)
+    {
+        $this->load->model('general_model');
+        $this->load->model('AcsProfile_model');
+        $invoice = get_invoice_by_id($id);
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => $invoice->company_id,
+            ),
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+        );
+
+        $company = $this->general_model->get_data_with_param($get_company_info, false);
+      
+        $this->page_data['invoice']  = $invoice;
+        $this->page_data['items']    = $this->invoice_model->getItemsInv($id);
+        $this->page_data['users']    = $this->invoice_model->getInvoiceCustomer($id);
+        $this->page_data['customer'] = $this->AcsProfile_model->getByProfId($invoice->customer_id);
+
+        if (!empty($invoice)) {
+            foreach ($invoice as $key => $value) {
+                if (is_serialized($value)) {
+                    $invoice->{$key} = unserialize($value);
+                }
+            }
+
+            $this->page_data['invoice'] = $invoice;
         }
         $format = $this->input->get('format');
         $this->page_data['company'] = $company;
-        $this->page_data['format'] = $format;
+        $this->page_data['format']  = $format;
 
-        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+        $setting = $this->invoice_settings_model->getAllByCompany($invoice->company_id);
 
         if ($format === "pdf") {
-            $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
+            $img = explode("/", parse_url((companyProfileImage($invoice->company_id)) ? companyProfileImage($invoice->company_id) : $url->assets)['path']);
             $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
             $filename = "nSmarTrac_invoice_".$id;
             $this->load->library('pdf');
@@ -143,17 +191,6 @@ class ClientHub extends MYF_Controller {
             if($setting[0]->invoice_template == 3){
                 $this->pdf->load_view('invoice/pdf/template', $this->page_data, $filename, "portrait");
               }
-        }elseif($format === "save_pdf"){
-            $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
-            $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
-            $filename = "nSmarTrac_invoice_".$id;
-            $this->load->library('pdf');
-            $this->pdf->save_pdf('invoice/pdf/template', $this->page_data, $filename, "P");
-            
-        } else {
-            $this->page_data['profile'] = (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets;
-            $filename = "nSmarTrac_invoice_".$id;
-            $this->load->view('invoice/pdf/template', $this->page_data, "portrait");
         }
     }	
 }

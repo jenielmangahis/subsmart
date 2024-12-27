@@ -79,10 +79,10 @@
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li>
-                                                <a class="dropdown-item view-job-row" href="javascript:void(0);" data-id="<?php //echo $ticket->id; ?>">View</a>
+                                                <a class="dropdown-item view-invoice-row" href="javascript:void(0);" data-id="<?php echo $invoice->id; ?>">View</a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=pdf') ?>" target="_blank">Invoice PDF</a>
+                                                <a class="dropdown-item" href="<?php echo base_url('client_hub/invoice_preview_pdf/'. $invoice->id . '?format=pdf') ?>" target="_blank">Invoice PDF</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -96,6 +96,22 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade nsm-modal fade" id="modal-quick-view-invoice" data-source="" tabindex="-1" aria-labelledby="modal-quick-view-invoice-label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">        
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">View Invoice</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" style="max-height:700px; overflow: auto;">
+                    <input type="hidden" id="view-ticket-id" value="" />
+                    <div id="view-invoice-container" class="view-invoice-container"></div>
+                </div>                                    
+            </div>        
+        </div>
+    </div>
+
 </div>
 
 <script type="text/javascript">
@@ -104,7 +120,31 @@
 
         $("#search_field").on("input", debounce(function() {
             tableSearch($(this));        
-        }, 1000));        
+        }, 1000));       
+        
+        $('.view-invoice-row').on('click', function(){
+            var invoice_id = $(this).attr('data-id');
+            var format     = 'html';
+            var url = base_url + 'client_hub/_quick_view_invoice/public';
+
+            $('#modal-quick-view-invoice').modal('show');
+
+            setTimeout(function () {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {invoice_id: invoice_id, format: format},
+                    success: function(result) {
+                        $("#view-invoice-container").html(result);
+                    },
+                    beforeSend: function() {
+                        $('#view-invoice-container').html('<span class="bx bx-loader bx-spin"></span>');
+                    }
+                });  
+            }, 500);
+
+        });     
+
     });
 </script>
 

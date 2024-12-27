@@ -1989,4 +1989,6 @@ $route['client_hub/jobs/(:any)?'] = 'ClientHub/jobs/$1';
 $route['client_hub/tickets/(:any)?'] = 'ClientHub/tickets/$1';
 $route['client_hub/invoice_status/(:any)?'] = 'ClientHub/invoice_status/$1';
 $route['client_hub/_quick_view_ticket_details/(:any)?'] = 'ClientHub/ajax_view_customer_ticket_details/$1';
+$route['client_hub/invoice_preview_pdf/(:any)?'] = 'ClientHub/invoice_preview_pdf/$1';
+$route['client_hub/_quick_view_invoice/(:any)?'] = 'ClientHub/ajax_view_customer_invoice_details/$1';
 
