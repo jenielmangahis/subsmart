@@ -193,4 +193,28 @@ class ClientHub extends MYF_Controller {
               }
         }
     }	
+
+    public function ajax_send_request_change_information()
+    {
+        $is_success = 0;
+        $msg = 'Cannot send request. Please try again later.';
+
+        $post = $this->input->post();
+        $customer_id = hashids_decrypt($post['cid'], '', 45);
+        $profile_info = $this->AcsProfile_model->getByProfId($customer_id);
+        $company      = $this->Business_model->getByCompanyId($profile_info->company_id);
+        if( $company && $company->business_email != '' ){
+            //Send email
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
 }

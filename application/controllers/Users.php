@@ -3016,6 +3016,7 @@ class Users extends MY_Controller
 	{
 		$this->load->model('Users_model');
 		$this->load->model('CompanyRoleAccessModule_model');
+		$this->load->model('Widgets_model');
 
 		$cid = logged('company_id');
 
@@ -3029,9 +3030,12 @@ class Users extends MY_Controller
 			};
 		}
 
+		$widgets = $this->Widgets_model->getAll();
+
 		$this->page_data['roles'] = $roles;
 		$this->page_data['modules'] = $modules;
 		$this->page_data['roleAccessModules'] = $roleAccessModules;
+		$this->page_data['widgets'] = $widgets;
 		$this->page_data['page']->title = 'Role Access Modules';
 		$this->load->view('v2/pages/users/access_role_modules/index', $this->page_data);
 	}
@@ -3039,6 +3043,7 @@ class Users extends MY_Controller
 	public function ajax_save_role_access_module()
 	{
 		$this->load->model('CompanyRoleAccessModule_model');
+		$this->load->model('CompanyRoleAccessWidget_model');
 
 		$is_success  = 0;		
 		$msg = 'Cannot find data';
@@ -3059,6 +3064,14 @@ class Users extends MY_Controller
 			];
 
 			$this->CompanyRoleAccessModule_model->create($data);
+
+			$data = [
+				'role_id' => $post['role'],
+				'widget_id' => 0,
+				'date_created' => date("Y-m-d H:i:s"),
+			];
+
+			$this->CompanyRoleAccessWidget_model->create($data);
 
 			$is_success = 1;
 			$msg = '';
@@ -3081,6 +3094,16 @@ class Users extends MY_Controller
 					
 				}
 
+				foreach( $post['roleWidgets'] as $widget_id ){
+					$data = [
+						'role_id' => $post['role'],
+						'widget_id' => $widget_id,
+						'date_created' => date("Y-m-d H:i:s"),
+					];
+
+					$this->CompanyRoleAccessWidget_model->create($data);
+				}
+
 				$is_success = 1;
 				$msg = '';
 			}else{
@@ -3099,6 +3122,7 @@ class Users extends MY_Controller
 	public function ajax_edit_role_access_module()
 	{
 		$this->load->model('CompanyRoleAccessModule_model');
+		$this->load->model('Widgets_model');
 		
 		$post = $this->input->post();
 		$cid  = logged('company_id');
@@ -3111,11 +3135,14 @@ class Users extends MY_Controller
 		foreach($roleAccessModule as $rm){
 			$groupRoleAccessModules[$rm->module] = $rm;	
 		}
+
+		$widgets = $this->Widgets_model->getAll();
 		
 		$this->page_data['roles'] = $roles;
 		$this->page_data['modules'] = $modules;
 		$this->page_data['rid'] = $post['rid'];
 		$this->page_data['groupRoleAccessModules'] = $groupRoleAccessModules;
+		$this->page_data['widgets'] = $widgets;
 		$this->load->view('v2/pages/users/access_role_modules/ajax_edit_role_access_module', $this->page_data);
 	}
 
