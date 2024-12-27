@@ -35,6 +35,9 @@
 <script src="<?php echo base_url('assets/js/v2/bootstrap.bundle.min.js'); ?>" crossorigin="anonymous"></script>
 <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
 
+<!-- Sweetalert JS -->
+<script src="<?php echo base_url('assets/js/v2/sweetalert2.min.js'); ?>"></script>
+
 <!-- Main Script -->
 <script type="text/javascript" src="<?php echo base_url('assets/js/v2/main.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/v2/nsm.draggable.js'); ?>"></script>

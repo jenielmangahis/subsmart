@@ -400,83 +400,101 @@ if ($this->session->userdata('usertimezone') == null) {
                     </a>
                     <ul class="mt-3">
                         <li class="<?=$page->title === 'Link Bank' ? 'selected' : ''?>">
-                            <a href="/accounting/link_bank">
+                            <a href="<?= base_url('accounting/link_bank'); ?>">
                                 Link Bank
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Rules' ? 'selected' : ''?>">
-                            <a href="/accounting/rules">
+                            <a href="<?= base_url('accounting/rules'); ?>">
                                 Rules
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Receipts' ? 'selected' : ''?>">
-                            <a href="/accounting/receipts">
+                            <a href="<?= base_url('accounting/receipts'); ?>">
                                 Receipts
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Tags' ? 'selected' : ''?>">
-                            <a href="/accounting/tags">
+                            <a href="<?= base_url('accounting/tags'); ?>">
                                 Tags
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="<?=$page->title === 'Cashflow' ? 'selected' : ''?>">
-                    <a href="/accounting/cashflowplanner">
+                    <a href="<?= base_url('accounting/cashflowplanner'); ?>">
                         <i class='bx bx-fw bx-notepad'></i> Cashflow
                     </a>
                 </li>
+                <li class="<?=$page->parent === 'Accounting' ? 'selected active' : ''?>">
+                    <a href="javascript:void(0);">
+                        <i class='bx bx-fw bx-calculator'></i> Transactions
+                        <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                    </a>
+                    <ul class="mt-3">
+                        <li class="<?=$page->title === 'Chart of Accounts' ? 'selected' : ''?>">
+                            <a href="<?= base_url('accounting/chart-of-accounts'); ?>">
+                                Chart of Accounts
+                            </a>
+                        </li>
+                        <li class="<?=$page->title === 'Reconcile' || $page->title === 'Reconciliation Summary' || $page->title === 'History by account' ? 'selected' : ''?>">
+                            <a href="<?= base_url('accounting/reconcile'); ?>">
+                                Reconcile
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="<?=$page->parent === 'Expenses' ? 'selected active' : ''?>">
-                    <a href="#">
+                    <a href="javascript:void(0);">
                         <i class='bx bx-fw bx-book-content'></i> Expenses
                         <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
                         <li class="<?=$page->title === 'Expenses' ? 'selected' : ''?>">
-                            <a href="/accounting/expenses">
+                            <a href="<?= base_url('accounting/expenses'); ?>">
                                 Expenses
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Vendors' ? 'selected' : ''?>">
-                            <a href="/accounting/vendors">
+                            <a href="<?= base_url('accounting/vendors'); ?>">
                                 Vendors
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="<?=$page->parent === 'Sales' ? 'selected active' : ''?>">
-                    <a href="#">
+                    <a href="javascript:void(0);">
                         <i class='bx bx-fw bx-line-chart'></i> Sales
                         <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
                         <li class="<?=$page->title === 'Sales Overview' ? 'selected' : ''?>">
-                            <a href="/accounting/sales-overview">
+                            <a href="<?= base_url('accounting/sales-overview'); ?>">
                                 <i class='bx bx-fw bx-line-chart'></i> Overview
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Sales Transactions' ? 'selected' : ''?>">
-                            <a href="/accounting/all-sales">
+                            <a href="<?= base_url('accounting/all-sales'); ?>">
                                 <i class='bx bx-fw bx-file'></i> All Sales
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Estimates' ? 'selected' : ''?>">
-                            <a href="/accounting/newEstimateList">
+                            <a href="<?= base_url('accounting/newEstimateList'); ?>">
                                 <i class='bx bx-fw bx-chart'></i> Estimates
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Credit Notes' ? 'selected' : ''?>">
-                            <a href="/accounting/credit-notes">
+                            <a href="<?= base_url('accounting/credit-notes'); ?>">
                                 <i class='bx bx-fw bx-note'></i> Credit Notes
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Customers' ? 'selected' : ''?>">
-                            <a href="/accounting/customers">
+                            <a href="<?= base_url('accounting/customers'); ?>">
                                 <i class='bx bx-fw bx-group'></i> Customers
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Deposits' ? 'selected' : ''?>">
-                            <a href="/accounting/deposits">
+                            <a href="<?= base_url('accounting/deposits'); ?>">
                                 <i class='bx bx-fw bx-file'></i> Deposits
                             </a>
                         </li>
@@ -486,95 +504,77 @@ if ($this->session->userdata('usertimezone') == null) {
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Invoice' ? 'selected' : ''?>">
-                            <a href="/accounting/invoices">
+                            <a href="<?= base_url('accounting/invoices'); ?>">
                                 <i class='bx bx-fw bx-receipt'></i> Invoice
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Jobs' ? 'selected' : ''?>">
-                            <a href="/accounting/jobs">
+                            <a href="<?= base_url('accounting/jobs'); ?>">
                                 <i class='bx bx-fw bx-message-square-error'></i> Jobs
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Products and Services' ? 'selected' : ''?>">
-                            <a href="/accounting/products-and-services">
+                            <a href="<?= base_url('accounting/products-and-services'); ?>">
                                 <i class='bx bx-fw bx-box'></i> Products and Services
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="<?=$page->parent === 'Payroll' ? 'selected active' : ''?>">
-                    <a href="#">
+                    <a href="javascript:void(0);">
                         <i class='bx bx-fw bx-bar-chart-square'></i> Payroll
                         <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
                         <li class="<?=$page->title === 'Payroll Overview' ? 'selected' : ''?>">
-                            <a href="/accounting/payroll-overview">
+                            <a href="<?= base_url('accounting/payroll-overview'); ?>">
                                 <i class='bx bx-fw bx-line-chart'></i> Overview
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Employees' ? 'selected' : ''?>">
-                            <a href="/accounting/employees">
+                            <a href="<?= base_url('accounting/employees'); ?>">
                                 <i class='bx bx-fw bx-user-pin'></i> Employees
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Contractors' ? 'selected' : ''?>">
-                            <a href="/accounting/contractors">
+                            <a href="<?= base_url('accounting/contractors'); ?>">
                                 <i class='bx bx-fw bx-group'></i> Contractors
                             </a>
                         </li>
                         <li class="<?=$page->title === "Workers' Comp" ? 'selected' : ''?>">
-                            <a href="/accounting/workers-comp">
+                            <a href="<?= base_url('accounting/workers-comp'); ?>">
                                 <i class='bx bx-fw bx-group'></i> Workers' Comp
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="<?=$page->parent === 'Reports' ? 'selected' : ''?>">
-                    <a href="/accounting/reports">
+                    <a href="<?= base_url('accounting/reports'); ?>">
                         <i class='bx bx-fw bx-chart'></i> Reports
                     </a>
                 </li>
                 <li class="<?=$page->parent === 'Taxes' ? 'selected active' : ''?>">
-                    <a href="#">
+                    <a href="javascript:void(0);">
                         <i class='bx bx-fw bx-receipt'></i> Taxes
                         <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
                         <li class="<?=$page->title === 'Sales Tax' ? 'selected' : ''?>">
-                            <a href="/accounting/salesTax">
+                            <a href="<?= base_url('accounting/salesTax'); ?>">
                                 Sales Tax
                             </a>
                         </li>
                         <li class="<?=$page->title === 'Payroll Tax' ? 'selected' : ''?>">
-                            <a href="/accounting/payrollTax">
+                            <a href="<?= base_url('accounting/payrollTax'); ?>">
                                 Payroll Tax
                             </a>
                         </li>
                     </ul>
-                </li>
-                <li class="<?=$page->parent === 'Accounting' ? 'selected active' : ''?>">
-                    <a href="#">
-                        <i class='bx bx-fw bx-calculator'></i> Accounting
-                        <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
-                    </a>
-                    <ul class="mt-3">
-                        <li class="<?=$page->title === 'Chart of Accounts' ? 'selected' : ''?>">
-                            <a href="/accounting/chart-of-accounts">
-                                Chart of Accounts
-                            </a>
-                        </li>
-                        <li class="<?=$page->title === 'Reconcile' || $page->title === 'Reconciliation Summary' || $page->title === 'History by account' ? 'selected' : ''?>">
-                            <a href="/accounting/reconcile">
-                                Reconcile
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                </li>                
             </ul>
 
             <div class="nsm-back-to-main-dashboard" style="padding: 2em; margin-top: 10px; position: unset;">
-                <a href="<?=base_url("dashboard")?>">
+                <a href="<?= base_url("dashboard"); ?>">
                     <i class='bx bx-fw bx-arrow-back'></i> Go to main Dashboard
                 </a>
             </div>
