@@ -24,6 +24,8 @@ class Customer extends MY_Controller
         $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Serversidetable_model', 'serverside_table');
 
+        $this->load->helper(array('hashids_helper'));
+
         // load library
         $this->load->library('session');
         // load helper
@@ -2415,7 +2417,6 @@ class Customer extends MY_Controller
     public function module($id = null)
     {
         $this->load->helper('sms_helper');
-        $this->load->helper(array('hashids_helper'));
         $this->load->model('Clients_model');
         $this->load->model('taskhub_model');
         $this->load->library('wizardlib');

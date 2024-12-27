@@ -180,18 +180,12 @@ class Users extends MY_Controller
 			'Design Services' => 'Design Services',
 			'Other' => 'Other',
 		];
-		//ifPermissions('businessdetail');
-		$user = $this->session->userdata('logged');
-		$user_id = $user['id'];
-		$userdata = $this->Users_model->getUser($user_id);
-		$company_id = $userdata->company_id;
+		$company_id = logged('company_id');
 		$selectedCategories = $this->ServiceCategory_model->getAllCategoriesByCompanyID($company_id);
 
 		$this->page_data['industryType'] = $industryType;
 		$this->page_data['businessTypes'] = $businessTypes;
 		$this->page_data['selectedCategories'] = $selectedCategories;
-		//print_r($user);die;
-		$cid = logged('id');
 		// $this->load->view('business_profile/services', $this->page_data);
 		$this->load->view('v2/pages/business_profile/services', $this->page_data);
 	}
@@ -201,38 +195,33 @@ class Users extends MY_Controller
 		$is_success = 0;
 		$msg = 'Cannot find data';
 		
-		$user = $this->session->userdata('logged');
 		$post = $this->input->post();
 
 		$industryTemplate = $this->IndustryType_model->getById($post['type_id']);
-		$user_id = $user['id'];
-		$userdata = $this->Users_model->getUser($user_id);
 		$categories = $post['categories'];
 
-		if ($userdata) {
-			if ($post['categories'] != '') {
-				$company_id = $userdata->company_id;
-				$ServiceCategory = $this->ServiceCategory_model->deleteCategoryByCompanyID($company_id);
+		if ($post['categories'] != '') {
+			$company_id = logged('company_id');
+			$ServiceCategory = $this->ServiceCategory_model->deleteCategoryByCompanyID($company_id);
 
-				$categories = $post['categories'];
-				foreach ($categories as $key => $category) {
-					$data = [
-						'company_id' => $company_id,
-						'industry_type_id' => $key,
-						'service_name' => $category,
-						'date_created' => date("Y-m-d H:i:s"),
-						'date_modified' => date("Y-m-d H:i:s")
-					];
-					$ServiceCategory = $this->ServiceCategory_model->create($data);
-				}
-
-				//Activity Logs
-				$activity_name = 'Updated Business Profile Services'; 
-				createActivityLog($activity_name);
-
-				$is_success = 1;
-				$msg = '';
+			$categories = $post['categories'];
+			foreach ($categories as $key => $category) {
+				$data = [
+					'company_id' => $company_id,
+					'industry_type_id' => $key,
+					'service_name' => $category,
+					'date_created' => date("Y-m-d H:i:s"),
+					'date_modified' => date("Y-m-d H:i:s")
+				];
+				$ServiceCategory = $this->ServiceCategory_model->create($data);
 			}
+
+			//Activity Logs
+			$activity_name = 'My Business Services : Updated Business Services'; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg = '';
 		}
 
 		$return = ['is_success' => $is_success, 'msg' => $msg];
@@ -241,6 +230,11 @@ class Users extends MY_Controller
 
 	public function credentials()
 	{
+		if(!checkRoleCanAccessModule('company-my-credentials', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Credentials';
         $this->page_data['page']->parent = 'Company';
 		//ifPermissions('businessdetail');
@@ -260,6 +254,11 @@ class Users extends MY_Controller
 
 	public function availability()
 	{
+		if(!checkRoleCanAccessModule('company-my-availability', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Availability';
         $this->page_data['page']->parent = 'Company';
 
@@ -281,9 +280,7 @@ class Users extends MY_Controller
 			$data_working_days['Saturday'] = ['time_from' => '', 'time_to' => ''];
 			$data_working_days['Sunday']   = ['time_from' => '', 'time_to' => ''];
 		}
-
 		
-
 		$this->page_data['data_working_days'] = $data_working_days;
 		$this->page_data['profiledata'] = $profiledata;
 		// $this->load->view('business_profile/availability', $this->page_data);
@@ -292,6 +289,11 @@ class Users extends MY_Controller
 
 	public function portfolio()
 	{
+		if(!checkRoleCanAccessModule('company-my-portfolio', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Portfolio';
         $this->page_data['page']->parent = 'Company';
 
@@ -302,19 +304,21 @@ class Users extends MY_Controller
 		add_footer_js(array(
 			"assets/js/jquery.fancybox.min.js"
 		));
-		//ifPermissions('businessdetail');
-		$user = (object)$this->session->userdata('logged');
-		//print_r($user);die;
+
 		$comp_id = logged('company_id');
 		$profiledata = $this->business_model->getByCompanyId($comp_id);
 
 		$this->page_data['profiledata'] = $profiledata;
-		// $this->load->view('business_profile/work_pictures', $this->page_data);
 		$this->load->view('v2/pages/business_profile/work_pictures', $this->page_data);
 	}
 
 	public function profilesetting()
 	{
+		if(!checkRoleCanAccessModule('company-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Profile Settings';
         $this->page_data['page']->parent = 'Company';
 		//ifPermissions('businessdetail');
@@ -341,6 +345,11 @@ class Users extends MY_Controller
 
 	public function socialMedia()
 	{
+		if(!checkRoleCanAccessModule('company-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Social Media';
         $this->page_data['page']->parent = 'Company';
 		//ifPermissions('businessdetail');
@@ -479,7 +488,7 @@ class Users extends MY_Controller
 			$this->business_model->updateByCompanyId($cid, $data_availability);
 
 			//Activity Logs
-			$activity_name = 'Updated Business Profile Availability'; 
+			$activity_name = 'My Business Availability : Updated business availability'; 
 			createActivityLog($activity_name);
 
 		} elseif ($action == 'credentials') {
@@ -560,14 +569,14 @@ class Users extends MY_Controller
 			$this->business_model->updateByCompanyId($cid, $data_availability);
 
 			//Activity Logs
-			$activity_name = 'Updated Business Profile Credentialsget_shift_duration'; 
+			$activity_name = 'My Business Credentials : Updated business credentials';			
 			createActivityLog($activity_name);
 
 		} else {				
 			$this->business_model->updateByCompanyId($cid, $pdata);
 
 			//Activity Logs
-			$activity_name = 'Updated Business Profile Credentials'; 
+			$activity_name = 'My Business Profile : Updated business profile';	
 			createActivityLog($activity_name);
 		}
 
