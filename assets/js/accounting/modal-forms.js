@@ -1,4 +1,4 @@
-const GET_OTHER_MODAL_URL = "/accounting/get-other-modals/";
+const GET_OTHER_MODAL_URL = base_url + "accounting/get-other-modals/";
 const vendorModals = ['#expenseModal', '#checkModal', '#billModal', '#vendorCreditModal', '#purchaseOrderModal', '#creditCardCreditModal'];
 const customerModals = ['#invoiceModal', '#creditMemoModal', '#salesReceiptModal', '#refundReceiptModal', '#delayedCreditModal', '#delayedChargeModal', '#standard-estimate-modal', '#options-estimate-modal', '#bundle-estimate-modal'];
 var rowCount = 0;
