@@ -66,6 +66,30 @@ class CompanyRoleAccessWidget_model extends MY_Model
         return $query->result();
     }
 
+    public function isRoleHasAccessAll($cid, $rid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+        $this->db->where('role_id', $rid);
+        $this->db->where('widget_id', '0');
+        
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getCompanyByRoleIdAndWidgetId($cid, $rid, $wid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+        $this->db->where('role_id', $rid);
+        $this->db->where('widget_id', $wid);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function deleteAllByCompanyIdAndRoleId($cid, $rid)
     {
         $this->db->delete($this->table, ['company_id' => $cid, 'role_id' => $rid]);
