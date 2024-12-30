@@ -990,15 +990,17 @@ class Widgets extends MY_Controller
                         $out_count++;
                     }
             ?>
-<div class="col-12">
+<div class="col-12 mb-2">
     <div class="widget-item timesheet-item">
-        <div class="nsm-profile">
-            <span><?php echo getLoggedNameInitials($user->id); ?></span>
+        <div class="profile-wrapper">
+            <div class="profile">
+                <span><?php echo getLoggedNameInitials($user->id); ?></span>
+            </div>
         </div>
         <div class="content">
             <div class="details">
                 <span class="content-title"><?php echo $user->FName; ?> <?php echo $user->LName; ?></span>
-                <span class="content-subtitle d-block"><?php echo $u_role != '' ? $u_role : "---"; ?></span>
+                <span class="content-subtitle badge-item"><?php echo $u_role != '' ? $u_role : "---"; ?></span>
             </div>
             <div class="controls">
                 <div class="timesheet-group">

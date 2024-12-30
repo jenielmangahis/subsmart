@@ -111,16 +111,16 @@
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-12">
-                            <div class="nsm-img-upload">
+                            <div class="nsm-img-upload m-auto">
                                 <span class="nsm-upload-label disable-select">Drop or click image to upload</span>
-                                <input type="file" name="work_picture" class="nsm-upload" accept="image/*">
+                                <input type="file" name="work_picture" id="work-picture" class="nsm-upload" accept="image/*">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Done</button>
-                    <button type="submit" class="nsm-button primary">Add</button>
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary">Save</button>
                 </div>
             </div>
         </form>

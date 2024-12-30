@@ -670,6 +670,7 @@ $route['accounting/chart-of-accounts/inactive-batch']['post'] = 'accounting_cont
 $route['accounting/chart-of-accounts/get-import-data']['post'] = 'accounting_controllers/chart_of_accounts/get_import_data';
 $route['accounting/chart-of-accounts/import-accounts-data']['post'] = 'accounting_controllers/chart_of_accounts/import_accounts_data';
 $route['accounting/chart-of-accounts/make-active-inactive']['post'] = 'accounting_controllers/chart_of_accounts/make_active_inactive';
+$route['accounting/chart-of-accounts/delete']['post'] = 'accounting_controllers/chart_of_accounts/ajax_delete_chart_of_accounts';
 
 $route['accounting/reconcile'] = 'accounting_controllers/reconcile/indexmain';
 $route['accounting/reconcile/create'] = 'accounting_controllers/reconcile/add';
@@ -1984,9 +1985,11 @@ $route['dashboard/_send_download_app_link'] = 'Dashboard/ajax_send_download_app_
 
 //Client Hub
 $route['client_hub/_job_view'] = 'ClientHub/ajax_view_customer_job';
-$route['client_hub/(:any)?'] = 'ClientHub/index/$1';
 $route['client_hub/jobs/(:any)?'] = 'ClientHub/jobs/$1';
 $route['client_hub/tickets/(:any)?'] = 'ClientHub/tickets/$1';
 $route['client_hub/invoice_status/(:any)?'] = 'ClientHub/invoice_status/$1';
 $route['client_hub/_quick_view_ticket_details/(:any)?'] = 'ClientHub/ajax_view_customer_ticket_details/$1';
-
+$route['client_hub/invoice_preview_pdf/(:any)?'] = 'ClientHub/invoice_preview_pdf/$1';
+$route['client_hub/_quick_view_invoice/(:any)?'] = 'ClientHub/ajax_view_customer_invoice_details/$1';
+$route['client_hub/_send_request_change_information'] = 'ClientHub/ajax_send_request_change_information';
+$route['client_hub/(:any)?'] = 'ClientHub/index/$1';

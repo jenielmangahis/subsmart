@@ -1,16 +1,72 @@
 <?php
-    if(!is_null($dynamic_load) && $dynamic_load == true):
-        echo '<div class="col-12 col-lg-4">';
-    endif;
+if (!is_null($dynamic_load) && $dynamic_load == true):
+    echo '<div class="col-12 col-lg-4">';
+endif;
 ?>
+<style>
+    .plans-item-container {
+        padding: 10px
+    }
 
+    .plans-item-container .item {
+        display: block;
+        padding: 10px;
+        color: #214548;
+        border-radius: 10px;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0px 3px 12px #38747859;
+        height: 100%;
+        margin: auto;
+    }
+
+    .plans-item-container .item .first {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 5px;
+        justify-content: center;
+    }
+
+    .plans-item-container .item .first .icons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        height: 38px;
+        width: 40px;
+        border-radius: 100%;
+    }
+
+    .plans-item-container .item .count {
+        width: 100%;
+        text-align: left;
+        color: #281c2d;
+    }
+
+    .plans-item-container .item .first label {
+        font-size: 24px;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+    .plans-item-container .item .count p {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+        text-align: center;
+    }
+</style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
             <span>Recurring Service Plans</span>
         </div>
         <div class="nsm-card-controls">
-            <a role="button" class="nsm-button btn-sm m-0 me-2" href="<?= base_url('customer/subscriptions'); ?>">
+            <a role="button" class="nsm-button btn-sm m-0 me-2" href="<?= base_url('customer/subscriptions') ?>">
                 See All Subscriptions
             </a>
             <div class="dropdown">
@@ -18,49 +74,64 @@
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#" onclick="addToMain('<?= $id ?>',<?php echo ($isMain?'1':'0') ?>,'<?= $isGlobal ?>' )"><?php echo ($isMain?'Remove From Main':'Add to Main') ?></a></li>
-                    <li><a class="dropdown-item" href="#" onclick="removeWidget('<?= $id ?>');">Remove Widget</a></li>
+                    <li><a class="dropdown-item" href="#"
+                            onclick="addToMain('<?= $id ?>',<?php echo $isMain ? '1' : '0'; ?>,'<?= $isGlobal ?>' )"><?php echo $isMain ? 'Remove From Main' : 'Add to Main'; ?></a>
+                    </li>
+                    <li><a class="dropdown-item" href="#" onclick="removeWidget('<?= $id ?>');">Remove Widget</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="nsm-card-content">
-        <div class="row h-100 gy-2">
-            <div class="col-12 col-md-12">
-                <div class="nsm-counter success mb-2 widget-tile-paid-invoices">
-                    <div class="row">
-                        <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
-                            <i class='bx bx-check-circle'></i>
+        <div class="col-md-12">
+            <div class="banner">
+                <img src="./assets/img/ytd-stats-banner.svg" alt="">
+            </div>
+            <div class="row plans-item-container">
+                <div class="col-4 mb-4">
+                    <div class="item">
+                        <div class="box" style="background:#FEA3032a"></div>
+                        <div class="first">
+                            <div class="icons" style="color:#FEA303;background:#FEA3031a">
+                                <i class='bx bx-check-circle'></i>
+                            </div>
+                            <label><?= $activeSubscriptions->total_active_subscriptions ?></label>
                         </div>
-                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <span>Active Service Plans</span>
-                            <h2><?= $activeSubscriptions->total_active_subscriptions; ?></h2>
+                        <div class="count">
+                            <p>Active Service Plans</p>
                         </div>
                     </div>
+
                 </div>
-            </div>
-            <div class="col-12 col-md-12">
-                <div class="nsm-counter error mb-2 widget-tile-paid-invoices">
-                    <div class="row">
-                        <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
-                            <i class='bx bx-calendar-exclamation'></i>
+                <div class="col-4 mb-4">
+                    <div class="item">
+                        <div class="box" style="background:#d9a1a02a"></div>
+
+                        <div class="first">
+                            <div class="icons" style="color:#d9a1a0;background:#d9a1a01a">
+                                <i class='bx bx-calendar-exclamation'></i>
+                            </div>
+                            <label><?= count($activeSubscriptionsWillExpireIn30d) ?></label>
                         </div>
-                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <span data-type="title">Agreements to expire in 30 days</span>
-                            <h2><?= count($activeSubscriptionsWillExpireIn30d); ?></h2>
+                        <div class="count">
+                            <p>Agreements to expire in 30 days</p>
                         </div>
                     </div>
+
+
                 </div>
-            </div>
-            <div class="col-12 col-md-12">
-                <div class="nsm-counter primary mb-2 widget-tile-paid-invoices">
-                    <div class="row">
-                        <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
-                            <i class='bx bx-dollar-circle'></i>
+                <div class="col-4 mb-4">
+                    <div class="item">
+                        <div class="box" style="background:#A888B52a"></div>
+                        <div class="first">
+                            <div class="icons" style="color:#A888B5;background:#A888B51a">
+                                <i class='bx bx-dollar-circle'></i>
+                            </div>
+                            <label><?php echo "$" . number_format($totalAmountActiveSubscriptions->total_amount, 2, '.', ','); ?></label>
                         </div>
-                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <span data-type="title">Total $ Recurring Payment</span>
-                            <h2><?php echo "$".number_format($totalAmountActiveSubscriptions->total_amount, 2,'.',','); ?></h2>
+                        <div class="count">
+                            <p>Total $ Recurring Payment</p>
                         </div>
                     </div>
                 </div>
@@ -70,69 +141,72 @@
 </div>
 
 <?php
-    if(!is_null($dynamic_load) && $dynamic_load == true):
-        echo '</div>';
-    endif;
+if (!is_null($dynamic_load) && $dynamic_load == true):
+    echo '</div>';
+endif;
 ?>
 
 
 <div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="rsp_users--modal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"></h5>
-        <button type="button" data-bs-dismiss="modal" aria-label="Close">
-            <i class="bx bx-fw bx-x m-0"></i>
-        </button>
-      </div>
-      <div class="modal-body loading">
-        <style>
-            #rsp_users--modal .modal-body.loading .users-wrapper {
-                display: none;
-            }
-            #rsp_users--modal .modal-body:not(.loading) .users-loader {
-                display: none !important;
-            }
-            #rsp_users--modal .nsm-empty {
-                min-height: 200px;
-            }
-        </style>
-        <div>
-            <div class="users-wrapper"></div>
-
-            <div class="nsm-empty d-none">
-                <i class="bx bx-meh-blank"></i>
-                <span>Customer list is empty</span>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-fw bx-x m-0"></i>
+                </button>
             </div>
+            <div class="modal-body loading">
+                <style>
+                    #rsp_users--modal .modal-body.loading .users-wrapper {
+                        display: none;
+                    }
 
-            <div class="users-loader d-flex align-items-center justify-content-center" style="min-height: 200px;">
-                <div class="spinner-border" role="status"></div>
-            </div>
-        </div>
+                    #rsp_users--modal .modal-body:not(.loading) .users-loader {
+                        display: none !important;
+                    }
 
-        <template>
-            <div class="nsm-card mb-2 h-auto">
-                <div class="nsm-card-content">
-                    <div class="d-flex align-items-center">
-                        <div class="nsm-profile me-3">
-                            <span></span>
-                        </div>
-                        <div class="w-100">
-                            <div class="d-flex justify-content-between">
-                                <div class="content-title">
-                                    <a href="" target="_blank" class="nsm-link"></a>
-                                </div>
-                                <span class="content-info"></span>
-                            </div>
-                            <div class="content-subtitle d-block"></div>
-                        </div>
+                    #rsp_users--modal .nsm-empty {
+                        min-height: 200px;
+                    }
+                </style>
+                <div>
+                    <div class="users-wrapper"></div>
+
+                    <div class="nsm-empty d-none">
+                        <i class="bx bx-meh-blank"></i>
+                        <span>Customer list is empty</span>
+                    </div>
+
+                    <div class="users-loader d-flex align-items-center justify-content-center"
+                        style="min-height: 200px;">
+                        <div class="spinner-border" role="status"></div>
                     </div>
                 </div>
+
+                <template>
+                    <div class="nsm-card mb-2 h-auto">
+                        <div class="nsm-card-content">
+                            <div class="d-flex align-items-center">
+                                <div class="nsm-profile me-3">
+                                    <span></span>
+                                </div>
+                                <div class="w-100">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="content-title">
+                                            <a href="" target="_blank" class="nsm-link"></a>
+                                        </div>
+                                        <span class="content-info"></span>
+                                    </div>
+                                    <div class="content-subtitle d-block"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </div>
-        </template>
-      </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <script>
@@ -225,7 +299,8 @@
             }
 
             const nameParts = customer.business_name.split(" ");
-            return nameParts.length > 1 ? `${nameParts.at(0)[0]}${nameParts.at(-1)[0]}` : nameParts.at(0)[0];
+            return nameParts.length > 1 ? `${nameParts.at(0)[0]}${nameParts.at(-1)[0]}` : nameParts.at(0)[
+                0];
         }
 
         function isCustomerBusiness(customer) {

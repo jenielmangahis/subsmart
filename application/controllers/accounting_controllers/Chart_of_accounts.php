@@ -5460,4 +5460,17 @@ class Chart_of_accounts extends MY_Controller {
 
         die(json_encode($data_arr));
     }
+
+    public function ajax_delete_chart_of_accounts()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data.';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
 }

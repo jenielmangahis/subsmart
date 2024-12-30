@@ -442,6 +442,9 @@
                                         </li>
                                         <?php endif;?>
                                         <li>
+                                            <a class="dropdown-item delete-account" data-id="<?= $account['id']; ?>" href="javascript:void(0);">Delete</a>
+                                        </li>
+                                        <li>
                                             <?php $is_status = $account['status'] === '0' ? 'make-active' : 'make-inactive'; ?>
                                             <a class="dropdown-item <?=$account['status'] === '0' ? 'make-active' : 'make-inactive'?>" onClick="javascript:makeActiveInactive('<?php echo $is_status; ?>','<?php echo $account['id']; ?>'); " href="#"><?=$account['status'] === '0' ? 'Make active' : 'Make inactive (reduces usage)'?></a>
                                         </li>
@@ -468,5 +471,46 @@
         </div>
     </div>
 </div>
+<script>
+$(function(){
+    $('.delete-account').on('click', function(){
+        var caid = $(this).attr('data-id');
 
+        Swal.fire({
+            title: 'Chart of Accounts',
+            html: `Proceed with deleting selected data?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "accounting/chart-of-accounts/delete",
+                    data: {ebid:ebid},
+                    dataType:'json',
+                    success: function(result) {
+                        if( result.is_success == 1 ) {
+                            Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Email Broadcast was successfully deleted.',
+                            }).then((result) => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
+});
+</script>
 <?php include viewPath('v2/includes/footer'); ?>

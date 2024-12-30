@@ -15,16 +15,15 @@ endif;
         --customer-status-color3: #281c2d;
         --customer-status-color4: #214548;
     }
+
     .customer-status-items {
         height: 700px;
     }
-    .customer-status-container {
-        background:url('./assets/img/customer-status-banner.png');
-        background-size: cover;
-    }
-    .customer-status-container .spacer{
+
+    .customer-status-container .spacer {
         padding-top: 100px;
     }
+
     .customer-status-items .item {
         display: block;
         padding: 10px;
@@ -74,6 +73,9 @@ endif;
         margin: 0;
         text-align: center;
     }
+    #customer_status {
+        padding: 20px;
+    }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
@@ -102,11 +104,15 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content jobs_stat">
-        <div class="nsm-widget-table">
-            <div class="customer-status-container" >
-                <div class="spacer"></div>
-                <div class="col-md-12 row-pad customer-status-items" >
-                    <div class="row" id="customer_status">
+        <div class="col-md-12">
+            <div class="banner">
+                <img src="./assets/img/customer-status-banner.svg" alt="">
+            </div>
+            <div class="nsm-widget-table">
+                <div class="customer-status-container">
+                    <div class="col-md-12 row-pad customer-status-items">
+                        <div class="row" id="customer_status">
+                        </div>
                     </div>
                 </div>
             </div>

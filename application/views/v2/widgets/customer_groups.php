@@ -17,30 +17,22 @@ endif;
         color: rgb(47 43 61 / 0.9);
         border-radius: 6px;
         background-image: none;
-
         padding: 10px;
         position: relative;
         z-index: 2;
+        height: 100%;
+        display: flex;
+        align-items: center;
     }
 
     .customer-groups-container .customer-groups-items canvas {
         width: 100% !important;
         display: block;
         box-sizing: border-box;
-        margin-top: 28%;
         box-shadow: 0px 3px 12px #38747859;
         padding: 20px;
         border-radius: 25px;
         background: #fff;
-    }
-
- 
-
-    .customer-groups-container {
-        position: relative;
-        background: url('./assets/img/customer-groups-banner.png');
-        background-size: cover;
-        height: 100%;
     }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -64,7 +56,10 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content">
-        <div class="col-md-12 h-100">
+        <div class="col-md-12">
+            <div class="banner mb-5">
+                <img src="./assets/img/customer-groups-banner.svg" alt="">
+            </div>
             <div class="customer-groups-container">
                 <div class=" customer-groups-items">
                     <canvas id="customer_groups_chart" class="nsm-chart" data-chart-type="customer-groups"
