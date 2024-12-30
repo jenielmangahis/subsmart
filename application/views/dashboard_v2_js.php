@@ -189,7 +189,16 @@
             } = response;
             $("#recent-customer-container").html('');
             if (success == 1) {
+                var colors = ['#FEA303', '#d9a1a0', '#BEAFC2', '#EFB6C8'];
+                var randomColor= ''
+                var count = 1;
                 for (var j = 0; j < recentCustomers.length; j++) {
+                    if (count == 9){
+                        return;
+                    }
+                    count++;
+
+                    randomColor = colors[Math.floor(Math.random() * colors.length)];
                     var nn = "NN";
                     if (recentCustomers[j].last_name[0]) {
                         nn = recentCustomers[j].last_name[0] + '' + recentCustomers[j].first_name[0];
@@ -216,11 +225,11 @@
 
                     $("#recent-customer-container").append(
                         '<div class="widget-item cursor-pointer" onclick="location.href=`/customer/module/' +
-                        recentCustomers[j].prof_id + '`"><div class="nsm-profile"><span>' + nn +
-                        '</span></div><div class="content ms-2"><div class="details"><span class="content-title">' +
+                        recentCustomers[j].prof_id + '`"><div class="nsm-profile" style="background-color:'+randomColor+'!important'+'"><span>' + nn +
+                        '</span></div><div class="content ms-2"><div class="details" style="color:#281c2d"><span class="content-title">' +
                         cust_name +
                         '</span><span class="content-subtitle d-block">' + cust_address +
-                        '</span></div><div class="controls"><span class="nsm-badge primary">' +
+                        '</span></div><div class="controls"><span class="customer-badge" style="background-color:'+randomColor+'!important'+'">' +
                         cust_type +
                         '</span><span class="content-subtitle d-block mt-1"></span></div></div></div>'
                     )
@@ -240,8 +249,12 @@
             } = response;
             $("#recent-leads-container").html('');
             if (success == 1) {
+                var colors = ['#FEA303', '#d9a1a0', '#BEAFC2', '#EFB6C8'];
+                var randomColor= ''
                 if (recentLeads.length > 0) {
                     for (var j = 0; j < recentLeads.length; j++) {
+
+                        randomColor = colors[Math.floor(Math.random() * colors.length)];
                         var nn = "NN";
                         if (recentLeads[j].lastname[0]) {
                             nn = recentLeads[j].lastname[0] + '' + recentLeads[j].firstname[0];
@@ -262,11 +275,11 @@
 
                         $("#recent-leads-container").append(
                             '<div class="widget-item cursor-pointer" onclick="location.href=`/customer/add_lead/' +
-                            recentLeads[j].leads_id + '`"><div class="nsm-profile"><span>' + nn +
+                            recentLeads[j].leads_id + '`"><div class="nsm-profile"  style="background-color:'+randomColor+'!important'+'"><span>' + nn +
                             '</span></div><div class="content ms-2"><div class="details"><span class="content-title">' +
                             recentLeads[j].lastname + ' ' + recentLeads[j].firstname +
                             '</span><span class="content-subtitle d-block">' + recent_lead_address +
-                            '</span></div><div class="controls"><span class="content-subtitle d-block mt-1">' +
+                            '</span></div><div class="controls"><span class="content-subtitle d-block mt-1"  style="background-color:'+randomColor+'!important'+'">' +
                             recent_lead_mail + '</span></div></div></div>'
                         )
                     }
@@ -331,7 +344,6 @@
                 status
             } = response;
 
-            console.log('status', status)
 
             var content = "";
             let icon = 'bx bxs-calendar';

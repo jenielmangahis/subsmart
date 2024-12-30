@@ -448,6 +448,8 @@ body {
   display: block;
 }
 
+
+
 .nsm-card {
   border: 1px solid #d3d3d3;
   border-radius: 5px;
@@ -525,7 +527,9 @@ body {
 .nsm-card .nsm-card-controls a > .bx {
   width: 12px !important;
 }
-
+.nsm-card .nsm-card-content .banner img{ 
+  width: 100% !important;
+}
 .nsm-card .nsm-card-content {
   display: block;
   height: calc(100% - 43px);

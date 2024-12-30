@@ -1993,4 +1993,3 @@ $route['client_hub/invoice_preview_pdf/(:any)?'] = 'ClientHub/invoice_preview_pd
 $route['client_hub/_quick_view_invoice/(:any)?'] = 'ClientHub/ajax_view_customer_invoice_details/$1';
 $route['client_hub/_send_request_change_information'] = 'ClientHub/ajax_send_request_change_information';
 $route['client_hub/(:any)?'] = 'ClientHub/index/$1';
-
