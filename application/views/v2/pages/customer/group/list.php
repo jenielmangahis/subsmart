@@ -18,8 +18,7 @@
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
                             A customer group is a way of aggregating customers that are similar in some way. For example, you may
-                            use them to distinguish between retail and wholesale customers or between company employees and external customers etc. ...
-                            For example, a customer may have registered through the application as a wholesale customer.
+                            use them to distinguish between retail and wholesale customers or between company employees and external customers etc..
                         </div>
                     </div>
                 </div>
@@ -53,12 +52,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        if (!empty($customerGroups)) :
-                        ?>
-                            <?php
-                            foreach ($customerGroups as $customerGroup) :
-                            ?>
+                        <?php if (!empty($customerGroups)) : ?>
+                            <?php foreach ($customerGroups as $customerGroup) : ?>
                                 <tr>
                                     <td>
                                         <div class="table-row-icon">
@@ -76,19 +71,17 @@
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <?php if( checkRoleCanAccessModule('customer-groups', 'write') ){ ?>
-                                                        <li><a class="dropdown-item" href="<?php echo url('customer/group_edit/' . $customerGroup->id) ?>">Edit</a></li>
+                                                        <li><a class="dropdown-item edit-item" data-id="<?= $customerGroup->id; ?>" data-name="<?= $customerGroup->title; ?>" data-description="<?= $customerGroup->description; ?>" href="javascript:void(0);">Edit</a></li>
                                                     <?php } ?>
                                                     <?php if( checkRoleCanAccessModule('customer-groups', 'delete') ){ ?>
-                                                        <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $customerGroup->id ?>">Delete</a></li>
+                                                        <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $customerGroup->id; ?>">Delete</a></li>
                                                     <?php } ?>
                                                 </ul>
                                             </div>
                                         <?php } ?>
                                     </td>
                                 </tr>
-                            <?php
-                            endforeach;
-                            ?>
+                            <?php endforeach; ?>
                         <?php else : ?>
                             <tr>
                                 <td colspan="4">
@@ -136,6 +129,39 @@
                 </div>
             </div>
 
+            <!-- Edit Customer Group -->
+            <div class="modal fade nsm-modal fade" id="modal-edit-customer-group" tabindex="-1" aria-labelledby="modal-edit-customer-group_label" aria-hidden="true">
+                <div class="modal-dialog modal-md">
+                    <form id="frm-update-customer-group" method="POST">
+                        <input type="hidden" name="gid" id="gid" value="" />
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <span class="modal-title content-title">Edit</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="col-12 mb-3">
+                                        <label class="content-subtitle fw-bold d-block mb-2">Name</label>
+                                        <input type="text" name="group_name" id="edit-group-name" class="nsm-field form-control" value="" placeholder="" required>
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <label class="content-subtitle fw-bold d-block mb-2">Description</label>
+                                        <textarea name="group_description" id="edit-group-description" class="form-control"></textarea>                                        
+                                    </div>
+                                </div>
+                            </div> 
+                            </div>
+                            <div class="modal-footer">                    
+                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="nsm-button primary" id="btn-update-customer-group">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -146,6 +172,18 @@
 
         $('#btn-create-customer-group').on('click', function(){
             $('#modal-create-customer-group').modal('show');
+        });
+
+        $('.edit-item').on('click', function(){
+            var gid = $(this).attr('data-id');
+            var name = $(this).attr('data-name');
+            var description = $(this).attr('data-description');
+
+            $('#gid').val(gid);
+            $('#edit-group-name').val(name);
+            $('#edit-group-description').val(description);
+
+            $('#modal-edit-customer-group').modal('show');
         });
 
         $('#frm-create-customer-group').on('submit', function(e){
@@ -185,6 +223,47 @@
                 },
                 beforeSend: function() {
                     $('#btn-save-customer-group').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#frm-update-customer-group').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + "customer/_update_customer_group",
+                dataType: 'json',
+                data: $('#frm-update-customer-group').serialize(),
+                success: function(data) {    
+                    $('#btn-update-customer-group').html('Save');                   
+                    if (data.is_success) {
+                        $('#modal-edit-customer-group').modal('hide');
+                        Swal.fire({
+                            title: "Customer Group",
+                            text: "Customer group was successfully updated.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                               location.reload(); 
+                            //}
+                        });                    
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-update-customer-group').html('<span class="bx bx-loader bx-spin"></span>');
                 }
             });
         });
