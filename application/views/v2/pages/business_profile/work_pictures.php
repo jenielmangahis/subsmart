@@ -22,15 +22,17 @@
                         </div>
                     </div>
                 </div>
+                <?php if( checkRoleCanAccessModule('company-my-portfolio', 'write') ){ ?>
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#add_image_modal">
-                                <i class='bx bx-fw bx-image-add'></i> Upload Image
+                                <i class='bx bx-fw bx-image-add'></i> Add New
                             </button>
                         </div>
                     </div>
                 </div>
+                <?php } ?>
                 <div class="row g-3">
                     <?php
                     $images = array();
@@ -41,7 +43,7 @@
                     <?php if ($images) { ?>
                         <?php foreach ($images as $key => $i) { ?>
                             <div class="col-12 col-md-3">
-                                <div class="nsm-card p-0 workspace-item" role="button">
+                                <div class="nsm-card p-0 workspace-item">
                                     <div class="nsm-card-content">
                                         <div class="row">
                                             <div class="col-12 thumbnail-header">
@@ -51,9 +53,13 @@
                                                 <div class="nsm-card-title mb-2">
                                                     <span><?= $i['caption']; ?></span>
                                                 </div>
+                                                <?php if( checkRoleCanAccessModule('company-my-portfolio', 'write') ){ ?>
                                                 <button class="nsm-button btn-sm btn-edit" data-caption="<?= $i['caption']; ?>" data-id="<?= $key; ?>"><i class='bx bx-edit'></i> Edit</button>
+                                                <?php } ?>
                                                 <button class="nsm-button btn-sm" data-fancybox data-src="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>"><i class='bx bx-zoom-in'></i> Zoom</button>
+                                                <?php if( checkRoleCanAccessModule('company-my-portfolio', 'delete') ){ ?>
                                                 <button class="nsm-button btn-sm btn-delete" data-name="<?= $i['file']; ?>" data-id="<?= $key; ?>"><i class='bx bx-trash'></i> Delete</button>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     </div>
@@ -94,7 +100,7 @@
                 dataType: "json",
                 success: function(result) {
                     Swal.fire({
-                        title: 'Save Successful!',
+                        title: 'My Business Portfolio',
                         text: "Image caption was successfully updated",
                         icon: 'success',
                         showCancelButton: false,
@@ -105,7 +111,6 @@
                         }
                     });
 
-                    _this.trigger("reset");
                     $("#edit_image_caption_modal").modal("hide");
 
                     _this.find("button[type=submit]").html("Save");
@@ -120,7 +125,7 @@
             let name = $(this).attr("data-name");
 
             Swal.fire({
-                title: 'Deleting Picture',
+                title: 'Delete Image',
                 text: "Are you sure you want delete the selected image?",
                 icon: 'question',
                 confirmButtonText: 'Proceed',
@@ -140,7 +145,7 @@
                                 _this.closest(".col-md-3").remove();
                             });
                             Swal.fire({
-                                title: 'Success',
+                                title: 'My Business Portfolio',
                                 text: "Image is deleted successfully!",
                                 icon: 'success',
                                 showCancelButton: false,
@@ -175,7 +180,7 @@
                 success: function(result) {
                     console.log(result);
                     Swal.fire({
-                        title: 'Save Successful!',
+                        title: 'My Business Portfolio',
                         text: "New image was added successfully.",
                         icon: 'success',
                         showCancelButton: false,
@@ -185,8 +190,7 @@
                             location.reload();
                         }
                     });
-
-                    _this.trigger("reset");
+                    
                     $("#add_image_modal").modal("hide");
 
                     _this.find("button[type=submit]").html("Save");
@@ -196,6 +200,21 @@
                     console.log(result);
                 }
             });
+        });
+
+        $('#work-picture').on('change', function(e) {
+            e.preventDefault();
+            let _parent = $(this).closest(".nsm-img-upload");
+            let reader = new FileReader();
+
+            if ($(this)[0].files[0]) {
+                reader.readAsDataURL($(this)[0].files[0]);
+                reader.onload = function() {
+                    let imgPreview = _parent;
+                    imgPreview.css("background-image", "url('" + reader.result + "')");
+                };
+            } 
+
         });
     });
 </script>

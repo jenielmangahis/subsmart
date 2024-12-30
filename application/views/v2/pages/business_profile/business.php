@@ -723,9 +723,6 @@
             let _parent = $(this).closest(".nsm-img-upload");
             let reader = new FileReader();
 
-
-            console.log('$(this)[0].files[0]', $(this)[0].files[0])
-
             if ($(this)[0].files[0]) {
                 reader.readAsDataURL($(this)[0].files[0]);
                 reader.onload = function() {
@@ -746,9 +743,6 @@
 
         });
 
-
-
-
         $('#cancel-crop').on('click', function(e) {
             e.preventDefault();
             cropActionButton.hide().removeClass('d-flex');
@@ -760,15 +754,9 @@
         });
 
 
-
-
         $('#crop-image').on('click', function(e) {
-
             e.preventDefault();
-
-
             const file = imageInput[0].files[0];
-            console.log('file', file);
 
             if (file) {
                 cropActionButton.hide().removeClass('d-flex');
@@ -809,11 +797,7 @@
         $('#change-image').on('click', function(e) {
             imageInput.trigger('click');
             triggerChange = true;
-
-
         });
-
-
 
         $('#apply-crop').on('click', function(e) {
             e.preventDefault();

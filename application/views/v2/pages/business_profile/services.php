@@ -22,12 +22,15 @@
                         <?php endif; ?>
                     </div>
                 </div>
-                <?php echo form_open_multipart(null, ['id' => 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
+                <?php if( checkRoleCanAccessModule('company-my-services', 'write') ){ ?>
+                    <?php echo form_open_multipart(null, ['id' => 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
+                <?php } ?>
                 <div class="row g-3">
                     <div class="col-12">
                         <div class="accordion">
                             <?php
                             $service = 1;
+                            $is_enabled = checkRoleCanAccessModule('company-my-services', 'write');
                             foreach ($businessTypes as $businessType) {
                             ?>
                                 <div class="accordion-item">
@@ -53,7 +56,7 @@
                                                     ?>
                                                         <div class="col-12 col-md-6">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" name="categories[<?php echo $industryValue->id; ?>]" id="category_<?php echo $industryValue->id; ?>" value="<?php echo $industryValue->name; ?>" <?php if ($select) { ?> checked="checked" <?php } ?>>
+                                                                <input class="form-check-input" type="checkbox" name="categories[<?php echo $industryValue->id; ?>]" id="category_<?php echo $industryValue->id; ?>" value="<?php echo $industryValue->name; ?>" <?php if ($select) { ?> checked="checked" <?php } ?> <?= !$is_enabled ? 'disabled=""' : ''; ?>>
                                                                 <label class="form-check-label" for="category_<?php echo $industryValue->id; ?>"><?php echo $industryValue->name; ?></label>
                                                             </div>
                                                         </div>
@@ -71,11 +74,15 @@
                             ?>
                         </div>
                     </div>
+                    <?php if( checkRoleCanAccessModule('company-my-services', 'write') ){ ?>
                     <div class="col-12 text-end">
                         <button class="nsm-button primary" type="submit">Save</button>
                     </div>
+                    <?php } ?>
                 </div>
+                <?php if( checkRoleCanAccessModule('company-my-services', 'write') ){ ?>
                 <?php echo form_close(); ?>
+                <?php } ?>
             </div>
         </div>
     </div>
@@ -83,45 +90,47 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $(document).on("submit", "#form-business-details", function(e) {
-            let _this = $(this);
-            e.preventDefault();
+        <?php if( checkRoleCanAccessModule('company-my-services', 'write') ){ ?>
+            $(document).on("submit", "#form-business-details", function(e) {
+                let _this = $(this);
+                e.preventDefault();
 
-            var url = "<?php echo base_url('users/saveservices'); ?>";
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
+                var url = "<?php echo base_url('users/saveservices'); ?>";
+                _this.find("button[type=submit]").html("Saving");
+                _this.find("button[type=submit]").prop("disabled", true);
 
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: _this.serialize(),
-                dataType: 'json',
-                success: function(result) {
-                    if( result.is_success == 1 ){
-                        Swal.fire({
-                            title: 'Save Successful!',
-                            text: "Services was successfully updated.",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            if (result.value) {
-                                //location.reload();
-                            }
-                        });
-                    }else{
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            html: result.msg
-                        });
-                    }
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: _this.serialize(),
+                    dataType: 'json',
+                    success: function(result) {
+                        if( result.is_success == 1 ){
+                            Swal.fire({
+                                title: 'My Business Services',
+                                text: "Data was successfully updated.",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                if (result.value) {
+                                    //location.reload();
+                                }
+                            });
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: result.msg
+                            });
+                        }
 
-                    _this.find("button[type=submit]").html("Save");
-                    _this.find("button[type=submit]").prop("disabled", false);
-                },
+                        _this.find("button[type=submit]").html("Save");
+                        _this.find("button[type=submit]").prop("disabled", false);
+                    },
+                });
             });
-        });
+        <?php } ?>
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

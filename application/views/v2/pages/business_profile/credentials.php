@@ -18,8 +18,11 @@
                         </div>
                     </div>
                 </div>
+                
+                <?php if( checkRoleCanAccessModule('company-my-credentials', 'write') ){ ?>
                 <?php echo form_open_multipart(null, ['id' => 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
                 <input type="hidden" name="action" value="credentials" />
+                <?php } ?>
                 <div class="row g-3">
                     <div class="col-md-6 d-flex justify-content-between">
                         <div>
@@ -31,20 +34,18 @@
                             ?>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="is_licensed" id="checkbox_license"
-                                    <?= $licensed_checked ?>>
+                                    <?= $licensed_checked ?> <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?>>
                                 <label class="form-check-label fw-bold" for="checkbox_license">Licensed</label>
                             </div>
                             <label class="content-subtitle" id="license_placeholder"
                                 <?= $profiledata->is_licensed == 1 ? 'style="display:none;"' : '' ?>>Not licensed.
                                 Select to activate.</label>
-
-
                         </div>
                         <div>
                             <div class="form-check form-switch"
                                 style="display: flex; align-items: center;gap: 10px;padding-left: 10px;">
                                 <input class="form-check-input m-0" name="is_show_licensed" type="checkbox"
-                                    value="1" <?php echo $profiledata && $profiledata->is_show_licensed == 1 ? 'checked' : ''; ?>>
+                                    value="1" <?php echo $profiledata && $profiledata->is_show_licensed == 1 ? 'checked' : ''; ?> <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?>>
                                 <label class="content-subtitle fw-bold d-block">Show Licensed To Public Page</label>
 
 
@@ -57,18 +58,18 @@
                             <div class="col-12 col-md-3">
                                 <label class="content-subtitle fw-bold d-block mb-2">License Number</label>
                                 <input type="text" name="license_number" class="nsm-field form-control" required
-                                    value="<?= $profiledata->license_number ?>" />
+                                    value="<?= $profiledata->license_number ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
                             </div>
                             <div class="col-12 col-md-3">
                                 <label class="content-subtitle fw-bold d-block mb-2">License Class</label>
                                 <input type="text" name="license_class" class="nsm-field form-control" required
-                                    value="<?= $profiledata->license_class ?>" />
+                                    value="<?= $profiledata->license_class ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
                             </div>
                         </div>
                         <div class="row g-3 mt-1">
                             <div class="col-12 col-md-3">
                                 <label class="content-subtitle fw-bold d-block mb-2">License State</label>
-                                <select class="nsm-field form-select" name="license_state">
+                                <select class="nsm-field form-select" name="license_state" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?>>
                                     <option value="" disabled>Select State</option>
                                     <?php foreach ($states as $key => $value) { ?>
                                     <option <?= $profiledata->license_state == $key ? 'selected="selected"' : '' ?>
@@ -80,7 +81,7 @@
                                 <label class="content-subtitle fw-bold d-block mb-2">License Expiration Date</label>
                                 <input type="text" name="license_exp_date" class="nsm-field form-control datepicker"
                                     required
-                                    value="<?= $profiledata->license_expiry_date != '0000-00-00' ? date('m/d/Y', strtotime($profiledata->license_expiry_date)) : '' ?>" />
+                                    value="<?= $profiledata->license_expiry_date != '0000-00-00' ? date('m/d/Y', strtotime($profiledata->license_expiry_date)) : '' ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
                             </div>
                         </div>
                         <div class="row g-3 mt-1">
@@ -118,7 +119,7 @@
                                 ?>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="is_bonded"
-                                        id="checkbox_bonded" <?= $bonded_checked ?>>
+                                        id="checkbox_bonded" <?= $bonded_checked ?> <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?>>
                                     <label class="form-check-label fw-bold" for="checkbox_bonded">Bonded</label>
                                 </div>
                                 <label class="content-subtitle" id="bond_placeholder"
@@ -130,7 +131,7 @@
                                 <div class="form-check form-switch"
                                     style="display: flex; align-items: center;gap: 10px;padding-left: 10px;">
                                     <input class="form-check-input m-0" name="is_show_bonded" type="checkbox"
-                                        value="1" <?php echo $profiledata && $profiledata->is_show_bonded == 1 ? 'checked' : ''; ?>>
+                                        value="1" <?php echo $profiledata && $profiledata->is_show_bonded == 1 ? 'checked' : ''; ?> <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?>>
                                     <label class="content-subtitle fw-bold d-block">Show Bonded To Public Page</label>
                                 </div>
                             </div>
@@ -144,14 +145,14 @@
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
                                     <input type="text" name="bonded_amount" class="nsm-field form-control"
-                                        required value="<?= $profiledata->bond_amount ?>" />
+                                        required value="<?= $profiledata->bond_amount ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
                                 </div>
                             </div>
                             <div class="col-12 col-md-3">
                                 <label class="content-subtitle fw-bold d-block mb-2">Bond Expiration Date</label>
                                 <input type="text" name="bonded_exp_date"
                                     class="nsm-field form-control datepicker" required
-                                    value="<?= $profiledata->bond_expiry_date != '0000-00-00' ? date('m/d/Y', strtotime($profiledata->bond_expiry_date)) : '' ?>" />
+                                    value="<?= $profiledata->bond_expiry_date != '0000-00-00' ? date('m/d/Y', strtotime($profiledata->bond_expiry_date)) : '' ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
                             </div>
                         </div>
                         <div class="row g-3 mt-1">
@@ -187,7 +188,7 @@
                                 ?>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="is_insured"
-                                        id="checkbox_insured" <?= $insured_checked ?>>
+                                        id="checkbox_insured" <?= $insured_checked ?> <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?>>
                                     <label class="form-check-label fw-bold" for="checkbox_insured">Insured</label>
                                 </div>
                                 <label class="content-subtitle" id="insured_placeholder"
@@ -199,7 +200,7 @@
                                 <div class="form-check form-switch"
                                     style="display: flex; align-items: center;gap: 10px;padding-left: 10px;">
                                     <input class="form-check-input m-0" name="is_show_business_insured"
-                                        type="checkbox" value="1" <?php echo $profiledata && $profiledata->is_show_business_insured == 1 ? 'checked' : ''; ?>>
+                                        type="checkbox" value="1" <?php echo $profiledata && $profiledata->is_show_business_insured == 1 ? 'checked' : ''; ?> <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?>>
                                     <label class="content-subtitle fw-bold d-block">Show Insured To Public Page</label>
                                 </div>
                             </div>
@@ -213,14 +214,14 @@
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
                                     <input type="text" name="insured_amount" class="nsm-field form-control"
-                                        required value="<?= $profiledata->insured_amount ?>" />
+                                        required value="<?= $profiledata->insured_amount ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?>/>
                                 </div>
                             </div>
                             <div class="col-12 col-md-3">
                                 <label class="content-subtitle fw-bold d-block mb-2">Insurance Expiration Date</label>
                                 <input type="text" name="insured_exp_date"
                                     class="nsm-field form-control datepicker" required
-                                    value="<?= $profiledata->insurance_expiry_date != '0000-00-00' ? date('m/d/Y', strtotime($profiledata->insurance_expiry_date)) : '' ?>" />
+                                    value="<?= $profiledata->insurance_expiry_date != '0000-00-00' ? date('m/d/Y', strtotime($profiledata->insurance_expiry_date)) : '' ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
                             </div>
                         </div>
                         <div class="row g-3 mt-1">
@@ -257,7 +258,7 @@
                                 ?>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="is_bbb"
-                                        id="checkbox_acredited" <?= $bbb_acredited_checked ?>>
+                                        id="checkbox_acredited" <?= $bbb_acredited_checked ?> <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     <label class="form-check-label fw-bold" for="checkbox_acredited">BBB
                                         Accredited</label>
                                 </div>
@@ -269,7 +270,7 @@
                                 <div class="form-check form-switch"
                                     style="display: flex; align-items: center;gap: 10px;padding-left: 10px;">
                                     <input class="form-check-input m-0" name="is_show_bbb_acredited" type="checkbox"
-                                        value="1" <?php echo $profiledata && $profiledata->is_show_bbb_acredited == 1 ? 'checked' : ''; ?>>
+                                        value="1" <?php echo $profiledata && $profiledata->is_show_bbb_acredited == 1 ? 'checked' : ''; ?> <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     <label class="content-subtitle fw-bold d-block">Show BBB Acredited To Public
                                         Page</label>
                                 </div>
@@ -284,15 +285,19 @@
                                 <label class="content-subtitle fw-bold d-block mb-2">Please provide your business BBB
                                     Link</label>
                                 <input type="text" name="bbb_url" class="nsm-field form-control"
-                                    value="<?= $profiledata->bbb_link ?>" />
+                                    value="<?= $profiledata->bbb_link ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
                             </div>
                         </div>
                     </div>
+                    <?php if( checkRoleCanAccessModule('company-my-credentials', 'write') ){ ?>
                     <div class="col-12 col-md-6 text-end">
                         <button type="submit" class="nsm-button primary">Save</button>
                     </div>
+                    <?php } ?>
                 </div>
+                <?php if( checkRoleCanAccessModule('company-my-credentials', 'write') ){ ?>
                 <?php echo form_close(); ?>
+                <?php } ?>
             </div>
         </div>
     </div>
@@ -352,6 +357,7 @@
             }
         });
 
+        <?php if( checkRoleCanAccessModule('company-my-credentials', 'write') ){ ?>
         $(document).on("submit", "#form-business-details", function(e) {
             let _this = $(this);
             e.preventDefault();
@@ -373,8 +379,8 @@
                 success: function(result) {
                     if (result.is_success == 1) {
                         Swal.fire({
-                            title: 'Save Successful!',
-                            text: "Credentials was successfully updated.",
+                            title: 'My Business Credentials',
+                            text: "Data was successfully updated.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -397,6 +403,7 @@
                 },
             });
         });
+        <?php } ?>
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
