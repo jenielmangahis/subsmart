@@ -32,14 +32,15 @@
                             </div>
                         </form>   
                     </div>                  
-
+                    <?php if( checkRoleCanAccessModule('customer-groups', 'write') ){ ?>
                     <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('customer/group_add') ?>'">
-                                <i class='bx bx-fw bx-group'></i> Add Group
+                            <button type="button" class="nsm-button primary" id="btn-create-customer-group">
+                                <i class='bx bx-fw bx-group'></i> Add New
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
                 <table class="nsm-table">
                     <thead>
@@ -66,29 +67,29 @@
                                     </td>
                                     <td class="fw-bold nsm-text-primary"><?php echo $customerGroup->title ?></td>
                                     <td><?= $customerGroup->description; ?></td>
-                                    <td><?= countCustomerByGroup($customerGroup->id); ?></td>
+                                    <td style="text-align:center;"><?= countCustomerByGroup($customerGroup->id); ?></td>
                                     <td>
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo url('customer/group_edit/' . $customerGroup->id) ?>">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $customerGroup->id ?>">Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        <?php if( checkRoleCanAccessModule('customer-groups', 'write') || checkRoleCanAccessModule('customer-groups', 'delete') ){ ?>
+                                            <div class="dropdown table-management">
+                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <?php if( checkRoleCanAccessModule('customer-groups', 'write') ){ ?>
+                                                        <li><a class="dropdown-item" href="<?php echo url('customer/group_edit/' . $customerGroup->id) ?>">Edit</a></li>
+                                                    <?php } ?>
+                                                    <?php if( checkRoleCanAccessModule('customer-groups', 'delete') ){ ?>
+                                                        <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $customerGroup->id ?>">Delete</a></li>
+                                                    <?php } ?>
+                                                </ul>
+                                            </div>
+                                        <?php } ?>
                                     </td>
                                 </tr>
                             <?php
                             endforeach;
                             ?>
-                        <?php
-                        else :
-                        ?>
+                        <?php else : ?>
                             <tr>
                                 <td colspan="4">
                                     <div class="nsm-empty">
@@ -102,6 +103,39 @@
                     </tbody>
                 </table>
             </div>
+            
+            <!-- Create Customer Group -->
+            <div class="modal fade nsm-modal fade" id="modal-create-customer-group" tabindex="-1" aria-labelledby="modal-create-customer-group_label" aria-hidden="true">
+                <div class="modal-dialog modal-md">
+                    <form id="frm-create-customer-group" method="POST">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <span class="modal-title content-title">Add New</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="col-12 mb-3">
+                                        <label class="content-subtitle fw-bold d-block mb-2">Name</label>
+                                        <input type="text" name="group_name" id="group-name" class="nsm-field form-control" value="" placeholder="" required>
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <label class="content-subtitle fw-bold d-block mb-2">Description</label>
+                                        <textarea name="group_description" id="group-description" class="form-control"></textarea>                                        
+                                    </div>
+                                </div>
+                            </div> 
+                            </div>
+                            <div class="modal-footer">                    
+                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="nsm-button primary" id="btn-save-customer-group">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -109,6 +143,51 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
+
+        $('#btn-create-customer-group').on('click', function(){
+            $('#modal-create-customer-group').modal('show');
+        });
+
+        $('#frm-create-customer-group').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + "customer/_create_customer_group",
+                dataType: 'json',
+                data: $('#frm-create-customer-group').serialize(),
+                success: function(data) {    
+                    $('#btn-save-customer-group').html('Save');                   
+                    if (data.is_success) {
+                        $('#modal-create-customer-group').modal('hide');
+                        Swal.fire({
+                            title: "Customer Group",
+                            text: "Customer group was successfully created.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                               location.reload(); 
+                            //}
+                        });                    
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-customer-group').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
 
         /*$("#search_field").on("input", debounce(function() {
             let _form = $(this).closest("form");
