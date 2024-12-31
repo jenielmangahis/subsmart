@@ -130,6 +130,7 @@
                             <td data-name="Next Date">NEXT DATE</td>
                             <td data-name="Customer/Vendor">CUSTOMER/VENDOR</td>
                             <td data-name="Amount">AMOUNT</td>
+                            <td data-name="Status">STATUS</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -145,6 +146,7 @@
                             <td><?=$transaction['next_date']?></td>
                             <td><?=$transaction['customer_vendor']?></td>
                             <td><?=$transaction['amount']?></td>
+                            <td><?=$transaction['status']?></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
