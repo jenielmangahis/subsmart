@@ -335,6 +335,10 @@ class Recurring_transactions extends MY_Controller {
                     break;
                 }
 
+                $status = 'Ongoing';
+                if( $transaction['status'] == 2 ){
+                    $status = 'Paused';
+                }
                 $data[] = [
                     'id' => $transaction['id'],
                     'template_name' => $transaction['template_name'],
@@ -346,7 +350,7 @@ class Recurring_transactions extends MY_Controller {
                     'next_date' => $transaction['status'] === "2" ? "Paused" : $next,
                     'customer_vendor' => $payeeName,
                     'amount' => $total,
-                    'status' => $transaction['status']
+                    'status' => $status
                 ];
             }
         }
