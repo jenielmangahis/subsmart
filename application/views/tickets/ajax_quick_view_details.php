@@ -266,44 +266,42 @@
     </div>
     <div class="row mt-3">
         <div class="col-md-6 paymentArea">   
-            <table class="table table-bordered">                
-                <?php if( $tickets->otp_setup > 0 ){ ?>
-                <tr style="font-weight:bold;">
-                    <td>One Time (Program and Setup)</td>
-                    <td style="text-align:right;">$<?php echo number_format($tickets->otp_setup,2); ?></td>
-                </tr>
-                <?php } ?>
-                <?php if( $tickets->monthly_monitoring > 0 ){ ?>
-                <tr style="font-weight:bold;">
-                    <td>Monthly Monitoring</td>
-                    <td style="text-align:right;">$<?php echo number_format($tickets->monthly_monitoring,2); ?></td>
-                </tr>
-                <?php } ?>
-                <?php if( $tickets->installation_cost > 0 ){ ?>
-                <tr style="font-weight:bold;">
-                    <td>Installation Cost</td>
-                    <td style="text-align:right;">$<?php echo number_format($tickets->installation_cost,2); ?></td>
-                </tr>
-                <?php } ?>
-                <tr style="font-weight:bold;"><td colspan="2">Service Description</td></tr>
-                <tr><td colspan="2"><?= $tickets->service_description; ?></td></tr>
-                <tr style="font-weight:bold;"><td colspan="2">Instructions / Notes</td></tr>
-                <tr>
-                    <td colspan="2">
-                        <?php 
-                            if( $tickets->instructions != '' ){
-                                echo  $tickets->instructions;
-                            }else{
-                                echo "None";
-                            }
-                        ?>
-                    </td>
-                </tr>
-                <tr style="font-weight:bold;"><td colspan="2">URL</td></tr>
-                <tr>
-                    <td colspan="2"><a target="_new" href="<?= base_url('view_service_ticket/'.$tickets->company_id.'/'.$tickets->id); ?>"><?= base_url('view_service_ticket/'.$tickets->company_id.'/'.$tickets->id); ?></a></td>
-                </tr>
-            </table>         
+            <div class="table-responsive">
+                <table class="table table-bordered">                
+                    <?php if( $tickets->otp_setup > 0 ){ ?>
+                    <tr style="font-weight:bold;">
+                        <td>One Time (Program and Setup)</td>
+                        <td style="text-align:right;">$<?php echo number_format($tickets->otp_setup,2); ?></td>
+                    </tr>
+                    <?php } ?>
+                    <?php if( $tickets->monthly_monitoring > 0 ){ ?>
+                    <tr style="font-weight:bold;">
+                        <td>Monthly Monitoring</td>
+                        <td style="text-align:right;">$<?php echo number_format($tickets->monthly_monitoring,2); ?></td>
+                    </tr>
+                    <?php } ?>
+                    <?php if( $tickets->installation_cost > 0 ){ ?>
+                    <tr style="font-weight:bold;">
+                        <td>Installation Cost</td>
+                        <td style="text-align:right;">$<?php echo number_format($tickets->installation_cost,2); ?></td>
+                    </tr>
+                    <?php } ?>
+                    <tr style="font-weight:bold;"><td colspan="2">Service Description</td></tr>
+                    <tr><td colspan="2"><?= $tickets->service_description != '' ? $tickets->service_description : 'None'; ?></td></tr>
+                    <tr style="font-weight:bold;"><td colspan="2">Instructions / Notes</td></tr>
+                    <tr>
+                        <td colspan="2">
+                            <?php 
+                                if( $tickets->instructions != '' ){
+                                    echo  $tickets->instructions;
+                                }else{
+                                    echo "None";
+                                }
+                            ?>
+                        </td>
+                    </tr>
+                </table> 
+            </div>       
             <!-- <table class="table table-borderless">
                 <tr>
                     <td style="width:150px;"><b>Payment Method: </b></td>
@@ -444,32 +442,34 @@
             </table> -->
         </div>
         <div class="col-md-6 summaryArea">
-            <table class="table table-bordered">
-                <tr style="font-weight:bold;">
-                    <td>Subtotal</td>
-                    <td style="text-align:right;">$<?php echo number_format($tickets->subtotal,2); ?></td>
-                </tr>                
-                <tr style="font-weight:bold;">
-                    <td>Taxes</td>
-                    <td style="text-align:right;">$<?php echo number_format($tickets->taxes,2); ?></td>
-                </tr>
-                <tr style="font-weight:bold;">
-                    <td>Discount</td>
-                    <td style="text-align:right;">$<?php echo number_format($total_discount,2); ?></td>
-                </tr>
-                <!-- <tr style="font-weight:bold;">
-                    <td>Adjustment: <?php echo $tickets->adjustment; ?></td>
-                    <td style="text-align:right;">$<?php echo number_format($tickets->adjustment_value,2); ?></td>
-                </tr> -->
-                <!-- <tr style="font-weight:bold;">
-                    <td>Markup</td>
-                    <td style="text-align:right;">$<?php echo number_format($tickets->markup,2); ?></td>
-                </tr> -->
-                <tr style="font-weight:bold;">
-                    <td>Grand Total</td>
-                    <td style="text-align:right;">$<?php echo number_format($tickets->grandtotal,2); ?></td>
-                </tr>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <tr style="font-weight:bold;">
+                        <td>Subtotal</td>
+                        <td style="text-align:right;">$<?php echo number_format($tickets->subtotal,2); ?></td>
+                    </tr>                
+                    <tr style="font-weight:bold;">
+                        <td>Taxes</td>
+                        <td style="text-align:right;">$<?php echo number_format($tickets->taxes,2); ?></td>
+                    </tr>
+                    <tr style="font-weight:bold;">
+                        <td>Discount</td>
+                        <td style="text-align:right;">$<?php echo number_format($total_discount,2); ?></td>
+                    </tr>
+                    <!-- <tr style="font-weight:bold;">
+                        <td>Adjustment: <?php echo $tickets->adjustment; ?></td>
+                        <td style="text-align:right;">$<?php echo number_format($tickets->adjustment_value,2); ?></td>
+                    </tr> -->
+                    <!-- <tr style="font-weight:bold;">
+                        <td>Markup</td>
+                        <td style="text-align:right;">$<?php echo number_format($tickets->markup,2); ?></td>
+                    </tr> -->
+                    <tr style="font-weight:bold;">
+                        <td>Grand Total</td>
+                        <td style="text-align:right;">$<?php echo number_format($tickets->grandtotal,2); ?></td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>
