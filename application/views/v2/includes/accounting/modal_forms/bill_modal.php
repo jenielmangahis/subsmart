@@ -24,12 +24,15 @@
 .hide-delete{
     display:none;
 }
- </style>
+.nsm-table > tbody td {
+    border:none !important;
+}
+</style>
 <div class="full-screen-modal">
 <?php if(!isset($bill)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
 <?php else : ?>
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/bill/<?=$bill->id?>">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="<?= base_url('accounting/update-transaction/bill/'.$bill->id); ?>">
 <?php endif; ?>
     <div id="billModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
         <div class="modal-dialog">
@@ -128,7 +131,7 @@
                                     <?php endif;?>
                                 </div>
                                 <?php endif; ?>
-                                <div class="col-12 col-md-8 grid-mb">
+                                <div class="col-12 col-md-8 grid-mb test2">
                                     <div class="row">
                                         <div class="col-12 col-md-3">
                                             <label for="vendor">Vendor</label>
@@ -150,41 +153,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-4 text-end grid-mb">
-                                    <h6>
-                                        <?php if(isset($bill)) : ?>
-                                            <?php if(!$is_copy) : ?>
-                                                <?=$bill->status === "1" ? "BALANCE DUE" : "PAYMENT STATUS"?>
-                                            <?php else : ?>
-                                                AMOUNT
-                                            <?php endif; ?>
-                                        <?php else : ?>
-                                            AMOUNT
-                                        <?php endif; ?>
-                                    </h6>
+                                <div class="col-12 col-md-4 text-end grid-mb test1">
+                                    <h6>AMOUNT</h6>
                                     <h2>
                                         <?php if(isset($bill)) : ?>
-                                            <?php if(!$is_copy) : ?>
-                                                <span class="transaction-total-amount">
-                                                <?php if($bill->status === "1") : ?>
-                                                    <?php
-                                                        $amount = '$'.number_format(floatval($bill->remaining_balance), 2, '.', ',');
-                                                        $amount = str_replace('$-', '-$', $amount);
-                                                        echo $amount;
-                                                    ?>
-                                                <?php else : ?>
-                                                    PAID
-                                                <?php endif; ?>
-                                                </span>
-                                            <?php else : ?>
-                                                <span class="transaction-total-amount">
-                                                    <?php
-                                                        $amount = '$'.number_format(floatval($bill->remaining_balance), 2, '.', ',');
-                                                        $amount = str_replace('$-', '-$', $amount);
-                                                        echo $amount;
-                                                    ?>
-                                                </span>
-                                            <?php endif; ?>
+                                            <span class="transaction-total-amount">
+                                                <?php
+                                                    $amount = '$'.number_format(floatval($bill->remaining_balance), 2, '.', ',');
+                                                    $amount = str_replace('$-', '-$', $amount);
+                                                    echo $amount;
+                                                ?>
+                                            </span>
                                         <?php else : ?>
                                             <span class="transaction-total-amount">
                                                 <?php 
@@ -257,6 +236,10 @@
                                     <label for="mailing_address">Mailing address</label>
                                     <textarea name="mailing_address" id="mailing_address" class="form-control nsm-field mb-2" style="height:157px;"><?=isset($purchaseOrder) || isset($bill) ? (isset($bill) && !isset($purchaseOrder)) ? str_replace("<br />", "", $bill->mailing_address) : str_replace("<br />", "", $purchaseOrder->mailing_address) : ""?></textarea>
                                 </div>
+                                <div class="col-md-2">
+                                    <label for="memo">Memo</label>
+                                    <textarea name="memo" id="memo" class="nsm-field form-control mb-2" style="height:157px !important;"><?=isset($purchaseOrder) || isset($bill) ? (isset($bill)) ? str_replace("<br />", "", $bill->memo) : str_replace("<br />", "", $purchaseOrder->memo) : ''?></textarea>
+                                </div>
                                 <div class="col-12 col-md-2">
                                     <label for="term">Terms</label>
                                     <select name="term" id="term" class="form-control nsm-field mb-2">
@@ -275,17 +258,13 @@
 
                                 </div>
                                 <div class="col-md-2">
-                                    <label for="memo">Memo</label>
-                                    <textarea name="memo" id="memo" class="nsm-field form-control mb-2" style="height:157px !important;"><?=isset($purchaseOrder) || isset($bill) ? (isset($bill)) ? str_replace("<br />", "", $bill->memo) : str_replace("<br />", "", $purchaseOrder->memo) : ''?></textarea>
-                                </div>
-                                <div class="col-md-2">
                                     <div class="mb-2">
                                         <label for="bill_no">Bill no.</label>
                                         <input type="text" name="bill_no" id="bill_no" class="form-control nsm-field" <?=isset($bill) ? "value='$bill->bill_no'" : ''?>>
                                     </div>
                                     <label for="permit_number">Permit no.</label>
                                     <input type="number" class="form-control nsm-field mb-2" name="permit_number" id="permit_number" <?=isset($bill) ? "value='$bill->permit_no'" : ''?>> 
-                                </div>
+                                </div>                                
                             </div>
 
                             <div class="row">
