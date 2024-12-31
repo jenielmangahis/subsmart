@@ -5500,3 +5500,24 @@ function checkIndustryAllowedSpecificField($field)
 
     return $enabled;
 }
+
+function checkRoleCanAccessWidget($wid){        
+    $CI =& get_instance();
+    $CI->load->model('CompanyRoleAccessWidget_model');
+
+    $rid = logged('role');
+    $cid = logged('company_id');
+    $allow_access = false;
+
+    $hasAccessAll = $CI->CompanyRoleAccessWidget_model->isRoleHasAccessAll($cid, $rid);
+    if( $hasAccessAll ){        
+        $allow_access = true;   
+    }else{
+        $hasAccess = $CI->CompanyRoleAccessWidget_model->getCompanyByRoleIdAndWidgetId($cid, $rid, $wid);
+        if( $hasAccess ){
+            $allow_access = true;
+        }
+    }
+    
+    return $allow_access;
+}

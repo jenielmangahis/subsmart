@@ -4,6 +4,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Widgets_model extends MY_Model
 {
+    public $table = 'widgets';
+
     public function loadTechLeaderboard($comp_id)
     {
         $this->db->from('users');
@@ -299,7 +301,7 @@ class Widgets_model extends MY_Model
         $filtered_widgets = array_filter($widgets, function ($widget) use ($companyId) {
             // Convert $companyId to string for proper comparison
             if (($widget->w_name === 'nSmart Sales' || $widget->w_name === 'Demo Schedules' || $widget->w_name === 'Coupon Codes' || $widget->w_name === 'nSmart Companies') && $companyId !== '1') {
-                 return false; 
+                  return false; 
             }
             return true; 
         });
@@ -363,5 +365,14 @@ class Widgets_model extends MY_Model
     {
         $this->db->where('wu_id', $wid);
         return $this->db->update('widgets_users', $data);
+    }
+
+    public function getAll()
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $query = $this->db->get();
+
+        return $query->result();
     }
 }
