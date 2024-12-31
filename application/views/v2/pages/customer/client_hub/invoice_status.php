@@ -1,7 +1,9 @@
 <?php include viewPath('v2/includes/header_clienthub'); ?>
 
 <style>
+.modal-body #view-invoice-container{
 
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -35,13 +37,14 @@
                 <div class="row">
                     <table class="nsm-table">
                         <thead>
-                            <tr>
-                                <td data-name="Date Issued">Date Issued</td>
-                                <td data-name="Invoice Number">Invoice Number</td>
-                                <td data-name="Amount">Amount</td>                               
-                                <td data-name="Balance">Balance</td>
+                            <tr>           
+                                <td class="table-icon"></td>                     
+                                <td data-name="Invoice Number" style="width:50%;">Invoice Number</td>
+                                <td data-name="Date Issued">Date Issued</td>                                
                                 <td data-name="Due Date">Due Date</td>
                                 <td data-name="Status">Status</td>
+                                <td data-name="Amount" style="text-align:right;">Amount</td>                               
+                                <td data-name="Balance" style="text-align:right;">Balance</td>
                                 <td data-name="Action"></td>
                             </tr>
                         </thead>
@@ -49,37 +52,42 @@
                         <?php foreach ($invoices as $invoice) { ?>                         
                             <tr>
                                 <td>
+                                    <div class="table-row-icon">
+                                        <i class='bx bx-receipt'></i>
+                                    </div>
+                                </td>
+                                <td class="fw-bold nsm-text-primary">                       
+                                    <?php echo $invoice->invoice_number; ?>
+                                </td>
+                                <td>
                                     <?php
                                         if( $invoice->date_issued != '' ){
                                             $myDateTime = DateTime::createFromFormat('Y-m-d', $invoice->date_issued);
                                             echo $newDateString = $myDateTime->format('m/d/Y');
                                         }else{
-                                            echo 'Not Specified';
+                                            echo '---';
                                         }                                
                                     ?>
-                                </td>                                
-                                <td class="fw-bold nsm-text-primary">                       
-                                    <?php echo $invoice->invoice_number; ?>
-                                </td>
-                                <td>$<?= number_format($invoice->grand_total,2) ?></td>
-                                <td>$<?= $invoice->balance > 0 ? number_format($invoice->balance,2) : '0.00'; ?></td>
+                                </td>                                                                                                
                                 <td>
                                     <?php
                                         if( $invoice->due_date != '' ){
                                             $myDateTime = DateTime::createFromFormat('Y-m-d', $invoice->due_date);
-                                            echo $newDateString = $myDateTime->format('m-d-Y');
+                                            echo $newDateString = $myDateTime->format('m/d/Y');
                                         }else{
-                                            echo 'Not Specified';
+                                            echo '---';
                                         }                                
                                     ?>                                    
                                 </td>
                                 <td><?= $invoice->INV_status != '' ? $invoice->INV_status : 'Draft'; ?></td>
+                                <td style="text-align:right;">$<?= number_format($invoice->grand_total,2) ?></td>
+                                <td style="text-align:right;">$<?= $invoice->balance > 0 ? number_format($invoice->balance,2) : '0.00'; ?></td>
                                 <td>
                                     <div class="dropdown table-management">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li>
-                                                <a class="dropdown-item view-invoice-row" href="javascript:void(0);" data-id="<?php echo $invoice->id; ?>">View</a>
+                                                <a class="dropdown-item view-invoice-row" href="javascript:void(0);" data-cid="<?php echo $cid; ?>" data-id="<?php echo $invoice->id; ?>">View</a>
                                             </li>
                                             <li>
                                                 <a class="dropdown-item" href="<?php echo base_url('client_hub/invoice_preview_pdf/'. $invoice->id . '?format=pdf') ?>" target="_blank">Invoice PDF</a>
@@ -104,8 +112,7 @@
                     <span class="modal-title content-title">View Invoice</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
-                <div class="modal-body" style="max-height:700px; overflow: auto;">
-                    <input type="hidden" id="view-ticket-id" value="" />
+                <div class="modal-body" style="max-height:700px; overflow: auto;">                    
                     <div id="view-invoice-container" class="view-invoice-container"></div>
                 </div>                                    
             </div>        
@@ -124,8 +131,8 @@
         
         $('.view-invoice-row').on('click', function(){
             var invoice_id = $(this).attr('data-id');
-            var format     = 'html';
-            var url = base_url + 'client_hub/_quick_view_invoice/public';
+            var cid        = $(this).attr('data-cid');
+            var url = base_url + 'client_hub/_quick_view_invoice';
 
             $('#modal-quick-view-invoice').modal('show');
 
@@ -133,7 +140,7 @@
                 $.ajax({
                     type: "POST",
                     url: url,
-                    data: {invoice_id: invoice_id, format: format},
+                    data: {invoice_id: invoice_id, cid:cid},
                     success: function(result) {
                         $("#view-invoice-container").html(result);
                     },
