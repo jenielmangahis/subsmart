@@ -2,7 +2,16 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><?php $heading = '403 Not Allowed !' ?>
 <?php include(VIEWPATH.'/errors/html/includes/header.php') ?>
-
+<style>
+.error-page > .headline {
+    font-size: 100px;
+    font-weight: 300;
+    float:none !important;
+    position: relative !important;
+    top: 115px;
+    display:inline-block;
+}
+</style>
  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -23,20 +32,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
           <p>
             Sorry, you cannot access this section/webpage.
-            Meanwhile, you may <a href="<?php echo config_item('base_url') ?>/">return to dashboard</a> or try using the search form.
+            Meanwhile, you may <a href="<?php echo config_item('base_url') ?>dashboard">return to dashboard</a>.
           </p>
-
-          <form class="search-form">
-            <div class="input-group">
-              <input type="text" name="search" class="form-control" placeholder="Search">
-
-              <div class="input-group-btn">
-                <button type="submit" name="submit" class="btn btn-warning btn-flat"><i class="fa fa-search"></i>
-                </button>
-              </div>
-            </div>
-            <!-- /.input-group -->
-          </form>
+          
         </div>
         <!-- /.error-content -->
       </div>

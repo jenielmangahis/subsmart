@@ -397,7 +397,7 @@
                     });
                     
                     foreach ($widgets as $wids) {
-                        if ($wids->w_main) {
+                        if ($wids->w_main && checkRoleCanAccessWidget($wids->w_id)) {
                             $data['class'] = 'nsm-card nsm-grid2 main-widget-container';
                             $data['isMain'] = false;
                             $data['id'] = $wids->w_id;
@@ -429,7 +429,7 @@
             <?php
                 if (count($main_widgets) > 0) {
                     foreach ($main_widgets as $wids) {
-                        if ($wids->wu_is_main) {
+                        if ($wids->wu_is_main && checkRoleCanAccessWidget($wids->w_id)) {
                             if ($wids->wu_widget_id == 26) {
                                 echo '<div class="col-12 col-lg-4" id="widget-'.$wids->wu_widget_id.'">';
                                 $data['class'] = 'nsm-card nsm-grid large';
@@ -460,7 +460,7 @@
 
             <?php
                 foreach ($widgets as $wids) {
-                    if (!$wids->wu_is_main && !$wids->w_main) {
+                    if (!$wids->wu_is_main && !$wids->w_main && checkRoleCanAccessWidget($wids->w_id)) {
                         echo '<div class="col-12 col-lg-4" data-order="'.$wids->wu_order.'" id="widget-'.$wids->wu_widget_id.'">';
                         $data['class'] = 'nsm-card nsm-grid';
                         $data['isMain'] = false;
