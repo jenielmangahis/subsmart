@@ -1209,7 +1209,7 @@ $(function () {
 
     $(document).on('keyup', '#tags-modal #search-tag', function () {
         var val = $(this).val();
-        $.get('/accounting/load-job-tags?search=' + val, function (res) {
+        $.get(base_url + 'accounting/load-job-tags?search=' + val, function (res) {
             var tags = JSON.parse(res);
 
             $('#tags-modal #tags-table tbody tr').remove();
@@ -1782,7 +1782,7 @@ $(function () {
         if ($(this).val() === 'by') {
             $(this).parent().next().remove();
             $(this).parent().parent().append(`
-                <div class="col-12 col-md-1">
+                <div class="col-12 col-md-2">
                     <label for="endDate">End date</label>
                     <div class="nsm-field-group calendar">
                         <input type="text" class="form-control nsm-field date" name="end_date" id="endDate"/>
@@ -1799,11 +1799,9 @@ $(function () {
             $(this).parent().next().remove();
             $(this).parent().parent().append(`
                 <div class="col-12 col-md-1">
-                    <div class="row h-100">
-                        <div class="col-6 d-flex align-items-end">
-                            <input type="number" name="max_occurence" id="maxOccurence" class="form-control nsm-field">
-                        </div>
-                        <div class="col-6 d-flex align-items-end">occurrences</div>
+                    <label for="occurrences">Occurrences</label>
+                    <div class="nsm-field-group occurrences">
+                        <input type="number" name="max_occurence" id="maxOccurence" class="form-control nsm-field" style="width: 87px !important">
                     </div>
                 </div>
             `);
@@ -10437,7 +10435,7 @@ const computeTotalHours = () => {
 // }
 
 const editGroupTagForm = (data) => {
-    $.get('/accounting/edit-group-tag-form', function (res) {
+    $.get(base_url + 'accounting/edit-group-tag-form', function (res) {
         $('#tags-modal div.modal-dialog div#tags-list').remove();
 
         $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="edit_group_tag"></form>`);
@@ -10449,7 +10447,7 @@ const editGroupTagForm = (data) => {
 }
 
 const getTagForm = (data = {}, method) => {
-    $.get('/accounting/get-job-tag-form/', function (res) {
+    $.get(base_url + 'accounting/get-job-tag-form/', function (res) {
         if (method === 'update' && data.groupTag !== null && data.type === 'group-tag') {
             var groupTagName = $(`#tags-modal #tags-table tbody tr td .edit[data-id="${data.groupTag}"][data-type="group"]`).parent().prev().find('span').text().trim();
 
@@ -10483,7 +10481,7 @@ const getTagForm = (data = {}, method) => {
         $('#tags-modal #tagGroup').select2({
             dropdownParent: $('#tags-modal'),
             ajax: {
-                url: '/accounting/tags/get-group-tags',
+                url: base_url + 'accounting/tags/get-group-tags',
                 dataType: 'json'
             }
         });
@@ -11626,7 +11624,7 @@ const makeRecurring = (modalName) => {
             <h3>Recurring Bank Deposit</h3>
             <div class="row">
                 <div class="col-12 col-md-3">
-                    <label for="templateName">Template name</label>
+                    <label for="templateName">Template Name</label>
                     <input type="text" class="form-control nsm-field" id="templateName" name="template_name">
                 </div>
                 <div class="col-12 col-md-2">
@@ -11637,7 +11635,7 @@ const makeRecurring = (modalName) => {
                         <option value="unscheduled">Unscheduled</option>
                     </select>
                 </div>
-                <div class="col-12 col-md-3 d-flex flex-column p-0 align-items-start">
+                <div class="col-12 col-md-4 d-flex flex-column p-0 align-items-start">
                     <span>Create &emsp;</span>
                     <div class="d-flex align-items-start justify-content-center"><input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
                     <span style="margin-top: 7px;">&emsp; days in advance</span></div>
@@ -11667,7 +11665,7 @@ const makeRecurring = (modalName) => {
         <div class="col-12 grid-mb">
             <div class="row">
                 <div class="col-12 col-md-2">
-                    <label for="recurringInterval">Interval</label>
+                    <label for="recurringInterval" style="margin-bottom: 3px;">Interval</label>
                     <select class="form-control nsm-field" name="recurring_interval" id="recurringInterval">
                         <option value="daily">Daily</option>
                         <option value="weekly">Weekly</option>
@@ -11700,14 +11698,14 @@ const makeRecurring = (modalName) => {
                         <div class="col-2 align-items-end d-flex" style="margin-bottom: 7px;">month(s)</div>
                     </div>
                 </div>
-                <div class="col-12 col-md-1">
-                    <label for="startDate">Start date</label>
+                <div class="col-12 col-md-2">
+                    <label for="startDate" style="margin-bottom: 3px;">Start date</label>
                     <div class="nsm-field-group calendar">
                         <input type="text" class="form-control nsm-field date" name="start_date" id="startDate"/>
                     </div>
                 </div>
                 <div class="col-12 col-md-1">
-                    <label for="endType">End</label>
+                    <label for="endType" style="margin-bottom: 3px;">End</label>
                     <select name="end_type" class="form-control nsm-field" id="endType">
                         <option value="none">None</option>
                         <option value="by">By</option>
