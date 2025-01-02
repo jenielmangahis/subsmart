@@ -250,7 +250,7 @@ if (!function_exists('getPublicCompanyBusinessProfileImage')) {
 
     function getPublicCompanyBusinessProfileImage($company_id)
     {
-        $CI         = &get_instance();
+        $CI  = &get_instance();
         $res = $CI->business_model->getByCompanyProfileImage($company_id);
         if( $res ){
             $url = urlUpload('users/business_profile/' . $res->id . '/' . $res->business_image . '?' . time());
