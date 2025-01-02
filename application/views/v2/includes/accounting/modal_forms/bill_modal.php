@@ -258,6 +258,10 @@
 
                                 </div>
                                 <div class="col-md-2">
+                                    <label for="memo">Memo</label>
+                                    <textarea name="memo" id="memo" class="nsm-field form-control mb-2" style="height:157px !important;"><?=isset($purchaseOrder) || isset($bill) ? (isset($bill)) ? str_replace("<br />", "", $bill->memo) : str_replace("<br />", "", $purchaseOrder->memo) : ''?></textarea>
+                                </div>
+                                <div class="col-md-2">
                                     <div class="mb-2">
                                         <label for="bill_no">Bill no.</label>
                                         <input type="text" name="bill_no" id="bill_no" class="form-control nsm-field" <?=isset($bill) ? "value='$bill->bill_no'" : ''?>>

@@ -11626,7 +11626,7 @@ const makeRecurring = (modalName) => {
             <h3>Recurring Bank Deposit</h3>
             <div class="row">
                 <div class="col-12 col-md-3">
-                    <label for="templateName">Template name</label>
+                    <label for="templateName">Template Name</label>
                     <input type="text" class="form-control nsm-field" id="templateName" name="template_name">
                 </div>
                 <div class="col-12 col-md-2">
@@ -11637,7 +11637,7 @@ const makeRecurring = (modalName) => {
                         <option value="unscheduled">Unscheduled</option>
                     </select>
                 </div>
-                <div class="col-12 col-md-3 d-flex flex-column p-0 align-items-start">
+                <div class="col-12 col-md-4 d-flex flex-column p-0 align-items-start">
                     <span>Create &emsp;</span>
                     <div class="d-flex align-items-start justify-content-center"><input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
                     <span style="margin-top: 7px;">&emsp; days in advance</span></div>
@@ -11667,7 +11667,7 @@ const makeRecurring = (modalName) => {
         <div class="col-12 grid-mb">
             <div class="row">
                 <div class="col-12 col-md-2">
-                    <label for="recurringInterval">Interval</label>
+                    <label for="recurringInterval" style="margin-bottom: 3px;">Interval</label>
                     <select class="form-control nsm-field" name="recurring_interval" id="recurringInterval">
                         <option value="daily">Daily</option>
                         <option value="weekly">Weekly</option>
@@ -11700,14 +11700,14 @@ const makeRecurring = (modalName) => {
                         <div class="col-2 align-items-end d-flex" style="margin-bottom: 7px;">month(s)</div>
                     </div>
                 </div>
-                <div class="col-12 col-md-1">
-                    <label for="startDate">Start date</label>
+                <div class="col-12 col-md-2">
+                    <label for="startDate" style="margin-bottom: 3px;">Start date</label>
                     <div class="nsm-field-group calendar">
                         <input type="text" class="form-control nsm-field date" name="start_date" id="startDate"/>
                     </div>
                 </div>
                 <div class="col-12 col-md-1">
-                    <label for="endType">End</label>
+                    <label for="endType" style="margin-bottom: 3px;">End</label>
                     <select name="end_type" class="form-control nsm-field" id="endType">
                         <option value="none">None</option>
                         <option value="by">By</option>
