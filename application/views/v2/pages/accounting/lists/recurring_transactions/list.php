@@ -138,15 +138,15 @@
                         <?php if(count($transactions) > 0) : ?>
 						<?php foreach($transactions as $transaction) : ?>
                         <tr data-id="<?=$transaction['id']?>" data-transaction_id="<?=$transaction['txn_id']?>">
-                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$transaction['template_name']?></td>
-                            <td><?=ucfirst($transaction['recurring_type'])?></td>
-                            <td><?=ucwords(str_replace('np', '', $transaction['txn_type']))?></td>
-                            <td><?=$transaction['recurring_interval']?></td>
-                            <td><?=$transaction['previous_date']?></td>
-                            <td><?=$transaction['next_date']?></td>
-                            <td><?=$transaction['customer_vendor']?></td>
-                            <td><?=$transaction['amount']?></td>
-                            <td><?=$transaction['status']?></td>
+                            <td class="fw-bold nsm-text-primary nsm-link default"><?= $transaction['template_name'] ? $transaction['template_name'] : '--'; ?></td>
+                            <td><?= ucfirst($transaction['recurring_type'])?></td>
+                            <td><?= $transaction['txn_type'] ? ucwords(str_replace('np', '', $transaction['txn_type'])) : '--'  ?></td>
+                            <td><?= $transaction['recurring_interval'] ? $transaction['recurring_interval'] : '--'; ?></td>
+                            <td><?= $transaction['previous_date'] ? $transaction['previous_date'] : '--'; ?></td>
+                            <td><?= $transaction['next_date'] ? $transaction['next_date'] : '--'; ?></td>
+                            <td><?= $transaction['customer_vendor'] ? $transaction['customer_vendor'] : '--'; ?></td>
+                            <td><?= $transaction['amount'] ? $transaction['amount'] : '--'; ?></td>
+                            <td><?= $transaction['status'] ? $transaction['status'] : '--'; ?></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
