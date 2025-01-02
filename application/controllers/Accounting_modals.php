@@ -15689,6 +15689,15 @@ class Accounting_modals extends MY_Controller
                 $this->vendors_model->updateVendor($data['vendor_id'], $vendorData);
             }
 
+            //Update Recurring data
+            $data = [
+                'template_name' => $data['template_name'],
+                'recurring_type' => $data['recurring_type'],
+                'days_in_advance' => $data['days_in_advance']
+            ];
+
+            $this->accounting_recurring_transactions_model->updateRecurringTransactionByTxnId($billId, $data);
+
             $attachments = $this->accounting_attachments_model->get_attachments('Bill', $bill->id);
             $tags = $this->tags_model->get_transaction_tags('Bill', $bill->id);
             $this->accounting_linked_transactions_model->unlink_all_from_linked_to('bill', $billId);

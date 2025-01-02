@@ -42,6 +42,17 @@ class Accounting_recurring_transactions_model extends MY_Model
         }
     }
 
+    public function updateRecurringTransactionByTxnId($txn_id, $data)
+    {
+        $this->db->where('txn_id', $txn_id);
+        $update = $this->db->update($this->table, $data);
+        if ($update) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function getRecurringTransaction($id)
     {
         $this->db->where('company_id', getLoggedCompanyID());

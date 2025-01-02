@@ -1,4 +1,4 @@
-const GET_OTHER_MODAL_URL = "/accounting/get-other-modals/";
+const GET_OTHER_MODAL_URL = base_url + "accounting/get-other-modals/";
 const vendorModals = ['#expenseModal', '#checkModal', '#billModal', '#vendorCreditModal', '#purchaseOrderModal', '#creditCardCreditModal'];
 const customerModals = ['#invoiceModal', '#creditMemoModal', '#salesReceiptModal', '#refundReceiptModal', '#delayedCreditModal', '#delayedChargeModal', '#standard-estimate-modal', '#options-estimate-modal', '#bundle-estimate-modal'];
 var rowCount = 0;
@@ -1658,12 +1658,20 @@ $(function () {
                 }
 
                 $(this).parent().next().html(`
-                    <span>Remind &emsp;</span>
-                   <div class="d-flex">
-                   <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
-                   <span>&emsp; days before the transaction date</span>
-                   </div>
+                    <span>Remind <span id="modal-help-popover-reminder-remind" class="bx bx-fw bx-help-circle"></span></span>
+                    <div class="d-flex">
+                        <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">                  
+                    </div>
                 `);
+
+                $('#modal-help-popover-reminder-remind').popover({
+                    placement: 'top',
+                    html: true,
+                    trigger: "hover focus",
+                    content: function () {
+                        return 'Days before the transaction date.';
+                    }
+                });
 
                 if ($('#modal-container form div.modal div.modal-body select#recurringInterval').length === 0) {
                     if ($('#modal-container form').children('.modal').attr('id') === 'depositModal') {
@@ -1696,7 +1704,7 @@ $(function () {
                     content: function () {
                         return 'Unscheduled transactions don’t have timetables; you use them as needed from the Recurring Transactions list.';
                     }
-                })
+                });
                 break;
             case 'scheduled':
                 if ($(this).parent().next().hasClass('col-md-2')) {
@@ -1705,10 +1713,18 @@ $(function () {
                 }
 
                 $(this).parent().next().html(`
-                    <span>Create &emsp;</span>
-                    <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
-                    <span>&emsp; days in advance</span>
+                    <span>Create <span id="modal-help-popover-scheduled-create" class="bx bx-fw bx-help-circle"></span></span>
+                    <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">                    
                 `);
+
+                $('#modal-help-popover-scheduled-create').popover({
+                    placement: 'top',
+                    html: true,
+                    trigger: "hover focus",
+                    content: function () {
+                        return 'Days in advance.';
+                    }
+                });
 
                 if ($('#modal-container form div.modal div.modal-body select#recurringInterval').length === 0) {
                     if ($('#modal-container form').children('.modal').attr('id') === 'depositModal') {
@@ -8408,12 +8424,12 @@ $(function () {
         e.preventDefault();
 
         submitType = 'save-and-close';
-
-        if ($('#modal-container form').length > 0) {
-            $('#modal-form').submit();
-        } else {
-            $('#update-recurring-form').submit();
-        }
+        $('#modal-form').submit();
+        // if ($('#modal-container #modal-form').length > 0) {
+        //     $('#modal-form').submit();
+        // } else {
+        //     $('#update-recurring-form').submit();
+        // }
     });
 
     $(document).on('change', '#invoiceModal #customer', function () {
@@ -10650,7 +10666,7 @@ const submitModalForm = (event, el) => {
             });
             break;
         case '#payBillsModal':
-            // var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '').trim();;
+            // var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '').trim();
 
             $(`${modalId} #bills-table tbody tr`).each(function () {
                 var rowData = this.dataset;
@@ -11233,7 +11249,6 @@ const submitModalForm = (event, el) => {
                                     </div>
                                 </div>
                             </span>`);
-                            
                             break;
                         case 'weeklyTimesheetModal':
                             var type = 'weekly-timesheet';
@@ -11611,7 +11626,7 @@ const makeRecurring = (modalName) => {
             <h3>Recurring Bank Deposit</h3>
             <div class="row">
                 <div class="col-12 col-md-3">
-                    <label for="templateName">Template name</label>
+                    <label for="templateName">Template Name</label>
                     <input type="text" class="form-control nsm-field" id="templateName" name="template_name">
                 </div>
                 <div class="col-12 col-md-2">
@@ -11622,7 +11637,7 @@ const makeRecurring = (modalName) => {
                         <option value="unscheduled">Unscheduled</option>
                     </select>
                 </div>
-                <div class="col-12 col-md-3 d-flex flex-column p-0 align-items-start">
+                <div class="col-12 col-md-4 d-flex flex-column p-0 align-items-start">
                     <span>Create &emsp;</span>
                     <div class="d-flex align-items-start justify-content-center"><input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
                     <span style="margin-top: 7px;">&emsp; days in advance</span></div>
@@ -11652,7 +11667,7 @@ const makeRecurring = (modalName) => {
         <div class="col-12 grid-mb">
             <div class="row">
                 <div class="col-12 col-md-2">
-                    <label for="recurringInterval">Interval</label>
+                    <label for="recurringInterval" style="margin-bottom: 3px;">Interval</label>
                     <select class="form-control nsm-field" name="recurring_interval" id="recurringInterval">
                         <option value="daily">Daily</option>
                         <option value="weekly">Weekly</option>
@@ -11685,14 +11700,14 @@ const makeRecurring = (modalName) => {
                         <div class="col-2 align-items-end d-flex" style="margin-bottom: 7px;">month(s)</div>
                     </div>
                 </div>
-                <div class="col-12 col-md-1">
-                    <label for="startDate">Start date</label>
+                <div class="col-12 col-md-2">
+                    <label for="startDate" style="margin-bottom: 3px;">Start date</label>
                     <div class="nsm-field-group calendar">
                         <input type="text" class="form-control nsm-field date" name="start_date" id="startDate"/>
                     </div>
                 </div>
                 <div class="col-12 col-md-1">
-                    <label for="endType">End</label>
+                    <label for="endType" style="margin-bottom: 3px;">End</label>
                     <select name="end_type" class="form-control nsm-field" id="endType">
                         <option value="none">None</option>
                         <option value="by">By</option>
@@ -11753,7 +11768,7 @@ const makeRecurring = (modalName) => {
             modalId = 'billModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
+            //$(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
             $(`#${modalId} div.modal-body #bill_date`).parent().parent().remove();
             $(`#${modalId} div.modal-body #due_date`).parent().parent().remove();
             $(`#${modalId} div.modal-body #bill_no`).parent().remove();
@@ -11864,7 +11879,7 @@ const makeRecurring = (modalName) => {
             break;
     }
 
-    $(`#${modalId}`).parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
+    //$(`#${modalId}`).parent().attr('onsubmit', 'submitModalForm(event, this)').removeAttr('data-href');
     $(`#${modalId} .transactions-container`).parent().remove();
     $(`#${modalId} .close-transactions-container`).parent().remove();
 
@@ -12671,7 +12686,12 @@ const updateTransaction = (event, el) => {
 
     if (vendorModals.includes(modalId)) {
         var count = 0;
-        var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '');
+        if( $(`${modalId} span.transaction-total-amount`).length > 0 ){
+            var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '');
+        }else{
+            var totalAmount = '0.00';
+        }
+        
         data.append('total_amount', totalAmount.trim());
 
         $(`${modalId} table#category-details-table tbody tr`).each(function () {
@@ -12760,6 +12780,7 @@ const updateTransaction = (event, el) => {
             }
 
             submitType = '';
+            location.reload();
             // $('#transactions-table').DataTable().ajax.reload(null, true);
         }
     });
@@ -14509,7 +14530,7 @@ const loadPaymentCredits = (paymentdata) => {
 // }
 
 const printPreviewInvoice = () => {
-    var split = $('#modal-container form').attr('data-href').replace(base_url + '/accounting/update-transaction/', '').split('/');
+    var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
     $.get(base_url + 'accounting/print-invoice-modal/' + split[1], function (result) {
         $('div#modal-container').append(result);
@@ -14541,7 +14562,7 @@ const printPreviewSalesReceipt = () => {
 const printPreviewRefundReceipt = () => {
     var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
-    $.get(base_url + '/accounting/print-refund-receipt-modal/' + split[1], function (result) {
+    $.get('/accounting/print-refund-receipt-modal/' + split[1], function (result) {
         $('div#modal-container').append(result);
 
         $('#viewPrintRefundReceiptModal').modal('show');

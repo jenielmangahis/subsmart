@@ -24,12 +24,15 @@
 .hide-delete{
     display:none;
 }
- </style>
+.nsm-table > tbody td {
+    border:none !important;
+}
+</style>
 <div class="full-screen-modal">
 <?php if(!isset($bill)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
 <?php else : ?>
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/bill/<?=$bill->id?>">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="<?= base_url('accounting/update-transaction/bill/'.$bill->id); ?>">
 <?php endif; ?>
     <div id="billModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
         <div class="modal-dialog">
@@ -128,7 +131,7 @@
                                     <?php endif;?>
                                 </div>
                                 <?php endif; ?>
-                                <div class="col-12 col-md-8 grid-mb">
+                                <div class="col-12 col-md-8 grid-mb test2">
                                     <div class="row">
                                         <div class="col-12 col-md-3">
                                             <label for="vendor">Vendor</label>
@@ -150,41 +153,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-4 text-end grid-mb">
-                                    <h6>
-                                        <?php if(isset($bill)) : ?>
-                                            <?php if(!$is_copy) : ?>
-                                                <?=$bill->status === "1" ? "BALANCE DUE" : "PAYMENT STATUS"?>
-                                            <?php else : ?>
-                                                AMOUNT
-                                            <?php endif; ?>
-                                        <?php else : ?>
-                                            AMOUNT
-                                        <?php endif; ?>
-                                    </h6>
+                                <div class="col-12 col-md-4 text-end grid-mb test1">
+                                    <h6>AMOUNT</h6>
                                     <h2>
                                         <?php if(isset($bill)) : ?>
-                                            <?php if(!$is_copy) : ?>
-                                                <span class="transaction-total-amount">
-                                                <?php if($bill->status === "1") : ?>
-                                                    <?php
-                                                        $amount = '$'.number_format(floatval($bill->remaining_balance), 2, '.', ',');
-                                                        $amount = str_replace('$-', '-$', $amount);
-                                                        echo $amount;
-                                                    ?>
-                                                <?php else : ?>
-                                                    PAID
-                                                <?php endif; ?>
-                                                </span>
-                                            <?php else : ?>
-                                                <span class="transaction-total-amount">
-                                                    <?php
-                                                        $amount = '$'.number_format(floatval($bill->remaining_balance), 2, '.', ',');
-                                                        $amount = str_replace('$-', '-$', $amount);
-                                                        echo $amount;
-                                                    ?>
-                                                </span>
-                                            <?php endif; ?>
+                                            <span class="transaction-total-amount">
+                                                <?php
+                                                    $amount = '$'.number_format(floatval($bill->remaining_balance), 2, '.', ',');
+                                                    $amount = str_replace('$-', '-$', $amount);
+                                                    echo $amount;
+                                                ?>
+                                            </span>
                                         <?php else : ?>
                                             <span class="transaction-total-amount">
                                                 <?php 
@@ -257,6 +236,10 @@
                                     <label for="mailing_address">Mailing address</label>
                                     <textarea name="mailing_address" id="mailing_address" class="form-control nsm-field mb-2" style="height:157px;"><?=isset($purchaseOrder) || isset($bill) ? (isset($bill) && !isset($purchaseOrder)) ? str_replace("<br />", "", $bill->mailing_address) : str_replace("<br />", "", $purchaseOrder->mailing_address) : ""?></textarea>
                                 </div>
+                                <div class="col-md-2">
+                                    <label for="memo">Memo</label>
+                                    <textarea name="memo" id="memo" class="nsm-field form-control mb-2" style="height:157px !important;"><?=isset($purchaseOrder) || isset($bill) ? (isset($bill)) ? str_replace("<br />", "", $bill->memo) : str_replace("<br />", "", $purchaseOrder->memo) : ''?></textarea>
+                                </div>
                                 <div class="col-12 col-md-2">
                                     <label for="term">Terms</label>
                                     <select name="term" id="term" class="form-control nsm-field mb-2">
@@ -275,17 +258,17 @@
 
                                 </div>
                                 <div class="col-md-2">
+                                    <label for="memo">Memo</label>
+                                    <textarea name="memo" id="memo" class="nsm-field form-control mb-2" style="height:157px !important;"><?=isset($purchaseOrder) || isset($bill) ? (isset($bill)) ? str_replace("<br />", "", $bill->memo) : str_replace("<br />", "", $purchaseOrder->memo) : ''?></textarea>
+                                </div>
+                                <div class="col-md-2">
                                     <div class="mb-2">
                                         <label for="bill_no">Bill no.</label>
                                         <input type="text" name="bill_no" id="bill_no" class="form-control nsm-field" <?=isset($bill) ? "value='$bill->bill_no'" : ''?>>
                                     </div>
                                     <label for="permit_number">Permit no.</label>
                                     <input type="number" class="form-control nsm-field mb-2" name="permit_number" id="permit_number" <?=isset($bill) ? "value='$bill->permit_no'" : ''?>> 
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="memo">Memo</label>
-                                    <textarea name="memo" id="memo" class="nsm-field form-control mb-2" style="height:157px !important;"><?=isset($purchaseOrder) || isset($bill) ? (isset($bill)) ? str_replace("<br />", "", $bill->memo) : str_replace("<br />", "", $purchaseOrder->memo) : ''?></textarea>
-                                </div>
+                                </div>                                
                             </div>
 
                             <div class="row">
@@ -331,8 +314,8 @@
                                                                 <td data-name="Category" style="width:15%;">CATEGORY</td>
                                                                 <td data-name="Description">DESCRIPTION</td>
                                                                 <td data-name="Amount" style="width:10%;">AMOUNT</td>
-                                                                <td data-name="Billable" style="width:5%;text-align:center;">BILLABLE</td>
-                                                                <td data-name="Markup %" style="width:10%;">MARKUP %</td>
+                                                                <td data-name="Billable" style="width:8%;text-align:center;">BILLABLE</td>
+                                                                <td data-name="Markup %" style="width:8%;">MARKUP %</td>
                                                                 <td data-name="Tax" style="width:5%;text-align:center;">TAX</td>
                                                                 <?php if(isset($bill) && !is_null($bill->linked_transacs)) : ?>
                                                                 <td data-name="Linked"></td>
@@ -346,8 +329,7 @@
                                                                 <td>
                                                                     <select name="category_customer[]" class="nsm-field form-control"></select>
                                                                 </td>
-                                                                <td><select name="expense_account[]" class="nsm-field form-control" required></select>
-                                                                </td>
+                                                                <td><select name="expense_account[]" class="nsm-field form-control" required></select></td>
                                                                 <td>
                                                                     <select name="category[]" class="nsm-field form-control">
                                                                         <option disabled selected>&nbsp;</option>
@@ -381,6 +363,14 @@
                                                             <tr>
                                                                 <td><?=$count?></td>
                                                                 <td>
+                                                                    <select name="category_customer[]" class="nsm-field form-control">
+                                                                        <option value="<?=$category->customer_id?>">
+                                                                            <?php $customer = $this->accounting_customers_model->get_by_id($category->customer_id); ?>
+                                                                            <?=$customer->first_name . ' ' . $customer->last_name?>
+                                                                        </option>
+                                                                    </select>
+                                                                </td>                                                                
+                                                                <td>
                                                                     <select name="expense_account[]" class="nsm-field form-control" required>
                                                                         <option value="<?=$category->expense_account_id?>"><?=$this->chart_of_accounts_model->getName($category->expense_account_id)?></option>
                                                                     </select>
@@ -405,14 +395,6 @@
                                                                     <div class="table-row-icon table-checkbox">
                                                                         <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1" <?=$category->tax === "1" ? 'checked' : ''?>>
                                                                     </div>
-                                                                </td>
-                                                                <td>
-                                                                    <select name="category_customer[]" class="nsm-field form-control">
-                                                                        <option value="<?=$category->customer_id?>">
-                                                                            <?php $customer = $this->accounting_customers_model->get_by_id($category->customer_id); ?>
-                                                                            <?=$customer->first_name . ' ' . $customer->last_name?>
-                                                                        </option>
-                                                                    </select>
                                                                 </td>
                                                                 <?php if(isset($bill) && !is_null($bill->linked_transacs)) : ?>
                                                                 <td>

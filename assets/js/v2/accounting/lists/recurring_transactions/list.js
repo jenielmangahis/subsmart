@@ -265,7 +265,7 @@ $('#transactions-table .edit-transaction').on('click', function(e) {
         type: transactionType
     };
 
-    $.get(`/accounting/view-transaction/${transactionType}/${transactionId}`, function(res) {
+    $.get(base_url + `accounting/view-transaction/${transactionType}/${transactionId}`, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -429,7 +429,7 @@ $('#transactions-table .use-transaction').on('click', function(e) {
         type: transactionType
     };
 
-    $.get(`/accounting/view-transaction/${transactionType}/${transactionId}`, function(res) {
+    $.get(base_url + `accounting/view-transaction/${transactionType}/${transactionId}`, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -549,7 +549,7 @@ $('#transactions-table .duplicate-transaction').on('click', function(e) {
         type: transactionType
     };
 
-    $.get(`/accounting/copy-transaction/${transactionType}/${transactionId}`, function(res) {
+    $.get(base_url + `/accounting/copy-transaction/${transactionType}/${transactionId}`, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -680,7 +680,7 @@ $('#transactions-table .skip-next-date').on('click', function(e) {
 
 function getRowData(id, modalName)
 {
-    $.get(`/accounting/recurring-transactions/get-details/${id}`, function(res) {
+    $.get(base_url + `accounting/recurring-transactions/get-details/${id}`, function(res) {
         var result = JSON.parse(res);
 
         if(result.success === false) {

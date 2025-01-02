@@ -37,7 +37,7 @@
                         <thead>
                             <tr>
                                 <td class="table-icon"></td>
-                                <td data-name="Ticket Number">Ticket Number</td>
+                                <td data-name="Ticket Number" style="width:50%;">Ticket Number</td>
                                 <td data-name="Date">Date</td>    
                                 <td data-name="Time">Time</td>                               
                                 <td data-name="Status">Status</td>

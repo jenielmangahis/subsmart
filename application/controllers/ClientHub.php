@@ -52,9 +52,11 @@ class ClientHub extends MYF_Controller {
 		$this->page_data['customer_id_incrypt'] = $id;
 
 		$customer_id = hashids_decrypt($id, '', 45);
-		$invoices = $this->invoice_model->getAllByCustomerId($customer_id);
+        $filter[] = ['field_name' => 'invoices.status !=', 'field_value' => 'Draft'];
+		$invoices = $this->invoice_model->getAllByCustomerId($customer_id, $filter);
 		
 		$this->page_data['invoices'] = $invoices;
+        $this->page_data['cid'] = $id;
 		$this->load->view('v2/pages/customer/client_hub/invoice_status', $this->page_data);
 	}
 
@@ -98,57 +100,31 @@ class ClientHub extends MYF_Controller {
 	
 	public function ajax_view_customer_invoice_details()
 	{
-		$post   = $this->input->post();
-		$format = $post['format'];
-		$id     = $post['invoice_id'];
-
-        $this->load->model('general_model');
-        $this->load->model('AcsProfile_model');
-        $invoice = get_invoice_by_id($post['invoice_id']);
-        $get_company_info = array(
-            'where' => array(
-                'company_id' => $invoice->company_id,
-            ),
-            'table' => 'business_profile',
-            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
-        );
-
-        $company = $this->general_model->get_data_with_param($get_company_info, false);
-      
-        $this->page_data['invoice']  = $invoice;
-        $this->page_data['items']    = $items = $this->invoice_model->getItemsInv($id);
-        $this->page_data['users']    = $this->invoice_model->getInvoiceCustomer($id);
-        $this->page_data['customer'] = $this->AcsProfile_model->getByProfId($invoice->customer_id);
-
-        if (!empty($invoice)) {
-            foreach ($invoice as $key => $value) {
-                if (is_serialized($value)) {
-                    $invoice->{$key} = unserialize($value);
-                }
-            }
-            $this->page_data['invoice'] = $invoice;
+		$post = $this->input->post();
+		$invoice_id  = $post['invoice_id'];
+        $customer_id = hashids_decrypt($post['cid'], '', 45);
+        
+        $customer = $this->AcsProfile_model->getByProfId($customer_id);
+        $invoice  = $this->invoice_model->getById($invoice_id, false);
+        
+        if( $invoice && $invoice->company_id == $customer->company_id ){
+            $company = $this->Business_model->getByCompanyId($customer->company_id);
+            $this->page_data['invoice']  = $invoice;
+            $this->page_data['items']    = $items = $this->invoice_model->getItemsInv($invoice_id);            
+            $this->page_data['customer'] = $customer;
+            $this->page_data['company']  = $company;
+            $this->load->view('invoice/front/standard_template_web', $this->page_data);
+        }else{
+            echo 'Data not found';
         }
-        $this->page_data['company'] = $company;
-        $this->page_data['format']  = $format;
-
-        $setting = $this->invoice_settings_model->getAllByCompany($invoice->company_id);	
-        if ($format === "html") {
-            $img = explode("/", parse_url((getPublicCompanyBusinessProfileImage($invoice->company_id)) ? getPublicCompanyBusinessProfileImage($invoice->company_id) : $url->assets)['path']);
-			$this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
-            $filename = "nSmarTrac_invoice_".$id;
-            if($setting[0]->invoice_template == 1){
-			  $this->load->view('invoice/pdf/standard_template_web', $this->page_data);
-            }
-            if($setting[0]->invoice_template == 3){
-				$this->load->view('invoice/pdf/template_web', $this->page_data);
-            }
-        }		
 	}
 
     public function invoice_preview_pdf($id)
     {
         $this->load->model('general_model');
         $this->load->model('AcsProfile_model');
+
+        $invoice = $this->invoice_model->
         $invoice = get_invoice_by_id($id);
         $get_company_info = array(
             'where' => array(
