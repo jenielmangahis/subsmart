@@ -2861,7 +2861,7 @@ class Users extends MY_Controller
 		
 			$target_file = $target_dir . basename($_FILES['image']['name']);
 			if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
-				$business_image = $target_file; 
+				$business_image = basename($_FILES['image']['name']); 
 				$this->business_model->update($bid, ['business_image' => $business_image]);
 			} else {
 				log_message('error', 'File upload failed for ' . $_FILES['image']['name']);
@@ -2871,7 +2871,7 @@ class Users extends MY_Controller
 		}
 		$this->business_model->update($bid, $pdata);
 
-		redirect('users/businessdetail');
+		//redirect('users/businessdetail');
 	}
 
 	public function ajax_update_business_details()
@@ -3066,6 +3066,7 @@ class Users extends MY_Controller
 			$this->CompanyRoleAccessModule_model->create($data);
 
 			$data = [
+				'company_id' => $cid,
 				'role_id' => $post['role'],
 				'widget_id' => 0,
 				'date_created' => date("Y-m-d H:i:s"),
@@ -3122,18 +3123,25 @@ class Users extends MY_Controller
 	public function ajax_edit_role_access_module()
 	{
 		$this->load->model('CompanyRoleAccessModule_model');
+		$this->load->model('CompanyRoleAccessWidget_model');
 		$this->load->model('Widgets_model');
 		
 		$post = $this->input->post();
 		$cid  = logged('company_id');
 
 		$roles = $this->Users_model->userRolesList();
-		$modules = $this->CompanyRoleAccessModule_model->modules();
-		$roleAccessModule = $this->CompanyRoleAccessModule_model->getAllByCompanyIdAndRoleId($cid, $post['rid']);
+		$modules = $this->CompanyRoleAccessModule_model->modules();		
+		$roleAccessModule  = $this->CompanyRoleAccessModule_model->getAllByCompanyIdAndRoleId($cid, $post['rid']);
+		$roleAccessWidgets = $this->CompanyRoleAccessWidget_model->getAllByCompanyIdAndRoleId($cid, $post['rid']);
 
 		$groupRoleAccessModules = [];
 		foreach($roleAccessModule as $rm){
 			$groupRoleAccessModules[$rm->module] = $rm;	
+		}
+
+		$accessWidgets = [];
+		foreach($roleAccessWidgets as $w){
+			$accessWidgets[] = $w->widget_id;
 		}
 
 		$widgets = $this->Widgets_model->getAll();
@@ -3142,6 +3150,7 @@ class Users extends MY_Controller
 		$this->page_data['modules'] = $modules;
 		$this->page_data['rid'] = $post['rid'];
 		$this->page_data['groupRoleAccessModules'] = $groupRoleAccessModules;
+		$this->page_data['accessWidgets'] = $accessWidgets;
 		$this->page_data['widgets'] = $widgets;
 		$this->load->view('v2/pages/users/access_role_modules/ajax_edit_role_access_module', $this->page_data);
 	}
@@ -3149,6 +3158,7 @@ class Users extends MY_Controller
 	public function ajax_update_role_access_module()
 	{
 		$this->load->model('CompanyRoleAccessModule_model');
+		$this->load->model('CompanyRoleAccessWidget_model');
 
 		$is_success  = 1;		
 		$msg = '';
@@ -3168,6 +3178,7 @@ class Users extends MY_Controller
 
 		if( $is_success == 1 ){
 			$this->CompanyRoleAccessModule_model->deleteAllByCompanyIdAndRoleId($cid, $post['role']);
+			$this->CompanyRoleAccessWidget_model->deleteAllByCompanyIdAndRoleId($cid, $post['role']);
 
 			if( $post['access_type'] == 'access-all' ){
 				$data = [
@@ -3181,6 +3192,15 @@ class Users extends MY_Controller
 				];
 
 				$this->CompanyRoleAccessModule_model->create($data);
+
+				$data = [
+					'company_id' => $cid,
+					'role_id' => $post['role'],
+					'widget_id' => 0,
+					'date_created' => date("Y-m-d H:i:s"),
+				];
+	
+				$this->CompanyRoleAccessWidget_model->create($data);
 
 				$is_success = 1;
 				$msg = '';
@@ -3201,6 +3221,17 @@ class Users extends MY_Controller
 					
 				}
 
+				foreach( $post['roleWidgets'] as $widget_id ){
+					$data = [
+						'company_id' => $cid,
+						'role_id' => $post['role'],
+						'widget_id' => $widget_id,
+						'date_created' => date("Y-m-d H:i:s"),
+					];
+
+					$this->CompanyRoleAccessWidget_model->create($data);
+				}
+
 				$is_success = 1;
 				$msg = '';
 			}
@@ -3217,12 +3248,16 @@ class Users extends MY_Controller
 	public function ajax_delete_role_access_module()
 	{
 		$this->load->model('CompanyRoleAccessModule_model');
+		$this->load->model('CompanyRoleAccessWidget_model');
 
 		$is_success  = 1;		
 		$msg = '';
 
 		$post = $this->input->post();
 		$cid  = logged('company_id');
+
+		$this->CompanyRoleAccessModule_model->deleteAllByCompanyIdAndRoleId($cid, $post['rid']);
+		$this->CompanyRoleAccessWidget_model->deleteAllByCompanyIdAndRoleId($cid, $post['rid']);
 		
 		$json_data = [
             'is_success' => $is_success,
