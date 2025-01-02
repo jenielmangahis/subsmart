@@ -60,6 +60,11 @@ $('#apply-button').on('click', function() {
     location.href = url;
 });
 
+$("#reset-button").on('click', function() {
+    var url = `${base_url}accounting/recurring-transactions`;
+    location.href = url;
+});
+
 $("#btn_print_recurring_transactions").on("click", function() {
     $("#recurring_transactions_table_print").printThis();
 });
