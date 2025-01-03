@@ -30,13 +30,7 @@
                 <i class='bx bx-fw bx-user-pin'></i>
                 <span>Customer Subscriptions</span>
             </a>
-        </li> -->
-        <li class="<?php if($page->title == 'Customer Groups'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/group') ?>">
-                <i class='bx bx-fw bx-group'></i>
-                <span>Customer Groups</span>
-            </a>
-        </li>
+        </li> -->        
         <!-- <li class="<?php if($page->title == 'Leads Manager List' || $page->title == 'New Lead Form'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('customer/leads') ?>">
                 <i class='bx bx-fw bx-notepad'></i>
@@ -54,6 +48,12 @@
             <a class="nsm-page-link" href="<?php echo base_url('customer/commercial') ?>">
             <i class='bx bx-building'></i>
                 <span>Commercial</span>
+            </a>
+        </li>
+        <li class="<?php if($page->title == 'Customer Groups'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('customer/group') ?>">
+                <i class='bx bx-fw bx-group'></i>
+                <span>Customer Groups</span>
             </a>
         </li>
         <li class="<?php if($page->title == 'Leads Manager List'): echo 'active'; endif; ?>">
