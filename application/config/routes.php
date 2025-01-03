@@ -109,6 +109,7 @@ $route['customer/delete/(:num)'] = 'customer/delete_company_or_person/$1';
 $route['customer/export_residential_list'] = 'Customer/export_residential_list';
 $route['customer/export_commercial_list'] = 'Customer/export_commercial_list';
 $route['customer/_archived_list'] = 'Customer/ajax_archived_list';
+$route['customer/_create_customer_group'] = 'Customer/ajax_create_customer_group';
 
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -1963,11 +1964,13 @@ $route['customers/_update_financing_category'] = 'Customer/ajax_update_financing
 $route['customers/_delete_financing_category'] = 'Customer/ajax_delete_financing_category';
 $route['customers/_create_customer_status'] = 'Customer/ajax_create_customer_status';
 $route['customers/_create_customer_group'] = 'Customer/ajax_create_customer_group';
+$route['customers/_update_customer_group'] = 'Customer/ajax_update_customer_group';
 $route['customers/_create_sales_area'] = 'Customer/ajax_create_sales_area';
 $route['customers/_create_accounting_terms'] = 'Customer/ajax_create_accounting_terms';
 $route['customers/_create_rate_plan'] = 'Customer/ajax_create_rate_plan';
 $route['customers/_create_system_package_type'] = 'Customer/ajax_create_system_package_type';
 $route['customers/_create_activation_fee'] = 'Customer/ajax_create_activation_fee';
+$route['customers/_delete_customer_group'] = 'Customer/ajax_delete_customer_group';
 
 //Benchmark for Testing
 $route['benchmark/cron_customer_subscription'] = 'Benchmark/cron_customer_subscription';
@@ -1990,6 +1993,6 @@ $route['client_hub/tickets/(:any)?'] = 'ClientHub/tickets/$1';
 $route['client_hub/invoice_status/(:any)?'] = 'ClientHub/invoice_status/$1';
 $route['client_hub/_quick_view_ticket_details/(:any)?'] = 'ClientHub/ajax_view_customer_ticket_details/$1';
 $route['client_hub/invoice_preview_pdf/(:any)?'] = 'ClientHub/invoice_preview_pdf/$1';
-$route['client_hub/_quick_view_invoice/(:any)?'] = 'ClientHub/ajax_view_customer_invoice_details/$1';
+$route['client_hub/_quick_view_invoice'] = 'ClientHub/ajax_view_customer_invoice_details';
 $route['client_hub/_send_request_change_information'] = 'ClientHub/ajax_send_request_change_information';
 $route['client_hub/(:any)?'] = 'ClientHub/index/$1';
