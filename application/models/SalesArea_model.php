@@ -69,6 +69,13 @@ class SalesArea_model extends MY_Model
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
     }
+
+    public function deleteSalesArea($id)
+    {
+        $this->db->where('sa_id', $id);
+        $delete = $this->db->delete($this->table);
+        return $delete;
+    }
 }
 
 /* End of file SalesArea_model.php */
