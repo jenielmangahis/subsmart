@@ -35,11 +35,13 @@
                     </div>               
 
                     <div class="col-6 grid-mb text-end">
+                        <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#new_sales_area_modal">
-                                <i class='bx bx-fw bx-bar-chart-square'></i> New Sales Area
+                                <i class='bx bx-fw bx-plus'></i> New Sales Area
                             </button>
                         </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <table class="nsm-table">
@@ -72,12 +74,16 @@
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                                                 <li>
                                                     <a class="dropdown-item edit-item sales-area-item" href="javascript:void(0);" data-id="<?= $sa->sa_id; ?>" data-name="<?= $sa->sa_name; ?>" data-bs-toggle="modal" data-bs-target="#edit_sales_area_modal">Edit</a>
                                                 </li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item delete-item sales-area-item" href="javascript:void(0);" data-id="<?= $sa->sa_id; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item sales-area-item" href="javascript:void(0);" data-name="<?= $sa->sa_name; ?>" data-id="<?= $sa->sa_id; ?>">Delete</a>
                                                 </li>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </td>
@@ -223,10 +229,11 @@
 
         $(document).on("click", ".sales-area-item.delete-item", function() {
             let id = $(this).attr("data-id");
+            let name = $(this).attr("data-name");
 
             Swal.fire({
                 title: 'Delete Sales Area',
-                text: "Are you sure you want to delete this Sales Area?",
+                html: `Are you sure you want to delete this sales area <b>${name}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -236,22 +243,26 @@
                     $.ajax({
                         type: 'POST',
                         url: "<?php echo base_url(); ?>customer/delete_sales_area",
-                        data: {
-                            id: id
-                        },
+                        data: {id: id},
+                        dataType:"json",
                         success: function(result) {
-                            console.log(result);
-                            if (result === '1') {
+                            if (result.is_success) {
                                 Swal.fire({
-                                    title: 'Good job!',
-                                    text: "Data Deleted Successfully!",
+                                    title: 'Sales Area',
+                                    text: "Data deleted successfully!",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
-                                    if (result.value) {
+                                    //if (result.value) {
                                         location.reload();
-                                    }
+                                    //}
+                                });
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
                                 });
                             }
                         },

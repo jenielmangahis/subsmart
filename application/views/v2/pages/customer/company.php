@@ -44,6 +44,11 @@
 .select-filter-card{
     cursor: pointer
 }
+.dropdown-menu {
+    overflow: hidden;
+    overflow-y: auto;
+    max-height: calc(100vh - 500px);
+}
 </style>
 
 <div class="nsm-fab-container">
@@ -119,9 +124,11 @@
                                 <?php } ?>
                             </ul>
                         </div>
+                        <?php if(checkRoleCanAccessModule('customers', 'write')){ ?>
                         <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary" id="openModalBtn"  style="margin-left: 10px; cursor:pointer"><i class="bx bx-building"></i> New Customer</a>
+                            <a class="nsm-button primary" id="openModalBtn"  style="margin-left: 10px; cursor:pointer"><i class='bx bx-fw bxs-user-plus'></i> New Customer</a>
                         </div>
+                        <?php } ?>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" id="btn-commercial-export-list">
                                 <i class='bx bx-fw bx-file'></i> Export
@@ -341,8 +348,19 @@
         </div>
     </div>
 </div>
-
-
+<div class="modal fade nsm-modal fade" id="modal-favorite-customers" aria-labelledby="modal-favorite-customers-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form method="post" id="quick-add-event-form">   
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Manage Favorite Customers</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="customer-favorite-list-container" style="max-height: 800px; overflow: auto;"></div>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="modal fade nsm-modal fade" id="company_modal" tabindex="-1" aria-labelledby="company_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <form id="person_and_company_form">
@@ -599,7 +617,6 @@ $(document).ready(function() {
     $('.select-filter-card').on('click', function(e) {
         e.preventDefault();
         var filterValue = $(this).attr('data-value');
-        console.log('filterValue',filterValue)
         $('#filter-selected').text(filterValue);
 
         COMPANY_LIST_TABLE.ajax.reload();
@@ -684,10 +701,75 @@ $(document).ready(function() {
         window.open('tel:' + phone);
     }); 
 
+    $(document).on('click', '.favorite-customer', function(){
+        var cid = $(this).attr('data-id');
+        var cname = $(this).attr('data-name');
+        var is_favorite = $(this).attr('data-favorite');
+
+        if( is_favorite == 1 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                html: 'Customer is already in favorite list.'
+            });
+        }else{
+            Swal.fire({
+                title: "Favorite Customer",
+                html: `Do you want to add to <b>${cname}</b> to the list?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    var url = base_url + "customer/_add_to_favorites";
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: {
+                            cid: cid
+                        },
+                        dataType: 'json',
+                        beforeSend: function(result) {
+
+                        },
+                        success: function(result) {
+                            if (result.is_success == 1) {
+                                Swal.fire({
+                                    html: 'Customer record was updated successfully',
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    COMPANY_LIST_TABLE.ajax.reload();  
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    html: result.msg
+                                });
+                            }
+                        },
+                        complete: function() {
+
+                        },
+                        error: function(e) {
+                            console.log(e);
+                        }
+                    });
+                }
+            });
+        }            
+    });
+
     $(document).on('click', '.delete-customer', function(){
         var cid = $(this).attr('data-id');
+        var name = $(this).attr('data-name');
+
         Swal.fire({            
-            html: "Delete selected customer?",
+            title: 'Commercial Customers',     
+            html: `Delete selected customer <b>${name}</b>?`,
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,
