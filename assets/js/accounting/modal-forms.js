@@ -11724,6 +11724,16 @@ const makeRecurring = (modalName) => {
             $(`#${modalId} #account-balance`).parent().parent().remove();
             $(`#${modalId} div.modal-body div.row.bank-account-details`).children('div:last-child()').remove();
             $(`#${modalId} #collapse-nsmartrac-payments`).parent().parent().remove();
+
+            $('#modal-help-popover-scheduled-create').popover({
+                placement: 'top',
+                html: true,
+                trigger: "hover focus",
+                content: function () {
+                    return 'Days in advance.';
+                }
+            });
+
             break;
         case 'transfer':
             modalId = 'transferModal';
@@ -11731,6 +11741,16 @@ const makeRecurring = (modalName) => {
             $(`div#${modalId} div.modal-body`).children('.row').children(':first-child').prepend(templateFields);
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Transfer');
             $(`div#${modalId} div.modal-body #date`).parent().parent().remove();
+
+            $('#modal-help-popover-scheduled-create').popover({
+                placement: 'top',
+                html: true,
+                trigger: "hover focus",
+                content: function () {
+                    return 'Days in advance.';
+                }
+            });
+
             break;
         case 'journal_entry':
             modalId = 'journalEntryModal';
@@ -11739,6 +11759,16 @@ const makeRecurring = (modalName) => {
             $(`div#${modalId} div.modal-body`).children('.row').children(':first-child').prepend(templateFields);
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Journal Entry');
             $(`#${modalId} div.modal-header .modal-title span`).html('');
+
+            $('#modal-help-popover-scheduled-create').popover({
+                placement: 'top',
+                html: true,
+                trigger: "hover focus",
+                content: function () {
+                    return 'Days in advance.';
+                }
+            });
+
             break;
         case 'expense':
             modalId = 'expenseModal';
@@ -11750,6 +11780,16 @@ const makeRecurring = (modalName) => {
             $(`#${modalId} div.modal-body #payment_date`).parent().parent().remove();
             $(`#${modalId} div.modal-body #ref_no`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Expense');
+
+            $('#modal-help-popover-scheduled-create').popover({
+                placement: 'top',
+                html: true,
+                trigger: "hover focus",
+                content: function () {
+                    return 'Days in advance.';
+                }
+            });
+
             break;
         case 'check':
             modalId = 'checkModal';
@@ -11800,6 +11840,16 @@ const makeRecurring = (modalName) => {
             $(`#${modalId} div.modal-body #purchase_order_date`).parent().remove();
             $(`#${modalId} div.modal-body #status`).parent().parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Purchase Order');
+
+            $('#modal-help-popover-scheduled-create').popover({
+                placement: 'top',
+                html: true,
+                trigger: "hover focus",
+                content: function () {
+                    return 'Days in advance.';
+                }
+            });
+            
             break;
         case 'vendor_credit':
             modalId = 'vendorCreditModal';
@@ -11810,6 +11860,16 @@ const makeRecurring = (modalName) => {
             $(`#${modalId} div.modal-body #ref_no`).prev().remove();
             $(`#${modalId} div.modal-body #ref_no`).remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Vendor Credit');
+
+            $('#modal-help-popover-scheduled-create').popover({
+                placement: 'top',
+                html: true,
+                trigger: "hover focus",
+                content: function () {
+                    return 'Days in advance.';
+                }
+            });
+
             break;
         case 'credit_card_credit':
             modalId = 'creditCardCreditModal';
@@ -11822,6 +11882,16 @@ const makeRecurring = (modalName) => {
             $(`#${modalId} #account-balance`).parent().parent().remove();
             $(`#${modalId} label[for="bank_credit_account"]`).html('Account');
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Credit Card Credit');
+
+            $('#modal-help-popover-scheduled-create').popover({
+                placement: 'top',
+                html: true,
+                trigger: "hover focus",
+                content: function () {
+                    return 'Days in advance.';
+                }
+            });
+
             break;
         case 'credit_memo':
             modalId = 'creditMemoModal';
@@ -11833,6 +11903,16 @@ const makeRecurring = (modalName) => {
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Credit Memo');
             $(`#${modalId} div.modal-body #sales-rep`).parent().removeClass('w-100').parent().removeClass('d-flex').removeClass('align-items-end');
             $(`#${modalId} div.modal-body #send-later`).parent().parent().remove();
+
+            $('#modal-help-popover-scheduled-create').popover({
+                placement: 'top',
+                html: true,
+                trigger: "hover focus",
+                content: function () {
+                    return 'Days in advance.';
+                }
+            });
+
             break;
         case 'sales_receipt':
             modalId = 'salesReceiptModal';
@@ -11857,6 +11937,16 @@ const makeRecurring = (modalName) => {
             addedFields += `</div>`;
             addedFields += `</div>`;
             $(addedFields).insertAfter($(`#${modalId} #email`).parent());
+
+            $('#modal-help-popover-scheduled-create').popover({
+                placement: 'top',
+                html: true,
+                trigger: "hover focus",
+                content: function () {
+                    return 'Days in advance.';
+                }
+            });
+
             break;
         case 'refund_receipt':
             modalId = 'refundReceiptModal';
@@ -11875,6 +11965,16 @@ const makeRecurring = (modalName) => {
             $(`#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
             $(`#${modalId} div.modal-body #delayed-credit-date`).parent().parent().parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Delayed Credit');
+
+            $('#modal-help-popover-scheduled-create').popover({
+                placement: 'top',
+                html: true,
+                trigger: "hover focus",
+                content: function () {
+                    return 'Days in advance.';
+                }
+            });
+
             break;
         case 'delayed_charge':
             modalId = 'delayedChargeModal';
@@ -11893,6 +11993,16 @@ const makeRecurring = (modalName) => {
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Invoice <a style="font-size: 12px !important;" href="javascript:void(0)" onclick="cancelRecurring('+ '`' + modalName + '`' +')">Cancel Recurring</a>');
             $(`#${modalId} div.modal-body #shipping-date`).parent().parent().html('');
             $(`#${modalId} div.modal-body #invoice-no`).parent().remove();
+
+            $('#modal-help-popover-scheduled-create').popover({
+                placement: 'top',
+                html: true,
+                trigger: "hover focus",
+                content: function () {
+                    return 'Days in advance.';
+                }
+            });
+
             break;
     }
 
