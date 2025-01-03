@@ -24,8 +24,8 @@ endif;
         background-image: none;
         box-shadow: 0px 3px 12px #38747859;
         padding: 10px;
-        transform: translateY(-60px);
-        height: 73%;
+        /* transform: translateY(-60px); */
+        /* height: 73%; */
     }
 
     .jobs-content #jobs_chart {
@@ -37,7 +37,7 @@ endif;
         height: 7px;
         background: var(--jobs2-color4);
         border-radius: 25px;
-        transform: translateY(-60px);
+        /* transform: translateY(-60px); */
         float: left;
         margin-left: 20px;
     }
@@ -47,7 +47,7 @@ endif;
         font-size: 16px !important;
         font-weight: 500;
         border-color: none;
-        border:none;
+        border: none;
         color: #214548;
     }
 
@@ -57,6 +57,30 @@ endif;
         font-weight: 500;
         border-color: #FEA303;
         color: #214548;
+    }
+
+    @media screen and (max-width: 1366px) {
+
+        .jobs-content .form-select {
+            width: 100%;
+        }
+
+        .jobs-content .col-4 {
+            width: 50%;
+        }
+
+        .jobs-content .filter-options {
+            width: 55%;
+            margin-bottom: 10px;
+        }
+    }
+
+    @media screen and (max-width: 567px) {
+
+        .jobs-content {
+            margin: unset;
+        }
+
     }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -85,7 +109,7 @@ endif;
         </div>
         <div class="jobs-content">
             <div class="row mb-4 mt-2 filter">
-                <div class="col-4">
+                <div class="col-4 filter-options">
                     <select class="nsm-field form-select" name="filter_date" id="widget-job-filter-date">
                         <!-- <option value="custom">Custom</option> -->
                         <option value="this-month">This month</option>
@@ -104,7 +128,7 @@ endif;
             </div>
             <canvas id="jobs_chart" class="nsm-chart" data-chart-type="jobs"></canvas>
         </div>
-        <div class="jobs-separator"></div>
+        <!-- <div class="jobs-separator"></div> -->
     </div>
 </div>
 <script>

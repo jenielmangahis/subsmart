@@ -69,7 +69,53 @@ endif;
         margin-right: 20px;
     }
 
-   
+    @media screen and (max-width: 1366px) {
+
+        .tech-filter .form-select {
+            width: 100%;
+        }
+
+        .tech-filter .col-4 {
+            width: 50%;
+        }
+
+        .tech-filter .filter-options {
+            width: 51%;
+            margin-bottom: 10px;
+        }
+
+        #user_tech_leaderboard {
+            transform: unset;
+            margin-top: 20px
+        }
+
+        #widget-tech-leaderboard .widget-item {
+            width: 200px;
+        }
+    }
+    
+    @media screen and (max-width: 768px) {
+        #user_tech_leaderboard {
+            height: unset;
+            margin: unset;
+            margin-top: 20px;
+        }
+
+
+    }
+
+    @media screen and (max-width: 460px) {
+        .tech-filter .col-4 {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .tech-filter {
+            height: 200px;
+        }
+
+     
+    }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
@@ -96,7 +142,7 @@ endif;
             <div class="tech-filter">
                 <div class="col-md-12 mt-3">
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-4 filter-options">
                             <select class="nsm-field form-select" name="filter_date" id="tech-leader-board-filter-date">
                                 <option value="all">All</option>
                                 <option value="today">Today</option>
@@ -120,7 +166,7 @@ endif;
                 </div>
             </div>
             <div id="user_tech_leaderboard"></div>
-            <div class="tech-separator"></div>
+            <!-- <div class="tech-separator"></div> -->
         </div>
     </div>
 </div>

@@ -9,7 +9,6 @@ endif;
     }
 
     .paid-invoices-container .paid-invoices-items {
-        margin: 0 20px;
         color: rgb(47 43 61 / 0.9);
         border-radius: 6px;
         background-image: none;
@@ -19,6 +18,7 @@ endif;
         height: 100%;
         display: flex;
         align-items: center;
+        justify-content: center;
     }
 
     .paid-invoices-container .paid-invoices-items .row-items {
@@ -44,6 +44,46 @@ endif;
         font-weight: 500;
         border-color: #FEA303;
         color: #214548;
+    }
+
+    @media screen and (max-width: 1366px) {
+
+        .paid-invoices-container .paid-invoices-items .form-select {
+            width: 100%;
+        }
+
+        .paid-invoices-container .paid-invoices-items .col-4 {
+            width: 50%;
+        }
+
+        .paid-invoices-container .paid-invoices-items .filter-options {
+            width: 55%;
+            margin-bottom: 10px;
+        }
+    }
+
+
+    @media screen and (max-width: 567px) {
+        .paid-invoices-container .paid-invoices-items .col-4 {
+            width: 100%;
+            margin-bottom: 10px
+        }
+
+        .paid-invoices-container .paid-invoices-items .filter-options {
+            width: 100%;
+        }
+
+        .paid-invoices-container .paid-invoices-items .row-items {
+            padding: 5px;
+        }
+
+        .paid-invoices-container .paid-invoices-items {
+            margin: unset
+        }
+
+        .paid-invoices-container .text-md-start {
+            text-align: left !important;
+        }
     }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -72,12 +112,12 @@ endif;
     <div class="nsm-card-content">
         <div class="col-md-12">
             <div class="banner mb-5">
-                <img src="./assets/img/paid-invoices-banner.svg" alt="">
+                <img src="./assets/img/paid-invoices-banner2.svg" alt="">
             </div>
             <div class="paid-invoices-container">
                 <div class="paid-invoices-items">
                     <div class="row row-items">
-                        <div class="col-4" style="margin-bottom: 40px ">
+                        <div class="col-4 filter-options">
                             <select class="nsm-field form-select" name="filter_date"
                                 id="widget-paid-invoices-filter-date">
                                 <option value="today">Today</option>
@@ -97,16 +137,15 @@ endif;
                             <input type="date" id="widget-paid-invoices-filter-to"
                                 class="nsm-field form-control date" value="<?= date('Y-m-t') ?>" required>
                         </div>
-                        <div class="col-12 col-md-12">
+                        <div class="col-12 col-md-12 mt-5">
                             <div class="nsm-counter mb-2 widget-tile-paid-invoices"
                                 style=" background-color: #A888B51a;">
-                                <div class="row">
-                                    <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
+                                <div class="d-flex align-items-center justify-content-start gap-2">
+                                    <div class="d-flex justify-content-center align-items-center">
                                         <i class='bx bx-dollar-circle'
                                             style=" background-color: #A888B5;color: #fff;"></i>
                                     </div>
-                                    <div
-                                        class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <div class="text-center text-md-start d-flex flex-column justify-content-center">
                                         <h2 id="widget-paid-invoices-total-amount">$0.00</h2>
                                         <span>Total Amount Paid Invoices</span>
                                     </div>
@@ -116,12 +155,11 @@ endif;
                         <div class="col-12 col-md-12">
                             <div class="nsm-counter mb-2 widget-tile-paid-invoices"
                                 style=" background-color: #d9a1a01a;">
-                                <div class="row">
-                                    <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
+                                <div class="d-flex align-items-center  justify-content-start  gap-2">
+                                    <div class="d-flex justify-content-center align-items-center">
                                         <i class='bx bx-box' style=" background-color: #d9a1a0;color: #fff;"></i>
                                     </div>
-                                    <div
-                                        class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <div class="text-center text-md-start d-flex flex-column justify-content-center">
                                         <h2 id="widget-paid-invoices-total-number">0</h2>
                                         <span>Total Paid invoices</span>
                                     </div>

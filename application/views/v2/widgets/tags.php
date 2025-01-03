@@ -19,6 +19,34 @@
         align-items: center;
         justify-content: center;
     }
+    .tags-container canvas{
+        padding: 30px;
+    }
+
+    @media screen and (max-width: 1366px) {
+        .tags-content .tags-graph-legend .col-md-6 {
+            width: 100%;
+            justify-content: start;
+        }
+    }
+
+    @media screen and (max-width: 991px) {
+        .tags-content .tags-graph-legend .col-md-6 {
+            width: 50%;
+            justify-content: center;
+        }
+    }
+
+    @media screen and (max-width: 567px) {
+        .tags-content .tags-graph-legend .col-md-6 {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .tags-content {
+            margin: unset;
+        }
+    }
 </style>
 <?php
 if (!is_null($dynamic_load) && $dynamic_load == true):
@@ -47,8 +75,8 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content">
-        <div class="banner">
-            <img src="./assets/img/tags-banner.svg" alt="">
+        <div class="banner mb-4">
+            <img src="./assets/img/overdue-invoices-banner2.svg" alt="">
         </div>
         <div class="tags-content">
             <a class="nsm-button primary btn-manage-tags" href="<?= base_url('job/job_tags') ?>">Manage Tags</a>

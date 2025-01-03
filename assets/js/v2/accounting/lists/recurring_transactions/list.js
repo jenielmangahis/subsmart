@@ -60,6 +60,11 @@ $('#apply-button').on('click', function() {
     location.href = url;
 });
 
+$("#reset-button").on('click', function() {
+    var url = `${base_url}accounting/recurring-transactions`;
+    location.href = url;
+});
+
 $("#btn_print_recurring_transactions").on("click", function() {
     $("#recurring_transactions_table_print").printThis();
 });
@@ -579,7 +584,7 @@ $('#transactions-table .delete-transaction').on('click', function(e) {
 
     Swal.fire({
         title: 'Are you sure you want to delete this?',
-        icon: 'warning',
+        icon: 'question',
         showCloseButton: false,
         confirmButtonColor: '#2ca01c',
         confirmButtonText: 'Yes',
@@ -589,7 +594,7 @@ $('#transactions-table .delete-transaction').on('click', function(e) {
     }).then((result) => {
         if(result.isConfirmed) {
             $.ajax({
-				url: `/accounting/recurring-transactions/delete/${row.data().id}`,
+				url: base_url + `/accounting/recurring-transactions/delete/${row.data().id}`,
 				type: 'DELETE',
 				success: function(result) {
                     location.reload();
@@ -630,6 +635,7 @@ $('#transactions-table .pause-recurring').on('click', function(e) {
     var row = $(this).closest('tr');
 
     Swal.fire({
+        icon: 'question',
         title: 'Pause Recurring Transaction',
         html: `Are you sure you want to pause this recurring transaction?`,
         showCloseButton: false,
@@ -640,7 +646,7 @@ $('#transactions-table .pause-recurring').on('click', function(e) {
         cancelButtonColor: '#d33'
     }).then((result) => {
         if(result.isConfirmed) {
-            $.get(`/accounting/recurring-transactions/pause/${row.data().id}`, function(res) {
+            $.get(base_url + `accounting/recurring-transactions/pause/${row.data().id}`, function(res) {
                 var result = JSON.parse(res);
 
                 if(result.success) {
@@ -706,7 +712,7 @@ function getRowData(id, modalName)
 function set_modal_data(data, modalName)
 {
     var txnType = data.txn_type.replaceAll(" ", "-");
-    $(`#${modalName}`).parent('form').removeAttr('onsubmit').attr('id', 'update-recurring-form').attr('data-href', `/accounting/recurring-transactions/update/${txnType}/${data.id}`);
+    //$(`#${modalName}`).parent('form').removeAttr('onsubmit').attr('id', 'update-recurring-form').attr('data-href', `/accounting/recurring-transactions/update/${txnType}/${data.id}`);
 
     $(`#${modalName} #templateName`).val(data.template_name);
     $(`#${modalName} #recurringType`).val(data.recurring_type).trigger('change');

@@ -1,9 +1,8 @@
 
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      Made with <i class="fa fa-heart" style="color: red;"></i> for Developers
-      &nbsp; &nbsp; &nbsp; &nbsp; 
-      <b>Version</b> 1.0
+      <!-- Made with <i class="fa fa-heart" style="color: red;"></i> for Developers
+      &nbsp; &nbsp; &nbsp; &nbsp;        -->
     </div>
     <strong>Copyright &copy; <?php echo date('Y') ?>. </strong> All rights
     reserved.

@@ -38,6 +38,7 @@ endif;
         gap: 10px;
         align-items: center;
         margin-bottom: 5px;
+        justify-content: center;
     }
 
     .today-items-contianer .item .first .icons {
@@ -57,7 +58,7 @@ endif;
     }
 
     .today-items-contianer .item .first label {
-        font-size: 30px;
+        font-size: 20px;
         font-weight: bold;
         line-height: 1;
     }
@@ -67,6 +68,16 @@ endif;
         font-weight: 600;
         margin: 0;
         text-align: center;
+    }
+
+    @media screen and (max-width: 460px) {
+        .today-items-contianer .col-6 {
+            width: 100%;
+        }
+
+        .today-items-contianer .item .first label {
+            font-size: 24px;
+        }
     }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -91,11 +102,11 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="col-md-12">
-            <div class="banner">
-                <img src="./assets/img/today-banner.svg" alt="">
+            <div class="banner mb-3">
+                <img src="./assets/img/today-banner2.svg" alt="">
             </div>
             <div class="row today-items-contianer">
-                <div class="col-4 mb-4">
+                <div class="col-6 mb-4">
                     <div class="row h-100">
                         <div class="item">
                             <div class="box" style="background:#FEA3032a"></div>
@@ -111,7 +122,7 @@ endif;
                         </div>
                     </div>
                 </div>
-                <div class="col-4 mb-4">
+                <div class="col-6 mb-4">
                     <div class="row h-100">
                         <div class="item">
                             <div class="box" style="background:#d9a1a02a"></div>
@@ -128,7 +139,7 @@ endif;
                         </div>
                     </div>
                 </div>
-                <div class="col-4 mb-4">
+                <div class="col-6 mb-4">
                     <div class="row h-100">
                         <div class="item">
                             <div class="box" style="background:#A888B52a"></div>
@@ -144,7 +155,7 @@ endif;
                         </div>
                     </div>
                 </div>
-                <div class="col-4 mb-4">
+                <div class="col-6 mb-4">
                     <div class="row h-100">
                         <div class="item">
                             <div class="box" style="background:#EFB6C82a"></div>
@@ -161,7 +172,7 @@ endif;
                         </div>
                     </div>
                 </div>
-                <div class="col-4 mb-4">
+                <div class="col-6 mb-4">
                     <div class="row h-100">
                         <div class="item">
                             <div class="box" style="background:#FEA3032a"></div>
@@ -177,7 +188,7 @@ endif;
                         </div>
                     </div>
                 </div>
-                <div class="col-4  mb-4">
+                <div class="col-6  mb-4">
                     <div class="row h-100">
                         <div class="item">
                             <div class="box" style="background:#d9a1a02a"></div>

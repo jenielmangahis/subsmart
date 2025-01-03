@@ -34,6 +34,7 @@ endif;
         gap: 10px;
         align-items: center;
         margin-bottom: 5px;
+        justify-content: center;
     }
 
     .ytd-items-container .item .first .icons {
@@ -53,7 +54,7 @@ endif;
     }
 
     .ytd-items-container .item .first label {
-        font-size: 24px;
+        font-size: 20px;
         font-weight: bold;
         line-height: 1;
     }
@@ -64,6 +65,20 @@ endif;
         margin: 0;
         text-align: center;
     }
+    @media screen and (max-width: 1366px) {
+        .ytd-items-container .col-4 {
+            width: 50%;
+        }
+    }
+
+    @media screen and (max-width: 460px) {
+        .ytd-items-container .col-4 {
+            width: 80%;
+            margin: auto;
+        }
+    }
+
+
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="thumbnail_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
@@ -87,8 +102,8 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="col-md-12">
-            <div class="banner">
-                <img src="./assets/img/ytd-stats-banner.svg" alt="">
+            <div class="banner mb-3">
+                <img src="./assets/img/ytd-stats-banner2.svg" alt="">
             </div>
             <div class="row ytd-items-container">
                 <div class="col-4 mb-4">

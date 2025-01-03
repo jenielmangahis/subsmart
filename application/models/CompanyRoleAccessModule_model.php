@@ -102,6 +102,7 @@ class CompanyRoleAccessModule_model extends MY_Model
         $modules = [
             'dashboard' => 'Dashboard',
             'customers' => 'Customers',
+            'leads' => 'Leads',
             'users' => 'Users',
             'user-timesheet' => 'Timesheet',
             'user-timesheet-settings' => 'Timesheet Settings', 
@@ -122,8 +123,7 @@ class CompanyRoleAccessModule_model extends MY_Model
             'calendar-schedule' => 'Calendar Schedule',
             'calendar-settings' => 'Calendar Settings',
             'customer-groups' => 'Customer Groups',
-            'customer-settings' => 'Customer Settings',            
-            'leads' => 'Leads',
+            'customer-settings' => 'Customer Settings',  
             'events' => 'Events',
             'events-settings' => 'Events Settings',
             'jobs' => 'Jobs',

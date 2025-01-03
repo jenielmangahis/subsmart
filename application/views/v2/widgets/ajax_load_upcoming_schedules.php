@@ -8,10 +8,11 @@
         vertical-align: middle;
         text-align: center;
         font: 300 28.5714285714px Roboto;
+        background: #DAD1E0;
     }
 
     .nsm-calendar .week {
-        color: #fff;
+        color: red;
         padding: 13px;
         padding-bottom: 5px;
         font-size: 20px;
@@ -70,11 +71,19 @@
     }
 
     .event-schedule-tags-type {
-        padding: 1px 20px;
-        border-radius: 25px;
+        padding: 10px;
+        display: block;
+        width: 100%;
         font-weight: bold;
         color: #fff !important;
         font-size: 12px !important;
+        border-radius: 5px;
+        text-align: start;
+    }
+
+    .event-schedule-tags-type i {
+        color: #fff !important;
+        font-size: 12px;
     }
 
     #dashboard_upcoming_schedules_table .profile {
@@ -95,16 +104,44 @@
         z-index: 1;
     }
 
+    #dashboard_upcoming_schedules_table .profile-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     #dashboard_upcoming_schedules_table .profile-wrapper::before {
         content: "";
         position: absolute;
         top: -2px;
-        left: -2px;
         width: 55px;
         height: 55px;
-        background: linear-gradient(135deg, var(--tech-green2), var(--tech-primary));
+        background: linear-gradient(135deg, #FEA303, #281c2d);
         border-radius: 50%;
         z-index: 0;
+    }
+
+    @media screen and (max-width: 1366px) {
+        .upcoming-calendar-container {
+            height: unset;
+        }
+    }
+
+    @media screen and (max-width: 1200px) {
+        #dashboard_upcoming_schedules_table .assigned-employee {
+            display: none;
+        }
+    }
+    @media screen and (max-width: 991px) {
+        #dashboard_upcoming_schedules_table .assigned-employee {
+            display: unset;
+        }
+    }
+
+    @media screen and (max-width: 460px) {
+        #dashboard_upcoming_schedules_table .assigned-employee {
+            display: none;
+        }
     }
 </style>
 <?php if (!empty($upcomingSchedules)) { ?>
@@ -318,7 +355,7 @@
                 $event_day = date('d', strtotime($schedule_date));
                 $event_day_word = date('D', strtotime($schedule_date));
                 ?>
-                <div class="nsm-calendar" ng-app="myApp" style="background: <?= $colors[array_rand($colors)] ?>">
+                <div class="nsm-calendar" ng-app="myApp">
                     <div class="week">
                         <b><?= $event_day_word ?></b>
                     </div>
@@ -347,19 +384,22 @@
                     <?php if( trim($schedule_tags) != '' ){ ?>
                     <?php  if( trim($schedule_type != '')  ){ ?>
                     <span class="event-schedule-number"><?= $schedule_number ?></span>
-                    <span class="event-schedule-tags-type " style="background: <?= $colors[array_rand($colors)] ?>"><i
-                            class='bx bxs-purchase-tag'></i>
-                        <?= trim($schedule_type) . ', ' . trim($schedule_tags) ?></span>
+                    <div class="event-schedule-tags-type" style="background: <?= $colors[array_rand($colors)] ?>">
+                        <span><i class='bx bxs-purchase-tag'></i>
+                            <?= trim($schedule_type) . ', ' . trim($schedule_tags) ?></span>
+                    </div>
                     <?php }else{ ?>
                     <span class="event-schedule-number"><?= $schedule_number ?></span>
-                    <span class="event-schedule-tags-type " style="background: <?= $colors[array_rand($colors)] ?>"><i
-                            class='bx bxs-purchase-tag'></i> <?= trim($schedule_tags) ?></span>
+                    <div class="event-schedule-tags-type" style="background: <?= $colors[array_rand($colors)] ?>">
+                        <span><i class='bx bxs-purchase-tag'></i> <?= trim($schedule_tags) ?></span>
+                    </div>
                     <?php } ?>
                     <?php }else{ ?>
                     <?php  if( trim($schedule_type != '')  ){ ?>
                     <span class="event-schedule-number"><?= $schedule_number ?></span>
-                    <span class="event-schedule-tags-type " style="background: <?= $colors[array_rand($colors)] ?>"><i
-                            class='bx bxs-purchase-tag'></i> <?= trim($schedule_type) ?></span>
+                    <div class="event-schedule-tags-type" style="background: <?= $colors[array_rand($colors)] ?>">
+                        <span><i class='bx bxs-purchase-tag'></i> <?= trim($schedule_type) ?></span>
+                    </div>
                     <?php }else{ ?>
                     <span class="event-schedule-number"><?= $schedule_number ?></span>
                     <?php } ?>
@@ -379,7 +419,8 @@
                 <label class="content-title" style="cursor: pointer">
                     <ul class="location-list">
                         <li><i class='bx bxs-map-pin'></i></li>
-                        <li style="max-width:90%;"><?=
+                        <li style="max-width:90%;">
+                            <?=
                         $schedule_location;
                         $schedule_location_b != '' ? '<br />' . $schedule_location_b : '';
                         ?></li>
@@ -413,7 +454,7 @@
                 </label>
                 <?php } ?>
             </td>
-            <td style="width:170px;">
+            <td class="assigned-employee" style="width:170px;">
                 <?php foreach($assigned_employees as $eid){ ?>
                 <div class="position-relative">
                     <div class="profile-wrapper">

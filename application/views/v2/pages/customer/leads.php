@@ -27,28 +27,38 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            A great process of managing interactions with existing as well as past and potential customers 
-                            is to have one powerful platform that can provide an immediate response to your customer needs. 
-                            Try our quick action icons to create invoices, scheduling, communicating and more with all your 
-                            customers.
+                            Listing of potential customers who has shown interest in a company's products or services. The data collected from leads can be used by sales or marketing teams to convert the lead into a paying customer.
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4">
-                        <form action="<?php echo base_url('customer/leads') ?>" method="GET">
-                            <div class="nsm-field-group search">
-                                <input type="search" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Leads" value="<?php echo (!empty($search)) ? $search : '' ?>">
-                            </div>
-                        </form>
-                    </div>
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div>
+                    </div>                    
                     <div class="col-12 col-md-8 grid-mb text-end">
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                Filter by Status: <span><?= $filter; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item btn-filter" href="javascript:void(0);" data-status="all">All</a></li>
+                                <li><a class="dropdown-item btn-filter" href="javascript:void(0);" data-status="new">New</a></li>                                
+                                <li><a class="dropdown-item btn-filter" href="javascript:void(0);" data-status="contacted">Contacted</a></li>                                
+                                <li><a class="dropdown-item btn-filter" href="javascript:void(0);" data-status="follow_up">Follow Up</a></li>                                
+                                <li><a class="dropdown-item btn-filter" href="javascript:void(0);" data-status="converted">Converted</a></li>                                
+                                <li><a class="dropdown-item btn-filter" href="javascript:void(0);" data-status="closed">Closed</a></li>
+                            </ul>
+                        </div>
+                        <?php if(checkRoleCanAccessModule('leads', 'write')){ ?>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
-                                <i class='bx bx-fw bx-chart'></i> Add New Lead
+                                <i class='bx bx-fw bxs-user-plus'></i> New Leads
                             </button>
                         </div>
-                    </div>
+                        <?php } ?>
+                    </div>                    
                 </div>
                 <table class="nsm-table">
                     <thead>
@@ -115,9 +125,10 @@
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('leads', 'write')){ ?>
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo url('/customer/add_lead/'.$lead->leads_id); ?>">Edit</a>
-                                                </li>
+                                                </li>                                                
                                                 <li>
                                                     <a class="dropdown-item btn-convert-to-customer" data-id="<?= $lead->leads_id; ?>" href="javascript:void(0);">Convert to Customer</a>
                                                 </li>
@@ -128,6 +139,7 @@
                                                     <!-- <a class="dropdown-item" href="mailto:<?= $lead->email_add; ?>">Send Email</a> -->
                                                     <a class="dropdown-item lead-send-email" href="javascript:void(0);" data-id="<?= $lead->leads_id; ?>" data-email="<?= $lead->email_add; ?>">Send Email</a>
                                                 </li>
+                                                <?php } ?>
                                                 <li>
                                                     <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $lead->leads_id; ?>">Delete</a>
                                                 </li>
@@ -257,6 +269,20 @@
         $(".nsm-table").nsmPagination({
             itemsPerPage: 10,
         });
+
+        $('.btn-filter').on('click', function(){
+            var status = $(this).attr('data-status');
+            if( status == 'all' ){
+                location.href = base_url + 'customer/leads';
+            }else{
+                location.href = base_url + 'customer/leads?status='+status;
+            }
+            
+        });
+
+        $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));        
+        }, 1000));
 
         $("#search_field").on("input", debounce(function() {
             let _form = $(this).closest("form");

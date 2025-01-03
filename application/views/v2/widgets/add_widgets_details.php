@@ -1,7 +1,5 @@
-<?php
-foreach ($widgets as $widget):
-?>
-
+<?php foreach ($widgets as $widget): ?>
+<?php if( checkRoleCanAccessWidget($widget->w_id) ){ ?>
 <div class="nsm-card mb-2">
     <div class="nsm-card-content">
         <div class="row">
@@ -31,8 +29,5 @@ foreach ($widgets as $widget):
         </div>
     </div>
 </div>
-
-
-<?php
-endforeach;
-?>
+<?php } ?>
+<?php endforeach; ?>

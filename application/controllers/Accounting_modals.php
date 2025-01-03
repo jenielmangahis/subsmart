@@ -3942,7 +3942,7 @@ class Accounting_modals extends MY_Controller
         $return = [];
 
         if ($this->form_validation->run() === false) {
-            if( !isset($data['payee']) || $data['payee'] == '' ){
+            if( !isset($data['payee']) || $data['payee'] == ''){
                 $return['data'] = null;
                 $return['success'] = false;
                 $return['message'] = 'Please select payee.';
@@ -9321,9 +9321,9 @@ class Accounting_modals extends MY_Controller
 
         $return = [];
         if ($this->form_validation->run() === false) {
-            $return['data'] = null;
+            $return['data']    = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            $return['message'] = validation_errors();
         } elseif (!isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;

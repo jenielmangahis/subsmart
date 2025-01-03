@@ -11,7 +11,6 @@ endif;
         border-radius: 6px;
         background-image: none;
         padding: 10px;
-        transform: translateY(-60px);
         height: unset;
     }
 
@@ -55,6 +54,49 @@ endif;
     #shortcut_slider .shortcut-item .content-subtitle {
         font-size: 14px !important;
         font-weight: 400 !important;
+    }
+
+    @media screen and (max-width: 1366px) {
+        .shortcut-container .col-4 {
+            width: 33%;
+        }
+
+    }
+
+    @media screen and (max-width: 1200px) {
+        .shortcut-container .col-4 {
+            width: 50%;
+        }
+
+        #shortcut_slider {
+            /* height: 60%; */
+            overflow: auto;
+            margin: unset;
+        }
+    }
+
+    @media screen and (max-width: 991px) {
+        .shortcut-container .col-4 {
+            width: 33%;
+        }
+
+        #shortcut_slider {
+            height: unset;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        #shortcut_slider {
+            margin: unset;
+        }
+    }
+
+
+    @media screen and (max-width: 460px) {
+        .shortcut-container .col-4 {
+            width: 50%;
+        }
+
     }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">

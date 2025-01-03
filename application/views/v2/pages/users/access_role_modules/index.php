@@ -16,6 +16,12 @@
     float:right;
     margin-top:3px;
 }
+
+.chk-row-allow-all-widgets, .chk-row-allow-all-modules{    
+    float:right;
+    margin-top:3px;
+}
+
 .module-permissions{
     list-style:none;
     padding:0px;
@@ -95,7 +101,7 @@
                                         <i class='bx bx-windows'></i>
                                     </div>
                                 </td>
-                                <td><?= getRoleName($rm->role_id); ?></td>                                                                
+                                <td class="fw-bold nsm-text-primary"><?= getRoleName($rm->role_id); ?></td>                                                                
                                 <td>
                                     <div class="dropdown table-management">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
@@ -141,39 +147,34 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row container-modules mt-4" style="display:none;">
-                        <?php foreach( $modules as $key => $module ){ ?>
-                        <div class="col-md-6">
-                            <div class="container-header">
-                                <h3><?= $module; ?></h3>
-                                <div class="form-check text-end chk-row-allow-all">
-                                    <input class="form-check-input chk-all-rights" data-module="<?= $key; ?>" type="checkbox" id="chk-all-<?= $key; ?>">
-                                    <label class="form-check-label" for="chk-all-<?= $key; ?>">Allow all</label>
-                                </div>
-                            </div>
-                            <ul class="module-permissions">
-                                <li>
-                                    <div class="form-check">
-                                        <input class="form-check-input chk-<?= $key; ?>-rights" type="checkbox" name="permission[<?= $key; ?>][read]" value="1" id="chk-read-<?= $key; ?>">
-                                        <label class="form-check-label" for="chk-read-<?= $key; ?>">Read</label>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="form-check">
-                                        <input class="form-check-input chk-<?= $key; ?>-rights" type="checkbox" name="permission[<?= $key; ?>][write]" value="1" id="chk-write-<?= $key; ?>">
-                                        <label class="form-check-label" for="chk-write-<?= $key; ?>">Write</label>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="form-check">
-                                        <input class="form-check-input chk-<?= $key; ?>-rights" type="checkbox" name="permission[<?= $key; ?>][delete]" value="1" id="chk-delete-<?= $key; ?>">
-                                        <label class="form-check-label" for="chk-delete-<?= $key; ?>">Delete</label>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <?php } ?>
+                    
+                    <div class="nsm-page-nav mt-4 grp-role-access" style="display:none;">
+                        <ul>
+                            <li class="li-tab active">
+                                <a class="nsm-page-link role-access-tab" data-type="widgets" href="javascript:void(0);">
+                                    <i class='bx bx-fw bxs-widget'></i>
+                                    <span>Widgets</span>
+                                </a>
+                            </li>
+                            <li class="li-tab">
+                                <a class="nsm-page-link role-access-tab" data-type="modules" href="javascript:void(0);">
+                                    <i class='bx bx-fw bx-windows'></i>
+                                    <span>Modules</span>
+                                </a>
+                            </li>
+                            <li><label></label></li>
+                        </ul>
                     </div>
+                    
+                    <div class="grp-role-access" style="display:none;">
+                        <div class="module-list-group" style="display:none;">
+                            <?php include viewPath('v2/pages/users/access_role_modules/_modules_list'); ?>
+                        </div>
+                        <div class="widget-list-group" >
+                            <?php include viewPath('v2/pages/users/access_role_modules/_widget_list'); ?>
+                        </div>
+                    </div>
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
@@ -206,8 +207,14 @@
 <script type="text/javascript">
 $(function(){
     $(".nsm-table").nsmPagination();
+    $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));        
+    }, 1000));
 
     $('#modal-add-new-role-permission').modal({backdrop: 'static', keyboard: false});
+    $("#modal-add-new-role-permission").on('shown', function(){
+        $('#modal-edit-role-permission #edit-role-permission-container').html('');
+    });
 
     $('.select-roles').select2({
         dropdownParent: $("#modal-add-new-role-permission"),
@@ -223,19 +230,27 @@ $(function(){
     $('.select-access-type').on('change', function(){
         var selected = $(this).val();
         if( selected == 'access-all' ){
-            $('.container-modules').hide();            
+            $('.grp-role-access').hide();
+            //$('.container-modules').hide();            
         }else{
-            $('.container-modules').show();
+            $('.grp-role-access').show();
+            //$('.container-modules').show();
         }
     });
 
-    $(document).on('change', '.edit-select-access-type', function(){
-        var selected = $(this).val();
-        if( selected == 'access-all' ){
-            $('.edit-container-modules').hide();            
+    $('.role-access-tab').on('click', function(){
+        var type = $(this).attr('data-type');
+
+        if( type == 'modules' ){
+            $('.module-list-group').show();
+            $('.widget-list-group').hide();
         }else{
-            $('.edit-container-modules').show();
+            $('.widget-list-group').show();
+            $('.module-list-group').hide();
         }
+
+        $('.li-tab').removeClass('active');
+        $(this).parent('.li-tab').addClass('active');
     });
 
     $('.chk-all-rights').on('change', function(){
@@ -247,12 +262,19 @@ $(function(){
         }
     });
 
-    $(document).on('change', '.edit-chk-all-rights', function(){
-        var module = $(this).attr('data-module');
+    $('.widget-list-group .chk-all-widgets').on('change', function(){
         if( $(this).is(':checked') ){
-            $('.edit-chk-'+module+'-rights').prop('checked', true);
+            $('.widget-list-group .chk-widgets').prop('checked', true);
         }else{
-            $('.edit-chk-'+module+'-rights').prop('checked', false);
+            $('.widget-list-group .chk-widgets').prop('checked', false);
+        }
+    });
+
+    $('#modules-all').on('change', function(){
+        if( $(this).is(':checked') ){
+            $('.module-check-input').prop('checked', true);
+        }else{
+            $('.module-check-input').prop('checked', false);
         }
     });
 
@@ -274,11 +296,12 @@ $(function(){
     });
 
     $(document).on('click', '.btn-delete-role-permission', function(){
+        var rid = $(this).attr('data-id');
         var role = $(this).attr('data-role');
 
         Swal.fire({
-            title: 'Delete role accesss module',
-            html: `Proceed with deleting access module for role <b>${role}</b>?`,
+            title: 'Role Access Modules',
+            html: `Proceed with deleting access modules and widgets for role <b>${role}</b>?`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes',
@@ -288,14 +311,14 @@ $(function(){
                 $.ajax({
                     type: "POST",
                     url: base_url + "users/_delete_role_access_module",
-                    data: {ebid:ebid},
+                    data: {rid:rid},
                     dataType:'json',
                     success: function(result) {
                         if( result.is_success == 1 ) {
                             Swal.fire({
                             icon: 'success',
-                            title: 'Success',
-                            text: 'Email Broadcast was successfully deleted.',
+                            title: 'Role Access Modules',
+                            text: 'Data was successfully deleted.',
                             }).then((result) => {
                                 window.location.reload();
                             });

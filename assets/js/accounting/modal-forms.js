@@ -1209,7 +1209,7 @@ $(function () {
 
     $(document).on('keyup', '#tags-modal #search-tag', function () {
         var val = $(this).val();
-        $.get('/accounting/load-job-tags?search=' + val, function (res) {
+        $.get(base_url + 'accounting/load-job-tags?search=' + val, function (res) {
             var tags = JSON.parse(res);
 
             $('#tags-modal #tags-table tbody tr').remove();
@@ -1782,7 +1782,7 @@ $(function () {
         if ($(this).val() === 'by') {
             $(this).parent().next().remove();
             $(this).parent().parent().append(`
-                <div class="col-12 col-md-1">
+                <div class="col-12 col-md-2">
                     <label for="endDate">End date</label>
                     <div class="nsm-field-group calendar">
                         <input type="text" class="form-control nsm-field date" name="end_date" id="endDate"/>
@@ -1799,11 +1799,9 @@ $(function () {
             $(this).parent().next().remove();
             $(this).parent().parent().append(`
                 <div class="col-12 col-md-1">
-                    <div class="row h-100">
-                        <div class="col-6 d-flex align-items-end">
-                            <input type="number" name="max_occurence" id="maxOccurence" class="form-control nsm-field">
-                        </div>
-                        <div class="col-6 d-flex align-items-end">occurrences</div>
+                    <label for="occurrences">Occurrences</label>
+                    <div class="nsm-field-group occurrences">
+                        <input type="number" name="max_occurence" id="maxOccurence" class="form-control nsm-field" style="width: 87px !important">
                     </div>
                 </div>
             `);
@@ -2279,7 +2277,7 @@ $(function () {
         var val = $(this).val();
 
         if (val !== '' && val !== null && val !== 'add-new') {
-            $.get('/accounting/get-account-balance/' + val, function (res) {
+            $.get(base_url + 'accounting/get-account-balance/' + val, function (res) {
                 var result = JSON.parse(res);
 
                 $('#checkModal span#account-balance').html(result.balance);
@@ -10437,7 +10435,7 @@ const computeTotalHours = () => {
 // }
 
 const editGroupTagForm = (data) => {
-    $.get('/accounting/edit-group-tag-form', function (res) {
+    $.get(base_url + 'accounting/edit-group-tag-form', function (res) {
         $('#tags-modal div.modal-dialog div#tags-list').remove();
 
         $('#tags-modal div.modal-dialog').append(`<form class="h-100" id="edit_group_tag"></form>`);
@@ -10449,7 +10447,7 @@ const editGroupTagForm = (data) => {
 }
 
 const getTagForm = (data = {}, method) => {
-    $.get('/accounting/get-job-tag-form/', function (res) {
+    $.get(base_url + 'accounting/get-job-tag-form/', function (res) {
         if (method === 'update' && data.groupTag !== null && data.type === 'group-tag') {
             var groupTagName = $(`#tags-modal #tags-table tbody tr td .edit[data-id="${data.groupTag}"][data-type="group"]`).parent().prev().find('span').text().trim();
 
@@ -10483,7 +10481,7 @@ const getTagForm = (data = {}, method) => {
         $('#tags-modal #tagGroup').select2({
             dropdownParent: $('#tags-modal'),
             ajax: {
-                url: '/accounting/tags/get-group-tags',
+                url: base_url + 'accounting/tags/get-group-tags',
                 dataType: 'json'
             }
         });
@@ -11026,7 +11024,6 @@ const submitModalForm = (event, el) => {
         contentType: false,
         success: function (result) {
             var res = JSON.parse(result);
-            console.log(res.message);
             toast(res.success, removeDuplicateMessages(res.message));
 
             if (res.success === true) {
@@ -11638,9 +11635,9 @@ const makeRecurring = (modalName) => {
                     </select>
                 </div>
                 <div class="col-12 col-md-4 d-flex flex-column p-0 align-items-start">
-                    <span>Create &emsp;</span>
+                    <span>Create <span id="modal-help-popover-scheduled-create" class="bx bx-fw bx-help-circle"></span></span>
                     <div class="d-flex align-items-start justify-content-center"><input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
-                    <span style="margin-top: 7px;">&emsp; days in advance</span></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -11758,11 +11755,21 @@ const makeRecurring = (modalName) => {
             modalId = 'checkModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
-            $(`#${modalId} #account-balance`).parent().parent().remove();
+            //$(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
+            //$(`#${modalId} #account-balance`).parent().parent().remove();
             $(`#${modalId} label[for="bank_account"]`).html('Account');
             $(`#${modalId} div.modal-body #payment_date`).parent().parent().html('');
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Check');
+
+            $('#modal-help-popover-scheduled-create').popover({
+                placement: 'top',
+                html: true,
+                trigger: "hover focus",
+                content: function () {
+                    return 'Days in advance.';
+                }
+            });
+
             break;
         case 'bill':
             modalId = 'billModal';
@@ -11773,6 +11780,16 @@ const makeRecurring = (modalName) => {
             $(`#${modalId} div.modal-body #due_date`).parent().parent().remove();
             $(`#${modalId} div.modal-body #bill_no`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Bill');
+
+            $('#modal-help-popover-scheduled-create').popover({
+                placement: 'top',
+                html: true,
+                trigger: "hover focus",
+                content: function () {
+                    return 'Days in advance.';
+                }
+            });
+
             break;
         case 'purchase_order':
             modalId = 'purchaseOrderModal';

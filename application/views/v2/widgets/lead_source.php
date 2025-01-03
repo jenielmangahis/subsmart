@@ -10,7 +10,7 @@ endif;
         color: rgb(47 43 61 / 0.9);
         border-radius: 6px;
         background-image: none;
-        box-shadow: 0px 3px 12px #38747859;
+        /* box-shadow: 0px 3px 12px #38747859; */
         padding: 10px;
         height: unset;
     }
@@ -38,8 +38,8 @@ endif;
 
 
     <div class="nsm-card-content ">
-        <div class="banner">
-            <img src="./assets/img/customer-status-banner.svg" alt="">
+        <div class="banner mb-4">
+            <img src="./assets/img/paid-invoices-banner2.svg" alt="">
 
         </div>
         <div class="lead-source-content">
@@ -79,6 +79,7 @@ endif;
                     datasets: [{
                         data: eval(LEAD_SOURCE_COUNT),
                         backgroundColor: [
+                            "#33757b",
                             '#FEA303',
                             '#d9a1a0',
                             '#BEAFC2',
@@ -98,7 +99,8 @@ endif;
                             display: true,
                             position: "bottom",
                         }
-                    }
+                    },
+                    aspectRatio: 1,
                 }
             });
         });

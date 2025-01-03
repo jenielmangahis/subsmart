@@ -29,13 +29,46 @@ endif;
         color: #214548;
     }
 
-    .income-container .income-items  {
+    .income-container .income-items {
         width: 100% !important;
         box-sizing: border-box;
         box-shadow: 0px 3px 12px #38747859;
         padding: 20px;
         border-radius: 25px;
         background: #fff;
+    }
+
+    @media screen and (max-width: 1366px) {
+        .income-container .income-items .form-select {
+            width: 100%;
+        }
+
+        .income-container .income-items .col-4 {
+            width: 50%;
+        }
+
+        .income-container .income-items .filter-options {
+            width: 55%;
+            margin-bottom: 10px;
+        }
+
+        .income-container .income-items .col-6 {
+            width: 100%;
+        }
+    }
+
+    @media screen and (max-width: 991px) {
+
+        .income-container .income-items .col-6 {
+            width: 50%;
+        }
+    }
+
+    @media screen and (max-width: 567px) {
+
+        .income-container .income-items .col-6 {
+            width: 100%;
+        }
     }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -60,12 +93,12 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="banner mb-5">
-            <img src="./assets/img/paid-invoices-banner.svg" alt="">
+            <img src="./assets/img/paid-invoices-banner2.svg" alt="">
         </div>
         <div class="income-container">
             <div class="income-items">
                 <div class="row mb-4 mt-2 row-items">
-                    <div class="col-4">
+                    <div class="col-4 filter-options">
                         <select class="nsm-field form-select" name="filter_date" id="widget-income-filter-date">
                             <option value="today">Today</option>
                             <option value="custom">Custom</option>
@@ -86,15 +119,15 @@ endif;
                 </div>
                 <div class="row">
                     <div class="col-6 mb-2">
-                        <div class="nsm-counter h-100" style=" background-color: #A888B51a;">
-                            <div class="row h-100">
+                        <div class="nsm-counter h-100" style=" background-color: #A888B51a;padding: 20px">
+                            <div class="w-100 d-flex align-items-center justify-content-between gap-2 h-100">
                                 <div
-                                    class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
+                                    class=" mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
                                     <span>Open Invoices</span>
                                     <h2 id="income-widget-open-invoices"></h2>
                                 </div>
                                 <div
-                                    class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
+                                    class="order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
                                     <i class="bx bx-receipt" style=" background-color: #A888B5;color: #fff;"></i>
                                 </div>
 
@@ -102,47 +135,50 @@ endif;
                         </div>
                     </div>
                     <div class="col-6 mb-2">
-                        <div class="nsm-counter h-100" style=" background-color: #d9a1a01a;">
-                            <div class="row h-100">
+                        <div class="nsm-counter h-100" style=" background-color: #d9a1a01a;padding: 20px">
+                            <div class="w-100 d-flex align-items-center justify-content-between gap-2 h-100">
+
                                 <div
-                                    class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
-                                    <i class="bx bx-calendar-exclamation"
-                                        style=" background-color: #d9a1a0;color: #fff;"></i>
-                                </div>
-                                <div
-                                    class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
+                                    class="mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
                                     <span>Overdue Invoices</span>
                                     <h2 id="income-widget-overdue"></h2>
                                 </div>
+                                <div
+                                    class="order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
+                                    <i class="bx bx-calendar-exclamation"
+                                        style=" background-color: #d9a1a0;color: #fff;"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-6 mb-2">
-                        <div class="nsm-counter success h-100" style=" background-color: #FEA3031a;">
-                            <div class="row h-100">
+                        <div class="nsm-counter success h-100" style=" background-color: #FEA3031a;padding: 20px">
+                            <div class="w-100 d-flex align-items-center justify-content-between gap-2 h-100">
+
                                 <div
-                                    class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
-                                    <i class="bx bx-badge-check" style=" background-color: #FEA303;color: #fff;"></i>
-                                </div>
-                                <div
-                                    class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
+                                    class="mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
                                     <span>Paid Invoices</span>
                                     <h2 id="income-widget-paid-invoices"></h2>
                                 </div>
+                                <div
+                                    class=" order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
+                                    <i class="bx bx-badge-check" style=" background-color: #FEA303;color: #fff;"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-6 mb-2">
-                        <div class="nsm-counter yellow h-100" style=" background-color: #EFB6C81a;">
-                            <div class="row h-100">
+                        <div class="nsm-counter yellow h-100" style=" background-color: #EFB6C81a;padding: 20px">
+                            <div class="w-100 d-flex align-items-center justify-content-between gap-2 h-100">
+
                                 <div
-                                    class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
-                                    <i class="bx bx-box subs" style=" background-color: #EFB6C8;color: #fff;"></i>
-                                </div>
-                                <div
-                                    class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
+                                    class=" mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
                                     <span>Subscription</span>
                                     <h2 id="income-widget-subscriptions"><?php echo "$" . number_format($subs->TOTAL_MMR, 2); ?></h2>
+                                </div>
+                                <div
+                                    class="order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
+                                    <i class="bx bx-box subs" style=" background-color: #EFB6C8;color: #fff;"></i>
                                 </div>
                             </div>
                         </div>

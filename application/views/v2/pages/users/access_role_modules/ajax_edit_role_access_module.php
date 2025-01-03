@@ -17,58 +17,93 @@
         </select>
     </div>
 </div>
-<div class="row edit-container-modules mt-4" style="<?= array_key_exists('access-all', $groupRoleAccessModules) ? 'display:none;' : ''; ?>">
-    <?php foreach( $modules as $key => $module ){ ?>
-    <div class="col-md-6">
-        <div class="container-header">
-            <h3><?= $module; ?></h3>
-            <div class="form-check text-end chk-row-allow-all">
-                <input class="form-check-input edit-chk-all-rights" data-module="<?= $key; ?>" type="checkbox" id="edit-chk-all-<?= $key; ?>">
-                <label class="form-check-label" for="edit-chk-all-<?= $key; ?>">Allow all</label>
-            </div>
-        </div>
-        <?php 
-            $is_read_allowed = '';
-            if( array_key_exists($key, $groupRoleAccessModules) ){
-                if( $groupRoleAccessModules[$key]->allow_read == 1 ){
-                    $is_read_allowed = 'checked="checked"';
-                }
-            }
-
-            $is_write_allowed = '';
-            if( array_key_exists($key, $groupRoleAccessModules) ){
-                if( $groupRoleAccessModules[$key]->allow_write == 1 ){
-                    $is_write_allowed = 'checked="checked"';
-                }
-            }
-
-            $is_delete_allowed = '';
-            if( array_key_exists($key, $groupRoleAccessModules) ){
-                if( $groupRoleAccessModules[$key]->allow_delete == 1 ){
-                    $is_delete_allowed = 'checked="checked"';
-                }
-            }
-        ?>
-        <ul class="module-permissions">
-            <li>
-                <div class="form-check">                    
-                    <input class="form-check-input edit-chk-<?= $key; ?>-rights" type="checkbox" name="permission[<?= $key ?>][read]" value="1" id="edit-chk-read-<?= $key; ?>" <?= $is_read_allowed; ?>>
-                    <label class="form-check-label" for="edit-chk-read-<?= $key; ?>">Read</label>
-                </div>
-            </li>
-            <li>
-                <div class="form-check">
-                    <input class="form-check-input edit-chk-<?= $key; ?>-rights" type="checkbox" name="permission[<?= $key ?>][write]" value="1" id="edit-chk-write-<?= $key; ?>" <?= $is_write_allowed; ?>>
-                    <label class="form-check-label" for="edit-chk-write-<?= $key; ?>">Write</label>
-                </div>
-            </li>
-            <li>
-                <div class="form-check">
-                    <input class="form-check-input edit-chk-<?= $key; ?>-rights" type="checkbox" name="permission[<?= $key ?>][delete]" value="1" id="edit-chk-delete-<?= $key; ?>" <?= $is_delete_allowed; ?>>
-                    <label class="form-check-label" for="edit-chk-delete-<?= $key; ?>">Delete</label>
-                </div>
-            </li>
-        </ul>
-    </div>
-    <?php } ?>
+<div class="nsm-page-nav mt-4 edit-grp-role-access" style="<?= array_key_exists('access-all', $groupRoleAccessModules) ? 'display:none;' : ''; ?>">
+    <ul>
+        <li class="edit-li-tab active">
+            <a class="nsm-page-link edit-role-access-tab" data-type="widgets" href="javascript:void(0);">
+                <i class='bx bx-fw bxs-widget'></i>
+                <span>Widgets</span>
+            </a>
+        </li>
+        <li class="edit-li-tab">
+            <a class="nsm-page-link edit-role-access-tab" data-type="modules" href="javascript:void(0);">
+                <i class='bx bx-fw bx-windows'></i>
+                <span>Modules</span>
+            </a>
+        </li>
+        <li><label></label></li>
+    </ul>
 </div>
+
+<div class="edit-grp-role-access" style="<?= array_key_exists('access-all', $groupRoleAccessModules) ? 'display:none;' : ''; ?>">
+    <div class="edit-module-list-group" style="display:none;">
+        <?php include viewPath('v2/pages/users/access_role_modules/_edit_modules_list'); ?>
+    </div>
+    <div class="edit-widget-list-group" >
+        <?php include viewPath('v2/pages/users/access_role_modules/_edit_widget_list'); ?>
+    </div>
+</div>
+
+<script>
+$(function(){
+    $('.edit-chk-all-rights').on('change', function(){
+        var module = $(this).attr('data-module');
+        if( $(this).is(':checked') ){
+            $('.edit-chk-'+module+'-rights').prop('checked', true);
+        }else{
+            $('.edit-chk-'+module+'-rights').prop('checked', false);
+        }
+    });
+
+    $('.edit-widget-list-group .chk-all-widgets').on('change', function(){
+        if( $(this).is(':checked') ){
+            $('.edit-widget-list-group .chk-widgets').prop('checked', true);
+        }else{
+            $('.edit-widget-list-group .chk-widgets').prop('checked', false);
+        }
+    });
+
+    $('.edit-role-access-tab').on('click', function(){
+        var type = $(this).attr('data-type');
+
+        if( type == 'modules' ){
+            $('.edit-module-list-group').show();
+            $('.edit-widget-list-group').hide();
+        }else{
+            $('.edit-widget-list-group').show();
+            $('.edit-module-list-group').hide();
+        }
+
+        $('.edit-li-tab').removeClass('active');
+        $(this).parent('.edit-li-tab').addClass('active');
+    });
+
+    $('.edit-select-access-type').on('change', function(){
+        var selected = $(this).val();
+        if( selected == 'access-all' ){
+            $('.edit-grp-role-access').hide();
+            //$('.edit-container-modules').hide();            
+        }else{
+            $('.edit-grp-role-access').show();
+            //$('.edit-container-modules').show();
+        }
+    });
+
+    $('#edit-modules-all').on('change', function(){
+        if( $(this).is(':checked') ){
+            $('.edit-module-check-input').prop('checked', true);
+        }else{
+            $('.edit-module-check-input').prop('checked', false);
+        }
+    });
+
+    $('.edit-chk-all-rights').on('change', function(){
+        var module = $(this).attr('data-module');
+        if( $(this).is(':checked') ){
+            $('.edit-chk-'+module+'-rights').prop('checked', true);
+        }else{
+            $('.edit-chk-'+module+'-rights').prop('checked', false);
+        }
+    });
+});
+</script>

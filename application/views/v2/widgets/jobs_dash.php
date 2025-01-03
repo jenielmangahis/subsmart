@@ -48,12 +48,6 @@ endif;
 
     }
 
-    .filter-item {
-        position: relative;
-        padding-top: 186px;
-        padding-bottom: 0px;
-    }
-
 
     #STATUS_COUNT_TAB {
         border-bottom: none !important;
@@ -352,6 +346,21 @@ endif;
             left: 13%;
         }
     }
+
+    @media screen and (max-width: 1366px) {
+
+        .jobs-status-items .col-md-3 {
+            width: 33%;
+        }
+    }
+
+
+    @media screen and (max-width: 460px) {
+
+        .jobs-status-items .col-md-3 {
+            width: 50%;
+        }
+    }
 </style>
 
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -382,9 +391,8 @@ endif;
     </div>
     <div class="nsm-card-content jobs_stat">
         <div class="d-flex flex-column">
-            <div class="header-banner">
-                <img src="./assets/img/jobs-status-wave-top.svg" alt="" />
-                <img src="./assets/img/jobs-status-wave-top-2.svg" alt="" />
+            <div class="banner mb-3">
+                <img src="./assets/img/jobs-status-banner2.svg" alt="" />
             </div>
             <div class="filter-item">
 

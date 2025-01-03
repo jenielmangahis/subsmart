@@ -43,9 +43,14 @@ endif;
         gap: 10px;
         margin-bottom: 10px;
         align-items: center;
+        justify-content: center;
     }
 
     .customer-status-items .item .first .icons {
+        border-radius: 100%;
+    }
+
+    .customer-status-items .item .first .icons i {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -73,8 +78,51 @@ endif;
         margin: 0;
         text-align: center;
     }
+
     #customer_status {
         padding: 20px;
+    }
+
+    @media screen and (max-width: 1366px) {
+        .customer-status-items .item .first label {
+            font-size: 18px;
+
+        }
+
+        .customer-status-items .item .first i {
+            font-size: 18px;
+
+        }
+
+        .customer-status-items .column-container {
+            width: 33%;
+        }
+    }
+
+    @media screen and (max-width: 1200px) {
+
+        .customer-status-items .column-container {
+            width: 50%;
+        }
+
+        #customer_status {
+            overflow: auto;
+            height: 90%;
+        }
+    }
+
+    @media screen and (max-width: 991px) {
+
+        .customer-status-items .column-container {
+            width: 25%;
+        }
+    }
+
+    @media screen and (max-width: 567px) {
+
+        .customer-status-items .column-container {
+            width: 50%;
+        }
     }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -106,7 +154,7 @@ endif;
     <div class="nsm-card-content jobs_stat">
         <div class="col-md-12">
             <div class="banner">
-                <img src="./assets/img/customer-status-banner.svg" alt="">
+                <img src="./assets/img/customer-status-banner2.svg" alt="">
             </div>
             <div class="nsm-widget-table">
                 <div class="customer-status-container">

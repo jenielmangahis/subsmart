@@ -945,27 +945,29 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllByCustomerId($customer_id)
+    public function getAllByCustomerId($customer_id, $filter = [])
     {
         $where = array(
             'invoices.customer_id'      => $customer_id,
             'invoices.view_flag'                => '0',
-          );
+        );
 
-        // $company_id = getLoggedCompanyID();
-        // $vendor = $this->db->get('invoices'->where('company_id', $company_id));
-
-        $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');
-
+        $this->db->select('invoices.*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');
         $this->db->from('invoices');
         $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id');
-        $this->db->order_by('id', 'DESC');
-
-        // $this->db->select('*');
-        // $this->db->from($this->table);
         $this->db->where($where);
-        $query = $this->db->get();
+    
+        if( !empty($filter) ){            
+            $this->db->group_start();
+                foreach( $filter as $f ){
+                    $this->db->where($f['field_name'], $f['field_value'], 'both');
+                }
+            $this->db->group_end();
+        }    
 
+        $this->db->order_by('invoices.id', 'DESC');
+        
+        $query = $this->db->get();
         return $query->result();
     }
 

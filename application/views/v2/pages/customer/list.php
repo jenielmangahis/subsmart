@@ -326,6 +326,11 @@
     .table > :not(:last-child) > :last-child > * {
         border-bottom: 1px solid #dee2e6;
     }
+    .dropdown-menu {
+        overflow: hidden;
+        overflow-y: auto;
+        max-height: calc(100vh - 500px);
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
@@ -401,34 +406,44 @@
                                 <?php } ?>
                             </ul>
                         </div>
+                    <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>            
                     <button type="button" class="nsm-button batchUpdaterButton"><i class='bx bxs-edit'></i> Customer Management</button>
                     <button type="button" class="nsm-button dupEntryButton"><i class='bx bxs-duplicate'></i> Duplicate Entries <small class="text-muted dupEntryCount"></small></button>
+                    <?php } ?>
                         <div class="nsm-page-buttons primary page-button-container">
                             <div class="dropdown d-inline-block">
                                 <button type="button" class="dropdown-toggle nsm-button primary" data-bs-toggle="dropdown" style="width:122px;">
                                     <span>More Action <i class='bx bx-fw bx-chevron-down'></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
+                                    <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
                                     <li>
                                         <a class="dropdown-item" href="<?= url('customer/import_customer') ?>'"><i class='bx bx-fw bx-chart'></i> Import</a>
                                     </li>
+                                    <?php } ?>
                                     <li>
                                         <a class="dropdown-item" href="<?= url('customer/import_customer') ?>"><i class='bx bx-fw bx-file'></i> Export</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item" id="print-customer-list" href="javascript:void(0)"><i class='bx bx-fw bx-printer'></i> Print</a>
                                     </li>
+                                    <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
                                     <li>
                                         <a class="dropdown-item" id="favorite-customer-list" href="javascript:void(0)"><i class='bx bx-fw bxs-heart'></i> Favorite Customers</a>
                                     </li>
+                                    <?php } ?>
                                 </ul>     
                             </div>
+                            <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('customer/add_advance') ?>'">
-                                <i class='bx bx-fw bx-chart'></i> New Customer
+                                <i class='bx bx-fw bxs-user-plus'></i> New Customer
                             </button>
+                            <?php } ?>
+                            <?php if( checkRoleCanAccessModule('customers', 'delete') ){ ?>
                             <button type="button" class="nsm-button primary" id="archived-customer-list">
                                 <i class='bx bx-fw bx-trash'></i> Manage Archived
                             </button>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
@@ -912,8 +927,11 @@
 
         $(document).on('click', '.delete-customer', function() {
             var cid = $(this).attr('data-id');
+            var name = $(this).attr('data-name');
+
             Swal.fire({
-                html: "Delete selected customer?",
+                title: 'Customers',
+                html: `Delete selected customer <b>${name}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,

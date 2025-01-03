@@ -11,34 +11,73 @@ endif;
         color: #ffffff;
         padding: 10px;
     }
+
     .estimates-container .estimates-items {
-    width: 100% !important;
-    display: block;
-    box-sizing: border-box;
-    box-shadow: 0px 3px 12px #38747859;
-    padding: 20px;
-    border-radius: 25px;
-    background: #fff;
-    height: unset;
-}
+        width: 100% !important;
+        display: block;
+        box-sizing: border-box;
+        box-shadow: 0px 3px 12px #38747859;
+        padding: 20px;
+        border-radius: 25px;
+        background: #fff;
+        height: unset;
+    }
 
-.estimates-container .filter .form-select {
-    border-radius: 25px;
-    font-size: 16px !important;
-    font-weight: 500;
-    border-color: none;
-    border: none;
-    color: #214548;
-}
+    .estimates-container .filter .form-select {
+        border-radius: 25px;
+        font-size: 16px !important;
+        font-weight: 500;
+        border-color: none;
+        border: none;
+        color: #214548;
+    }
 
-.estimates-container .filter .form-control {
-    border-radius: 25px;
-    font-size: 16px !important;
-    font-weight: 500;
-    border-color: #FEA303;
-    color: #214548;
-}
+    .estimates-container .filter .form-control {
+        border-radius: 25px;
+        font-size: 16px !important;
+        font-weight: 500;
+        border-color: #FEA303;
+        color: #214548;
+    }
 
+    @media screen and (max-width: 1366px) {
+        .estimates-container .filter .form-select {
+            width: 100%;
+        }
+
+        .estimates-container .filter .col-4 {
+            width: 50%;
+        }
+
+        .estimates-container .filter .filter-option {
+            width: 55%;
+            margin-bottom: 10px;
+        }
+    }
+
+    @media screen and (max-width: 991px) {
+
+        .estimates-container .filter .col-4 {
+            width: unset;
+        }
+
+    }
+
+    @media screen and (max-width: 567px) {
+
+        .estimates-container .filter .form-select {
+            width: 100%;
+        }
+
+        .estimates-container .filter .col-4 {
+            width: 50%;
+        }
+
+        .estimates-container .filter .filter-option {
+            width: 55%;
+            margin-bottom: 10px;
+        }
+    }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
@@ -62,12 +101,12 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="banner mb-5">
-            <img src="./assets/img/estimates-banner.svg" alt="">
+            <img src="./assets/img/estimates-banner2.svg" alt="">
         </div>
         <div class="estimates-container">
             <div class="estimates-items">
                 <div class="row mb-4 mt-2 filter">
-                    <div class="col-4">
+                    <div class="col-4 filter-option">
                         <select class="nsm-field form-select" name="filter_date" id="widget-open-estimates-filter-date">
                             <option value="custom">Custom</option>
                             <option value="this-month">This month</option>
@@ -217,7 +256,7 @@ endif;
                             '#FBB4A5',
                             '#FB9EC6',
                             '#E7FBB4',
-                    
+
 
                         ],
                         data: data.chart_data,
