@@ -8,7 +8,7 @@
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/customer_groups_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/customer_tabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
@@ -74,7 +74,7 @@
                                                         <li><a class="dropdown-item edit-item" data-id="<?= $customerGroup->id; ?>" data-name="<?= $customerGroup->title; ?>" data-description="<?= $customerGroup->description; ?>" href="javascript:void(0);">Edit</a></li>
                                                     <?php } ?>
                                                     <?php if( checkRoleCanAccessModule('customer-groups', 'delete') ){ ?>
-                                                        <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $customerGroup->id; ?>">Delete</a></li>
+                                                        <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-name="<?= $customerGroup->title; ?>" data-id="<?= $customerGroup->id; ?>">Delete</a></li>
                                                     <?php } ?>
                                                 </ul>
                                             </div>
@@ -232,7 +232,7 @@
 
             $.ajax({
                 type: "POST",
-                url: base_url + "customer/_update_customer_group",
+                url: base_url + "customers/_update_customer_group",
                 dataType: 'json',
                 data: $('#frm-update-customer-group').serialize(),
                 success: function(data) {    
@@ -279,10 +279,10 @@
 
         $(document).on("click", ".delete-item", function() {
             let id = $(this).attr('data-id');
-
+            let name = $(this).attr('data-name');
             Swal.fire({
                 title: 'Customer Group',
-                text: "Are you sure you want to delete this Customer Group?",
+                html: `Are you sure you want to delete customer group <b>${name}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -291,22 +291,33 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: "<?php echo base_url(); ?>customer/group_delete",
-                        data: {
-                            id: id
-                        },
-                        success: function(result) {
-                            Swal.fire({
-                                //title: 'Good job!',
-                                text: "Data Deleted Successfully!",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            }).then((result) => {
-                                //if (result.value) {
-                                    location.reload();
-                                //}
-                            });
+                        url: base_url + "customers/_delete_customer_group",
+                        data: {id: id},
+                        dataType:'json',
+                        success: function(data) {
+                            if( data.is_success ){
+                                Swal.fire({
+                                    title: "Customer Group",
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            }else{
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: data.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    
+                                });
+                            }
                         },
                     });
                 }
