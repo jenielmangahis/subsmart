@@ -4,7 +4,6 @@ if (!is_null($dynamic_load) && $dynamic_load == true):
 endif;
 ?>
 <style>
-
     .service-tickets-content {
         margin: 0 20px;
         background-color: #FFFFFF;
@@ -14,7 +13,6 @@ endif;
         box-shadow: 0px 3px 12px #38747859;
         padding: 10px;
         transform: translateY(-60px);
-        height: 73%;
     }
 
     .service-tickets-content #jobs_chart {
@@ -47,6 +45,22 @@ endif;
         border-color: #FEA303;
         color: #214548;
     }
+
+    @media screen and (max-width: 1366px) {
+
+        .service-tickets-content .form-select {
+            width: 100%;
+        }
+
+        .service-tickets-content .col-4 {
+            width: 50%;
+        }
+
+        .service-tickets-content .filter-options {
+            width: 55%;
+            margin-bottom: 10px;
+        }
+    }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
@@ -74,7 +88,7 @@ endif;
         </div>
         <div class="service-tickets-content">
             <div class="row mb-4 mt-2 filter">
-                <div class="col-4">
+                <div class="col-4 filter-options">
                     <select class="nsm-field form-select" name="filter_date" id="widget-service-ticket-filter-date">
                         <option value="this-month">This month</option>
                         <option value="this-quarter">This quarter</option>
@@ -94,7 +108,7 @@ endif;
             </div>
             <canvas id="service_tickets_chart" class="nsm-chart" data-chart-type="service_tickets"></canvas>
         </div>
-        <div class="service-tickets-separator"></div>
+        <!-- <div class="service-tickets-separator"></div> -->
     </div>
 </div>
 <script>

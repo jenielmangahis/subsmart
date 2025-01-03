@@ -190,6 +190,7 @@
             $("#recent-customer-container").html('');
             if (success == 1) {
                 var colors = ['#FEA303', '#d9a1a0', '#BEAFC2', '#EFB6C8'];
+                var colorIndex = 0;
                 var randomColor= ''
                 var count = 1;
                 for (var j = 0; j < recentCustomers.length; j++) {
@@ -197,8 +198,9 @@
                         return;
                     }
                     count++;
+                    randomColor = colors[colorIndex];
 
-                    randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    colorIndex = (colorIndex + 1) % colors.length;
                     var nn = "NN";
                     if (recentCustomers[j].last_name[0]) {
                         nn = recentCustomers[j].last_name[0] + '' + recentCustomers[j].first_name[0];
@@ -445,7 +447,7 @@
                         var total_count = parseFloat(status[x].statusCount);
 
                         content += `
-                            <div class="col-md-3 mb-3" style="padding: 0 5px;margin-bottom: 10px;">
+                            <div class="col-md-3 mb-3 column-container" style="padding: 0 5px;margin-bottom: 10px;">
                                 <div class="item">
                                     <div class="box" style="background:` + color_icon + '2a' + `"></div>
                                     <div class="box3" style="background:` + color_icon + '2a' + `"></div>

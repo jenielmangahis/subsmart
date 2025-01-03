@@ -12,7 +12,6 @@ endif;
         background-image: none;
         box-shadow: 0px 3px 12px #38747859;
         padding: 10px;
-        height: 75%;
     }
 
     .sales-content #jobs_chart {
@@ -44,6 +43,24 @@ endif;
         border-color: #FEA303;
         color: #214548;
     }
+
+    @media screen and (max-width: 1366px) {
+        .sales-content{
+            margin: auto;
+        }
+        .sales-content .form-select {
+            width: 100%;
+        }
+
+        .sales-content .col-4 {
+            width: 50%;
+        }
+
+        .sales-content .filter-options {
+            width: 55%;
+            margin-bottom: 10px;
+        }
+    }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
@@ -71,12 +88,12 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content">
-        <div class="banner">
-            <img src="./assets/img/open-estimates-banner.svg" alt="">
+        <div class="banner mb-4">
+            <img src="./assets/img/open-estimates-banner2.svg" alt="">
         </div>
         <div class="sales-content">
             <div class="row mb-4 mt-2 filter">
-                <div class="col-4">
+                <div class="col-4 filter-options">
                     <select class="nsm-field form-select" name="filter_date" id="widget-sales-filter-date">
                         <option value="custom">Custom</option>
                         <option value="this-month">This month</option>
@@ -96,7 +113,7 @@ endif;
 
             <canvas id="sales_chart" class="nsm-chart" data-chart-type="sales"></canvas>
         </div>
-        <div class="sales-separator2"></div>
+        <!-- <div class="sales-separator2"></div> -->
     </div>
 
 </div>

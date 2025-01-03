@@ -21,7 +21,7 @@ endif;
         width: 100% !important;
         display: block;
         box-sizing: border-box;
-        box-shadow: 0px 3px 12px #38747859;
+        /* box-shadow: 0px 3px 12px #38747859; */
         padding: 20px;
         border-radius: 25px;
         background: #fff;
@@ -49,7 +49,7 @@ endif;
     </div>
     <div class="nsm-card-content ">
         <div class="banner mb-5">
-            <img src="./assets/img/customer-groups-banner.svg" alt="">
+            <img src="./assets/img/customer-groups-banner2.svg" alt="">
         </div>
         <div class="expenses-container">
             <div class="expenses-items">

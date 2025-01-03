@@ -77,7 +77,7 @@
                 plugins: {
                     legend: false,
                 },
-                aspectRatio: 2,
+                aspectRatio: 1,
             }
         });
     }

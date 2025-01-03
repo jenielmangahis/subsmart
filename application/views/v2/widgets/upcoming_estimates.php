@@ -22,7 +22,7 @@
         box-sizing: border-box;
         box-shadow: 0px 3px 12px #38747859;
         padding: 20px;
-        border-radius: 25px;
+        border-radius: 10px;
         background: #fff;
         height: unset;
     }
@@ -41,6 +41,8 @@
         line-height: 1.3;
         display: block;
     }
+
+
 
     #nsm-table-open-estimates .unpaid-invoices-items .nsm-widget-table .badge-section .nsm-badge {
         padding: 1px 20px;
@@ -67,6 +69,47 @@
     #nsm-table-open-estimates .nsm-table-pagination .pagination li a.active {
         background: #d9a1a0;
         border: 1px solid #BEAFC2;
+    }
+
+    #nsm-table-open-estimates .nsm-badge {
+        background-color: #EFB6C8;
+        color: #fff;
+        display: block;
+        width: 100%;
+        margin-top: 10px;
+        text-wrap: auto;
+    }
+
+    #nsm-table-open-estimates tbody tr td {
+        width: 200px;
+    }
+
+
+    @media screen and (max-width: 1366px) {
+        #nsm-table-open-estimates {
+            width: 500px;
+        }
+    }
+
+    @media screen and (max-width: 1200px) {
+        .open-estimates-container .open-estimates-items {
+            margin: unset;
+        }
+    }
+
+
+
+    @media screen and (max-width: 991px) {
+        #nsm-table-open-estimates {
+            width: 100%;
+        }
+    }
+
+    @media screen and (max-width: 567px) {
+        .open-estimates-container .open-estimates-items {
+            margin: unset;
+        }
+
     }
 </style>
 <?php
@@ -110,11 +153,11 @@ function formatEstimateNumber($number)
     <div class="nsm-card-content">
         <div class="col-md-12">
             <div class="banner mb-5">
-                <img src="./assets/img/open-estimates-banner.svg" alt="">
+                <img src="./assets/img/open-estimates-banner2.svg" alt="">
             </div>
             <div class="open-estimates-container">
                 <div class="open-estimates-items">
-                    <div class="nsm-widget-table">
+                    <div class="nsm-widget-table table-responsive">
                         <table class="nsm-table" id="nsm-table-open-estimates">
                             <thead style="display:none;">
                                 <tr>
@@ -164,7 +207,7 @@ function formatEstimateNumber($number)
                                         <?php if( $show_no_movement_notice == 1 ){  ?>
                                         <a style="text-decoration:none;" style="margin-top:7px;"
                                             href="<?= base_url('estimate/edit/' . $estimate->id) ?>"><span
-                                                class="nsm-badge"  style="background-color:#EFB6C8;color:#fff">Last update was
+                                                class="nsm-badge">Last update was
                                                 <b><?= $difference->d . ' days ago' ?></b> - Needs update</span></a>
                                         <?php } ?>
                                     </td>
@@ -174,7 +217,8 @@ function formatEstimateNumber($number)
                                         <span class="content-subtitle d-block">Total Due</span>
                                     </td>
                                     <td style="width:25%;text-align:right;" class="badge-section">
-                                        <span class="nsm-badge " style="background-color: <?= $statusBadgeColor ?>"><?= ucwords($estimate->status) ?></span>
+                                        <span class="nsm-badge "
+                                            style="background-color: <?= $statusBadgeColor ?>"><?= ucwords($estimate->status) ?></span>
                                         <span
                                             class="content-subtitle d-block mt-2"><?= date('F d, Y', strtotime($estimate->updated_at)) ?></span>
                                     </td>

@@ -9,9 +9,11 @@
     <tbody>
         <?php 
         $colors = ['#FEA303', '#d9a1a0', '#BEAFC2', '#EFB6C8'];
+        $colorIndex = 0;
         foreach ($activity_logs as $logs) : ?>
         <?php 
-          $colorSelected = $colors[array_rand($colors)];
+            $colorSelected = $colors[$colorIndex];
+            $colorIndex = ($colorIndex + 1) % count($colors);
         ?>
         <tr>
             <td>

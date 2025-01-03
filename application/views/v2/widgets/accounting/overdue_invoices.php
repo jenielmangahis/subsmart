@@ -28,7 +28,7 @@ endif;
         box-sizing: border-box;
         box-shadow: 0px 3px 12px #38747859;
         padding: 20px;
-        border-radius: 25px;
+        border-radius: 10px;
         background: #fff;
         height: unset;
     }
@@ -74,6 +74,25 @@ endif;
         background: #d9a1a0;
         border: 1px solid #BEAFC2;
     }
+    #nsm-table-overdue-invoices tbody tr td {
+        width: 200px;
+    }
+
+
+    @media screen and (max-width: 1366px) {
+        #nsm-table-overdue-invoices {
+            width: 500px;
+        }
+        .overdue-invoices-container .overdue-invoices-items{
+            margin: auto;
+        }
+    }
+
+    @media screen and (max-width: 991px) {
+        #nsm-table-overdue-invoices {
+            width: 100%;
+        }
+    }
 </style>
 
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -102,11 +121,11 @@ endif;
     <div class="nsm-card-content">
         <div class="col-md-12">
             <div class="banner mb-5">
-                <img src="./assets/img/overdue-invoices-banner.svg" alt="">
+                <img src="./assets/img/overdue-invoices-banner2.svg" alt="">
             </div>
             <div class="overdue-invoices-container">
                 <div class="overdue-invoices-items">
-                    <div class="nsm-widget-table">
+                    <div class="nsm-widget-table table-responsive">
                         <table class="nsm-table" id="nsm-table-overdue-invoices">
                             <thead style="display:none;">
                                 <tr>
@@ -156,16 +175,17 @@ endif;
                                 <?php $initials = ucwords($invoice->first_name[0]) . ucwords($invoice->last_name[0]); ?>
                                 <tr>
                                     <td class="widget-tile-upcoming-estimate-row" data-id="<?= $invoice->id ?>">
-                                        <div class="nsm-profile"
-                                            style="width: 40px;background-color: <?= $statusBadgeColor ?> !important">
-                                            <span><?= $initials ?></span></div>
-                                    </td>
-                                    <td>
-                                        <div class="details">
-                                            <span
-                                                class="content-title"><?= formatInvoiceNumber($invoice->invoice_number) ?></span>
-                                            <span
-                                                class="content-subtitle d-block"><?= $invoice->first_name . ' ' . $invoice->last_name ?></span>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="nsm-profile"
+                                                style="width: 40px;background-color: <?= $statusBadgeColor ?> !important">
+                                                <span><?= $initials ?></span>
+                                            </div>
+                                            <div class="details">
+                                                <span
+                                                    class="content-title"><?= formatInvoiceNumber($invoice->invoice_number) ?></span>
+                                                <span
+                                                    class="content-subtitle d-block"><?= $invoice->first_name . ' ' . $invoice->last_name ?></span>
+                                            </div>
                                         </div>
                                     </td>
                                     <td>
@@ -175,11 +195,11 @@ endif;
                                         <span class="content-subtitle d-block">total due</span>
                                     </td>
                                     <td style="width:25%;text-align:right;">
-                                        <div class="controls badge-section">
+                                        <div class="controls badge-section mb-2">
                                             <span class="nsm-badge " style="background-color: <?= $statusBadgeColor ?>">
                                                 <?= $invoice->status ?>
                                             </span>
-                                            <span class="content-subtitle d-block">
+                                            <span class="content-subtitle d-block mt-2">
                                                 <?= $invoice->due_date ? get_format_date($invoice->due_date) : '' ?>
                                             </span>
                                         </div>

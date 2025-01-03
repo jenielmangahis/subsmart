@@ -14,7 +14,6 @@ endif;
     }
 
     #recent-customer-container {
-        margin: 0 20px;
         background-color: #FFFFFF;
         color: rgb(47 43 61 / 0.9);
         border-radius: 6px;
@@ -24,10 +23,37 @@ endif;
         padding: 10px;
         overflow: auto;
         height: 70%;
+        width: 100%;
     }
 
+    @media screen and (max-width: 1200px) {
+        .nsm-widget-table .recent-customer-item-main .widget-item .content .details {
+            width: 60% !important;
+            justify-content: start;
+        }
 
-   
+        .recent-customer-item-main .widget-item {
+            width: 400px;
+        }
+    }
+
+    @media screen and (max-width: 991px) {
+
+        .recent-customer-item-main .widget-item {
+            width: 100%;
+        }
+    }
+
+    @media screen and (max-width: 567px) {
+
+        .recent-customer-item-main .widget-item .content {
+            justify-content: start;
+        }
+
+        .nsm-widget-table .recent-customer-item-main .widget-item .content .details {
+            width: 100% !important;
+        }
+    }
 </style>
 
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -59,12 +85,12 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="col-md-12">
-            <div class="banner">
-                <img src="./assets/img/recent-customers-banner.svg" alt="">
+            <div class="banner mb-3">
+                <img src="./assets/img/recent-customers-banner2.svg" alt="">
             </div>
             <div class="nsm-widget-table">
                 <div class="recent-customer-item-main">
-                    <div class="recent-custom-item">
+                    <div class="recent-custom-item table-responsive">
                         <div id="recent-customer-container">
                             <div class="nsm-loader">
                                 <i class='bx bx-loader-alt bx-spin'></i>

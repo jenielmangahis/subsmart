@@ -282,19 +282,60 @@ endif;
     #dashboard-job-activities tbody .view button i {
         color: var(--jobs-activities-primary);
     }
-    #dashboard-job-activities .nsm-table-pagination .pagination { 
+
+    #dashboard-job-activities .nsm-table-pagination .pagination {
         gap: 10px;
     }
-    #dashboard-job-activities .nsm-table-pagination .pagination li a.prev,#dashboard-job-activities .nsm-table-pagination .pagination li a.next{ 
+
+    #dashboard-job-activities .nsm-table-pagination .pagination li a.prev,
+    #dashboard-job-activities .nsm-table-pagination .pagination li a.next {
         border: none;
     }
 
-    #dashboard-job-activities .nsm-table-pagination .pagination li a{
+    #dashboard-job-activities .nsm-table-pagination .pagination li a {
         border-radius: 50%;
     }
-    #dashboard-job-activities .nsm-table-pagination .pagination li a.active{
+
+    #dashboard-job-activities .nsm-table-pagination .pagination li a.active {
         background: var(--jobs-activities-tertiary);
         border: 1px solid var(--jobs-activities-color1);
+    }
+
+    #dashboard-job-activities .nsm-row-collapse .content-subtitle label {
+        padding: 1px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        color: #fff;
+        font-size: 12px;
+    }
+
+    @media screen and (max-width: 1366px) {
+
+        #dashboard-job-activities thead tr {
+            font-size: 12px;
+
+        }
+
+        #dashboard-job-activities tbody .amount label {
+            padding: 1px 0px;
+            width: 50px;
+        }
+    }
+
+    @media screen and (max-width: 991px) {
+
+        #dashboard-job-activities tbody .amount label {
+            padding: 1px 20px;
+            width: unset;
+        }
+    }
+
+    @media screen and (max-width: 567px) {
+
+        .jobs-activities .table-reponsinve {
+            margin: unset;
+            transform: unset;
+        }
     }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -411,7 +452,7 @@ endif;
                         </tbody>
                     </table>
                 </div>
-                <div class="jobs-activities-separator"></div>
+                <!-- <div class="jobs-activities-separator"></div> -->
             </div>
         </div>
     </div>

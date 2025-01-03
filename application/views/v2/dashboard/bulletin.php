@@ -73,6 +73,20 @@ endif;
         font-weight: bold !important;
         color: #000 !important;
     }
+
+    @media screen and (max-width: 991px) {
+        .timesheet-container-item .content .badge-item {
+            width: 35%;
+        }
+    }
+
+    @media screen and (max-width: 460px) {
+        .timesheet-container-item .content .badge-item {
+            width: 50%;
+        }
+    }
+
+
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
@@ -102,7 +116,7 @@ endif;
             <div class="banner">
                 <img src="./assets/img/activity-logs-banner.svg" alt="">
             </div>
-            <div class="timesheet-container-item ">
+            <div class="timesheet-container-item table-responsive">
                 <div class="nsm-widget-table">
                     <div class="row timesheet-header">
                         <div class="widget-item timesheet-item ">
