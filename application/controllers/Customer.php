@@ -63,6 +63,11 @@ class Customer extends MY_Controller
     {
         $this->load->model('AcsProfile_model');
 
+        if(!checkRoleCanAccessModule('customers', 'read')){
+			show403Error();
+			return false;
+		}
+
         $company_id = logged('company_id');
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
@@ -171,6 +176,12 @@ class Customer extends MY_Controller
 
     public function CompanyList(){
         $company_id = logged('company_id');
+
+        if(!checkRoleCanAccessModule('customers', 'read')){
+			show403Error();
+			return false;
+		}
+
         $get_customer_groups = [
             'where' => [
                     'company_id' => $company_id,
@@ -256,9 +267,13 @@ class Customer extends MY_Controller
 
         $data = [];
         foreach ($filteredPersons as $customer) {
-           
             $data_arr  = [];
-            $labelName = $customer->first_name.' '.$customer->last_name;
+            if( $customer->is_favorite == 1 ){
+                $labelName   = "<i class='bx bxs-heart customer-favorite'></i> " . $customer->first_name.' '.$customer->last_name;
+            }else{
+                $labelName   = $customer->first_name.' '.$customer->last_name;
+            }
+            
             if (!empty($enabled_table_headers)) {
                 if (in_array('name', $enabled_table_headers)) {                    
                     $n = ucwords($customer->first_name[0]).ucwords($customer->last_name[0]);
@@ -416,6 +431,24 @@ class Customer extends MY_Controller
                 array_push($data_arr, $stat);
             }
 
+            $edit_action     = '';
+            $favorite_action = '';
+            $call_action     = '';
+            $schedule_action = '';
+            $email_action    = '';
+            if( checkRoleCanAccessModule('customers', 'write') ){
+                $edit_action = "<li><a class='dropdown-item' href='".base_url('customer/add_advance/'.$customer->prof_id)."'>Edit</a></li>";
+                $favorite_action = " <li><a class='dropdown-item favorite-customer' data-favorite='".$customer->is_favorite."' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' href='javascript:void(0);'>Add to Favorites</a></li>";
+                $call_action = "<li><a class='dropdown-item call-item' href='javascript:void(0);' data-id='".$customer->phone_m."'>Call</a></li>";
+                $schedule_action = "<li><a class='dropdown-item' href='".base_url('job/new_job1?cus_id='.$customer->prof_id)."'>Schedule</a></li>";
+                $email_action = "<li><a class='dropdown-item send-email' data-id='".$customer->prof_id."' data-email='".$customer->email."' href='javascript:void(0);'>Email</a></li>";
+            }
+            
+            $delete_action = '';
+            if( checkRoleCanAccessModule('customers', 'delete') ){
+                $delete_action = "<li><a class='dropdown-item delete-customer' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' href='javascript:void(0);'>Delete</a></li>";
+            }
+
             $actionColumn = "<div class='dropdown table-management'>
                 <a href='javascript:void(0);' class='dropdown-toggle' data-bs-toggle='dropdown'>
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
@@ -424,30 +457,21 @@ class Customer extends MY_Controller
                     <li>
                         <a class='dropdown-item' href='".base_url('customer/preview_/'.$customer->prof_id)."'>Preview</a>
                     </li>
-                    <li>
-                        <a class='dropdown-item' href='".base_url('customer/add_advance/'.$customer->prof_id)."'>Edit</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item send-email' data-id='".$customer->prof_id."' data-email='".$customer->email."' href='javascript:void(0);'>Email</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item call-item' href='javascript:void(0);' data-id='".$customer->phone_m."'>Call</a>
-                    </li>
+                    ".$edit_action."
+                    ".$email_action."
+                    ".$call_action."      
                     <li>
                         <a class='dropdown-item' href='".base_url('invoice/add?cus_id='.$customer->prof_id)."'>Invoice</a>
                     </li>
                     <li>
                         <a class='dropdown-item' href='".base_url('customer/module/'.$customer->prof_id)."'>Dashboard</a>
                     </li>
-                    <li>
-                        <a class='dropdown-item' href='".base_url('job/new_job1?cus_id='.$customer->prof_id)."'>Schedule</a>
-                    </li>
+                    ".$schedule_action."
                     <li>
                         <a class='dropdown-item sms-messages' data-id='".$customer->prof_id."' href='javascript:void(0);'>Message</a>
                     </li>
-                    <li>
-                        <a class='dropdown-item delete-customer' data-id='".$customer->prof_id."' href='javascript:void(0);'>Delete</a>
-                    </li>
+                    ".$favorite_action."
+                    ".$delete_action."
                 </ul>
             </div>";
 
@@ -498,7 +522,11 @@ class Customer extends MY_Controller
         $data = [];
         foreach ($filteredPersons as $customer) {
             $data_arr  = [];
-            $labelName = $customer->first_name.' '.$customer->last_name;
+            if( $customer->is_favorite == 1 ){
+                $labelName   = "<i class='bx bxs-heart customer-favorite'></i> " . $customer->first_name.' '.$customer->last_name;
+            }else{
+                $labelName   = $customer->first_name.' '.$customer->last_name;
+            }
             if (!empty($enabled_table_headers)) {
                 if (in_array('name', $enabled_table_headers)) {                    
                     $n = ucwords($customer->first_name[0]).ucwords($customer->last_name[0]);
@@ -530,7 +558,7 @@ class Customer extends MY_Controller
                     }
                 }
                 if (in_array('city', $enabled_table_headers)) {
-                    array_push($data_arr, $customer->city);
+                    array_push($data_arr, $customer->city != '' ? $customer->city : '---');
                 }
                 if (in_array('state', $enabled_table_headers)) {
                     $state = 'Not Specified';
@@ -655,6 +683,24 @@ class Customer extends MY_Controller
                 array_push($data_arr, $stat);
             }
 
+            $edit_action     = '';
+            $favorite_action = '';
+            $call_action     = '';
+            $schedule_action = '';
+            $email_action    = '';
+            if( checkRoleCanAccessModule('customers', 'write') ){
+                $edit_action = "<li><a class='dropdown-item' href='".base_url('customer/add_advance/'.$customer->prof_id)."'>Edit</a></li>";
+                $favorite_action = " <li><a class='dropdown-item favorite-customer' data-favorite='".$customer->is_favorite."' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' href='javascript:void(0);'>Add to Favorites</a></li>";
+                $call_action = "<li><a class='dropdown-item call-item' href='javascript:void(0);' data-id='".$customer->phone_m."'>Call</a></li>";
+                $schedule_action = "<li><a class='dropdown-item' href='".base_url('job/new_job1?cus_id='.$customer->prof_id)."'>Schedule</a></li>";
+                $email_action = "<li><a class='dropdown-item send-email' data-id='".$customer->prof_id."' data-email='".$customer->email."' href='javascript:void(0);'>Email</a></li>";
+            }
+            
+            $delete_action = '';
+            if( checkRoleCanAccessModule('customers', 'delete') ){
+                $delete_action = "<li><a class='dropdown-item delete-customer' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' href='javascript:void(0);'>Delete</a></li>";
+            }
+
             $actionColumn = "<div class='dropdown table-management'>
                 <a href='javascript:void(0);' class='dropdown-toggle' data-bs-toggle='dropdown'>
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
@@ -663,30 +709,21 @@ class Customer extends MY_Controller
                     <li>
                         <a class='dropdown-item' href='".base_url('customer/preview_/'.$customer->prof_id)."'>Preview</a>
                     </li>
-                    <li>
-                        <a class='dropdown-item' href='".base_url('customer/add_advance/'.$customer->prof_id)."'>Edit</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item send-email' data-id='".$customer->prof_id."' data-email='".$customer->email."' href='javascript:void(0);'>Email</a>
-                    </li>
-                    <li>
-                        <a class='dropdown-item call-item' href='javascript:void(0);' data-id='".$customer->phone_m."'>Call</a>
-                    </li>
+                    ".$edit_action."
+                    ".$email_action."
+                    ".$call_action."                    
                     <li>
                         <a class='dropdown-item' href='".base_url('invoice/add?cus_id='.$customer->prof_id)."'>Invoice</a>
                     </li>
                     <li>
                         <a class='dropdown-item' href='".base_url('customer/module/'.$customer->prof_id)."'>Dashboard</a>
                     </li>
-                    <li>
-                        <a class='dropdown-item' href='".base_url('job/new_job1?cus_id='.$customer->prof_id)."'>Schedule</a>
-                    </li>
+                    ".$schedule_action."
                     <li>
                         <a class='dropdown-item sms-messages' data-id='".$customer->prof_id."' href='javascript:void(0);'>Message</a>
                     </li>
-                    <li>
-                        <a class='dropdown-item delete-customer' data-id='".$customer->prof_id."' href='javascript:void(0);'>Delete</a>
-                    </li>
+                    ".$favorite_action."
+                    ".$delete_action."
                 </ul>
             </div>";
 
@@ -708,6 +745,12 @@ class Customer extends MY_Controller
 
     public function PersonList(){
         $company_id = logged('company_id');
+
+        if(!checkRoleCanAccessModule('customers', 'read')){
+			show403Error();
+			return false;
+		}
+
         $get_customer_groups = [
             'where' => [
                     'company_id' => $company_id,
@@ -1049,6 +1092,24 @@ class Customer extends MY_Controller
                 array_push($data_arr, $stat);
             }
 
+            $edit_action     = '';
+            $favorite_action = '';
+            $call_action     = '';
+            $schedule_action = '';
+            $email_action    = '';
+            if( checkRoleCanAccessModule('customers', 'write') ){
+                $edit_action = "<li><a class='dropdown-item' href='".base_url('customer/add_advance/'.$customer->prof_id)."'>Edit</a></li>";
+                $favorite_action = " <li><a class='dropdown-item favorite-customer' data-favorite='".$customer->is_favorite."' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' href='javascript:void(0);'>Add to Favorites</a></li>";
+                $call_action = "<li><a class='dropdown-item call-item' href='javascript:void(0);' data-id='".$customer->phone_m."'>Call</a></li>";
+                $schedule_action = "<li><a class='dropdown-item' href='".base_url('job/new_job1?cus_id='.$customer->prof_id)."'>Schedule</a></li>";
+                $email_action = "<li><a class='dropdown-item send-email' data-id='".$customer->prof_id."' data-email='".$customer->email."' href='javascript:void(0);'>Email</a></li>";
+            }
+            
+            $delete_action = '';
+            if( checkRoleCanAccessModule('customers', 'delete') ){
+                $delete_action = "<li><a class='dropdown-item delete-customer' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' href='javascript:void(0);'>Delete</a></li>";
+            }
+
             $dropdown = "<div class='dropdown table-management'>
                     <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
@@ -1057,33 +1118,21 @@ class Customer extends MY_Controller
                         <li>
                             <a class='dropdown-item' href='".('customer/preview_/'.$customer->prof_id)."'>Preview</a>
                         </li>
-                        <li>
-                            <a class='dropdown-item' href='".base_url('customer/add_advance/'.$customer->prof_id)."'>Edit</a>
-                        </li>
-                        <li>
-                            <a class='dropdown-item send-email' data-id='".$customer->prof_id."' data-email='".$customer->email."' href='javascript:void(0);'>Email</a>
-                        </li>
-                        <li>
-                            <a class='dropdown-item call-item' href='javascript:void(0);' data-id='".$customer->phone_m."'>Call</a>
-                        </li>
+                        ".$edit_action."
+                        ".$email_action."
+                        ".$call_action."
                         <li>
                             <a class='dropdown-item' href='".base_url('invoice/add?cus_id='.$customer->prof_id)."'>Invoice</a>
                         </li>
                         <li>
                             <a class='dropdown-item' href='".base_url('customer/module/'.$customer->prof_id)."'>Dashboard</a>
                         </li>
-                        <li>
-                            <a class='dropdown-item' href='".base_url('job/new_job1?cus_id='.$customer->prof_id)."'>Schedule</a>
-                        </li>
+                        ".$schedule_action."
                         <li>
                             <a class='dropdown-item sms-messages' data-id='".$customer->prof_id."' href='javascript:void(0);'>Message</a>
                         </li>
-                        <li>
-                            <a class='dropdown-item favorite-customer' data-favorite='".$customer->is_favorite."' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' href='javascript:void(0);'>Add to Favorites</a>
-                        </li>
-                        <li>
-                            <a class='dropdown-item delete-customer' data-id='".$customer->prof_id."' href='javascript:void(0);'>Delete</a>
-                        </li>
+                        ".$favorite_action."
+                        ".$delete_action."
                     </ul>
                 </div>";
             array_push($data_arr, $dropdown);
@@ -3130,6 +3179,11 @@ class Customer extends MY_Controller
 
         $this->hasAccessModule(9);
 
+        if(!checkRoleCanAccessModule('customers', 'write')){
+			show403Error();
+			return false;
+		}
+
         $userid = $id;
         $user_id = logged('id');
         $company_id = logged('company_id');
@@ -3137,6 +3191,9 @@ class Customer extends MY_Controller
         if (isset($userid) || !empty($userid)) {
             $billing = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
             $customer = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
+            if( $customer->company_id != $company_id) {
+                redirect('customer');
+            }
             $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($userid);
             $this->page_data['profile_info'] = $customer;
             $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_access');
@@ -3304,13 +3361,35 @@ class Customer extends MY_Controller
 
     public function leads()
     {
-        $this->page_data['page']->title = 'Leads Manager List';
-        $this->page_data['page']->parent = 'Customers';
+        $this->load->model('Lead_model');
 
         $this->hasAccessModule(14);
 
-        $user_id = logged('id');
-        $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
+        if(!checkRoleCanAccessModule('leads', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $cid = logged('company_id');
+        $filter = 'All';
+        if( $this->input->get('status') && $this->input->get('status') != 'all' ){
+            $filter = $this->input->get('status');
+            if( $filter == 'follow_up' ){
+                $filter = 'follow up';
+            }
+
+            $filter = ucwords($filter);
+            $filters[] = ['field_name' => 'status', 'field_value' => $filter];
+            $leads = $this->Lead_model->getAllByCompanyId($cid, $filters);
+
+        }else{
+            $leads = $this->Lead_model->getAllByCompanyId($cid, []);
+        }
+
+        $this->page_data['filter'] = $filter;
+        $this->page_data['page']->title = 'Leads Manager List';
+        $this->page_data['page']->parent = 'Customers';
+        $this->page_data['leads'] = $leads;
         $this->load->view('v2/pages/customer/leads', $this->page_data);
     }
 
@@ -4485,6 +4564,12 @@ class Customer extends MY_Controller
     {
         // $this->hasAccessModule(9);
         $this->hasAccessModule(43);
+
+        if(!checkRoleCanAccessModule('leads', 'write')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'New Lead Form';
 
         if (isset($lead_id)) {
@@ -4539,9 +4624,9 @@ class Customer extends MY_Controller
                 $this->page_data['company_id'] = $cid;
                 $this->page_data['plans'] = '';
                 $this->page_data['users'] = $this->users_model->getUsers();
-                $this->page_data['lead_types'] = $this->customer_ad_model->getAllSettingsLeadTypesByCompanyId($cid);
-                $this->page_data['sales_area'] = $this->customer_ad_model->getAllSettingsSalesAreaByCompanyId($cid);
-
+                $this->page_data['lead_types']  = $this->customer_ad_model->getAllSettingsLeadTypesByCompanyId($cid);
+                $this->page_data['sales_area']  = $this->customer_ad_model->getAllSettingsSalesAreaByCompanyId($cid);
+                $this->page_data['page']->title = 'Leads Manager List';
                 $this->load->view('customer/add_lead', $this->page_data);
             }
         }
@@ -5172,17 +5257,29 @@ class Customer extends MY_Controller
 
     public function delete_sales_area()
     {
-        $deletion_query = [
-            'where' => [
-                'sa_id' => $_POST['id'],
-            ],
-            'table' => 'ac_salesarea',
-        ];
-        if ($this->general->delete_($deletion_query)) {
-            echo 1;
-        } else {
-            echo 0;
+        $this->load->model('SalesArea_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $salesArea = $this->SalesArea_model->getByIdAndCompanyId($post['id'], $cid);
+        if( $salesArea ){
+            $name = $salesArea->sa_name;
+            $this->SalesArea_model->deleteSalesArea($post['id']);
+            
+            $is_success = 1;
+            $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Sales Area : Deleted sales area ' . $name; 
+            createActivityLog($activity_name);
+
         }
+
+        $json_data = ['is_success' => $is_success];
+        echo json_encode($json_data);
     }
 
     public function delete_lead_source()
@@ -6438,6 +6535,11 @@ class Customer extends MY_Controller
     {
         $this->load->helper('customer_helper');
 
+        if(!checkRoleCanAccessModule('customer-groups', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Customer Groups';
         $this->page_data['page']->parent = 'Customers';
         
@@ -6561,6 +6663,33 @@ class Customer extends MY_Controller
         }else{
             echo false;
         }
+        
+    }
+    
+    public function ajax_delete_customer_group()
+    {
+        $this->load->model('CustomerGroup_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+        
+        $customerGroup = $this->CustomerGroup_model->getById($post['id']);
+        if( $customerGroup && $customerGroup->company_id == $cid ){
+            $this->CustomerGroup_model->delete($customerGroup->id);
+            
+            //Activity Logs
+            $activity_name = 'Customer Group : Deleted customer group  ' . $customerGroup->title; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
         
     }
 
@@ -7333,6 +7462,11 @@ class Customer extends MY_Controller
 
         $this->load->library('wizardlib');
         $this->hasAccessModule(9);
+
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
 
         $user_id = logged('id');
         $company_id = logged('company_id');
@@ -10033,6 +10167,51 @@ class Customer extends MY_Controller
         echo json_encode($return);
     }
 
+    public function ajax_update_customer_group()
+    {
+        $this->load->model('CustomerGroup_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        $group_name = '';
+        $group_id   = 0;
+
+        $company_id = logged('company_id');
+        $user_id    = logged('id');
+        $post = $this->input->post();
+
+        $customerGroup = $this->CustomerGroup_model->getById($post['gid']);
+        if( $customerGroup ){
+            $isExists = $this->CustomerGroup_model->getByNameAndCompanyId($post['group_name'], $company_id);
+            if( $isExists && $isExists->id != $post['gid'] ){
+                $msg = 'Group name already exists.';
+            }else{
+                if ($post['group_name'] != '') {
+                    $data = [
+                        'name' => $post['group_name'],
+                        'title' => $post['group_name'],
+                        'description' => $post['group_description'],
+                    ];
+        
+                    $this->CustomerGroup_model->update($customerGroup->id, $data);
+        
+                    //Activity Logs
+                    $activity_name = 'Customer Group : Updated customer group ' . $customerGroup->group_name; 
+                    createActivityLog($activity_name);
+        
+                    $is_success = 1;
+                    $msg = '';
+                    
+                }else{
+                    $msg = 'Please enter group name.';
+                }
+            }
+        }        
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
     public function ajax_create_sales_area()
     {
         $this->load->model('SalesArea_model');
@@ -10249,5 +10428,4 @@ class Customer extends MY_Controller
         $return = ['is_success' => $is_success, 'msg' => $msg, 'amount' => $amount];
         echo json_encode($return);
     }
-
 }
