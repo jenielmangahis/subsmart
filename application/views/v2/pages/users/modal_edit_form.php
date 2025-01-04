@@ -103,6 +103,11 @@
     </div>
 </div>
 <script type="text/javascript">
+    $(function(){
+        $('#edit_employee_modal .form-select').select2({
+            dropdownParent: $("#edit_employee_modal")
+        });
+    });
     $('.edit_phone_number').keydown(function(e) {
         var key = e.charCode || e.keyCode || 0;
         $text = $(this);

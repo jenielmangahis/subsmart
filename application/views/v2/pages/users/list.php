@@ -179,9 +179,9 @@
                                                     <li>
                                                         <a class="dropdown-item edit-item" name="btn_edit" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Edit</a>
                                                     </li>                                                
-                                                    <li>
+                                                    <!-- <li>
                                                         <a class="dropdown-item commissions-list" name="" href="javascript:void(0);" data-id="<?php echo $row->id ?>">Commissions</a>
-                                                    </li>
+                                                    </li> -->
                                                     <li>
                                                         <a class="dropdown-item update-profile-item" name="btn_update_profile_image" href="javascript:void(0);" data-id="<?php echo $row->id ?>" data-img="<?php echo $data_img; ?>">Update Profile Image</a>
                                                     </li>                                                
@@ -289,6 +289,10 @@
                     _this.attr("type", "password");
                 }
             }
+        });
+
+        $('#add_employee_modal .form-select').select2({
+            dropdownParent: $("#add_employee_modal")
         });
 
         $(".btn-share-url").on("click", function() {
