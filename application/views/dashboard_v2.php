@@ -2293,8 +2293,8 @@ function loadCustomerGroupChart() {
 
                     // Draw the total value on the second line
                     const text2 = total;
-                    ctx.font = '25px sans-serif'
-                    ctx.fillText(text2, width / 2, height / 2 - 30); // Adjust Y for the second line
+                    ctx.font = '22px sans-serif'
+                    ctx.fillText(text2, width / 2, height / 2 - 25); // Adjust Y for the second line
 
                     ctx.restore();
                 },
@@ -2315,7 +2315,7 @@ function loadCustomerGroupChart() {
                             enabled: true,
                         },
                     },
-                    aspectRatio: 1.5,
+                    aspectRatio: 1,
                 },
                 plugins: [centerTextPlugin], // Use the correct plugin
             });

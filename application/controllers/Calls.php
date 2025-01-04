@@ -7,6 +7,7 @@ class Calls extends Widgets {
         parent::__construct();
         $this->checkLogin();		
         $this->page_data['page']->parent = 'Dashboard';
+        $this->load->model('Serversidetable_model', 'serverside_table');
     }
 
     public function index() 
@@ -144,5 +145,45 @@ class Calls extends Widgets {
         $company_id = logged('company_id');
         $this->page_data['page']->title = 'Scheduled Calls';
         $this->load->view('v2/pages/dashboard/scheduled_calls', $this->page_data);
+    }
+
+    public function showCustomerContacts()
+    {
+        $company_id = logged('company_id');
+        $initializeTable = $this->serverside_table->initializeTable(
+            "customer_contacts_view", 
+            array('firstname', 'lastname', 'business_name', 'type', 'phone_h', 'phone_m'),
+            array('firstname', 'lastname', 'business_name', 'type', 'phone_h', 'phone_m'),
+            null,  
+            array('company_id' => $company_id,),
+        );
+
+        $whereCondition = array('company_id' => $company_id);
+        $getData = $this->serverside_table->getRows($this->input->post(), $whereCondition);
+
+        $data = $row = array();
+        $i = $this->input->post('start');
+        
+        foreach($getData as $getDatas){
+            if ($getDatas->company_id == $company_id) {
+                $data[] = array(
+                    ($getDatas->type == "Residential") ? "<div class='nsm-profile'><span>".ucwords($getDatas->firstname[0]).ucwords($getDatas->lastname[0])."</span></div>" : "<div class='nsm-profile'><span>".ucwords($getDatas->business_name[0])."</span></div>",
+                    ($getDatas->type == "Residential") ? "<span>$getDatas->firstname $getDatas->lastname</span>" : "<span>$getDatas->business_name</span>",
+                    $getDatas->type,
+                    $getDatas->phone_h,
+                    "<div class='noWidth dropdown table-management'><a href='#' name='dropdown_link' class='dropdown-toggle dotsOption' data-bs-toggle='dropdown'><i class='bx bx-fw bx-dots-vertical-rounded'></i></a><ul class='dropdown-menu dropdown-menu-end'><li><a class='dropdown-item call-customer' name='dropdown_call' data-id='$getDatas->id' data-phone='$getDatas->phone_h' href='call:$getDatas->phone_h' data-action='call'>Call</a></li></ul></div>",
+                );
+                $i++;
+            }
+        }
+
+        $output = array(
+            "draw" => $this->input->post('draw'),
+            "recordsTotal" => $this->serverside_table->countAll(),
+            "recordsFiltered" => $this->serverside_table->countFiltered($this->input->post()),
+            "data" => $data,
+        );
+        
+        echo json_encode($output);
     }
 }

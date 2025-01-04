@@ -13,9 +13,9 @@ endif;
         overflow: hidden;
         box-shadow: 0px 3px 12px #38747859;
         padding: 10px;
-        transform: translateY(-60px);
+        /* transform: translateY(-60px); */
         overflow: auto;
-        height: 80%;
+        height: unset;
     }
 
     #dashboard_upcoming_schedules_table .nsm-table-pagination .pagination { 

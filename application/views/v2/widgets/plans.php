@@ -59,6 +59,13 @@ endif;
         margin: 0;
         text-align: center;
     }
+
+    @media screen and (max-width: 1366px) {
+      .plans-item-container .col-4{ 
+        width: 100%;
+      }
+    }
+  
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
@@ -85,8 +92,8 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="col-md-12">
-            <div class="banner">
-                <img src="./assets/img/ytd-stats-banner.svg" alt="">
+            <div class="banner mb-4">
+                <img src="./assets/img/ytd-stats-banner2.svg" alt="">
             </div>
             <div class="row plans-item-container">
                 <div class="col-4 mb-4">

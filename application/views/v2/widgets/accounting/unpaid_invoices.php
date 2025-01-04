@@ -10,7 +10,6 @@ endif;
 
 
     .unpaid-invoices-container .unpaid-invoices-items {
-        margin: 0 20px;
         color: rgb(47 43 61 / 0.9);
         border-radius: 6px;
         background-image: none;
@@ -28,7 +27,7 @@ endif;
         box-sizing: border-box;
         box-shadow: 0px 3px 12px #38747859;
         padding: 20px;
-        border-radius: 25px;
+        border-radius: 10px;
         background: #fff;
         height: unset;
     }
@@ -65,6 +64,43 @@ endif;
         background: #d9a1a0;
         border: 1px solid #BEAFC2;
     }
+
+    #dashboard_unpaid_invoices .nsm-badge2 {
+        background-color: #EFB6C8;
+        color: #fff;
+        display: block;
+        width: 175px;
+        margin-top: 10px;
+        text-wrap: auto;
+    }
+
+    #dashboard_unpaid_invoices tbody tr td {
+        width: 200px;
+    }
+
+
+    @media screen and (max-width: 1366px) {
+        #dashboard_unpaid_invoices {
+            width: 500px;
+        }
+    }
+
+    @media screen and (max-width: 991px) {
+        #dashboard_unpaid_invoices {
+            width: 100%;
+        }
+    }
+
+    @media screen and (max-width: 567px) {
+        #dashboard_unpaid_invoices .nsm-badge2 {
+            width: 100%;
+        }
+
+        .unpaid-invoices-container .unpaid-invoices-items {
+            margin: unset;
+        }
+
+    }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
@@ -89,11 +125,11 @@ endif;
     <div class="nsm-card-content">
         <div class="col-md-12">
             <div class="banner mb-5">
-                <img src="./assets/img/unpaid-invoices-banner.svg" alt="">
+                <img src="./assets/img/open-invoices-banner2.svg" alt="">
             </div>
             <div class="unpaid-invoices-container">
                 <div class="unpaid-invoices-items">
-                    <div class="nsm-widget-table">
+                    <div class="nsm-widget-table table-responsive">
                         <table class="nsm-table" id="dashboard_unpaid_invoices">
                             <thead style="display:none;">
                                 <tr>
@@ -153,7 +189,7 @@ endif;
                                         <div class="widget-item widget-tile-unpaid-invoice-row"
                                             data-id="<?= $invoice->id ?>">
                                             <div class="content">
-                                                <div class="details" style="width:98% !important;">
+                                                <div class="details" style="width:100% !important;">
                                                     <?php $customer_name = $invoice->first_name . ' ' . $invoice->last_name; ?>
                                                     <span class="content-title"><?= $invoice->invoice_number ?></span>
                                                     <span class="content-subtitle d-block" style="margin-top:7px;"><i
@@ -163,8 +199,7 @@ endif;
                                                     <?php if( $show_no_movement_notice == 1 ){  ?>
                                                     <a style="text-decoration:none;margin-top:5px;"
                                                         href="<?= base_url('invoice/invoice_edit/' . $invoice->id) ?>"><span
-                                                            class="nsm-badge"
-                                                            style="background-color:#EFB6C8;color:#fff">Last update was
+                                                            class="nsm-badge nsm-badge2">Last update was
                                                             <b><?= $difference->d . ' days ago' ?></b> - Needs
                                                             update</span></a>
                                                     <?php } ?>

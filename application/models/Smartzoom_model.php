@@ -4,18 +4,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Smartzoom_model extends MY_Model 
 {   
     private function generateMeetingCode() {
-        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        $codeLength = 14;
-        $hyphenPositions = [4, 9];
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $codeLength = 8;
         $meetingCode = '';
-
+    
         for ($i = 0; $i < $codeLength; $i++) {
-            if (in_array($i, $hyphenPositions)) {
-                $meetingCode .= '-';
-            } else {
-                $randomIndex = rand(0, strlen($characters) - 1);
-                $meetingCode .= $characters[$randomIndex];
-            }
+            $randomIndex = rand(0, strlen($characters) - 1);
+            $meetingCode .= $characters[$randomIndex];
         }
         return $meetingCode;
     }

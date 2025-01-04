@@ -80,6 +80,53 @@ endif;
         float: left;
         margin-left: 20px;
     }
+
+    @media screen and (max-width: 1366px) {
+
+        .sales-filter .form-select {
+            width: 100%;
+        }
+
+        .sales-filter .col-4 {
+            width: 50%;
+        }
+
+        .sales-filter .filter-options {
+            width: 51%;
+            margin-bottom: 10px;
+        }
+
+        #sales_leaderboard_v2 {
+            transform: unset;
+            margin-top: 20px
+        }
+
+        #widget-tech-leaderboard .widget-item {
+            width: 200px;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        #sales_leaderboard_v2 {
+            height: unset;
+            margin: unset;
+            margin-top: 20px;
+        }
+
+
+    }
+
+    @media screen and (max-width: 460px) {
+        .sales-filter .col-4 {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .sales-filter {
+            height: 200px;
+        }
+
+    }
 </style>
 
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -108,7 +155,7 @@ endif;
             <div class="sales-filter">
                 <div class="col-md-12 mt-3">
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-4 filter-options">
                             <select class="nsm-field form-select" name="filter_date"
                                 id="sales-leader-board-filter-date">
                                 <option value="today">Today</option>
@@ -132,7 +179,7 @@ endif;
                 </div>
             </div>
             <div id="sales_leaderboard_v2"></div>
-            <div class="sales-separator"></div>
+            <!-- <div class="sales-separator"></div> -->
 
         </div>
     </div>

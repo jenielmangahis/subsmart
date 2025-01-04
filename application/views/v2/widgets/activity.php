@@ -82,7 +82,7 @@ endif;
 
     #dashboard_activity_logs .date-item {
         padding: 5px 10px;
-        border-radius: 25px;
+        border-radius: 10px;
         font-weight: bold;
         color: #fff;
         font-size: 12px;
@@ -136,9 +136,40 @@ endif;
         overflow: hidden;
         box-shadow: 0px 3px 12px #38747859;
         padding: 10px;
-        transform: translateY(-60px);
         overflow: auto;
-        height: 75%;
+    }
+
+    @media screen and (max-width: 1366px) {
+        #dashboard_activity_logs .content .badge-item {
+            width: 80%;
+        }
+
+        .activity-container-main .activity-logs-container {
+            height: unset;
+        }
+
+        #dashboard_activity_logs {
+            width: 500px;
+        }
+
+    }
+
+    @media screen and (max-width: 991px) {
+        #dashboard_activity_logs .content .badge-item {
+            width: 45%;
+        }
+        #dashboard_activity_logs {
+            width: 100%;
+        }
+    }
+
+    @media screen and (max-width: 567px) {
+        #dashboard_activity_logs .content .badge-item {
+            width: 100%;
+        }
+        .activity-container-main .activity-logs-container{
+            margin: unset;
+        }
     }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -171,7 +202,7 @@ endif;
                     <img src="./assets/img/activity-logs-banner.svg" alt="">
                 </div>
                 <div class="nsm-widget-table">
-                    <div class="activity-logs-container"></div>
+                    <div class="activity-logs-container table-responsive"></div>
                 </div>
             </div>
         </div>

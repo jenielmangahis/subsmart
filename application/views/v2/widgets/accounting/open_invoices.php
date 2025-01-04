@@ -21,7 +21,7 @@ endif;
         width: 100% !important;
         display: block;
         box-sizing: border-box;
-        box-shadow: 0px 3px 12px #38747859;
+        /* box-shadow: 0px 3px 12px #38747859; */
         padding: 20px;
         border-radius: 25px;
         background: #fff;
@@ -54,8 +54,8 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="col-md-12">
-        <div class="banner mb-5">
-                <img src="./assets/img/open-invoices-banner.svg" alt="">
+        <div class="banner mb-2">
+                <img src="./assets/img/open-invoices-banner2.svg" alt="">
             </div>
             <div class="open-invoices-container">
                 <div class=" open-invoices-items">
