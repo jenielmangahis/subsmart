@@ -197,7 +197,7 @@
                                                 <?php if(checkRoleCanAccessModule('users', 'delete')){ ?>
                                                     <?php if ($row->id != 1 && logged('id') != $row->id) : ?>
                                                         <li>
-                                                            <a class="dropdown-item delete-item" name="btn_delete" href="javascript:void(0);" data-id="<?= $row->id; ?>">Delete</a>
+                                                            <a class="dropdown-item delete-item" data-name="<?php echo ucwords(strtolower($row->FName)) . ' ' . ucwords(strtolower($row->LName)); ?>" name="btn_delete" href="javascript:void(0);" data-id="<?= $row->id; ?>">Delete</a>
                                                         </li>
                                                     <?php endif; ?>
                                                 <?php } ?>
@@ -708,10 +708,11 @@
 
         $(document).on("click", ".delete-item", function() {
             let id = $(this).attr('data-id');
+            let name = $(this).attr('data-name');
 
             Swal.fire({
                 title: 'Delete User',
-                text: "Are you sure you want to delete the selected user?",
+                html: `Are you sure you want to delete employee <b>${name}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -720,7 +721,7 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: "<?php echo base_url(); ?>users/_delete_user",
+                        url: base_url + "users/_delete_user",
                         data: {
                             eid: id
                         },
@@ -728,15 +729,15 @@
                         success: function(result) {
                             if (result.is_success) {
                                 Swal.fire({
-                                    title: 'Success',
-                                    text: "User was successfully deleted.",
+                                    title: 'Delete Employee',
+                                    text: "Data was successfully deleted.",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
-                                    if (result.value) {
+                                    //if (result.value) {
                                         location.reload();
-                                    }
+                                    //}
                                 });
                             } else {
                                 Swal.fire({
