@@ -308,7 +308,7 @@
                 <div class="col-md-7">
                     <div class="profile-headline profile-headline1">
                         <img class="profile-avatar"
-                            style="background-image:url('<?php echo base_url($profiledata->business_image); ?>');background-size:contain;">
+                            style="background-image:url('<?= getCompanyCoverPhoto($company_id) ?>');background-size:contain;">
                         <div class="profile-cnt">
                             <div class="profile-cnt">
                                 <div class="profile-cnt-h">
