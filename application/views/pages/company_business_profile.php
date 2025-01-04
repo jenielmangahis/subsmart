@@ -703,7 +703,7 @@
         new google.maps.Marker({
             position: myLatLng,
             map,
-            title: "Hello World!",
+            title: "",
         });
         geocoder = new google.maps.Geocoder();
         codeAddress(geocoder, map, address);
