@@ -187,7 +187,7 @@ if (!function_exists('getCompanyCoverPhoto')) {
 
         $CI         = &get_instance();
         $res = $CI->business_model->getByCompanyCoverPhoto($company_id);
-        if( $res ){
+        if( $res && $res->business_cover_photo != '' ){
             $url = urlUpload('company_cover_photo/' . $res->company_id . '/' . $res->business_cover_photo . '?' . time());
         }else{
             $url = urlUpload('company_cover_photo/default.png');
@@ -253,7 +253,7 @@ if (!function_exists('getPublicCompanyBusinessProfileImage')) {
         $CI  = &get_instance();
         $res = $CI->business_model->getByCompanyProfileImage($company_id);
         if( $res ){
-            $url = urlUpload('users/business_profile/' . $res->id . '/' . $res->business_image . '?' . time());
+            $url = urlUpload('users/business_profile/' . $res->company_id . '/' . $res->business_image . '?' . time());
         }else{
             $url = urlUpload('users/business_profile/default.png');
         }
@@ -5451,7 +5451,7 @@ function checkRoleCanAccessModule($module, $action){
     $allow_access = false;
 
     $hasAccessAll = $CI->CompanyRoleAccessModule_model->isRoleHasAccessAll($cid, $rid);
-    if( $hasAccessAll ){        
+    if( $hasAccessAll || $rid == 7 ){     
         $allow_access = true;   
     }else{
         $permission   = $CI->CompanyRoleAccessModule_model->getCompanyRoleModulePermission($cid, $rid, $module);
@@ -5510,7 +5510,7 @@ function checkRoleCanAccessWidget($wid){
     $allow_access = false;
 
     $hasAccessAll = $CI->CompanyRoleAccessWidget_model->isRoleHasAccessAll($cid, $rid);
-    if( $hasAccessAll ){        
+    if( $hasAccessAll || $rid == 7 ){           
         $allow_access = true;   
     }else{
         $hasAccess = $CI->CompanyRoleAccessWidget_model->getCompanyByRoleIdAndWidgetId($cid, $rid, $wid);
