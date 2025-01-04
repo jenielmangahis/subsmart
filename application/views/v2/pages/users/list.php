@@ -1,6 +1,14 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/users/users_modals'); ?>
-
+<style>
+#add_employee_modal .custom-header, #edit_employee_modal .custom-header{
+    background-color: #6a4a86;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 10px;
+    display:block;
+}
+</style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
@@ -51,15 +59,15 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container">
+                        <div class="nsm-page-buttons page-button-container">                            
+                            <button type="button" name="btn_link" class="nsm-button primary btn-export-list">
+                                <i class='bx bx-fw bx-export'></i> Export
+                            </button>
                             <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
-                            <button type="button" name="btn_link" class="nsm-button add-employee" data-bs-toggle="modal" data-bs-target="#add_employee_modal">
+                            <button type="button" name="btn_link" class="nsm-button primary add-employee" data-bs-toggle="modal" data-bs-target="#add_employee_modal">
                                 <i class='bx bx-fw bx-user-plus'></i> Add Employee
                             </button>
                             <?php } ?>
-                            <button type="button" name="btn_link" class="nsm-button btn-export-list">
-                                <i class='bx bx-fw bx-export'></i> Export List
-                            </button>
                             <button type="button" name="btn_link" class="nsm-button primary btn-share-url">
                                 <i class='bx bx-fw bx-share-alt'></i>
                             </button>
@@ -77,7 +85,7 @@
                                 <td data-name="Password">Password</td>
                             <?php endif; ?>
                             <td data-name="Title">Title</td>
-                            <td data-name="Rights">Rights</td>
+                            <td data-name="Rights">Role</td>
                             <td data-name="Last Login">Last Login</td>
                             <td data-name="Status">Status</td>
                             <td data-name="App Access">App Access</td>
@@ -104,7 +112,7 @@
                                         <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($row->id); ?>');" data-img="<?php echo $data_img; ?>"></div>
                                     </td>
                                     <td class="nsm-text-primary">
-                                        <label class="d-block fw-bold"><?php echo $row->FName . ' ' . $row->LName ?></label>
+                                        <label class="d-block fw-bold"><?php echo ucwords(strtolower($row->FName)) . ' ' . ucwords(strtolower($row->LName)); ?></label>
                                         <?php
                                         if ($row->employee_number) {
                                             $employee_number = $row->employee_number;
@@ -303,7 +311,7 @@
             let _this = $(this);
             e.preventDefault();
 
-            var url = "<?php echo base_url(); ?>users/addNewEmployeeV2";
+            var url = base_url + "user/_create_employee";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -314,9 +322,10 @@
                 dataType: "json",
                 success: function(result) {
                     if (result == 1) {
+                        $('#add_employee_modal').modal('hide');
                         Swal.fire({
-                            title: 'Save Successful!',
-                            text: "New employee source has been added successfully.",
+                            title: 'Create Employee',
+                            text: "Data has been created successfully.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -360,7 +369,7 @@
                     } else {
                         Swal.fire({
                             title: 'Failed',
-                            text: "Something is wrong in the process",
+                            text: "Cannot create employee",
                             icon: 'error',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -380,7 +389,7 @@
             let id = $(this).attr("data-id");
             let _container = $("#edit_employee_container");
             let _form = $("#edit_employee_form");
-            let url = "<?php echo base_url('users/ajax_edit_employee'); ?>";
+            let url = "<?php echo base_url('users/_edit_employee'); ?>";
             showLoader(_container);
 
             $.ajax({
@@ -608,8 +617,8 @@
                 success: function(data) {
                     if (data.is_success == 1) {                  
                       Swal.fire({
-                        title: 'Success',
-                        text: "Employee record s has been Updated.",
+                        title: 'Edit Employee',
+                        text: "Data was successfully updated.",
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonColor: '#32243d',
@@ -815,7 +824,7 @@
             dataType: "json",
             success: function(result) {
                 $.each(result, function(i, obj) {
-                    _container.append("<option val=" + obj.id + ">" + obj.text + "</option>");
+                    _container.append("<option value=" + obj.id + ">" + obj.text + "</option>");
                 });
             }
         });
