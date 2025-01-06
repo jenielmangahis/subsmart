@@ -11736,7 +11736,7 @@ const makeRecurring = (modalName) => {
                 <div class="col-12 col-md-2">
                     <label for="startDate" style="margin-bottom: 3px;">Start date</label>
                     <div class="nsm-field-group calendar">
-                        <input type="text" class="form-control nsm-field date" name="start_date" id="startDate"/>
+                        <input type="text" class="form-control nsm-field date" autocomplete="off" name="start_date" id="startDate"/>
                     </div>
                 </div>
                 <div class="col-12 col-md-1">
@@ -11998,7 +11998,7 @@ const makeRecurring = (modalName) => {
             modalId = 'delayedCreditModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
-            $(`#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
+            //$(`#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
             $(`#${modalId} div.modal-body #delayed-credit-date`).parent().parent().parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Delayed Credit');
 
