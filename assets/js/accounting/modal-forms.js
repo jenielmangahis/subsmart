@@ -9337,10 +9337,10 @@ $(function () {
 
             var packageItems = `
                 <td colspan="4">
-                    <table class="nsm-table" style="margin-left: 35px;">
+                    <table class="nsm-table table table-borderless" style="margin-left: 35px;">
                         <thead>
                             <tr class="package-item-header">
-                                <th>-> Item Name</th>
+                                <th>Item Name</th>
                                 <th>Quantity</th>
                                 <th>Price</th>
                             </tr>
@@ -9458,20 +9458,15 @@ $(function () {
             contentType: false,
             success: function (result) {
                 var res = JSON.parse(result);
-
+                var amount = parseFloat(data.get('amount_set'));
                 if (res.success) {
                     var appendPackage = `<tr>
-                        <td>${res.id}</td>
-                        <td>${data.get('name')}</td>
-                        <td></td>
-                        <td></td>
-                        <td>${data.get('amount_set')}</td>
+                        <td>${data.get('name')}</td>                        
+                        <td style="text-align:right;">${amount.toFixed(2)}</td>
                         <td>
                             <button id="${res.id}" data-id="${res.id}" type="button" data-bs-dismiss="modal" class="nsm-button addNewPackageToList">
                                 <span class="bx bx-fw bx-plus"></span>
                             </button>
-                        </td>
-                        <td>
                             <button type="button" class="nsm-button" data-bs-toggle="collapse" data-bs-target="#demo${res.id}" data-parent="#package-table" id="packageID" data-id="${res.id}">
                                 <i class="bx bx-fw bx-caret-down"></i>
                             </button>
@@ -11916,11 +11911,11 @@ const makeRecurring = (modalName) => {
             modalId = 'creditCardCreditModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
+            //$(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
             $(`#${modalId} div.modal-body #payment_date`).parent().parent().html('');
-            $(`#${modalId} div.modal-body #ref_no`).prev().remove();
-            $(`#${modalId} div.modal-body #ref_no`).remove();
-            $(`#${modalId} #account-balance`).parent().parent().remove();
+            //$(`#${modalId} div.modal-body #ref_no`).prev().remove();
+            //$(`#${modalId} div.modal-body #ref_no`).remove();
+            //$(`#${modalId} #account-balance`).parent().parent().remove();
             $(`#${modalId} label[for="bank_credit_account"]`).html('Account');
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Credit Card Credit');
 
@@ -12052,7 +12047,7 @@ const makeRecurring = (modalName) => {
     $(`#${modalId} .close-transactions-container`).parent().remove();
 
     $(`div#${modalId} div.modal-footer div.row.w-100 div:nth-child(2)`).html('');
-    $(`div#${modalId} div.modal-footer div.row.w-100 div:last-child()`).html('<button class="nsm-button success float-end" id="save-template">Save template</button>');
+    $(`div#${modalId} div.modal-footer div.row.w-100 div:last-child()`).html('<button class="nsm-button success float-end" id="save-template">Save</button>');
 
     recurrInterval = $(`div#${modalId} div.modal-body div.recurring-interval-container`).html();
     recurringDays = $(`div#${modalId} div.modal-body select[name="recurring_day"]`).html();
