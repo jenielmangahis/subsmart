@@ -190,7 +190,7 @@ if (!function_exists('getCompanyCoverPhoto')) {
         if( $res && $res->business_cover_photo != '' ){
             $url = urlUpload('company_cover_photo/' . $res->company_id . '/' . $res->business_cover_photo . '?' . time());
         }else{
-            $url = urlUpload('company_cover_photo/default.png');
+            $url = urlUpload('company_cover_photo/default.jpg');
         }
 
         return $url;

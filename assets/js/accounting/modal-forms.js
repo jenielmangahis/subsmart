@@ -81,6 +81,45 @@ const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 
 
 var targetItemTable = null;
 
+function getDefaultAccount() {
+    setTimeout(() => {
+        $.ajax({
+            type: "POST",
+            url: window.origin + "/accounting/getDefaultAccount",
+            dataType: "JSON",
+            success: function (response) {
+                $('#bank_account, .checkBankNameSelect').empty();
+                const newOption = new Option(response.account_name, response.account_id, true, true);
+                $('#bank_account, .checkBankNameSelect').append(newOption).trigger('change');
+            }
+        });
+        $("#checkPrintLater").prop("checked", true).change();
+        $('#checkAmountInput').val(null).change();
+        $('#checkWrittenText').text("{WRITTEN_AMOUNT}");
+        $('#checkMemoInput').val(null).change();
+        $('#checkDateInput').val(new Date().toISOString().split('T')[0]).change();
+    }, 500);
+} getDefaultAccount();
+
+//  Override script, Select the last check no.
+function getLastCheckNo() {
+    $.ajax({
+        type: "POST",
+        url: window.origin + "/accounting/getCheckNo",
+        dataType: "JSON",
+        success: function (response) {
+            const check_no = parseInt(response.check_no);
+
+            $('#starting-check-no').val(check_no + 1).change();
+            // $('#starting-check-no, #check_no, #checkNumberInput').val(check_no + 1).change(); 
+
+            $('#successPrintCheck').modal('hide');
+            $('#printChecksModal #payment_account').trigger('change');
+            window.currentCheckNo = check_no  + 1;
+        }
+    });
+}
+
 $(function () {
     $(document).on('change', '#adjust-starting-value-modal #location', function () {
         var selected = $(this).children('option:selected');
@@ -5418,18 +5457,12 @@ $(function () {
         // });
 
         //  Override script, Select the last check no.
-        $.ajax({
-            type: "POST",
-            url: window.origin + "/accounting/getCheckNo",
-            dataType: "JSON",
-            success: function (response) {
-                const check_no = parseInt(response.check_no);
-                $('#starting-check-no').val(check_no + 1);
+        getLastCheckNo();
+    });
 
-                $('#successPrintCheck').modal('hide');
-                $('#printChecksModal #payment_account').trigger('change');
-            }
-        });
+    $(document).ready(function () {
+        //  Override script, Select the last check no.
+        getLastCheckNo();
     });
 
     $(document).on('click', '#purchaseOrderModal .modal-footer #save-and-print', function (e) {
@@ -10634,7 +10667,7 @@ const submitModalForm = (event, el) => {
 
     switch (modalId) {
         case '#weeklyTimesheetModal':
-            $('#weeklyTimesheetModal #timesheet-table tbody tr').each(function () {
+            $('#weeklyTimesheetModal #timesheet-table tbody tr').each(function() {
                 var customer = $(this).find('select[name="customer[]"]').val();
                 if (customer !== "" && customer !== null) {
                     var hours = {
@@ -10666,7 +10699,7 @@ const submitModalForm = (event, el) => {
         case '#payBillsModal':
             // var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '').trim();
 
-            $(`${modalId} #bills-table tbody tr`).each(function () {
+            $(`${modalId} #bills-table tbody tr`).each(function() {
                 var rowData = this.dataset;
                 var checkbox = $(this).find('.select-one');
                 var payee = rowData.payeeid;
@@ -10695,7 +10728,7 @@ const submitModalForm = (event, el) => {
             data.delete('bills[]');
             data.delete('credits[]');
 
-            $(`${modalId} #bills-table tbody tr`).each(function () {
+            $(`${modalId} #bills-table tbody tr`).each(function() {
                 if ($(this).find('input[type="checkbox"]').prop('checked')) {
                     if (data.has('bills[]') === false) {
                         data.set('bills[]', $(this).find('input[type="checkbox"]').val());
@@ -10707,7 +10740,7 @@ const submitModalForm = (event, el) => {
                 }
             });
 
-            $(`${modalId} #vendor-credits-table tbody tr`).each(function () {
+            $(`${modalId} #vendor-credits-table tbody tr`).each(function() {
                 if ($(this).find('input[type="checkbox"]').prop('checked')) {
                     if (data.has('credits[]') === false) {
                         data.set('credits[]', $(this).find('input[type="checkbox"]').val());
@@ -10728,7 +10761,7 @@ const submitModalForm = (event, el) => {
         case '#journalEntryModal':
             data.delete('names[]');
 
-            $('#journalEntryModal #journal-table tbody tr select[name="names[]"]').each(function () {
+            $('#journalEntryModal #journal-table tbody tr select[name="names[]"]').each(function() {
                 if (data.has('names[]') === false) {
                     data.set('names[]', $(this).val() === null ? '' : $(this).val());
                 } else {
@@ -10741,7 +10774,7 @@ const submitModalForm = (event, el) => {
             data.delete('payment_method[]');
             // var totalAmount = $(`#depositModal span.transaction-total-amount`).html().replace('$', '');
 
-            $('#depositModal #bank-deposit-table tbody tr select[name="received_from[]"]').each(function () {
+            $('#depositModal #bank-deposit-table tbody tr select[name="received_from[]"]').each(function() {
                 if (data.has('received_from[]') === false) {
                     data.set('received_from[]', $(this).val() === null ? '' : $(this).val());
                 } else {
@@ -10749,7 +10782,7 @@ const submitModalForm = (event, el) => {
                 }
             });
 
-            $('#depositModal #bank-deposit-table tbody tr select[name="payment_method[]"]').each(function () {
+            $('#depositModal #bank-deposit-table tbody tr select[name="payment_method[]"]').each(function() {
                 if (data.has('payment_method[]') === false) {
                     data.set('payment_method[]', $(this).val() === null ? '' : $(this).val());
                 } else {
@@ -10774,7 +10807,7 @@ const submitModalForm = (event, el) => {
             data.set('amount_to_credit', $('#receivePaymentModal span.amount-to-credit').html().replace('$', ''));
             data.set('amount_to_apply', $('#receivePaymentModal span.amount-to-apply').html().replace('$', ''));
 
-            $('#receivePaymentModal #invoices-table tbody tr input[type="checkbox"]:checked').each(function () {
+            $('#receivePaymentModal #invoices-table tbody tr input[type="checkbox"]:checked').each(function() {
                 if (data.has('invoice[]') === false) {
                     data.set('invoice[]', $(this).val());
                     data.set('payment[]', $(this).parent().parent().parent().parent().find('input[name="payment[]"]').val());
@@ -10784,7 +10817,7 @@ const submitModalForm = (event, el) => {
                 }
             });
 
-            $('#receivePaymentModal #credits-table tbody tr input[type="checkbox"]:checked').each(function () {
+            $('#receivePaymentModal #credits-table tbody tr input[type="checkbox"]:checked').each(function() {
                 if (data.has('credits[]') === false) {
                     data.set('credits[]', $(this).val());
                     data.set('credit_payment[]', $(this).parent().parent().parent().parent().find('input[name="credit_payment[]"]').val());
@@ -10805,7 +10838,7 @@ const submitModalForm = (event, el) => {
             data.delete('missing_email_customer[]');
             data.delete('no_email[]');
 
-            $('#statementModal #statements-table tbody .select-one:checked').each(function () {
+            $('#statementModal #statements-table tbody .select-one:checked').each(function() {
                 var row = $(this).closest('tr');
 
                 data.append('customer[]', $(this).val());
@@ -10825,7 +10858,7 @@ const submitModalForm = (event, el) => {
             data.delete('item_tax[]');
             data.delete('item_linked_transaction[]');
             data.delete('transaction_item_id[]');
-            $(`${modalId} table#item-table tbody:not(#package-items-table) tr:not(.package-items, .package-item, .package-item-header)`).each(function () {
+            $(`${modalId} table#item-table tbody:not(#package-items-table) tr:not(.package-items, .package-item, .package-item-header)`).each(function() {
                 if (data.has('item_total[]')) {
                     if ($(this).hasClass('package')) {
                         data.append('item[]', 'package-' + $(this).find('input[name="package[]"]').val());
@@ -10886,7 +10919,7 @@ const submitModalForm = (event, el) => {
                 var table2 = $('#bundle-estimate-modal #bundle-2-item-table');
             }
 
-            table1.children('tbody:not(#package-items-table)').children('tr:not(.package-items, .package-item, .package-item-header)').each(function () {
+            table1.children('tbody:not(#package-items-table)').children('tr:not(.package-items, .package-item, .package-item-header)').each(function() {
                 if (data.has('table_1_item_total[]')) {
                     data.append('table_1_item[]', $(this).find('input[name="item[]"]').val());
                     data.append('table_1_location[]', $(this).find('select[name="location[]"]').val());
@@ -10920,7 +10953,7 @@ const submitModalForm = (event, el) => {
             var t1total = table1.closest('.accordion-body').find(`table:not(#${table1.attr('id')})`).find('.table-total').html().replace('$', '');
             data.set('table_1_total', t1total);
 
-            table2.children('tbody:not(#package-items-table)').children('tr:not(.package-items, .package-item, .package-item-header)').each(function () {
+            table2.children('tbody:not(#package-items-table)').children('tr:not(.package-items, .package-item, .package-item-header)').each(function() {
                 if (data.has('table_2_item_total[]')) {
                     data.append('table_2_item[]', $(this).find('input[name="item[]"]').val());
                     data.append('table_2_location[]', $(this).find('select[name="location[]"]').val());
@@ -10960,13 +10993,13 @@ const submitModalForm = (event, el) => {
         if ($(`#modal-container #modal-form ${modalId} #templateName`).length > 0) {
             var totalAmount = 0.00;
 
-            $('#modal-container table#category-details-table input[name="category_amount[]"]').each(function () {
+            $('#modal-container table#category-details-table input[name="category_amount[]"]').each(function() {
                 var value = $(this).val() === "" ? 0.00 : parseFloat($(this).val()).toFixed(2);
 
                 totalAmount = parseFloat(parseFloat(totalAmount) + parseFloat(value)).toFixed(2);
             });
 
-            $('#modal-container table#item-details-table tbody tr td span.row-total').each(function () {
+            $('#modal-container table#item-details-table tbody tr td span.row-total').each(function() {
                 var value = $(this).html() === "" ? 0.00 : parseFloat($(this).html().replace('$', '').replaceAll(',', '')).toFixed(2);
 
                 totalAmount = parseFloat(parseFloat(totalAmount) + parseFloat(value)).toFixed(2);
@@ -10977,9 +11010,14 @@ const submitModalForm = (event, el) => {
             var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '');
         }
 
-        data.append('total_amount', totalAmount);
+        if (totalAmount == 0.00) {
+            data.append('total_amount', window.totalAmountInVirtualCheck);
+        } else {
+            data.append('total_amount', totalAmount);
+        }
 
-        $(`${modalId} table#category-details-table tbody tr`).each(function () {
+
+        $(`${modalId} table#category-details-table tbody tr`).each(function() {
             var billable = $(this).find('input[name="category_billable[]"]');
             var tax = $(this).find('input[name="category_tax[]"]');
 
@@ -11001,7 +11039,7 @@ const submitModalForm = (event, el) => {
         });
 
         count = 0;
-        $(`${modalId} table#item-details-table tbody tr`).each(function () {
+        $(`${modalId} table#item-details-table tbody tr`).each(function() {
             if (count === 0) {
                 data.set('item_total[]', $(this).find('td span.row-total').html().replace('$', ''));
                 data.set('item_linked[]', $(this).find('input[name="item_linked_transaction[]"]').length > 0 ? $(this).find('input[name="item_linked_transaction[]"]').val() : '');
@@ -11016,20 +11054,21 @@ const submitModalForm = (event, el) => {
         });
     }
     data.append('modal_name', $(el).children().attr('id'));
+    
     $.ajax({
         url: base_url + 'accounting/submit-modal-form',
         data: data,
         type: 'post',
         processData: false,
         contentType: false,
-        success: function (result) {
+        success: function(result) {
             var res = JSON.parse(result);
             toast(res.success, removeDuplicateMessages(res.message));
 
             if (res.success === true) {
                 if (submitType === 'save-and-close' || submitType === 'save-and-void') {
                     $(el).children().modal('hide');
-                    setTimeout(function () {
+                    setTimeout(function() {
                         location.reload();
                     }, 1000);
                 }
@@ -11208,7 +11247,7 @@ const submitModalForm = (event, el) => {
 
                             $('#receivePaymentModal .modal-footer div.row.w-100 #receive-payment-modal-print-link-divider').show();
                             $('#receivePaymentModal .modal-footer div.row.w-100 #receive-payment-modal-print-link-more').show();
-                            
+
                             /*$('#receivePaymentModal .modal-footer div.row.w-100 div:nth-child(2)').removeClass('d-flex');
                             $('#receivePaymentModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
                             <div class="row h-100">
@@ -11359,6 +11398,8 @@ const submitModalForm = (event, el) => {
         }
     });
 }
+
+
 const removeDuplicateMessages = (htmlMessage) => {
 
     const lines = htmlMessage.split('\n');
@@ -13944,7 +13985,6 @@ const clearForm = () => {
     $('#payee').empty().change();
     $('#mailing_address, #memo, #tags').empty().change();
     $('#check_no, #permit_number').val(null).change();
-    $("#print_later").prop("checked", false).change();
     $('#account-balance').text('$0.00');
     $('.delete-row').click();
     if (modalName == 'creditMemoModal') {
@@ -13952,6 +13992,7 @@ const clearForm = () => {
         $('#billing-address').val('');
         $('#purchase-order-no').val('');
     }
+    getDefaultAccount();
 
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
@@ -14918,16 +14959,7 @@ const printcheck = (checkID, filterDate, filterType, bankAccountID, bankAccount)
         window.filterType = filterType;
 
         //  Override script, Select the last check no.
-        $.ajax({
-            type: "POST",
-            url: window.origin + "/accounting/getCheckNo",
-            dataType: "JSON",
-            success: function (response) {
-                const check_no = parseInt(response.check_no);
-                $('#starting-check-no').val(check_no + 1);
-            }
-        });
-
+        getLastCheckNo();
     });
 }
 

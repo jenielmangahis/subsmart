@@ -32,6 +32,16 @@
     border-radius: .25rem;
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
+
+.fw-normalx {
+    font-weight: 500;
+}
+
+.cursorPointer {
+    cursor: pointer;
+}
+
+
 </style>
 <div class="full-screen-modal">
 <?php if(!isset($check)) : ?>
@@ -68,7 +78,12 @@
                             </div>
                             &nbsp;
                             <span class="modal-title content-title">
-                                Check 
+                                <div class="btn-group" role="group">
+                                    <input type="radio" class="btn-check" name="options-outlined" id="standardCheck_toggle" autocomplete="off" checked>
+                                    <label class="btn btn-outline-secondary fw-normalx" for="standardCheck_toggle">Standard Check</label>
+                                    <input type="radio" class="btn-check" name="options-outlined" id="virtualCheck_toggle" autocomplete="off">
+                                    <label class="btn btn-outline-success fw-normalx" for="virtualCheck_toggle">Virtual Check</label>
+                                </div>
                                 <span>
                                     <?php if(isset($check)) : ?>
                                         <?php if(is_null($check->to_print) && $check->check_no !== "" && !is_null($check->check_no)) : ?>
@@ -84,7 +99,7 @@
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row" style="min-height: 100%">
+                    <div class="row standardCheckContent" style="min-height: 100%; display: non;">
                         <div class="col">
                             <div class="row payee-details">
                                 <?php if(isset($check) && !is_null($check->linked_transacs)) : ?>
@@ -235,7 +250,6 @@
                                     </div>
                                     <label for="permit_number">Permit no.</label>
                                     <input type="number" class="form-control nsm-field mb-2" name="permit_number" id="permit_number" <?=isset($check) ? "value='$check->permit_no'" : ''?>> 
-
                                 </div>
                                 <div class="col-md-2"></div>
                                 <div class="col-12 col-md-2">
@@ -672,7 +686,304 @@
                         </div>
                         <?php endif; ?>
                     </div>
+
+                    <style>
+                        #payee-modal .modal-content, #account-modal .modal-content {
+                            box-shadow: 0px 0px 10px 0px #6a4a86;
+                            border-radius: 10px;
+                        }
+
+                        .checkContainer {
+                            position: relative;
+                            width: 1000px;
+                            max-width: 1000px;
+                            height: 360px;
+                            border: 2px solid #000;
+                            padding: 20px;
+                            border-radius: 10px;
+                            background-color: #f9f9f9;
+                            font-family: Arial, sans-serif;
+                            margin: auto;
+                        }
+
+                        .checkSection {
+                            display: flex;
+                            justify-content: space-between;
+                            margin-bottom: 10px;
+                        }
+
+                        .checkPayerInfo_Section {
+
+                        }
+
+                        .checkNumber_Section {
+                            right: -20px;
+                        }
+
+                        .printLater_Section {
+                            right: 46px;
+                            top: 55px;
+                        }
+
+                        .checkDate_Section {
+                            right: 26px;
+                            top: 100px;
+                        }
+
+                        #checkDateInput {
+                            width: 180px;
+                        }
+
+                        .checkPayee_Section {
+                            top: 150px;
+                        }
+
+                        .checkPayeeSelect + * {
+                            width: 625px !important;
+                        }
+
+                        .checkAmount_Section  {
+                            top: 150px;
+                            right: 26px;
+                        }
+
+                        #checkAmountInput {
+                            width: 150px;
+                        }
+
+                        .checkWrittenAmount_Section {
+                            top: 200px;
+                        }
+
+                        #checkWrittenText {
+                            letter-spacing: 4px;
+                        }
+
+                        .checkBankName_Section {
+                            top: 250px;
+                        }
+
+                        .checkBankNameSelect + * {
+                            width: 260px !important;
+                        }
+
+                        .checkMemo_Section {
+                            bottom: 20px;
+                        }
+
+                        #checkMemoInput {
+                            background: unset;
+                            border-radius: 0;
+                            border-left: 0;
+                            border-right: 0;
+                            border-top: 0;
+                            width: 713px;
+                        }
+                    </style>
+
+                    <div class="row virtualCheckContent" style="display: none;">
+                        <div class="checkContainer">
+                            <div class="checkSection">
+                                <div class="checkPayerInfo_Section position-absolute">
+                                    <strong class="checkPayerNameText">{PAYER_NAME}</strong><br>
+                                    <span class="checkPayerAddressText">{ADDRESS}</span>
+                                </div>
+                                <div class="printLater_Section position-absolute">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="checkPrintLater">
+                                        <label class="form-check-label text-muted" for="checkPrintLater">Print Later</label>
+                                    </div>
+                                </div>
+                                <div class="checkNumber_Section position-absolute">
+                                    <div class="d-flex align-items-center">
+                                        <label for="checkNumberInput" class="me-2">Check No.</label>
+                                        <input type="number" id="checkNumberInput" class="form-control form-control-sm w-50">
+                                    </div>
+                                </div>
+                                <div class="checkDate_Section position-absolute">
+                                    <div class="d-flex align-items-center">
+                                        <label for="checkDateInput" class="me-2">Date</label>
+                                        <input type="date" id="checkDateInput" class="form-control" value="<?php echo date('Y-m-d'); ?>">
+                                    </div>
+                                </div>
+                                <div class="checkPayee_Section position-absolute">
+                                    <div class="d-flex align-items-center">
+                                        <strong for="checkPayeeSelect" class="me-2 text-nowrap">Pay to the Order of</strong>
+                                        <select id="payee" name="payee" class="form-select checkPayeeSelect">
+                                            <option value="" selected disabled>Select payee...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="checkAmount_Section position-absolute">
+                                    <div class="input-group">
+                                        <div class="input-group-text" id="btnGroupAddon"><strong>$</strong></div>
+                                        <input id="checkAmountInput" type="number" class="form-control" placeholder="0.00" step="any">
+                                    </div>
+                                </div>
+                                <div class="checkWrittenAmount_Section position-absolute">
+                                    <div class="d-flex align-items-center">
+                                        <span id="checkWrittenText" class="me-2 text-nowrap">{WRITTEN_AMOUNT}</span>
+                                        <strong class="me-2 text-nowrap">Dollars</strong>
+                                    </div>
+                                </div>
+                                <div class="checkBankName_Section position-absolute">
+                                    <select id="bank_account" name="bank_account" class="form-select checkBankNameSelect">
+                                        <option value="" selected disabled>Select Bank...</option>
+                                    </select>
+                                </div>
+                                <div class="checkMemo_Section position-absolute">
+                                    <div class="d-flex align-items-center">
+                                        <strong for="checkMemoInput" class="me-2 text-nowrap">Memo</strong>
+                                        <input type="text" id="checkMemoInput" class="form-control" placeholder="Specify notes...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <script>
+                    var currentCheckNo = $('#checkNumberInput').val();
+                    var totalAmountInVirtualCheck = 0.00;
+
+                    $(document).ready(function () {
+                        $('#checkPrintLater').prop('checked', true).change();
+                    });
+                        
+                    function setPayerDetails() {
+                        $.ajax({
+                            type: "POST",
+                            url: window.origin + "/accounting/getPayerDetails",
+                            dataType: "JSON",
+                            success: function (response) {
+                                $('.checkPayerNameText').text(response.name);
+
+                                const formatAddress = (address) => {
+                                    return address
+                                        .split(/\s+/)
+                                        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize first letter
+                                        .join(' '); 
+                                };
+
+                                const formattedAddress = formatAddress(response.address || '') + 
+                                    (response.city ? `, ${formatAddress(response.city)}` : '') +
+                                    (response.state ? `, ${formatAddress(response.state)}` : '') +
+                                    (response.postal_code ? `, ${response.postal_code}` : '');
+
+                                $('.checkPayerAddressText').text(formattedAddress.trim());
+                            }
+                        });
+                    } setPayerDetails();
+
+
+                    $('#checkNumberInput').on('input', function() {
+                        const value = $(this).val();
+                        if (value >= 0) {
+                            currentCheckNo = $('#checkNumberInput').val();
+                        }
+                    });
+
+                    $('#checkPrintLater').on('change', function() {
+                        if ($(this).is(':checked')) {
+                            $('#checkNumberInput').prop('disabled', true);
+                            $('#checkNumberInput').val('');
+                            $('#print_later').prop('checked', true).change();
+                        } else {
+                            $('#checkNumberInput').prop('disabled', false);
+                            // $('#checkNumberInput').val(currentCheckNo).change();
+                            $('#print_later').prop('checked', false).change();
+                            // $('#check_no').val(currentCheckNo).change();
+                        }
+                    });
+
+                    $('#checkDateInput').on('change', function() {
+                        const value = $(this).val();
+                        const dateParts = value.split('-');
+                        const padZero = (num) => (num < 10 ? `0${num}` : num);
+                        const formattedDate = `${padZero(parseInt(dateParts[1]))}/${padZero(parseInt(dateParts[2]))}/${dateParts[0]}`;
+                        $('#payment_date').val(formattedDate).change();
+                    });
+
+                    $('.checkPayeeSelect').on('change', function() {
+                        const selectedValue = $(this).val();
+                        const selectedText = $(this).find('option:selected').text();
+
+                        $('#payee').empty();
+                        const newOption = new Option(selectedText, selectedValue, true, true);
+                        $('#payee').append(newOption).trigger('change');
+                    });
+
+
+                    $('.checkBankNameSelect').on('change', function() {
+                        const selectedValue = $(this).val();
+                        const selectedText = $(this).find('option:selected').text();
+
+                        $('#bank_account').empty();
+                        const newOption = new Option(selectedText, selectedValue, true, true);
+                        $('#bank_account').append(newOption).trigger('change');
+                    });
+
+
+                    $('#checkMemoInput').on('input', function() {
+                        const value = $(this).val();
+                        $('#memo').val(value).change();
+                    });
+
+                    function numberToWords(amount) {
+                        const numbersToWords = (num) => {
+                            const ones = [
+                                "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"
+                            ];
+                            const tens = [
+                                "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
+                            ];
+                            const teens = [
+                                "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
+                            ];
+
+                            if (num < 10) return ones[num];
+                            if (num < 20) return teens[num - 10];
+                            if (num < 100) {
+                                return tens[Math.floor(num / 10)] + (num % 10 !== 0 ? " " + ones[num % 10] : "");
+                            }
+                            if (num < 1000) {
+                                return ones[Math.floor(num / 100)] + " Hundred" +
+                                    (num % 100 !== 0 ? " " + numbersToWords(num % 100) : "");
+                            }
+                            if (num < 1000000) {
+                                return numbersToWords(Math.floor(num / 1000)) + " Thousand" +
+                                    (num % 1000 !== 0 ? " " + numbersToWords(num % 1000) : "");
+                            }
+                            if (num < 1000000000) {
+                                return numbersToWords(Math.floor(num / 1000000)) + " Million" +
+                                    (num % 1000000 !== 0 ? " " + numbersToWords(num % 1000000) : "");
+                            }
+                            if (num < 1000000000000) {
+                                return numbersToWords(Math.floor(num / 1000000000)) + " Billion" +
+                                    (num % 1000000000 !== 0 ? " " + numbersToWords(num % 1000000000) : "");
+                            }
+                            return "Amount Too Large";
+                        };
+
+                        const dollars = Math.floor(amount);
+                        const cents = Math.round((amount - dollars) * 100);
+
+                        const dollarText = dollars > 0 ? numbersToWords(dollars) : "";
+                        const centText = cents > 0 ? `${cents}/100` : "";
+
+                        return dollarText + (dollars > 0 && cents > 0 ? " and " : "") + centText;
+                    }
+
+                    $('#checkAmountInput').on('input', function() {
+                        const inputValue = parseFloat($(this).val());
+                        window.totalAmountInVirtualCheck = inputValue;
+                        if (!isNaN(inputValue)) {
+                            const writtenAmount = numberToWords(inputValue);
+                            $('#checkWrittenText').text(writtenAmount);
+                        } else {
+                            $('#checkWrittenText').text("{WRITTEN_AMOUNT}");
+                        }
+                    });
+                </script>
 
                 <div class="modal-footer">
                     <div class="row w-100">
@@ -725,22 +1036,36 @@
 
         </div>
     </div>
+    <!-- <input type="text" name="total_amount" value="69"> -->
     <!--end of modal-->
 </form>
 </div>
+
+<script>
+    $('input[name="options-outlined"]').on('click', function () {
+        if ($('#standardCheck_toggle').is(':checked')) {
+            $('.standardCheckContent').fadeIn();
+            $('.virtualCheckContent').hide();
+        } else if ($('#virtualCheck_toggle').is(':checked')) {
+            $('.standardCheckContent').hide();
+            $('.virtualCheckContent').fadeIn();
+        }
+    });
+</script>
+
 <script>
 $(function(){
     //  Override script, Get the last used bank account option
-    $.ajax({
-        type: "POST",
-        //url: window.origin + "/accounting/getDefaultAccount",
-        url: base_url + "/accounting/getDefaultAccount",
-        dataType: "JSON",
-        success: function (response) {
-            var newOption = new Option(response.account_name, response.account_id, false, false);
-            $('#bank_account').append(newOption).trigger('change');
-        }
-    });
+    // $.ajax({
+    //     type: "POST",
+    //     //url: window.origin + "/accounting/getDefaultAccount",
+    //     url: base_url + "/accounting/getDefaultAccount",
+    //     dataType: "JSON",
+    //     success: function (response) {
+    //         var newOption = new Option(response.account_name, response.account_id, false, false);
+    //         $('#bank_account').append(newOption).trigger('change');
+    //     }
+    // });
 
     $('.btn-recent-checks-print').on('click', function(){
         $.get( base_url + 'accounting/get-other-modals/print_checks_modal', function(res) {

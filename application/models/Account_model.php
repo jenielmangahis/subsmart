@@ -108,4 +108,20 @@ class Account_model extends MY_Model {
 		$result = $query->row();
 		return $result;
 	}
+
+	public function getOwnerDetails($company_id) {
+		$role = 3; // Owner
+		$userType = 7; //Admin, all access
+
+		$this->db->select('users.id, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS name, users.address AS address, users.city AS city, users.state AS state, users.postal_code AS postal_code');
+		$this->db->from('users');
+		$this->db->where('users.company_id', $company_id);
+		$this->db->where('users.role', $role);
+		$this->db->where('users.user_type', $userType);
+		$this->db->limit(1);
+		$query = $this->db->get();
+		$result = $query->row();
+		
+		return $result;
+	}
 }
