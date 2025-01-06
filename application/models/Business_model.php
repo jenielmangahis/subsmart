@@ -85,7 +85,7 @@ class Business_model extends MY_Model
 
     public function getByCompanyProfileImage($company_id)
     {
-        $this->db->select('id,business_image');
+        $this->db->select('id,company_id,business_image');
         $this->db->from($this->table);
 
         $this->db->where('company_id', $company_id);

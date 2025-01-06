@@ -889,7 +889,7 @@ class Users extends MY_Controller
 		$this->page_data['eid'] = $eid;
 
 		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
-		
+		$this->page_data['roles']  = $this->users_model->userRolesList();
 		$this->page_data['show_pass'] = 1;
 		$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
 		$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
@@ -1043,69 +1043,50 @@ class Users extends MY_Controller
     }    
 
 	public function addNewEmployeeV2(){
+		$this->load->library('upload',$config);
 		$this->load->helper('adt_portal_helper');
-
     	$this->load->model('IndustryType_model');
     	$this->load->model('Clients_model');
     	$this->load->model('UserPortalAccount_model');
 		$this->load->model('EmployeeCommissionSetting_model');
     	//$this->load->model('AdtPortal_model');
 
-		// Upload profile picture
-		$config = array(
-			'upload_path' => './uploads/users/user-profile/',
-			'allowed_types' => '*',
-			'overwrite' => TRUE,
-			'max_size' => '20000',
-			'max_height' => '0',
-			'max_width' => '0',
-			'encrypt_name' => true
-		);
-		$config = $this->uploadlib->initialize($config);
-		$this->load->library('upload',$config);
-		if ($this->upload->do_upload("file")){
-			$uploadData = $this->upload->data();
-		
-			$data = array(
-				'profile_image'=> $uploadData['file_name'],
-				'date_created' => time()
+		$post = $this->input->post();
+		$cid  = logged('company_id');
+
+		$profile_image = '';
+		if (!empty($_FILES['userfile']['name'])) {
+			// Upload profile picture
+			$config = array(
+				'upload_path' => './uploads/users/user-profile/',
+				'allowed_types' => '*',
+				'overwrite' => TRUE,
+				'max_size' => '20000',
+				'max_height' => '0',
+				'max_width' => '0',
+				'encrypt_name' => true
 			);
-			$img_id = $this->users_model->addProfilePhoto($data);
-		}
+			$config = $this->uploadlib->initialize($config);
+			if ($this->upload->do_upload("file")){
+				$uploadData = $this->upload->data();
 			
-		//print_r($this->input->post);
-		$post  = $this->input->post();
-        $fname = $this->input->post('firstname');
-        $lname = $this->input->post('lastname');
-        $email = $this->input->post('email');
-        $username = $this->input->post('username');
-        $password = $this->input->post('password');
-        $address = $this->input->post('address');
+				$data = array(
+					'profile_image'=> $uploadData['file_name'],
+					'date_created' => time()
+				);
+				$img_id = $this->users_model->addProfilePhoto($data);
+				$profile_image = $uploadData['file_name'];
+			}
+		}
 
-        $city  = $this->input->post('city');
-        $state  = $this->input->post('state');
-        $postal_code  = $this->input->post('postal_code');
-
-        $mobile = $this->input->post('mobile');
-        $phone  = $this->input->post('phone');
-
-        $user_type = $this->input->post('user_type');
-        $role = $this->input->post('role');
-        $status = $this->input->post('status');
-        $profile_img = $uploadData['file_name'];
-        $payscale_id = $this->input->post('empPayscale');
-        $emp_number  = $this->input->post('emp_number');
-        $cid=logged('company_id');
-
-        $post       = $this->input->post();
         $app_access = 0;
         $web_access = 0;
 
-        if( isset($post['app_access']) ){
+        if( $this->input->post('app_access') ){
         	$app_access = 1;	
         }
         
-        if( isset($post['web_access']) ){
+        if( $this->input->post('web_access') ){
         	$web_access = 1;	
         }
 
@@ -1147,45 +1128,29 @@ class Users extends MY_Controller
         		}       		
         	}else{
         		$add = array(
-		            'FName' => $fname,
-		            'LName' => $lname,
-		            'username' => $username,
-		            'email' => $username,
-		            'password' => hash("sha256",$password),
-		            'password_plain' => $password,
-		            'role' => $role,
-		            'user_type' => $user_type,
-		            'status' => $status,
+		            'FName' => $this->input->post('firstname'),
+		            'LName' => $this->input->post('lastname'),
+		            'username' => $this->input->post('email'),
+		            'email' => $this->input->post('email'),
+		            'password' => hash("sha256",$this->input->post('password')),
+		            'password_plain' => $this->input->post('password'),
+		            'role' => $this->input->post('role'),
+		            'user_type' => $this->input->post('user_type'),
+		            'status' => $this->input->post('status'),
 		            'company_id' => $cid,
 		            'profile_img' => $profile_img,
-		            'address' => $address,
-		            'mobile' => $mobile,
-		            'phone' => $phone,
-		            'state' => $state,
-		            'city' => $city,
-		            'postal_code' => $postal_code,
-		            'payscale_id' => $payscale_id,
-		            'employee_number' => $emp_number,
+		            'address' => $this->input->post('address'),
+		            'mobile' => $this->input->post('mobile'),
+		            'phone' => $this->input->post('phone'),
+		            'state' => $this->input->post('state'),
+		            'city' => $this->input->post('city'),
+		            'postal_code' => $this->input->post('postal_code'),
+		            'payscale_id' => 0,
+		            'employee_number' => $this->input->post('emp_number'),
 		            'has_web_access' => $web_access,
 		            'has_app_access' => $app_access
 		        );
 		        $last_id = $this->users_model->addNewEmployee($add);
-				$this->updatePayScaleData($last_id, $post);
-
-				//Employee Commission Settings
-				if( isset($post['commission_setting_id']) ){
-					foreach( $post['commission_setting_id'] as $key => $csid ){
-						$employee_commission_setting = [
-							'user_id' => $last_id,
-							'company_id' => $cid,
-							'commission_setting_id' => $csid,
-							'commission_type' => $post['commission_setting_type'][$key],
-							'commission_value' => $post['commission_setting_value'][$key]
-						];
-
-						$this->EmployeeCommissionSetting_model->create($employee_commission_setting);
-					}
-				}
 				
 		        if( $create_portal_access ){
 		        	//Create portal access 
@@ -1206,11 +1171,12 @@ class Users extends MY_Controller
 		        $this->Clients_model->updateClient($cid, $company_data);
 
 		        //Create timesheet record
+				$name = ucwords($this->input->post('firstname')) . ' ' . ucwords($this->input->post('lastname'));
 				$this->load->model('TimesheetTeamMember_model');
 				$this->TimesheetTeamMember_model->create([
 					'user_id' => $last_id,
-					'name' => $fname . ' ' . $lname,
-					'email' => $username,
+					'name' => $name,
+					'email' => $this->input->post('email'),
 					'role' => 'Employee',
 					'department_id' => 0,
 					'department_role' => 'Member',
@@ -1224,7 +1190,7 @@ class Users extends MY_Controller
 				$this->load->model('Trac360_model');
 				$data = [
 					'user_id' => $last_id,
-					'name' => $fname . ' ' . $lname,
+					'name' => $name,
 					'company_id' => $cid
 				];
 				$this->Trac360_model->add('trac360_people', $data);
@@ -1232,20 +1198,11 @@ class Users extends MY_Controller
 
 		        if ($last_id > 0 ){
 					//Activity Logs
-					$activity_name = 'Created User ' . $fname . ' ' . $lname; 
+					$activity_name = 'Users : Created user ' . $name; 
 					createActivityLog($activity_name);
-
-		            echo json_encode(1);
-		        }else{
-
-					$isUserExist = $this->db->get_where('users', array('email'=>$add['email'],'username'=>$add['username']))->num_rows();
-					if($isUserExist > 0) {
-						echo json_encode(6);
-					} else {
-						echo json_encode(0);
-					}
-		            
 		        }
+
+				echo json_encode(1);
         	}
         }
         
@@ -1323,7 +1280,7 @@ class Users extends MY_Controller
 		$get_role = $this->db->get_where('roles', array('id' => $get_user->role));		
 
 		$cid   = logged('company_id');
-		$roles = $this->users_model->getRoles($cid);
+		$userTypes = $this->users_model->getRoles($cid);
 
 		$payscale = $this->PayScale_model->getById($get_user->payscale_id);
 		$salary_rate = 0;
@@ -1348,6 +1305,7 @@ class Users extends MY_Controller
 			$salary_type_label = 'Commission Only';
 		}
 
+		$this->page_data['roles']  = $this->users_model->userRolesList();
 		$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		$this->page_data['salary_rate'] = $salary_rate;
 		$this->page_data['salary_type_label'] = $salary_type_label;
@@ -1356,7 +1314,7 @@ class Users extends MY_Controller
 		$this->page_data['employeeCommissionSettings'] = $this->EmployeeCommissionSetting_model->getAllByUserId($user_id);
 		$this->page_data['totalSalary'] = $this->Users_model->getTOtalJobTypeBaseAmount($user_id);
 		$this->page_data['commission'] = $this->Users_model->getTotalCommission($user_id);
-        $this->page_data['roles'] = $roles;
+        $this->page_data['userTypes'] = $userTypes;
 	    $this->page_data['user'] = $get_user;
 	    $this->page_data['role'] = $get_role;	    
 	    // $this->load->view('users/modal_edit_form', $this->page_data);
@@ -2001,41 +1959,14 @@ class Users extends MY_Controller
 					'has_web_access' => $has_web_access,
 					'has_app_access' => $has_app_access,
 					'postal_code' => $post['postal_code'],
-					'payscale_id' => $post['empPayscale'],
-					//'base_salary' => $post['empBaseSalary'],
-					//'base_hourly' => $post['empBaseHourlyRate'],
-					//'base_weekly' => $post['empBaseWeeklyRate'],
-					//'base_monthly' => $post['empBaseMonthlyRate'],
-					//'compensation_base' => $post['empCompensationBase'],
-					//'compensation_rate' => $post['empCompensationHourlyRate'],
-					//'jobtypebase_amount' => $post['empJobTypeBaseInstall'],
-					//'commission_id' => $post['empCommission'],
-					//'commission_percentage' => $post['empCommissionPercentage'],
 					'user_type' => $post['user_type'],
 					'employee_number' => $post['emp_number']
 				);
 
 				$this->Users_model->update($user->id,$data);
-				$this->updatePayScaleData($user->id, $post);
-
-				//Employee Commission Settings
-				$this->EmployeeCommissionSetting_model->deleteAllByUserId($user->id);
-				if( isset($post['commission_setting_id']) ){
-					foreach( $post['commission_setting_id'] as $key => $csid ){
-						$employee_commission_setting = [
-							'user_id' => $user->id,
-							'company_id' => $user->company_id,
-							'commission_setting_id' => $csid,
-							'commission_type' => $post['commission_setting_type'][$key],
-							'commission_value' => $post['commission_setting_value'][$key]
-						];
-
-						$this->EmployeeCommissionSetting_model->create($employee_commission_setting);
-					}
-				}
 
 				//Activity Logs
-                $activity_name = 'Updated User ' . $post['firstname'] . ' ' . $post['lastname']; 
+                $activity_name = 'Users : Updated user ' . $post['firstname'] . ' ' . $post['lastname']; 
                 createActivityLog($activity_name);
 
 				$msg  = '';

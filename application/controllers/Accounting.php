@@ -164,11 +164,18 @@ class Accounting extends MY_Controller
     }
 
     // Get the option selected on the last check transaction
-    function getCheckNo() 
+    public function getCheckNo() 
     {
         $company_id = logged('company_id');
         $checkNo = $this->account_model->getLastCheckNo($company_id);
         echo json_encode($checkNo);
+    }
+
+    public function getPayerDetails()
+    {
+        $company_id = logged('company_id');
+        $ownerDetails = $this->account_model->getOwnerDetails($company_id);
+        echo json_encode($ownerDetails);
     }
 
     public function banking()

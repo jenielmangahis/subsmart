@@ -3982,11 +3982,16 @@ class Accounting_modals extends MY_Controller
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please select payee.';
-        }elseif (!isset($data['expense_account']) && !isset($data['item'])) {
-            $return['data'] = null;
-            $return['success'] = false;
-            $return['message'] = 'Please enter at least one line item.';
-        }else {
+        }
+        
+        // Remove Temporarily
+        // elseif (!isset($data['expense_account']) && !isset($data['item'])) {
+        //     $return['data'] = null;
+        //     $return['success'] = false;
+        //     $return['message'] = 'Please enter at least one line item.';
+        // }
+        
+        else {
             $payee = explode('-', $data['payee']);
 
             $checkNo = $this->account_model->getLastCheckNo($company_id);
@@ -15436,14 +15441,13 @@ class Accounting_modals extends MY_Controller
     }
 
     // Get the option selected on the last check transaction
-    function getCheckNo() 
+    public function getCheckNo() 
     {
         $company_id = logged('company_id');
         $checkNo = $this->account_model->getLastCheckNo($company_id);
         echo json_encode($checkNo);
     }
-
-
+    
     private function update_check($checkId, $data)
     {
         $check = $this->vendors_model->get_check_by_id($checkId, logged('company_id'));

@@ -33,6 +33,17 @@ class LeadSource_model extends MY_Model
         return $query->result();
     }
 
+    public function getByIdAndCompanyId($id, $cid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('ls_id', $id);
+        $this->db->where('fk_comp_id', $cid);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getById($id)
     {
         $this->db->select('*');
