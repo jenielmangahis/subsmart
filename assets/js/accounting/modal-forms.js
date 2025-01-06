@@ -85,7 +85,7 @@ function getDefaultAccount() {
     setTimeout(() => {
         $.ajax({
             type: "POST",
-            url: window.origin + "/accounting/getDefaultAccount",
+            url: base_url + "/accounting/getDefaultAccount",
             dataType: "JSON",
             success: function (response) {
                 $('#bank_account, .checkBankNameSelect').empty();
@@ -105,7 +105,7 @@ function getDefaultAccount() {
 function getLastCheckNo() {
     $.ajax({
         type: "POST",
-        url: window.origin + "/accounting/getCheckNo",
+        url: base_url + "/accounting/getCheckNo",
         dataType: "JSON",
         success: function (response) {
             const check_no = parseInt(response.check_no);

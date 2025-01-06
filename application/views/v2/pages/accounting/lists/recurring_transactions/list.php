@@ -145,7 +145,18 @@
                             <td><?= $transaction['previous_date'] ? $transaction['previous_date'] : '--'; ?></td>
                             <td><?= $transaction['next_date'] ? $transaction['next_date'] : '--'; ?></td>
                             <td><?= $transaction['customer_vendor'] ? $transaction['customer_vendor'] : '--'; ?></td>
-                            <td><?= $transaction['amount'] ? $transaction['amount'] : '--'; ?></td>
+                            <td>
+                                <?php //$transaction['amount'] ? $transaction['amount'] : '--'; ?>
+                                <?php 
+                                    if($transaction['amount']) {
+                                        $amount = '$'.number_format(floatval($transaction['amount']), 2, '.', ',');
+                                        echo str_replace('$-', '-$', $amount); 
+                                    } else {
+                                        echo '--';
+                                    }
+                               
+                                ?>
+                            </td>
                             <td><?= $transaction['status'] ? $transaction['status'] : '--'; ?></td>
                             <td>
                                 <div class="dropdown table-management">
