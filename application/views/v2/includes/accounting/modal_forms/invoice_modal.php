@@ -23,6 +23,12 @@
         color: red;
         font-size: 12px;
     }
+    .tax-exempted .select2-container{
+        width: 100px !important;
+    }
+    td.bold{
+        font-weight:bold;
+    }
 </style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
@@ -777,11 +783,11 @@
                                         <div class="col-12 col-md-6">
                                             <div class="row">
                                                 <div class="col-12 col-md-6 offset-md-6">
-                                                    <table class="nsm-table float-end text-end">
+                                                    <table class="table table-borderless table_mobile">
                                                         <tfoot>
                                                             <tr>
-                                                                <td>Subtotal</td>
-                                                                <td>
+                                                                <td class="bold">Subtotal</td>
+                                                                <td align="right">
                                                                     <span class="transaction-subtotal" style="">
                                                                         <?php if (isset($invoice)) : ?>
                                                                             <?php
@@ -796,18 +802,8 @@
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td>
-                                                                    <div class="row">
-                                                                        <div class="col-4" style="text-align:right; padding-top: 5px;">Taxes</div>
-                                                                        <div class="col-8">
-                                                                            <select class="form-control" name="tax_rates" id="tax_rates">
-                                                                                <?php foreach ($ac_tax_rates as $rates) { ?>
-                                                                                    <option value="<?php echo $rates->id; ?>"><?php echo $rates->name . ' -  <span style="float:right;">' . $rates->rate . '%</span> <i> ( ' . $rates->type . ' ) </i>'; ?></option>
-                                                                                <?php } ?>
-                                                                            </select>
-                                                                        </div>
-                                                                </td>
-                                                                <td>
+                                                                <td class="bold">Taxes</td>
+                                                                <td align="right">
                                                                     <span class="transaction-taxes" style="">
                                                                         <?php if (isset($invoice)) : ?>
                                                                             <?php
@@ -822,8 +818,17 @@
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Discounts</td>
-                                                                <td>
+                                                                <td class="bold">Is Tax Exempted</td>
+                                                                <td align="right" class="tax-exempted">
+                                                                    <select class="form-control" id="tax-exempted" name="is_tax_exempted" style="width:100px;">
+                                                                        <option value="1">Yes</option>
+                                                                        <option value="0" selected="selected">No</option>
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="bold">Discounts</td>
+                                                                <td align="right">
                                                                     <span class="transaction-discounts" style="">
                                                                         <?php if (isset($invoice)) : ?>
                                                                             <?php
@@ -839,22 +844,17 @@
                                                             </tr>
                                                             <tr>
                                                                 <td>
-                                                                    <div class="row" style="float: right;">
+                                                                    <div class="row">
                                                                         <div class="col-10">
                                                                             <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="<?= isset($invoice) ? $invoice->adjustment_name : '' ?>">
                                                                         </div>
-                                                                        <!-- <div class="col-3">
-                                                                    <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?= isset($invoice) ? number_format(floatval($invoice->adjustment_value), 2, '.', ',') : '' ?>">
-                                                                </div> -->
                                                                         <div class="col-1 d-flex align-items-center" style="padding-left: 0 !important;">
                                                                             <span id="modal-help-popover-adjustment" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span>
-                                                                            <!-- <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10." style=""></span> -->
                                                                         </div>
                                                                     </div>
                                                                 </td>
-                                                                <td>
-
-                                                                    <input style="float: right; width: 75px;" type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?= isset($invoice) ? number_format(floatval($invoice->adjustment_value), 2, '.', ',') : '' ?>">
+                                                                <td align="right">
+                                                                    <input style="float: right; width: 100px;" type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?= isset($invoice) ? number_format(floatval($invoice->adjustment_value), 2, '.', ',') : '' ?>">
                                                                     <!-- 
                                                             <span class="transaction-adjustment">
                                                                 <?php if (isset($invoice)) : ?>
@@ -871,8 +871,8 @@
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Grand Total ($)</td>
-                                                                <td>
+                                                                <td class="bold">Grand Total</td>
+                                                                <td align="right">
                                                                     <span class="transaction-grand-total" id="transaction-grand-total">
                                                                         <?php if (isset($invoice)) : ?>
                                                                             <?php
