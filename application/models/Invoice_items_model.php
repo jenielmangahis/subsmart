@@ -7,10 +7,10 @@ class Invoice_items_model extends MY_Model
 
     public function getAllByInvoiceId($invoice_id)
     {        
-
-        $this->db->select('*');
+        $this->db->select('invoices_items.*, items.title AS product_name');
         $this->db->from($this->table);
-        $this->db->where('invoice_id', $invoice_id);
+        $this->db->join('items', 'invoices_items.items_id = items.id', 'left');
+        $this->db->where('invoices_items.invoice_id', $invoice_id);
 
         $query = $this->db->get();
         return $query->result();

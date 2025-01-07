@@ -309,6 +309,13 @@ endif;
         font-size: 12px;
     }
 
+    #dashboard-job-activities .widget-item {
+        align-items: center;
+        gap: 10px;
+    }
+
+
+
     @media screen and (max-width: 1366px) {
 
         #dashboard-job-activities thead tr {
@@ -370,11 +377,11 @@ endif;
                 <div class="banner">
                     <img src="./assets/img/jobs-activities-wave-top.svg" alt="">
                 </div>
-                <div class="table-reponsinve">
+                <div class="table-reponsinve nsm-widget-table">
                     <table id="dashboard-job-activities" class="nsm-table mb-3">
                         <thead>
                             <tr>
-                                <td class="table-icon"></td>
+                                <td></td>
                                 <td data-name="JobNumber">Job Number</td>
                                 <td data-name="Updated" style="text-align:center">Last Updated</td>
                                 <td data-name="Amount" style="text-align:center"><?php echo $company_id == 58 ? 'Proposed' : 'Amount'; ?></td>
@@ -423,12 +430,15 @@ endif;
                                         $VIEW_INFO = "<strong><i class='bx bx-user-pin' ></i> Customer Name:</strong> $latestJobs_data->first_name, $latestJobs_data->last_name<br><strong><i class='bx bx-map-pin' ></i> Address:</strong> $ADDRESS<br><strong><i class='bx bxs-user-check' ></i> Tech Rep</strong>:$TECH_BADGE<hr /><strong>Amount:</strong> $$amount_format";
                                 ?>
                             <tr>
-                                <td class="JOB_PREVIEW" onclick="location.replace('<?php echo $JOB_PREVIEW; ?>')">
-                                    <div class="table-row-icon" style="background: <?= $colorSelected ?>;">
-                                        <i class='bx bx-briefcase-alt-2' style="color: #fff !important"></i>
+                                <td class="JOB_PREVIEW ">
+                                    <div class="widget-item position-relative">
+                                        <div class="table-row-icon" style="background: <?= $colorSelected ?>;">
+                                            <i class='bx bx-briefcase-alt-2' style="color: #fff !important"></i>
+                                        </div>
+                                        <div class="job-number">
+                                            <b onclick="location.replace('<?php echo $JOB_PREVIEW; ?>')"><?php echo $latestJobs_data->job_number; ?></b>
+                                        </div>
                                     </div>
-                                </td>
-                                <td class="job-number"><b><?php echo $latestJobs_data->job_number; ?></b>
                                 </td>
                                 <td class="last-update" style="text-align:center;">
                                     <label>

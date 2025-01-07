@@ -12,12 +12,16 @@ class Accounting_assigned_checks_model extends MY_Model {
 
     public function assign_check_no($data)
     {
+        $company_id = logged('company_id');
+        $data['company_id'] = $company_id;
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
     }
 
     public function update_check_no($data)
     {
+        $company_id = logged('company_id');
+        $data['company_id'] = $company_id;
         $this->db->where('transaction_type', $data['transaction_type']);
         $this->db->where('transaction_id', $data['transaction_id']);
         $update = $this->db->update($this->table, $data);

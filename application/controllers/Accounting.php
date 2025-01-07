@@ -171,6 +171,14 @@ class Accounting extends MY_Controller
         echo json_encode($checkNo);
     }
 
+    // Get the check details based on ID specified
+    public function fetchCheckDetails($id) 
+    {
+        $company_id = logged('company_id');
+        $checkDetails = $this->account_model->getCheckDetails($id, $company_id);
+        echo json_encode($checkDetails);
+    }
+
     public function getPayerDetails()
     {
         $company_id = logged('company_id');

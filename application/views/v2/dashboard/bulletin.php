@@ -74,6 +74,15 @@ endif;
         color: #000 !important;
     }
 
+    @media screen and (max-width: 1200px) {
+        .nsm-widget-table .timesheet-container .widget-item.timesheet-item .content .details {
+            width: 100% !important;
+        }
+
+    }
+
+
+
     @media screen and (max-width: 991px) {
         .timesheet-container-item .content .badge-item {
             width: 35%;
@@ -85,8 +94,6 @@ endif;
             width: 50%;
         }
     }
-
-
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">

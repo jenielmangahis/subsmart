@@ -763,7 +763,7 @@ class Expenses_model extends MY_Model
 
         if($filters['delivery_method'] === 'print-later') {
             $this->db->where('to_print', 1);
-            $this->db->where('check_no', null);
+            $this->db->where("(check_no IS NULL OR check_no = 0)");
         }
         $this->db->join('accounting_chart_of_accounts', 'accounting_chart_of_accounts.id = accounting_check.bank_account_id', 'left');
         $query = $this->db->get('accounting_check');
@@ -904,7 +904,7 @@ class Expenses_model extends MY_Model
 
         if($filters['delivery_method'] === 'print-later') {
             $this->db->where('to_print_check_no', 1);
-            $this->db->where('check_no', null);
+            $this->db->where("(check_no IS NULL OR check_no = 0)");
         }
         $query = $this->db->get('accounting_bill_payments');
         return $query->result();
@@ -1006,7 +1006,7 @@ class Expenses_model extends MY_Model
         $this->db->where('company_id', logged('company_id'));
         $this->db->where('status', 1);
         $this->db->where('to_print', 1);
-        $this->db->where('check_no', null);
+        $this->db->where("(check_no IS NULL OR check_no = 0)");
         $this->db->where('bank_account_id', $filters['payment_account']);
         $this->db->order_by('created_at', 'desc');
         $query = $this->db->get('accounting_check');
@@ -1018,7 +1018,7 @@ class Expenses_model extends MY_Model
         $this->db->where('company_id', logged('company_id'));
         $this->db->where('status', 1);
         $this->db->where('to_print_check_no', 1);
-        $this->db->where('check_no', null);
+        $this->db->where("(check_no IS NULL OR check_no = 0)");
         $this->db->where('payment_account_id', $filters['payment_account']);
         $this->db->order_by('created_at', 'desc');
         $query = $this->db->get('accounting_bill_payments');

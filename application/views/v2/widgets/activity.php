@@ -45,7 +45,7 @@ endif;
         font-size: 12px;
         text-align: center;
         width: unset;
-        width: 70%;
+        width:fit-content;
         margin-top: 5px;
     }
 
@@ -84,13 +84,13 @@ endif;
         padding: 5px 10px;
         border-radius: 10px;
         font-weight: bold;
-        color: #fff;
+        color: #000;
         font-size: 12px;
-        text-align: center;
+        text-align: start;
     }
 
     #dashboard_activity_logs .date-item i {
-        color: #fff;
+        color: #000;
         font-size: 20px;
     }
 
@@ -140,9 +140,7 @@ endif;
     }
 
     @media screen and (max-width: 1366px) {
-        #dashboard_activity_logs .content .badge-item {
-            width: 80%;
-        }
+     
 
         .activity-container-main .activity-logs-container {
             height: unset;
@@ -155,18 +153,14 @@ endif;
     }
 
     @media screen and (max-width: 991px) {
-        #dashboard_activity_logs .content .badge-item {
-            width: 45%;
-        }
+       
         #dashboard_activity_logs {
             width: 100%;
         }
     }
 
     @media screen and (max-width: 567px) {
-        #dashboard_activity_logs .content .badge-item {
-            width: 100%;
-        }
+       
         .activity-container-main .activity-logs-container{
             margin: unset;
         }

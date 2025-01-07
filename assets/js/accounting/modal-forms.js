@@ -93,7 +93,7 @@ function getDefaultAccount() {
                 $('#bank_account, .checkBankNameSelect').append(newOption).trigger('change');
             }
         });
-        $("#checkPrintLater").prop("checked", true).change();
+        // $("#checkPrintLater").prop("checked", true).change();
         $('#checkAmountInput').val(null).change();
         $('#checkWrittenText').text("{WRITTEN_AMOUNT}");
         $('#checkMemoInput').val(null).change();
@@ -103,22 +103,29 @@ function getDefaultAccount() {
 
 //  Override script, Select the last check no.
 function getLastCheckNo() {
-    $.ajax({
-        type: "POST",
-        url: base_url + "/accounting/getCheckNo",
-        dataType: "JSON",
-        success: function (response) {
-            const check_no = parseInt(response.check_no);
+    setTimeout(() => {
+        $.ajax({
+            type: "POST",
+            url: base_url + "/accounting/getCheckNo",
+            dataType: "JSON",
+            success: function (response) {
+                const check_no = (response == null || response == "") ? 0 : parseInt(response.check_no);
+                $('#starting-check-no').val(check_no + 1).change();
+                $('#starting-check-no, #check_no, #checkNumberInput').val(check_no + 1).change(); 
 
-            $('#starting-check-no').val(check_no + 1).change();
-            // $('#starting-check-no, #check_no, #checkNumberInput').val(check_no + 1).change(); 
-
-            $('#successPrintCheck').modal('hide');
-            $('#printChecksModal #payment_account').trigger('change');
-            window.currentCheckNo = check_no  + 1;
-        }
-    });
+                $('#successPrintCheck').modal('hide');
+                $('#printChecksModal #payment_account').trigger('change');
+                window.currentCheckNo = check_no  + 1;
+            }
+        });
+    }, 500);
 }
+
+$('#new-check').on('click', function(e) {
+    e.preventDefault();
+    getDefaultAccount();
+    getLastCheckNo();
+});
 
 $(function () {
     $(document).on('change', '#adjust-starting-value-modal #location', function () {
@@ -2259,10 +2266,9 @@ $(function () {
             $('#checkModal #check_no').val('To print').trigger('change');
         } else {
             $('#checkModal #check_no').prop('disabled', false);
-            $('#checkModal #check_no').val('').trigger('change');
+            $('#checkModal #check_no').val(window.currentCheckNo).trigger('change');
         }
     });
-
 
     $(document).on('change', '#checkModal #check_no', function () {
         if ($(this).val() !== "") {
@@ -5161,7 +5167,7 @@ $(function () {
                 // var checks = JSON.parse(result);
 
                 var jsonResultData = JSON.parse(result);
-                let checks = jsonResultData.filter(jsonResultData => jsonResultData.check_no == null);
+                let checks = jsonResultData.filter(jsonResultData => jsonResultData.check_no == null || jsonResultData.check_no == 0);
                 $('#printChecksModal #checks-table tbody tr').remove();
                 $('#print_printable_checks_modal table tbody tr').remove();
                 $('#print_preview_printable_checks_modal #printable_checks_table_print tbody tr').remove();
@@ -5391,7 +5397,7 @@ $(function () {
         });
 
         $.ajax({
-            url: '/accounting/success-print-checks-modal',
+            url: '/accounting/success-print-checks-modal',  
             data: data,
             type: 'post',
             processData: false,
@@ -13988,6 +13994,7 @@ const clearForm = () => {
         $('#purchase-order-no').val('');
     }
     getDefaultAccount();
+    getLastCheckNo();
 
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');

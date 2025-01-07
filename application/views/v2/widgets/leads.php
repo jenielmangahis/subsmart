@@ -24,6 +24,12 @@ endif;
         height: 70%;
         width: 100%;
     }
+
+    @media screen and (max-width: 1366px) {
+        .nsm-widget-table .recent-leads-container-item .content {
+            justify-content: start !important;
+        }
+    }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">

@@ -60,7 +60,8 @@ class CompanyMenuSetting_model extends MY_Model {
             'Toolbox',
             'Company',
             'Settings',
-            'University'
+            'University',
+            'Automation'
         ];
 
         return $menus;

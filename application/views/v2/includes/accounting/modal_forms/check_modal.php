@@ -845,9 +845,9 @@
                     var currentCheckNo = $('#checkNumberInput').val();
                     var totalAmountInVirtualCheck = 0.00;
 
-                    $(document).ready(function () {
-                        $('#checkPrintLater').prop('checked', true).change();
-                    });
+                    // $(document).ready(function () {
+                    //     $('#checkPrintLater').prop('checked', true).change();
+                    // });
                         
                     function setPayerDetails() {
                         $.ajax({
@@ -860,7 +860,7 @@
                                 const formatAddress = (address) => {
                                     return address
                                         .split(/\s+/)
-                                        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize first letter
+                                        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) 
                                         .join(' '); 
                                 };
 
@@ -881,7 +881,7 @@
                             currentCheckNo = $('#checkNumberInput').val();
                         }
                     });
-
+                    
                     $('#checkPrintLater').on('change', function() {
                         if ($(this).is(':checked')) {
                             $('#checkNumberInput').prop('disabled', true);
@@ -889,9 +889,9 @@
                             $('#print_later').prop('checked', true).change();
                         } else {
                             $('#checkNumberInput').prop('disabled', false);
-                            // $('#checkNumberInput').val(currentCheckNo).change();
+                            $('#checkNumberInput').val(currentCheckNo).change();
                             $('#print_later').prop('checked', false).change();
-                            // $('#check_no').val(currentCheckNo).change();
+                            $('#check_no').val(currentCheckNo).change();
                         }
                     });
 
@@ -921,7 +921,6 @@
                         const newOption = new Option(selectedText, selectedValue, true, true);
                         $('#bank_account').append(newOption).trigger('change');
                     });
-
 
                     $('#checkMemoInput').on('input', function() {
                         const value = $(this).val();
@@ -973,7 +972,7 @@
                         return dollarText + (dollars > 0 && cents > 0 ? " and " : "") + centText;
                     }
 
-                    $('#checkAmountInput').on('input', function() {
+                    $('#checkAmountInput').on('input change', function() {
                         const inputValue = parseFloat($(this).val());
                         window.totalAmountInVirtualCheck = inputValue;
                         if (!isNaN(inputValue)) {

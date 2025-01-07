@@ -173,7 +173,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                           </tr>
                           <tr>
                             <td style="text-align:left;">Panel  Type:</td>
-                            <td style="text-align: right;"><b><?php echo $workorder->panel_type ?? ""; ?></b></td>
+                            <td style="text-align: right;"><b><?php echo $workorder->panel_type ?? "---"; ?></b></td>
                           </tr>
                           <tr>
                             <td style="text-align:left;">Source:</td>
@@ -189,7 +189,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                           <td style="text-align: right;">
                             <?php 
                                 if (logged("user_type") == 1){
-                                    $ssn = $customer->ssn;
+                                    $ssn = $customer->ssn ?? "---";
                                 }else{
                                     $ssn = strMask($customer->ssn);
                                 } 
@@ -236,11 +236,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <ul class="workorder-details w-100">
                             <li>
                               <span class="label-details">Job Name</span>
-                              <span class="value-details"><?= $workorder->job_name; ?></span>
+                              <span class="value-details"><?= $workorder->job_name != '' ? $workorder->job_name : '---'; ?></span>
                             </li> 
                             <li>
                               <span class="label-details">Job Description</span>
-                              <span class="value-details"><?= $workorder->job_description; ?></span>
+                              <span class="value-details"><?= $workorder->job_description != '' ? $workorder->job_description : '---'; ?></span>
                             </li>                            
                    
                           </ul></div>
@@ -341,106 +341,179 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </thead>
                         <tbody>
                           <?php $row = 1; ?>
-                          <?php foreach($workorder_items as $item){ ?>
-                            <?php if($item->items_id != 0){ ?>
+                          <?php if( $invoiceItems ){ ?>
+                            <?php foreach($invoiceItems as $item){ ?>
                               <tr class="table-items__tr">
                                 <td style="width: 30px; text-align: center;" valign="top"><?= $row; ?></td>
-                                <td valign="top"> <?php echo $item->title; ?>   </td>
-                                <td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty ?>  </td>
-                                <td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($item->costing,2) ?></td>
-                                <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-                                  $ 0<?php //echo $item->discount ?>
-                                  </td>
-                                <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-                                  $<?php echo number_format($item->tax,2) ?>
-                                  </td>
-                                <td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo number_format($b,2); ?></td>
+                                <td valign="top"> <?php echo $item->product_name; ?>   </td>
+                                <td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty; ?>  </td>
+                                <td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($item->cost,2) ?></td>
+                                <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($item->discount,2) ?></td>
+                                <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($item->tax,2) ?></td>
+                                <td style="width: 90px; text-align: right;" valign="top">$<?php echo number_format($item->total,2) ?></td>
                               </tr>
-                            <?php }else{ ?>
-                              <tr class="table-items__tr">
-                                <td style="width: 30px; text-align: center;" valign="top"><?= $row; ?></td>
-                                <td valign="top" colspan="5"> <div id="PaName_<?php echo $item->package_id; ?>"></div> <br>
-                                <div id="packageItemsTitle<?php echo  $item->package_id; ?>" style="padding-left:5%;">
-                                <div id="packageItems<?php echo  $item->package_id; ?>" style="padding-left:5%;"></div>
-                                </td>
-                                <td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo number_format($b,2); ?></td>
-                              </tr>
-                            <?php } ?>
                             <?php $row++; ?>
+                            <?php } ?>
+                          <?php }elseif( $workorder_agreement_items ){ ?>
+                            <?php foreach($workorder_agreement_items as $item){ ?>
+                                <?php 
+                                  $qty = $item->qty > 0 ? $item->qty : 0;
+                                  $total_cost = $item->price > 0 ? $item->price : 0;
+                                  $unit_cost  = $total_cost / $qty;
+                                  $unit_cost  = is_nan($unit_cost) ? 0 : $unit_cost;
+                                ?>
+                                <tr class="table-items__tr">
+                                  <td style="width: 30px; text-align: center;" valign="top"><?= $row; ?></td>
+                                  <td valign="top"> <?php echo $item->item; ?>   </td>
+                                  <td style="width: 50px; text-align: right;" valign="top"> <?php echo intval($qty); ?>  </td>
+                                  <td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($unit_cost,2) ?></td>
+                                  <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">$0.00</td>
+                                  <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">$0.00</td>
+                                  <td style="width: 90px; text-align: right;" valign="top">$<?php echo number_format($total_cost,2); ?></td>
+                                </tr>
+                                <?php $row++; ?>
+                            <?php } ?>
+                          <?php }else{ ?>
+                            <?php foreach($workorder_items as $item){ ?>
+                              <?php if($item->items_id != 0){ ?>
+                                <tr class="table-items__tr">
+                                  <td style="width: 30px; text-align: center;" valign="top"><?= $row; ?></td>
+                                  <td valign="top"> <?php echo $item->title; ?>   </td>
+                                  <td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty ?>  </td>
+                                  <td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($item->costing,2) ?></td>
+                                  <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
+                                    $ 0<?php //echo $item->discount ?>
+                                    </td>
+                                  <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
+                                    $<?php echo number_format($item->tax,2) ?>
+                                    </td>
+                                  <td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo number_format($b,2); ?></td>
+                                </tr>
+                              <?php }else{ ?>
+                                <tr class="table-items__tr">
+                                  <td style="width: 30px; text-align: center;" valign="top"><?= $row; ?></td>
+                                  <td valign="top" colspan="5"> <div id="PaName_<?php echo $item->package_id; ?>"></div> <br>
+                                  <div id="packageItemsTitle<?php echo  $item->package_id; ?>" style="padding-left:5%;">
+                                  <div id="packageItems<?php echo  $item->package_id; ?>" style="padding-left:5%;"></div>
+                                  </td>
+                                  <td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo number_format($b,2); ?></td>
+                                </tr>
+                              <?php } ?>
+                              <?php $row++; ?>
+                            <?php } ?>
                           <?php } ?>
-
                           <tr>
                             <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
                             <td colspan="2" style="text-align: ;">Subtotal</td>
-                            <td colspan="1" style="text-align: right;">$<?php echo number_format((Float)$workorder->subtotal,2); ?></td>
+                            <td colspan="1" style="text-align: right;">
+                              <?php 
+                                $subtotal = $workorder->subtotal;
+                                if( $invoice ){
+                                  $subtotal = $invoice->sub_total;
+                                }
+                              ?>
+                              $<?php echo number_format((Float)$subtotal,2); ?>
+                            </td>
                           </tr>
 
                           <tr>
                             <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
                             <td colspan="2" style="text-align: ;">Taxes</td>
-                            <td colspan="1" style="text-align: right;">$<?php echo number_format((Float)$workorder->taxes,2); ?></td>
-                          </tr>
+                            <td colspan="1" style="text-align: right;">
+                              <?php 
+                                $taxes = $workorder->taxes;
+                                if( $invoice ){
+                                  $taxes = $invoice->taxes;
+                                }
 
-                          <?php if( $workorder->adjustment_name != '' && $workorder->adjustment_value > 0 ){ ?>
-                          <tr>
-                            <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
-                            <td colspan="2" style="text-align: ;"><?php echo $workorder->adjustment_name; ?></td>
-                            <td colspan="1" style="text-align: right;">$<?php echo number_format((Float)$workorder->adjustment_value,2); ?></td>
+                              ?>
+                              $<?php echo number_format((Float)$taxes,2); ?>
+                            </td>
                           </tr>
+                          
+                          <?php if( $invoice ){ ?>
+                              <?php if( $invoice->adjustment_name != '' && $invoice->adjustment_value > 0 ){ ?>
+                              <tr>
+                                <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
+                                <td colspan="2" style="text-align: ;"><?php echo $invoice->adjustment_name; ?></td>
+                                <td colspan="1" style="text-align: right;">$<?php echo number_format((Float)$invoice->adjustment_value,2); ?></td>
+                              </tr>
+                              <?php } ?>
+
+                              <?php if( $invoice->program_setup > 0 ){ ?>
+                              <tr>
+                                <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
+                                <td colspan="2" style="text-align: ;">One Time Program and Setup</td>
+                                <td colspan="1" style="text-align: right;">$<?php echo number_format((Float)$invoice->program_setup,2); ?></td>
+                              </tr>
+                              <?php } ?>
+
+                              <?php if( $invoice->monthly_monitoring > 0 ){ ?>
+                              <tr>
+                                <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
+                                <td colspan="2" style="text-align: ;">Monthly Monitoring</td>
+                                <td colspan="1" style="text-align: right;">$<?php echo number_format((Float)$invoice->monthly_monitoring,2); ?></td>
+                              </tr>
+                              <?php } ?>
+
+                              <tr>
+                                <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
+                                <td colspan="2" style="text-align: ;"><b>Grand Total ($)</b></td>
+                                <td colspan="1" style="text-align: right;"><b>$<?php echo number_format((Float)$invoice->grand_total,2) ?></b></td>
+                              </tr>                            
+                          <?php }else{ ?>
+                              <?php if( $workorder->adjustment_name != '' && $workorder->adjustment_value > 0 ){ ?>
+                              <tr>
+                                <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
+                                <td colspan="2" style="text-align: ;"><?php echo $workorder->adjustment_name; ?></td>
+                                <td colspan="1" style="text-align: right;">$<?php echo number_format((Float)$workorder->adjustment_value,2); ?></td>
+                              </tr>
+                              <?php } ?>
+                              
+                              <?php if( $workorder->otp_setup > 0 ){ ?>
+                              <tr>
+                                <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
+                                <td colspan="2" style="text-align: ;">One Time Program and Setup</td>
+                                <td colspan="1" style="text-align: right;">$<?php echo number_format((Float)$workorder->otp_setup,2); ?></td>
+                              </tr>
+                              <?php } ?>
+
+                              <?php if( $workorder->monthly_monitoring > 0 ){ ?>
+                              <tr>
+                                <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
+                                <td colspan="2" style="text-align: ;">Monthly Monitoring</td>
+                                <td colspan="1" style="text-align: right;">$<?php echo number_format((Float)$workorder->monthly_monitoring,2); ?></td>
+                              </tr>
+
+                              <tr>
+                                <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
+                                <td colspan="2" style="text-align: ;"><b>Grand Total ($)</b></td>
+                                <td colspan="1" style="text-align: right;"><b>$<?php echo number_format((Float)$workorder->grand_total,2) ?></b></td>
+                              </tr>
+                              <?php } ?>                            
                           <?php } ?>
-
-                          <?php if( $workorder->voucher_value != '' ){ ?>
-                          <tr>
-                            <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
-                            <td colspan="2" style="text-align: ;">Voucher</td>
-                            <td colspan="1" style="text-align: right;">$<?php echo $workorder->voucher_value ?></td>
-                          </tr>
-                          <?php } ?>
-
-                          <?php if( $workorder->otp_setup > 0 ){ ?>
-                          <tr>
-                            <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
-                            <td colspan="2" style="text-align: ;">One Time Program and Setup</td>
-                            <td colspan="1" style="text-align: right;">$<?php echo number_format((Float)$workorder->otp_setup,2); ?></td>
-                          </tr>
-                          <?php } ?>
-
-                          <?php if( $workorder->monthly_monitoring > 0 ){ ?>
-                          <tr>
-                            <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
-                            <td colspan="2" style="text-align: ;">Monthly Monitoring</td>
-                            <td colspan="1" style="text-align: right;">$<?php echo number_format((Float)$workorder->monthly_monitoring,2); ?></td>
-                          </tr>
-                          <?php } ?>
-
-                          <tr>
-                            <td colspan="4" style="border-left: 1px solid Transparent!important;"></td>
-                            <td colspan="2" style="text-align: ;"><b>Grand Total ($)</b></td>
-                            <td colspan="1" style="text-align: right;"><b>$<?php echo number_format((Float)$workorder->grand_total,2) ?></b></td>
-                          </tr>
-
                         </tbody>
                       </table>
                     </div>
 
-                    <div class="col-md-12"">
+                    <div class="col-md-12">
                       <h6 class="title-border">INSTRUCTIONS :</h6>
-                      <span class="workorder-box"><?= $workorder->instructions; ?></span>
+                      <span class="workorder-box"><?= $workorder->instructions ?? "None"; ?></span>
                     </div>
 
-                    <div class="col-md-12"">
+                    <div class="col-md-12">
                       <h6 class="title-border">HEADER :</h6>
-                      <span class="workorder-box"><?= $workorder->header; ?></span>
+                      <span class="workorder-box"><?= $workorder->header ?? "None"; ?></span>
                     </div>
 
-                    <div class="col-md-12"">
+                    <div class="col-md-12">
                       <h6 class="title-border">TERMS AND CONDITIONS :</h6>
-                      <span class="workorder-box"><?= $workorder->terms_and_conditions; ?></span>
+                      <span class="workorder-box"><?= $workorder->terms_and_conditions ?? "None"; ?></span>
                     </div>
 
-                    <div class="col-md-12"">
+                    <div class="col-md-12">
                       <h6 class="title-border">TERMS OF USE :</h6>
-                      <span class="workorder-box"><?= $workorder->terms_of_use; ?></span>
+                      <span class="workorder-box"><?= $workorder->terms_of_use ?? "None"; ?></span>
                     </div>
                   </div>                                    
               </div>     

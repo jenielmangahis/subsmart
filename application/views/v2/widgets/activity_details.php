@@ -2,8 +2,8 @@
 <table class="nsm-table" id="dashboard_activity_logs">
     <thead>
         <tr>
-            <td data-name="LogsDetailsProfile" style="width:70%;"></td>
-            <td data-name="LogsDetailsDetails"></td>
+            <td  style="width:70%;" ></td>
+            <td data-name="Date"></td>
         </tr>
     </thead>
     <tbody>
@@ -34,7 +34,7 @@
                         <div class="details" style="width:98% !important;">
                             <span class="content-title"><?= $logs->first_name . ' ' . $logs->last_name ?></span>
                             <span class="content-subtitle d-block"><?= $logs->email ?></span>
-                            <span class="content-subtitle badge-item"  style="background: <?= $colorSelected ?>;">
+                            <p class="content-subtitle badge-item" style="background: <?= $colorSelected ?>;" >
                                 <?php
                                 if (strpos($logs->activity_name, 'Logged in') !== false) {
                                     echo 'Logged In';
@@ -44,15 +44,15 @@
                                     echo $logs->activity_name;
                                 }
                                 ?>
-                            </span>
+                            </p>
                         </div>
                     </div>
                 </div>
             </td>
             <td>
-                <div class="content-subtitle d-flex align-items-center justify-content-center date-item"  style="background: <?= $colorSelected ?>;">
-                    <i class='bx bx-calendar'></i>
-                    <p><?= date('F d, Y g:i A', strtotime($logs->created_at)) ?></p>
+                <div class="content-subtitle d-flex align-items-center justify-content-center gap-2 date-item"  >
+                    <i class='bx bx-calendar' style="color: <?= $colorSelected ?>;"></i>
+                    <p style="color: <?= $colorSelected ?>;"><?= date('F d, Y g:i A', strtotime($logs->created_at)) ?></p>
                 </div>
             </td>
         </tr>

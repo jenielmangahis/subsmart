@@ -637,60 +637,63 @@ class Workorder extends MY_Controller
 
 
     public function view($id)
-    {        
-        // dd('test');
+    {   
+        $this->load->model('Invoice_model');
+        $this->load->model('Invoice_items_model');
+
         $company_id = logged('company_id');
 
         $this->page_data['workorder'] = $this->workorder_model->getById($id);
         $work =  $this->workorder_model->getById($id);
-        
-        $this->page_data['company'] = $this->workorder_model->getCompanyCompanyId($work->company_id);
-        $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
-        $this->page_data['items'] = $this->workorder_model->getItems($id);
 
-        $this->page_data['itemsA'] = $this->workorder_model->getItemsAlarm($id);
-        $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
-        
-        $WOitems = $this->workorder_model->getworkorderItems($id);
-        $this->page_data['workorder_items'] = $this->workorder_model->getworkorderItems($id);
+        if( $work && $work->company_id == $company_id ){
+            add_footer_js('assets/js/esign/docusign/workorder.js');
+            $WOitems = $this->workorder_model->getworkorderItems($id);
+            $invoice = [];
+            $invoiceItems = [];
+            if( $work->invoice_id > 0 ){
+                $invoice = $this->Invoice_model->getById($work->invoice_id);
+                $invoiceItems = $this->Invoice_items_model->getAllByInvoiceId($work->invoice_id);
+            }
 
-        $this->page_data['first'] = $this->workorder_model->getuserfirst($work->company_representative_name);
-        $this->page_data['second'] = $this->workorder_model->getusersecond($work->primary_account_holder_name);
-        $this->page_data['third'] = $this->workorder_model->getuserthird($work->secondary_account_holder_name);
+            $this->page_data['invoice'] = $invoice;
+            $this->page_data['invoiceItems'] = $invoiceItems;
+            $this->page_data['company'] = $this->workorder_model->getCompanyCompanyId($work->company_id);
+            $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
+            $this->page_data['items'] = $this->workorder_model->getItems($id);
+            $this->page_data['itemsA'] = $this->workorder_model->getItemsAlarm($id);
+            $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);                        
+            $this->page_data['workorder_items'] = $this->workorder_model->getworkorderItems($id);
+            $this->page_data['workorder_agreement_items'] = $this->workorder_model->getAllWorkorderAgreementProductsByWorkorderId($id);
+            $this->page_data['first'] = $this->workorder_model->getuserfirst($work->company_representative_name);
+            $this->page_data['second'] = $this->workorder_model->getusersecond($work->primary_account_holder_name);
+            $this->page_data['third'] = $this->workorder_model->getuserthird($work->secondary_account_holder_name);
+            $this->page_data['lead'] = $this->workorder_model->getleadSource($work->lead_source_id);
+            $this->page_data['contacts'] = $this->workorder_model->get_contacts($work->customer_id);
+            $this->page_data['solars'] = $this->workorder_model->get_solar($id);
+            $this->page_data['solar_files'] = $this->workorder_model->get_solar_files($id);
+            $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();            
+            $this->page_data['agreements'] = $this->workorder_model->get_agreements($id);
+            $this->page_data['agree_items'] = $this->workorder_model->get_agree_items($id);
+            $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
+            $this->page_data['page']->title = 'Workorder';            
+            $this->page_data['payment'] = $this->workorder_model->getpayment($id);
 
-        $this->page_data['lead'] = $this->workorder_model->getleadSource($work->lead_source_id);
-        $this->page_data['contacts'] = $this->workorder_model->get_contacts($work->customer_id);
-        $this->page_data['solars'] = $this->workorder_model->get_solar($id);
-        $this->page_data['solar_files'] = $this->workorder_model->get_solar_files($id);
-        $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
-        
-        $this->page_data['agreements'] = $this->workorder_model->get_agreements($id);
-        $this->page_data['agree_items'] = $this->workorder_model->get_agree_items($id);
-        $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
-		$this->page_data['page']->title = 'Workorder';
-        
-        $this->page_data['payment'] = $this->workorder_model->getpayment($id);
-
-        $spt_query = array(
-            'table' => 'ac_system_package_type',
-            'order' => array(
-                'order_by' => 'id',
-            ),
-            'where' => array(
-                'company_id' => $company_id,
-            ),
-            'select' => '*',
-        );
-        $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
-
-        // $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
-
-        // $this->page_data['Workorder']->activity = $this->activity_model->getByWhere(['user' => $id], ['order' => ['id', 'desc']]);
-
-        // print_r($this->page_data['items']);
-        add_footer_js('assets/js/esign/docusign/workorder.js');
-        //$this->load->view('workorder/view_v1', $this->page_data);
-        $this->load->view('v2/pages/workorder/view', $this->page_data);
+            $spt_query = array(
+                'table' => 'ac_system_package_type',
+                'order' => array(
+                    'order_by' => 'id',
+                ),
+                'where' => array(
+                    'company_id' => $company_id,
+                ),
+                'select' => '*',
+            );
+            $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);            
+            $this->load->view('v2/pages/workorder/view', $this->page_data);
+        }else{
+            redirect('workorder');  
+        }
     }
 
     public function printSolar($id)
