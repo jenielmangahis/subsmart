@@ -33,6 +33,13 @@ add_css(array(
 
         .subs-payment-form-container .container-right .form_line {
             margin-bottom: 5px !important;
+        }       
+        
+        #btn-quick-add-term{
+            padding: 5px 10px;
+            font-size: 12px;
+            position: relative;
+            top: 6px;
         }        
 
     </style>
@@ -211,7 +218,7 @@ add_css(array(
                                                     </div>
                                                     <div class="row form_line invoicing_field">
                                                         <div class="col-md-4">Term</div>
-                                                        <div class="col-md-8">
+                                                        <!-- <div class="col-md-8">
                                                             <select id="invoice_term" name="invoice_term" data-customer-source="dropdown" class="input_select" >
                                                                 <option  value="Due On Receipt">Due On Receipt</option>
                                                                 <option  value="Net 5">Net 5</option>
@@ -220,14 +227,29 @@ add_css(array(
                                                                 <option  value="Net 30">Net 30</option>
                                                                 <option  value="Net 60">Net 60</option>
                                                             </select>
-                                                        </div>
+                                                        </div> -->
+                                                        <div class="col-md-8">
+                                                            <div class="row">
+                                                                <div class="col-md-8">
+                                                                    <select id="invoice_term" name="invoice_term" data-customer-source="dropdown" class="input_select" style="display:inline-block;width:50%;">
+                                                                        <option value="0" selected="">Select Term</option>
+                                                                        <?php foreach($accountingTerms as $term){ ?>
+                                                                            <option value="<?= $term->net_due_days; ?>"><?= $term->name; ?></option>
+                                                                        <?php } ?>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-term"><span class="fa fa-plus"></span> Add Term</a>    
+                                                                </div>
+                                                            </div>
+                                                        </div>                                                        
                                                     </div>
                                                     <div class="row form_line invoicing_field">
                                                         <div class="col-md-4">
                                                             Invoice Date
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="number" class="form-control" name="invoice_date" id="invoice_date" />
+                                                            <input type="date" class="form-control" name="invoice_date" value="<?= date("Y-m-d"); ?>" id="invoice_date" />
                                                         </div>
                                                     </div>
                                                     <div class="row form_line invoicing_field">
@@ -235,7 +257,7 @@ add_css(array(
                                                             Due Date
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="number" class="form-control" name="invoice_due_date" id="invoice_due_date" />
+                                                            <input type="date" class="form-control" value="<?= date("Y-m-d", strtotime("+5 days")); ?>" name="invoice_due_date" id="invoice_due_date" />
                                                         </div>
                                                     </div>
                                                     <div id="credit_card">
@@ -244,7 +266,7 @@ add_css(array(
                                                                 Card Number
                                                             </div>
                                                             <div class="col-md-8">
-                                                                <input type="text" class="form-control" name="card_number" id="first_name" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" required/>
+                                                                <input type="text" class="form-control" name="card_number" id="card_number" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" required/>
                                                             </div>
                                                         </div>
                                                         <div class="row form_line">
@@ -452,6 +474,39 @@ add_css(array(
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="quick_add_terms" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title" style="font-size: 17px;">Create Accounting Terms</span>
+                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                    </div>
+                    <div class="modal-body">
+                        <form id="frm-quick-add-term">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label class="mb-2">Name</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" name="term_name" value="" class="form-control" required="" autocomplete="off" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <label class="mb-2">Number of days due</label>
+                                    <div class="input-group mb-3" style="width:40%;">
+                                        <input type="number" step="any" name="term_number_days_due" value="0" class="form-control" required="" autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">                        
+                                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="nsm-button primary" id="btn-save-terms">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>    
  
 </div>
 
