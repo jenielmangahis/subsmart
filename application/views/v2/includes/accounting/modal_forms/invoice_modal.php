@@ -1070,6 +1070,10 @@
 <script>
    
 $(document).ready(function() {
+    $('#tax-exempted').on('change', function(){
+
+    });
+    
      $('#manage-payment-schedule').on('click', function(event) {
         event.preventDefault();
         var paymentScheduleContainer = $('#payment-schedule-input');
