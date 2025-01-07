@@ -4,12 +4,17 @@ if (!is_null($dynamic_load) && $dynamic_load == true):
 endif;
 ?>
 <style>
-    .widget-legend-header {
-        margin-top: 48px;
-        margin-bottom: 49px;
+    .widget-legend-header  {
+        margin-top: 30px;
+        margin-bottom: 10px;
+        background-color: unset !important;
+    }
+
+    .widget-legend-header span {
         background-color: #EFB6C8 !important;
         color: #ffffff;
-        padding: 10px;
+        padding: 5px;
+        border-radius: 25px;
     }
 
     .estimates-container .estimates-items {
@@ -74,7 +79,7 @@ endif;
         }
 
         .estimates-container .filter .filter-option {
-            width: 55%;
+            width: 100%;
             margin-bottom: 10px;
         }
     }
@@ -101,7 +106,7 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="banner mb-5">
-            <img src="./assets/img/estimates-banner2.svg" alt="">
+            <img src="./assets/img/open-estimates-banner2.svg" alt="">
         </div>
         <div class="estimates-container">
             <div class="estimates-items">
@@ -125,8 +130,10 @@ endif;
                             required>
                     </div>
                 </div>
-                <h4 class="widget-legend-header">Total Estimates : <span id="estimate-chart-total-estimates">0</span>
-                </h4>
+                <div class="widget-legend-header">
+                    <span>Total Estimates : <span id="estimate-chart-total-estimates">0</span>
+                    </span>
+                </div>
                 <canvas id="estimates_chart" class="nsm-chart" data-chart-type="estimates"></canvas>
             </div>
         </div>
@@ -237,10 +244,10 @@ endif;
                         responsive: true,
                         plugins: {
                             legend: {
-                                position: 'right',
+                                position: 'bottom',
                             },
                         },
-                        aspectRatio: 1.5,
+                        aspectRatio: 1,
                     },
                 });
 

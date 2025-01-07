@@ -394,7 +394,7 @@ class Expenses extends MY_Controller
                                     <a class="dropdown-item attach-file" href="#">Attach a file</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item view-edit-check" href="#">View/Edit</a>
+                                    <a class="dropdown-item view-edit-check" href="#" data-id="'.$check->id.'">View/Edit</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item copy-transaction" href="#">Copy</a>

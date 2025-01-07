@@ -1,0 +1,74 @@
+<?php include viewPath('v2/includes/header'); ?>
+<?php include viewPath('v2/includes/customer/customer_modals'); ?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.bootstrap5.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+<link rel="stylesheet" href="<?php echo $url->assets ?>css/automation/automation.css">
+
+<div class="row page-content g-0">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/automation_tabs'); ?>
+    </div>
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class='bx bx-x'></i></button>
+                            Set automatic reminders for your team or clients.
+                        </div>
+                    </div>
+                    <!-- Card Group -->
+                    <?php
+                    $cards = [
+                        [
+                            'title' => 'Immediate Notice / Client Reminder',
+                            'description' => 'Send immediate notice to a client.',
+                            'onclick' => "generateAutomationTemplate('job', 'has a status', 'client', 'a text message', 'immediately')"
+                        ],
+                        [
+                            'title' => '2 hours / Tech Reminder',
+                            'description' => 'Send a text to a technician 2 hours ahead of the job.',
+                            'onclick' => "generateAutomationTemplate('job', 'has a status', 'client', 'a text message', '2 hours', 'ahead', 'scheduled date')"
+                        ],
+                        [
+                            'title' => '4 hours / Tech Reminder',
+                            'description' => 'Send a text to a technician 4 hours ahead of the job.',
+                            'onclick' => "generateAutomationTemplate('job', 'has a status', 'technician', 'a text message', '4 hours', 'ahead', 'scheduled date')"
+                        ],
+                        [
+                            'title' => '1 Day Notice/Client Reminder',
+                            'description' => 'Send an email to a client 1 day ahead of the job.',
+                            'onclick' => "generateAutomationTemplate('job', 'created', 'assigned tech', 'an email', '1 day', 'ahead', 'scheduled date')"
+                        ]
+                    ];
+
+                    foreach ($cards as $card) : ?>
+                        <div class="col-3 mb-3">
+                            <div class="nsm-card primary cursor-pointer reminder-item" style="overflow: visible !important;"
+                                data-value="<?php echo htmlspecialchars($card['title']); ?>"
+                                data-onclick="<?php echo htmlspecialchars($card['onclick']); ?>">
+                                <div class="nsm-card-header">
+                                    <div class="nsm-card-text text-muted">
+                                        <span><?php echo $card['title']; ?></span>
+                                    </div>
+                                </div>
+                                <div class="nsm-card-content">
+                                    <h5><?php echo $card['description']; ?></h5>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php include viewPath('v2/includes/automation/add_automation_modal'); ?>
+<?php include viewPath('v2/includes/automation/add_email_modal'); ?>
+<?php include viewPath('v2/pages/automation/js/automation'); ?>
+<?php include viewPath('v2/includes/footer'); ?>

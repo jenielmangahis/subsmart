@@ -861,6 +861,18 @@
 
     <?php } ?>
 
+    <?php if( $menu->menu_name == 'Automation' ){ ?>
+        
+        <li>
+            <a href="<?php echo base_url('automation'); ?>">
+                <i class='bx bx-fw bx-bot'></i>Automation
+            </a>
+            <ul>
+            </ul>
+        </li>
+
+    <?php } ?>
+
     <?php if( $menu->menu_name == 'University' ){ ?>
         
         <li>

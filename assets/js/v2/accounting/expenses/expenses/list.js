@@ -128,9 +128,9 @@ $(document).on('click', '#expenses-table .view-edit-expense', function() {
 });
 
 $(document).on('click', '#expenses-table .view-edit-check', function() {
+    const data_id = $(this).attr('data-id');
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
-
     var data = {
         id: id,
         type: row.find('td:nth-child(3)').text().trim()
@@ -151,6 +151,53 @@ $(document).on('click', '#expenses-table .view-edit-check', function() {
         initModalFields('checkModal', data);
 
         $('#checkModal').modal('show');
+    });
+
+    $.ajax({
+        type: "POST",
+        url: window.origin + "/accounting/fetchCheckDetails/" + data_id,
+        dataType: "JSON",
+        success: function (response) {
+            console.log(response);
+            const check_no = parseInt(response.check_no);
+            const to_print = parseInt(response.to_print);
+            const payment_date = response.payment_date;
+            const total_amount = parseFloat(response.total_amount);
+            const payee_id = parseInt(response.payee_id);
+            const payee_type = response.payee_type;
+            let payee_name = "";
+
+            switch (payee_type) {
+                case "customer":
+                    payee_name = response.customer_name;
+                    break;
+                case "vendor":
+                    payee_name = response.vendor_name;
+                    break;
+                case "employee":
+                    payee_name = response.employee_name;
+                    break;
+            }
+
+            const bank_account_id = parseInt(response.bank_account_id);
+            const bank_account_name = response.bank_account_name;
+            const memo = response.memo;
+            const bankSelectedOption = new Option(bank_account_name, bank_account_id, true, true);
+            const payeeSelectedOption = new Option(payee_name, payee_type + "-" + payee_id, true, true);
+
+            setTimeout(() => {
+                window.currentCheckNo = check_no;
+                $('#checkNumberInput').val(window.currentCheckNo).change();
+                $('#checkDateInput').val(new Date(payment_date).toISOString().split('T')[0]).change();
+                $('#checkAmountInput').val(total_amount).change();
+                $('.checkBankNameSelect').empty();
+                $('.checkBankNameSelect').append(bankSelectedOption).trigger('change');
+                $('.checkPayeeSelect').empty();
+                $('.checkPayeeSelect').append(payeeSelectedOption).trigger('change');
+                $('#checkMemoInput').val(memo).change();
+                (to_print == 1) ? $('#checkPrintLater').prop('checked', true).change() : $('#checkPrintLater').prop('checked', false).change();
+            }, 500);
+        }
     });
 });
 

@@ -6,6 +6,7 @@ class Workorder_model extends MY_Model
 
     public $table = 'work_orders';
     public $table_workorder_settings = 'work_order_settings';
+    public $table_agreement_products = 'work_orders_agreement_products'; 
 
     public function getAllOrderByCompany($company_id, $options = array(), $search = array())
     {
@@ -2640,6 +2641,19 @@ class Workorder_model extends MY_Model
         $this->db->insert('work_orders',$data);
         $insert_id = $this->db->insert_id();
         return  $insert_id;
+    }
+
+    public function getAllWorkorderAgreementProductsByWorkorderId($id)
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table_agreement_products);
+        $this->db->where('work_order_id', $id);
+        $this->db->where('item !=', '');
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();
+
+        return $query->result();
     }
 }
 

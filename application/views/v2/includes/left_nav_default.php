@@ -811,3 +811,11 @@ echo 'active';
         </li>
     </ul>
 </li>
+
+<li>
+    <a href="<?php echo base_url('automation'); ?>">
+        <i class='bx bx-fw bx-bot'></i> Automation
+    </a>
+    <ul>
+    </ul>
+</li>

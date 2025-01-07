@@ -99,17 +99,25 @@ class Account_model extends MY_Model {
 		return $result;
 	}
 
-	public function getLastCheckNo($company_id) {
-		$this->db->select('accounting_assigned_checks.check_no as check_no');
-		$this->db->from('accounting_assigned_checks');
-		$this->db->order_by('accounting_assigned_checks.created_at', 'DESC');
-		$this->db->limit(1);
+	public function getLastCheckNo($company_id) 
+	{
+		$this->db->select('accounting_check.check_no as check_no');
+		$this->db->from('accounting_check');
+		$this->db->where('accounting_check.company_id', $company_id);
+		$this->db->order_by('accounting_check.check_no', 'DESC');
 		$query = $this->db->get();
-		$result = $query->row();
-		return $result;
+	
+		foreach ($query->result() as $row) {
+			if (!is_null($row->check_no) && $row->check_no !== '0' && $row->check_no !== 0 && trim($row->check_no) !== '') {
+				return $row;
+			}
+		}
+	
+		return null;
 	}
 
-	public function getOwnerDetails($company_id) {
+	public function getOwnerDetails($company_id) 
+	{
 		$role = 3; // Owner
 		$userType = 7; //Admin, all access
 
@@ -122,6 +130,22 @@ class Account_model extends MY_Model {
 		$query = $this->db->get();
 		$result = $query->row();
 		
+		return $result;
+	}
+
+	public function getCheckDetails($id, $company_id) 
+	{
+		$this->db->select('accounting_check.id AS id, accounting_check.company_id AS company_id, accounting_check.payee_type AS payee_type, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name, accounting_vendors.title AS vendor_name, CONCAT(users.FName, " ", users.LName) AS employee_name, accounting_check.payee_id AS payee_id, accounting_check.bank_account_id AS bank_account_id, accounting_chart_of_accounts.name AS bank_account_name, accounting_check.payment_date AS payment_date, accounting_check.check_no AS check_no, accounting_check.to_print AS to_print, accounting_check.memo AS memo, accounting_check.total_amount AS total_amount');
+		$this->db->from('accounting_check');
+        $this->db->join('accounting_chart_of_accounts', 'accounting_chart_of_accounts.id = accounting_check.bank_account_id', 'left');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = accounting_check.payee_id', 'left');
+        $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_check.payee_id', 'left');
+        $this->db->join('users', 'users.id = accounting_check.payee_id', 'left');
+		$this->db->where('accounting_check.company_id', $company_id);
+		$this->db->where('accounting_check.id', $id);
+		$this->db->order_by('accounting_check.check_no', 'DESC');
+		$query = $this->db->get();
+		$result = $query->row();
 		return $result;
 	}
 }

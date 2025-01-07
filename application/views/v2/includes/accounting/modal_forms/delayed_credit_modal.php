@@ -151,15 +151,15 @@
                                 <div class="col-12 grid-mb">
                                     <table class="nsm-table" id="item-table">
                                         <thead>
-                                            <td data-name="Item" style="width:20%;">ITEM</td>
-                                            <td data-name="Type" style="width:10%;">TYPE</td>
-                                            <td data-name="Location" style="width:15%;">LOCATION</td>
-                                            <td data-name="Quantity">QUANTITY</td>
-                                            <td data-name="Price">PRICE</td>
-                                            <td data-name="Discount">DISCOUNT</td>
-                                            <td data-name="Tax">TAX (CHANGE IN %)</td>
-                                            <td data-name="Total">TOTAL</td>
-                                            <td data-name="Manage"></td>
+                                            <td data-name="Item" style="width:28%;">ITEM</td>
+                                            <td data-name="Type">TYPE</td>
+                                            <td data-name="Location">LOCATION</td>
+                                            <td data-name="Quantity" style="width:8%; text-align: center;">QUANTITY</td>
+                                            <td data-name="Price" style="width:8%; text-align: center;">PRICE</td>
+                                            <td data-name="Discount" style="width:8%; text-align: center;">DISCOUNT</td>
+                                            <td data-name="Tax" style="width:10%; text-align: center;">TAX (CHANGE IN %)</td>
+                                            <td data-name="Total" style="width:8%; text-align:right;">TOTAL</td>
+                                            <td data-name="Manage" style="width:5%;"></td>
                                         </thead>
                                         <tbody>
                                             <?php if(isset($items) && count($items) > 0) : ?>

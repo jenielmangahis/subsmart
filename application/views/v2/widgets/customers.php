@@ -6,7 +6,6 @@ endif;
 
 <style>
     #recent-customer-container .controls span {
-        padding: 1px 20px;
         border-radius: 25px;
         font-weight: bold;
         color: #fff;
