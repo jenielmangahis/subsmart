@@ -7236,6 +7236,52 @@ class Accounting_modals extends MY_Controller
                         }
                     }
                 }
+
+                //Update invoice settings
+                if( $invoiceSettings ){
+                    $invoice_settings_data = ['invoice_num_next' => $next_number + 1];
+                    $this->Invoice_settings_model->update($invoiceSettings->id, $invoice_settings_data);
+                }else{
+                    $invoice_settings_data = [
+                        'invoice_num_prefix' => $prefix,
+                        'invoice_num_next' => $next_number,
+                        'check_payable_to' => '',
+                        'accept_credit_card' => 1,
+                        'accept_check' => 0,
+                        'accept_cash'  => 1,
+                        'accept_direct_deposit' => 0,
+                        'accept_credit' => 0,
+                        'mobile_payment' => 1,
+                        'capture_customer_signature' => 1,
+                        'hide_item_price' => 0,
+                        'hide_item_qty' => 0,
+                        'hide_item_tax' => 0,
+                        'hide_item_discount' => 0,
+                        'hide_item_total' => 0,
+                        'hide_from_email' => 0,
+                        'hide_item_subtotal' => 0,
+                        'hide_business_phone' => 0,
+                        'hide_office_phone' => 0,
+                        'accept_tip' => 0,
+                        'due_terms' => '',
+                        'auto_convert_completed_work_order' => 0,
+                        'message' => 'Thank you for your business.',
+                        'terms_and_conditions' => 'Thank you for your business.',
+                        'company_id' => $company_id,
+                        'commercial_message' => 'Thank you for your business.',
+                        'commercial_terms_and_conditions' => 'Thank you for your business.',
+                        'logo' => '',
+                        'payment_fee_percent' => '',
+                        'payment_fee_amount' => '',
+                        'recurring' => '',
+                        'invoice_template' => 1,
+                        'residential_message' => 'Thank you for your business.',
+                        'residential_terms_and_conditions' => 'Thank you for your business.'
+
+                    ];
+
+                    $this->Invoice_settings_model->create($invoice_settings_data);
+                }                
             }
 
             $return = [];
