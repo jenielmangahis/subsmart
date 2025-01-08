@@ -262,9 +262,7 @@
                                             <label for="term">Terms</label>
                                             <select name="term" id="term" class="form-control nsm-field">
                                                 <?php if (isset($invoice)) : ?>
-                                                    <?php if ($invoice->terms !== null && $invoice->terms !== "") : ?>
-                                                        <option value="<?= $term->id ?>"><?= $term->name ?></option>
-                                                    <?php endif; ?>
+                                                    <option selected="selected" value="<?= $term->id ?>"><?= $term->name ?></option>
                                                 <?php endif; ?>
                                             </select>
                                         </div>
