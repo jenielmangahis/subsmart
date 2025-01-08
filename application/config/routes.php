@@ -1181,7 +1181,7 @@ $route['color_settings/delete_color'] = 'Color_Settings/delete_color';
 $route['color_settings/add_new'] = 'Color_Settings/add_new';
 
 // Users
-$route['users/load_edit_employee'] = 'Users/ajax_edit_employee';
+$route['users/_edit_employee'] = 'Users/ajax_edit_employee';
 $route['users/_update_employee'] = 'Users/ajaxUpdateEmployee';
 $route['users/_update_employee_password'] = 'Users/ajaxUpdateEmployeePassword';
 $route['users/_add_payscale'] = 'Users/ajax_add_payscale';
@@ -1199,6 +1199,7 @@ $route['user/_commission_list'] = 'Users/ajax_commission_list';
 $route['user/_get_employee_commission_status'] = 'Users/ajax_get_employee_commission_status';
 $route['user/_delete_employee_commission'] = 'Users/ajax_delete_employee_commission';
 $route['user/_update_employee_commission'] = 'Users/ajax_update_employee_commission';
+$route['user/_create_employee'] = 'Users/addNewEmployeeV2';
 
 // Payscale
 $route['payscale/_get_details'] = 'Users/ajax_payscale_get_details';
