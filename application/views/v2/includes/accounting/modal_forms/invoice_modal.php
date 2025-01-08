@@ -360,14 +360,14 @@
                                             <label for="status">Status <span class="text-danger">*</span></label>
                                             <select name="status" id="status" class="form-control nsm-field">
                                                 <option value="Draft" <?= isset($invoice) && $invoice->status === 'Draft' ? 'selected' : '' ?>>Draft</option>
-                                                <option value="Submitted" <?= isset($invoice) && $invoice->status === 'Submitted' ? 'selected' : '' ?>>Submitted</option>
+                                                <option value="Scheduled" <?= isset($invoice) && $invoice->status === 'Scheduled' ? 'selected' : '' ?>>Scheduled<d/option>
+                                                <!-- <option value="Submitted" <?= isset($invoice) && $invoice->status === 'Submitted' ? 'selected' : '' ?>>Submitted</option> -->
                                                 <option value="Partially Paid" <?= isset($invoice) && $invoice->status === 'Partially Paid' ? 'selected' : '' ?>>Partially Paid</option>
                                                 <option value="Paid" <?= isset($invoice) && $invoice->status === 'Paid' ? 'selected' : '' ?>>Paid</option>
                                                 <option value="Due" <?= isset($invoice) && $invoice->status === 'Due' ? 'selected' : '' ?>>Due</option>
                                                 <option value="Overdue" <?= isset($invoice) && $invoice->status === 'Overdue' ? 'selected' : '' ?>>Overdue</option>
                                                 <option value="Approved" <?= isset($invoice) && $invoice->status === 'Approved' ? 'selected' : '' ?>>Approved</option>
-                                                <option value="Declined" <?= isset($invoice) && $invoice->status === 'Declined' ? 'selected' : '' ?>>Declined</option>
-                                                <option value="Schedule" <?= isset($invoice) && $invoice->status === 'Schedule' ? 'selected' : '' ?>>Schedule</option>
+                                                <option value="Declined" <?= isset($invoice) && $invoice->status === 'Declined' ? 'selected' : '' ?>>Declined</option>                                                
                                             </select>
                                         </div>
                                     </div>
