@@ -727,7 +727,7 @@ function set_modal_data(data, modalName)
     }
 
     if(data.recurring_day !== null) {
-        $(`#${modalName} select[name="recurring_day"]`).val(data.recurring_day);
+        $(`#${modalName} select[name="recurring_day"]`).val(data.recurring_day).trigger('change');
     }
 
     if(data.recurring_month !== null) {
