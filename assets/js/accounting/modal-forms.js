@@ -1831,7 +1831,7 @@ $(function () {
                 <div class="col-12 col-md-2">
                     <label for="endDate">End date</label>
                     <div class="nsm-field-group calendar">
-                        <input type="text" class="form-control nsm-field date" name="end_date" id="endDate"/>
+                        <input type="text" class="form-control nsm-field date" name="end_date" autocomplete="off" id="endDate"/>
                     </div>
                 </div>
             `);
