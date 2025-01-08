@@ -6696,7 +6696,7 @@ class Accounting_modals extends MY_Controller
                 'ship_via' => $data['ship_via'],
                 'shipping_date' => isset($data['shipping_date']) && !empty($data['shipping_date']) ? date("Y-m-d", strtotime($data['shipping_date'])) : null,
                 'tracking_number' => $data['tracking_no'],
-                'terms' => $data['terms'],
+                'terms' => $data['term'],
                 'location_scale' => $data['location_of_sale'],
                 'attachments' => json_encode($data['attachments']),
                 'tags' => json_encode($data['tags']),
