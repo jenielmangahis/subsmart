@@ -2276,12 +2276,14 @@ class Customer extends MY_Controller
     public function subscription_new($id = null)
     {
         $this->load->model('FinancingPaymentCategory_model');
+        $this->load->model('AccountingTerm_model');
 
         $this->page_data['page']->parent = 'Customers';
         $this->page_data['page']->title = 'New Subscription Plan';
-        $userid = $id;
-        $user_id = logged('id');
-        $company_id = logged('company_id');
+        $userid          = $id;
+        $user_id         = logged('id');
+        $company_id      = logged('company_id');
+        $accountingTerms = $this->AccountingTerm_model->getAllByCompanyId($company_id);
         $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
         $get_login_user = [
             'where' => ['id' => $user_id],
@@ -2291,6 +2293,7 @@ class Customer extends MY_Controller
         $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
         $financingCategories = $this->FinancingPaymentCategory_model->getAllByCompanyId($company_id);
         $this->page_data['financingCategories'] = $financingCategories;   
+        $this->page_data['accountingTerms']     = $accountingTerms;
         $this->load->view('v2/pages/customer/subscription_new', $this->page_data);
     }
 
@@ -5278,7 +5281,7 @@ class Customer extends MY_Controller
 
         }
 
-        $json_data = ['is_success' => $is_success];
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
     }
 
@@ -5286,29 +5289,28 @@ class Customer extends MY_Controller
     {
         $this->load->model('LeadSource_model');
 
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
         $post = $this->input->post();
-        $deletion_query = [
-            'where' => [
-                'ls_id' => $post['id'],
-            ],
-            'table' => 'ac_leadsource',
-        ];
+        $cid  = logged('company_id');
 
-        $leadSource = $this->LeadSource_model->getById($post['id']);
+        $leadSource = $this->LeadSource_model->getByIdAndCompanyId($post['id'], $cid);
         if( $leadSource ){
-            if ($this->general->delete_($deletion_query)) {
+            $name = $leadSource->ls_name;
+            $this->LeadSource_model->deleteById($post['id']);
 
-                //Activity Logs
-                $activity_name = 'Deleted Lead Source  ' . $leadSource->ls_name; 
-                createActivityLog($activity_name);
-    
-                echo 1;
-            } else {
-                echo 0;
-            }
-        }else{
-            echo 0;
-        }        
+            $is_success = 1;
+            $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Lead Source : Deleted lead source ' . $name; 
+            createActivityLog($activity_name);
+            
+        } 
+        
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
     }
 
     public function delete_lead_type()
@@ -7495,11 +7497,13 @@ class Customer extends MY_Controller
 
     public function settings_lead_source()
     {
-        $this->page_data['page']->title = 'Lead Source';
-        $this->page_data['page']->parent = 'Sales';
-
         $this->load->library('wizardlib');
         $this->hasAccessModule(9);
+
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
 
         $user_id = logged('id');
         $company_id = logged('company_id');
@@ -7523,16 +7527,20 @@ class Customer extends MY_Controller
             $this->page_data['lead_source'] = $this->customer_ad_model->getAllSettingsLeadSourceByCompanyId($company_id);
         }        
 
+        $this->page_data['page']->title = 'Lead Source';
+        $this->page_data['page']->parent = 'Sales';
         $this->load->view('v2/pages/customer/settings_lead_source', $this->page_data);
     }
 
     public function settings_lead_types()
     {
-        $this->page_data['page']->title = 'Lead Types';
-        $this->page_data['page']->parent = 'Sales';
-
         $this->load->library('wizardlib');
         $this->hasAccessModule(9);
+
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
 
         $user_id = logged('id');
         $company_id = logged('company_id');
@@ -7556,6 +7564,8 @@ class Customer extends MY_Controller
             $this->page_data['lead_types'] = $this->customer_ad_model->getAllSettingsLeadTypesByCompanyId($company_id);
         }          
 
+        $this->page_data['page']->title = 'Lead Types';
+        $this->page_data['page']->parent = 'Sales';
         $this->load->view('v2/pages/customer/settings_lead_types', $this->page_data);
     }
 

@@ -121,7 +121,7 @@
     });
 
     $('.payment_method').on( 'change', function () {
-        var method = this.value;;
+        var method = this.value;
 
         $('#method').val(method);
         remove_required();
@@ -166,6 +166,7 @@
             $("#docu_signed").show('slow');
         }else if(method === 'Invoicing'){
             hide_all();
+            $('#card_number').prop("required", false);
             $('#payment-button').hide();
             $(".invoicing_field").show("slow");
         }

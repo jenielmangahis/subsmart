@@ -397,6 +397,11 @@ class DocuSign_v2 extends MYF_Controller
 
     public function apiStoreFieldValue()
     {
+        $this->load->model('CalendarSettings_model');
+        $this->load->model('Jobs_model');
+
+        $default_timezone   = 'America/New_York';
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false]);
             return;
@@ -404,6 +409,8 @@ class DocuSign_v2 extends MYF_Controller
 
         $payload = json_decode(file_get_contents('php://input'), true);
         $isCreated = false;
+        $jid       = $payload['jid'];
+        unset($payload['jid']);
         $tableName = 'user_docfile_recipient_field_values';
 
         $this->db->where('recipient_id', $payload['recipient_id']);

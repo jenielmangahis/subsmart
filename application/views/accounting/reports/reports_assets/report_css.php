@@ -84,4 +84,10 @@
     /* table.dataTable > tbody {
         font-size: 14px;
     } */
+    .nsm-table thead tr:not(.nsm-row-collapse) td:not(.show), .nsm-table tbody tr:not(.nsm-row-collapse) td:not(.show) {
+        display: table-cell !important;
+    }
+    .dataTables_wrapper{
+        overflow-x:auto !important;
+    }
 </style>

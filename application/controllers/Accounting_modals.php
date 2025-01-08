@@ -6565,6 +6565,9 @@ class Accounting_modals extends MY_Controller
 
     private function invoice($data)
     {
+        $this->load->model('Invoice_settings_model');
+        $this->load->model('AccountingTerm_model');
+
         $this->form_validation->set_rules('customer', 'Customer', 'required');
         $this->form_validation->set_rules('item[]', 'Item', 'required');
         $this->form_validation->set_rules('quantity[]', 'Item total', 'required');
@@ -6647,21 +6650,51 @@ class Accounting_modals extends MY_Controller
                 $deposit = '0';
             }
 
+            $cid  = logged('company_id');
+            $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($cid);
+            if( $invoiceSettings ){            
+                $next_number = (int) $invoiceSettings->invoice_num_next;     
+                $prefix      = $invoiceSettings->invoice_num_prefix;        
+            }else{
+                $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($cid);
+                $prefix     = 'INV-';
+                if( $lastInsert ){
+                    $next_number   = $lastInsert->id + 1;
+                }else{
+                    $next_number   = 1;
+                }
+            }
+
+            $invoiceNumber = formatInvoiceNumberV2($prefix, $next_number);     
+
+            if($data['term'] != 0) {
+                $accountingTermData = $this->AccountingTerm_model->getById($data['term']);
+                if($accountingTermData) {
+                    $due_data_current    = date("Y-m-d", strtotime($data['due_date']));
+                    $net_due_day = isset($accountingTermData->net_due_days) ? $accountingTermData->net_due_days : 0;
+                    $due_data = date('Y-m-d', strtotime($due_data_current. ' + ' . $net_due_day . ' days'));
+                } else {
+                    $due_data = date("Y-m-d", strtotime($data['due_date']));
+                }
+            } else {
+                $due_data = date("Y-m-d", strtotime($data['due_date']));
+            }
+
             $invoiceData = [
                 'customer_id' => $data['customer'],
                 'job_location' => $data['job_location'],
                 'job_name' => $data['job_name'],
                 'work_order_number' => $data['job_no'],
                 'purchase_order' => $data['purchase_order_no'],
-                'invoice_number' => !isset($data['template_name']) ? $data['invoice_no'] : '',
-                'date_issued' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['date_issued'])) : null,
-                'due_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['due_date'])) : null,
-                'status' => !isset($data['template_name']) ? $data['status'] : 'Schedule',
+                'invoice_number' => $invoiceNumber,
+                'date_issued' => isset($data['date_issued']) ? date("Y-m-d", strtotime($data['date_issued'])) : null,
+                'due_date' => isset($due_data) ? $due_data : null,
+                'status' => isset($data['status']) ? $data['status'] : 'Schedule',
                 'customer_email' => $data['customer_email'],
                 'billing_address' => nl2br($data['billing_address']),
                 'shipping_to_address' => nl2br($data['shipping_to']),
                 'ship_via' => $data['ship_via'],
-                'shipping_date' => !isset($data['template_name']) && !empty($data['shipping_date']) ? date("Y-m-d", strtotime($data['shipping_date'])) : null,
+                'shipping_date' => isset($data['shipping_date']) && !empty($data['shipping_date']) ? date("Y-m-d", strtotime($data['shipping_date'])) : null,
                 'tracking_number' => $data['tracking_no'],
                 'terms' => $data['terms'],
                 'location_scale' => $data['location_of_sale'],
@@ -6682,6 +6715,7 @@ class Accounting_modals extends MY_Controller
                 'adjustment_name' => $data['adjustment_name'],
                 'adjustment_value' => $data['adjustment_value'],
                 'grand_total' => floatval(str_replace(',', '', $data['total_amount'])),
+                'no_tax' => isset($data['is_tax_exempted']) ? $data['is_tax_exempted'] : 0
             ];
 
             $invoiceId = $this->invoice_model->createInvoice($invoiceData);
@@ -7202,6 +7236,52 @@ class Accounting_modals extends MY_Controller
                         }
                     }
                 }
+
+                //Update invoice settings
+                if( $invoiceSettings ){
+                    $invoice_settings_data = ['invoice_num_next' => $next_number + 1];
+                    $this->Invoice_settings_model->update($invoiceSettings->id, $invoice_settings_data);
+                }else{
+                    $invoice_settings_data = [
+                        'invoice_num_prefix' => $prefix,
+                        'invoice_num_next' => $next_number,
+                        'check_payable_to' => '',
+                        'accept_credit_card' => 1,
+                        'accept_check' => 0,
+                        'accept_cash'  => 1,
+                        'accept_direct_deposit' => 0,
+                        'accept_credit' => 0,
+                        'mobile_payment' => 1,
+                        'capture_customer_signature' => 1,
+                        'hide_item_price' => 0,
+                        'hide_item_qty' => 0,
+                        'hide_item_tax' => 0,
+                        'hide_item_discount' => 0,
+                        'hide_item_total' => 0,
+                        'hide_from_email' => 0,
+                        'hide_item_subtotal' => 0,
+                        'hide_business_phone' => 0,
+                        'hide_office_phone' => 0,
+                        'accept_tip' => 0,
+                        'due_terms' => '',
+                        'auto_convert_completed_work_order' => 0,
+                        'message' => 'Thank you for your business.',
+                        'terms_and_conditions' => 'Thank you for your business.',
+                        'company_id' => $company_id,
+                        'commercial_message' => 'Thank you for your business.',
+                        'commercial_terms_and_conditions' => 'Thank you for your business.',
+                        'logo' => '',
+                        'payment_fee_percent' => '',
+                        'payment_fee_amount' => '',
+                        'recurring' => '',
+                        'invoice_template' => 1,
+                        'residential_message' => 'Thank you for your business.',
+                        'residential_terms_and_conditions' => 'Thank you for your business.'
+
+                    ];
+
+                    $this->Invoice_settings_model->create($invoice_settings_data);
+                }                
             }
 
             $return = [];
@@ -14790,7 +14870,6 @@ class Accounting_modals extends MY_Controller
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Invoice', $invoiceId);
         $this->page_data['number'] = $this->invoice_model->get_last_invoice_number(logged('company_id'), $invoiceSettings->invoice_num_prefix);
         $this->page_data['ac_tax_rates'] = $this->invoice_model->ac_tax_rates();
-        var_dump($this->page_data['packageItems']);
         $this->load->view("v2/includes/accounting/modal_forms/invoice_modal", $this->page_data);
 
     }

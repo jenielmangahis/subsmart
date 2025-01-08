@@ -1184,7 +1184,7 @@ function Signing(hash) {
           const { created_at } = field.value;
           if (created_at) {
             const date = moment(created_at);
-            dateTime = date.format("MMMM Do YYYY, h:mm:ss A");
+            dateTime = date.format("MMMM Do YYYY, h:mm A");
           }
         }
 
@@ -1192,8 +1192,8 @@ function Signing(hash) {
               <div class="fillAndSign__signatureContainer">
                 <img class="fillAndSign__signatureDraw" src="${value}"/>
                 ${
-                  window._companyDateTime
-                    ? `<span class="fillAndSign__signatureTime">${window._companyDateTime}</span>`
+                  dateTime
+                    ? `<span class="fillAndSign__signatureTime">${dateTime}</span>`
                     : ""
                 }
               </div>
@@ -2228,28 +2228,40 @@ function Signing(hash) {
         $(e).attr("id").replace("signature", "")
       );
 
-      const promises = fieldIds.map((id) => storeFieldValue({ id, value: signatureDataUrl })); // prettier-ignore
-      await Promise.all(promises);
+      const { data } = await storeFieldValue({
+        id: fieldId,
+        value: signatureDataUrl,
+      });
+      //const promises = fieldIds.map((id) => storeFieldValue({ id, value: signatureDataUrl })); // prettier-ignore
+      //await Promise.all(promises);
+      console.log('fields',data);
 
-      const jid = window.__esigndata.job_id;
-      const endpoint = `${prefixURL}/DocuSign/getUserdate?jid=${jid}`;
-      const response = await fetch(endpoint);
-      companyDataTime = await response.json();
-      //console.log(window.__esigndata.job_id)      
+      // Using company set timezone
+      // const jid = window.__esigndata.job_id;
+      // const endpoint = `${prefixURL}/DocuSign/getUserdate?jid=${jid}`;
+      // const response = await fetch(endpoint);
+      // companyDataTime = await response.json();
+      // const dateTimeFormatted = moment(companyDataTime.current_date_time).format("MMMM Do YYYY, h:mm:ss A");
 
-      const dateTimeFormatted = moment(companyDataTime.current_date_time).format("MMMM Do YYYY, h:mm:ss A");
+      //Using created_at field where date is base from user timezone via ip address
+      let dateTime = moment();
+      const field = window.__esigndata.fields.find((f) => f.id === fieldId);
 
-      // let dateTime = moment();
-      // const field = window.__esigndata.fields.find((f) => f.id === fieldId);
-
-      // if (field && field.value) {
-      //   const { created_at } = field.value;
-      //   if (created_at) {
-      //     dateTime = moment();
-      //   }
-      // }
-
-      // const dateTimeFormatted = dateTime.format("MMMM Do YYYY, h:mm:ss A");
+      if( data.created_at != '' ){
+        let { created_at } = data.created_at;
+        if (created_at) {
+          dateTime = moment(created_at);          
+        }
+      }else{
+        if (field && field.value) {
+          let { created_at } = field.value;
+          if (created_at) {
+            dateTime = moment(created_at);          
+          }
+        }
+      }
+            
+      const dateTimeFormatted = dateTime.format("MMMM Do YYYY, hh:mm A");
 
       const html = `
         <div class="fillAndSign__signatureContainer">
