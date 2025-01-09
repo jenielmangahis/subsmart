@@ -34,7 +34,7 @@
                         <div class="details" style="width:98% !important;">
                             <span class="content-title"><?= $logs->first_name . ' ' . $logs->last_name ?></span>
                             <span class="content-subtitle d-block"><?= $logs->email ?></span>
-                            <p class="content-subtitle badge-item" style="background: <?= $colorSelected ?>;" >
+                            <p class="content-subtitle badge-item"  >
                                 <?php
                                 if (strpos($logs->activity_name, 'Logged in') !== false) {
                                     echo 'Logged In';
@@ -52,7 +52,7 @@
             <td>
                 <div class="content-subtitle d-flex align-items-center justify-content-center gap-2 date-item"  >
                     <i class='bx bx-calendar' style="color: <?= $colorSelected ?>;"></i>
-                    <p style="color: <?= $colorSelected ?>;"><?= date('F d, Y g:i A', strtotime($logs->created_at)) ?></p>
+                    <p><?= date('F d, Y g:i A', strtotime($logs->created_at)) ?></p>
                 </div>
             </td>
         </tr>

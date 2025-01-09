@@ -1,5 +1,9 @@
 <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 <style>
+    small {
+        font-size: smaller;
+    }
+
     table {
         width: 100% !important;
     }

@@ -15,6 +15,7 @@ endif;
         height: 100%;
         display: flex;
         align-items: center;
+        box-shadow: 0px 3px 12px #38747859;
     }
 
     .expenses-container .expenses-items canvas {
@@ -48,8 +49,8 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content ">
-        <div class="banner mb-5">
-            <img src="./assets/img/customer-groups-banner2.svg" alt="">
+        <div class="banner">
+            <img src="./assets/img/expense-banner.svg" alt="">
         </div>
         <div class="expenses-container">
             <div class="expenses-items">

@@ -75,14 +75,15 @@
                 <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#addAutomation">
                     <i class='bx bx-fw bx-plus'></i> Add Automation
                 </button>
-                <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#addEmail">
-                    <i class='bx bx-fw bx-plus'></i> Add email
+                <button type="button" class="nsm-button primary test-auto">
+                    <i class='bx bx-fw bx-plus'></i>Test automation
                 </button>
+
             </div>
         </div>
     </div>
 
-    <div class="col-12 mb-3">
+    <!-- <div class="col-12 mb-3">
         <div class="nsm-card primary" style="overflow: visible !important;">
             <div class="nsm-card-header">
                 <div class="nsm-card-title d-flex justify-content-between">
@@ -126,7 +127,59 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
+
+    <?php
+    // Assuming you passed the automations data from the controller to the view
+    foreach ($automations as $automation) : ?>
+        <div class="col-12 mb-3">
+            <div class="nsm-card primary" style="overflow: visible !important;">
+                <div class="nsm-card-header">
+                    <div class="nsm-card-title d-flex justify-content-between">
+                        <span><?= !empty($automation['title']) ? $automation['title'] : 'No Title' ?></span>
+
+                        <div class=" form-switch">
+                            <input class="form-check-input primary" type="checkbox" role="switch" id="flexSwitchCheckChecked" <?= $automation['status'] === 'active' ? 'checked' : '' ?>>
+                        </div>
+                    </div>
+                </div>
+                <div class="nsm-card-content">
+                    <h6><?= generateAutomationDescription($automation) ?>.</h6>
+
+                    <hr />
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-between">
+                            <div class="d-flex gap-3 small">
+                                <span>Created on <?= date('M d, Y', strtotime($automation['created_at'])) ?></span>
+                                <span>|</span>
+                                <span>Triggered 0 times</span>
+                            </div>
+
+                            <div class="nsm-card-controls px-3">
+                                <div class="dropup">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                        <i class='bx bx-fw bx-dots-horizontal-rounded'></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="<?= base_url('automation/preview/') ?><?= $automation['id'] ?>">Preview</a></li>
+                                        <li><a class="dropdown-item" href="<?= base_url('automation/edit/') ?><?= $automation['id'] ?>">Edit</a></li>
+                                        <li><a class="dropdown-item" href="<?= base_url('automation/rename/') ?><?= $automation['id'] ?>">Rename</a></li>
+                                        <li><a class="dropdown-item" href="<?= base_url('automation/delete/') ?><?= $automation['id'] ?>">Delete</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <div class="row">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+
 </div>
 
 
@@ -523,6 +576,9 @@
         selectedTitle = title
     }
 </script> -->
-
+<?php
+$options = get_automation_options();
+?>
+<script src="<?php echo $url->assets ?>js/automation/options.js" type="text/javascript"></script>
 <?php include viewPath('v2/pages/automation/js/automation'); ?>
 <?php include viewPath('v2/includes/footer'); ?>

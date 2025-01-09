@@ -38,15 +38,15 @@ endif;
     }
 
     #dashboard_activity_logs .content .badge-item {
-        padding: 1px 20px;
         border-radius: 25px;
-        font-weight: bold;
+        font-weight: 500;
         color: #fff;
         font-size: 12px;
         text-align: center;
         width: unset;
-        width:fit-content;
-        margin-top: 5px;
+        width: fit-content;
+        margin-top: 6px;
+        color: #000;
     }
 
     #dashboard_activity_logs .profile {
@@ -96,6 +96,7 @@ endif;
 
     #dashboard_activity_logs .date-item p {
         margin: 0 !important;
+        font-weight: 400;
     }
 
 
@@ -140,7 +141,7 @@ endif;
     }
 
     @media screen and (max-width: 1366px) {
-     
+
 
         .activity-container-main .activity-logs-container {
             height: unset;
@@ -153,15 +154,15 @@ endif;
     }
 
     @media screen and (max-width: 991px) {
-       
+
         #dashboard_activity_logs {
             width: 100%;
         }
     }
 
     @media screen and (max-width: 567px) {
-       
-        .activity-container-main .activity-logs-container{
+
+        .activity-container-main .activity-logs-container {
             margin: unset;
         }
     }
@@ -193,7 +194,7 @@ endif;
         <div class="row">
             <div class="col-md-12 activity-container-main">
                 <div class="banner">
-                    <img src="./assets/img/activity-logs-banner.svg" alt="">
+                    <img src="./assets/img/activity-logs-banner2.svg" alt="">
                 </div>
                 <div class="nsm-widget-table">
                     <div class="activity-logs-container table-responsive"></div>

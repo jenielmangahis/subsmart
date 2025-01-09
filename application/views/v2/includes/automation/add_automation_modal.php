@@ -8,7 +8,7 @@
                 <div class="row h-100">
                     <div class="col-8 m-auto">
                         <div class="nsm-field-group icon-right">
-                            <input type="text" class="nsm-field form-control mb-2" placeholder="Title..." onchange="storeTitle(this)">
+                            <input type="text" class="nsm-field form-control mb-2" placeholder="Title..." id="automation_title">
                         </div>
                         <section class="py-5">
                             <ul class="timeline">
@@ -23,7 +23,7 @@
                                     </div>
                                 </li>
 
-                                <li class="timeline-item mb-5" id="timeline-item-2">
+                                <li class="timeline-item mb-5" id="timeline-item-2" style="word-break: break-all;">
                                     <a class="dropdown-toggle nsm-text secondary h4 fw-bold me-2" href="#" id="taskMenuBtn" data-bs-toggle="dropdown">
                                         do this
                                     </a>
@@ -38,8 +38,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="nsm-button secondary outlined" data-bs-target="#addEmail" data-bs-toggle="modal">Preview/edit message</button>
-                <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
+                <button type="button" class="nsm-button secondary outlined preview-message" data-bs-toggle="modal">Preview/edit message</button>
+                <button type="button" class="nsm-button primary" id='submitAutomation'>
                     <i class='bx bx-fw bx-plus'></i> Add Automation
                 </button>
             </div>

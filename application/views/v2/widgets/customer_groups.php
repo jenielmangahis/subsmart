@@ -13,7 +13,6 @@ endif;
     }
 
     .customer-groups-container .customer-groups-items {
-        margin: 0 20px;
         color: rgb(47 43 61 / 0.9);
         border-radius: 6px;
         background-image: none;
@@ -29,7 +28,7 @@ endif;
         width: 100% !important;
         display: block;
         box-sizing: border-box;
-        /* box-shadow: 0px 3px 12px #38747859; */
+        box-shadow: 0px 3px 12px #38747859;
         padding: 20px;
         border-radius: 25px;
         background: #fff;
@@ -60,7 +59,7 @@ endif;
     <div class="nsm-card-content">
         <div class="col-md-12">
             <div class="banner ">
-                <img src="./assets/img/customer-groups-banner2.svg" alt="">
+                <img src="./assets/img/customer-groups-banner3.svg" alt="">
             </div>
             <div class="customer-groups-container">
                 <div class=" customer-groups-items">
