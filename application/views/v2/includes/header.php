@@ -1132,14 +1132,16 @@ if (is_null($image)) {
             </div>            
             <div class="modal-body" id="getting-started-container">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-6 text-center">
+                    <i class='bx bx-calendar-plus' style="font-size: 100px;color:#6a4a86;"></i>
                         <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('workcalender'); ?>">
-                            <i class='bx bx-fw bx-calendar-plus'></i> Use Calendar 
+                            Use Calendar 
                         </a>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 text-center">
+                        <i class='bx bx-task' style="font-size: 100px;color:#6a4a86;"></i>                        
                         <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('job/new_job1'); ?>">
-                            <i class='bx bx-fw bx-list-plus' ></i> Use Job Form 
+                            Use Job Form 
                         </a>
                     </div>
                 </div>
@@ -1164,7 +1166,7 @@ if (is_null($image)) {
                         <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('tools/quickbooks_accounting'); ?>">From Quickbooks</a>
                     </div>
                     <div class="col-md-6" style="text-align: center;">
-                        <i class='bx bxs-spreadsheet' style="font-size: 100px;"></i>
+                        <i class='bx bxs-spreadsheet' style="font-size: 100px;color:#6a4a86;"></i>
                         <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('customer/import_customer'); ?>">From Spreadsheet</a>
                     </div>
                 </div>

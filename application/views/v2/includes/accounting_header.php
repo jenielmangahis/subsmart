@@ -172,6 +172,11 @@ if ($this->session->userdata('usertimezone') == null) {
             color: #fff;
             font-size: 1em;
         }
+        .getting-started-big-btn {
+            width: 100%;
+            display: block;
+            font-size: 19px;
+        }
     </style>
     
 </head>
@@ -332,6 +337,16 @@ if ($this->session->userdata('usertimezone') == null) {
                         <div id="hdr-multi-account-list"></div>
                     </li>
                 <?php } ?>
+                <li>
+                    <a href="javascript:void(0);" id="left-nav-customer-search">
+                        <i class='bx bx-fw bx-search'></i> Search Customer
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" id="left-getting-started">
+                        <i class='bx bx-fw bx-rocket'></i> Getting Started
+                    </a>
+                </li>
                 <li>
                     <a href="javascript:void(0);" data-bs-toggle="dropdown">
                         <i class="bx bx-fw bx-plus"></i> New 
@@ -1034,210 +1049,403 @@ if ($this->session->userdata('usertimezone') == null) {
                             </li>
                         </ul>
                     </div>
-                    
-    <script type="text/javascript">
-        var user_id = <?= $user_id ?> ;
-        var baseURL = base_url; //window.location.origin;
-        var current_user_company_id = <?=logged('company_id')?> ;
-        var all_notifications_html = '';
-        var notification_badge_value = 0;
-        var notification_html_holder_ctr = 0;
 
-        function countChar(val) {
-            var len = val.value.length;
-            if (len >= 300) {
-                val.value = val.value.substring(0, 300);
-            } else {
-                $('#charNum').text(300 - len);
-            }
-        };
+<!-- Customer Search -->
+<div class="modal fade nsm-modal fade" id="modal-quick-customer-search" tabindex="-1" aria-labelledby="modal-customize-menuLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id=""><i class='bx bx-search'></i> Search Customer</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>            
+            <div class="modal-body">
+                <form id="frm-left-nav-quick-search-customer">
+                <div class="input-group">
+                    <input type="text" name="customer_query" class="form-control rounded" placeholder="Search" />
+                    <button type="submit" class="nsm nsm-button primary" style="margin-bottom:0px;">search</button>
+                </div>
+                </form>
+                <div id="quick-customer-search-result-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
-        function bell_acknowledged() {
+<!-- Getting Started -->
+<div class="modal fade nsm-modal fade" id="modal-getting-started" tabindex="-1" aria-labelledby="modal-customize-menuLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-lg" style="max-width:690px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="">Getting Started</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>            
+            <div class="modal-body" id="getting-started-container"></div>
+            <br /><br />
+        </div>
+    </div>
+</div>
 
-            // console.log("solod");
-            $('#notifyBadge').hide();
-            if (notification_badge_value > 0) {
-                notification_badge_value = 0;
-                $.ajax({
-                    url: baseURL + '/timesheet/notif_user_acknowledge',
-                    type: "POST",
-                    dataType: 'json',
-                    success: function(data) {
-                        console.log("Bell Acknowledged");
-                    }
-                });
-            }
+<!-- Getting Started : Download Mobile App -->
+<div class="modal fade nsm-modal fade" id="modal-getting-started-download-mobile-app" tabindex="-1" aria-labelledby="modal-getting-started-download-mobile-app-menuLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-lg modal-dialog-centered" style="max-width:633px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="">Download Mobile App</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>            
+            <div class="modal-body">
+                <form id="frm-getting-started-send-download-app-link">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4>Manage Your Business & Connect with Your Team in the field</h4>
+                        <p class="mt-2">This app is perfect for your team/techs in the field. View your schedule, invoice client on the spot, clock in and out, send estimates and more…</p>
+                        <div class="mb-3 mt-4">
+                            <label for="gettingStartedSendDownloadAppLink" class="form-label">Get the download link sent to your phone</label>
+                            <input type="text" class="form-control" id="gettingStartedSendDownloadAppLink" name="download_app_phone_number" placeholder="Your Phone" required="">
+                            <button type="submit" class="nsm-button primary mt-2" id="btn-send-download-link">Send</button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="<?= base_url('assets\frontend\images\mobile-app.jpg'); ?>" style="height:258px;" />
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Getting Started : Job Schedule -->
+<div class="modal fade nsm-modal fade" id="modal-getting-started-job-schedule" aria-labelledby="modal-getting-started-job-scheduleLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="">Job Schedule</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>            
+            <div class="modal-body" id="getting-started-container">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                    <i class='bx bx-calendar-plus' style="font-size: 100px;color:#6a4a86;"></i>
+                        <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('workcalender'); ?>">
+                            Use Calendar 
+                        </a>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <i class='bx bx-task' style="font-size: 100px;color:#6a4a86;"></i>                        
+                        <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('job/new_job1'); ?>">
+                            Use Job Form 
+                        </a>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
 
+<!-- Getting Started : Connect to Quickbooks -->
+<div class="modal fade nsm-modal fade" id="modal-connect-to-quickbooks-or-import-customer-list" aria-labelledby="modal-connect-to-quickbooks-or-import-customer-listLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="">Import Your Clients</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>            
+            <div class="modal-body" id="getting-started-container">
+                <div class="row">
+                    <div class="col-md-6 text-center">                        
+                        <img class="nsm-logo" src="<?php echo base_url('assets/img/api-tools/thumb_quickbooks_payroll.png'); ?>" style="height: 100px;">
+                        <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('tools/quickbooks_accounting'); ?>">From Quickbooks</a>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <i class='bx bxs-spreadsheet' style="font-size: 100px;color:#6a4a86;"></i>
+                        <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('customer/import_customer'); ?>">From Spreadsheet</a>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
+                   
+<script type="text/javascript">
+    var user_id = <?= $user_id ?> ;
+    var baseURL = base_url; //window.location.origin;
+    var current_user_company_id = <?=logged('company_id')?> ;
+    var all_notifications_html = '';
+    var notification_badge_value = 0;
+    var notification_html_holder_ctr = 0;
+
+    function countChar(val) {
+        var len = val.value.length;
+        if (len >= 300) {
+            val.value = val.value.substring(0, 300);
+        } else {
+            $('#charNum').text(300 - len);
         }
-        let notificationClockInOut = (function() {
-            return function() {
-                $.ajax({
-                    url: baseURL + "Timesheet/getCount_NotificationsAll",
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        notifycount: notification_badge_value
-                    },
-                    success: function(data) {
-                        // console.log(data);
-                        if (notification_badge_value != data.badgeCount) {
-                            notification_badge_value = data.badgeCount;
-                            // $('#notifyBadge').html(notification_badge_value);
-                            // $('#nfcount').html(data.notifyCount);
-                            // $('#notifyBadge').show();
-                            // $('#autoNotifications').html(data.autoNotifications);
-                            notification_viewer();
-                            // console.log(data.notifyCount);
-                        }
-                        if (data.notifyCount < 1) {
-                            $('#autoNotifications').html("<div>No new notification</div>");
-                        }
-                        // setTimeout(notificationClockInOut, 5000);
-                    }
-                });
-            }
-        })();
+    };
 
-        let notification_viewer = (function() {
-            return function() {
-                $.ajax({
-                    url: baseURL + "/Timesheet/getNotificationsAll",
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        badgeCount: notification_badge_value
-                    },
-                    success: function(data) {
-                        // alert(data.badgeCount);
-                        if (data.notifyCount > 0) {
-                            $('#notifyBadge').html(data.badgeCount);
-                            $('#nfcount').html(data.notifyCount);
-                            $('#autoNotifications').html(data.autoNotifications);
-                            notification_badge_value = data.badgeCount;
-                            if (data.badgeCount > 0) {
-                                // alert(data.badgeCount);
-                                $('#notifyBadge').show();
-                            } else {
-                                $('#notifyBadge').hide();
-                            }
-                        }
+    function bell_acknowledged() {
 
-
-
-
-                        // console.log(data.notifyCount+0);
-                        // setTimeout(notificationClockInOut, 5000);
-                    }
-                });
-            }
-        })();
-
-        $(document).ready(function() {
-            var TimeStamp = null;
-            notification_viewer();
-            // notificationClockInOut();
-        });
-
-        async function notificationRing() {
-            const audio = new Audio();
-            audio.src = baseURL + '/assets/css/notification/notification_tone2.mp3';
-            audio.muted = false;
-            try {
-                await audio.play();
-            } catch (err) {
-                // console.log('error');
-            }
-        }
-
-        Pusher.logToConsole = false;
-
-        var pusher = new Pusher('f3c73bc6ff54c5404cc8', {
-            cluster: 'ap1'
-        });
-
-        var channel = pusher.subscribe('nsmarttrac');
-        channel.bind('my-event', function(data) {
-
-            // console.log(data.user_id);
-            if (data.notif_action_made == "over8less9") {
-                if (data.user_id == user_id) {
-                    notificationRing();
-                    Push.Permission.GRANTED;
-                    Push.create("Hey! " + data.FName, {
-                        body: "It's time for you to clock out. Do you still need more time?",
-                        icon: data.profile_img,
-                        timeout: 20000,
-                        onClick: function() {
-                            window.focus();
-                            this.close();
-                        }
-                    });
-                }
-            } else {
-
-                if (data.user_id != user_id && data.company_id == current_user_company_id) {
-                    notificationRing();
-                    // console.log("posk");
-
-                    // console.log(data.profile_img);
-                    Push.Permission.GRANTED; // 'granted'
-                    Push.create(data.FName + " " + data.LName, {
-                        body: data.content_notification,
-                        icon: data.profile_img,
-                        timeout: 20000,
-                        onClick: function() {
-                            window.focus();
-                            this.close();
-                        }
-                    });
-                }
-                if (data.notif_action_made != "Lunchin" && data.notif_action_made != "Lunchout" && data
-                    .company_id == current_user_company_id) {
-                    notification_badge_value++;
-                    $('#notifyBadge').html(notification_badge_value);
-                    $('#notifyBadge').show();
-                    var current_notifs = $('#autoNotifications').html();
-                    $('#autoNotifications').html(data.html + current_notifs);
-                }
-                if (data.notif_action_made == "autoclockout") {
-                    if (data.user_id == user_id) {
-                        notificationRing();
-                        Push.Permission.GRANTED;
-                        Push.create("Hey! " + data.FName + " you have been auto clocked out.", {
-                            body: "We haven't heard from you since the last time clock notification.",
-                            icon: data.profile_img,
-                            timeout: 20000,
-                            onClick: function() {
-                                window.focus();
-                                this.close();
-                            }
-                        });
-                    }
-                }
-            }
-
-        });
-        $(document).ready(function() {
-            // var timeZoneFormatted = new Date().toString().match(/([A-Z]+[\+-][0-9]+)/)[1];
-            var offset = new Date().getTimezoneOffset();
-            var offset_zone = (offset / 60) * (-1);
-            if (offset_zone >= 0) {
-                offset_zone = "+" + offset_zone;
-            }
+        // console.log("solod");
+        $('#notifyBadge').hide();
+        if (notification_badge_value > 0) {
+            notification_badge_value = 0;
             $.ajax({
-                url: "<?= base_url() ?>/timesheet/timezonesetter",
+                url: baseURL + '/timesheet/notif_user_acknowledge',
+                type: "POST",
+                dataType: 'json',
+                success: function(data) {
+                    console.log("Bell Acknowledged");
+                }
+            });
+        }
+
+
+    }
+    let notificationClockInOut = (function() {
+        return function() {
+            $.ajax({
+                url: baseURL + "Timesheet/getCount_NotificationsAll",
                 type: "POST",
                 dataType: "json",
                 data: {
-                    usertimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    offset_zone: "GMT" + offset_zone
+                    notifycount: notification_badge_value
                 },
-                success: function(data) {}
+                success: function(data) {
+                    if (notification_badge_value != data.badgeCount) {
+                        notification_badge_value = data.badgeCount;
+                        // $('#notifyBadge').html(notification_badge_value);
+                        // $('#nfcount').html(data.notifyCount);
+                        // $('#notifyBadge').show();
+                        // $('#autoNotifications').html(data.autoNotifications);
+                        notification_viewer();
+                        // console.log(data.notifyCount);
+                    }
+                    if (data.notifyCount < 1) {
+                        $('#autoNotifications').html("<div>No new notification</div>");
+                    }
+                    // setTimeout(notificationClockInOut, 5000);
+                }
             });
+        }
+    })();
+
+    let notification_viewer = (function() {
+        return function() {
+            $.ajax({
+                url: baseURL + "/Timesheet/getNotificationsAll",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    badgeCount: notification_badge_value
+                },
+                success: function(data) {
+                    // alert(data.badgeCount);
+                    if (data.notifyCount > 0) {
+                        $('#notifyBadge').html(data.badgeCount);
+                        $('#nfcount').html(data.notifyCount);
+                        $('#autoNotifications').html(data.autoNotifications);
+                        notification_badge_value = data.badgeCount;
+                        if (data.badgeCount > 0) {
+                            // alert(data.badgeCount);
+                            $('#notifyBadge').show();
+                        } else {
+                            $('#notifyBadge').hide();
+                        }
+                    }
 
 
 
 
+                    // console.log(data.notifyCount+0);
+                    // setTimeout(notificationClockInOut, 5000);
+                }
+            });
+        }
+    })();
+
+    $(document).ready(function() {
+        var TimeStamp = null;
+        notification_viewer();
+        // notificationClockInOut();
+    });
+
+    async function notificationRing() {
+        const audio = new Audio();
+        audio.src = baseURL + '/assets/css/notification/notification_tone2.mp3';
+        audio.muted = false;
+        try {
+            await audio.play();
+        } catch (err) {
+            // console.log('error');
+        }
+    }
+
+    Pusher.logToConsole = false;
+
+    var pusher = new Pusher('f3c73bc6ff54c5404cc8', {
+        cluster: 'ap1'
+    });
+
+    var channel = pusher.subscribe('nsmarttrac');
+    channel.bind('my-event', function(data) {
+
+        // console.log(data.user_id);
+        if (data.notif_action_made == "over8less9") {
+            if (data.user_id == user_id) {
+                notificationRing();
+                Push.Permission.GRANTED;
+                Push.create("Hey! " + data.FName, {
+                    body: "It's time for you to clock out. Do you still need more time?",
+                    icon: data.profile_img,
+                    timeout: 20000,
+                    onClick: function() {
+                        window.focus();
+                        this.close();
+                    }
+                });
+            }
+        } else {
+
+            if (data.user_id != user_id && data.company_id == current_user_company_id) {
+                notificationRing();
+                // console.log("posk");
+
+                // console.log(data.profile_img);
+                Push.Permission.GRANTED; // 'granted'
+                Push.create(data.FName + " " + data.LName, {
+                    body: data.content_notification,
+                    icon: data.profile_img,
+                    timeout: 20000,
+                    onClick: function() {
+                        window.focus();
+                        this.close();
+                    }
+                });
+            }
+            if (data.notif_action_made != "Lunchin" && data.notif_action_made != "Lunchout" && data
+                .company_id == current_user_company_id) {
+                notification_badge_value++;
+                $('#notifyBadge').html(notification_badge_value);
+                $('#notifyBadge').show();
+                var current_notifs = $('#autoNotifications').html();
+                $('#autoNotifications').html(data.html + current_notifs);
+            }
+            if (data.notif_action_made == "autoclockout") {
+                if (data.user_id == user_id) {
+                    notificationRing();
+                    Push.Permission.GRANTED;
+                    Push.create("Hey! " + data.FName + " you have been auto clocked out.", {
+                        body: "We haven't heard from you since the last time clock notification.",
+                        icon: data.profile_img,
+                        timeout: 20000,
+                        onClick: function() {
+                            window.focus();
+                            this.close();
+                        }
+                    });
+                }
+            }
+        }
+    });
+
+    $(document).ready(function() {
+        // var timeZoneFormatted = new Date().toString().match(/([A-Z]+[\+-][0-9]+)/)[1];
+        var offset = new Date().getTimezoneOffset();
+        var offset_zone = (offset / 60) * (-1);
+        if (offset_zone >= 0) {
+            offset_zone = "+" + offset_zone;
+        }
+        $.ajax({
+            url: "<?= base_url() ?>/timesheet/timezonesetter",
+            type: "POST",
+            dataType: "json",
+            data: {
+                usertimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                offset_zone: "GMT" + offset_zone
+            },
+            success: function(data) {}
         });
-    </script>
+
+        $(document).on('click', '#connect-to-quickbooks-or-import-customer-list', function() {
+            $('#modal-connect-to-quickbooks-or-import-customer-list').modal('show');
+        });
+
+        $(document).on('click', '#getting-started-schedule-job', function() {
+            $('#modal-getting-started-job-schedule').modal('show');
+        });
+
+        $(document).on('click', '#getting-started-download-mobile-app', function() {
+            $('#modal-getting-started-download-mobile-app').modal('show');
+        });
+
+        $(document).on('click', '#left-nav-customer-search', function() {
+            $('#modal-quick-customer-search').modal('show');
+        });
+
+        $(document).on('click', '#left-getting-started', function() {
+            $('#modal-getting-started').modal('show');
+            $.ajax({
+                type: "POST",
+                url: base_url + "dashboard/_getting_started",
+                beforeSend: function() {
+                    $('#getting-started-container').html('<span class="bx bx-loader bx-spin"></span>');
+
+                },
+                success: function(html) {
+                    $('#getting-started-container').html(html);
+                }
+            });
+        });
+
+        $(document).on('submit', '#frm-left-nav-quick-search-customer', function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + "customer/_quick_search",
+                data: $('#frm-left-nav-quick-search-customer').serialize(),
+                beforeSend: function() {
+                    $('#quick-customer-search-result-container').html('<span class="bx bx-loader bx-spin"></span>');
+
+                },
+                success: function(html) {
+                    $('#quick-customer-search-result-container').html(html);
+                }
+            });
+        });
+
+        $('#frm-getting-started-send-download-app-link').on('submit', function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + "dashboard/_send_download_app_link",
+                data: $('#frm-getting-started-send-download-app-link').serialize(),
+                dataType: "JSON",
+                beforeSend: function() {
+                    $('#btn-send-download-link').html('<span class="bx bx-loader bx-spin"></span>');
+                },
+                success: function(result) {
+                    $('#modal-getting-started-download-mobile-app').modal('hide');
+                    $('#btn-send-download-link').html('Send');
+                    if (result.is_success == 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Download Mobile App',
+                            text: 'A text message will be sent to you in a short while.',
+                        }).then((result) => {
+                            //window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.msg,
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>
