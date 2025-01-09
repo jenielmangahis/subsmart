@@ -154,7 +154,7 @@ endif;
     <div class="nsm-card-content jobs_stat">
         <div class="col-md-12">
             <div class="banner">
-                <img src="./assets/img/customer-status-banner2.svg" alt="">
+                <img src="./assets/img/customer-status-banner3.svg" alt="">
             </div>
             <div class="nsm-widget-table">
                 <div class="customer-status-container">

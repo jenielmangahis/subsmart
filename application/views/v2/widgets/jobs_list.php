@@ -227,7 +227,6 @@ endif;
     }
 
     .jobs-activities .table-reponsinve {
-        margin: 0 20px;
         background-color: #FFFFFF;
         color: rgb(47 43 61 / 0.9);
         border-radius: 6px;
@@ -235,7 +234,7 @@ endif;
         overflow: hidden;
         box-shadow: 0px 3px 12px #38747859;
         padding: 10px;
-        transform: translateY(-60px);
+        /* transform: translateY(-60px); */
         overflow: auto;
         height: 73%;
     }
@@ -269,7 +268,7 @@ endif;
         padding: 1px 20px;
         border-radius: 25px;
         font-weight: bold;
-        color: #fff;
+        color: #000;
         font-size: 12px;
     }
 
@@ -371,25 +370,22 @@ endif;
             </div>
         </div>
     </div>
-    <div class="nsm-card-content">
-        <div class="row">
-            <div class="col-md-12 jobs-activities">
-                <div class="banner">
-                    <img src="./assets/img/jobs-activities-wave-top.svg" alt="">
-                </div>
-                <div class="table-reponsinve nsm-widget-table">
-                    <table id="dashboard-job-activities" class="nsm-table mb-3">
-                        <thead>
-                            <tr>
-                                <td></td>
-                                <td data-name="JobNumber">Job Number</td>
-                                <td data-name="Updated" style="text-align:center">Last Updated</td>
-                                <td data-name="Amount" style="text-align:center"><?php echo $company_id == 58 ? 'Proposed' : 'Amount'; ?></td>
-                                <td data-name="ViewInfo" style="width: 0%;">View&nbsp;Info</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
+    <div class="nsm-card-content jobs-activities">
+        <div class="banner">
+            <img src="./assets/img/jobs-activities-banner.svg" alt="">
+        </div>
+        <div class="table-reponsinve nsm-widget-table">
+            <table id="dashboard-job-activities" class="nsm-table mb-3">
+                <thead>
+                    <tr>
+                        <td data-name="JobNumber">Job Number</td>
+                        <td data-name="Updated" style="text-align:center">Last Updated</td>
+                        <td data-name="Amount" style="text-align:center"><?php echo $company_id == 58 ? 'Proposed' : 'Amount'; ?></td>
+                        <td data-name="ViewInfo" style="width: 0%;">View&nbsp;Info</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
                                     $colors = ['#FEA303', '#d9a1a0', '#BEAFC2', '#EFB6C8'];
                                     function getInitials($string = null) {
                                         return array_reduce(
@@ -429,41 +425,38 @@ endif;
                                         $amount_format = number_format($latestJobs_data->amount,2);
                                         $VIEW_INFO = "<strong><i class='bx bx-user-pin' ></i> Customer Name:</strong> $latestJobs_data->first_name, $latestJobs_data->last_name<br><strong><i class='bx bx-map-pin' ></i> Address:</strong> $ADDRESS<br><strong><i class='bx bxs-user-check' ></i> Tech Rep</strong>:$TECH_BADGE<hr /><strong>Amount:</strong> $$amount_format";
                                 ?>
-                            <tr>
-                                <td class="JOB_PREVIEW ">
-                                    <div class="widget-item position-relative">
-                                        <div class="table-row-icon" style="background: <?= $colorSelected ?>;">
-                                            <i class='bx bx-briefcase-alt-2' style="color: #fff !important"></i>
-                                        </div>
-                                        <div class="job-number">
-                                            <b onclick="location.replace('<?php echo $JOB_PREVIEW; ?>')"><?php echo $latestJobs_data->job_number; ?></b>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="last-update" style="text-align:center;">
-                                    <label>
-                                        <?php echo date('M d, Y', strtotime($latestJobs_data->date_updated)); ?></label>
+                    <tr>
+                        <td class="JOB_PREVIEW ">
+                            <div class="widget-item position-relative">
+                                <div class="table-row-icon" style="background: <?= $colorSelected ?>;">
+                                    <i class='bx bx-briefcase-alt-2' style="color: #fff !important"></i>
+                                </div>
+                                <div class="job-number">
+                                    <b onclick="location.replace('<?php echo $JOB_PREVIEW; ?>')"><?php echo $latestJobs_data->job_number; ?></b>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="last-update" style="text-align:center;">
+                            <label>
+                                <?php echo date('M d, Y', strtotime($latestJobs_data->date_updated)); ?></label>
 
-                                </td>
-                                <td style="text-align:center;" class="amount">
-                                    <label style="background: <?= $colors[array_rand($colors)] ?>">
-                                        <?php echo $latestJobs_data->amount ? "$" . number_format($latestJobs_data->amount, 2) : '$0.00'; ?>
-                                    </label>
-                                </td>
-                                <td style="width: 0%;text-align:right;" class="view"><button class="nsm-button small"
-                                        data-bs-trigger="hover focus" data-bs-toggle="popover"
-                                        title="<?php echo $latestJobs_data->job_number; ?>" data-bs-content="<?php echo $VIEW_INFO; ?>"
-                                        data-bs-html="true"><i class='bx bx-search-alt'></i></button></td>
-                            </tr>
-                            <?php 
+                        </td>
+                        <td style="text-align:center;" class="amount">
+                            <label>
+                                <?php echo $latestJobs_data->amount ? "$" . number_format($latestJobs_data->amount, 2) : '$0.00'; ?>
+                            </label>
+                        </td>
+                        <td style="width: 0%;text-align:right;" class="view"><button class="nsm-button small"
+                                data-bs-trigger="hover focus" data-bs-toggle="popover" title="<?php echo $latestJobs_data->job_number; ?>"
+                                data-bs-content="<?php echo $VIEW_INFO; ?>" data-bs-html="true"><i
+                                    class='bx bx-search-alt'></i></button></td>
+                    </tr>
+                    <?php 
                                     $TECH_BADGE = "";
                                     }
                                 ?>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- <div class="jobs-activities-separator"></div> -->
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

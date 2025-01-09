@@ -30,7 +30,7 @@ class Jobs_model extends MY_Model
      */
     public function get_all_jobs($userId = null, $leaderBoardType = null)
     {
-        $cid=logged('company_id');
+        $cid = logged('company_id');
         $this->db->from($this->table);
         $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,job_tags.name,job_payments.amount,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state, acs_profile.zip_code as cust_zipcode');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
@@ -67,7 +67,7 @@ class Jobs_model extends MY_Model
      */
     public function get_all_jobs_by_tag($tag_id, $userId = null, $leaderBoardType = null)
     {
-        $cid=logged('company_id');
+        $cid = logged('company_id');
         $this->db->from($this->table);
         $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,job_tags.name,job_payments.amount,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
@@ -95,6 +95,48 @@ class Jobs_model extends MY_Model
         }
 
         $this->db->where("jobs.tags", $tag_id);
+        $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get_all_jobs_by_status($status, $userId = null, $leaderBoardType = null)
+    {
+        $cid = logged('company_id');
+        date_default_timezone_set('Asia/Manila');
+        $today = date('Y-m-d');
+
+        $this->db->from($this->table);
+        $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,acs_profile.email,job_tags.name,job_payments.amount,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
+        $this->db->join('job_payments', 'jobs.id = job_payments.job_id', 'left');
+        $this->db->where("jobs.company_id", $cid);
+        $this->db->where('jobs.is_archived', 0);
+
+        if (in_array($leaderBoardType, ['sales', 'tech'])) {
+            if (is_numeric($userId)) {
+                if ($leaderBoardType === 'sales') {
+                    $this->db->where('jobs.employee_id', $userId);
+                } else {
+                    $this->db
+                        ->group_start()
+                        ->where('jobs.employee2_id', $userId)
+                        ->or_where('jobs.employee3_id', $userId)
+                        ->or_where('jobs.employee4_id', $userId)
+                        ->or_where('jobs.employee5_id', $userId)
+                        ->or_where('jobs.employee6_id', $userId)
+                        ->group_end();
+                }
+            }
+        }
+
+        $this->db->where("jobs.status", $status);
+        $this->db->where("DATE(jobs.start_date) =", $today);
         $this->db->order_by('id', "DESC");
         $query = $this->db->get();
         return $query->result();
@@ -134,7 +176,7 @@ class Jobs_model extends MY_Model
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
         $this->db->join('users', 'users.id = jobs.employee_id', 'left');
         //$this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
-        $this->db->join('job_url_links', 'job_url_links.job_id = jobs.id', 'left');        
+        $this->db->join('job_url_links', 'job_url_links.job_id = jobs.id', 'left');
         $this->db->join('jobs_approval as ja', 'jobs.id = ja.jobs_id', 'left');
         $this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id', 'left');
         $this->db->where("jobs.id", $id);
@@ -157,21 +199,23 @@ class Jobs_model extends MY_Model
         return $query->row();
     }
 
-    public function getJobPaymentByJobId($jobid){        
+    public function getJobPaymentByJobId($jobid)
+    {
         $this->db->select('*');
-        $this->db->from($this->table_job_payments);        
+        $this->db->from($this->table_job_payments);
         $this->db->where("job_id", $jobid);
         $query = $this->db->get();
         return $query->row();
     }
 
-    public function getTotalSalesBySalesRepresentative($employee_id , $date_range = []){        
+    public function getTotalSalesBySalesRepresentative($employee_id, $date_range = [])
+    {
         $this->db->select('COALESCE(SUM(invoices.grand_total),0)AS total_sales');
         $this->db->from($this->table);
-        $this->db->join('invoices', 'jobs.id = invoices.job_id');        
+        $this->db->join('invoices', 'jobs.id = invoices.job_id');
         $this->db->where("jobs.employee_id", $employee_id);
 
-        if( !empty($date_range) ){
+        if (!empty($date_range)) {
             $date_start = $date_range['from'] . ' 00:00:00';
             $date_end   = $date_range['to'] . ' 23:59:59';
 
@@ -183,24 +227,25 @@ class Jobs_model extends MY_Model
         return $query->row();
     }
 
-    public function getTotalSalesBySalesRepresentativeV2($companyID, $date_range = []){        
-        
+    public function getTotalSalesBySalesRepresentativeV2($companyID, $date_range = [])
+    {
+
         $jobs_date_start = $date_range['from'] . ' 00:00:00';
         $jobs_date_end   = $date_range['to'] . ' 23:59:59';
 
         $this->db->select('users.id AS uid,users.email AS email,users.employee_number AS employee_number, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS name, COALESCE(invoices.status, "") AS invoice_status, SUM(invoices.grand_total) AS total_sales, invoices.date_created AS date_created, COALESCE((
             SELECT COUNT(id) FROM jobs            
             WHERE employee_id = users.id
-            AND jobs.date_created >="'.$jobs_date_start.'" AND jobs.date_created <="' .$jobs_date_end.'"
+            AND jobs.date_created >="' . $jobs_date_start . '" AND jobs.date_created <="' . $jobs_date_end . '"
         ),0)AS total_jobs');
         $this->db->from('users');
         $this->db->join('jobs', 'jobs.employee_id = users.id', 'left');
-        $this->db->join('invoices', 'invoices.job_id = jobs.id', 'left');        
+        $this->db->join('invoices', 'invoices.job_id = jobs.id', 'left');
         $this->db->where('users.company_id', $companyID);
         $this->db->where('invoices.status !=', 'Draft');
         $this->db->where("invoices.view_flag", 0);
-     
-        if( !empty($date_range) ){
+
+        if (!empty($date_range)) {
             $this->db->where("invoices.date_created >= ", $date_range['from']);
             $this->db->where("invoices.date_created <= ", $date_range['to']);
         }
@@ -228,7 +273,7 @@ class Jobs_model extends MY_Model
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
         $this->db->join('users', 'users.id = jobs.employee_id', 'left');
         //$this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
-        $this->db->join('job_url_links', 'job_url_links.job_id = jobs.id', 'left');        
+        $this->db->join('job_url_links', 'job_url_links.job_id = jobs.id', 'left');
         $this->db->join('jobs_approval as ja', 'jobs.id = ja.jobs_id', 'left');
         $this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id', 'left');
         $this->db->where("jobs.work_order_id", $work_order_id);
@@ -241,7 +286,7 @@ class Jobs_model extends MY_Model
      */
     public function get_specific_job_by_hash_id($hash_id)
     {
-        $cid=logged('company_id');
+        $cid = logged('company_id');
         $this->db->from($this->table);
         $this->db->select('jobs.*,jobs.id as job_unique_id,LName,FName,
         acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
@@ -254,7 +299,7 @@ class Jobs_model extends MY_Model
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
         $this->db->join('users', 'users.id = jobs.employee_id', 'left');
         $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
-        $this->db->join('job_url_links', 'job_url_links.job_id = jobs.id', 'left');        
+        $this->db->join('job_url_links', 'job_url_links.job_id = jobs.id', 'left');
         $this->db->join('jobs_approval as ja', 'jobs.id = ja.jobs_id', 'left');
         $this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id', 'left');
         $this->db->where("jobs.hash_id", $hash_id);
@@ -293,7 +338,7 @@ class Jobs_model extends MY_Model
     }
 
     public function get_specific_workorder_items($id)
-    {   
+    {
         $this->db->select('work_order_types.name');
         $this->db->from('work_orders');
         $this->db->join('work_order_types', 'work_order_types.id = work_orders.work_order_type_id', 'left');
@@ -331,7 +376,7 @@ class Jobs_model extends MY_Model
             $this->db->where('company_id', $currentCompanyId);
             $matchedItemsQuery = $this->db->get();
             $matchedItems = $matchedItemsQuery->result();
-            
+
             $items = [];
             $updatedMatchedItemIds = [];
 
@@ -538,7 +583,7 @@ class Jobs_model extends MY_Model
 
         return $query->result_array();
     }
-    
+
     /**
      * @return mixed
      */
@@ -688,7 +733,7 @@ class Jobs_model extends MY_Model
         $this->db->join('users eb', 'jobs.employee3_id = eb.id', 'left');
         $this->db->join('users ec', 'jobs.employee4_id = ec.id', 'left');
         //$this->db->join('job_payments', 'jobs.id = job_payments.job_id', 'left');
-        
+
         $this->db->where('jobs.company_id', $company_id);
         //$this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
         $this->db->where('jobs.start_date >=', $start_date);
@@ -719,7 +764,7 @@ class Jobs_model extends MY_Model
         $this->db->join('users eb', 'jobs.employee3_id = eb.id', 'left');
         $this->db->join('users ec', 'jobs.employee4_id = ec.id', 'left');
         $this->db->join('job_payments', 'jobs.id = job_payments.job_id', 'left');
-        
+
         $this->db->where('jobs.company_id', $company_id);
         $this->db->where('jobs.start_date', $date);
         $this->db->order_by('jobs.start_date', 'ASC');
@@ -746,22 +791,22 @@ class Jobs_model extends MY_Model
         $end_date   = date('Y-m-d', strtotime($start_date . ' +5 day'));
 
         //echo $start_date . "/" . $end_date;exit;
-        
-        $this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+
+        $this->db->where('jobs.start_date BETWEEN "' . $start_date . '" and "' . $end_date . '"');
         $this->db->order_by('jobs.id', 'DESC');
 
         $query = $this->db->get();
         return $query->result();
 
 
-//        $this->db->select('jobs.*,job_tags.name as tags_name,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img');
-//        $this->db->from($this->table);
+        //        $this->db->select('jobs.*,job_tags.name as tags_name,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img');
+        //        $this->db->from($this->table);
 
-//        $this->db->where('jobs.company_id', $comp_id);
-//        $this->db->order_by('date_updated', 'DESC');
-//        $this->db->limit(5);
-//        $query = $this->db->get();
-//        return $query->result();
+        //        $this->db->where('jobs.company_id', $comp_id);
+        //        $this->db->order_by('date_updated', 'DESC');
+        //        $this->db->limit(5);
+        //        $query = $this->db->get();
+        //        return $query->result();
     }
 
     /**
@@ -769,7 +814,7 @@ class Jobs_model extends MY_Model
      */
     public function getAllJobsByUserId($user_id, $date_range = array(), $filter = array())
     {
-        $cid=logged('company_id');
+        $cid = logged('company_id');
         $this->db->from($this->table);
         $this->db->select('jobs.*,acs_profile.*');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
@@ -778,7 +823,7 @@ class Jobs_model extends MY_Model
         if (!empty($date_range)) {
             $start_date = $date_range['date_from'];
             $end_date   = $date_range['date_to'];
-            $this->db->where('start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+            $this->db->where('start_date BETWEEN "' . $start_date . '" and "' . $end_date . '"');
         }
 
         if (!empty($filter)) {
@@ -819,18 +864,21 @@ class Jobs_model extends MY_Model
         return $query;
     }
 
-    public function updateJobSettingsByCompanyId($company_id, $data) {
+    public function updateJobSettingsByCompanyId($company_id, $data)
+    {
         $this->db->where('company_id', $company_id);
         $this->db->update($this->table_job_settings, $data);
     }
 
-    public function updateJobItemByJobIdAndItemId($job_id, $item_id, $data) {
+    public function updateJobItemByJobIdAndItemId($job_id, $item_id, $data)
+    {
         $this->db->where('job_id', $job_id);
         $this->db->where('items_id', $item_id);
         $this->db->update($this->table_items, $data);
     }
 
-    public function getlastInsert($company_id){
+    public function getlastInsert($company_id)
+    {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $comp_id);
@@ -840,7 +888,8 @@ class Jobs_model extends MY_Model
         return $result->result();
     }
 
-    public function getLastInsertByCompanyId($company_id){
+    public function getLastInsertByCompanyId($company_id)
+    {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
@@ -850,8 +899,9 @@ class Jobs_model extends MY_Model
         return $query->row();
     }
 
-    public function getLastJobNumber() {
-    	$this->db->select('job_number');
+    public function getLastJobNumber()
+    {
+        $this->db->select('job_number');
         $this->db->from($this->table);
         $this->db->order_by('id', 'DESC');
         $this->db->limit(1);
@@ -864,7 +914,7 @@ class Jobs_model extends MY_Model
      */
     public function getAllJobsByCustomerId($customer_id)
     {
-        $cid=logged('company_id');
+        $cid = logged('company_id');
         $this->db->from($this->table);
         $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,job_tags.name,job_payments.amount,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
@@ -911,7 +961,7 @@ class Jobs_model extends MY_Model
         $this->db->from($this->table);
         $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state, acs_profile.zip_code as cust_zipcode');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
-        $this->db->join('users', 'users.id = jobs.employee_id', 'left');                
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
         $this->db->where("jobs.company_id", $company_id);
         $this->db->where("jobs.status", 'Scheduled');
         $this->db->order_by('id', "DESC");
@@ -924,7 +974,7 @@ class Jobs_model extends MY_Model
         $this->db->from($this->table);
         $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state, acs_profile.zip_code as cust_zipcode');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
-        $this->db->join('users', 'users.id = jobs.employee_id', 'left');                
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
         $this->db->where("jobs.company_id", $company_id);
         $this->db->where("jobs.status !=", 'Draft');
         $this->db->where("jobs.status !=", 'Cancelled');
@@ -958,23 +1008,23 @@ class Jobs_model extends MY_Model
         $this->db->select('COUNT(id)AS total_jobs_assigned');
         $this->db->from($this->table);
         $this->db->group_start();
-            //$this->db->or_where('employee_id', $user_id);
-            $this->db->or_where('employee2_id', $user_id);
-            $this->db->or_where('employee3_id', $user_id);
-            $this->db->or_where('employee4_id', $user_id);
-            $this->db->or_where('employee5_id', $user_id);
-            $this->db->or_where('employee6_id', $user_id);
+        //$this->db->or_where('employee_id', $user_id);
+        $this->db->or_where('employee2_id', $user_id);
+        $this->db->or_where('employee3_id', $user_id);
+        $this->db->or_where('employee4_id', $user_id);
+        $this->db->or_where('employee5_id', $user_id);
+        $this->db->or_where('employee6_id', $user_id);
         $this->db->group_end();
 
-        if( $status ){
+        if ($status) {
             $this->db->group_start();
-            foreach($status as $value){                
-                $this->db->or_where('status', $value);                
+            foreach ($status as $value) {
+                $this->db->or_where('status', $value);
             }
             $this->db->group_end();
         }
 
-        if( !empty($date_range) ){
+        if (!empty($date_range)) {
             $this->db->where("start_date >= ", $date_range['from']);
             $this->db->where("start_date <= ", $date_range['to']);
         }
@@ -983,7 +1033,8 @@ class Jobs_model extends MY_Model
         return $query->row();
     }
 
-    public function getSelectedCustomerInfo($customerID) {
+    public function getSelectedCustomerInfo($customerID)
+    {
         $this->db->select("acs_office.purchase_price, acs_alarm.pass_thru_cost, acs_profile.prof_id, acs_profile.company_id, acs_profile.fk_user_id, acs_profile.business_name AS ACS_PROFILE_BUSINESS_NAME, acs_profile.fk_sa_id, acs_profile.mail_add, acs_profile.cross_street, acs_profile.city, acs_profile.state, acs_profile.zip_code, acs_profile.country, acs_profile.phone_h, acs_profile.phone_m, acs_profile.email, acs_profile.activated, acs_access.access_password, business_profile.business_name, acs_alarm.monitor_id, acs_office.equipment_cost, acs_billing.mmr, acs_billing.*");
         $this->db->from("acs_profile");
         $this->db->join('acs_access', 'acs_access.fk_prof_id = acs_profile.prof_id', 'left');
@@ -996,39 +1047,41 @@ class Jobs_model extends MY_Model
         return $query->result()[0];
     }
 
-    public function recordTaxRate($type, $data = array()) {
+    public function recordTaxRate($type, $data = array())
+    {
         if ($type == "add") {
-		// ===============
-        	if ($data['is_default'] == 1) {
-        		$removeDefault = [ 'is_default' => 0 ];
-       			$this->db->where('company_id', $data['company_id']);
-       			$this->db->update('tax_rates', $removeDefault);
-        	}
-        // ===============
+            // ===============
+            if ($data['is_default'] == 1) {
+                $removeDefault = ['is_default' => 0];
+                $this->db->where('company_id', $data['company_id']);
+                $this->db->update('tax_rates', $removeDefault);
+            }
+            // ===============
             $INSERT = $this->db->insert('tax_rates', $data);
             $last_id = $this->db->insert_id();
-        // ===============
+            // ===============
             return $last_id;
-        // ===============
+            // ===============
         }
 
         if ($type == "update") {
-        // ===============
-        	if ($data['is_default'] == 1) {
-        		$removeDefault = [ 'is_default' => 0 ];
-       			$this->db->where('company_id', $data['company_id']);
-       			$this->db->update('tax_rates', $removeDefault);
-        	}
-        // ===============
-       		$this->db->where('id', $data['id']);
+            // ===============
+            if ($data['is_default'] == 1) {
+                $removeDefault = ['is_default' => 0];
+                $this->db->where('company_id', $data['company_id']);
+                $this->db->update('tax_rates', $removeDefault);
+            }
+            // ===============
+            $this->db->where('id', $data['id']);
             $UPDATE = $this->db->update('tax_rates', $data);
-        // ===============
+            // ===============
             return true;
-        // ===============
+            // ===============
         }
     }
 
-    public function jobStatusSequence(){
+    public function jobStatusSequence()
+    {
         $status_sequence = [
             1 => 'Draft',
             2 => 'Scheduled',
@@ -1043,7 +1096,8 @@ class Jobs_model extends MY_Model
         return $status_sequence;
     }
 
-    public function getStatusNumber($job_status){
+    public function getStatusNumber($job_status)
+    {
         $status_number = 1;
 
         $status_sequence = [
@@ -1057,8 +1111,8 @@ class Jobs_model extends MY_Model
             8 => 'Completed'
         ];
 
-        foreach( $status_sequence as $key => $status ){
-            if( $status == $job_status ){
+        foreach ($status_sequence as $key => $status) {
+            if ($status == $job_status) {
                 $status_number = $key;
                 break;
             }
@@ -1069,8 +1123,8 @@ class Jobs_model extends MY_Model
 
     public function getAllByCompanyIdAndStatus($cid, $status)
     {
-        $this->db->select('*');        
-        $this->db->from($this->table);   
+        $this->db->select('*');
+        $this->db->from($this->table);
         $this->db->where('company_id', $cid);
         $this->db->where('status', $status);
         $this->db->where('is_archived', 0);
@@ -1082,8 +1136,8 @@ class Jobs_model extends MY_Model
 
     public function getAllPendingByCompanyId($cid)
     {
-        $this->db->select('*');        
-        $this->db->from($this->table);   
+        $this->db->select('*');
+        $this->db->from($this->table);
         $this->db->where('company_id', $cid);
         $this->db->where('status !=', 'Completed');
         $this->db->where('status !=', 'Cancelled');
@@ -1096,15 +1150,15 @@ class Jobs_model extends MY_Model
 
     public function getAllCompletedJobsByCompanyIdAndDateRange($cid, $date_range = array())
     {
-        $this->db->select('*');        
-        $this->db->from($this->table);   
+        $this->db->select('*');
+        $this->db->from($this->table);
         $this->db->where('company_id', $cid);
         $this->db->group_start();
-            $this->db->or_where('status', 'Completed');
-            $this->db->or_where('status', 'Finished');
+        $this->db->or_where('status', 'Completed');
+        $this->db->or_where('status', 'Finished');
         $this->db->group_end();
 
-        if( $date_range ){
+        if ($date_range) {
             $this->db->where('start_date >=', $date_range['from']);
             $this->db->where('end_date <=', $date_range['to']);
         }
@@ -1118,12 +1172,12 @@ class Jobs_model extends MY_Model
     public function getAllJobsByCompanyIdAndDateRange($cid, $date_range = array())
     {
         $this->db->select('jobs.*, COALESCE(invoices.grand_total,0) AS amount,acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state, acs_profile.zip_code as cust_zipcode');
-        $this->db->from($this->table);   
+        $this->db->from($this->table);
         $this->db->join('invoices', 'jobs.id = invoices.job_id');
         $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id', 'left');
         $this->db->where('jobs.company_id', $cid);
 
-        if( $date_range ){
+        if ($date_range) {
             //$date_start = $date_range['from'] . ' 00:00:00';
             //$date_end   = $date_range['to'] . ' 23:59:59';
             $date_start = $date_range['from'];
@@ -1141,20 +1195,20 @@ class Jobs_model extends MY_Model
     public function getAllJobsByCompanyIdAndDateRangeV2($cid, $date_range = array())
     {
         $this->db->select('jobs.id AS id, jobs.company_id AS company_id, jobs.job_number AS number, jobs.job_type AS type, jobs.job_description AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, jobs.status AS status, jobs.date_created AS date_created, SUM(job_items.cost) AS job_amount');
-        $this->db->from('jobs');   
+        $this->db->from('jobs');
         $this->db->where('jobs.company_id', $cid);
 
-        if( $date_range ){
+        if ($date_range) {
             $date_start = $date_range['from'];
             $date_end   = $date_range['to'];
             $this->db->where("DATE_FORMAT(jobs.date_created,'%Y-%m-%d') >= '$date_start'");
             $this->db->where("DATE_FORMAT(jobs.date_created,'%Y-%m-%d') <= '$date_end'");
-        }        
+        }
 
         $this->db->join('job_items', 'job_items.job_id = jobs.id', 'left');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
         $this->db->group_by('jobs.id');
-        
+
         $this->db->order_by('date_created', 'DESC');
         $this->db->limit(99999);
 
@@ -1165,12 +1219,12 @@ class Jobs_model extends MY_Model
     public function getAllJobsByCompanyIdAndStartDate($cid, $date_range = array())
     {
         $this->db->select('jobs.*, COALESCE(invoices.grand_total,0) AS amount,acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state, acs_profile.zip_code as cust_zipcode');
-        $this->db->from($this->table);   
+        $this->db->from($this->table);
         $this->db->join('invoices', 'jobs.id = invoices.job_id');
         $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id', 'left');
         $this->db->where('jobs.company_id', $cid);
 
-        if( $date_range ){
+        if ($date_range) {
             $this->db->where('jobs.start_date >=', $date_range['from']);
             $this->db->where('jobs.start_date <=', $date_range['to']);
         }
@@ -1186,7 +1240,7 @@ class Jobs_model extends MY_Model
         $this->db->select('jobs.id AS id, jobs.company_id AS company_id, jobs.job_number AS number, jobs.job_type AS type, jobs.job_description AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, jobs.status AS status, jobs.date_created AS date_created, SUM(job_items.cost) AS job_amount');
         $this->db->from($this->table);
         $this->db->where('jobs.company_id', $cid);
-        if( $date_range ){
+        if ($date_range) {
             $this->db->where('jobs.start_date >=', $date_range['from']);
             $this->db->where('jobs.start_date <=', $date_range['to']);
         }
@@ -1209,10 +1263,9 @@ class Jobs_model extends MY_Model
 
     public function restoreJob($id)
     {
-        $this->db->where('id', $id);      
-        $this->db->update($this->table, array("is_archived" => 0, 'archived_date' => null));        
-    }   
+        $this->db->where('id', $id);
+        $this->db->update($this->table, array("is_archived" => 0, 'archived_date' => null));
+    }
 }
 /* End of file Jobs_model.php */
 /* Location: ./application/models/Jobs_model.php */
-

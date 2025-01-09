@@ -158,7 +158,6 @@ $(document).on('click', '#expenses-table .view-edit-check', function() {
         url: window.origin + "/accounting/fetchCheckDetails/" + data_id,
         dataType: "JSON",
         success: function (response) {
-            console.log(response);
             const check_no = parseInt(response.check_no);
             const to_print = parseInt(response.to_print);
             const payment_date = response.payment_date;
@@ -867,7 +866,6 @@ $(document).on('click', '#expenses-delete-selected', function() {
                 method: "POST",
                 data: frmData,
                 success: function(data) {
-                    console.log(data);
                     $('.displayExpensesDelete').html(data);
                     window.location.reload();
                     Swal.fire(

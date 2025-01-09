@@ -392,7 +392,7 @@ endif;
     <div class="nsm-card-content jobs_stat">
         <div class="d-flex flex-column">
             <div class="banner mb-3">
-                <img src="./assets/img/jobs-status-banner2.svg" alt="" />
+                <img src="./assets/img/jobs-status-banner3.svg" alt="" />
             </div>
             <div class="filter-item">
 
