@@ -889,6 +889,24 @@ $(function () {
             }
         );
     });
+ 
+    $(document).on('click', '#modal-container a#open-customer-info-window', function (e) {
+        e.preventDefault();
+        var customer_id = $('#modal-container #customer').val();
+        if(customer_id !== null) {
+            window.open(base_url + 'customer/preview/' + customer_id, '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');
+        } else {
+            Swal.fire({
+                text: "You must select a customer",
+                icon: 'warning',
+                showCloseButton: true,
+                confirmButtonColor: '#2ca01c',
+                confirmButtonText: 'OK',
+                timer: 2000
+            })            
+        }
+        
+    });
 
     $(document).on('click', '#modal-container a#open-tags-modal', function (e) {
         e.preventDefault();
@@ -12017,6 +12035,8 @@ const makeRecurring = (modalName) => {
                 }
             });
 
+            $('#open-customer-info-window-container').show();
+
             break;
         case 'delayed_charge':
             modalId = 'delayedChargeModal';
@@ -12025,6 +12045,7 @@ const makeRecurring = (modalName) => {
             $(`#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
             $(`#${modalId} div.modal-body #delayed-charge-date`).parent().parent().parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Delayed Charge');
+            $('#open-customer-info-window-container').show();
             break;
         case 'invoice':
             modalId = 'invoiceModal';
@@ -12035,6 +12056,8 @@ const makeRecurring = (modalName) => {
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Invoice <a style="font-size: 12px !important;" href="javascript:void(0)" onclick="cancelRecurring('+ '`' + modalName + '`' +')">Cancel Recurring</a>');
             $(`#${modalId} div.modal-body #shipping-date`).parent().parent().html('');
             $(`#${modalId} div.modal-body #invoice-no`).parent().remove();
+
+            $('#open-customer-info-window-container').show();
 
             $('#modal-help-popover-scheduled-create').popover({
                 placement: 'top',
