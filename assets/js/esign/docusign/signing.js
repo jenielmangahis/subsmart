@@ -1184,7 +1184,7 @@ function Signing(hash) {
           const { created_at } = field.value;
           if (created_at) {
             const date = moment(created_at);
-            dateTime = date.format("MMMM Do YYYY, h:mm A");
+            dateTime = date.format("MMMM Do YYYY, hh:mm A");
           }
         }
 
@@ -2232,9 +2232,10 @@ function Signing(hash) {
         id: fieldId,
         value: signatureDataUrl,
       });
+      
       //const promises = fieldIds.map((id) => storeFieldValue({ id, value: signatureDataUrl })); // prettier-ignore
       //await Promise.all(promises);
-      console.log('fields',data);
+      //console.log('fields',data);
 
       // Using company set timezone
       // const jid = window.__esigndata.job_id;

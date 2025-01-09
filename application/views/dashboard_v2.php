@@ -2260,7 +2260,7 @@ function loadCustomerGroupChart() {
                 labels: chart_labels,
                 datasets: [{
                     data: data.chart_data,
-                    backgroundColor: ['#FEA303','#EB5B00','#d9a1a0','#A888B5','#FA4032','#FA812F'],
+                    backgroundColor: ['#387478','#EFB6C8' ,'#BEAFC2','#FEA303','#629584','#E2F1E7'],
                     borderWidth: 0.5,
                 }],
             };

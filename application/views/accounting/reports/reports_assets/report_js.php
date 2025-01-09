@@ -61,10 +61,105 @@
     };
     // =========================
 
+    // Date Filter 
+    $('select[name="date_filter"]').on('change', function() {
+        const dateFilterOption = $(this).val();
+        const $dateFromInput = $('input[name="date_from"]');
+        const $dateToInput = $('input[name="date_to"]');
+
+        const currentDate = new Date();
+        let dateFrom = '';
+        let dateTo = '';
+        let dateFilterText = '';
+
+        if (dateFilterOption === 'get_all') {
+            dateFrom = `1970-01-01`;
+            dateTo = `9999-12-31`;
+            dateFilterText = 'As of <?php echo date("F d, Y"); ?> (All Data)';
+            $('.dateRangeFilterSection').hide();
+        } else if (dateFilterOption === 'current_month') {
+            const currentMonth = currentDate.getMonth();
+            dateFrom = new Date(currentDate.getFullYear(), currentMonth, 1).toLocaleDateString('en-CA');
+            dateTo = new Date(currentDate.getFullYear(), currentMonth + 1, 0).toLocaleDateString('en-CA');
+            const monthName = currentDate.toLocaleString('default', {month: 'long'});
+            dateFilterText = `This Month (${monthName} 1 - ${new Date(currentDate.getFullYear(), currentMonth + 1, 0).getDate()}, ${currentDate.getFullYear()})`;
+            $('.dateRangeFilterSection').hide();
+        } else if (dateFilterOption === 'current_quarter') {
+            const currentMonth = currentDate.getMonth();
+            const startMonth = Math.floor(currentMonth / 3) * 3;
+            dateFrom = new Date(currentDate.getFullYear(), startMonth, 1).toLocaleDateString('en-CA');
+            dateTo = new Date(currentDate.getFullYear(), startMonth + 3, 0).toLocaleDateString('en-CA');
+            const startMonthName = new Date(currentDate.getFullYear(), startMonth, 1).toLocaleString('default', {month: 'long'});
+            const endMonthName = new Date(currentDate.getFullYear(), startMonth + 2, 1).toLocaleString('default', {month: 'long'});
+            dateFilterText = `This Quarter (${startMonthName} ${currentDate.getFullYear()} - ${endMonthName} ${currentDate.getFullYear()})`;
+            $('.dateRangeFilterSection').hide();
+        } else if (dateFilterOption === 'current_year') {
+            dateFrom = `${currentDate.getFullYear()}-01-01`;
+            dateTo = `${currentDate.getFullYear()}-12-31`;
+            dateFilterText = `This Year (${currentDate.getFullYear()})`;
+            $('.dateRangeFilterSection').hide();
+        } else if (dateFilterOption === 'custom') {
+            dateFrom = `${currentDate.getFullYear()}-01-01`;
+            dateTo = `${currentDate.getFullYear()}-12-31`;
+            dateFilterText = `${new Date(dateFrom).toLocaleString('default', { month: 'long' })} 1, ${currentDate.getFullYear()} - ${new Date(dateTo).toLocaleString('default', { month: 'long' })} 31, ${currentDate.getFullYear()}`;
+            $('.dateRangeFilterSection').fadeIn();
+        }
+
+        if (dateFrom && dateTo) {
+            $dateFromInput.val(dateFrom);
+            $dateToInput.val(dateTo);
+            $("#filter_by_text").text(dateFilterText);
+        }
+    });
+
+    function initializeDateFilterText() {
+        let dateFilterText = '';
+        const dateFilterOption = $('select[name="date_filter"').val();
+        const currentDate = new Date();
+        if (dateFilterOption === 'get_all') {
+            dateFilterText = 'As of <?php echo date("F d, Y"); ?> (All Data)';
+        } else if (dateFilterOption === 'current_month') {
+            const currentMonth = currentDate.getMonth();
+            const monthName = currentDate.toLocaleString('default', {month: 'long'});
+            dateFilterText = `This Month (${monthName} 1 - ${new Date(currentDate.getFullYear(), currentMonth + 1, 0).getDate()}, ${currentDate.getFullYear()})`;
+        } else if (dateFilterOption === 'current_quarter') {
+            const currentMonth = currentDate.getMonth();
+            const startMonth = Math.floor(currentMonth / 3) * 3;
+            const startMonthName = new Date(currentDate.getFullYear(), startMonth, 1).toLocaleString('default', {month: 'long'});
+            const endMonthName = new Date(currentDate.getFullYear(), startMonth + 2, 1).toLocaleString('default', {month: 'long'});
+            dateFilterText = `This Quarter (${startMonthName} ${currentDate.getFullYear()} - ${endMonthName} ${currentDate.getFullYear()})`;
+        } else if (dateFilterOption === 'current_year') {
+            dateFilterText = `This Year (${currentDate.getFullYear()})`;
+        }  else if (dateFilterOption === 'custom') {
+            dateFilterText = `${new Date(dateFrom).toLocaleString('default', { month: 'long' })} 1, ${currentDate.getFullYear()} - ${new Date(dateTo).toLocaleString('default', { month: 'long' })} 31, ${currentDate.getFullYear()}`;
+        }
+        $("#filter_by_text").text(dateFilterText);
+    } initializeDateFilterText();
+
+    function formatDate(inputDate) {
+        const date = new Date(inputDate);
+        const options = { year: 'numeric', month: 'long', day: '2-digit' };
+        return date.toLocaleDateString('en-US', options);
+    }
+
+    function updateReportDate() {
+        const dateFrom = $('input[name="date_from"]').val();
+        const dateTo = $('input[name="date_to"]').val();
+
+        if (dateFrom && dateTo) {
+            const formattedDateFrom = formatDate(dateFrom);
+            const formattedDateTo = formatDate(dateTo);
+            $('#filter_by_text').text(`${formattedDateFrom} - ${formattedDateTo}`);
+        }
+    }
+
+    $('input[name="date_from"]').on('change', updateReportDate);
+    $('input[name="date_to"]').on('change', updateReportDate);
+
     // Render Report Data Script
     function renderReportList() {
         subscription_period = $('select[name="subscription_period"]').val();
-        filter_by = $('select[name="filter_by"]').val();
+        // filter_by = $('select[name="filter_by"]').val();
         status_filter = $('select[name="status_filter"]').val();
 
         switch (subscription_period) {
@@ -87,124 +182,54 @@
                 period = "";
         }
 
-        switch (filter_by) {
-            case "current_day":
-                $("#filter_by_text").text("Filtered by Current Day (<?php echo date('M d, Y'); ?>)");
-                break;
-            case "current_week":
-                $("#filter_by_text").text("Filtered by Current Week (<?php echo date('Y'); ?>)");
-                break;
-            case "current_month":
-                $("#filter_by_text").text("Filtered by Current Month (<?php echo date('M Y'); ?>)");
-                break;
-            case "current_year":
-                $("#filter_by_text").text("Filtered by Current Year (<?php echo date('Y'); ?>)");
-                break;
-            case "current_quarter":
-                <?php
-                    $currentMonth = date('n');
-                    $currentQuarter = ceil($currentMonth / 3);
-
-                    $quarters = [
-                        1 => ['Jan', 'Mar'],
-                        2 => ['Apr', 'Jun'],
-                        3 => ['Jul', 'Sep'],
-                        4 => ['Oct', 'Dec']
-                    ];
-
-                    $quarterStart = $quarters[$currentQuarter][0];
-                    $quarterEnd = $quarters[$currentQuarter][1];
-                ?>
-                $("#filter_by_text").text("Filtered by This Quarter (<?php echo $quarterStart . '-' . $quarterEnd . ' ' . date('Y'); ?>)");
-                break;
-            case "jan":
-                $("#filter_by_text").text("Filtered by January (<?php echo date('Y'); ?>)");
-                break;
-            case "feb":
-                $("#filter_by_text").text("Filtered by February (<?php echo date('Y'); ?>)");
-                break;
-            case "mar":
-                $("#filter_by_text").text("Filtered by March (<?php echo date('Y'); ?>)");
-                break;
-            case "apr":
-                $("#filter_by_text").text("Filtered by April (<?php echo date('Y'); ?>)");
-                break;
-            case "may":
-                $("#filter_by_text").text("Filtered by May (<?php echo date('Y'); ?>)");
-                break;
-            case "jun":
-                $("#filter_by_text").text("Filtered by June (<?php echo date('Y'); ?>)");
-                break;
-            case "jul":
-                $("#filter_by_text").text("Filtered by July (<?php echo date('Y'); ?>)");
-                break;
-            case "aug":
-                $("#filter_by_text").text("Filtered by August (<?php echo date('Y'); ?>)");
-                break;
-            case "sep":
-                $("#filter_by_text").text("Filtered by September (<?php echo date('Y'); ?>)");
-                break;
-            case "oct":
-                $("#filter_by_text").text("Filtered by October (<?php echo date('Y'); ?>)");
-                break;
-            case "nov":
-                $("#filter_by_text").text("Filtered by November (<?php echo date('Y'); ?>)");
-                break;
-            case "dec":
-                $("#filter_by_text").text("Filtered by December (<?php echo date('Y'); ?>)");
-                break;
+        switch (status_filter) {
             case "active_customer_group":
-                $("#filter_by_text").text("Filtered by Active Customer Group");
+                status_text = " (Active Only)";
                 break;
             case "all_customer_group":
-                $("#filter_by_text").text("Filtered by All Customer Group");
+                status_text = " (All)";
                 break;
-            default:
-                $("#filter_by_text").text("As of <?php echo date('F d, Y'); ?>");
-        }
-
-        switch (status_filter) {
             case "Partially Paid":
-                status_text = " (Partially Paid)";
+                status_text = " (Partially Paid Status)";
                 break;
             case "Paid":
-                status_text = " (Paid)";
+                status_text = " (Paid Status)";
                 break;
             case "Due":
-                status_text = " (Due)";
+                status_text = " (Due Status)";
                 break;
             case "Overdue":
-                status_text = " (Overdue)";
+                status_text = " (Overdue Status)";
                 break;
             case "Unpaid":
-                status_text = " (Unpaid)";
+                status_text = " (Unpaid Status)";
                 break;
             case "Draft":
-                status_text = " (Draft)";
+                status_text = " (Draft Status)";
                 break;
             case "Scheduled":
-                status_text = " (Scheduled)";
+                status_text = " (Scheduled Status)";
                 break;
             case "Arrival":
-                status_text = " (Arrival)";
+                status_text = " (Arrival Status)";
                 break;
             case "Started":
-                status_text = " (Started)";
+                status_text = " (Started Status)";
                 break;
             case "Approved":
-                status_text = " (Approved)";
+                status_text = " (Approved Status)";
                 break;
             case "Finished":
-                status_text = " (Finished)";
+                status_text = " (Finished Status)";
                 break;
             case "Cancelled":
-                status_text = " (Cancelled)";
+                status_text = " (Cancelled Status)";
                 break;
             case "Invoiced":
-                status_text = " (Invoiced)";
+                status_text = " (Invoiced Status)";
                 break;
             case "Completed":
-                status_text = " (Completed)";
+                status_text = " (Completed Status)";
                 break;
             case "Acceptance Pending":
                 status_text = " (Acceptance Pending)";

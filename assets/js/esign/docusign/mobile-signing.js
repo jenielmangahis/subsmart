@@ -2,12 +2,10 @@ if (!window.screen.orientation) {
   console.info("using screen.orientation polyfill");
   window.screen.orientation = o9n.orientation;
 }
-
 if (isMobile()) {
   window.__ismobile = true;
   console.info("mobile device detected");
 }
-
 function Signing(hash) {
   
   const PDFJS = pdfjsLib;
@@ -1165,7 +1163,6 @@ function Signing(hash) {
       if (specs.value) {
         value = specs.value;
       }
-
       let html = `
             <div class="signing__fieldSignature docusignField" title="Signature" data-field-type="signature" id="signature${fieldId}">
               <div style="display:flex; flex-direction:column; align-items:center; padding:0 0.5em; border:2px solid #bf1e2e; background-color: #ffea588c;">
@@ -1180,12 +1177,12 @@ function Signing(hash) {
       const $element = createElementFromHTML(html);
 
       if (value) {
-        let dateTime = null;
+        let dateTime = moment();
         if (field.value) {
           const { created_at } = field.value;
           if (created_at) {
             const date = moment(created_at);
-            dateTime = date.format("MMMM Do YYYY, h:mm:ss A");
+            dateTime = date.format("MMMM Do YYYY, hh:mm A");
           }
         }
 
@@ -1193,8 +1190,8 @@ function Signing(hash) {
               <div class="mobile-signature-container fillAndSign__signatureContainer">
                 <img class="fillAndSign__signatureDraw" src="${value}"/>
                 ${
-                  window._companyDateTime
-                    ? `<span class="fillAndSign__signatureTime">${window._companyDateTime}</span>`
+                  dateTime
+                    ? `<span class="fillAndSign__signatureTime">${dateTime}</span>`
                     : ""
                 }
               </div>
@@ -2230,28 +2227,40 @@ function Signing(hash) {
         $(e).attr("id").replace("signature", "")
       );
 
-      const promises = fieldIds.map((id) => storeFieldValue({ id, value: signatureDataUrl })); // prettier-ignore
-      await Promise.all(promises);
+      const { data } = await storeFieldValue({
+        id: fieldId,
+        value: signatureDataUrl,
+      });
 
-      const jid = window.__esigndata.job_id;
-      const endpoint = `${prefixURL}/DocuSign/getUserdate?jid=${jid}`;
-      const response = await fetch(endpoint);
-      companyDataTime = await response.json();
-      //console.log(window.__esigndata.job_id)      
+      // const promises = fieldIds.map((id) => storeFieldValue({ id, value: signatureDataUrl })); // prettier-ignore
+      // await Promise.all(promises);
 
-      const dateTimeFormatted = moment(companyDataTime.current_date_time).format("MMMM Do YYYY, h:mm:ss A");
+      // Using company set timezone
+      // const jid = window.__esigndata.job_id;
+      // const endpoint = `${prefixURL}/DocuSign/getUserdate?jid=${jid}`;
+      // const response = await fetch(endpoint);
+      // companyDataTime = await response.json();
+      // const dateTimeFormatted = moment(companyDataTime.current_date_time).format("MMMM Do YYYY, h:mm:ss A");
 
-      // let dateTime = moment();
-      // const field = window.__esigndata.fields.find((f) => f.id === fieldId);
+      //Using created_at field where date is base from user timezone via ip address
+      let dateTime = moment();
+      const field = window.__esigndata.fields.find((f) => f.id === fieldId);
 
-      // if (field && field.value) {
-      //   const { created_at } = field.value;
-      //   if (created_at) {
-      //     dateTime = moment();
-      //   }
-      // }
+      if( data.created_at != '' ){
+        let { created_at } = data.created_at;
+        if (created_at) {
+          dateTime = moment(created_at);          
+        }
+      }else{
+        if (field && field.value) {
+          let { created_at } = field.value;
+          if (created_at) {
+            dateTime = moment(created_at);          
+          }
+        }
+      }
 
-      // const dateTimeFormatted = dateTime.format("MMMM Do YYYY, h:mm:ss A");
+      const dateTimeFormatted = dateTime.format("MMMM Do YYYY, hh:mm A");
 
       const html = `
         <div class="mobile-signature-container fillAndSign__signatureContainer">

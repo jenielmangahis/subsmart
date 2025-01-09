@@ -27,22 +27,22 @@
                         [
                             'title' => 'Immediate Notice / Client Reminder',
                             'description' => 'Send immediate notice to a client.',
-                            'onclick' => "generateAutomationTemplate('job', 'has a status', 'client', 'a text message', 'immediately')"
+                            'onclick' => "generateAutomationTemplate('job', 'has_status', 'client', 'send_sms', '0')"
                         ],
                         [
                             'title' => '2 hours / Tech Reminder',
                             'description' => 'Send a text to a technician 2 hours ahead of the job.',
-                            'onclick' => "generateAutomationTemplate('job', 'has a status', 'client', 'a text message', '2 hours', 'ahead', 'scheduled date')"
+                            'onclick' => "generateAutomationTemplate('job', 'has_status', 'technician', 'send_sms', '120', 'ahead_of', 'scheduled_date')"
                         ],
                         [
                             'title' => '4 hours / Tech Reminder',
                             'description' => 'Send a text to a technician 4 hours ahead of the job.',
-                            'onclick' => "generateAutomationTemplate('job', 'has a status', 'technician', 'a text message', '4 hours', 'ahead', 'scheduled date')"
+                            'onclick' => "generateAutomationTemplate('job', 'has_status', 'technician', 'send_sms', '240', 'ahead_of', 'scheduled_date')"
                         ],
                         [
                             'title' => '1 Day Notice/Client Reminder',
                             'description' => 'Send an email to a client 1 day ahead of the job.',
-                            'onclick' => "generateAutomationTemplate('job', 'created', 'assigned tech', 'an email', '1 day', 'ahead', 'scheduled date')"
+                            'onclick' => "generateAutomationTemplate('job', 'created', 'client', 'send_email', '1440 day', 'after', 'scheduled_date')"
                         ]
                     ];
 
@@ -50,6 +50,7 @@
                         <div class="col-3 mb-3">
                             <div class="nsm-card primary cursor-pointer reminder-item" style="overflow: visible !important;"
                                 data-value="<?php echo htmlspecialchars($card['title']); ?>"
+                                data-type="reminders"
                                 data-onclick="<?php echo htmlspecialchars($card['onclick']); ?>">
                                 <div class="nsm-card-header">
                                     <div class="nsm-card-text text-muted">
@@ -68,7 +69,12 @@
     </div>
 </div>
 
+<?php
+$options = get_automation_options();
+?>
+
 <?php include viewPath('v2/includes/automation/add_automation_modal'); ?>
 <?php include viewPath('v2/includes/automation/add_email_modal'); ?>
+<script src="<?php echo $url->assets ?>js/automation/options.js" type="text/javascript"></script>
 <?php include viewPath('v2/pages/automation/js/automation'); ?>
 <?php include viewPath('v2/includes/footer'); ?>

@@ -751,8 +751,8 @@ function set_modal_data(data, modalName)
         var end_date = new Date(data.end_date);
         $(`#${modalName} #endDate`).val(`${String(end_date.getMonth() + 1).padStart(2, '0')}/${String(end_date.getDate()).padStart(2, '0')}/${end_date.getFullYear()}`);
     }
-
-    if(data.max_occurences !== null && data.end_type === 'after') {
-        $(`#${modalName} #maxOccurence`).val(data.max_occurences);
+    
+    if(data.max_occurrences !== null && data.end_type === 'after') {        
+        $(`#${modalName} #maxOccurence`).val(data.max_occurrences);
     }
 }

@@ -11,10 +11,10 @@ endif;
     }
 
     .widget-legend-header span {
-        background-color: #EFB6C8 !important;
-        color: #ffffff;
+        color: #000;
         padding: 5px;
         border-radius: 25px;
+        font-weight: 600;
     }
 
     .estimates-container .estimates-items {
@@ -105,8 +105,8 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content">
-        <div class="banner mb-5">
-            <img src="./assets/img/open-estimates-banner2.svg" alt="">
+        <div class="banner">
+            <img src="./assets/img/open-estimates-banner3.svg" alt="">
         </div>
         <div class="estimates-container">
             <div class="estimates-items">
@@ -131,7 +131,7 @@ endif;
                     </div>
                 </div>
                 <div class="widget-legend-header">
-                    <span>Total Estimates : <span id="estimate-chart-total-estimates">0</span>
+                    <span>Total Estimates : <span id="estimate-chart-total-estimates" style="font-size: 18px;">0</span>
                     </span>
                 </div>
                 <canvas id="estimates_chart" class="nsm-chart" data-chart-type="estimates"></canvas>

@@ -6696,7 +6696,7 @@ class Accounting_modals extends MY_Controller
                 'ship_via' => $data['ship_via'],
                 'shipping_date' => isset($data['shipping_date']) && !empty($data['shipping_date']) ? date("Y-m-d", strtotime($data['shipping_date'])) : null,
                 'tracking_number' => $data['tracking_no'],
-                'terms' => $data['terms'],
+                'terms' => $data['term'],
                 'location_scale' => $data['location_of_sale'],
                 'attachments' => json_encode($data['attachments']),
                 'tags' => json_encode($data['tags']),
@@ -6798,7 +6798,7 @@ class Accounting_modals extends MY_Controller
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
                         'current_occurrence' => 0,
                         'next_date' => date("Y-m-d", strtotime($next)),
                         'status' => 1

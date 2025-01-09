@@ -262,9 +262,7 @@
                                             <label for="term">Terms</label>
                                             <select name="term" id="term" class="form-control nsm-field">
                                                 <?php if (isset($invoice)) : ?>
-                                                    <?php if ($invoice->terms !== null && $invoice->terms !== "") : ?>
-                                                        <option value="<?= $term->id ?>"><?= $term->name ?></option>
-                                                    <?php endif; ?>
+                                                    <option selected="selected" value="<?= $term->id ?>"><?= $term->name ?></option>
                                                 <?php endif; ?>
                                             </select>
                                         </div>
@@ -328,7 +326,7 @@
                                                 <span id="modal-popover-purchase-order-optional" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=""></span>
                                                 <!-- <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional if you want to display the purchase order number on invoice."></span> -->
                                             </label>
-                                            <input type="text" class="form-control nsm-field mb-2" id="purchase-order-no" name="purchase_order_no" value="<?= isset($invoice) ? $invoice->po_number : '' ?>">
+                                            <input type="text" class="form-control nsm-field mb-2" id="purchase-order-no" name="purchase_order_no" value="<?= isset($invoice) ? $invoice->purchase_order : '' ?>">
                                         </div>
 
                                         <div class="col-12 col-md-2">
@@ -380,7 +378,7 @@
                                         <div class="col-4 col-md-4 grid-mb">
                                             <div id="label">
                                                 <label for="tags">Tags</label>
-                                                <span class="float-end"><a href="#" class="nsm-button btn-small" id="open-tags-modal">Manage tags</a></span>
+                                                <span class="float-end"><a href="#" class="nsm-button btn-small" style="margin-bottom:3px;display:inline-block;" id="open-tags-modal">Manage tags</a></span>
                                             </div>
                                             <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                                                 <?php if (isset($tags) && count($tags) > 0) : ?>
@@ -821,8 +819,8 @@
                                                                 <td class="bold">Is Tax Exempted</td>
                                                                 <td align="right" class="tax-exempted">
                                                                     <select class="form-control" id="tax-exempted" name="is_tax_exempted" style="width:100px;">
-                                                                        <option value="1">Yes</option>
-                                                                        <option value="0" selected="selected">No</option>
+                                                                        <option <?= $invoice && $invoice->no_tax == 0 ? 'selected="selected"' : ''; ?> value="0">No</option>
+                                                                        <option <?= $invoice && $invoice->no_tax == 1 ? 'selected="selected"' : ''; ?>  value="1">Yes</option>
                                                                     </select>
                                                                 </td>
                                                             </tr>

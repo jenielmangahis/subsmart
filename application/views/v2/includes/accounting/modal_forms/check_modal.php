@@ -1,47 +1,136 @@
 <!-- Modal for bank deposit-->
 <style>
-.btn-recent-checks-print{
-    display:inline-block;
-    float:right;
-}
-#checkModal h5.dropdown-header{
-    display:inline-block;
-}
-#checkModal #category-details-table td .table-checkbox{
-    margin:0 auto;
-}
-#checkModal .nsm-table thead td{
-    background-color:#6a4a86;
-    color:#ffffff;
-}
-.dropzone {
-    min-height: 160px !important;
-}
-.span-input{
-    display: block;
-    width: 100%;
-    height: calc(1.5em + .75rem + 2px);
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: .25rem;
-    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-}
+    .btn-recent-checks-print{
+        display:inline-block;
+        float:right;
+    }
+    #checkModal h5.dropdown-header{
+        display:inline-block;
+    }
+    #checkModal #category-details-table td .table-checkbox{
+        margin:0 auto;
+    }
+    #checkModal .nsm-table thead td{
+        background-color:#6a4a86;
+        color:#ffffff;
+    }
+    .dropzone {
+        min-height: 160px !important;
+    }
+    .span-input{
+        display: block;
+        width: 100%;
+        height: calc(1.5em + .75rem + 2px);
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
 
-.fw-normalx {
-    font-weight: 500;
-}
+    .fw-normalx {
+        font-weight: 500;
+    }
 
-.cursorPointer {
-    cursor: pointer;
-}
+    .cursorPointer {
+        cursor: pointer;
+    }
 
+    #payee-modal .modal-content,
+    #account-modal .modal-content {
+        box-shadow: 0px 0px 10px 0px #6a4a86;
+        border-radius: 10px;
+    }
 
+    .checkContainer {
+        position: relative;
+        width: 1000px;
+        max-width: 1000px;
+        height: 360px;
+        border: 2px solid #000;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        font-family: Arial, sans-serif;
+        margin: auto;
+    }
+
+    .checkSection {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .checkPayerInfo_Section {}
+
+    .checkNumber_Section {
+        right: -20px;
+    }
+
+    .printLater_Section {
+        right: 46px;
+        top: 55px;
+    }
+
+    .checkDate_Section {
+        right: 26px;
+        top: 100px;
+    }
+
+    #checkDateInput {
+        width: 180px;
+    }
+
+    .checkPayee_Section {
+        top: 150px;
+    }
+
+    .checkPayeeSelect+* {
+        width: 625px !important;
+    }
+
+    .checkAmount_Section {
+        top: 150px;
+        right: 26px;
+    }
+
+    #checkAmountInput {
+        width: 150px;
+    }
+
+    .checkWrittenAmount_Section {
+        top: 200px;
+    }
+
+    #checkWrittenText {
+        letter-spacing: 4px;
+    }
+
+    .checkBankName_Section {
+        top: 250px;
+    }
+
+    .checkBankNameSelect+* {
+        width: 260px !important;
+    }
+
+    .checkMemo_Section {
+        bottom: 20px;
+    }
+
+    #checkMemoInput {
+        background: unset;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        border-top: 0;
+        width: 713px;
+    }
 </style>
 <div class="full-screen-modal">
 <?php if(!isset($check)) : ?>
@@ -219,7 +308,6 @@
                                     </h2>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <?php if($is_copy) : ?>
                                 <div class="col-12">
@@ -267,7 +355,6 @@
                                     -->
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-12 col-md-4 grid-mb">
                                     <div id="label">
@@ -290,7 +377,6 @@
                                     </select>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-12">
                                     <div class="accordion grid-mb">
@@ -499,7 +585,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="accordion grid-mb">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
@@ -620,7 +705,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-12 col-md-8">
                                     <div class="row">
                                         <div class="col-12 col-md-4">
@@ -646,7 +730,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <?php if(isset($check) && !is_null($check->linked_transacs)) : ?>
                         <div class="w-auto nsm-callout primary" style="display: none; max-width: 15%">
                             <div class="transactions-container h-100 p-3">
@@ -686,101 +769,6 @@
                         </div>
                         <?php endif; ?>
                     </div>
-
-                    <style>
-                        #payee-modal .modal-content, #account-modal .modal-content {
-                            box-shadow: 0px 0px 10px 0px #6a4a86;
-                            border-radius: 10px;
-                        }
-
-                        .checkContainer {
-                            position: relative;
-                            width: 1000px;
-                            max-width: 1000px;
-                            height: 360px;
-                            border: 2px solid #000;
-                            padding: 20px;
-                            border-radius: 10px;
-                            background-color: #f9f9f9;
-                            font-family: Arial, sans-serif;
-                            margin: auto;
-                        }
-
-                        .checkSection {
-                            display: flex;
-                            justify-content: space-between;
-                            margin-bottom: 10px;
-                        }
-
-                        .checkPayerInfo_Section {
-
-                        }
-
-                        .checkNumber_Section {
-                            right: -20px;
-                        }
-
-                        .printLater_Section {
-                            right: 46px;
-                            top: 55px;
-                        }
-
-                        .checkDate_Section {
-                            right: 26px;
-                            top: 100px;
-                        }
-
-                        #checkDateInput {
-                            width: 180px;
-                        }
-
-                        .checkPayee_Section {
-                            top: 150px;
-                        }
-
-                        .checkPayeeSelect + * {
-                            width: 625px !important;
-                        }
-
-                        .checkAmount_Section  {
-                            top: 150px;
-                            right: 26px;
-                        }
-
-                        #checkAmountInput {
-                            width: 150px;
-                        }
-
-                        .checkWrittenAmount_Section {
-                            top: 200px;
-                        }
-
-                        #checkWrittenText {
-                            letter-spacing: 4px;
-                        }
-
-                        .checkBankName_Section {
-                            top: 250px;
-                        }
-
-                        .checkBankNameSelect + * {
-                            width: 260px !important;
-                        }
-
-                        .checkMemo_Section {
-                            bottom: 20px;
-                        }
-
-                        #checkMemoInput {
-                            background: unset;
-                            border-radius: 0;
-                            border-left: 0;
-                            border-right: 0;
-                            border-top: 0;
-                            width: 713px;
-                        }
-                    </style>
-
                     <div class="row virtualCheckContent" style="display: none;">
                         <div class="checkContainer">
                             <div class="checkSection">
@@ -841,149 +829,6 @@
                         </div>
                     </div>
                 </div>
-                <script>
-                    var currentCheckNo = $('#checkNumberInput').val();
-                    var totalAmountInVirtualCheck = 0.00;
-
-                    // $(document).ready(function () {
-                    //     $('#checkPrintLater').prop('checked', true).change();
-                    // });
-                        
-                    function setPayerDetails() {
-                        $.ajax({
-                            type: "POST",
-                            url: window.origin + "/accounting/getPayerDetails",
-                            dataType: "JSON",
-                            success: function (response) {
-                                $('.checkPayerNameText').text(response.name);
-
-                                const formatAddress = (address) => {
-                                    return address
-                                        .split(/\s+/)
-                                        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) 
-                                        .join(' '); 
-                                };
-
-                                const formattedAddress = formatAddress(response.address || '') + 
-                                    (response.city ? `, ${formatAddress(response.city)}` : '') +
-                                    (response.state ? `, ${formatAddress(response.state)}` : '') +
-                                    (response.postal_code ? `, ${response.postal_code}` : '');
-
-                                $('.checkPayerAddressText').text(formattedAddress.trim());
-                            }
-                        });
-                    } setPayerDetails();
-
-
-                    $('#checkNumberInput').on('input', function() {
-                        const value = $(this).val();
-                        if (value >= 0) {
-                            currentCheckNo = $('#checkNumberInput').val();
-                        }
-                    });
-                    
-                    $('#checkPrintLater').on('change', function() {
-                        if ($(this).is(':checked')) {
-                            $('#checkNumberInput').prop('disabled', true);
-                            $('#checkNumberInput').val('');
-                            $('#print_later').prop('checked', true).change();
-                        } else {
-                            $('#checkNumberInput').prop('disabled', false);
-                            $('#checkNumberInput').val(currentCheckNo).change();
-                            $('#print_later').prop('checked', false).change();
-                            $('#check_no').val(currentCheckNo).change();
-                        }
-                    });
-
-                    $('#checkDateInput').on('change', function() {
-                        const value = $(this).val();
-                        const dateParts = value.split('-');
-                        const padZero = (num) => (num < 10 ? `0${num}` : num);
-                        const formattedDate = `${padZero(parseInt(dateParts[1]))}/${padZero(parseInt(dateParts[2]))}/${dateParts[0]}`;
-                        $('#payment_date').val(formattedDate).change();
-                    });
-
-                    $('.checkPayeeSelect').on('change', function() {
-                        const selectedValue = $(this).val();
-                        const selectedText = $(this).find('option:selected').text();
-
-                        $('#payee').empty();
-                        const newOption = new Option(selectedText, selectedValue, true, true);
-                        $('#payee').append(newOption).trigger('change');
-                    });
-
-
-                    $('.checkBankNameSelect').on('change', function() {
-                        const selectedValue = $(this).val();
-                        const selectedText = $(this).find('option:selected').text();
-
-                        $('#bank_account').empty();
-                        const newOption = new Option(selectedText, selectedValue, true, true);
-                        $('#bank_account').append(newOption).trigger('change');
-                    });
-
-                    $('#checkMemoInput').on('input', function() {
-                        const value = $(this).val();
-                        $('#memo').val(value).change();
-                    });
-
-                    function numberToWords(amount) {
-                        const numbersToWords = (num) => {
-                            const ones = [
-                                "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"
-                            ];
-                            const tens = [
-                                "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
-                            ];
-                            const teens = [
-                                "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
-                            ];
-
-                            if (num < 10) return ones[num];
-                            if (num < 20) return teens[num - 10];
-                            if (num < 100) {
-                                return tens[Math.floor(num / 10)] + (num % 10 !== 0 ? " " + ones[num % 10] : "");
-                            }
-                            if (num < 1000) {
-                                return ones[Math.floor(num / 100)] + " Hundred" +
-                                    (num % 100 !== 0 ? " " + numbersToWords(num % 100) : "");
-                            }
-                            if (num < 1000000) {
-                                return numbersToWords(Math.floor(num / 1000)) + " Thousand" +
-                                    (num % 1000 !== 0 ? " " + numbersToWords(num % 1000) : "");
-                            }
-                            if (num < 1000000000) {
-                                return numbersToWords(Math.floor(num / 1000000)) + " Million" +
-                                    (num % 1000000 !== 0 ? " " + numbersToWords(num % 1000000) : "");
-                            }
-                            if (num < 1000000000000) {
-                                return numbersToWords(Math.floor(num / 1000000000)) + " Billion" +
-                                    (num % 1000000000 !== 0 ? " " + numbersToWords(num % 1000000000) : "");
-                            }
-                            return "Amount Too Large";
-                        };
-
-                        const dollars = Math.floor(amount);
-                        const cents = Math.round((amount - dollars) * 100);
-
-                        const dollarText = dollars > 0 ? numbersToWords(dollars) : "";
-                        const centText = cents > 0 ? `${cents}/100` : "";
-
-                        return dollarText + (dollars > 0 && cents > 0 ? " and " : "") + centText;
-                    }
-
-                    $('#checkAmountInput').on('input change', function() {
-                        const inputValue = parseFloat($(this).val());
-                        window.totalAmountInVirtualCheck = inputValue;
-                        if (!isNaN(inputValue)) {
-                            const writtenAmount = numberToWords(inputValue);
-                            $('#checkWrittenText').text(writtenAmount);
-                        } else {
-                            $('#checkWrittenText').text("{WRITTEN_AMOUNT}");
-                        }
-                    });
-                </script>
-
                 <div class="modal-footer">
                     <div class="row w-100">
                         <div class="col-md-4">
@@ -1032,16 +877,149 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
-    <!-- <input type="text" name="total_amount" value="69"> -->
     <!--end of modal-->
 </form>
 </div>
-
 <script>
-    $('input[name="options-outlined"]').on('click', function () {
+    var currentCheckNo = $('#checkNumberInput').val();
+    var totalAmountInVirtualCheck = 0.00;
+
+    function setPayerDetails() {
+        $.ajax({
+            type: "POST",
+            url: window.origin + "/accounting/getPayerDetails",
+            dataType: "JSON",
+            success: function(response) {
+                $('.checkPayerNameText').text(response.name);
+
+                const formatAddress = (address) => {
+                    return address
+                        .split(/\s+/)
+                        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                        .join(' ');
+                };
+
+                const formattedAddress = formatAddress(response.address || '') +
+                    (response.city ? `, ${formatAddress(response.city)}` : '') +
+                    (response.state ? `, ${formatAddress(response.state)}` : '') +
+                    (response.postal_code ? `, ${response.postal_code}` : '');
+
+                $('.checkPayerAddressText').text(formattedAddress.trim());
+            }
+        });
+    }
+    setPayerDetails();
+
+    $('#checkNumberInput').on('input', function() {
+        const value = $(this).val();
+        if (value >= 0) {
+            currentCheckNo = $('#checkNumberInput').val();
+        }
+    });
+
+    $('#checkPrintLater').on('change', function() {
+        if ($(this).is(':checked')) {
+            $('#checkNumberInput').prop('disabled', true);
+            $('#checkNumberInput').val('');
+            $('#print_later').prop('checked', true).change();
+        } else {
+            $('#checkNumberInput').prop('disabled', false);
+            $('#checkNumberInput').val(currentCheckNo).change();
+            $('#print_later').prop('checked', false).change();
+            $('#check_no').val(currentCheckNo).change();
+        }
+    });
+
+    $('#checkDateInput').on('change', function() {
+        const value = $(this).val();
+        const dateParts = value.split('-');
+        const padZero = (num) => (num < 10 ? `0${num}` : num);
+        const formattedDate = `${padZero(parseInt(dateParts[1]))}/${padZero(parseInt(dateParts[2]))}/${dateParts[0]}`;
+        $('#payment_date').val(formattedDate).change();
+    });
+
+    $('.checkPayeeSelect').on('change', function() {
+        const selectedValue = $(this).val();
+        const selectedText = $(this).find('option:selected').text();
+
+        $('#payee').empty();
+        const newOption = new Option(selectedText, selectedValue, true, true);
+        $('#payee').append(newOption).trigger('change');
+    });
+
+    $('.checkBankNameSelect').on('change', function() {
+        const selectedValue = $(this).val();
+        const selectedText = $(this).find('option:selected').text();
+
+        $('#bank_account').empty();
+        const newOption = new Option(selectedText, selectedValue, true, true);
+        $('#bank_account').append(newOption).trigger('change');
+    });
+
+    $('#checkMemoInput').on('input', function() {
+        const value = $(this).val();
+        $('#memo').val(value).change();
+    });
+
+    function numberToWords(amount) {
+        const numbersToWords = (num) => {
+            const ones = [
+                "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"
+            ];
+            const tens = [
+                "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
+            ];
+            const teens = [
+                "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
+            ];
+
+            if (num < 10) return ones[num];
+            if (num < 20) return teens[num - 10];
+            if (num < 100) {
+                return tens[Math.floor(num / 10)] + (num % 10 !== 0 ? " " + ones[num % 10] : "");
+            }
+            if (num < 1000) {
+                return ones[Math.floor(num / 100)] + " Hundred" +
+                    (num % 100 !== 0 ? " " + numbersToWords(num % 100) : "");
+            }
+            if (num < 1000000) {
+                return numbersToWords(Math.floor(num / 1000)) + " Thousand" +
+                    (num % 1000 !== 0 ? " " + numbersToWords(num % 1000) : "");
+            }
+            if (num < 1000000000) {
+                return numbersToWords(Math.floor(num / 1000000)) + " Million" +
+                    (num % 1000000 !== 0 ? " " + numbersToWords(num % 1000000) : "");
+            }
+            if (num < 1000000000000) {
+                return numbersToWords(Math.floor(num / 1000000000)) + " Billion" +
+                    (num % 1000000000 !== 0 ? " " + numbersToWords(num % 1000000000) : "");
+            }
+            return "Amount Too Large";
+        };
+
+        const dollars = Math.floor(amount);
+        const cents = Math.round((amount - dollars) * 100);
+
+        const dollarText = dollars > 0 ? numbersToWords(dollars) : "";
+        const centText = cents > 0 ? `${cents}/100` : "";
+
+        return dollarText + (dollars > 0 && cents > 0 ? " and " : "") + centText;
+    }
+
+    $('#checkAmountInput').on('input change', function() {
+        const inputValue = parseFloat($(this).val());
+        window.totalAmountInVirtualCheck = inputValue;
+        if (!isNaN(inputValue)) {
+            const writtenAmount = numberToWords(inputValue);
+            $('#checkWrittenText').text(writtenAmount);
+        } else {
+            $('#checkWrittenText').text("{WRITTEN_AMOUNT}");
+        }
+    });
+
+    $('input[name="options-outlined"]').on('click', function() {
         if ($('#standardCheck_toggle').is(':checked')) {
             $('.standardCheckContent').fadeIn();
             $('.virtualCheckContent').hide();
@@ -1050,88 +1028,76 @@
             $('.virtualCheckContent').fadeIn();
         }
     });
-</script>
 
-<script>
-$(function(){
-    //  Override script, Get the last used bank account option
-    // $.ajax({
-    //     type: "POST",
-    //     //url: window.origin + "/accounting/getDefaultAccount",
-    //     url: base_url + "/accounting/getDefaultAccount",
-    //     dataType: "JSON",
-    //     success: function (response) {
-    //         var newOption = new Option(response.account_name, response.account_id, false, false);
-    //         $('#bank_account').append(newOption).trigger('change');
-    //     }
-    // });
+    // ====================================================
 
-    $('.btn-recent-checks-print').on('click', function(){
-        $.get( base_url + 'accounting/get-other-modals/print_checks_modal', function(res) {
-            if ($('div#modal-container').length > 0) {
-                $('div#modal-container').html(res);
-            } else {
-                $('body').append(`
-                    <div id="modal-container"> 
-                        ${res}
-                    </div>
-                `);
-            }
-    
-            $(`#printChecksModal select`).each(function() {
-                var type = $(this).attr('id');
-                if (type === undefined) {
-                    type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+    $(function() {
+        $('.btn-recent-checks-print').on('click', function() {
+            $.get(base_url + 'accounting/get-other-modals/print_checks_modal', function(res) {
+                if ($('div#modal-container').length > 0) {
+                    $('div#modal-container').html(res);
                 } else {
-                    type = type.replaceAll('_', '-');
-    
-                    if (type.includes('transfer')) {
-                        type = 'transfer-account';
+                    $('body').append(`
+                        <div id="modal-container"> 
+                            ${res}
+                        </div>
+                    `);
+                }
+
+                $(`#printChecksModal select`).each(function() {
+                    var type = $(this).attr('id');
+                    if (type === undefined) {
+                        type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+                    } else {
+                        type = type.replaceAll('_', '-');
+
+                        if (type.includes('transfer')) {
+                            type = 'transfer-account';
+                        }
                     }
-                }
-    
-                if (type === 'payment-account') {
-                    $(this).select2({
-                        ajax: {
-                            url: base_url + 'accounting/get-dropdown-choices',
-                            dataType: 'json',
-                            data: function(params) {
-                                var query = {
-                                    search: params.term,
-                                    type: 'public',
-                                    field: type,
-                                    modal: 'printChecksModal'
+
+                    if (type === 'payment-account') {
+                        $(this).select2({
+                            ajax: {
+                                url: base_url + 'accounting/get-dropdown-choices',
+                                dataType: 'json',
+                                data: function(params) {
+                                    var query = {
+                                        search: params.term,
+                                        type: 'public',
+                                        field: type,
+                                        modal: 'printChecksModal'
+                                    }
+
+                                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                                    return query;
                                 }
-    
-                                // Query parameters will be ?search=[term]&type=public&field=[type]
-                                return query;
-                            }
-                        },
-                        templateResult: formatResult,
-                        templateSelection: optionSelect,
-                        dropdownParent: $('#printChecksModal')
-                    });
-                } else {
-                    $(this).select2({
-                        minimumResultsForSearch: -1,
-                        dropdownParent: $('#printChecksModal')
+                            },
+                            templateResult: formatResult,
+                            templateSelection: optionSelect,
+                            dropdownParent: $('#printChecksModal')
+                        });
+                    } else {
+                        $(this).select2({
+                            minimumResultsForSearch: -1,
+                            dropdownParent: $('#printChecksModal')
+                        });
+                    }
+                });
+
+                if ($(`#printChecksModal .dropdown`).length > 0) {
+                    $(`#printChecksModal .dropdown-menu`).on('click', function(e) {
+                        e.stopPropagation();
                     });
                 }
-            });
-    
-            if ($(`#printChecksModal .dropdown`).length > 0) {
-                $(`#printChecksModal .dropdown-menu`).on('click', function(e) {
-                    e.stopPropagation();
+
+                $('#printChecksModal').on('hidden.bs.modal', function() {
+                    $('#modal-container').remove();
+                    $('.modal-backdrop').remove();
                 });
-            }
-    
-            $('#printChecksModal').on('hidden.bs.modal', function() {
-                $('#modal-container').remove();
-                $('.modal-backdrop').remove();
+
+                $('#printChecksModal').modal('show');
             });
-    
-            $('#printChecksModal').modal('show');
-        });
-    })
-});
+        })
+    });
 </script>

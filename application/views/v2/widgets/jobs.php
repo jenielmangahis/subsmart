@@ -105,7 +105,7 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="banner">
-            <img src="./assets/img/jobs-wave-top.svg" alt="">
+            <img src="./assets/img/jobs-banner.svg" alt="">
         </div>
         <div class="jobs-content">
             <div class="row mb-4 mt-2 filter">

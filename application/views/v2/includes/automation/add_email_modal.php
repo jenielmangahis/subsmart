@@ -6,31 +6,32 @@
             </div>
             <div class="modal-body">
                 <div class="row h-100">
-                    <div class="col-12 ">
-                        <label class="mb-1 fw-xnormal">Subject</label>
-                        <div class="input-group">
+                    <form id='emailForm'>
+                        <div class="col-12 ">
+                            <label class="mb-1 fw-xnormal">Subject</label>
                             <div class="input-group">
-                                <input name="schedule_cc" class="form-control mt-0" type="email" required>
+                                <div class="input-group">
+                                    <input name="subject" class="form-control mt-0" type="text" required>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-12">
-                        <label class="mb-1 fw-xnormal">From</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-text">
-                                <input name="schedule_cc_checkbox" class="form-check-input mt-0 ccCheckbox cursorPointer" type="checkbox" checked>
+                        <div class="col-md-12">
+                            <label class="mb-1 fw-xnormal">From</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group">
+                                    <input name="sender" class="form-control mt-0" type="email" value="<?php echo logged('email');; ?>" required>
+                                </div>
                             </div>
-                            <input name="schedule_cc" class="form-control mt-0" type="email" value="<?php echo logged('email');; ?>" required>
                         </div>
-                    </div>
-                    <div class="col-12">
-                        <textarea name="automation_msg" id="automation_msg" cols="30" rows="2" class="form-control ckeditor">Thank you for your business.</textarea>
-                    </div>
+                        <div class="col-12">
+                            <textarea name="message" id="automation_msg" cols="30" rows="2" class="form-control ckeditor"></textarea>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button secondary outlined" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
+                <button type="submit" form="emailForm" class="nsm-button primary">
                     <i class='bx bx-fw bx-check'></i> Save and close
                 </button>
             </div>
