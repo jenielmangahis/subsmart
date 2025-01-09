@@ -11964,6 +11964,8 @@ const makeRecurring = (modalName) => {
             $(`#${modalId} div.modal-body #sales-rep`).parent().removeClass('w-100').parent().removeClass('d-flex').removeClass('align-items-end');
             $(`#${modalId} div.modal-body #send-later`).parent().parent().remove();
 
+            $('#open-customer-info-window-container').show();
+
             $('#modal-help-popover-scheduled-create').popover({
                 placement: 'top',
                 html: true,
@@ -11997,6 +11999,8 @@ const makeRecurring = (modalName) => {
             addedFields += `</div>`;
             addedFields += `</div>`;
             $(addedFields).insertAfter($(`#${modalId} #email`).parent());
+
+            $('#open-customer-info-window-container').show();
 
             $('#modal-help-popover-scheduled-create').popover({
                 placement: 'top',

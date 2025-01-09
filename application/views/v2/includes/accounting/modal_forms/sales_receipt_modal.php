@@ -63,6 +63,7 @@
                                     <div class="row">
                                         <div class="col-12 col-md-3">
                                             <label for="customer">Customer</label>
+                                            <div id="open-customer-info-window-container" style='display:none; float:right;'><span class="float-end"><a href="javascript:void(0)" class="nsm-button btn-small open-customer-info-window" style="margin-bottom:3px;display:inline-block;" id="open-customer-info-window">View Customer Info</a></span></div> 
                                             <select name="customer" id="customer" class="form-control nsm-field" required>
                                                 <?php if(isset($receipt)) : ?>
                                                     <option value="<?=$receipt->customer_id?>">
