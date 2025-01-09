@@ -26,19 +26,19 @@
                 </div>
                 <div class="row">
                     <div class="col-6 grid-mb">
-                        <form action="<?php echo base_url('customer/status') ?>" method="get">
-                            <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="<?php echo (!empty($search)) ? $search : '' ?>">
-                            </div>
-                        </form>   
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                        </div>
                     </div>                      
+                    <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                     <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#new_customer_status_modal">
-                                <i class='bx bx-fw bx-bar-chart-square'></i> New Customer Status
+                                <i class='bx bx-fw bx-plus'></i> New Customer Status
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
                 <table class="nsm-table">
                     <thead>
@@ -72,13 +72,16 @@
                                             </a>
                                             
                                             <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                                                 <li>
                                                     <a class="dropdown-item edit-item customer-status-item" href="javascript:void(0);" data-id="<?= $cs->id; ?>" data-name="<?= $cs->name; ?>" data-bs-toggle="modal" data-bs-target="#edit_customer_status_modal">Edit</a>
                                                 </li>
-                                                
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item delete-item delete-customer-status-item" href="javascript:void(0);" data-id="<?= $cs->id; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item delete-customer-status-item" href="javascript:void(0);" data-name="<?= $cs->name; ?>" data-id="<?= $cs->id; ?>">Delete</a>
                                                 </li>                                                
+                                                <?php } ?>
                                             </ul>                                            
                                         </div>
                                         <?php } ?>
@@ -113,18 +116,13 @@
 
         $("#search_field").on("input", debounce(function() {
             tableSearch($(this));        
-        }, 1000));
-
-        /*$("#search_field").on("input", debounce(function() {
-            let _form = $(this).closest("form");
-            _form.submit();
-        }, 1000));*/        
+        }, 1000));  
 
         $("#new_customer_status_form").on("submit", function(e) {
             let _this = $(this);
             e.preventDefault();
 
-            var url = "<?php echo base_url(); ?>customer/_add_customer_status";
+            var url = base_url + "customers/_create_customer_status";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -139,8 +137,8 @@
                         _this.trigger("reset");
                         
                         Swal.fire({
-                            title: 'Save Successful!',
-                            text: "Customer Status has been created successfully.",
+                            title: 'Customer Status',
+                            text: "New customer status has been created successfully.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -182,8 +180,8 @@
                         _this.trigger("reset");
                         
                         Swal.fire({
-                            title: 'Save Successful!',
-                            text: "Customer Status has been updated successfully.",
+                            title: 'Customer Status',
+                            text: "Customer status has been updated successfully.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -215,11 +213,12 @@
         });
 
         $(document).on("click", ".delete-customer-status-item", function() {
-            let csid = $(this).attr("data-id");
+            let csid = $(this).attr('data-id');
+            let name = $(this).attr('data-name');
 
             Swal.fire({
                 title: 'Delete Customer Status',
-                text: "Are you sure you want to delete selected customer status?",
+                html: `Are you sure you want to delete customer status <b>${name}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -237,8 +236,8 @@
                             console.log(result);
                             if (result.is_success === 1) {
                                 Swal.fire({
-                                    //title: 'Good job!',
-                                    text: "Data Deleted Successfully!",
+                                    title: 'Customer Status',
+                                    text: "Data deleted successfully!",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'

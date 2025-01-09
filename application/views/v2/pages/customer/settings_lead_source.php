@@ -34,11 +34,13 @@
                     </div>  
 
                     <div class="col-6 grid-mb text-end">
+                        <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#new_lead_source_modal">
-                                <i class='bx bx-fw bx-notepad'></i> New Lead Source
+                                <i class='bx bx-fw bx-plus'></i> New Lead Source
                             </button>
                         </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <table class="nsm-table">
@@ -72,12 +74,16 @@
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                                                 <li>
                                                     <a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $source->ls_id; ?>" data-name="<?= $source->ls_name; ?>">Edit</a>
                                                 </li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $source->ls_id; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-name="<?= $source->ls_name; ?>" data-id="<?= $source->ls_id; ?>">Delete</a>
                                                 </li>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                         <?php } ?>
@@ -217,10 +223,11 @@
 
         $(document).on("click", ".delete-item", function() {
             let id = $(this).attr("data-id");
+            let name = $(this).attr('data-name');
 
             Swal.fire({
                 title: 'Delete Lead Source',
-                text: "Are you sure you want to delete this Lead Source?",
+                html: `Are you sure you want to delete this lead source <b>${name}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -229,15 +236,14 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: "<?php echo base_url(); ?>customer/delete_lead_source",
-                        data: {
-                            id: id
-                        },
+                        url: base_url + "customer/delete_lead_source",
+                        data: {id: id},
+                        dataType:"json",
                         success: function(result) {
-                            if (result === '1') {
+                            if (result.is_success ) {
                                 Swal.fire({
-                                    //title: 'Good job!',
-                                    text: "Data Deleted Successfully!",
+                                    title: 'Lead Source',
+                                    text: "Data deleted successfully!",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
@@ -245,6 +251,12 @@
                                     //if (result.value) {
                                         location.reload();
                                     //}
+                                });
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
                                 });
                             }
                         },
