@@ -1099,7 +1099,7 @@ class Tickets extends MY_Controller
         $this->load->model('PanelType_model');
         $this->load->model('Invoice_model');
 
-        $this->page_data['page']->title = 'Tickets';
+        $this->page_data['page']->title = 'Service Tickets';
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
