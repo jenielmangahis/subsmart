@@ -52,16 +52,18 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <?php 
-                                        $tableID = "jobstatus_table"; 
-                                        $reportCategory = "job_status"; 
+                                        $tableID = "jobscompleted_table"; 
+                                        $reportCategory = "jobs_completed"; 
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
                                                 <th>NUMBER</th>
+                                                <th>TYPE</th>
                                                 <th>DESCRIPTION</th>
+                                                <th>CUSTOMER</th>
                                                 <th>STATUS</th>
-                                                <th>DATE</th>
+                                                <th>DATE CREATED</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -187,6 +189,8 @@
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
                                                 <option value="date" <?php echo ($reportSettings->sort_by == "date") ? "selected" : "" ?>>Date</option>
                                                 <option value="number" <?php echo ($reportSettings->sort_by == "number") ? "selected" : "" ?>>Number</option>
+                                                <option value="type" <?php echo ($reportSettings->sort_by == "type") ? "selected" : "" ?>>Type</option>
+                                                <option value="customer" <?php echo ($reportSettings->sort_by == "customer") ? "selected" : "" ?>>Customer</option>
                                                 <option value="status" <?php echo ($reportSettings->sort_by == "status") ? "selected" : "" ?>>Status</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
@@ -212,22 +216,6 @@
                                         <input name="date_from" class="form-control mt-0" type="date" value="<?= date('Y').'-01-01'; ?>">
                                         <input name="date_to" class="form-control mt-0" type="date" value="<?= date('Y-m-t'); ?>">
                                     </div>
-                                </div>
-                                <div class="col-md-12"><hr class="mt-0"></div>
-                                <div class="col-md-3 mb-3">
-                                    <label class="mb-1 fw-xnormal">Status Filter</label>
-                                    <select name="status_filter" id="status-filter" class="nsm-field form-select">
-                                        <option value="" <?php echo ($reportSettings->status_filter == "") ? "selected" : "" ?>>None</option>
-                                        <option value="Draft" <?php echo ($reportSettings->status_filter == "Draft") ? "selected" : "" ?>>Draft</option>
-                                        <option value="Scheduled" <?php echo ($reportSettings->status_filter == "Scheduled") ? "selected" : "" ?>>Scheduled</option>
-                                        <option value="Arrival" <?php echo ($reportSettings->status_filter == "Arrival") ? "selected" : "" ?>>Arrival</option>
-                                        <option value="Started" <?php echo ($reportSettings->status_filter == "Started") ? "selected" : "" ?>>Started</option>
-                                        <option value="Approved" <?php echo ($reportSettings->status_filter == "Approved") ? "selected" : "" ?>>Approved</option>
-                                        <option value="Finished" <?php echo ($reportSettings->status_filter == "Finished") ? "selected" : "" ?>>Finished</option>
-                                        <option value="Cancelled" <?php echo ($reportSettings->status_filter == "Cancelled") ? "selected" : "" ?>>Cancelled</option>
-                                        <option value="Invoiced" <?php echo ($reportSettings->status_filter == "Invoiced") ? "selected" : "" ?>>Invoiced</option>
-                                        <option value="Completed" <?php echo ($reportSettings->status_filter == "Completed") ? "selected" : "" ?>>Completed</option>
-                                    </select>
                                 </div>
                                 <div class="col-md-12"><hr class="mt-0"></div>
                             </div>
