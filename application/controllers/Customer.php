@@ -6762,7 +6762,7 @@ class Customer extends MY_Controller
 
     public function ticketslist()
     {   
-        $this->page_data['page']->title = 'Tickets';
+        $this->page_data['page']->title = 'Service Tickets';
         $this->page_data['page']->parent = 'Sales';
 
         $this->hasAccessModule(39);
@@ -7618,17 +7618,14 @@ class Customer extends MY_Controller
 
     public function settings_system_package()
     {
-        $this->page_data['page']->title = 'System Package Type';
-        $this->page_data['page']->parent = 'Sales';
-
-        $this->load->library('wizardlib');
         $this->hasAccessModule(9);
 
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
         $user_id = logged('id');
-
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $user_id;
-
         if (isset($userid) || !empty($userid)) {
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
@@ -7646,12 +7643,10 @@ class Customer extends MY_Controller
             'select' => '*',
         ];
 
-        // for($x=0;$x<10;$x++){
-        //     $randomPassword = bin2hex(random_bytes(20));
-        //     echo $randomPassword.'<br>';
-        // }
+        $this->page_data['customer_profile_id'] = $user_id;
+        $this->page_data['page']->title = 'System Package Type';
+        $this->page_data['page']->parent = 'Sales';
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
-
         $this->load->view('v2/pages/customer/settings_system_package', $this->page_data);
     }
 
@@ -9089,20 +9084,25 @@ class Customer extends MY_Controller
         $cid  = logged('company_id');
 
         if ($post['name'] != '') {
-            $isExists = $this->CustomerStatus_model->getByNameAndCompanyId($post['name'], $cid);
+            $customerStatus = $this->CustomerStatus_model->getByIdAndCompanyId($post['cs_id'], $cid);
+            $isExists       = $this->CustomerStatus_model->getByNameAndCompanyId($post['name'], $cid);
             if( $isExists && $isExists->id != $post['cs_id'] ){
                 $msg = 'Status name already exists.';
             }else{
-                $status = ['name' => $post['name']];
-                $this->general->update_with_key_field($status, $post['cs_id'], 'acs_cust_status', 'id');
-                
-                //Activity Logs
-                $activity_name = 'Customer Status : Updated status  ' . $isExists->name . ' changed to ' . $post['name']; 
-                createActivityLog($activity_name);
+                if( $customerStatus ){
+                    $data = ['name' => $post['name']];
+                    $this->CustomerStatus_model->update($customerStatus->id, $data);
+                    
+                    //Activity Logs
+                    $activity_name = 'Customer Status : Updated status  ' . $isExists->name . ' changed to ' . $post['name']; 
+                    createActivityLog($activity_name);
 
-                $is_success = 1;
-                $msg = '';
+                    $is_success = 1;
+                    $msg = '';
+                }                
             }               
+        }else{
+            $msg  = 'Please enter status name';
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
@@ -10283,6 +10283,48 @@ class Customer extends MY_Controller
         echo json_encode($return);
     }
 
+    public function ajax_update_sales_area()
+    {
+        $this->load->model('SalesArea_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $salesArea = $this->SalesArea_model->getByIdAndCompanyId($post['sa_id'], $company_id);
+        $isExists  = $this->SalesArea_model->getByNameAndCompanyId($post['sa_name'], $company_id);
+        if( $isExists && $isExists->id != $post['sa_id'] ){
+            $msg = 'Sales area name already exists.';
+        }else{
+            if( $salesArea ){
+                if ($post['sa_name'] != '') {
+                    $data = [
+                        'fk_comp_id' => $company_id,
+                        'sa_name' => $post['sa_name'],
+                        'date_created' => date("Y-m-d H:i:s")
+                    ];
+        
+                    $this->SalesArea_model->updateSalesArea($post['sa_id'], $data);
+        
+                    //Activity Logs
+                    $activity_name = 'Sales Area : Created ' . $post['sa_name']; 
+                    createActivityLog($activity_name);
+        
+                    $is_success = 1;
+                    $msg = '';
+                    
+                }else{
+                    $msg = 'Please enter sales area name.';
+                }
+            }           
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
     public function ajax_create_accounting_terms()
     {
         $this->load->model('AccountingTerm_model');
@@ -10390,28 +10432,31 @@ class Customer extends MY_Controller
         $company_id = logged('company_id');
         $post = $this->input->post();
 
-        $isExists = $this->RatePlan_model->getByNameAndCompanyId($post['plan_name'], $company_id);
+        $ratePlan = $this->RatePlan_model->getByIdAndCompanyId($post['rate_plan_id'], $company_id);
+        $isExists  = $this->RatePlan_model->getByNameAndCompanyId($post['plan_name'], $company_id);
         if( $isExists && $isExists->id != $post['rate_plan_id'] ){
             $msg = 'Plan name already exists.';
         }else{
-            if ($post['plan_name'] != '') {
-                $data = [
-                    'plan_name' => $post['plan_name'],
-                    'amount' => $post['plan_amount']
-                ];
-    
-                $this->RatePlan_model->update($isExists->id, $data);
-    
-                //Activity Logs
-                $activity_name = 'Rate Plan : Updated ' . $post['plan_name']; 
-                createActivityLog($activity_name);
-    
-                $is_success = 1;
-                $msg = '';
-                
-            }else{
-                $msg = 'Please enter plan name.';
-            }
+            if( $ratePlan ){
+                if ( $post['plan_name'] != '') {
+                    $data = [
+                        'plan_name' => $post['plan_name'],
+                        'amount' => $post['plan_amount']
+                    ];
+        
+                    $this->RatePlan_model->update($ratePlan->id, $data);
+        
+                    //Activity Logs
+                    $activity_name = 'Rate Plan : Updated ' . $post['plan_name']; 
+                    createActivityLog($activity_name);
+        
+                    $is_success = 1;
+                    $msg = '';
+                    
+                }else{
+                    $msg = 'Please enter plan name.';
+                }
+            }            
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
@@ -10459,6 +10504,41 @@ class Customer extends MY_Controller
         echo json_encode($return);
     }
 
+    public function ajax_update_system_package_type()
+    {
+        $this->load->model('SystemPackageType_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->SystemPackageType_model->getByNameAndCompanyId($post['package_name'], $company_id);
+        if( $isExists && $isExists->id != $post['id'] ){
+            $msg = 'System package already exists.';
+        }else{
+            if ($post['package_name'] != '') {
+                $data = ['name' => $post['package_name']];
+                
+                $this->SystemPackageType_model->update($isExists->id, $data);
+    
+                //Activity Logs
+                $activity_name = 'System Package : Updated ' . $isExists->name . ' changed to ' . $post['package_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+                
+            }else{
+                $msg = 'Please enter package name.';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
     public function ajax_create_activation_fee()
     {
         $this->load->model('ActivationFee_model');
@@ -10491,6 +10571,68 @@ class Customer extends MY_Controller
             $msg = 'Please enter amount.';
         }
 
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'amount' => $amount];
+        echo json_encode($return);
+    }
+
+    public function ajax_update_activation_fee()
+    {
+        $this->load->model('ActivationFee_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        $amount = 0;
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $activationFee = $this->ActivationFee_model->getByIdAndCompanyId($post['id'], $company_id);
+        if( $activationFee ){
+            if ($post['amount'] >= 0 ) {
+                $data = ['amount' => $post['amount']];
+    
+                $this->ActivationFee_model->update($post['id'], $data);
+                $amount = number_format($post['amount'],2,".","");
+    
+                //Activity Logs
+                $activity_name = 'Activation Fee : Updated amount from ' . $activationFee->amount . ' to ' . $post['amount']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+                
+            }else{
+                $msg = 'Please enter amount.';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'amount' => $amount];
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_activation_fee()
+    {
+        $this->load->model('ActivationFee_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        $amount = 0;
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $activationFee = $this->ActivationFee_model->getByIdAndCompanyId($post['id'], $company_id);
+        if( $activationFee ){
+            $this->ActivationFee_model->delete($activationFee->id);
+
+            //Activity Logs
+            $activity_name = 'Activation Fee : Deleted ' . $activationFee->amount; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+        
         $return = ['is_success' => $is_success, 'msg' => $msg, 'amount' => $amount];
         echo json_encode($return);
     }
