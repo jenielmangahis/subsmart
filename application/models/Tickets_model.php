@@ -214,6 +214,18 @@ class Tickets_model extends MY_Model
         return $result->row();
     }
 
+    public function getCompanylastInsert($cid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit(1);
+        
+        $result = $this->db->get();
+        return $result->row();
+    }
+
     public function get_ticket_items($id)
     {
         $where = array(
