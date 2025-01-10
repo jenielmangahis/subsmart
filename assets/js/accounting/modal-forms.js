@@ -893,19 +893,69 @@ $(function () {
     $(document).on('click', '#modal-container a#open-customer-info-window', function (e) {
         e.preventDefault();
         var customer_id = $('#modal-container #customer').val();
-        if(customer_id !== null) {
+        if(customer_id > 0) {
             window.open(base_url + 'customer/preview/' + customer_id, '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');
         } else {
             Swal.fire({
-                text: "You must select a customer",
+                text: "Please select a customer",
                 icon: 'warning',
                 showCloseButton: true,
                 confirmButtonColor: '#2ca01c',
                 confirmButtonText: 'OK',
                 timer: 2000
-            })            
+            });            
         }
         
+    });
+
+    $(document).on('click', '#modal-container a#open-vendor-info-window', function (e) {
+        e.preventDefault();
+        var vendor_id = $('#modal-container #vendor').val();
+        if(vendor_id > 0) {
+            window.open(base_url + 'accounting/vendors/view/' + vendor_id, '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');
+        } else {
+            Swal.fire({
+                text: "Please select a vendor",
+                icon: 'warning',
+                showCloseButton: true,
+                confirmButtonColor: '#2ca01c',
+                confirmButtonText: 'OK',
+                timer: 2000
+            });            
+        }
+        
+    });
+
+    $(document).on('click', '#modal-container a#open-payee-info-window', function (e) {
+        e.preventDefault();
+        var payee = $('#modal-container #payee').val(); 
+        if( payee !== null ){
+            var payee_info = payee.split('-');
+            if( payee_info[0] === 'customer' ){
+                window.open(base_url + 'customer/preview/' + payee_info[1], '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');
+            }else if( payee_info[0] === 'vendor' ){
+                window.open(base_url + 'accounting/vendors/view/' + payee_info[1], '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');
+            }else{
+                Swal.fire({
+                    text: "Please select a payee",
+                    icon: 'warning',
+                    showCloseButton: true,
+                    confirmButtonColor: '#2ca01c',
+                    confirmButtonText: 'OK',
+                    timer: 2000
+                }); 
+            }
+        }else{
+            Swal.fire({
+                text: "Please select a payee",
+                icon: 'warning',
+                showCloseButton: true,
+                confirmButtonColor: '#2ca01c',
+                confirmButtonText: 'OK',
+                timer: 2000
+            }); 
+        }
+
     });
 
     $(document).on('click', '#modal-container a#open-tags-modal', function (e) {
