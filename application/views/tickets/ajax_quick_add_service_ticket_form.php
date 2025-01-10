@@ -46,6 +46,10 @@
     position:relative;
     top:10px;
 }
+.custom-ticket-header i{
+    position: relative;
+    top: 2px;
+}
 </style>
 <input type="hidden" id="siteurl" value="<?=base_url();?>">
 <input type="hidden" id="redirect-calendar" name="redirect_calendar" value="<?= $redirect_calendar; ?>">
@@ -107,17 +111,16 @@
     <div class="col-12">
         <div class="nsm-card primary">
             <div class="nsm-card-header">
-                <div class="nsm-card-title">
-                    <span class="custom-ticket-header"><i class='bx bx-wrench'></i> Ticket Information</span>
+                <div class="nsm-card-title custom-ticket-header">
+                    <span class=""><i class='bx bx-wrench'></i> Ticket Information</span>
+                    <div class="form-check" style="float:right;">
+                        <input class="form-check-input" type="checkbox" name="is_with_esign" id="is-with-esign" value="1">
+                        <label class="form-check-label" for="is-with-esign">eSign Required</label>
+                    </div>
                 </div>
             </div>
             <div class="nsm-card-content">
                 <div class="row">
-                    <div class="col-md-3">
-                        <label for="ticket_no" class="required"><b>Service Ticket No.</b></label>
-                        <input type="text" class="form-control" name="ticket_no" id="ticket_no"
-                                required placeholder="Enter Ticket#" a value="<?= $prefix . $next_num; ?>" readonly="" />
-                    </div>
                     <div class="col-md-3">
                         <label for="ticket_date" class="required"><b>Schedule Date</b></label>
                         <div class="input-group date" data-provide="datepicker">
@@ -146,16 +149,8 @@
                             <?php } ?>
                         </select>
                     </div>
-                </div>
-                <div class="row mt-4">
                     <div class="col-md-3">
-                        <label for="purchase_order_number" class="block-label"><b>Purchase Order#</b></label>
-                        <input type="text" class="form-control" name="purchase_order_no"
-                            id="purchase_order_no" placeholder="Enter Purchase Order#"
-                            autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="ticket_status" class="block-label"><b>Ticket Status</b></label>
+                        <label for="ticket_status" class=""><b>Ticket Status</b></label>
                         <select id="ticket_status" name="ticket_status" class="form-control">
                             <!-- <option value="New">New</option> -->
                             <!-- <option value="Draft">Draft</option> -->
@@ -168,6 +163,14 @@
                             <option value="Completed">Completed</option>
                         </select>
                     </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-3">
+                        <label for="purchase_order_number" class="block-label"><b>Purchase Order#</b></label>
+                        <input type="text" class="form-control" name="purchase_order_no"
+                            id="purchase_order_no" placeholder="Enter Purchase Order#"
+                            autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                    </div>                    
                     <div class="col-md-3 form-group">
                         <label for="panel_type" class="block-label"><b>Panel Type</b> <a href="javascript:void(0);" id="btn-quick-add-panel-type" class="btn-small nsm-button">Add New</a></label>
                             <select name="panel_type" id="panel_type" class="form-control" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
@@ -186,7 +189,13 @@
                                 <option value="Job">Job</option>
                             </select>
                         </div>
-                    </div>                    
+                    </div>  
+                    <div class="col-md-3 form-group">
+                        <label for="employee_id" class="block-label"><b>Created By</b></label>                        
+                        <select class="form-control mb-3" name="employee_id" id="employee_id">
+                            <option value="<?= logged('id'); ?>" selected=""><?= logged('FName') . ' ' . logged('LName'); ?></option>
+                        </select>
+                    </div> 
                 </div>
                 <div class="row mt-4" style="background-color:white;">
                     <div class="col-md-3 form-group">
@@ -209,24 +218,15 @@
                             <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Extended"){ echo 'selected'; } } ?>  value="Extended">Extended</option>
                             <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "None"){ echo 'selected'; } } ?>  value="None">None</option>
                         </select>
-                    </div>
+                    </div>  
                     <div class="col-md-6 form-group">
-                        <label for="employee_id" class="block-label"><b>Created By</b></label>                        
-                        <select class="form-control mb-3" name="employee_id" id="employee_id">
-                            <option value="<?= logged('id'); ?>" selected=""><?= logged('FName') . ' ' . logged('LName'); ?></option>
-                        </select>
-                    </div>                    
-                </div>
-                <div class="row mt-4" style="background-color:white;">
-                    <div class="col-md-6 form-group">
-                        <label for="ticket-appointment-user"><b>Assigned Technician</b></label>
+                        <label for="ticket-appointment-user" class="block-label"><b>Assigned Technician</b></label>
                         <select class="form-control nsm-field form-select" name="assign_tech[]" id="ticket-appointment-user" multiple="multiple">
                         </select>
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="checkbox" name="is_with_esign" id="is-with-esign" value="1">
-                            <label class="form-check-label" for="is-with-esign">eSign Required</label>
-                        </div>
-                    </div>
+                    </div>                                   
+                </div>
+                <div class="row mt-4" style="background-color:white;">
+                    
                     <!-- <div class="col-md-6 form-group">
                         <label for="job_description"><b>Job Description</b></label>                        
                         <textarea name="job_description" id="job_description" class="form-control" required="" style="height:100px;"></textarea>
@@ -235,14 +235,15 @@
                 </div>
             </div>
         </div>
-    </div>       
+    </div>  
+</div>     
 
     <div class="row mt-2" id="with-esign-inputs-container" style="display:none;">
         <div class="col-12">
             <div class="nsm-card primary">
                 <div class="nsm-card-header">
-                    <div class="nsm-card-title">
-                        <span class="custom-ticket-header"><i class='bx bxs-pen'></i> eSign Information</span>
+                    <div class="nsm-card-title custom-ticket-header">
+                        <span class=""><i class='bx bxs-pen'></i> eSign Information</span>
                     </div>
                 </div>
                 <div class="row mt-4" style="background-color:white;">
@@ -398,8 +399,8 @@
         <div class="col-12">
             <div class="nsm-card primary">
                 <div class="nsm-card-header">
-                    <div class="nsm-card-title">
-                        <span class="custom-ticket-header"><i class="bx bx-fw bx-user"></i> Emergency Contacts</span>
+                    <div class="nsm-card-title custom-ticket-header">
+                        <span class=""><i class="bx bx-fw bx-user"></i> Emergency Contacts</span>
                     </div>
                 </div>
                 <div class="nsm-card-content">
@@ -516,8 +517,8 @@
         <div class="col-12">
             <div class="nsm-card primary">
                 <div class="nsm-card-header">
-                    <div class="nsm-card-title">
-                        <span class="custom-ticket-header"><i class='bx bx-list-ul'></i> Item List</span>
+                    <div class="nsm-card-title custom-ticket-header">
+                        <span class=""><i class='bx bx-list-ul'></i> Item List</span>
                     </div>
                 </div>
                 <div class="nsm-card-content">

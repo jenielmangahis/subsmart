@@ -502,7 +502,7 @@ a.btn-primary.btn-md {
                                             </div>     
                                             <div class="form-group col-md-3">
                                                 <b>Amount</b>
-                                                <input type="number" class="form-control payment_amount" name="payment_amount" id="payment_amount" placeholder="Enter Amount" />
+                                                <input type="number" step="any" class="form-control payment_amount" name="payment_amount" id="payment_amount" placeholder="Enter Amount" />
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <b>Billing Date</b>
