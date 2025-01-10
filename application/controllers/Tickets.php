@@ -3224,7 +3224,7 @@ class Tickets extends MY_Controller
 
         $this->page_data['settings'] = $settings;
         $this->page_data['page']->title = 'Service Ticket Settings';
-        $this->load->view('v2/pages/tickets/settings', $this->page_data);
+        $this->load->view('v2/pages/tickets/settings/index', $this->page_data);
     }
 
     public function ajax_update_settings()
