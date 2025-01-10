@@ -2784,7 +2784,7 @@ class Users extends MY_Controller
 		$comp_id = logged('company_id');
 
 		if (!empty($_FILES['image']['name'])) {
-			$target_dir = "./uploads/users/business_profile/$comp_id/";
+			$target_dir = "./uploads/users/business_profile/$bid/";
 		
 			if (!file_exists($target_dir)) {
 				mkdir($target_dir, 0777, true);

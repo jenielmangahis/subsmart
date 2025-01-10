@@ -19556,6 +19556,8 @@ class Accounting_modals extends MY_Controller
 
     private function update_invoice($invoiceId, $data)
     {
+        $this->load->model('AccountingTerm_model');
+
         $invoice = $this->invoice_model->getinvoice($invoiceId);
 
         if ($data['credit_card_payments'] == 1) {
@@ -19594,6 +19596,24 @@ class Accounting_modals extends MY_Controller
             $deposit = '0';
         }
 
+        if($data['term'] != 0) {
+            $accountingTermData = $this->AccountingTerm_model->getById($data['term']);
+            if($accountingTermData) {
+                $due_data_current    = date("Y-m-d", strtotime($data['due_date']));
+                $net_due_day = isset($accountingTermData->net_due_days) ? $accountingTermData->net_due_days : 0;
+                $due_data = date('Y-m-d', strtotime($due_data_current. ' + ' . $net_due_day . ' days'));
+            } else {
+                $due_data = date("Y-m-d", strtotime($data['due_date']));
+            }
+        } else {
+            $due_data = date("Y-m-d", strtotime($data['due_date']));
+        }
+
+        $invoice_no = $invoice->invoice_number;
+        if(isset($data['invoice_no']) && $data['invoice_no'] != 'undefined') {
+            $invoice_no = $data['invoice_no'];
+        }
+
         $diff = floatval(str_replace(',', '', $invoice->grand_total)) - floatval(str_replace(',', '', $invoice->balance));
         $balance = floatval(str_replace(',', '', $data['total_amount'])) - floatval(str_replace(',', '', $diff));
 
@@ -19603,9 +19623,9 @@ class Accounting_modals extends MY_Controller
             'job_name' => $data['job_name'],
             'work_order_number' => $data['job_no'],
             'purchase_order' => $data['purchase_order_no'],
-            'invoice_number' => $data['invoice_no'],
+            'invoice_number' => $invoice_no,
             'date_issued' => date("Y-m-d", strtotime($data['date_issued'])),
-            'due_date' => date("Y-m-d", strtotime($data['due_date'])),
+            'due_date' => isset($due_data) ? $due_data : null,
             'status' => $data['status'],
             'customer_email' => $data['customer_email'],
             'billing_address' => nl2br($data['billing_address']),
@@ -19613,7 +19633,7 @@ class Accounting_modals extends MY_Controller
             'ship_via' => $data['ship_via'],
             'shipping_date' => date("Y-m-d", strtotime($data['shipping_date'])),
             'tracking_number' => $data['tracking_no'],
-            'terms' => $data['terms'],
+            'terms' => $data['term'],
             'location_scale' => $data['location_of_sale'],
             'attachments' => json_encode($data['attachments']),
             'tags' => json_encode($data['tags']),
@@ -19634,6 +19654,95 @@ class Accounting_modals extends MY_Controller
         $update = $this->invoice_model->update_invoice($invoiceId, $invoiceData);
 
         if($update) {
+
+            /**
+             * Update recurring data - start
+             */
+            if($data['recurring_type'] !== 'unscheduled') {
+                $currentDate = date("m/d/Y");
+                $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
+                $every = $data['recurr_every'];
+
+                switch($data['recurring_interval']) {
+                    case 'daily' :
+                        $next = $startDate;
+                    break;
+                    case 'weekly' :
+                        $days = [
+                            'sunday',
+                            'monday',
+                            'tuesday',
+                            'wednesday',
+                            'thursday',
+                            'friday',
+                            'saturday'
+                        ];
+
+                        $day = $data['recurring_day'];
+                        $dayNum = array_search($day, $days);
+                        $next = $startDate;
+
+                        if(intval(date("w", strtotime($next))) !== $dayNum) {
+                            do {
+                                $next = date("m/d/Y", strtotime("$next +1 day"));
+                            } while(intval(date("w", strtotime($next))) !== $dayNum);
+                        }
+                    break;
+                    case 'monthly' :
+                        if($data['recurring_week'] === 'day') {
+                            $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                            $next = date("m/$day/Y", strtotime($startDate));
+
+                            if(strtotime($currentDate) > strtotime($next)) {
+                                $next = date("m/$day/Y", strtotime("$next +$every months"));
+                            }
+                        } else {
+                            $week = $data['recurring_week'];
+                            $day = $data['recurring_day'];
+                            $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                            if(strtotime($currentDate) > strtotime($next)) {
+                                $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                            }
+                        }
+                    break;
+                    case 'yearly' :
+                        $month = $data['recurring_month'];
+                        $day = $data['recurring_day'];
+                        $previous = date("$month/$day/Y", strtotime($startDate));
+                        $next = date("$month/$day/Y", strtotime($startDate));
+
+                        if(strtotime($currentDate) > strtotime($next)) {
+                            $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                        }
+                    break;
+                }
+            }            
+
+            $recurringData = [
+                'company_id' => logged('company_id'),
+                'template_name' => $data['template_name'],
+                'recurring_type' => $data['recurring_type'],
+                'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                'txn_type' => 'invoice',
+                'recurring_interval' => $data['recurring_interval'],
+                'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
+                'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
+                'end_type' => $data['end_type'],
+                'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                'current_occurrence' => 0,
+                'next_date' => date("Y-m-d", strtotime($next)),
+                'status' => 1
+            ];       
+            $recurringUpdate = $this->accounting_recurring_transactions_model->updateRecurringTransactionByTxnId($invoiceId, $recurringData);
+            /**
+             * Update recurring data - end
+             */            
+
             $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Invoice', $invoiceId);
 
             foreach($accountTransacs as $transac)

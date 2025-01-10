@@ -1,3 +1,4 @@
+var base_url = window.location.origin + "/";
 $(document).ready(function () {
     let vendorIdTemp
     let modal_element

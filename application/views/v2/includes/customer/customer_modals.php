@@ -36,10 +36,10 @@
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="new_sales_area_modal" tabindex="-1" aria-labelledby="new_sales_area_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="new_sales_area_form">
-            <div class="modal-content">
+<div class="modal fade nsm-modal fade" id="new_sales_area_modal" tabindex="-1" data-bs-backdrop="static" aria-labelledby="new_sales_area_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">        
+        <div class="modal-content">
+            <form method="POST" id="new_sales_area_form">
                 <div class="modal-header">
                     <span class="modal-title content-title">Add Sales Area</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
@@ -56,15 +56,15 @@
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="nsm-button primary">Save</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>        
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="new_customer_status_modal" tabindex="-1" aria-labelledby="new_customer_status_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="new_customer_status_form">
-            <div class="modal-content">
+<div class="modal fade nsm-modal fade" id="new_customer_status_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="new_customer_status_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">        
+        <div class="modal-content">
+            <form method="POST" id="new_customer_status_form">
                 <div class="modal-header">
                     <span class="modal-title content-title">Add Customer Status</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
@@ -72,7 +72,7 @@
                 <div class="modal-body">                    
                     <div class="row">
                         <div class="col-12">
-                            <input type="text" placeholder="Status Name" name="name" id="cs_name" class="nsm-field form-control mb-2" required />
+                            <input type="text" placeholder="Status Name" name="status_name" id="cs_name" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -80,16 +80,16 @@
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="nsm-button primary">Save</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="edit_customer_status_modal" tabindex="-1" aria-labelledby="edit_customer_status_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="edit_customer_status_form">
-        <input type="hidden" class="form-control" name="cs_id" id="edit_cs_id" />
-            <div class="modal-content">
+<div class="modal fade nsm-modal fade" id="edit_customer_status_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="edit_customer_status_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">        
+        <div class="modal-content">
+            <form method="POST" id="edit_customer_status_form">
+                <input type="hidden" class="form-control" name="cs_id" id="edit_cs_id" />
                 <div class="modal-header">
                     <span class="modal-title content-title">Edit Customer Status</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
@@ -105,15 +105,15 @@
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="nsm-button primary">Save</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>        
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="edit_sales_area_modal" tabindex="-1" aria-labelledby="edit_sales_area_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="edit_sales_area_form">
-            <div class="modal-content">
+<div class="modal fade nsm-modal fade" id="edit_sales_area_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="edit_sales_area_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" id="edit_sales_area_form">
                 <div class="modal-header">
                     <span class="modal-title content-title">Edit Sales Area</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
@@ -130,15 +130,15 @@
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="nsm-button primary">Save</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>        
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="new_lead_source_modal" tabindex="-1" aria-labelledby="new_lead_source_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="new_lead_source_form">
-            <div class="modal-content">
+<div class="modal fade nsm-modal fade" id="new_lead_source_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="new_lead_source_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">        
+        <div class="modal-content">
+            <form method="POST" id="new_lead_source_form">
                 <div class="modal-header">
                     <span class="modal-title content-title">Add Lead Source</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
@@ -155,15 +155,15 @@
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="nsm-button primary">Save</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="edit_lead_source_modal" tabindex="-1" aria-labelledby="edit_lead_source_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="edit_lead_source_form">
-            <div class="modal-content">
+<div class="modal fade nsm-modal fade" id="edit_lead_source_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="edit_lead_source_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" id="edit_lead_source_form">
                 <div class="modal-header">
                     <span class="modal-title content-title">Edit Lead Source</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
@@ -180,15 +180,15 @@
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="nsm-button primary">Save</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="new_lead_types_modal" tabindex="-1" aria-labelledby="new_lead_types_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="new_lead_types_form">
-            <div class="modal-content">
+<div class="modal fade nsm-modal fade" id="new_lead_types_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="new_lead_types_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">        
+        <div class="modal-content">
+            <form method="POST" id="new_lead_types_form">
                 <div class="modal-header">
                     <span class="modal-title content-title">Add Lead Type</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
@@ -205,15 +205,15 @@
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="nsm-button primary">Save</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>        
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="edit_lead_type_modal" tabindex="-1" aria-labelledby="edit_lead_type_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="edit_lead_type_form">
-            <div class="modal-content">
+<div class="modal fade nsm-modal fade" id="edit_lead_type_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="edit_lead_type_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">        
+        <div class="modal-content">
+            <form method="POST" id="edit_lead_type_form">                    
                 <div class="modal-header">
                     <span class="modal-title content-title">Edit Lead Type</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
@@ -230,15 +230,15 @@
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="nsm-button primary">Save</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="new_rate_plan_modal" tabindex="-1" aria-labelledby="new_rate_plan_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="new_rate_plan_form">
-            <div class="modal-content">
+<div class="modal fade nsm-modal fade" id="new_rate_plan_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="new_rate_plan_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">        
+        <div class="modal-content">
+            <form method="POST" id="new_rate_plan_form">
                 <div class="modal-header">
                     <span class="modal-title content-title">Add Rate Plan</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
@@ -249,10 +249,8 @@
                         <div class="col-12">
                             <input type="text" placeholder="Plan Name" name="plan_name" id="plan_name" class="nsm-field form-control mb-2" required />
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <input type="number" step="any" placeholder="Rate Amount" name="amount" id="amount" class="nsm-field form-control mb-2" required />
+                        <div class="col-6">
+                            <input type="number" value="0" step="any" placeholder="Rate Amount" name="plan_amount" id="amount" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -260,21 +258,21 @@
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="nsm-button primary">Save</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>        
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="edit_rate_plan_modal" tabindex="-1" aria-labelledby="edit_rate_plan_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="edit_rate_plan_form">
-            <div class="modal-content">
+<div class="modal fade nsm-modal fade" id="edit_rate_plan_modal" tabindex="-1" data-bs-backdrop="static" aria-labelledby="edit_rate_plan_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">        
+        <div class="modal-content">
+            <form method="POST" id="edit_rate_plan_form">
                 <div class="modal-header">
                     <span class="modal-title content-title">Edit Rate Plan</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" class="form-control" name="rate-plan-id" id="rate_plan_id" />
+                    <input type="hidden" class="form-control" name="rate_plan_id" id="rate_plan_id" />
                     <input type="hidden" class="form-control" name="id" id="edit_rate_id" />
                     <div class="row">
                         <div class="col-12">
@@ -282,8 +280,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12">
-                            <input type="number" placeholder="Rate Amount" name="amount" id="edit_amount" class="nsm-field form-control mb-2" required />
+                        <div class="col-6">
+                            <input type="number" placeholder="Rate Amount" name="plan_amount" id="edit_amount" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -291,8 +289,8 @@
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="nsm-button primary">Save</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 

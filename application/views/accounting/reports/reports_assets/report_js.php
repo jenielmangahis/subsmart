@@ -183,53 +183,8 @@
         }
 
         switch (status_filter) {
-            case "active_customer_group":
-                status_text = " (Active Only)";
-                break;
-            case "all_customer_group":
-                status_text = " (All)";
-                break;
-            case "Partially Paid":
-                status_text = " (Partially Paid Status)";
-                break;
-            case "Paid":
-                status_text = " (Paid Status)";
-                break;
-            case "Due":
-                status_text = " (Due Status)";
-                break;
-            case "Overdue":
-                status_text = " (Overdue Status)";
-                break;
-            case "Unpaid":
-                status_text = " (Unpaid Status)";
-                break;
-            case "Draft":
-                status_text = " (Draft Status)";
-                break;
-            case "Scheduled":
-                status_text = " (Scheduled Status)";
-                break;
-            case "Arrival":
-                status_text = " (Arrival Status)";
-                break;
-            case "Started":
-                status_text = " (Started Status)";
-                break;
-            case "Approved":
-                status_text = " (Approved Status)";
-                break;
-            case "Finished":
-                status_text = " (Finished Status)";
-                break;
-            case "Cancelled":
-                status_text = " (Cancelled Status)";
-                break;
-            case "Invoiced":
-                status_text = " (Invoiced Status)";
-                break;
-            case "Completed":
-                status_text = " (Completed Status)";
+            case "Accepted":
+                status_text = " (Accepted Status)";
                 break;
             case "Acceptance Pending":
                 status_text = " (Acceptance Pending)";
@@ -249,14 +204,23 @@
             case "Active w/RYR":
                 status_text = " (Active w/RYR)";
                 break;
+            case "active_customer_group":
+                status_text = " (Active Only)";
+                break;
+            case "all_customer_group":
+                status_text = " (All)";
+                break;
+            case "Arrival":
+                status_text = " (Arrival Status)";
+                break;
             case "CAD/Permitting":
                 status_text = " (CAD/Permitting)";
                 break;
-            case "Pending":
-                status_text = " (Pending)";
-                break;
             case "Cancel Pending":
                 status_text = " (Cancel Pending)";
+                break;
+            case "Cancelled":
+                status_text = " (Cancelled Status)";
                 break;
             case "Charge Back":
                 status_text = " (Charge Back)";
@@ -267,11 +231,32 @@
             case "Competition Lost":
                 status_text = " (Competition Lost)";
                 break;
+            case "Completed":
+                status_text = " (Completed Status)";
+                break;
             case "Contract Review":
                 status_text = " (Contract Review)";
                 break;
+            case "Declined By Customer":
+                status_text = " (Declined By Customer Status)";
+                break;
             case "Design Team/Engineering Stamps":
                 status_text = " (Design Team/Engineering Stamps)";
+                break;
+            case "Draft":
+                status_text = " (Draft Status)";
+                break;
+            case "Due":
+                status_text = " (Due Status)";
+                break;
+            case "Estimate":
+                status_text = " (Estimate)";
+                break;
+            case "Event":
+                status_text = " (Event)";
+                break;
+            case "Finished":
+                status_text = " (Finished Status)";
                 break;
             case "Funded":
                 status_text = " (Funded)";
@@ -282,6 +267,9 @@
             case "Inactive w/RMM":
                 status_text = " (Inactive w/RMM)";
                 break;
+            case "Invoiced":
+                status_text = " (Invoiced Status)";
+                break;
             case "Inspection":
                 status_text = " (Inspection)";
                 break;
@@ -291,36 +279,58 @@
             case "Interconnection":
                 status_text = " (Interconnection)";
                 break;
+            case "Job":
+                status_text = " (Job)";
+                break;
             case "Lead":
                 status_text = " (Lead)";
                 break;
             case "Loan Documents to be Executed":
                 status_text = " (Loan Documents to be Executed)";
                 break;
+            case "Lost":
+                status_text = " (Lost Status)";
+                break;
             case "New":
                 status_text = " (New)";
+                break;
+            case "Overdue":
+                status_text = " (Overdue Status)";
+                break;
+            case "Paid":
+                status_text = " (Paid Status)";
+                break;
+            case "Partially Paid":
+                status_text = " (Partially Paid Status)";
+                break;
+            case "Pending":
+                status_text = " (Pending Status)";
                 break;
             case "Proposal":
                 status_text = " (Proposal)";
                 break;
-            case "Site Survey":
-                status_text = " (Site Survey)";
+            case "Scheduled":
+                status_text = " (Scheduled Status)";
                 break;
             case "Service":
                 status_text = " (Service)";
                 break;
-            case "Job":
-                status_text = " (Job)";
+            case "Site Survey":
+                status_text = " (Site Survey)";
                 break;
-            case "Event":
-                status_text = " (Event)";
+            case "Started":
+                status_text = " (Started Status)";
                 break;
-            case "Estimate":
-                status_text = " (Estimate)";
+            case "Submitted":
+                status_text = " (Submitted Status)";
+                break;
+            case "Unpaid":
+                status_text = " (Unpaid Status)";
                 break;
             default:
                 status_text = "";
         }
+
 
         // =========================
         theadColumnNames = $(`#<?php echo $tableID; ?> th`).map(function() { return $(this).text(); }).get();

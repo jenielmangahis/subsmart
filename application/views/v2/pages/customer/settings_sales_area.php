@@ -128,7 +128,7 @@
             let _this = $(this);
             e.preventDefault();
 
-            var url = "<?php echo base_url(); ?>customer/add_salesarea_ajax";
+            var url = base_url + "customer/_create_sales_area";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -136,22 +136,11 @@
                 type: 'POST',
                 url: url,
                 data: _this.serialize(),
+                dataType: 'json',
                 success: function(result) {
-                    if (result === "Updated") {
+                    if ( result.is_success ) {
                         Swal.fire({
-                            title: 'Update Successful!',
-                            text: "Sales area has been updated successfully.",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            if (result.value) {
-                                location.reload();
-                            }
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Save Successful!',
+                            title: 'Sales Area',
                             text: "New sales area has been added successfully.",
                             icon: 'success',
                             showCancelButton: false,
@@ -161,6 +150,12 @@
                                 location.reload();
                             //}
                         });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
+                        }); 
                     }
                     $("#new_sales_area_modal").modal('hide');
                     _this.trigger("reset");
@@ -242,7 +237,7 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: "<?php echo base_url(); ?>customer/delete_sales_area",
+                        url: base_url + "customer/delete_sales_area",
                         data: {id: id},
                         dataType:"json",
                         success: function(result) {

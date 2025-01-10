@@ -2336,58 +2336,33 @@ class Customer extends MY_Controller
         $this->load->view('customer/subscription_details', $this->page_data);
     }
 
-    // public function settingStatus()
-    // {
-    //     $this->page_data['page']->title = 'Customer Status';
-    //     $this->page_data['page']->parent = 'Customers';
-    //     $this->hasAccessModule(9);
-
-    //     $user_id = logged('id');
-    //     $company_id = logged('company_id');
-
-    //     // set a global data for customer profile id
-    //     $this->page_data['customer_profile_id'] = $user_id;
-
-    //     if (isset($userid) || !empty($userid)) {
-    //         $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
-    //         $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-    //     }
-
-    //     $default_ids = defaultCompanyCustomerStatusIds();
-    //     $this->page_data['customerStatus'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id, $default_ids);
-
-    //     $this->load->view('v2/pages/customer/settings_customer_status', $this->page_data);
-    // }
-
     public function settingStatus()
     {
-        $this->page_data['page']->title = 'Customer Status';
-        $this->page_data['page']->parent = 'Customers';
+        
         $this->hasAccessModule(9);
+        
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
 
         $user_id = logged('id');
         $company_id = logged('company_id');
-
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $user_id;
-
-        if (isset($userid) || !empty($userid)) {
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
-            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-        }
 
 		$keyword         = '';
         $param['search'] = '';
         if(!empty(get('search'))) {
 			$keyword = get('search');
-            $this->page_data['search'] = $keyword;
             $param['search'] = $keyword;
             $this->page_data['customerStatus'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id, [], $param);
         } else {
             $this->page_data['customerStatus'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id);
         }          
         
-        // $default_ids = defaultCompanyCustomerStatusIds();
+        $this->page_data['search'] = $keyword;
+        $this->page_data['customer_profile_id'] = $user_id;
+        $this->page_data['page']->title = 'Customer Status';
+        $this->page_data['page']->parent = 'Customers';
         $this->page_data['page']->title = 'Customer Status';
         $this->page_data['page']->parent = 'Sales';
         $this->load->view('v2/pages/customer/settings_customer_status', $this->page_data);
@@ -5328,6 +5303,34 @@ class Customer extends MY_Controller
         }
     }
 
+    public function ajax_delete_rate_plan()
+    {
+        $this->load->model('RatePlan_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $ratePlan = $this->RatePlan_model->getByIdAndCompanyId($post['id'], $cid);
+        if( $ratePlan ){
+            $name = $ratePlan->plan_name;
+            $this->RatePlan_model->delete($post['id']);
+
+            $is_success = 1;
+            $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Rate Plan : Deleted ' . $name; 
+            createActivityLog($activity_name);
+            
+        } 
+        
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
     public function delete_rate_plan()
     {
         $deletion_query = [
@@ -7571,47 +7574,44 @@ class Customer extends MY_Controller
 
     public function settings_rate_plans()
     {
-        $this->page_data['page']->title = 'Rate Plans';
-        $this->page_data['page']->parent = 'Sales';
-
         $this->load->library('wizardlib');
         $this->hasAccessModule(9);
+
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
 
         $user_id = logged('id');
         $company_id = logged('company_id');
 
-        // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
-
-        if (isset($userid) || !empty($userid)) {
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
-            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-        }
-
+        $this->page_data['page']->title = 'Rate Plans';
+        $this->page_data['page']->parent = 'Sales';
         $this->page_data['rate_plans'] = $this->customer_ad_model->getAllSettingsRatePlansByCompanyId($company_id);
-
         $this->load->view('v2/pages/customer/settings_rate_plans', $this->page_data);
     }
 
     public function settings_activation_fee()
     {
-        $this->page_data['page']->title = 'Activation Fee';
-        $this->page_data['page']->parent = 'Sales';
-
         $this->load->library('wizardlib');
         $this->hasAccessModule(9);
 
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
         $user_id = logged('id');
         $company_id = logged('company_id');
-
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $user_id;
-
         if (isset($userid) || !empty($userid)) {
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
+        $this->page_data['customer_profile_id'] = $user_id;
+        $this->page_data['page']->title = 'Activation Fee';
+        $this->page_data['page']->parent = 'Sales';
         $this->page_data['activation_fee'] = $this->customer_ad_model->getAllSettingsActivationFeeByCompanyId($company_id);
         $this->load->view('v2/pages/customer/settings_activation_fee', $this->page_data);
     }
@@ -9081,15 +9081,28 @@ class Customer extends MY_Controller
 
     public function ajax_update_customer_status()
     {
+        $this->load->model('CustomerStatus_model');
+
         $is_success = 0;
-        $msg = 'Cannot save data';
+        $msg  = 'Cannot find data';
         $post = $this->input->post();
+        $cid  = logged('company_id');
 
         if ($post['name'] != '') {
-            $status = ['name' => $post['name']];
-            $this->general->update_with_key_field($status, $post['cs_id'], 'acs_cust_status', 'id');
-            $is_success = 1;
-            $msg = '';
+            $isExists = $this->CustomerStatus_model->getByNameAndCompanyId($post['name'], $cid);
+            if( $isExists && $isExists->id != $post['cs_id'] ){
+                $msg = 'Status name already exists.';
+            }else{
+                $status = ['name' => $post['name']];
+                $this->general->update_with_key_field($status, $post['cs_id'], 'acs_cust_status', 'id');
+                
+                //Activity Logs
+                $activity_name = 'Customer Status : Updated status  ' . $isExists->name . ' changed to ' . $post['name']; 
+                createActivityLog($activity_name);
+
+                $is_success = 1;
+                $msg = '';
+            }               
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
@@ -9099,22 +9112,27 @@ class Customer extends MY_Controller
 
     public function ajax_delete_customer_status()
     {
+        $this->load->model('CustomerStatus_model');
+
         $is_success = 0;
         $msg = 'Cannot find data';
 
         $post = $this->input->post();
-        $deletion_query = [
-            'where' => [
-                'id' => $post['csid'],
-            ],
-            'table' => 'acs_cust_status',
-        ];
-        if ($this->general->delete_($deletion_query)) {
+        $cid  = logged('company_id');
+        $customerStatus = $this->CustomerStatus_model->getByIdAndCompanyId($post['csid'], $cid);
+        if( $customerStatus ){
+            //Activity Logs
+            $activity_name = 'Customer Status : Deleted status  ' . $customerStatus->name; 
+            createActivityLog($activity_name);
+
+            $this->CustomerStatus_model->delete($customerStatus->id);
+
             $is_success = 1;
             $msg = '';
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
+
         echo json_encode($return);
         exit;
     }
@@ -10354,11 +10372,49 @@ class Customer extends MY_Controller
                 $msg = '';
                 
             }else{
-                $msg = 'Please enter accounting term name.';
+                $msg = 'Please enter plan name.';
             }
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg, 'plan_id' => $plan_id, 'plan_amount' => $plan_amount];
+        echo json_encode($return);
+    }
+
+    public function ajax_update_rate_plan()
+    {
+        $this->load->model('RatePlan_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $isExists = $this->RatePlan_model->getByNameAndCompanyId($post['plan_name'], $company_id);
+        if( $isExists && $isExists->id != $post['rate_plan_id'] ){
+            $msg = 'Plan name already exists.';
+        }else{
+            if ($post['plan_name'] != '') {
+                $data = [
+                    'plan_name' => $post['plan_name'],
+                    'amount' => $post['plan_amount']
+                ];
+    
+                $this->RatePlan_model->update($isExists->id, $data);
+    
+                //Activity Logs
+                $activity_name = 'Rate Plan : Updated ' . $post['plan_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+                
+            }else{
+                $msg = 'Please enter plan name.';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
 

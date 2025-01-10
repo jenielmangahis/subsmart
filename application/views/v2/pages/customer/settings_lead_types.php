@@ -34,11 +34,13 @@
                     </div> 
 
                     <div class="col-6 grid-mb text-end">
+                        <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#new_lead_types_modal">
-                                <i class='bx bx-fw bx-layer'></i> New Lead Type
+                                <i class='bx bx-fw bx-plus'></i> New Lead Type
                             </button>
                         </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <table class="nsm-table">
@@ -71,12 +73,16 @@
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                                                 <li>
                                                     <a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $lead_type->lead_id; ?>" data-name="<?= $lead_type->lead_name; ?>">Edit</a>
                                                 </li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
                                                 <li>
                                                     <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $lead_type->lead_id; ?>">Delete</a>
                                                 </li>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </td>
