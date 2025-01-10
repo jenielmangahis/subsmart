@@ -1162,7 +1162,7 @@ class Tickets extends MY_Controller
         $this->load->model('PanelType_model');
         $this->load->model('Customer_advance_model');
 
-        $this->page_data['page']->title = 'Tickets';
+        $this->page_data['page']->title = 'Service Tickets';
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -3151,6 +3151,58 @@ class Tickets extends MY_Controller
             'msg' => $msg
         ];
 
+        echo json_encode($return);
+    }
+
+    public function settings_tickets()
+    {
+        $this->load->model('TicketSettings_model');
+
+        $cid = logged('company_id');
+
+        $settings = $this->TicketSettings_model->getByCompanyId($cid);
+
+        $this->page_data['settings'] = $settings;
+        $this->page_data['page']->title = 'Service Ticket Settings';
+        $this->load->view('v2/pages/tickets/settings', $this->page_data);
+    }
+
+    public function ajax_update_settings()
+    {
+        $this->load->model('TicketSettings_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';        
+
+        $post = $this->input->post();
+        $cid = logged('company_id');
+
+        $settings   = $this->TicketSettings_model->getByCompanyId($cid);
+        if( $settings ){
+            $data = [
+                'ticket_num_prefix' => $post['ticket_settings_prefix'],
+                'ticket_num_next' => $post['ticket_settings_next_number']
+            ];
+
+            $this->TicketSettings_model->update($settings->id, $data);
+        }else{
+            $data = [
+                'company_id' => $cid,
+                'ticket_num_prefix' => $post['ticket_settings_prefix'],
+                'ticket_num_next' => $post['ticket_settings_next_number']
+            ];
+
+            $this->TicketSettings_model->create($data);
+        }
+
+        //Activity Logs
+        $activity_name = 'Service Ticket : Updated settings'; 
+        createActivityLog($activity_name);
+
+        $is_success = 1;
+        $msg = '';      
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
 }
