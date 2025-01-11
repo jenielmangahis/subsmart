@@ -4999,6 +4999,11 @@ class Customer extends MY_Controller
 
     public function add_leadsource_ajax()
     {
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+            show403Error();
+            return false;
+        }
+
         $is_success = 1;
         $msg = '';
 
@@ -5035,6 +5040,11 @@ class Customer extends MY_Controller
 
     public function update_leadsource_ajax()
     {
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
         $is_success = 1;
         $msg = '';
 
@@ -5233,9 +5243,14 @@ class Customer extends MY_Controller
         }
     }
 
-    public function delete_sales_area()
+    public function ajax_delete_sales_area()
     {
         $this->load->model('SalesArea_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'delete')){
+			show403Error();
+			return false;
+		}
 
         $is_success = 0;
         $msg = 'Cannot find data';
@@ -5263,6 +5278,11 @@ class Customer extends MY_Controller
     public function delete_lead_source()
     {
         $this->load->model('LeadSource_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'delete')){
+			show403Error();
+			return false;
+		}
 
         $is_success = 0;
         $msg = 'Cannot find data';
@@ -5306,6 +5326,11 @@ class Customer extends MY_Controller
     public function ajax_delete_rate_plan()
     {
         $this->load->model('RatePlan_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'delete')){
+			show403Error();
+			return false;
+		}
 
         $is_success = 0;
         $msg = 'Cannot find data';
@@ -7652,25 +7677,14 @@ class Customer extends MY_Controller
 
     public function settings_headers()
     {
-        $this->page_data['page']->title = 'Headers';
-        $this->page_data['page']->parent = 'Sales';
-
-        $this->load->library('wizardlib');
         $this->hasAccessModule(9);
 
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+            show403Error();
+            return false;
+        }        
+
         $user_id = logged('id');
-
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $user_id;
-
-        if (isset($userid) || !empty($userid)) {
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
-            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-        }
-
-        $this->page_data['customer_list_headers'] = customer_list_headers();
-        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
-
         $get_company_settings = [
             'where' => [
                 'company_id' => logged('company_id'),
@@ -7680,6 +7694,12 @@ class Customer extends MY_Controller
         ];
         $customer_settings = $this->general->get_data_with_param($get_company_settings);
         $headers = unserialize($customer_settings[0]->headers);
+
+        $this->page_data['customer_profile_id'] = $user_id;
+        $this->page_data['customer_list_headers'] = customer_list_headers();
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
+        $this->page_data['page']->title = 'Headers';
+        $this->page_data['page']->parent = 'Sales';
         $this->page_data['customer_tbl_headers'] = $headers;
         $this->page_data['company_id'] = logged('company_id');
 
@@ -7691,24 +7711,19 @@ class Customer extends MY_Controller
      */
     public function settings_import()
     {
-        $this->page_data['page']->title = 'Customer Import Settings';
-        $this->page_data['page']->parent = 'Sales';
-
-        $this->load->library('wizardlib');
         $this->hasAccessModule(9);
 
-        $user_id = logged('id');
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+            show403Error();
+            return false;
+        }  
 
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $user_id;
+        $user_id = logged('id');
 
         if (isset($userid) || !empty($userid)) {
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
-
-        $this->page_data['customer_list_headers'] = customer_list_headers();
-        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
 
         $get_company_settings = [
             'where' => [
@@ -7722,6 +7737,12 @@ class Customer extends MY_Controller
             'table' => 'acs_import_fields',
             'select' => '*',
         ];
+
+        $this->page_data['customer_list_headers'] = customer_list_headers();
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
+        $this->page_data['customer_profile_id'] = $user_id;
+        $this->page_data['page']->title = 'Customer Import Settings';
+        $this->page_data['page']->parent = 'Sales';
         $this->page_data['importFieldsList'] = $this->general->get_data_with_param($getImportFields);
         $this->page_data['importFields'] = $this->general->get_data_with_param($get_company_settings, false);
         $this->page_data['company_id'] = logged('company_id');
@@ -7735,25 +7756,14 @@ class Customer extends MY_Controller
      */
     public function settings_export()
     {
-        $this->page_data['page']->title = 'Customer Export Settings';
-        $this->page_data['page']->parent = 'Sales';
-
-        $this->load->library('wizardlib');
         $this->hasAccessModule(9);
 
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+            show403Error();
+            return false;
+        } 
+        
         $user_id = logged('id');
-
-        // set a global data for customer profile id
-        $this->page_data['customer_profile_id'] = $user_id;
-
-        if (isset($userid) || !empty($userid)) {
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
-            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-        }
-
-        $this->page_data['customer_list_headers'] = customer_list_headers();
-        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
-
         $get_company_settings = [
             'where' => [
                 'company_id' => logged('company_id'),
@@ -7766,9 +7776,20 @@ class Customer extends MY_Controller
             'table' => 'acs_import_fields',
             'select' => '*',
         ];
-        $this->page_data['importFieldsList'] = $this->general->get_data_with_param($getImportFields);
-
         $customer_settings = $this->general->get_data_with_param($get_company_settings, false);
+
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
+            $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+        }
+
+        // set a global data for customer profile id
+        $this->page_data['customer_profile_id'] = $user_id;
+        $this->page_data['customer_list_headers'] = customer_list_headers();
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
+        $this->page_data['importFieldsList'] = $this->general->get_data_with_param($getImportFields);
+        $this->page_data['page']->title = 'Customer Export Settings';
+        $this->page_data['page']->parent = 'Sales';
         $this->page_data['importFields'] = $customer_settings;
         $this->page_data['company_id'] = logged('company_id');
         $this->page_data['page']->title = 'Export Settings';
@@ -7781,6 +7802,11 @@ class Customer extends MY_Controller
      */
     public function addOrUpdateImportFields()
     {
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+            show403Error();
+            return false;
+        }    
+
         addJSONResponseHeader();
         $input = $this->input->post();
         $is_updated = 0;
@@ -7825,9 +7851,9 @@ class Customer extends MY_Controller
             if( $is_updated == 1 ){
                 //Activity Logs
                 if( $input['type'] == 'export' ){
-                    $activity_name = 'Updated Customer Export Settings'; 
+                    $activity_name = 'Export Settings : Updated customer export settings'; 
                 }else{
-                    $activity_name = 'Updated Customer Import Settings'; 
+                    $activity_name = 'Import Settings : Updated customer import settings'; 
                 }
                 
                 createActivityLog($activity_name);
@@ -9078,6 +9104,11 @@ class Customer extends MY_Controller
     {
         $this->load->model('CustomerStatus_model');
 
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
         $is_success = 0;
         $msg  = 'Cannot find data';
         $post = $this->input->post();
@@ -9113,6 +9144,11 @@ class Customer extends MY_Controller
     public function ajax_delete_customer_status()
     {
         $this->load->model('CustomerStatus_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'delete')){
+			show403Error();
+			return false;
+		}
 
         $is_success = 0;
         $msg = 'Cannot find data';
@@ -9999,6 +10035,11 @@ class Customer extends MY_Controller
     {
         $this->load->model('FinancingPaymentCategory_model');
 
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+            show403Error();
+            return false;
+        }
+
         $is_success = 0;
         $msg   = 'Cannot save data';
         $name  = '';
@@ -10007,24 +10048,29 @@ class Customer extends MY_Controller
         $company_id = logged('company_id');
         $post       = $this->input->post();
 
-        $data = [
-            'company_id' => $company_id,
-            'name' => $post['category_name'],
-            'value' => $post['category_value'],
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s")
-        ];
-
-        $this->FinancingPaymentCategory_model->create($data);
-        $name  = $post['category_name'];
-        $value = $post['category_value'];
-
-        //Activity Logs
-        $activity_name = 'Financing Payment Category : Created ' . $post['category_name']; 
-        createActivityLog($activity_name);
-
-        $is_success = 1;
-        $msg = '';
+        $isExists = $this->FinancingPaymentCategory_model->getByNameAndCompanyId($post['category_name'], $company_id);
+        if( $isExists ){
+            $msg   = 'Category name already exists.';
+        }else{
+            $data = [
+                'company_id' => $company_id,
+                'name' => $post['category_name'],
+                'value' => $post['category_value'],
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+    
+            $this->FinancingPaymentCategory_model->create($data);
+            $name  = $post['category_name'];
+            $value = $post['category_value'];
+    
+            //Activity Logs
+            $activity_name = 'Financing Payment Category : Created ' . $post['category_name']; 
+            createActivityLog($activity_name);
+    
+            $is_success = 1;
+            $msg = '';
+        }        
 
         $return = ['is_success' => $is_success, 'msg' => $msg, 'name' => $name, 'value' => $value];
         echo json_encode($return);
@@ -10034,18 +10080,28 @@ class Customer extends MY_Controller
     {
         $this->load->model('FinancingPaymentCategory_model');
 
+        if(!checkRoleCanAccessModule('customers', 'read')){
+			show403Error();
+			return false;
+		}
+
         $cid = logged('company_id');
         $financingCategories = $this->FinancingPaymentCategory_model->getAllByCompanyId($cid);
 
         $this->page_data['financingCategories'] = $financingCategories;
-        $this->page_data['page']->title = 'Financing Categories';
-        $this->page_data['page']->parent = 'Financing Categories';
+        $this->page_data['page']->title  = 'Financing Payment Categories';
+        $this->page_data['page']->parent = 'Financing Payment Categories';
         $this->load->view('v2/pages/customer/settings_financing_categories', $this->page_data);
     }
 
     public function ajax_update_financing_category()
     {
         $this->load->model('FinancingPaymentCategory_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+            show403Error();
+            return false;
+        }
 
         $is_success = 0;
         $msg   = 'Cannot save data';
@@ -10056,25 +10112,30 @@ class Customer extends MY_Controller
         $post       = $this->input->post();        
 
         $financingCategory = $this->FinancingPaymentCategory_model->getByIdAndCompanyId($post['catid'], $company_id);
-        if( $financingCategory ){
-            $data = [
-                'name' => $post['category_name'],
-                'value' => $post['category_value'],
-                'updated_at' => date("Y-m-d H:i:s")
-            ];
-
-            $this->FinancingPaymentCategory_model->update($financingCategory->id, $data);
-
-            $name  = $post['category_name'];
-            $value = $post['category_value'];
-
-            //Activity Logs
-            $activity_name = 'Financing Payment Category : Updated ' . $financingCategory->name; 
-            createActivityLog($activity_name);
-
-            $is_success = 1;
-            $msg = '';
-        }
+        $isExists          = $this->FinancingPaymentCategory_model->getByNameAndCompanyId($post['category_name'], $company_id);
+        if( $isExists && $isExists->id != $financingCategory->id ){
+            $msg = 'Category already exists';
+        }else{
+            if( $financingCategory ){
+                $data = [
+                    'name' => $post['category_name'],
+                    'value' => $post['category_value'],
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->FinancingPaymentCategory_model->update($financingCategory->id, $data);
+    
+                $name  = $post['category_name'];
+                $value = $post['category_value'];
+    
+                //Activity Logs
+                $activity_name = 'Financing Payment Category : Updated ' . $financingCategory->name; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+            }
+        }        
 
         $return = ['is_success' => $is_success, 'msg' => $msg, 'name' => $name, 'value' => $value];
         echo json_encode($return);
@@ -10083,6 +10144,11 @@ class Customer extends MY_Controller
     public function ajax_delete_financing_category()
     {
         $this->load->model('FinancingPaymentCategory_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'delete')){
+            show403Error();
+            return false;
+        }
 
         $is_success = 0;
         $msg   = 'Cannot save data';
@@ -10109,6 +10175,11 @@ class Customer extends MY_Controller
     public function ajax_create_customer_status()
     {
         $this->load->model('CustomerStatus_model');
+        
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
 
         $is_success = 0;
         $msg = 'Cannot save data';
@@ -10244,6 +10315,11 @@ class Customer extends MY_Controller
     {
         $this->load->model('SalesArea_model');
 
+        if(!checkRoleCanAccessModule('customers', 'write')){
+			show403Error();
+			return false;
+		}
+
         $is_success = 0;
         $msg = 'Cannot save data';
         $sa_name = '';
@@ -10286,6 +10362,11 @@ class Customer extends MY_Controller
     public function ajax_update_sales_area()
     {
         $this->load->model('SalesArea_model');
+
+        if(!checkRoleCanAccessModule('customers', 'write')){
+			show403Error();
+			return false;
+		}
 
         $is_success = 0;
         $msg = 'Cannot find data';
@@ -10383,6 +10464,11 @@ class Customer extends MY_Controller
     {
         $this->load->model('RatePlan_model');
 
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
         $is_success = 0;
         $msg = 'Cannot save data';
         $plan_id = 0;
@@ -10426,6 +10512,11 @@ class Customer extends MY_Controller
     {
         $this->load->model('RatePlan_model');
 
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
         $is_success = 0;
         $msg = 'Cannot find data';
 
@@ -10466,6 +10557,11 @@ class Customer extends MY_Controller
     public function ajax_create_system_package_type()
     {
         $this->load->model('SystemPackageType_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+            show403Error();
+            return false;
+        }
 
         $is_success = 0;
         $msg = 'Cannot save data';
@@ -10508,6 +10604,11 @@ class Customer extends MY_Controller
     {
         $this->load->model('SystemPackageType_model');
 
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+            show403Error();
+            return false;
+        }
+
         $is_success = 0;
         $msg = 'Cannot find data';
 
@@ -10542,6 +10643,11 @@ class Customer extends MY_Controller
     public function ajax_create_activation_fee()
     {
         $this->load->model('ActivationFee_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
 
         $is_success = 0;
         $msg = 'Cannot save data';
@@ -10579,6 +10685,11 @@ class Customer extends MY_Controller
     {
         $this->load->model('ActivationFee_model');
 
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+            show403Error();
+            return false;
+        }
+
         $is_success = 0;
         $msg = 'Cannot find data';
         $amount = 0;
@@ -10614,6 +10725,11 @@ class Customer extends MY_Controller
     {
         $this->load->model('ActivationFee_model');
 
+        if(!checkRoleCanAccessModule('customer-settings', 'delete')){
+            show403Error();
+            return false;
+        }
+
         $is_success = 0;
         $msg = 'Cannot find data';
         $amount = 0;
@@ -10634,6 +10750,37 @@ class Customer extends MY_Controller
         }
         
         $return = ['is_success' => $is_success, 'msg' => $msg, 'amount' => $amount];
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_system_package_type()
+    {
+        $this->load->model('SystemPackageType_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'delete')){
+            show403Error();
+            return false;
+        }
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $systemPackageType = $this->SystemPackageType_model->getByIdAndCompanyId($post['id'], $company_id);
+        if( $systemPackageType ){
+            $this->SystemPackageType_model->delete($systemPackageType->id);
+
+            //Activity Logs
+            $activity_name = 'System Package Type : Deleted ' . $systemPackageType->name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+        
+        $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
 }
