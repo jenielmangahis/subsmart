@@ -76,7 +76,7 @@
                                                 <?php } ?>
                                                 <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $type->id; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $type->id; ?>" data-name="<?= $type->name; ?>">Delete</a>
                                                 </li>
                                                 <?php } ?>
                                             </ul>
@@ -209,11 +209,12 @@
         });
 
         $(document).on("click", ".delete-item", function() {
-            let id = $(this).attr("data-id");
+            let id = $(this).attr('data-id');
+            let name = $(this).attr('data-name');
 
             Swal.fire({
                 title: 'Delete System Package Type',
-                text: "Are you sure you want to delete this System Package Type?",
+                html: `Are you sure you want to delete this system package type <b>${name}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -222,15 +223,14 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: "<?php echo base_url(); ?>customer/delete_spt",
-                        data: {
-                            id: id
-                        },
+                        url: base_url + "customers/_delete_system_package_type",
+                        data: {id: id},
+                        dataType:"json",
                         success: function(result) {
-                            if (result === '1') {
+                            if (result.is_success) {
                                 Swal.fire({
-                                    title: 'Good job!',
-                                    text: "Data Deleted Successfully!",
+                                    title: 'System Package Type',
+                                    text: "Data deleted successfully!",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
@@ -238,6 +238,12 @@
                                     //if (result.value) {
                                         location.reload();
                                     //}
+                                });
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    html: result.msg
                                 });
                             }
                         },

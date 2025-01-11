@@ -28,6 +28,12 @@
                                         </div>
                                         <label class="nsm-subtitle mb-3">Check the column title to display in customers list.</label>
                                         <form id="customer_headers_form" method="POST">
+                                            <?php
+                                                $chk_disabled = "disabled='disabled'"; 
+                                                if(checkRoleCanAccessModule('customer-settings', 'write')){
+                                                    $chk_disabled = '';
+                                                }
+                                            ?>
                                             <div class="row">
                                                 <?php foreach ($customer_list_headers as $key => $value) :
                                                     $checked  = '';
@@ -40,7 +46,7 @@
                                                     <div class="col-12 col-md-6">
                                                         <div class="d-block">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" name="headers[<?= $key; ?>]" id="<?= $key; ?>" <?= $checked; ?>>
+                                                                <input class="form-check-input" type="checkbox" name="headers[<?= $key; ?>]" id="<?= $key; ?>" <?= $checked; ?> <?= $chk_disabled; ?>>
                                                                 <label class="form-check-label" for="<?= $key; ?>"><?= $value; ?></label>
                                                             </div>
                                                         </div>
@@ -61,7 +67,7 @@
                                                                 <div class="col-12 col-md-3">
                                                                     <div class="d-block">
                                                                         <div class="form-check">
-                                                                            <input class="form-check-input" type="checkbox" name="solarHeader[<?= $solar['name'] ?>]" id="<?= $solar['name'] ?>" <?= $checked; ?>>
+                                                                            <input class="form-check-input" type="checkbox" name="solarHeader[<?= $solar['name'] ?>]" id="<?= $solar['name'] ?>" <?= $checked; ?> <?= $chk_disabled; ?>>
                                                                             <label class="form-check-label" for="<?= $solar['name'] ?>"><?= $solar['description'] ?></label>
                                                                         </div>
                                                                     </div>
@@ -104,11 +110,13 @@
                             </div>
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                     <div class="col-12 text-end">
                         <button type="button" data-action="save" class="nsm-button primary" id="btn_save_headers">
                             Save Changes
                         </button>
                     </div>
+                    <?php } ?>
                 </div>
             </div>
         </div>

@@ -30,13 +30,15 @@
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" id="btn-add-new-category">
-                                <i class='bx bx-plus-medical'></i> New Financing Category
+                                <i class='bx bx-fw bx-plus'></i> New Financing Payment Category
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
                 <table class="nsm-table">
                     <thead>
@@ -66,12 +68,16 @@
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                                                 <li>
                                                     <a class="dropdown-item edit-row-item" href="javascript:void(0);" data-id="<?= $category->id; ?>" data-name="<?= $category->name; ?>" data-value="<?= $category->value; ?>">Edit</a>
                                                 </li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
                                                 <li>
                                                     <a class="dropdown-item delete-row-item" href="javascript:void(0);" data-id="<?= $category->id; ?>" data-name="<?= $category->name; ?>">Delete</a>
                                                 </li>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </td>
@@ -92,72 +98,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal_add_financing_category" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title" style="font-size: 17px;">Create Financing Category</span>
-                    <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
-                </div>
-                <div class="modal-body">
-                    <form id="frm-add-financing-category">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <label class="mb-2">Name</label>
-                                <div class="input-group mb-3">
-                                    <input type="text" name="category_name" value="" class="form-control" required="" autocomplete="off" />
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="mb-2">Value</label>
-                                <div class="input-group mb-3">
-                                    <input type="text" name="category_value" value="" class="form-control" required="" autocomplete="off" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end">                        
-                            <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="nsm-button primary" id="btn-save-financing-category">Save</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modal_edit_financing_category" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title" style="font-size: 17px;">Edit Financing Category</span>
-                    <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
-                </div>
-                <div class="modal-body">
-                    <form id="frm-edit-financing-category">
-                        <input type="hidden" name="catid" id="cat-id" value="" />
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <label class="mb-2">Name</label>
-                                <div class="input-group mb-3">
-                                    <input type="text" name="category_name" id="edit-category-name" value="" class="form-control" required="" autocomplete="off" />
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="mb-2">Value</label>
-                                <div class="input-group mb-3">
-                                    <input type="text" name="category_value" id="edit-category-value" value="" class="form-control" required="" autocomplete="off" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end">                        
-                            <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="nsm-button primary" id="btn-update-financing-category">Save</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
 
 </div>
@@ -168,7 +109,7 @@
         $("#search_field").on("input", debounce(function() {
             tableSearch($(this));        
         }, 1000)); 
-
+        
         $('#btn-add-new-category').on('click', function(){
             $('#modal_add_financing_category').modal('show');
         });
@@ -189,7 +130,7 @@
 
             $.ajax({
                 type: "POST",
-                url: base_url + 'customers/_update_financing_category',
+                url: base_url + 'customers/_create_financing_category',
                 dataType: 'json',
                 data: $('#frm-add-financing-category').serialize(),
                 success: function(data) {    
@@ -197,7 +138,8 @@
                     if (data.is_success) {
                         $('#modal_add_financing_category').modal('hide');
                         Swal.fire({
-                            text: 'Data was successfully created',
+                            title: 'Financing Payment Category',
+                            text: "Financing payment category has been created successfully.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -237,7 +179,8 @@
                     if (data.is_success) {
                         $('#modal_edit_financing_category').modal('hide');
                         Swal.fire({
-                            text: 'Data was successfully updated',
+                            title: 'Financing Payment Category',
+                            text: "Financing payment category has been updated successfully.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -286,8 +229,8 @@
                             if( result.is_success == 1 ) {
                                 Swal.fire({
                                 icon: 'success',
-                                title: 'Success',
-                                text: 'Data was successfully deleted.',
+                                title: 'System Package Type',
+                                text: "Data deleted successfully!",
                                 }).then((result) => {
                                     window.location.reload();
                                 });
