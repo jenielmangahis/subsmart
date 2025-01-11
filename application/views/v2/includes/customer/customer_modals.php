@@ -114,12 +114,12 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form method="POST" id="edit_sales_area_form">
+                <input type="hidden" class="form-control" name="sa_id" id="edit_sa_id" value="" />
                 <div class="modal-header">
                     <span class="modal-title content-title">Edit Sales Area</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
-                <div class="modal-body">
-                    <input type="hidden" class="form-control" name="sa_id" id="edit_sa_id" value="" />
+                <div class="modal-body">                    
                     <div class="row">
                         <div class="col-12">
                             <input type="text" placeholder="Sales Area Name" name="sa_name" id="edit_sa_name" class="nsm-field form-control mb-2" value="" required />
@@ -294,35 +294,35 @@
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="new_activation_fee_modal" tabindex="-1" aria-labelledby="new_activation_fee_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="new_activation_fee_form">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Add Activation Fee</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" class="form-control" name="id" id="fee_id" />
-                    <div class="row">
-                        <div class="col-12">
-                            <input type="number" placeholder="Amount" name="amount" id="amount" step=".01" class="nsm-field form-control mb-2" required />
-                        </div>
+<div class="modal fade nsm-modal fade" id="new_activation_fee_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="new_activation_fee_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">        
+        <div class="modal-content">
+            <form method="POST" id="new_activation_fee_form">
+            <div class="modal-header">
+                <span class="modal-title content-title">Add Activation Fee</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" class="form-control" name="id" id="fee_id" />
+                <div class="row">
+                    <div class="col-12">
+                        <input type="number" placeholder="Amount" name="amount" id="amount" step=".01" class="nsm-field form-control mb-2" required />
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
-                </div>
             </div>
-        </form>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary">Save</button>
+            </div>
+            </form>
+        </div>        
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="edit_activation_fee_modal" tabindex="-1" aria-labelledby="edit_activation_fee_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="edit_activation_fee_form">
-            <div class="modal-content">
+<div class="modal fade nsm-modal fade" id="edit_activation_fee_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="edit_activation_fee_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">        
+        <div class="modal-content">
+            <form method="POST" id="edit_activation_fee_form">
                 <div class="modal-header">
                     <span class="modal-title content-title">Edit Activation Fee</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
@@ -339,24 +339,23 @@
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="nsm-button primary">Save</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="new_system_package_modal" tabindex="-1" aria-labelledby="new_system_package_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="new_system_package_form">
-            <div class="modal-content">
+<div class="modal fade nsm-modal fade" id="new_system_package_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="new_system_package_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" id="new_system_package_form">
                 <div class="modal-header">
                     <span class="modal-title content-title">Add System Package Type</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" class="form-control" name="id" id="system_id" />
                     <div class="row">
                         <div class="col-12">
-                            <input type="text" placeholder="Name" name="name" id="system_name" class="nsm-field form-control mb-2" required />
+                            <input type="text" placeholder="Name" name="package_name" id="system_name" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -364,24 +363,24 @@
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="nsm-button primary">Save</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="edit_system_package_modal" tabindex="-1" aria-labelledby="edit_system_package_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="edit_system_package_form">
-            <div class="modal-content">
+<div class="modal fade nsm-modal fade" id="edit_system_package_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="edit_system_package_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">        
+        <div class="modal-content">
+            <form method="POST" id="edit_system_package_form">
+                <input type="hidden" class="form-control" name="id" id="edit_system_id" />
                 <div class="modal-header">
                     <span class="modal-title content-title">Edit System Package Type</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
-                <div class="modal-body">
-                    <input type="hidden" class="form-control" name="id" id="edit_system_id" />
+                <div class="modal-body">                    
                     <div class="row">
                         <div class="col-12">
-                            <input type="text" placeholder="Name" name="name" id="edit_system_name" class="nsm-field form-control mb-2" required />
+                            <input type="text" placeholder="Name" name="package_name" id="edit_system_name" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -389,8 +388,75 @@
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="nsm-button primary">Save</button>
                 </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_add_financing_category" data-bs-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Create Financing Payment Category</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
-        </form>
+            <div class="modal-body">
+                <form id="frm-add-financing-category">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="mb-2">Name</label>
+                            <div class="input-group mb-3">
+                                <input type="text" name="category_name" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="mb-2">Value</label>
+                            <div class="input-group mb-3">
+                                <input type="text" name="category_value" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">                        
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="nsm-button primary" id="btn-save-financing-category">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_edit_financing_category" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Edit Financing Payment Category</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="frm-edit-financing-category">
+                    <input type="hidden" name="catid" id="cat-id" value="" />
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="mb-2">Name</label>
+                            <div class="input-group mb-3">
+                                <input type="text" name="category_name" id="edit-category-name" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="mb-2">Value</label>
+                            <div class="input-group mb-3">
+                                <input type="text" name="category_value" id="edit-category-value" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">                        
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="nsm-button primary" id="btn-update-financing-category">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
