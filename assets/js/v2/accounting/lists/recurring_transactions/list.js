@@ -153,6 +153,11 @@ $('#transaction-type-modal #submit-transaction-type').on('click', function(e) {
             view = 'delayed_charge_modal';
             modalName = 'delayedChargeModal';
         break;
+        case 'refund' :
+            modal ='refund_receipt';
+            view = 'refund_receipt_modal';
+            modalName = 'refundReceiptModal';
+        break;
     }
 
     $('#transaction-type-modal').modal('hide');
