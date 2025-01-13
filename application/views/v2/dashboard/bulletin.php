@@ -56,13 +56,11 @@ endif;
     }
 
     .timesheet-container-item .content .badge-item {
-        padding: 1px 20px;
         border-radius: 25px;
         font-weight: bold;
-        color: #fff;
+        color: #574c4c;
         font-size: 12px;
-        background: #EFB6C8;
-        text-align: center;
+        text-align: start;
         width: unset;
         width: 70%;
         margin-top: 5px;
@@ -121,7 +119,7 @@ endif;
     <div class="nsm-card-content">
         <div class="col-md-12">
             <div class="banner">
-                <img src="./assets/img/activity-logs-banner.svg" alt="">
+                <img src="./assets/img/timesheet-banner2.svg" alt="">
             </div>
             <div class="timesheet-container-item table-responsive">
                 <div class="nsm-widget-table">

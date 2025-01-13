@@ -1,5 +1,11 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
+<?php
+    $currentMonth = date("n");
+    $startMonth = ceil($currentMonth / 3) * 3 - 2;
+    $endMonth = $startMonth + 2;
+    $currentQuarter = "This Quarter (" . date("M", mktime(0, 0, 0, $startMonth, 1)) . " - " . date("M", mktime(0, 0, 0, $endMonth, 1)) . ")";
+?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-1"></div>
@@ -53,8 +59,10 @@
                                         <thead>
                                             <tr>
                                                 <th>TECHNICIAN</th>
-                                                <th>JOBS COUNT</th>
-                                                <th style="text-align:right;">TOTAL AMOUNT</th>
+                                                <th style="text-align:right;">JOBS COUNT</th>
+                                                <th style="text-align:right;">JOBS AMOUNT</th>
+                                                <th style="text-align:right;">TICKETS COUNT</th>
+                                                <th style="text-align:right;">TICKETS AMOUNT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -178,9 +186,11 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="total_amount" <?php echo ($reportSettings->sort_by == "total_amount") ? "selected" : "" ?>>Total Amount</option>
-                                                <option value="total_jobs" <?php echo ($reportSettings->sort_by == "total_jobs") ? "selected" : "" ?>>Job Count</option>
-                                                <option value="tech_rep" <?php echo ($reportSettings->sort_by == "tech_rep") ? "selected" : "" ?>>Technician</option>
+                                                <option value="job_count" <?php echo ($reportSettings->sort_by == "job_count") ? "selected" : "" ?>>Job Count</option>
+                                                <option value="job_amount" <?php echo ($reportSettings->sort_by == "job_amount") ? "selected" : "" ?>>Job Amount</option>
+                                                <option value="ticket_count" <?php echo ($reportSettings->sort_by == "ticket_count") ? "selected" : "" ?>>Ticket Count</option>
+                                                <option value="ticket_amount" <?php echo ($reportSettings->sort_by == "ticket_amount") ? "selected" : "" ?>>Ticket Amount</option>
+                                                <option value="tech_rep_name" <?php echo ($reportSettings->sort_by == "tech_rep_name") ? "selected" : "" ?>>Technician</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
@@ -189,34 +199,21 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12"><hr class="mt-0"></div>
-                                <div class="col-lg-12">
-                                    <div class="row">
-                                        <div class="col-md-4 mb-3">
-                                            <label class="mb-1 fw-xnormal">Filter Date by</label>
-                                            <?php
-                                                $currentMonth = date('n');
-                                                $currentQuarter = ceil($currentMonth / 3);
-
-                                                $quarters = [
-                                                    1 => ['Jan', 'Mar'],
-                                                    2 => ['Apr', 'Jun'],
-                                                    3 => ['Jul', 'Sep'],
-                                                    4 => ['Oct', 'Dec']
-                                                ];
-
-                                                $quarterStart = $quarters[$currentQuarter][0];
-                                                $quarterEnd = $quarters[$currentQuarter][1];
-                                            ?>
-                                            <select name="filter_by" id="filter-by" class="nsm-field form-select">
-                                                <option value="get_all" <?php echo ($reportSettings->filter_by == "get_all") ? "selected" : "" ?>>None</option>
-                                                <option value="current_day" <?php echo ($reportSettings->filter_by == "current_day") ? "selected" : "" ?>>Today</option>
-                                                <option value="current_week" <?php echo ($reportSettings->filter_by == "current_week") ? "selected" : "" ?>>This Week</option>
-                                                <option value="current_month" <?php echo ($reportSettings->filter_by == "current_month") ? "selected" : "" ?>>This Month (<?php echo date('M'); ?>)</option>
-                                                <option value="current_quarter" <?php echo ($reportSettings->filter_by == "current_quarter") ? "selected" : "" ?>>This Quarter (<?php echo $quarterStart . '-' . $quarterEnd . ' ' . date('Y'); ?>)</option>
-                                                <option value="current_year" <?php echo ($reportSettings->filter_by == "current_year") ? "selected" : "" ?>>This Year (<?php echo date('Y'); ?>)</option>
-                                            </select>
-                                        </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Date Filter</label>
+                                    <select name="date_filter" id="date-filter" class="nsm-field form-select">
+                                        <option value="get_all" <?php echo ($reportSettings->filter_by == "get_all") ? "selected" : "" ?>>None (get all records)</option>
+                                        <option value="current_month" <?php echo ($reportSettings->filter_by == "current_month") ? "selected" : "" ?>>This Month (<?php echo date('M') . ' 1 - ' . date('t'); ?>)</option>
+                                        <option value="current_quarter" <?php echo ($reportSettings->filter_by == "current_quarter") ? "selected" : "" ?>><?php echo $currentQuarter;?></option>
+                                        <option selected value="current_year" <?php echo ($reportSettings->filter_by == "current_year") ? "selected" : "" ?>>This Year (<?php echo date('Y'); ?>)</option>
+                                        <option value="custom" <?php echo ($reportSettings->filter_by == "custom") ? "selected" : "" ?>>Custom</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-5 mb-3 dateRangeFilterSection" style="display: none;">
+                                    <label class="mb-1 fw-xnormal">Date Range <small class="text-muted"><i>(Specify From &mdash; To Dates)</i></small></label>
+                                    <div class="input-group">
+                                        <input name="date_from" class="form-control mt-0" type="date" value="<?= date('Y').'-01-01'; ?>">
+                                        <input name="date_to" class="form-control mt-0" type="date" value="<?= date('Y-m-t'); ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-12"><hr class="mt-0"></div>

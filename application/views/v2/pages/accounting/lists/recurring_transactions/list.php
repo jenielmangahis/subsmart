@@ -2,6 +2,9 @@
 <?php include viewPath('v2/includes/accounting/recurring_transactions_modals'); ?>
 
 <div class="row page-content g-0">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/accounting/tabs/recurring_transactions'); ?>
+    </div>
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -90,7 +93,7 @@
                         </div>
 
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#transaction-type-modal">
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#transaction-type-modal">
                                 <i class='bx bx-fw bx-list-plus'></i> New
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_recurring_transactions_modal">

@@ -46,7 +46,7 @@
                             <td class="table-icon"></td>
                             <td data-name="Amount">Amount</td>
                             <td data-name="Date Created" style="width:10%;">Date Created</td>
-                            <td data-name="Manage" style="width:5%;"></td>
+                            <td data-name="Manage" style="width:1%;"></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -77,7 +77,7 @@
                                                 <?php } ?>
                                                 <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $fee->id; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-amount="<?= $fee->amount; ?>" data-id="<?= $fee->id; ?>">Delete</a>
                                                 </li>
                                                 <?php } ?>
                                             </ul>
@@ -128,7 +128,7 @@
             let _this = $(this);
             e.preventDefault();
 
-            var url = "<?php echo base_url(); ?>customer/add_activation_fee_ajax";
+            var url = base_url + "customers/_create_activation_fee";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -136,24 +136,30 @@
                 type: 'POST',
                 url: url,
                 data: _this.serialize(),
+                dataType: "json",
                 success: function(result) {
-                    if (result === "Updated") {
+                    if (result.is_success) {
+                        $("#new_activation_fee_modal").modal('hide');
+                        _this.trigger("reset");
 
-                    } else {
                         Swal.fire({
-                            title: 'Save Successful!',
-                            text: "New activation fee has been added successfully.",
+                            title: 'Rate Plans',
+                            text: "Rate plan has been updated successfully.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 location.reload();
-                            }
+                            //}
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
                         });
                     }
-                    $("#new_activation_fee_modal").modal('hide');
-                    _this.trigger("reset");
 
                     _this.find("button[type=submit]").html("Save");
                     _this.find("button[type=submit]").prop("disabled", false);
@@ -165,7 +171,7 @@
             let _this = $(this);
             e.preventDefault();
 
-            var url = "<?php echo base_url(); ?>customer/update_activation_fee_ajax";
+            var url = base_url + "customers/_update_activation_fee";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -173,20 +179,25 @@
                 type: 'POST',
                 url: url,
                 data: _this.serialize(),
+                dataType:"json",
                 success: function(result) {
-                    if (result === "Updated") {
-
-                    } else {
+                    if (result.is_success) {
                         Swal.fire({
-                            title: 'Update Successful!',
+                            title: 'Activation Fee',
                             text: "Activation fee has been updated successfully.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 location.reload();
-                            }
+                            //}
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
                         });
                     }
                     $("#edit_activation_fee_modal").modal('hide');
@@ -200,10 +211,11 @@
 
         $(document).on("click", ".delete-item", function() {
             let id = $(this).attr("data-id");
+            let amount = $(this).attr('data-amount');
 
             Swal.fire({
                 title: 'Delete Activation Fee',
-                text: "Are you sure you want to delete this Activation Fee?",
+                html: `Are you sure you want to delete activation fee amounting of <b>${amount}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -212,22 +224,27 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: "<?php echo base_url(); ?>customer/delete_activation_fee",
-                        data: {
-                            id: id
-                        },
+                        url: base_url + "customers/_delete_activation_fee",
+                        data: {id: id},
+                        dataType:"json",
                         success: function(result) {
-                            if (result === '1') {
+                            if (result.is_success) {
                                 Swal.fire({
-                                    title: 'Good job!',
+                                    title: 'Activation Fee',
                                     text: "Data Deleted Successfully!",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
-                                    if (result.value) {
+                                    //if (result.value) {
                                         location.reload();
-                                    }
+                                    //}
+                                });
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    html: result.msg
                                 });
                             }
                         },

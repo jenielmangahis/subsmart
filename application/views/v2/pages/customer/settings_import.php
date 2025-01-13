@@ -19,7 +19,7 @@
                 </div>
                 <div class="row g-3">
                     <div class="col-12">
-                        <div class="nsm-card">
+                        <div class="nsm-card primary">
                             <div class="nsm-card-content">
                                 <div class="row g-2">
                                     <div class="col-12">
@@ -28,9 +28,14 @@
                                         </div>
                                         <label class="nsm-subtitle mb-3">Check the column title for mapping import customer.</label>
                                         <form id="customer_headers_form" method="POST">
+                                            <?php
+                                                $chk_disabled = "disabled='disabled'"; 
+                                                if(checkRoleCanAccessModule('customer-settings', 'write')){
+                                                    $chk_disabled = '';
+                                                }
+                                            ?>
                                             <?php $fieldsValue = $importFields->value ? explode(',', $importFields->value) : array() ; ?>
                                            <div class="row">
-
                                                 <div class="col-md-2">
                                                     <h5>Customer Information</h5>
                                                     <?php foreach ($importFieldsList as $header): ?>
@@ -44,7 +49,7 @@
                                                         <div class="col-12">
                                                             <div class="d-block">
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" id="fieldCustomerInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                    <input class="form-check-input" id="fieldCustomerInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?> <?= $chk_disabled; ?>>
                                                                     <label class="form-check-label" for="fieldCustomerInfo<?= $header->id; ?>"><?= $header->field_description; ?></label>
                                                                 </div>
                                                             </div>
@@ -66,7 +71,7 @@
                                                             <div class="col-12">
                                                                 <div class="d-block">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" id="fieldBilling<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                        <input class="form-check-input" id="fieldBilling<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?> <?= $chk_disabled; ?>>
                                                                         <label class="form-check-label" for="fieldBilling<?= $header->id; ?>"><?= $header->field_description; ?></label>
                                                                     </div>
                                                                 </div>
@@ -88,7 +93,7 @@
                                                             <div class="col-12">
                                                                 <div class="d-block">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" id="fieldOfficeInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                        <input class="form-check-input" id="fieldOfficeInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?> <?= $chk_disabled; ?>>
                                                                         <label class="form-check-label" for="fieldOfficeInfo<?= $header->id; ?>"><?= $header->field_description; ?></label>
                                                                     </div>
                                                                 </div>
@@ -110,7 +115,7 @@
                                                             <div class="col-12">
                                                                 <div class="d-block">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" id="fieldAlarmInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                        <input class="form-check-input" id="fieldAlarmInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?> <?= $chk_disabled; ?>>
                                                                         <label class="form-check-label" for="fieldAlarmInfo<?= $header->id; ?>"><?= $header->field_description; ?></label>
                                                                     </div>
                                                                 </div>
@@ -133,7 +138,7 @@
                                                             <div class="col-12">
                                                                 <div class="d-block">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" id="fieldContactInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                        <input class="form-check-input" id="fieldContactInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?> <?= $chk_disabled; ?> >
                                                                         <label class="form-check-label" for="fieldContactInfo<?= $header->id; ?>"><?= $header->field_description; ?></label>
                                                                     </div>
                                                                 </div>
@@ -148,18 +153,18 @@
                             </div>
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                     <div class="col-12 text-end">
                         <button type="button" data-action="save" class="nsm-button primary" id="btn_save_fields">
                             Save Changes
                         </button>
                     </div>
+                    <?php } ?>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-
 <script type="text/javascript">
     $(document).ready(function() {
         $("#btn_save_fields").on("click", function() {
@@ -173,39 +178,39 @@
             formData.append('importFields', JSON.stringify(selectedField));
             formData.append('type', 'import');
 
-            fetch('<?= base_url('customer/addOrUpdateImportFields') ?>', {
+            fetch(base_url + 'customer/addOrUpdateImportFields', {
                 method: 'POST',
                 body: formData,
             }) .then(response => response.json() ).then(response => {
-                var { message, success }  = response;
-                console.log(response);
+                var { message, success }  = response;                
                 if(success){
-                    sweetAlert('', 'success', message, 1);
+                    Swal.fire({
+                        title: 'Import Fields',
+                        text: "Import fields has been updated successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            
+                        //}
+                    });
                 }else{
-                    sweetAlert('Sorry!','error',message);
+                    Swal.fire({
+                        title: 'Error',
+                        text: message,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
                 }
             }).catch((error) => {
                 console.log('Error:', error);
             });
             
         });
-        function sweetAlert(title,icon,information,is_reload){
-            Swal.fire({
-                title: title,
-                text: information,
-                icon: icon,
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if(is_reload === 1){
-                    if (result.value) {
-                        window.location.reload();
-                    }
-                }
-            });
-        }
     });
     
 </script>

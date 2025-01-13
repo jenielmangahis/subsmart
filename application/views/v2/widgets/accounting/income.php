@@ -8,10 +8,6 @@ endif;
         background-color: #fef5e0;
     }
 
-    i.bx.bx-box.subs {
-        background-color: #ffeab9;
-        color: #cda030;
-    }
 
     .income-container .income-items .row-items .form-select {
         border-radius: 25px;
@@ -32,13 +28,68 @@ endif;
     .income-container .income-items {
         width: 100% !important;
         box-sizing: border-box;
-        box-shadow: 0px 3px 12px #38747859;
+        /* box-shadow: 0px 3px 12px #38747859; */
         padding: 20px;
         border-radius: 25px;
         background: #fff;
     }
 
+    .income-container .item .first {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .income-container .item .first .icons {
+        border-radius: 100%;
+    }
+
+    .income-container .item .first label {
+        font-size: 30px;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+
+
+    .income-container .item {
+        display: block;
+        padding: 20px 10px;
+        color: #214548;
+        border-radius: 10px;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0px 3px 12px #38747859;
+        height: 100%;
+    }
+
+    .income-container .item .count p {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+        text-align: center;
+    }
+
+    .income-container .item .first .icons i {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        height: 38px;
+        width: 40px;
+        border-radius: 100%;
+    }
+
     @media screen and (max-width: 1366px) {
+        .income-container .item .first label {
+            font-size: 24px;
+        }
+
         .income-container .income-items .form-select {
             width: 100%;
         }
@@ -53,7 +104,7 @@ endif;
         }
 
         .income-container .income-items .col-6 {
-            width: 100%;
+            width: 50%;
         }
     }
 
@@ -66,8 +117,8 @@ endif;
 
     @media screen and (max-width: 567px) {
 
-        .income-container .income-items .col-6 {
-            width: 100%;
+        .income-container .income-items {
+            padding: 0 20px;
         }
     }
 </style>
@@ -92,12 +143,12 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content">
-        <div class="banner mb-5">
-            <img src="./assets/img/paid-invoices-banner2.svg" alt="">
+        <div class="banner">
+            <img src="./assets/img/income-banner2.svg" alt="">
         </div>
         <div class="income-container">
             <div class="income-items">
-                <div class="row mb-4 mt-2 row-items">
+                <div class="row mb-5 mt-2 row-items">
                     <div class="col-4 filter-options">
                         <select class="nsm-field form-select" name="filter_date" id="widget-income-filter-date">
                             <option value="today">Today</option>
@@ -118,71 +169,63 @@ endif;
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-6 mb-2">
-                        <div class="nsm-counter h-100" style=" background-color: #A888B51a;padding: 20px">
-                            <div class="w-100 d-flex align-items-center justify-content-between gap-2 h-100">
-                                <div
-                                    class=" mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
-                                    <span>Open Invoices</span>
-                                    <h2 id="income-widget-open-invoices"></h2>
+                    <div class="col-6 mb-4">
+                        <div class="item">
+                            <div class="first">
+                                <div class="icons" style="color: #A888B5 ; background: #A888B51a;">
+                                    <i class="bx bx-receipt"></i>
                                 </div>
-                                <div
-                                    class="order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
-                                    <i class="bx bx-receipt" style=" background-color: #A888B5;color: #fff;"></i>
-                                </div>
-
+                                <label id="income-widget-open-invoices"></label>
+                            </div>
+                            <div class="count">
+                                <p>Open Invoices</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 mb-2">
-                        <div class="nsm-counter h-100" style=" background-color: #d9a1a01a;padding: 20px">
-                            <div class="w-100 d-flex align-items-center justify-content-between gap-2 h-100">
 
-                                <div
-                                    class="mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
-                                    <span>Overdue Invoices</span>
-                                    <h2 id="income-widget-overdue"></h2>
+                    <div class="col-6 mb-4">
+                        <div class="item">
+                            <div class="first">
+                                <div class="icons" style="color: #FEA303;background: #FEA3031a;">
+                                    <i class="bx bx-calendar-exclamation"></i>
                                 </div>
-                                <div
-                                    class="order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
-                                    <i class="bx bx-calendar-exclamation"
-                                        style=" background-color: #d9a1a0;color: #fff;"></i>
-                                </div>
+                                <label id="income-widget-overdue"></label>
+                            </div>
+                            <div class="count">
+                                <p>Overdue Invoices</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 mb-2">
-                        <div class="nsm-counter success h-100" style=" background-color: #FEA3031a;padding: 20px">
-                            <div class="w-100 d-flex align-items-center justify-content-between gap-2 h-100">
 
-                                <div
-                                    class="mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
-                                    <span>Paid Invoices</span>
-                                    <h2 id="income-widget-paid-invoices"></h2>
+                    <div class="col-6 mb-4">
+                        <div class="item">
+                            <div class="first">
+                                <div class="icons" style=" color: #EFB6C8;background: #EFB6C81a;">
+                                    <i class="bx bx-badge-check"></i>
                                 </div>
-                                <div
-                                    class=" order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
-                                    <i class="bx bx-badge-check" style=" background-color: #FEA303;color: #fff;"></i>
-                                </div>
+                                <label id="income-widget-paid-invoices"></label>
+                            </div>
+                            <div class="count">
+                                <p>Paid Invoices</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 mb-2">
-                        <div class="nsm-counter yellow h-100" style=" background-color: #EFB6C81a;padding: 20px">
-                            <div class="w-100 d-flex align-items-center justify-content-between gap-2 h-100">
 
-                                <div
-                                    class=" mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
-                                    <span>Subscription</span>
-                                    <h2 id="income-widget-subscriptions"><?php echo "$" . number_format($subs->TOTAL_MMR, 2); ?></h2>
+
+                    <div class="col-6 mb-4">
+                        <div class="item">
+                            <div class="first">
+                                <div class="icons" style="color: #d9a1a0;background: #d9a1a01a;">
+                                    <i class="bx bx-box subs"></i>
                                 </div>
-                                <div
-                                    class="order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
-                                    <i class="bx bx-box subs" style=" background-color: #EFB6C8;color: #fff;"></i>
-                                </div>
+                                <label id="income-widget-subscriptions"><?php echo "$" . number_format($subs->TOTAL_MMR, 2); ?></label>
+                            </div>
+                            <div class="count">
+                                <p>Subscription</p>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

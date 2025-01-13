@@ -4,6 +4,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Automation extends MY_Controller
 {
 
+    private $technicians = [];
+
     public function __construct()
     {
         parent::__construct();
@@ -19,6 +21,7 @@ class Automation extends MY_Controller
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('Automation_model', 'automation_model');
         $this->load->model('Jobs_model', 'jobs_model');
+        $this->load->model('Users_model', 'users_model');
     }
 
     public function index()
@@ -145,15 +148,24 @@ class Automation extends MY_Controller
         file_put_contents($log_file, $full_message, FILE_APPEND);
     }
 
-
-    private function get_event_data($entity, $user_id, $trigger_status, $trigger_event)
+    private function nameCleanup($firstName, $lastName)
     {
-        if ($trigger_event == 'has_status' && $entity == 'job') {
-            return $this->jobs_model->get_all_jobs_by_status($trigger_status, $user_id);
+        $fullName = '';
+
+        if (empty($firstName) && empty($lastName)) {
+            $fullName = $firstName . ' ' . $lastName;
+        } elseif (!empty($firstName)) {
+            $fullName = $firstName;
+        } elseif (!empty($lastName)) {
+            $fullName = $lastName;
+        } else {
+            $fullName = '';
         }
 
-        return [];
+
+        return $fullName;
     }
+
 
     public function trigger_automations()
     {
@@ -164,18 +176,18 @@ class Automation extends MY_Controller
                 'status' => 'active',
             ]);
 
-
             $debug = [];
 
             foreach ($automations as $automation) {
-                $event_data = $this->get_event_data(
+                $event_data = $this->getEventData(
                     $automation['entity'], //entity type (job, lead, invoice, estimate)
                     $automation['user_id'],
-                    $automation['trigger_status'],
-                    $automation['trigger_event'] //has_status, created
+                    $automation['trigger_event'], //has_status, created
+                    $automation['trigger_status'], //scheduled approved
                 );
 
                 foreach ($event_data as $data) {
+                    $this->log_debug_message('event ' . print_r($data, true));
                     // Calculate the time difference
                     $start_datetime = $data->start_date . ' ' . $data->start_time;  // Combine date and time //2024-11-28 5:30 am
                     $event_time = strtotime($start_datetime); // Convert combined datetime string to timestamp
@@ -192,61 +204,82 @@ class Automation extends MY_Controller
                         ($automation['timing_reference'] == 'after' && time() >= $trigger_time_after)
                     ) {
 
+                        $recipient = $this->getRecepient('technician', $data);
+
                         $debug[$automation['id']][] = [
                             'event' => $data,
-                            'body' => $this->prepareEmailBody($data)
+                            'body' => $this->prepareEmailBody($data, $automation),
+                            'automation' => $automation,
+                            'recipient' => $recipient
                         ];
 
-                        $subject = $automation['title'] ? $automation['title'] : 'na';
-                        $send = $this->sendEmail(
-                            $data->email,
-                            '',
-                            $subject,
-                            $this->prepareEmailBody($data)
-                        );
+                        $this->triggerAction($data, $automation);
                     }
                 }
             }
 
             echo json_encode(['status' => 'success', 'debug' => $debug]);
         } catch (Exception $error) {
-            $this->log_debug_message('Error:' . $error->getMessage());
+            echo json_encode(['status' => 'false', 'error' => $error->getMessage()]);
         }
     }
 
-
-
-
-    private function prepareEmailBody($data)
+    private function triggerAction($data, $automation)
     {
+        $body = $this->prepareEmailBody($data, $automation);
+        $recipient = $this->getRecepient($automation['target'], $data);
+        $subject = $automation['title'] ? $automation['title'] : 'na';
 
-        return "
-            <p>Hi, {$data->first_name}</p>
-            <p>This is a friendly reminder about your upcoming service appointment with us at NSMART LLC. Here are the details:</p>
-            <ul>
-                <li><strong>Appointment details</strong></li>
-                <li><strong>Date: </strong>$data->start_date at $data->start_time</li>
-                <li><strong>Address: $data->job_location</strong></li>
-                <li><strong>Techs: </strong></li>
-            </ul>
-            <p>Feel free to reply to this email or give us a call at {account_business_number} if you have any updates or questions</p>
-            <p>Thank you!</p>
-        ";
+
+        switch ($automation['action']) {
+            case 'send_email':
+                // $this->sendEmail($recipient, '', $subject, $body);
+                break;
+            case 'send_sms':
+                break;
+            default:
+                log_message('error', 'Unknown action type');
+                break;
+        }
+    }
+
+    private function getEventData($entity, $user_id, $trigger_event, $trigger_status = null)
+    {
+        switch ($entity) {
+            case 'job':
+                if ($trigger_event == 'has_status') {
+                    if (!$trigger_status) return null;
+
+                    return $this->jobs_model->get_all_jobs_by_status($trigger_status, $user_id);
+                }
+                break;
+            case 'lead':
+                if ($trigger_event == 'has_status') {
+                    return null;
+                }
+                break;
+        }
+
+        return [];
     }
 
     private function sendEmail($emailTo, $emailCC, $emailSubject, $emailBody)
     {
         try {
-            $this->log_debug_message('sendEmail:' . $emailTo . $emailCC . $emailSubject .  $emailBody);
 
             $emailer = email__getInstance(['subject' => $emailSubject]);
-            // Reset recipients and other data before sending the next email
             $emailer->clearAddresses();
-            $emailer->addAddress($emailTo, $emailTo);
-            $emailer->addAddress($emailTo, $emailTo);
+
+            if (is_array($emailTo)) {
+                foreach ($emailTo as $recipient) {
+                    $emailer->addAddress($recipient, $recipient);
+                }
+            } else {
+                $emailer->addAddress($emailTo, $emailTo);
+            }
+
             $emailer->isHTML(true);
             $emailer->Body = $emailBody;
-
 
             if (!empty($emailCC)) {
                 $emailer->addCC($emailCC);
@@ -254,8 +287,6 @@ class Automation extends MY_Controller
 
             $s = $emailer->send();
             if (!$s) {
-                $this->log_debug_message('Mailer Error:' . $emailer->ErrorInfo);
-
                 return false;
             }
 
@@ -266,4 +297,86 @@ class Automation extends MY_Controller
             return false;
         }
     }
+
+    private function prepareEmailBody($data, $automationData)
+    {
+        $template = $automationData['template'];
+
+        //replace key
+        foreach ($data as $key => $value) {
+            $template = str_replace('{' . $key . '}', $value, $template);
+        }
+
+        //check for techs and replace
+        if (stripos($template, '{tech_names}') !== false) {
+            $tech = $this->getAssignedTechNames($data);
+            $tech = implode(', ', $tech);
+            $template = str_replace('{tech_names}', $tech, $template);
+        }
+
+
+        return $template;
+    }
+
+    private function getRecepient($target, $data)
+    {
+        switch ($target) {
+            case 'client':
+                return $data->email;
+            case 'technician':
+                $technicians = $this->getTechnician($data);
+                $emails = array_map(fn($user) => $user->email, $technicians);
+
+                return $emails;
+            case 'admin':
+                return 'admin@example.com';
+            case 'user':
+                return $data->user_email;
+        }
+    }
+
+    private function getAssignedTechNames($data)
+    {
+        $technicians = $this->getTechnician($data);
+
+        $tech = array_map(function ($user) {
+            $firstName = $user->FName;
+            $lastName = $user->LName;
+            $fullName = $this->nameCleanup($firstName, $lastName);
+
+            return $fullName;
+        }, $technicians);
+
+        return $tech;
+    }
+
+    private function getTechnician($data)
+    {
+        $employeeIds = [
+            $data->employee2_id ?? null,
+            $data->employee3_id ?? null,
+            $data->employee4_id ?? null,
+            $data->employee5_id ?? null,
+            $data->employee6_id ?? null,
+        ];
+
+        $technicians = [];
+        foreach ($employeeIds as $employeeId) {
+            $user = $this->users_model->getCompanyUsersById($employeeId);
+            if ($user) {
+                $technicians[] = $user[0];
+            }
+        }
+
+        return $technicians;
+    }
+
+    // private function prepare_email_body($template, $event_data)
+    // {
+    //     return str_replace(
+    //         ['{client_name}', '{scheduled_date}', '{job_address}'],
+    //         [$event_data->client_name, $event_data->scheduled_date, $event_data->job_address],
+    //         $template
+    //     );
+    // }
 }

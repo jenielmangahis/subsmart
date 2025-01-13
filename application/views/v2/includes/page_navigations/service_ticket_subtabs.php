@@ -15,5 +15,10 @@
                 <span>Plan Types</span>
             </a>
         </li>
+        <li class="<?php if($page->title == 'Service Ticket Settings'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('tickets/settings') ?>'">
+            <a class="nsm-page-link" href="javascript:void(0);">
+                <span>Settings</span>
+            </a>
+        </li>
     </ul>
 </div>

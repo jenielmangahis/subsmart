@@ -46,7 +46,7 @@
                             <td class="table-icon"></td>
                             <td data-name="Name">Name</td>
                             <td data-name="Date Created" style="width:10%;">Date Created</td>
-                            <td data-name="Manage" style="width:5%;"></td>
+                            <td data-name="Manage" style="width:1%;"></td>
                         </tr>
                     </thead>
                     <tbody>

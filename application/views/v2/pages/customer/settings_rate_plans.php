@@ -180,7 +180,6 @@
                     if (result.is_success) {
                         $("#edit_rate_plan_modal").modal('hide');
                         _this.trigger("reset");
-
                         Swal.fire({
                             title: 'Rate Plans',
                             text: "Rate plan has been updated successfully.",

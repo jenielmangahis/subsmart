@@ -66,24 +66,24 @@ if (!function_exists('get_automation_email_config')) {
                     'client' => [
                         'subject' => "Reminder: Upcoming Service Appointment",
                         'body' => "
-                            <p>Hi {client_first_name},</p>
+                            <p>Hi {first_name},</p>
                             <p>This is a friendly reminder about your upcoming service appointment with us at {account_business_name}.</p>
                             <p><strong>Appointment details:</strong></p>
-                            <p><strong>Date: </strong> {jobDate} at {jobStartTime}</p>
-                            <p><strong>Address: </strong> {location_key}</p>
-                            <p><strong>Tech(s): </strong> {tech_names}</p>
-                            Feel free to call or text us if you have any updates or questions!
+                            <p><strong>Date: </strong>{start_date} at {start_time}</p>
+                            <p><strong>Address: </strong> {job_location}</p>
+                            <p><strong>Technician(s): </strong> {tech_names}</p>
+                            <p>Feel free to call or text us if you have any updates or questions!</p>
                         "
                     ],
                     'technician' => [
                         'subject' => "Reminder: Service Appointment",
                         'body' => "
-                            <p>Service Appointment Reminder</p>
-                            <p><strong>Job ID: </strong>{job_serial}</p>
-                            <p><strong>Client: </strong>{client_first_name} {client_last_name}</p>
-                            <p><strong>Date: </strong>{jobDate} at {jobStartTime}</p>
-                            <p><strong>Address: </strong>{location_key}</p>
-                            <p><strong>Job Type: </strong>{type_name}</p>
+                            <p><strong>Service Appointment Reminder</strong></p>
+                            <p><strong>Job ID: </strong>{job_number}</p>
+                            <p><strong>Client: </strong>{first_name} {last_name}</p>
+                            <p><strong>Date: </strong>{start_date} at {start_time}</p>
+                            <p><strong>Address: </strong>{job_location}</p>
+                            <p><strong>Job Type: </strong>{job_type}</p>
                             <p><strong>Job Description: </strong>{job_description}</p>
                         "
                     ]
@@ -185,5 +185,12 @@ if (!function_exists('generateAutomationDescription')) {
         }
 
         return $description;
+    }
+}
+
+if (!function_exists('isValueValid')) {
+    function isValueValid($value)
+    {
+        return isset($value) && $value !== null && !empty($value);
     }
 }

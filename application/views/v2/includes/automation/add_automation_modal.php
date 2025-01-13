@@ -14,7 +14,7 @@
                             <ul class="timeline">
                                 <li class="timeline-item mb-5" id="timeline-item-1">
                                     <h4 class="fw-bold nsm-text secondary d-inline">When</h4>
-                                    <a class="dropdown-toggle nsm-text primary h4 fw-bold" href="#" id="workflowMenuBtn" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a class="dropdown-toggle nsm-text primary h4 fw-bold" href="#" id="workflowMenuBtn" data-bs-auto-close="outside" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         this happens
                                     </a>
                                     <div class="dropdown-menu workflow" aria-labelledby="workflowMenuBtn">

@@ -551,6 +551,7 @@ $route['accounting/recurring-transactions/resume/(:any)'] = 'accounting_controll
 $route['accounting/recurring-transactions/reminders-list'] = 'accounting_controllers/recurring_transactions/reminders_list';
 $route['accounting/recurring-transactions/load-reminders-list']['post'] = 'accounting_controllers/recurring_transactions/load_reminders_list';
 $route['accounting/recurring-transactions/skip-batch']['post'] = 'accounting_controllers/recurring_transactions/skip_batch';
+$route['accounting/recurring-transactions-payments'] = 'accounting_controllers/recurring_transactions/payments_list';
 
 // Accounting payment terms
 $route['accounting/terms'] = 'accounting_controllers/payment_terms/index';
@@ -1926,6 +1927,10 @@ $route['tickets/_delete_selected_tickets'] = 'Tickets/ajax_delete_selected_ticke
 $route['tickets/_update_status_selected_tickets'] = 'Tickets/ajax_update_status_selected_tickets';
 $route['ticket/add'] = 'Tickets/addTicket';
 
+//Setting : Index
+$route['tickets/settings'] = 'Tickets/settings_tickets';
+$route['tickets/_update_settings'] = 'Tickets/ajax_update_settings';
+
 //Setting : Panel Types
 $route['tickets/settings_panel_types'] = 'Tickets/settings_panel_types';
 $route['tickets/_create_panel_type'] = 'Tickets/ajax_create_panel_type';
@@ -1967,12 +1972,17 @@ $route['customers/_create_customer_status'] = 'Customer/ajax_create_customer_sta
 $route['customers/_create_customer_group'] = 'Customer/ajax_create_customer_group';
 $route['customers/_update_customer_group'] = 'Customer/ajax_update_customer_group';
 $route['customers/_create_sales_area'] = 'Customer/ajax_create_sales_area';
+$route['customers/_update_sales_area'] = 'Customer/ajax_update_sales_area';
+$route['customers/_delete_sales_area'] = 'Customer/delete_sales_area';
 $route['customers/_create_accounting_terms'] = 'Customer/ajax_create_accounting_terms';
 $route['customers/_create_rate_plan'] = 'Customer/ajax_create_rate_plan';
 $route['customers/_update_rate_plan'] = 'Customer/ajax_update_rate_plan';
 $route['customers/_delete_rate_plan'] = 'Customer/ajax_delete_rate_plan';
 $route['customers/_create_system_package_type'] = 'Customer/ajax_create_system_package_type';
+$route['customers/_update_system_package_type'] = 'Customer/ajax_update_system_package_type';
 $route['customers/_create_activation_fee'] = 'Customer/ajax_create_activation_fee';
+$route['customers/_update_activation_fee'] = 'Customer/ajax_update_activation_fee';
+$route['customers/_delete_activation_fee'] = 'Customer/ajax_delete_activation_fee';
 $route['customers/_delete_customer_group'] = 'Customer/ajax_delete_customer_group';
 
 //Benchmark for Testing

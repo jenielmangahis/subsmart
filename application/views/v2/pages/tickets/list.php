@@ -74,7 +74,7 @@
                 <div class="row mt-5">
                     <div class="col-12 col-md-4">
                             <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="custom-ticket-searchbar" name="search" placeholder="Search Tickets" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="custom-ticket-searchbar" name="search" placeholder="Search Service Ticket..." value="<?php echo (!empty($search)) ? $search : '' ?>">
                             </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
@@ -103,8 +103,8 @@
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('ticket/add') ?>'">
-                                <i class='bx bx-fw bx-note'></i> New Ticket
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('ticket/add') ?>'">
+                                <i class='bx bx-fw bx-note'></i> New Service Ticket
                             </button>
                         </div>
                     </div>
@@ -118,7 +118,7 @@
                                     <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                                 </td>
                                 <td class="table-icon"></td>
-                                <td data-name="Work Order Number">Ticket No.</td>
+                                <td data-name="Work Order Number">Service Ticket No.</td>
                                 <td data-name="Customer">Customer</td>
                                 <td data-name="Date Issued">Date</td>
                                 <td data-name="Time From">Time</td>                            

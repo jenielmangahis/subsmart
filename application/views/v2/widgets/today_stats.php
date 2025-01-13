@@ -103,7 +103,7 @@ endif;
     <div class="nsm-card-content">
         <div class="col-md-12">
             <div class="banner mb-3">
-                <img src="./assets/img/ytd-stats-banner2.svg" alt="">
+                <img src="./assets/img/ytd-stats-banner3.svg" alt="">
             </div>
             <div class="row ytd-items-container">
                 <div class="col-4 mb-4">

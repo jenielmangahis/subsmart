@@ -364,6 +364,7 @@ class Recurring_transactions extends MY_Controller {
             $this->page_data['search'] = $search;
         }
 
+        $this->page_data['page_title'] = "Recurring Transactions";
         $this->page_data['transactions'] = $data;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('v2/pages/accounting/lists/recurring_transactions/list', $this->page_data);
@@ -3474,5 +3475,10 @@ class Recurring_transactions extends MY_Controller {
         echo json_encode([
             'success' => $update === count($post['transaction_ids'])
         ]);
+    }
+
+    public function payments_list()
+    {
+        return redirect('accounting/recurring-transactions');
     }
 }

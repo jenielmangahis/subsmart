@@ -205,6 +205,9 @@ foreach ($jobs as $job) {
                             <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('job/new_job1') ?>'">
                                 <i class='bx bx-fw bx-briefcase'></i> New Job
                             </button>
+                            <button type="button" class="nsm-button primary" id="archived-jobs-list">
+                                <i class='bx bx-fw bx-trash'></i> Manage Archived
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -216,13 +219,13 @@ foreach ($jobs as $job) {
                             <td data-name="Date">Date</td>
                             <td data-name="Customer">Customer</td>
                             <td data-name="Sales Rep">Sales Rep</td>
-                            <td data-name="Tech Rep">Tech Reps</td>
-                            <td data-name="Status">Status</td>
+                            <td data-name="Tech Rep">Tech Reps</td>                            
                             <td data-name="Amount">Job Amount</td>
                             <td data-name="Job Type">Job Type</td>
                             <td data-name="Job Tag">Job Tag</td>
                             <td data-name="Priority">Priority</td>
-                            <td class="d-none" data-name="Status"></td>
+                            <td data-name="Status">Status</td>
+                            <td data-name="Amount" style="text-align:right">Amount</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -301,8 +304,7 @@ foreach ($jobs as $job) {
                                     <?php } ?>
                                 </div>
                                 <small class="content-subtitle d-block mt-1"><?= $job->status; ?></small>
-                            </td>
-                            <td>$<?php echo number_format((float)$job->amount, 2, '.', ',');  ?></td>
+                            </td>                            
                             <td><?php echo $job->job_type; ?></td>
                             <td>
                                 <?php if(!empty($tags)): ?>
@@ -315,7 +317,8 @@ foreach ($jobs as $job) {
                                 <?php endif; ?>
                             </td>
                             <td><?php echo $job->priority; ?></td>
-                            <td class="d-none"><?php echo $job->status; ?></td>
+                            <td><?php echo $job->status; ?></td>
+                            <td style="text-align:right;">$<?php echo number_format((float)$job->amount, 2, '.', ',');  ?></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
@@ -356,6 +359,20 @@ foreach ($jobs as $job) {
                 </div>
             </div>
 
+            <div class="modal fade nsm-modal fade" id="modal-archived-jobs" aria-labelledby="modal-archived-jobs-label" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <form method="post" id="quick-add-event-form">   
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <span class="modal-title content-title">Archived Jobs</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <div class="modal-body" id="jobs-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -375,45 +392,45 @@ JOB_LIST_TABLE_SETTINGS = JOB_LIST_TABLE.settings();
 
 $('#CUSTOM_FILTER_DROPDOWN').change(function(event) {
     $('#CUSTOM_FILTER_SEARCHBAR').val($('#CUSTOM_FILTER_DROPDOWN').val());
-    JOB_LIST_TABLE.columns(11).search(this.value).draw();
+    JOB_LIST_TABLE.columns(10).search(this.value).draw();
 });
 
 function DELETE_JOB(job_id){
     Swal.fire({
-            title: 'Continue to REMOVE this Job?',
-            text: "",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url('job/delete_job'); ?>",
-                    data: {
-                        job_id: job_id
-                    }, // serializes the form's elements.
-                    success: function(data) {
-                        if (data === "1") {
-                            Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Job deleted successfully!',
-                            }).then((result) => {
-                                window.location.reload();
-                            });
-                        } else {
-                           Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Failed to Delete Job!',
-                            });
-                        }
+        title: 'Delete Job',
+        text: "Are you sure you want to delete this Job?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Proceed',
+        cancelButtonText: 'Cancel',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('job/delete_job'); ?>",
+                data: {
+                    job_id: job_id
+                }, // serializes the form's elements.
+                success: function(data) {
+                    if (data === "1") {
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Job deleted successfully!',
+                        }).then((result) => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to Delete Job!',
+                        });
                     }
-                });
-            }
-        });
+                }
+            });
+        }
+    });
 }
 
 // $(".DELETE_ITEM > a").click(function(event) {
@@ -490,6 +507,61 @@ $(document).ready(function() {
              }
           });
         }, 500);
+    });
+
+    $('#archived-jobs-list').on('click', function(){
+        $('#modal-archived-jobs').modal('show');
+        $.ajax({
+            type: "POST",
+            url: base_url + "jobs/_archived_list",  
+            success: function(html) {    
+                $('#jobs-archived-list-container').html(html);                          
+            },
+            beforeSend: function() {
+                $('#jobs-archived-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on('click', '.btn-restore-job', function(){
+        var job_id = $(this).attr('data-id');
+        var job_number = $(this).attr('data-jobnumber');
+
+        Swal.fire({
+            title: 'Restore Job Data',
+            html: `Proceed with restoring job data <b>${job_number}</b>?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {                    
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "jobs/_restore_archived",
+                    data: {job_id:job_id},
+                    dataType:'json',
+                    success: function(result) {                            
+                        if( result.is_success == 1 ) {
+                            $('#modal-archived-jobs').modal('hide');
+                            Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Job data was successfully restored.',
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    }
+                });
+            }
+        });
     });
 });
 

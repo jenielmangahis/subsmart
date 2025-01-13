@@ -38,6 +38,9 @@
                                     <div class="row">
                                         <div class="col-12 col-md-3">
                                             <label for="vendor">Vendor <span style="color:red;font-weight:bold">*</span></label>
+                                            <div id="open-vendor-info-window-container" style='float:right;'>
+                                                <a href="javascript:void(0)" class="nsm-button btn-small" style="margin-bottom:3px;display:inline-block;" id="open-vendor-info-window">View Vendor Info</a>
+                                            </div> 
                                             <select name="vendor_id" id="vendor" class="form-control nsm-field" required>
                                                 <?php if(isset($vendorCredit)) : ?>
                                                 <option value="<?=$vendorCredit->vendor_id?>">

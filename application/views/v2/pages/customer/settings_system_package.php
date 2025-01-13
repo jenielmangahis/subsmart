@@ -29,13 +29,15 @@
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#new_system_package_modal">
-                                <i class='bx bx-fw bx-package'></i> New Package Type
+                                <i class='bx bx-fw bx-plus'></i> New Package Type
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
                 <table class="nsm-table">
                     <thead>
@@ -43,7 +45,7 @@
                             <td class="table-icon"></td>
                             <td data-name="Name">Name</td>
                             <td data-name="Date Created" style="width:10%;">Date Created</td>
-                            <td data-name="Manage" style="width:5%;"></td>
+                            <td data-name="Manage" style="width:2%;"></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,12 +69,16 @@
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                                                 <li>
                                                     <a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $type->id; ?>" data-name="<?= $type->name; ?>">Edit</a>
                                                 </li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $type->id; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $type->id; ?>" data-name="<?= $type->name; ?>">Delete</a>
                                                 </li>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </td>
@@ -121,7 +127,7 @@
             let _this = $(this);
             e.preventDefault();
 
-            var url = "<?php echo base_url(); ?>customer/add_spt_ajax";
+            var url = base_url + "customers/_create_system_package_type";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -129,13 +135,15 @@
                 type: 'POST',
                 url: url,
                 data: _this.serialize(),
+                dataType:"json",
                 success: function(result) {
-                    if (result === "Updated") {
+                    if (result.is_success) {
+                        $("#new_system_package_modal").modal('hide');
+                        _this.trigger("reset");
 
-                    } else {
                         Swal.fire({
-                            title: 'Save Successful!',
-                            text: "New System Package Type has been added successfully.",
+                            title: 'System Package Type',
+                            text: "System package type has been added successfully.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -144,10 +152,13 @@
                                 location.reload();
                             //}
                         });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
+                        });
                     }
-                    $("#new_system_package_modal").modal('hide');
-                    _this.trigger("reset");
-
                     _this.find("button[type=submit]").html("Save");
                     _this.find("button[type=submit]").prop("disabled", false);
                 },
@@ -158,7 +169,7 @@
             let _this = $(this);
             e.preventDefault();
 
-            var url = "<?php echo base_url(); ?>customer/update_spt_ajax";
+            var url = base_url + "customers/_update_system_package_type";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -166,13 +177,15 @@
                 type: 'POST',
                 url: url,
                 data: _this.serialize(),
+                dataType:"json",
                 success: function(result) {
-                    if (result === "Updated") {
+                    if (result.is_success) {
+                        $("#edit_system_package_modal").modal('hide');
+                        _this.trigger("reset");
 
-                    } else {
                         Swal.fire({
-                            title: 'Update Successful!',
-                            text: "System Package Type has been updated successfully.",
+                            title: 'System Package Type',
+                            text: "System package type has been updated successfully.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -181,9 +194,13 @@
                                 location.reload();
                             //}
                         });
-                    }
-                    $("#edit_system_package_modal").modal('hide');
-                    _this.trigger("reset");
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
+                        });
+                    }                    
 
                     _this.find("button[type=submit]").html("Save");
                     _this.find("button[type=submit]").prop("disabled", false);
@@ -192,11 +209,12 @@
         });
 
         $(document).on("click", ".delete-item", function() {
-            let id = $(this).attr("data-id");
+            let id = $(this).attr('data-id');
+            let name = $(this).attr('data-name');
 
             Swal.fire({
                 title: 'Delete System Package Type',
-                text: "Are you sure you want to delete this System Package Type?",
+                html: `Are you sure you want to delete this system package type <b>${name}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -205,15 +223,14 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: "<?php echo base_url(); ?>customer/delete_spt",
-                        data: {
-                            id: id
-                        },
+                        url: base_url + "customers/_delete_system_package_type",
+                        data: {id: id},
+                        dataType:"json",
                         success: function(result) {
-                            if (result === '1') {
+                            if (result.is_success) {
                                 Swal.fire({
-                                    title: 'Good job!',
-                                    text: "Data Deleted Successfully!",
+                                    title: 'System Package Type',
+                                    text: "Data deleted successfully!",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
@@ -221,6 +238,12 @@
                                     //if (result.value) {
                                         location.reload();
                                     //}
+                                });
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    html: result.msg
                                 });
                             }
                         },

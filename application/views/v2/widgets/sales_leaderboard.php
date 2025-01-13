@@ -37,27 +37,33 @@ endif;
         left: 13px;
     }
 
-    .sales-filter {
-        height: 150px;
-        background: var(--sales-primary);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        padding: 20px;
-    }
-
-    .sales-filter .form-select,
-    .sales-filter .form-control {
+    .sales-leaderboard-container .filter .form-select {
         border-radius: 25px;
         font-size: 16px !important;
         font-weight: 500;
-        background: var(--sales-quaternary);
-        color: var(--sales-green3);
-        border-color: var(--sales-quaternary) !important;
+        border-color: none;
+        border: none;
+        color: #214548;
     }
 
-    #sales_leaderboard_v2 {
+    .sales-leaderboard-container .filter .form-select {
+        border-radius: 25px;
+        font-size: 16px !important;
+        font-weight: 500;
+        border-color: none;
+        border: none;
+        color: #214548;
+    }
+
+    .sales-leaderboard-container .filter .form-control {
+        border-radius: 25px;
+        font-size: 16px !important;
+        font-weight: 500;
+        border-color: #FEA303;
+        color: #214548;
+    }
+
+    .sales-leaderboard-container {
         margin: 0 20px;
         background-color: #FFFFFF;
         color: rgb(47 43 61 / 0.9);
@@ -66,9 +72,7 @@ endif;
         overflow: hidden;
         box-shadow: 0px 3px 12px #38747859;
         padding: 10px;
-        transform: translateY(-60px);
         overflow: auto;
-        height: 75%;
     }
 
     .sales-separator {
@@ -83,16 +87,16 @@ endif;
 
     @media screen and (max-width: 1366px) {
 
-        .sales-filter .form-select {
+        .sales-leaderboard-container .form-select {
             width: 100%;
         }
 
-        .sales-filter .col-4 {
+        .sales-leaderboard-container .col-4 {
             width: 50%;
         }
 
-        .sales-filter .filter-options {
-            width: 51%;
+        .sales-leaderboard-container .filter-options {
+            width: 55%;
             margin-bottom: 10px;
         }
 
@@ -112,9 +116,15 @@ endif;
             margin: unset;
             margin-top: 20px;
         }
-
-
     }
+
+    @media screen and (max-width: 567px) {
+        .sales-leaderboard-container{
+            margin: unset;
+            margin-top: 20px;
+        }
+    }
+
 
     @media screen and (max-width: 460px) {
         .sales-filter .col-4 {
@@ -151,36 +161,36 @@ endif;
     </div>
 
     <div class="nsm-card-content">
-        <div class="nsm-widget-table">
-            <div class="sales-filter">
-                <div class="col-md-12 mt-3">
-                    <div class="row">
-                        <div class="col-4 filter-options">
-                            <select class="nsm-field form-select" name="filter_date"
-                                id="sales-leader-board-filter-date">
-                                <option value="today">Today</option>
-                                <option value="custom">Custom</option>
-                                <option value="this-week" <?= $date === 'this-week' ? 'selected' : '' ?>>This week
-                                </option>
-                                <option value="this-month">This month</option>
-                                <option value="this-quarter">This quarter</option>
-                                <option value="this-year" selected="">This year</option>
-                            </select>
-                        </div>
-                        <div class="col-4">
-                            <input type="date" id="sales-leaderboard-filter-from" class="nsm-field form-control date"
-                                value="<?= date('Y-01-01') ?>" />
-                        </div>
-                        <div class="col-4">
-                            <input type="date" id="sales-leaderboard-filter-to" class="nsm-field form-control date"
-                                value="<?= date('Y-m-d') ?>" required>
-                        </div>
+        <div class="banner">
+            <img src="./assets/img/sales-leaderboard-banner.svg" alt="">
+        </div>
+        <div class="sales-leaderboard-container">
+            <div class="nsm-widget-table">
+                <div class="row mb-4 mt-2 filter">
+                    <div class="col-4 filter-options">
+                        <select class="nsm-field form-select" name="filter_date" id="sales-leader-board-filter-date">
+                            <option value="today">Today</option>
+                            <option value="custom">Custom</option>
+                            <option value="this-week" <?= $date === 'this-week' ? 'selected' : '' ?>>This week
+                            </option>
+                            <option value="this-month">This month</option>
+                            <option value="this-quarter">This quarter</option>
+                            <option value="this-year" selected="">This year</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <input type="date" id="sales-leaderboard-filter-from" class="nsm-field form-control date"
+                            value="<?= date('Y-01-01') ?>" />
+                    </div>
+                    <div class="col-4">
+                        <input type="date" id="sales-leaderboard-filter-to" class="nsm-field form-control date"
+                            value="<?= date('Y-m-d') ?>" required>
                     </div>
                 </div>
-            </div>
-            <div id="sales_leaderboard_v2"></div>
-            <!-- <div class="sales-separator"></div> -->
+                <div id="sales_leaderboard_v2" class="mt-2"></div>
+                <!-- <div class="sales-separator"></div> -->
 
+            </div>
         </div>
     </div>
 

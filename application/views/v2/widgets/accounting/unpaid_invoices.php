@@ -15,7 +15,6 @@ endif;
         background-image: none;
         padding: 10px;
         position: relative;
-        z-index: 2;
         height: 100%;
         display: flex;
         align-items: center;
@@ -33,11 +32,12 @@ endif;
     }
 
     .unpaid-invoices-container .unpaid-invoices-items .nsm-widget-table .badge-section .nsm-badge {
-        padding: 1px 20px;
         border-radius: 25px;
         font-weight: bold;
-        color: #fff;
-        font-size: 12px;
+        color: #000;
+        font-size: 14px;
+        background-color: unset;
+        padding: unset;
     }
 
     .content-title {
@@ -66,16 +66,15 @@ endif;
     }
 
     #dashboard_unpaid_invoices .nsm-badge2 {
-        background-color: #EFB6C8;
-        color: #fff;
+        background-color: unset;
         display: block;
-        width: 175px;
-        margin-top: 10px;
+        margin-top: 5px;
         text-wrap: auto;
+        padding: unset;
     }
 
     #dashboard_unpaid_invoices tbody tr td {
-        width: 200px;
+        /* width: 200px; */
     }
 
 
@@ -124,8 +123,8 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="col-md-12">
-            <div class="banner mb-5">
-                <img src="./assets/img/open-invoices-banner2.svg" alt="">
+            <div class="banner">
+                <img src="./assets/img/unpaid-invoices-banner2.svg" alt="">
             </div>
             <div class="unpaid-invoices-container">
                 <div class="unpaid-invoices-items">
@@ -194,7 +193,7 @@ endif;
                                                     <span class="content-title"><?= $invoice->invoice_number ?></span>
                                                     <span class="content-subtitle d-block" style="margin-top:7px;"><i
                                                             class='bx bxs-user-circle'
-                                                            style="font-size: 14px;position: relative;top: 2px;"></i>
+                                                            style="font-size: 14px;position: relative;top: 2px;top: 2px;color: #FEA303;"></i>
                                                         <?= trim($customer_name) != '' ? $customer_name : '---' ?></span>
                                                     <?php if( $show_no_movement_notice == 1 ){  ?>
                                                     <a style="text-decoration:none;margin-top:5px;"
@@ -209,12 +208,11 @@ endif;
                                     </td>
                                     <td>
                                         <span class="content-subtitle fw-bold"
-                                            style="font-size:12px;color:#FEA303">$<?= number_format($invoice->grand_total, 2) ?></span>
+                                            style="font-size:14px;">$<?= number_format($invoice->grand_total, 2) ?></span>
                                         <span class="content-subtitle d-block">Total Due</span>
                                     </td>
                                     <td style="text-align:right;" class="badge-section">
-                                        <span class="nsm-badge"
-                                            style="background-color: <?= $statusBadgeColor ?>"><?= $invoice->status ?></span>
+                                        <span class="nsm-badge"><?= $invoice->status ?></span>
                                         <span class="content-subtitle d-block mt-2">
                                             <?= $invoice->due_date ? get_format_date($invoice->due_date) : '---' ?>
                                         </span>

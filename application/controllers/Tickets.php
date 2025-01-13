@@ -57,6 +57,7 @@ class Tickets extends MY_Controller
     {   
         $this->load->helper(array('hashids_helper', 'form'));
         $this->load->model('JobSettings_model');
+        $this->load->model('TicketSettings_model');
 
         $input = $this->input->post();
         $comp_id = logged('company_id');
@@ -70,6 +71,21 @@ class Tickets extends MY_Controller
         $techni = serialize($this->input->post('assign_tech'));
         $tDate = date("Y-m-d",strtotime($this->input->post('ticket_date')));
 
+        $ticketSetting = $this->TicketSettings_model->getByCompanyId($company_id);
+        if( $ticketSetting ){
+            $num_next   = $ticketSetting->ticket_num_next;
+            $num_prefix = $ticketSetting->ticket_num_prefix;
+        }else{
+            $lastInsert = $this->tickets_model->getCompanylastInsert($company_id);
+            if( $lastInsert ){
+                $num_next = $lastInsert->id + 1;
+            }else{
+                $num_next = 1;
+            }
+            $num_prefix = 'SERVICE-';                
+        }
+
+        $ticket_number = $num_prefix . str_pad($num_next, 5, '0', STR_PAD_LEFT);
         $new_data = array(
             'customer_id'               => $this->input->post('customer_id'),
             'business_name'             => $this->input->post('business_name'),
@@ -79,7 +95,7 @@ class Tickets extends MY_Controller
             'acs_state'                 => $this->input->post('customer_state'),
             'acs_zip'                   => $this->input->post('customer_zip'),
             'job_tag'                   => $this->input->post('job_tag'),
-            'ticket_no'                 => $this->input->post('ticket_no'),
+            'ticket_no'                 => $ticket_number,
             'ticket_date'               => $tDate,
             'scheduled_time'            => $this->input->post('scheduled_time'),
             'scheduled_time_to'         => $this->input->post('scheduled_time_to'),
@@ -130,6 +146,21 @@ class Tickets extends MY_Controller
         );
 
         $updateaddQuery = $this->tickets_model->updateTicketsHash_ID($update_data);
+
+        //Update ticket settings
+        if( $ticketSetting ){
+            $setting_data = [
+                'ticket_num_next' => $num_next + 1
+            ];
+            $this->TicketSettings_model->update($ticketSetting->id, $setting_data);
+        }else{
+            $setting_data = [
+                'company_id' => $company_id,
+                'ticket_num_prefix' => $num_prefix,
+                'ticket_num_next' => $num_next + 1
+            ];
+            $this->TicketSettings_model->create($setting_data);
+        }
 
         //Google Calendar
         createSyncToCalendar($addQuery, 'service_ticket', $company_id);
@@ -1068,7 +1099,7 @@ class Tickets extends MY_Controller
         $this->load->model('PanelType_model');
         $this->load->model('Invoice_model');
 
-        $this->page_data['page']->title = 'Tickets';
+        $this->page_data['page']->title = 'Service Tickets';
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -1162,7 +1193,7 @@ class Tickets extends MY_Controller
         $this->load->model('PanelType_model');
         $this->load->model('Customer_advance_model');
 
-        $this->page_data['page']->title = 'Tickets';
+        $this->page_data['page']->title = 'Service Tickets';
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -1769,20 +1800,19 @@ class Tickets extends MY_Controller
     }
 
     public function ajax_create_service_ticket()
-    {
-        $this->load->helper(array('stripe_helper'));
-
-        $this->load->helper(array('hashids_helper', 'form'));
+    {        
+        $this->load->helper(array('hashids_helper', 'form', 'stripe_helper'));
         $this->load->model('JobSettings_model');
         $this->load->model('Customer_advance_model');
+        $this->load->model('TicketSettings_model');
 
         $jobs_id  = 0;
         $is_valid = 1;
         $msg = '';
         $esign_id = 0;        
 
-        $company_id  = getLoggedCompanyID();
-        $user_id  = getLoggedUserID();
+        $company_id  = logged('company_id');
+        $user_id     = logged('id');
         $card_type = '';
 
         if( $this->input->post('customer_id') == '' || $this->input->post('customer_id') == 0 ){
@@ -1873,6 +1903,21 @@ class Tickets extends MY_Controller
                 $grand_total = $this->input->post('grandtotal') - $this->input->post('taxes');
             }
 
+            $ticketSetting = $this->TicketSettings_model->getByCompanyId($company_id);
+            if( $ticketSetting ){
+                $num_next   = $ticketSetting->ticket_num_next;
+                $num_prefix = $ticketSetting->ticket_num_prefix;
+            }else{
+                $lastInsert = $this->tickets_model->getCompanylastInsert($company_id);
+                if( $lastInsert ){
+                    $num_next = $lastInsert->id + 1;
+                }else{
+                    $num_next = 1;
+                }
+                $num_prefix = 'SERVICE-';                
+            }
+
+            $ticket_number = $num_prefix . str_pad($num_next, 5, '0', STR_PAD_LEFT);
             $new_data = array(
                 'customer_id'               => $this->input->post('customer_id'),
                 'business_name'             => $this->input->post('business_name'),
@@ -1882,7 +1927,7 @@ class Tickets extends MY_Controller
                 'acs_state'                 => $this->input->post('customer_state'),
                 'acs_zip'                   => $this->input->post('customer_zip'),
                 'job_tag'                   => $this->input->post('job_tag'),
-                'ticket_no'                 => $this->input->post('ticket_no'),
+                'ticket_no'                 => $ticket_number,
                 'ticket_date'               => $tDate,
                 'scheduled_time'            => $this->input->post('scheduled_time'),
                 'scheduled_time_to'         => $this->input->post('scheduled_time_to'),
@@ -1933,6 +1978,21 @@ class Tickets extends MY_Controller
             );
 
             $updateaddQuery = $this->tickets_model->updateTicketsHash_ID($update_data);
+
+            //Update ticket settings
+            if( $ticketSetting ){
+                $setting_data = [
+                    'ticket_num_next' => $num_next + 1
+                ];
+                $this->TicketSettings_model->update($ticketSetting->id, $setting_data);
+            }else{
+                $setting_data = [
+                    'company_id' => $company_id,
+                    'ticket_num_prefix' => $num_prefix,
+                    'ticket_num_next' => $num_next + 1
+                ];
+                $this->TicketSettings_model->create($setting_data);
+            }
 
             if( $this->input->post('is_with_esign') ){
                 //Emergency Contacts
@@ -2171,7 +2231,7 @@ class Tickets extends MY_Controller
                 $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
 
                 //Activity Logs
-                $activity_name = 'Created Caledar Schedule ' . $this->input->post('ticket_no'); 
+                $activity_name = 'Calendar Schedule : Created ticket number ' . $this->input->post('ticket_no'); 
                 createActivityLog($activity_name);
             }
         }
@@ -3151,6 +3211,58 @@ class Tickets extends MY_Controller
             'msg' => $msg
         ];
 
+        echo json_encode($return);
+    }
+
+    public function settings_tickets()
+    {
+        $this->load->model('TicketSettings_model');
+
+        $cid = logged('company_id');
+
+        $settings = $this->TicketSettings_model->getByCompanyId($cid);
+
+        $this->page_data['settings'] = $settings;
+        $this->page_data['page']->title = 'Service Ticket Settings';
+        $this->load->view('v2/pages/tickets/settings/index', $this->page_data);
+    }
+
+    public function ajax_update_settings()
+    {
+        $this->load->model('TicketSettings_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';        
+
+        $post = $this->input->post();
+        $cid = logged('company_id');
+
+        $settings   = $this->TicketSettings_model->getByCompanyId($cid);
+        if( $settings ){
+            $data = [
+                'ticket_num_prefix' => $post['ticket_settings_prefix'],
+                'ticket_num_next' => $post['ticket_settings_next_number']
+            ];
+
+            $this->TicketSettings_model->update($settings->id, $data);
+        }else{
+            $data = [
+                'company_id' => $cid,
+                'ticket_num_prefix' => $post['ticket_settings_prefix'],
+                'ticket_num_next' => $post['ticket_settings_next_number']
+            ];
+
+            $this->TicketSettings_model->create($data);
+        }
+
+        //Activity Logs
+        $activity_name = 'Service Ticket : Updated settings'; 
+        createActivityLog($activity_name);
+
+        $is_success = 1;
+        $msg = '';      
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
 }

@@ -16,7 +16,6 @@ endif;
         background-image: none;
         padding: 10px;
         position: relative;
-        z-index: 2;
         height: 100%;
         display: flex;
         align-items: center;
@@ -34,11 +33,11 @@ endif;
     }
 
     .overdue-invoices-container .overdue-invoices-items .nsm-widget-table .badge-section .nsm-badge {
-        padding: 1px 20px;
         border-radius: 25px;
         font-weight: bold;
-        color: #fff;
-        font-size: 12px;
+        font-size: 16px;
+        background: unset;
+        padding: unset;
     }
 
     .content-title {
@@ -74,6 +73,7 @@ endif;
         background: #d9a1a0;
         border: 1px solid #BEAFC2;
     }
+
     #nsm-table-overdue-invoices tbody tr td {
         width: 200px;
     }
@@ -83,7 +83,8 @@ endif;
         #nsm-table-overdue-invoices {
             width: 500px;
         }
-        .overdue-invoices-container .overdue-invoices-items{
+
+        .overdue-invoices-container .overdue-invoices-items {
             margin: auto;
         }
     }
@@ -120,8 +121,8 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="col-md-12">
-            <div class="banner mb-5">
-                <img src="./assets/img/overdue-invoices-banner2.svg" alt="">
+            <div class="banner">
+                <img src="./assets/img/overdue-invoices-banner3.svg" alt="">
             </div>
             <div class="overdue-invoices-container">
                 <div class="overdue-invoices-items">
@@ -189,14 +190,14 @@ endif;
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="content-subtitle  fw-bold" style="font-size:12px;color:#FEA303">
+                                        <span class="content-subtitle  fw-bold" >
                                             $<?= number_format($invoice->balance, 2) ?>
                                         </span>
                                         <span class="content-subtitle d-block">total due</span>
                                     </td>
                                     <td style="width:25%;text-align:right;">
                                         <div class="controls badge-section mb-2">
-                                            <span class="nsm-badge " style="background-color: <?= $statusBadgeColor ?>">
+                                            <span class="nsm-badge ">
                                                 <?= $invoice->status ?>
                                             </span>
                                             <span class="content-subtitle d-block mt-2">

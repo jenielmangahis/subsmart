@@ -1,3 +1,12 @@
+<style>
+#expenseModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+#expenseModal .modal-body{
+    overflow-x:hidden;
+}
+</style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <?php if(!isset($expense)) : ?>
@@ -86,6 +95,9 @@
                                     <div class="row">
                                         <div class="col-12 col-md-4">
                                             <label for="payee">Payee</label>
+                                            <div id="open-payee-info-window-container" style='float:right;'>
+                                                <a href="javascript:void(0)" class="nsm-button btn-small" style="margin-bottom:3px;display:inline-block;" id="open-payee-info-window">View Payee Info</a>
+                                            </div>  
                                             <select name="payee" id="payee" class="form-control nsm-field">
                                                 <?php if(isset($expense)) : ?>
                                                     <option value="<?=$expense->payee_type.'-'.$expense->payee_id?>">

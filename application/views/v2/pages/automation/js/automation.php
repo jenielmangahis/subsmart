@@ -27,6 +27,7 @@
         });
 
         $(document).on('click', '#workflowMenuAccordion', function(event) {
+            console.log('test')
             event.preventDefault(); // Prevent the dropdown from closing
             event.stopPropagation(); // Stop event bubbling
         });
@@ -67,49 +68,15 @@
 
         $(document).on('submit', '#emailForm', function(e) {
             e.preventDefault();
-            let scheduledForm = $(this);
 
-            $.ajax({
-                type: "POST",
-                url: BASE_URL + "/Automation/addAutomation",
-                data: scheduledForm.serialize(),
-                dataType: "JSON",
-                beforeSend: function() {
-                    formDisabler(scheduledForm, true);
-                    Swal.fire({
-                        icon: "info",
-                        title: "Saving Entry!",
-                        html: "Please wait while the process is running...",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        },
-                    });
-                },
-                success: function(response) {
-                    $('#emailForm')[0].reset();
-                    formDisabler(scheduledForm, false);
-                    Swal.fire({
-                        icon: "success",
-                        title: "Entry Saved!",
-                        html: "Call support has beed scheduled.",
-                        showConfirmButton: true,
-                        confirmButtonText: "Okay",
-                    });
-                },
-                error: function(xhr, status, error) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error!",
-                        html: "An unexpected error occurred: " + error,
-                        showConfirmButton: true,
-                        confirmButtonText: "Okay",
-                    });
-                    formDisabler(scheduledForm, false);
-                },
-            });
+            let formData = $(this).serializeArray();
+            emailBody = formData.find(field => field.name === 'message').value;
+            emailSubject = formData.find(field => field.name === 'subject').value;
+
+            // Close modal or perform further actions
+            $('#addEmail').modal('hide');
         });
+
 
         $(document).on('click', '#submitAutomation', function(e) {
             e.preventDefault();
@@ -125,13 +92,11 @@
                 target: selectedTarget,
                 date_reference: selectedDate,
                 timing_reference: selectedTiming,
-                template: `
-                    <p>Hi {client_first_name},</p>
-                    <p>This is a friendly reminder about your upcoming service appointment with us at {account_business_name}.</p>
-                `,
+                template: emailBody,
                 status: 'active'
             };
 
+            console.log(automationData)
 
             $.ajax({
                 type: "POST",
@@ -152,7 +117,6 @@
                     });
                 },
                 success: function(response) {
-                    $('#emailForm')[0].reset();
                     formDisabler(automationData, false);
                     Swal.fire({
                         icon: "success",
@@ -161,6 +125,8 @@
                         showConfirmButton: true,
                         confirmButtonText: "Okay",
                     });
+                    $('#addAutomation').modal('hide');
+
                 },
                 error: function(xhr, status, error) {
                     Swal.fire({
@@ -199,6 +165,8 @@
                     });
                 },
                 success: function(response) {
+                    console.log('response')
+                    console.log(response)
                     $('#emailForm')[0].reset();
                     formDisabler(automationData, false);
                     Swal.fire({
@@ -370,6 +338,7 @@
                 className: className,
                 callback: function(selected) {
                     selectedAction = selected;
+                    $('#addEmail').modal('show');
                 }
             });
             createDropdown({
@@ -523,7 +492,7 @@
                     class="list-group-item event-item cursor-pointer" 
                     data-type="${type}" 
                     data-event="${value}">
-                    ${text} ${value}
+                    ${text}
                 </li>
             `
                 )
@@ -534,8 +503,6 @@
             const type = $(this).data('type');
             const event = $(this).data('event');
             selectedEvent = event
-            preventDropdownClose()
-
 
             displayFirstParagraphSelection(type, event);
         });

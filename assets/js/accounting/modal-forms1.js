@@ -1,4 +1,3 @@
-var base_url = window.location.origin + "/";
 $(document).ready(function () {
     let vendorIdTemp
     let modal_element
@@ -107,7 +106,6 @@ $(document).ready(function () {
                         type = 'transfer-account';
                     }
                 }
-
                 if (dropdownFields.includes(type)) {
                     $(this).select2({
                         ajax: {

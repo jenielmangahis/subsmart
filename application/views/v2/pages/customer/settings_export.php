@@ -19,7 +19,7 @@
                 </div>
                 <div class="row g-3">
                     <div class="col-12">
-                        <div class="nsm-card">
+                        <div class="nsm-card primary">
                             <div class="nsm-card-content">
                                 <div class="row g-2">
                                     <div class="col-12">
@@ -28,9 +28,14 @@
                                         </div>
                                         <label class="nsm-subtitle mb-3">Check the column title for CSV Header Export Customer.</label>
                                         <form id="customer_headers_form" method="POST">
+                                            <?php
+                                                $chk_disabled = "disabled='disabled'"; 
+                                                if(checkRoleCanAccessModule('customer-settings', 'write')){
+                                                    $chk_disabled = '';
+                                                }
+                                            ?>
                                             <?php $fieldsValue = $importFields->value ? explode(',', $importFields->value) : array() ; ?>
                                            <div class="row">
-
                                                 <div class="col-md-2">
                                                     <h5>Customer Information</h5>
                                                     <?php foreach ($importFieldsList as $header): ?>
@@ -44,7 +49,7 @@
                                                         <div class="col-12">
                                                             <div class="d-block">
                                                                 <div class="form-check">
-                                                                    <input class="form-check-input" id="fieldCustomerInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                    <input class="form-check-input" id="fieldCustomerInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?> <?= $chk_disabled; ?>>
                                                                     <label class="form-check-label" for="fieldCustomerInfo<?= $header->id; ?>"><?= $header->field_description; ?></label>
                                                                 </div>
                                                             </div>
@@ -66,7 +71,7 @@
                                                             <div class="col-12">
                                                                 <div class="d-block">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" id="fieldBilling<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                        <input class="form-check-input" id="fieldBilling<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?> <?= $chk_disabled; ?>>
                                                                         <label class="form-check-label" for="fieldBilling<?= $header->id; ?>"><?= $header->field_description; ?></label>
                                                                     </div>
                                                                 </div>
@@ -88,7 +93,7 @@
                                                             <div class="col-12">
                                                                 <div class="d-block">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" id="fieldOfficeInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                        <input class="form-check-input" id="fieldOfficeInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?> <?= $chk_disabled; ?>>
                                                                         <label class="form-check-label" for="fieldOfficeInfo<?= $header->id; ?>"><?= $header->field_description; ?></label>
                                                                     </div>
                                                                 </div>
@@ -110,7 +115,7 @@
                                                                 <div class="col-12">
                                                                     <div class="d-block">
                                                                         <div class="form-check">
-                                                                            <input class="form-check-input" id="fieldAlarmInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                            <input class="form-check-input" id="fieldAlarmInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?> <?= $chk_disabled; ?>>
                                                                             <label class="form-check-label" for="fieldAlarmInfo<?= $header->id; ?>"><?= $header->field_description; ?></label>
                                                                         </div>
                                                                     </div>
@@ -132,7 +137,7 @@
                                                             <div class="col-12">
                                                                 <div class="d-block">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" id="fieldContactInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?>>
+                                                                        <input class="form-check-input" id="fieldContactInfo<?= $header->id; ?>" type="checkbox" name="headers[]" value='<?= $header->id; ?>' <?= $checked; ?> <?= $chk_disabled; ?>>
                                                                         <label class="form-check-label" for="fieldContactInfo<?= $header->id; ?>"><?= $header->field_description; ?></label>
                                                                     </div>
                                                                 </div>
@@ -147,11 +152,13 @@
                             </div>
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                     <div class="col-12 text-end">
                         <button type="button" data-action="save" class="nsm-button primary" id="btn_save_fields">
                             Save Changes
                         </button>
                     </div>
+                    <?php } ?>
                 </div>
             </div>
         </div>

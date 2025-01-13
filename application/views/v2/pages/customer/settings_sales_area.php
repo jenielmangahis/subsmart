@@ -27,11 +27,9 @@
                 <div class="row">
 
                     <div class="col-6 grid-mb">
-                        <form action="<?php echo base_url('customer/settings_sales_area') ?>" method="get">
-                            <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="<?php echo (!empty($search)) ? $search : '' ?>">
-                            </div>
-                        </form>   
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                        </div>
                     </div>               
 
                     <div class="col-6 grid-mb text-end">
@@ -50,7 +48,7 @@
                             <td class="table-icon"></td>
                             <td data-name="Name">Name</td>
                             <td data-name="Date Created" style="width:10%;">Date Created</td>
-                            <td data-name="Manage" style="width:5%;"></td>
+                            <td data-name="Manage" style="width:1%;"></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -170,7 +168,7 @@
             let _this = $(this);
             e.preventDefault();
 
-            var url = "<?php echo base_url(); ?>customer/update_sales_area_ajax";
+            var url = base_url + "customers/_update_sales_area";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -178,11 +176,14 @@
                 type: 'POST',
                 url: url,
                 data: _this.serialize(),
+                dataType:"json",
                 success: function(result) {
-                    console.log(result);
-                    if (result === "1") {
+                    if (result.is_success) {
+                        $("#edit_sales_area_modal").modal('hide');
+                        _this.trigger("reset");
+
                         Swal.fire({
-                            title: 'Update Successful!',
+                            title: 'Sales Area',
                             text: "Sales area has been updated successfully.",
                             icon: 'success',
                             showCancelButton: false,
@@ -194,20 +195,11 @@
                         });
                     } else {
                         Swal.fire({
-                            title: 'Save Successful!',
-                            text: "New sales area has been added successfully.",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            //if (result.value) {
-                                location.reload();
-                            //}
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
                         });
                     }
-                    $("#edit_sales_area_modal").modal('hide');
-                    _this.trigger("reset");
-
                     _this.find("button[type=submit]").html("Save");
                     _this.find("button[type=submit]").prop("disabled", false);
                 },
@@ -237,7 +229,7 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: base_url + "customer/delete_sales_area",
+                        url: base_url + "customers/_delete_sales_area",
                         data: {id: id},
                         dataType:"json",
                         success: function(result) {

@@ -243,6 +243,9 @@
                                     <div class="row">
                                         <div class="col-12 col-md-3">
                                             <label for="payee">Payee</label>
+                                            <div id="open-payee-info-window-container" style='float:right;'>
+                                                <a href="javascript:void(0)" class="nsm-button btn-small" style="margin-bottom:3px;display:inline-block;" id="open-payee-info-window">View Payee Info</a>
+                                            </div>  
                                             <select name="payee" id="payee" class="nsm-field form-control">
                                                 <?php if(isset($check)) : ?>
                                                 <option value="<?=$check->payee_type.'-'.$check->payee_id?>">
