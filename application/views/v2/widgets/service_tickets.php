@@ -12,7 +12,6 @@ endif;
         background-image: none;
         box-shadow: 0px 3px 12px #38747859;
         padding: 10px;
-        transform: translateY(-60px);
     }
 
     .service-tickets-content #jobs_chart {
@@ -84,7 +83,7 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="banner">
-            <img src="./assets/img/service-tickets-banner.svg" alt="">
+            <img src="./assets/img/service-tickets-banner2.svg" alt="">
         </div>
         <div class="service-tickets-content">
             <div class="row mb-4 mt-2 filter">

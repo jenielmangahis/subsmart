@@ -1242,7 +1242,7 @@ class Mycrm extends MY_Controller
             $isValid = $this->Users_model->attempt($login_data);
             if ($isValid == 'valid') {
                 // Create data
-                $user = $this->Users_model->getUserByEmail($post['multi_email']);
+                $user = $this->Users_model->getUserByUsernname($post['multi_email']);
                 if ($user->company_id != $company_id) {
                     // Check if company id already in the list. Can only accept 1 company user
                     $isExists = $this->CompanyMultiAccount_model->getByParentCompanyIdAndLinkCompanyId($company_id, $user->company_id);

@@ -14,7 +14,6 @@ endif;
         background-image: none;
         padding: 10px;
         position: relative;
-        z-index: 2;
         height: 100%;
         display: flex;
         align-items: center;
@@ -24,10 +23,24 @@ endif;
     .paid-invoices-container .paid-invoices-items .row-items {
         width: 100% !important;
         box-sizing: border-box;
-        box-shadow: 0px 3px 12px #38747859;
+        /* box-shadow: 0px 3px 12px #38747859; */
         padding: 20px;
         border-radius: 25px;
         background: #fff;
+    }
+
+    .paid-invoices-container .item {
+        display: block;
+        padding: 20px 10px;
+        color: #214548;
+        border-radius: 10px;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0px 3px 12px #38747859;
+        height: 100%;
     }
 
     .paid-invoices-container .paid-invoices-items .row-items .form-select {
@@ -38,12 +51,49 @@ endif;
         color: #214548;
     }
 
+
+
     .paid-invoices-container .paid-invoices-items .row-items .form-control {
         border-radius: 25px;
         font-size: 16px !important;
         font-weight: 500;
         border-color: #FEA303;
         color: #214548;
+    }
+
+    .paid-invoices-container .item .first {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .paid-invoices-container .item .first .icons {
+        border-radius: 100%;
+    }
+
+    .paid-invoices-container .item .first .icons i {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        height: 38px;
+        width: 40px;
+        border-radius: 100%;
+    }
+
+    .paid-invoices-container .item .first label {
+        font-size: 30px;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+    .paid-invoices-container .item .count p {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+        text-align: center;
     }
 
     @media screen and (max-width: 1366px) {
@@ -65,7 +115,6 @@ endif;
 
     @media screen and (max-width: 567px) {
         .paid-invoices-container .paid-invoices-items .col-4 {
-            width: 100%;
             margin-bottom: 10px
         }
 
@@ -84,6 +133,11 @@ endif;
         .paid-invoices-container .text-md-start {
             text-align: left !important;
         }
+
+        .paid-invoices-container .paid-invoices-items .col-6 {
+            width: 100%;
+        }
+
     }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
@@ -111,58 +165,57 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="col-md-12">
-            <div class="banner mb-5">
-                <img src="./assets/img/paid-invoices-banner2.svg" alt="">
+            <div class="banner">
+                <img src="./assets/img/paid-invoices-banner3.svg" alt="">
             </div>
             <div class="paid-invoices-container">
                 <div class="paid-invoices-items">
                     <div class="row row-items">
-                        <div class="col-4 filter-options">
-                            <select class="nsm-field form-select" name="filter_date"
-                                id="widget-paid-invoices-filter-date">
-                                <option value="today">Today</option>
-                                <option value="custom">Custom</option>
-                                <option value="this-week" <?= $date === 'this-week' ? 'selected' : '' ?>>This week
-                                </option>
-                                <option value="this-month">This month</option>
-                                <option value="this-quarter">This quarter</option>
-                                <option value="this-year" selected="">This Year</option>
-                            </select>
+                        <div class="row mb-5">
+                            <div class="col-4 filter-options">
+                                <select class="nsm-field form-select" name="filter_date"
+                                    id="widget-paid-invoices-filter-date">
+                                    <option value="today">Today</option>
+                                    <option value="custom">Custom</option>
+                                    <option value="this-week" <?= $date === 'this-week' ? 'selected' : '' ?>>This week
+                                    </option>
+                                    <option value="this-month">This month</option>
+                                    <option value="this-quarter">This quarter</option>
+                                    <option value="this-year" selected="">This Year</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <input type="date" id="widget-paid-invoices-filter-from"
+                                    class="nsm-field form-control date" value="<?= date('Y-01-01') ?>" />
+                            </div>
+                            <div class="col-4">
+                                <input type="date" id="widget-paid-invoices-filter-to"
+                                    class="nsm-field form-control date" value="<?= date('Y-m-t') ?>" required>
+                            </div>
                         </div>
-                        <div class="col-4">
-                            <input type="date" id="widget-paid-invoices-filter-from"
-                                class="nsm-field form-control date" value="<?= date('Y-01-01') ?>" />
-                        </div>
-                        <div class="col-4">
-                            <input type="date" id="widget-paid-invoices-filter-to"
-                                class="nsm-field form-control date" value="<?= date('Y-m-t') ?>" required>
-                        </div>
-                        <div class="col-12 col-md-12 mt-5">
-                            <div class="nsm-counter mb-2 widget-tile-paid-invoices"
-                                style=" background-color: #A888B51a;">
-                                <div class="d-flex align-items-center justify-content-start gap-2">
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <i class='bx bx-dollar-circle'
-                                            style=" background-color: #A888B5;color: #fff;"></i>
+                        <div class="col-6 mb-4">
+                            <div class="item">
+                                <div class="first">
+                                    <div class="icons" style="color: #A888B5 ; background: #A888B51a;">
+                                        <i class='bx bx-dollar-circle'></i>
                                     </div>
-                                    <div class="text-center text-md-start d-flex flex-column justify-content-center">
-                                        <h2 id="widget-paid-invoices-total-amount">$0.00</h2>
-                                        <span>Total Amount Paid Invoices</span>
-                                    </div>
+                                    <label id="widget-paid-invoices-total-amount">$0.0</label>
+                                </div>
+                                <div class="count">
+                                    <p>Total Amount Paid Invoices</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-md-12">
-                            <div class="nsm-counter mb-2 widget-tile-paid-invoices"
-                                style=" background-color: #d9a1a01a;">
-                                <div class="d-flex align-items-center  justify-content-start  gap-2">
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <i class='bx bx-box' style=" background-color: #d9a1a0;color: #fff;"></i>
+                        <div class="col-6 mb-4 ">
+                            <div class="item">
+                                <div class="first">
+                                    <div class="icons" style="color: #FEA303;background: #FEA3031a;">
+                                        <i class='bx bx-box'></i>
                                     </div>
-                                    <div class="text-center text-md-start d-flex flex-column justify-content-center">
-                                        <h2 id="widget-paid-invoices-total-number">0</h2>
-                                        <span>Total Paid invoices</span>
-                                    </div>
+                                    <label id="widget-paid-invoices-total-number">0</label>
+                                </div>
+                                <div class="count">
+                                    <p>Total Paid invoices</p>
                                 </div>
                             </div>
                         </div>

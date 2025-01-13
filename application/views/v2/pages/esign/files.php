@@ -571,7 +571,7 @@ echo put_header_assets();
                                                                     </div>
                                                                 </li>
                                                                 
-                                                                <?php if( logged('company_id') == 31 || logged('company_id') == 24 || logged('company_id') == 1 ){ ?>
+                                                                <?php if( logged('company_id') == 31 || logged('company_id') == 24 || logged('company_id') == 1 || logged('company_id') == 3644 ){ ?>
                                                                 <li class="menu_listItem">
                                                                     <div class="fields menu_item" data-type="default-widget" data-key="Profile Name">
                                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-name"></i></span>
@@ -999,7 +999,7 @@ echo put_header_assets();
                                                 </div>
                                             </div>
 
-                                            <?php if( logged('company_id') == 31 || logged('company_id') == 24 || logged('company_id') == 1 ){ ?>
+                                            <?php if( logged('company_id') == 31 || logged('company_id') == 24 || logged('company_id') == 1 || logged('company_id') == 3644 ){ ?>
                                                 <div class="accordion-item">
                                                     <h2 class="accordion-header" id="widgetDefault8">
                                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#widgetCollapseDefault8" aria-expanded="true" aria-controls="widgetCollapseDefault8">

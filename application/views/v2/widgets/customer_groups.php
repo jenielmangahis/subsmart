@@ -18,7 +18,6 @@ endif;
         background-image: none;
         padding: 10px;
         position: relative;
-        z-index: 2;
         height: 100%;
         display: flex;
         align-items: center;
@@ -30,7 +29,7 @@ endif;
         box-sizing: border-box;
         box-shadow: 0px 3px 12px #38747859;
         padding: 20px;
-        border-radius: 25px;
+        border-radius: 10px;
         background: #fff;
     }
 

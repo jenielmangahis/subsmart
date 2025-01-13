@@ -89,7 +89,7 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="banner mb-4">
-            <img src="./assets/img/open-estimates-banner2.svg" alt="">
+            <img src="./assets/img/sales-banner2.svg" alt="">
         </div>
         <div class="sales-content">
             <div class="row mb-4 mt-2 filter">
@@ -262,8 +262,8 @@ endif;
                     labels: sales_labels,
                     datasets: [{
                             label: 'Sales',
-                            backgroundColor: '#76B351',
-                            borderColor: '#76B351',
+                            backgroundColor: '#FEA303',
+                            borderColor: '#FEA303',
                             data: data.chart_data_sales,
                         },
                         // {

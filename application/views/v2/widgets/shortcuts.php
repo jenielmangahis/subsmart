@@ -121,7 +121,7 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="banner">
-            <img src="./assets/img/shortcuts-banner.svg" alt="" />
+            <img src="./assets/img/shortcuts-banner2.svg" alt="" />
         </div>
 
         <div id="shortcut_slider" class="carousel slide" data-bs-ride="carousel">

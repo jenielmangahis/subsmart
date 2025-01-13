@@ -10,7 +10,6 @@
         background-image: none;
         padding: 10px;
         position: relative;
-        z-index: 2;
         height: 100%;
         display: flex;
         align-items: center;
@@ -28,11 +27,10 @@
     }
 
     .open-estimates-container .open-estimates-items .nsm-widget-table .badge-section .nsm-badge {
-        padding: 1px 20px;
         border-radius: 25px;
         font-weight: bold;
-        color: #fff;
-        font-size: 12px;
+        font-size: 14px;
+        color: #000;
     }
 
     .content-title {
@@ -72,8 +70,7 @@
     }
 
     #nsm-table-open-estimates .nsm-badge {
-        background-color: #EFB6C8;
-        color: #fff;
+        background-color: unset;
         display: block;
         width: 100%;
         margin-top: 10px;
@@ -81,7 +78,7 @@
     }
 
     #nsm-table-open-estimates tbody tr td {
-        width: 200px;
+        /* width: 200px; */
     }
 
 
@@ -152,8 +149,8 @@ function formatEstimateNumber($number)
     </div>
     <div class="nsm-card-content">
         <div class="col-md-12">
-            <div class="banner mb-5">
-                <img src="./assets/img/open-estimates-banner2.svg" alt="">
+            <div class="banner">
+                <img src="./assets/img/upcoming-estimates.svg" alt="">
             </div>
             <div class="open-estimates-container">
                 <div class="open-estimates-items">
@@ -197,8 +194,8 @@ function formatEstimateNumber($number)
                                 <tr>
                                     <td class="widget-tile-upcoming-estimate-row" data-id="<?= $estimate->id ?>">
                                         <span class="content-title"><?= $estimate->estimate_number ?></span>
-                                        <span class="content-subtitle d-block"><i class='bx bxs-user-circle'
-                                                style="font-size: 14px;position: relative;top: 2px;"></i>
+                                        <span class="content-subtitle d-block" style="font-weight: bold; margin-top: 5px;"><i class='bx bxs-user-circle'
+                                                style="font-size: 14px;position: relative;top: 2px; color: #FEA303;"></i>
                                             <?php if ($estimate->customer !== '' && $estimate->customer !== null) {
                                                 echo $estimate->customer;
                                             } else {
@@ -213,12 +210,11 @@ function formatEstimateNumber($number)
                                     </td>
                                     <td>
                                         <span class="content-subtitle fw-bold"
-                                            style="font-size:12px;color:#FEA303">$<?= $estimate->grand_total == null || $estimate->grand_total == 0 ? '0.00' : number_format($estimate->grand_total, 2) ?></span>
+                                            style="font-size:12px;color:#000">$<?= $estimate->grand_total == null || $estimate->grand_total == 0 ? '0.00' : number_format($estimate->grand_total, 2) ?></span>
                                         <span class="content-subtitle d-block">Total Due</span>
                                     </td>
                                     <td style="width:25%;text-align:right;" class="badge-section">
-                                        <span class="nsm-badge "
-                                            style="background-color: <?= $statusBadgeColor ?>"><?= ucwords($estimate->status) ?></span>
+                                        <span class="nsm-badge "><?= ucwords($estimate->status) ?></span>
                                         <span
                                             class="content-subtitle d-block mt-2"><?= date('F d, Y', strtotime($estimate->updated_at)) ?></span>
                                     </td>

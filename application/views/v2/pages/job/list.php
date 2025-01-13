@@ -392,7 +392,7 @@ JOB_LIST_TABLE_SETTINGS = JOB_LIST_TABLE.settings();
 
 $('#CUSTOM_FILTER_DROPDOWN').change(function(event) {
     $('#CUSTOM_FILTER_SEARCHBAR').val($('#CUSTOM_FILTER_DROPDOWN').val());
-    JOB_LIST_TABLE.columns(11).search(this.value).draw();
+    JOB_LIST_TABLE.columns(10).search(this.value).draw();
 });
 
 function DELETE_JOB(job_id){
