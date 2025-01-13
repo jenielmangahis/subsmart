@@ -1973,7 +1973,7 @@ $route['customers/_create_customer_group'] = 'Customer/ajax_create_customer_grou
 $route['customers/_update_customer_group'] = 'Customer/ajax_update_customer_group';
 $route['customers/_create_sales_area'] = 'Customer/ajax_create_sales_area';
 $route['customers/_update_sales_area'] = 'Customer/ajax_update_sales_area';
-$route['customers/_delete_sales_area'] = 'Customer/delete_sales_area';
+$route['customers/_delete_sales_area'] = 'Customer/ajax_delete_sales_area';
 $route['customers/_create_accounting_terms'] = 'Customer/ajax_create_accounting_terms';
 $route['customers/_create_rate_plan'] = 'Customer/ajax_create_rate_plan';
 $route['customers/_update_rate_plan'] = 'Customer/ajax_update_rate_plan';
@@ -1984,6 +1984,7 @@ $route['customers/_create_activation_fee'] = 'Customer/ajax_create_activation_fe
 $route['customers/_update_activation_fee'] = 'Customer/ajax_update_activation_fee';
 $route['customers/_delete_activation_fee'] = 'Customer/ajax_delete_activation_fee';
 $route['customers/_delete_customer_group'] = 'Customer/ajax_delete_customer_group';
+$route['customers/_delete_system_package_type'] = 'Customer/ajax_delete_system_package_type';
 
 //Benchmark for Testing
 $route['benchmark/cron_customer_subscription'] = 'Benchmark/cron_customer_subscription';
