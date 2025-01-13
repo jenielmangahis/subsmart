@@ -11908,7 +11908,7 @@ const makeRecurring = (modalName) => {
             //$(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
             //$(`#${modalId} #account-balance`).parent().parent().remove();
             $(`#${modalId} label[for="bank_account"]`).html('Account');
-            $(`#${modalId} div.modal-body #payment_date`).parent().parent().html('');
+            //$(`#${modalId} div.modal-body #payment_date`).parent().parent().html('');
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Check');
 
             $('#modal-help-popover-scheduled-create').popover({
