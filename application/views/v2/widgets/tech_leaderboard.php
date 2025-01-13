@@ -19,33 +19,7 @@ endif;
         width: 40% !important;
     }
 
-    #user_tech_leaderboard .nsm-profile>span {
-        position: relative;
-        top: 10px;
-        left: 13px;
-    }
-
-    .tech-filter {
-        height: 150px;
-        background: var(--tech-primary);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        padding: 20px;
-    }
-
-    .tech-filter .form-select,
-    .tech-filter .form-control {
-        border-radius: 25px;
-        font-size: 16px !important;
-        font-weight: 500;
-        background: var(--tech-quaternary);
-        color: var(--tech-green3);
-        border-color: var(--tech-quaternary) !important;
-    }
-
-    #user_tech_leaderboard {
+    .tech-leaderboard-container {
         margin: 0 20px;
         background-color: #FFFFFF;
         color: rgb(47 43 61 / 0.9);
@@ -54,10 +28,41 @@ endif;
         overflow: hidden;
         box-shadow: 0px 3px 12px #38747859;
         padding: 10px;
-        transform: translateY(-60px);
         overflow: auto;
-        height: 75%;
     }
+
+    #user_tech_leaderboard .nsm-profile>span {
+        position: relative;
+        top: 10px;
+        left: 13px;
+    }
+
+    .tech-leaderboard-container .filter .form-select {
+        border-radius: 25px;
+        font-size: 16px !important;
+        font-weight: 500;
+        border-color: none;
+        border: none;
+        color: #214548;
+    }
+
+    .tech-leaderboard-container .filter .form-select {
+        border-radius: 25px;
+        font-size: 16px !important;
+        font-weight: 500;
+        border-color: none;
+        border: none;
+        color: #214548;
+    }
+
+    .tech-leaderboard-container .filter .form-control {
+        border-radius: 25px;
+        font-size: 16px !important;
+        font-weight: 500;
+        border-color: #FEA303;
+        color: #214548;
+    }
+
 
     .tech-separator {
         width: 12%;
@@ -71,16 +76,16 @@ endif;
 
     @media screen and (max-width: 1366px) {
 
-        .tech-filter .form-select {
+        .tech-leaderboard-container .form-select {
             width: 100%;
         }
 
-        .tech-filter .col-4 {
+        .tech-leaderboard-container .col-4 {
             width: 50%;
         }
 
-        .tech-filter .filter-options {
-            width: 51%;
+        .tech-leaderboard-container .filter-options {
+            width: 55%;
             margin-bottom: 10px;
         }
 
@@ -93,29 +98,23 @@ endif;
             width: 200px;
         }
     }
-    
+
     @media screen and (max-width: 768px) {
         #user_tech_leaderboard {
             height: unset;
             margin: unset;
             margin-top: 20px;
         }
-
-
     }
 
-    @media screen and (max-width: 460px) {
-        .tech-filter .col-4 {
-            width: 100%;
-            margin-bottom: 10px;
+    @media screen and (max-width: 567px) {
+        .tech-leaderboard-container{
+            margin: unset;
+            margin-top: 20px;
         }
-
-        .tech-filter {
-            height: 200px;
-        }
-
-     
     }
+
+  
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
@@ -138,35 +137,35 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content jobs_stat">
-        <div class="nsm-widget-table">
-            <div class="tech-filter">
-                <div class="col-md-12 mt-3">
-                    <div class="row">
-                        <div class="col-4 filter-options">
-                            <select class="nsm-field form-select" name="filter_date" id="tech-leader-board-filter-date">
-                                <option value="all">All</option>
-                                <option value="today">Today</option>
-                                <!-- <option value="custom">Custom</option> -->
-                                <option value="this-week" <?= $date === 'this-week' ? 'selected' : '' ?>>This week
-                                </option>
-                                <option value="this-month">This month</option>
-                                <option value="this-quarter">This quarter</option>
-                                <option value="this-year" selected="">This year</option>
-                            </select>
-                        </div>
-                        <div class="col-4">
-                            <input type="date" id="tech-leaderboard-filter-from" class="nsm-field form-control date"
-                                disable value="<?= date('Y-01-01') ?>" />
-                        </div>
-                        <div class="col-4">
-                            <input type="date" id="tech-leaderboard-filter-to" class="nsm-field form-control date"
-                                disable value="<?= date('Y-m-d') ?>" required>
-                        </div>
+        <div class="banner">
+            <img src="./assets/img/sales-leaderboard-banner.svg" alt="">
+        </div>
+        <div class="tech-leaderboard-container">
+            <div class="nsm-widget-table">
+                <div class="row mb-4 mt-2 filter">
+                    <div class="col-4 filter-options">
+                        <select class="nsm-field form-select" name="filter_date" id="tech-leader-board-filter-date">
+                            <option value="all">All</option>
+                            <option value="today">Today</option>
+                            <!-- <option value="custom">Custom</option> -->
+                            <option value="this-week" <?= $date === 'this-week' ? 'selected' : '' ?>>This week
+                            </option>
+                            <option value="this-month">This month</option>
+                            <option value="this-quarter">This quarter</option>
+                            <option value="this-year" selected="">This year</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <input type="date" id="tech-leaderboard-filter-from" class="nsm-field form-control date"
+                            disable value="<?= date('Y-01-01') ?>" />
+                    </div>
+                    <div class="col-4">
+                        <input type="date" id="tech-leaderboard-filter-to" class="nsm-field form-control date"
+                            disable value="<?= date('Y-m-d') ?>" required>
                     </div>
                 </div>
+                <div id="user_tech_leaderboard"></div>
             </div>
-            <div id="user_tech_leaderboard"></div>
-            <!-- <div class="tech-separator"></div> -->
         </div>
     </div>
 </div>

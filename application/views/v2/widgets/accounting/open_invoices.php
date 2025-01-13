@@ -11,10 +11,10 @@ endif;
         background-image: none;
         padding: 10px;
         position: relative;
-        z-index: 2;
         height: 100%;
         display: flex;
         align-items: center;
+        box-shadow: 0px 3px 12px #38747859;
     }
 
     .open-invoices-container .open-invoices-items canvas {
@@ -54,8 +54,8 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="col-md-12">
-        <div class="banner mb-2">
-                <img src="./assets/img/open-invoices-banner2.svg" alt="">
+        <div class="banner ">
+                <img src="./assets/img/open-invoices-banner3.svg" alt="">
             </div>
             <div class="open-invoices-container">
                 <div class=" open-invoices-items">
@@ -85,11 +85,11 @@ endif;
                     data: [totalDueInvoices, totalOverDueInvoices],
                     backgroundColor: [
                         '#A5BFCC',
-                        '#d9a1a0',
+                        '#FEA303',
                     ],
                     borderColor: [
                         '#A5BFCC',
-                        '#d9a1a0',
+                        '#FEA303',
                     ],
                     borderWidth: 1
                 }]

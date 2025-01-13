@@ -1731,7 +1731,8 @@ class DocuSign extends MYF_Controller
         for ($i = 0; $i < $count; $i++) {
             $tempName = $files['tmp_name'][$i];
             $filename = $files['name'][$i];
-
+            
+            $this->db->where('template_id', $id);
             $this->db->where('name', $filename);
             $document = $this->db->get('user_docfile_templates_documents')->row_array();
 

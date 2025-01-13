@@ -118,8 +118,8 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="col-md-12">
-            <div class="banner mb-3">
-                <img src="./assets/img/overdue-invoices-banner2.svg" alt="">
+            <div class="banner">
+                <img src="./assets/img/taskhub-banner2.svg" alt="">
             </div>
             <div class="row taskhub-items-container">
 

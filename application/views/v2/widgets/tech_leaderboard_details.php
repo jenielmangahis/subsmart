@@ -33,11 +33,9 @@
 
     #widget-tech-leaderboard .jobs label,
     #widget-tech-leaderboard .ticket label {
-        padding: 1px 20px;
         border-radius: 25px;
         font-weight: bold;
-        color: #fff;
-        font-size: 12px;
+        font-size: 16px;
     }
 
     #widget-tech-leaderboard .sales {
@@ -132,9 +130,9 @@
                     </div>
                 </td>
                 <td class="jobs"><label
-                        style="background: <?= $colors[array_rand($colors)] ?>"><?= $tech->total_jobs ?></label></td>
+                       ><?= $tech->total_jobs ?></label></td>
                 <td class="ticket"><label
-                        style="background: <?= $colors[array_rand($colors)] ?>"><?= $tech->total_tickets ?></label></td>
+                        ><?= $tech->total_tickets ?></label></td>
                 <td class="sales"><label for="">$<?= number_format($tech->total_amount, 2) ?></label></td>
 
             </tr>

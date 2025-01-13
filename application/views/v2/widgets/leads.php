@@ -5,10 +5,8 @@ endif;
 ?>
 <style>
     #recent-leads-container .controls span {
-        padding: 1px 20px;
         border-radius: 25px;
         font-weight: bold;
-        color: #fff;
         font-size: 12px;
     }
 
@@ -56,8 +54,8 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="col-md-12">
-            <div class="banner mb-4">
-                <img src="./assets/img/recent-customers-banner2.svg" alt="">
+            <div class="banner">
+                <img src="./assets/img/recent-leads.svg" alt="">
             </div>
             <div class="nsm-widget-table">
                 <div class="recent-leads-item-main">

@@ -34,11 +34,9 @@
 
     #widget-sales-leaderboard .jobs label,
     #widget-sales-leaderboard .ticket label {
-        padding: 1px 20px;
         border-radius: 25px;
         font-weight: bold;
-        color: #fff;
-        font-size: 12px;
+        font-size: 16px;
     }
 
     #widget-sales-leaderboard .sales {
@@ -130,8 +128,7 @@
                     </div>
                 </div>
             </td>
-            <td class="jobs"><label
-                    style="background: <?= $colors[array_rand($colors)] ?>"><?= $sales->total_jobs ?></label></td>
+            <td class="jobs"><label><?= $sales->total_jobs ?></label></td>
             <td class="sales"><label for="">$<?= number_format($sales->total_sales, 2) ?></label></td>
         </tr>
         <?php  $count++;} ?>

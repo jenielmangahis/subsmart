@@ -4,7 +4,6 @@
     }
 
     .tags-content {
-        margin: 0 20px;
         background-color: #FFFFFF;
         color: rgb(47 43 61 / 0.9);
         border-radius: 6px;
@@ -75,8 +74,8 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content">
-        <div class="banner mb-4">
-            <img src="./assets/img/overdue-invoices-banner2.svg" alt="">
+        <div class="banner mb-3">
+            <img src="./assets/img/tags-banner2.svg" alt="">
         </div>
         <div class="tags-content">
             <a class="nsm-button primary btn-manage-tags" href="<?= base_url('job/job_tags') ?>">Manage Tags</a>

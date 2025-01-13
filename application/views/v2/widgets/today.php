@@ -102,8 +102,8 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="col-md-12">
-            <div class="banner mb-3">
-                <img src="./assets/img/today-banner2.svg" alt="">
+            <div class="banner">
+                <img src="./assets/img/today-banner3.svg" alt="">
             </div>
             <div class="row today-items-contianer">
                 <div class="col-6 mb-4">

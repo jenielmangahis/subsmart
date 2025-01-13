@@ -100,10 +100,13 @@
             $('.dateRangeFilterSection').hide();
         } else if (dateFilterOption === 'custom') {
             dateFrom = `${currentDate.getFullYear()}-01-01`;
-            dateTo = `${currentDate.getFullYear()}-12-31`;
-            dateFilterText = `${new Date(dateFrom).toLocaleString('default', { month: 'long' })} 1, ${currentDate.getFullYear()} - ${new Date(dateTo).toLocaleString('default', { month: 'long' })} 31, ${currentDate.getFullYear()}`;
+            const currentDay = currentDate.getDate();
+            dateTo = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDay).padStart(2, '0')}`;
+            dateFilterText = `${new Date(dateFrom).toLocaleString('default', { month: 'long' })} 1, ${currentDate.getFullYear()} - ${new Date(dateTo).toLocaleString('default', { month: 'long' })} ${currentDay}, ${currentDate.getFullYear()}`;
             $('.dateRangeFilterSection').fadeIn();
         }
+
+
 
         if (dateFrom && dateTo) {
             $dateFromInput.val(dateFrom);

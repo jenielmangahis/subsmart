@@ -5,12 +5,12 @@ endif;
 ?>
 <style>
     .lead-source-content {
-        margin: 0 20px;
+        margin: 0 10px;
         background-color: #FFFFFF;
         color: rgb(47 43 61 / 0.9);
         border-radius: 6px;
         background-image: none;
-        /* box-shadow: 0px 3px 12px #38747859; */
+        box-shadow: 0px 3px 12px #38747859;
         padding: 10px;
         height: unset;
     }
@@ -38,12 +38,12 @@ endif;
 
 
     <div class="nsm-card-content ">
-        <div class="banner mb-4">
-            <img src="./assets/img/paid-invoices-banner2.svg" alt="">
+        <div class="banner ">
+            <img src="./assets/img/lead-source-banner.svg" alt="">
 
         </div>
         <div class="lead-source-content">
-            <canvas id="lead-source" class="nsm-chart" data-chart-type="lead-source" ></canvas>
+            <canvas id="lead-source" class="nsm-chart" data-chart-type="lead-source"></canvas>
         </div>
     </div>
 </div>
@@ -87,7 +87,7 @@ endif;
                             '#FFD2A0',
                             '#F29F58',
                         ],
-                      
+
                         borderWidth: 0.5
 
                     }]

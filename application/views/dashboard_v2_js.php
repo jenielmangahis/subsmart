@@ -231,7 +231,7 @@
                         '</span></div><div class="content ms-2"><div class="details" style="color:#281c2d"><span class="content-title">' +
                         cust_name +
                         '</span><span class="content-subtitle d-block">' + cust_address +
-                        '</span></div><div class="controls"><span class="customer-badge" style="color:'+randomColor+'!important'+'">' +
+                        '</span></div><div class="controls"><span class="customer-badge" >' +
                         cust_type +
                         '</span><span class="content-subtitle d-block mt-1"></span></div></div></div>'
                     )
@@ -281,7 +281,7 @@
                             '</span></div><div class="content ms-2"><div class="details"><span class="content-title">' +
                             recentLeads[j].lastname + ' ' + recentLeads[j].firstname +
                             '</span><span class="content-subtitle d-block">' + recent_lead_address +
-                            '</span></div><div class="controls"><span class="content-subtitle d-block mt-1"  style="background-color:'+randomColor+'!important'+'">' +
+                            '</span></div><div class="controls"><span class="content-subtitle d-block mt-1"  >' +
                             recent_lead_mail + '</span></div></div></div>'
                         )
                     }

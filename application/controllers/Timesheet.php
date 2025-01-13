@@ -4262,37 +4262,41 @@ class Timesheet extends MY_Controller
     }
     public function get_shift_duration()
     {
+        $data   = [];
         $att_id = $this->input->post("attn_id");
-        $shifts = $this->timesheet_model->calculateShiftDuration_and_overtime($att_id);
-        $overtime_status = $this->timesheet_model->get_attendance_overtime_status($att_id);
+        if( $att_id > 0 ){
+            $shifts = $this->timesheet_model->calculateShiftDuration_and_overtime($att_id);
+            $overtime_status = $this->timesheet_model->get_attendance_overtime_status($att_id);
 
-        $lunch_auxes = $this->timesheet_model->get_lunch_auxes($att_id);
-        $lunch_in = "";
-        $lunch_out = date('Y-m-d H:i:s');
+            $lunch_auxes = $this->timesheet_model->get_lunch_auxes($att_id);
+            $lunch_in = "";
+            $lunch_out = date('Y-m-d H:i:s');
 
-        foreach ($lunch_auxes as $aux) {
-            if ($aux->action == "Break in") {
-                $lunch_in = $aux->date_created;
+            foreach ($lunch_auxes as $aux) {
+                if ($aux->action == "Break in") {
+                    $lunch_in = $aux->date_created;
+                }
+                if ($aux->action == "Break out") {
+                    $lunch_out = $aux->date_created;
+                }
             }
-            if ($aux->action == "Break out") {
-                $lunch_out = $aux->date_created;
+            $lunch_duration = $this->get_differenct_of_dates($lunch_in, $lunch_out);
+            $data = new stdClass();
+            $data->difference = $shifts[0] + $shifts[1];
+            if ($overtime_status == 1) {
+                $_SESSION['autoclockout_timer_closed'] = true;
+                $data->autoclockout_timer_closed = $this->session->userdata('autoclockout_timer_closed');
             }
-        }
-        $lunch_duration = $this->get_differenct_of_dates($lunch_in, $lunch_out);
-        $data = new stdClass();
-        $data->difference = $shifts[0] + $shifts[1];
-        if ($overtime_status == 1) {
-            $_SESSION['autoclockout_timer_closed'] = true;
-            $data->autoclockout_timer_closed = $this->session->userdata('autoclockout_timer_closed');
-        }
-        $data->over_lunch = false;
-        if ($lunch_duration > 4 && $lunch_in != "") {
-            $data->over_lunch = true;
-        }
-        $data->overtime_status = $overtime_status;
-        $data->lunch_duration = $lunch_duration;
-        $data->lunch_in = $lunch_in;
-        $data->lunch_out = $lunch_out;
+            $data->over_lunch = false;
+            if ($lunch_duration > 4 && $lunch_in != "") {
+                $data->over_lunch = true;
+            }
+            $data->overtime_status = $overtime_status;
+            $data->lunch_duration = $lunch_duration;
+            $data->lunch_in = $lunch_in;
+            $data->lunch_out = $lunch_out;            
+        }        
+
         echo json_encode($data);
     }
 

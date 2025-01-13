@@ -8,21 +8,21 @@ endif;
     #recent-customer-container .controls span {
         border-radius: 25px;
         font-weight: bold;
-        color: #fff;
+        color: #00;
         font-size: 12px;
     }
 
     #recent-customer-container {
+        overflow: auto;
+        height: 70%;
+        width: 95%;
+        margin: 0 10px;
         background-color: #FFFFFF;
         color: rgb(47 43 61 / 0.9);
         border-radius: 6px;
         background-image: none;
-        overflow: hidden;
         box-shadow: 0px 3px 12px #38747859;
         padding: 10px;
-        overflow: auto;
-        height: 70%;
-        width: 100%;
     }
 
     @media screen and (max-width: 1200px) {
@@ -84,8 +84,8 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="col-md-12">
-            <div class="banner mb-3">
-                <img src="./assets/img/recent-customers-banner2.svg" alt="">
+            <div class="banner">
+                <img src="./assets/img/recent-customers-banner3.svg" alt="">
             </div>
             <div class="nsm-widget-table">
                 <div class="recent-customer-item-main">

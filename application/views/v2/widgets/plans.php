@@ -92,8 +92,8 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="col-md-12">
-            <div class="banner mb-4">
-                <img src="./assets/img/ytd-stats-banner2.svg" alt="">
+            <div class="banner">
+                <img src="./assets/img/recurring-service-plan-banner.svg" alt="">
             </div>
             <div class="row plans-item-container">
                 <div class="col-4 mb-4">
