@@ -25,6 +25,17 @@ class Accounting_recurring_transactions_model extends MY_Model
         return $query->result_array();
     }
 
+    public function getAllByNextDateAndStatus($date, $status)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('next_date', $date);
+        $this->db->where('status', $status);
+        
+        $query = $this->db->get($this->table);
+        return $query->result_array();
+    }
+
     public function delete($id)
     {
         return $this->db->where(['company_id' => getLoggedCompanyID(), 'id' => $id])
