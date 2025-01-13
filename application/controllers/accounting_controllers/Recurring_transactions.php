@@ -3479,6 +3479,13 @@ class Recurring_transactions extends MY_Controller {
 
     public function payments_list()
     {
-        return redirect('accounting/recurring-transactions');
+        $this->load->model('AccountingRecurringTransactionPayment_model');
+        
+        $cid = logged('company_id');
+        $recurringPayments = $this->AccountingRecurringTransactionPayment_model->getAllByCompanyId($cid);
+        
+        $this->page_data['recurringPayments'] = $recurringPayments;
+        $this->page_data['page']->title = "Recurring Transaction Payments";
+        $this->load->view('v2/pages/accounting/lists/recurring_transactions/payments', $this->page_data);
     }
 }
