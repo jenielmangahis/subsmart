@@ -136,7 +136,7 @@
 <?php if(!isset($check)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
 <?php else : ?>
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/check/<?=$check->id?>">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="<?php echo base_url(); ?>accounting/update-transaction/check/<?=$check->id?>">
 <?php endif; ?>
     <div id="checkModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
         <div class="modal-dialog">
@@ -330,7 +330,6 @@
                                     <div class="nsm-field-group calendar">
                                         <input type="text" name="payment_date" id="payment_date" class="form-control nsm-field mb-2 date" value="<?=isset($check) ? ($check->payment_date !== "" && !is_null($check->payment_date) ? date("m/d/Y", strtotime($check->payment_date)) : "") : date("m/d/Y")?>" required>
                                     </div>
-
                                     <div class="mb-2">
                                         <label for="check_no">Check no.</label>
                                         <input type="text" name="check_no" id="check_no" class="form-control nsm-field" <?=isset($check) && !is_null($check->to_print) ? "value='To Print' disabled" : "value='$check->check_no'"?>>
@@ -394,14 +393,14 @@
                                                     <table class="nsm-table" id="category-details-table">
                                                         <thead>
                                                             <tr>
-                                                                <td data-name="Num" style="width:2%;text-align:center;">#</td>
-                                                                <td data-name="Customer" style="width:20%;">CUSTOMER</td>
-                                                                <td data-name="Expense Name" style="width:20%;">EXPENSE NAME</td>
+                                                                <td data-name="Num" style="width:3%;text-align:center;">#</td>
+                                                                <td data-name="Customer" style="width:15%;">CUSTOMER</td>
+                                                                <td data-name="Expense Name">EXPENSE NAME</td>
                                                                 <td data-name="Category" style="width:15%;">CATEGORY</td>
                                                                 <td data-name="Description">DESCRIPTION</td>
-                                                                <td data-name="Amount" style="width:8%;">AMOUNT</td>
-                                                                <td data-name="Billable" style="width:5%;text-align:center;">BILLABLE</td>
-                                                                <td data-name="Markup %" style="width:8%; text-align:center;">MARKUP %</td>
+                                                                <td data-name="Amount" style="width:10%;">AMOUNT</td>
+                                                                <td data-name="Billable" style="width:8%;text-align:center;">BILLABLE</td>
+                                                                <td data-name="Markup %" style="width:8%;">MARKUP %</td>
                                                                 <td data-name="Tax" style="width:5%;text-align:center;">TAX</td>                                                                
                                                                 <?php if(isset($check) && !is_null($check->linked_transacs)) : ?>
                                                                 <td data-name="Linked"></td>
@@ -451,6 +450,14 @@
                                                             <tr>
                                                                 <td><?=$count?></td>
                                                                 <td>
+                                                                    <select name="category_customer[]" class="nsm-field form-control">
+                                                                        <option value="<?=$category->customer_id?>">
+                                                                            <?php $customer = $this->accounting_customers_model->get_by_id($category->customer_id); ?>
+                                                                            <?=$customer->first_name . ' ' . $customer->last_name?>
+                                                                        </option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
                                                                     <select name="expense_account[]" class="nsm-field form-control" required>
                                                                         <option value="<?=$category->expense_account_id?>"><?=$this->chart_of_accounts_model->getName($category->expense_account_id)?></option>
                                                                     </select>
@@ -475,14 +482,6 @@
                                                                     <div class="table-row-icon table-checkbox">
                                                                         <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1" <?=$category->tax === "1" ? 'checked' : ''?>>
                                                                     </div>
-                                                                </td>
-                                                                <td>
-                                                                    <select name="category_customer[]" class="nsm-field form-control">
-                                                                        <option value="<?=$category->customer_id?>">
-                                                                            <?php $customer = $this->accounting_customers_model->get_by_id($category->customer_id); ?>
-                                                                            <?=$customer->first_name . ' ' . $customer->last_name?>
-                                                                        </option>
-                                                                    </select>
                                                                 </td>
                                                                 <?php if(isset($check) && !is_null($check->linked_transacs)) : ?>
                                                                 <td>
