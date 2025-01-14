@@ -40,21 +40,16 @@ class Estimate extends MY_Controller
 
     public function index($tab = '')
     {
-        $is_allowed = $this->isAllowedModuleAccess(18);
-        if (!$is_allowed) {
-            $this->page_data['module'] = 'estimate';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            exit;
-        }
+        $this->hasAccessModule(18);       
+
+        if(!checkRoleCanAccessModule('estimates', 'read')){
+            show403Error();
+            return false;
+        }  
 
         $company_id = logged('company_id');
         $role = logged('role');
 
-        /*if ($role == 2 || $role == 1) {
-            $this->page_data['jobs'] = $this->jobs_model->getByWhere([]);
-        }else{
-            $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $company_id]);
-        } */
         $order_by = 'Newest first';
         if (!empty($tab)) {
             $query_tab = $tab;
@@ -111,38 +106,15 @@ class Estimate extends MY_Controller
             }
         }
 
+        $totalSubmittedEstimates  = $this->estimate_model->countTotalEstimateByCompanyIdAndStatus($company_id, 'Submitted');
+        $totalLostEstimates       = $this->estimate_model->countTotalEstimateByCompanyIdAndStatus($company_id, 'Lost');
+
         $this->page_data['order_by'] = $order_by;
         $this->page_data['tab'] = $tab;
         $this->page_data['role'] = $role;
+        $this->page_data['totalSubmittedEstimates'] = $totalSubmittedEstimates;
+        $this->page_data['totalLostEstimates'] = $totalLostEstimates;
         $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount($company_id);
-
-        /*if ($role == 4) {
-
-            if (!empty($tab)) {
-
-                $this->page_data['tab'] = $tab;
-                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => $tab));
-
-
-            } elseif (!empty(get('order'))) {
-
-                $this->page_data['order'] = get('order');
-                $this->page_data['estimates'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
-
-            } else {
-
-                if (!empty(get('search'))) {
-
-                    $this->page_data['search'] = get('search');
-                    $this->page_data['estimates'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
-                } else {
-                    $this->page_data['estimates'] = $this->estimate_model->getAllByUserId();
-                }
-            }
-
-            $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount();
-        }*/
-        // $this->load->view('estimate/list', $this->page_data);
         $this->load->view('v2/pages/estimate/list', $this->page_data);
     }
 
@@ -467,6 +439,11 @@ class Estimate extends MY_Controller
 
     public function add()
     {        
+        if(!checkRoleCanAccessModule('estimates', 'write')){
+            show403Error();
+            return false;
+        }
+
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateSettings_model');
 
@@ -535,6 +512,11 @@ class Estimate extends MY_Controller
     {
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateSettings_model');
+
+        if(!checkRoleCanAccessModule('estimates', 'write')){
+            show403Error();
+            return false;
+        }
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -1340,6 +1322,11 @@ class Estimate extends MY_Controller
     public function edit($id)
     {
         $this->load->model('AcsProfile_model');
+
+        if(!checkRoleCanAccessModule('estimates', 'write')){
+            show403Error();
+            return false;
+        }
 
         $company_id = logged('company_id');
         $user_id = logged('id');
@@ -2854,6 +2841,11 @@ class Estimate extends MY_Controller
 
     public function estimate_settings()
     {
+        if(!checkRoleCanAccessModule('estimate-settings', 'read')){
+            show403Error();
+            return false;
+        }
+
         $this->page_data['page']->title = 'Estimate Settings';
         $this->page_data['page']->parent = 'Sales';
         $this->load->model('EstimateSettings_model');

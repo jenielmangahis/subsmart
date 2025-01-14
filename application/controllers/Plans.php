@@ -15,6 +15,11 @@ class Plans extends MY_Controller {
 	 
 	public function index()
 	{ 			
+		if(!checkRoleCanAccessModule('estimate-settings', 'read')){
+            show403Error();
+            return false;
+        }
+		
 		$this->page_data['page']->title = 'Plans';
         $this->page_data['page']->parent = 'Sales';
         $role = logged('role');        
@@ -23,19 +28,18 @@ class Plans extends MY_Controller {
 		$this->load->view('v2/pages/plans/list', $this->page_data);
 	}
 	
-	public function add(){
-		$is_allowed = $this->isAllowedModuleAccess(22);
-		$this->page_data['page']->title = 'Plans';
+	public function add()
+	{
+		$this->hasAccessModule(22);
 
-
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'plans';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
+		if(!checkRoleCanAccessModule('estimate-settings', 'write')){
+            show403Error();
+            return false;
         }
+
+		$this->page_data['page']->title = 'Plans';
 		$this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
 		$this->page_data['items'] = $this->items_model->getItemlist();
-		// ifPermissions('add_plan');
 		$this->load->view('v2/pages/plans/add', $this->page_data);
 	}
 
@@ -46,9 +50,15 @@ class Plans extends MY_Controller {
 		die($this->load->view('plans/details', $this->page_data, true));
 	}
 	
-	public function edit($id){
+	public function edit($id)
+	{
+		$this->hasAccessModule(22);
 
-		//ifPermissions('plan_edit');
+		if(!checkRoleCanAccessModule('estimate-settings', 'write')){
+            show403Error();
+            return false;
+        }
+
 		$plan = $this->plans_model->getById($id);
 		$this->page_data['page']->title = 'Plans';
 		$this->page_data['items'] = $this->items_model->getItemlist();
@@ -212,6 +222,141 @@ class Plans extends MY_Controller {
 
         redirect('plans');
 	}
+
+	public function ajax_create_estimate_plan()
+    {
+		$this->load->model('Plans_model');
+
+        if(!checkRoleCanAccessModule('estimate-settings', 'write')){
+            show403Error();
+            return false;
+        }
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
+		$cid  = logged('company_id');
+        $post = $this->input->post();
+
+		$isExists = $this->Plans_model->getByNameAndCompanyId($post['plan_name'], $cid);
+		if( $isExists ){
+			$msg = 'Plan name already exists.';
+        }elseif( $post['plan_name'] == '' ){
+			$msg = 'Plan enter plan name.';
+		}else{
+			$itemArray = [];
+			$items     = $post['items'];
+			$item_ids  = $post['item_id'];
+			$quantity  = $post['quantity'];
+			$price     = $post['price'];
+			$discount  = $post['discount'];
+			$type      = $post['item_type'];
+			$location  = $post['location'];
+			$tax       = $post['tax'];
+
+			foreach($items as $key => $val) {
+				$itemArray[] = array(
+					'item_id' => $item_ids[$key],
+					'item' => $items[$key],
+					'item_type' => $type[$key],
+					'quantity'=> $quantity[$key],
+					//'location'=> $location[$key],
+					'tax' => $tax[$key],
+					'discount'=> $discount[$key],
+					'price' => $price[$key]
+				);
+			}
+			$plan_items = serialize($itemArray);
+			$data = [
+				'company_id' => $cid,
+				'plan_name' => $post['plan_name'],
+				'items' => $plan_items,
+				'status' => $post['status'],
+				'created' => date("Y-m-d H:i:s"),
+				'modified' => date("Y-m-d H:i:s")
+			];
+
+			$this->Plans_model->create($data);
+
+			//Activity Logs
+			$activity_name = 'Estimate Plans : Created plan ' . $post['plan_name']; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg = '';
+		}
+
+		$return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+	public function ajax_update_estimate_plan()
+    {
+		$this->load->model('Plans_model');
+
+        if(!checkRoleCanAccessModule('estimate-settings', 'write')){
+            show403Error();
+            return false;
+        }
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+		$cid  = logged('company_id');
+        $post = $this->input->post();
+
+		$plan = $this->Plans_model->getByIdAndCompanyId($post['pid'], $cid);
+		if( $plan ){
+			$isExists = $this->Plans_model->getByNameAndCompanyId($post['plan_name'], $cid);
+			if( $isExists && $isExists->id != $post['pid'] ){
+				$msg = 'Plan name already exists.';
+			}elseif( $post['plan_name'] == '' ){
+				$msg = 'Plan enter plan name.';
+			}else{
+				$itemArray = [];
+				$items     = $post['items'];
+				$item_ids  = $post['item_id'];
+				$quantity  = $post['quantity'];
+				$price     = $post['price'];
+				$discount  = $post['discount'];
+				$type      = $post['item_type'];
+				$location  = $post['location'];
+				$tax       = $post['tax'];
+
+				foreach($items as $key => $val) {
+					$itemArray[] = array(
+						'item_id' => $item_ids[$key],
+						'item' => $items[$key],
+						'item_type' => $type[$key],
+						'quantity'=> $quantity[$key],
+						//'location'=> $location[$key],
+						'tax' => $tax[$key],
+						'discount'=> $discount[$key],
+						'price' => $price[$key]
+					);
+				}
+				$plan_items = serialize($itemArray);
+				$data = [
+					'plan_name' => $post['plan_name'],
+					'items' => $plan_items,
+					'status' => $post['status'],				
+					'modified' => date("Y-m-d H:i:s")
+				];
+
+				$this->Plans_model->update($plan->id, $data);
+
+				//Activity Logs
+				$activity_name = 'Estimate Plans : Updated plan ' . $post['plan_name']; 
+				createActivityLog($activity_name);
+
+				$is_success = 1;
+				$msg = '';
+			}
+		}		
+
+		$return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
 
 }
 
