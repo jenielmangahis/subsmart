@@ -131,6 +131,15 @@
         border-top: 0;
         width: 713px;
     }
+    
+    .checkSwitchButton {
+        white-space: nowrap;
+    }
+
+    .topSection {
+        position: absolute;
+        margin-top: -18px;
+    }
 </style>
 <div class="full-screen-modal">
 <?php if(!isset($check)) : ?>
@@ -167,21 +176,23 @@
                             </div>
                             &nbsp;
                             <span class="modal-title content-title">
-                                <div class="btn-group" role="group">
-                                    <input type="radio" class="btn-check" name="options-outlined" id="standardCheck_toggle" autocomplete="off" checked>
-                                    <label class="btn btn-outline-secondary fw-normalx" for="standardCheck_toggle">Standard Check</label>
-                                    <input type="radio" class="btn-check" name="options-outlined" id="virtualCheck_toggle" autocomplete="off">
-                                    <label class="btn btn-outline-success fw-normalx" for="virtualCheck_toggle">Virtual Check</label>
-                                </div>
-                                <span>
-                                    <?php if(isset($check)) : ?>
-                                        <?php if(is_null($check->to_print) && $check->check_no !== "" && !is_null($check->check_no)) : ?>
-                                            #<?=$check->check_no?>
-                                        <?php elseif(!is_null($check->to_print)) : ?>
-                                            #To Print
+                                <div class="topSection">
+                                    <div class="btn-group checkSwitchButton" role="group">
+                                        <input type="radio" class="btn-check" name="options-outlined" id="standardCheck_toggle" autocomplete="off" checked>
+                                        <label class="btn btn-outline-secondary fw-normalx" for="standardCheck_toggle">Standard Check</label>
+                                        <input type="radio" class="btn-check" name="options-outlined" id="virtualCheck_toggle" autocomplete="off">
+                                        <label class="btn btn-outline-success fw-normalx" for="virtualCheck_toggle">Virtual Check</label>
+                                    </div>
+                                    <span>
+                                        <?php if(isset($check)) : ?>
+                                            <?php if(is_null($check->to_print) && $check->check_no !== "" && !is_null($check->check_no)) : ?>
+                                                #<?=$check->check_no?>
+                                            <?php elseif(!is_null($check->to_print)) : ?>
+                                                #To Print
+                                            <?php endif; ?>
                                         <?php endif; ?>
-                                    <?php endif; ?>
-                                </span>
+                                    </span>
+                                </div>
                             </span>
                         </div>
                     </div>
@@ -774,7 +785,7 @@
                     <div class="row virtualCheckContent" style="display: none;">
                         <div class="checkContainer">
                             <div class="checkSection">
-                                <div class="checkPayerInfo_Section position-absolute">
+                                <div class="checkPayerInfo_Section position-absolute d-none">
                                     <strong class="checkPayerNameText">{PAYER_NAME}</strong><br>
                                     <span class="checkPayerAddressText">{ADDRESS}</span>
                                 </div>

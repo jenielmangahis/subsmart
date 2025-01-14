@@ -2023,6 +2023,13 @@ class Job extends MY_Controller
             //if ($this->general->delete_($remove_job)) {
                 $data = ['is_archived' => 1, 'archived_date' => date("Y-m-d H:i:s")];
                 $this->jobs_model->update($job->id, $data);
+
+                // Point Rating System delete / set status = 0 data script for job module
+                $this->db->where('module', 'job');
+                $this->db->where('company_id', $cid);
+                $this->db->where('module_id', $job->id);
+                $this->db->update('point_rating_system', ['status' => 0,]);
+
                 // Record Job delete to Customer Activities Module in Customer Dashboard
                 $action = "$user_login deleted a job. $job->job_number";
 
@@ -2032,6 +2039,7 @@ class Job extends MY_Controller
                     'user_id' => logged('id'),
                     'logs' => "$action"
                 );
+
                 $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogPayload);
 
                 //Activity Logs
@@ -2246,6 +2254,20 @@ class Job extends MY_Controller
 
         $input = $this->input->post();
         $comp_id = logged('company_id');
+
+
+        // Point Rating System variables
+        $point = 1;
+        $employee_type = "tech_rep";
+        $module = "job";
+        $employee_ids = [
+            $input['employee2_id'],
+            $input['employee3_id'],
+            $input['employee4_id'],
+            $input['employee5_id'],
+            $input['employee6_id'],
+        ];
+
 
         if ($input['item_name'] == null) {
             $is_success = 0;
@@ -2632,6 +2654,7 @@ class Job extends MY_Controller
                 //'gross_profit' => $input['input_totalJobGrossProfit'],
                 'job_account_number' => $job_account_number                
             );
+
             $commission_history_payload = [
                 'datetime' => date("M d, Y")."<br>".date("h:i a"), 
                 'user_id' => $input['employee_id'], 
@@ -2679,6 +2702,22 @@ class Job extends MY_Controller
                 // INSERT DATA TO JOBS TABLE
                 $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
                 $commission_history_returnID = $this->general->add_return_id($commission_history_payload, 'employee_commission_history');
+
+                // Point Rating System insert data script for job module
+                $filtered_employee_ids = array_filter($employee_ids);
+                $unique_employee_ids = array_unique($filtered_employee_ids);
+                $total_employees = count($unique_employee_ids);
+                $points_per_employee = $point / $total_employees;
+
+                $insert_data = [
+                    'company_id'    => $comp_id,
+                    'employee_type' => $employee_type,
+                    'employee_id'   => json_encode($unique_employee_ids), 
+                    'module'        => $module,
+                    'module_id'     => $jobs_id,
+                    'points'        => number_format($points_per_employee, 2),
+                    'status'        => 1,
+                ]; $this->db->insert('point_rating_system', $insert_data);
 
                 //Create hash_id
                 $job_hash_id = hashids_encrypt($jobs_id, '', 15);
@@ -2838,6 +2877,28 @@ class Job extends MY_Controller
                 
                 $isset = $this->general->update_with_key_field($job_payment_query, $isJob->id, 'job_payments', 'job_id');
                 $this->general->update_with_key_field($jobs_data, $isJob->id, 'jobs', 'id');
+
+
+                // Point Rating System update data script for job module
+                $filtered_employee_ids = array_filter($employee_ids);
+                $unique_employee_ids = array_unique($filtered_employee_ids);
+                $total_employees = count($unique_employee_ids);
+                $points_per_employee = $point / $total_employees;
+
+                $update_data = [
+                    'company_id'    => $comp_id,
+                    'employee_type' => $employee_type,
+                    'employee_id'   => json_encode($unique_employee_ids),
+                    'module'        => $module,
+                    'module_id'     => $jobs_id,
+                    'points'        => number_format($points_per_employee, 2),
+                    'status'        => 1,
+                ];
+
+                $this->db->where('module', $module);
+                $this->db->where('module_id', $jobs_id);
+                $this->db->update('point_rating_system', $update_data);
+
             }
 
             //Update customer otp equipment cost and monthly monitoring fields
