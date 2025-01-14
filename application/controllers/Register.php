@@ -826,7 +826,7 @@ class Register extends MYF_Controller {
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
 
-        }elseif( $post['offer_code'] == 'CPNSMART2023' ){
+        }elseif( $post['offer_code'] == 'CPNSMART202324' ){
             $num_days_trial = 30;
             $next_billing_date = date("Y-m-d", strtotime("+".$num_days_trial." day"));
             $today = strtotime(date("Y-m-d"));
