@@ -348,60 +348,9 @@ if ($this->session->userdata('usertimezone') == null) {
                     </a>
                 </li>
                 <li>
-                    <a href="javascript:void(0);" data-bs-toggle="dropdown">
+                    <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#createEntryShortcut">
                         <i class="bx bx-fw bx-plus"></i> New 
                     </a>
-                    <div class="dropdown-menu p-3" id="new-popup">
-                        <div class="row">
-                            <div class="col-12 col-md-3">
-                                <h5>CUSTOMERS</h5>
-                                <ul class="list-unstyled">
-                                    <li><a href="#" class="ajax-modal" data-view="invoice_modal" data-toggle="modal" data-target="#invoiceModal">Invoice</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="receive_payment_modal" data-toggle="modal" data-target="#receivePaymentModal">Receive payment</a></li>
-                                    <li><a href="#" data-bs-toggle="modal" data-bs-target="#new_estimate_modal">Estimate</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="credit_memo_modal" data-toggle="modal" data-target="#creditMemoModal">Credit memo</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="sales_receipt_modal" data-toggle="modal" data-target="#salesReceiptModal">Sales receipt</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="refund_receipt_modal" data-toggle="modal" data-target="#refundReceiptModal">Refund receipt</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="delayed_credit_modal" data-toggle="modal" data-target="#delayedCreditModal">Delayed credit</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="delayed_charge_modal" data-toggle="modal" data-target="#delayedChargeModal">Delayed charge</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <h5>VENDORS</h5>
-                                <ul class="list-unstyled">
-                                    <li><a href="#" class="ajax-modal" data-view="expense_modal" data-toggle="modal" data-target="#expenseModal">Expense</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="check_modal" data-toggle="modal" data-target="#checkModal">Check</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="bill_modal" data-toggle="modal" data-target="#billModal">Bill</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="pay_bills_modal" data-toggle="modal" data-target="#payBillsModal">Pay bills</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="purchase_order_modal" data-toggle="modal" data-target="#purchaseOrderModal">Purchase order</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="vendor_credit_modal" data-toggle="modal" data-target="#vendorCreditModal">Vendor credit</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="credit_card_credit_modal" data-toggle="modal" data-target="#creditCardCreditModal">Credit card credit</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="print_checks_modal" data-toggle="modal" data-target="#printChecksModal">Print checks</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <h5>EMPLOYEES</h5>
-                                <ul class="list-unstyled">
-                                    <li><a href="#" class="ajax-modal" data-view="payroll_modal" data-toggle="modal" data-target="#payrollModal">Payroll</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="single_time_activity_modal" data-toggle="modal" data-target="#singleTimeModal">Single time activity</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="weekly_timesheet_modal" data-toggle="modal" data-target="#weeklyTimesheetModal">Weekly timesheet</a></li>
-                                    <!-- <li><a href="#" class="ajax-modal" data-view="print_checks_setup_modal" data-toggle="modal" data-target="#printSetupModal">Print checks setup</a></li> -->
-                                </ul>
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <h5>OTHER</h5>
-                                <ul class="list-unstyled">
-                                    <li><a href="#" class="ajax-modal" data-view="bank_deposit_modal" data-toggle="modal" data-target="#depositModal">Bank deposit</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="transfer_modal" data-toggle="modal" data-target="#transferModal">Transfer</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="journal_entry_modal" data-toggle="modal" data-target="#journalEntryModal">Journal entry</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="statement_modal" data-toggle="modal" data-target="#statementModal">Statement</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="inventory_qty_modal" data-toggle="modal" data-target="#inventoryModal">Inventory qty adjustment</a></li>
-                                    <li><a href="#" class="ajax-modal" data-view="pay_down_credit_card_modal" data-toggle="modal" data-target="#payDownCreditModal">Pay down credit card</a></li>
-                                    <li><a href="<?php echo base_url('accounting/apply-for-capital') ?>">Apply for Capital</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
                 </li>
                 <li class="<?=$page->title === 'Dashboard' ? 'selected' : ''?>">
                     <a href="/accounting/banking">
@@ -1166,8 +1115,129 @@ if ($this->session->userdata('usertimezone') == null) {
         </div>
     </div>
 </div>
-                   
+<style>
+    .hoverSelection:hover {
+        outline: 1px solid #80808036;
+        background: #6a4a860d;
+        border-radius: 5px;
+    }
+
+    .headerColor {
+        background: #6a4a8624;
+    }
+
+    #createEntryShortcut .modal-body {
+        padding-top: 12px;
+    }
+
+    #createEntryShortcut .list-unstyled {
+        padding: unset;
+    }
+</style>
+<div class="modal fade" id="createEntryShortcut" role="dialog" data-bs-keyboard="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">New Entry Shortcut</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <span>Select the module for which you want to create an new entry.</span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card">
+                            <div class="card-header headerColor"><strong>CUSTOMER</strong></div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <ul class="list-unstyled m-0">
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="invoice_modal" data-toggle="modal" data-target="#invoiceModal">— Invoice</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="receive_payment_modal" data-toggle="modal" data-target="#receivePaymentModal">— Receive payment</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="new_estimate_modal" data-toggle="modal" data-target="#new_estimate_modal">— Estimate</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="credit_memo_modal" data-toggle="modal" data-target="#creditMemoModal">— Credit memo</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="sales_receipt_modal" data-toggle="modal" data-target="#salesReceiptModal">— Sales receipt</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="refund_receipt_modal" data-toggle="modal" data-target="#refundReceiptModal">— Refund receipt</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="delayed_credit_modal" data-toggle="modal" data-target="#delayedCreditModal">— Delayed credit</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="delayed_charge_modal" data-toggle="modal" data-target="#delayedChargeModal">— Delayed charge</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card">
+                            <div class="card-header headerColor"><strong>EMPLOYEE</strong></div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <ul class="list-unstyled mt-0">
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="payroll_modal" data-toggle="modal" data-target="#payrollModal">— Payroll</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="single_time_activity_modal" data-toggle="modal" data-target="#singleTimeModal">— Single time activity</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="weekly_timesheet_modal" data-toggle="modal" data-target="#weeklyTimesheetModal">— Weekly timesheet</li>
+                                            <!-- <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="print_checks_setup_modal" data-toggle="modal" data-target="#printSetupModal">— Print checks setup</li> -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card">
+                            <div class="card-header headerColor"><strong>VENDOR</strong></div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <ul class="list-unstyled m-0">
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="expense_modal" data-toggle="modal" data-target="#expenseModal">— Expense</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="check_modal" data-toggle="modal" data-target="#checkModal">— Check</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="bill_modal" data-toggle="modal" data-target="#billModal">— Bill</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="pay_bills_modal" data-toggle="modal" data-target="#payBillsModal">— Pay bills</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="purchase_order_modal" data-toggle="modal" data-target="#purchaseOrderModal">— Purchase order</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="vendor_credit_modal" data-toggle="modal" data-target="#vendorCreditModal">— Vendor credit</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="credit_card_credit_modal" data-toggle="modal" data-target="#creditCardCreditModal">— Credit card credit</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="print_checks_modal" data-toggle="modal" data-target="#printChecksModal">— Print checks</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card">
+                            <div class="card-header headerColor"><strong>OTHERS</strong></div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <ul class="list-unstyled mt-0">
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="bank_deposit_modal" data-toggle="modal" data-target="#depositModal">— Bank deposit</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="transfer_modal" data-toggle="modal" data-target="#transferModal">— Transfer</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="journal_entry_modal" data-toggle="modal" data-target="#journalEntryModal">— Journal entry</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="statement_modal" data-toggle="modal" data-target="#statementModal">— Statement</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="inventory_qty_modal" data-toggle="modal" data-target="#inventoryModal">— Inventory qty adjustment</li>
+                                            <li class="p-2 cursor-pointer hoverSelection ajax-modal" data-view="pay_down_credit_card_modal" data-toggle="modal" data-target="#payDownCreditModal">— Pay down credit card</li>
+                                            <!-- <li class="p-2 cursor-pointer hoverSelection"><a href="<?php echo base_url('accounting/apply-for-capital') ?>">— Apply for Capital</li> -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
+    // Backdrop bug fix on modal #createEntryShortcut
+    $('#createEntryShortcut').on('show.bs.modal', function() {
+        setTimeout(() => {
+            $('.modal-backdrop.fade.show').remove();
+        }, 0);
+    });
+
     var user_id = <?= $user_id ?> ;
     var baseURL = base_url; //window.location.origin;
     var current_user_company_id = <?=logged('company_id')?> ;

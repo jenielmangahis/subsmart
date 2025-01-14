@@ -690,5 +690,217 @@ class Cron_Payment extends MY_Controller {
         //echo "Total updated " . $total_updated . " record(s)";
         exit;
     }
+
+    public function process_accounting_recurring_transaction_payment()
+    {
+        $this->load->model('Accounting_recurring_transactions_model');
+        $this->load->model('AccountingRecurringTransactionPayment_model');
+
+        $total_data = 0;
+        $date = date("Y-m-d");
+        $transactions = $this->Accounting_recurring_transactions_model->getAllByNextDateAndStatus($date, 1);
+        if( $transactions ){
+            foreach($transactions as $transaction) {
+                $total = 0;
+                switch($transaction['txn_type']) {
+                    case 'expense' :
+                        //$expense = $this->vendors_model->get_expense_by_id($transaction['txn_id']);
+                        $query = $this->db->query('
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            FROM accounting_expense                         
+                            WHERE id ='.$transaction['txn_id'].'
+                        ');                        
+                    break;
+                    case 'check' :
+                        //$check = $this->vendors_model->get_check_by_id($transaction['txn_id'], logged('company_id'));
+                        $query = $this->db->query('
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            FROM accounting_check                         
+                            WHERE id ='.$transaction['txn_id'].'
+                        ');    
+                    break;
+                    case 'bill' :
+                        //$bill = $this->vendors_model->get_bill_by_id($transaction['txn_id'], logged('company_id'));
+                        $query = $this->db->query('
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            FROM accounting_bill                         
+                            WHERE id ='.$transaction['txn_id'].'
+                        ');   
+                    break;
+                    case 'purchase order' :
+                        //$purchaseOrder = $this->vendors_model->get_purchase_order_by_id($transaction['txn_id'], logged('company_id'));
+                        $query = $this->db->query('
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            FROM accounting_purchase_order                         
+                            WHERE id ='.$transaction['txn_id'].'
+                        ');  
+                    break;
+                    case 'vendor credit' :
+                        //$vCredit = $this->vendors_model->get_vendor_credit_by_id($transaction['txn_id'], logged('company_id'));
+                        $query = $this->db->query('
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            FROM accounting_vendor_credit                         
+                            WHERE id ='.$transaction['txn_id'].'
+                        '); 
+                    break;
+                    case 'credit card credit' :
+                        //$ccCredit = $this->vendors_model->get_credit_card_credit_by_id($transaction['txn_id'], logged('company_id'));
+                        $query = $this->db->query('
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            FROM accounting_credit_card_credits                         
+                            WHERE id ='.$transaction['txn_id'].'
+                        '); 
+                    break;
+                    case 'deposit' :
+                        //$deposit = $this->accounting_bank_deposit_model->getById($transaction['txn_id'], logged('company_id'));
+                        $query = $this->db->query('
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            FROM accounting_bank_deposit                         
+                            WHERE id ='.$transaction['txn_id'].'
+                        '); 
+                    break;
+                    case 'transfer' :
+                        //$transfer = $this->accounting_transfer_funds_model->getById($transaction['txn_id'], logged('company_id'));
+                        $query = $this->db->query('
+                            SELECT COALESCE(transfer_amount,0) AS total_amount,company_id
+                            FROM accounting_transfer_funds_transaction                         
+                            WHERE id ='.$transaction['txn_id'].'
+                        '); 
+                    break;
+                    case 'journal entry' :
+                        $query = '';
+                    break;
+                    case 'npcharge' :
+                        //$charge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($transaction['txn_id']);
+                        $query = $this->db->query('
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            FROM accounting_delayed_charge                         
+                            WHERE id ='.$transaction['txn_id'].'
+                        '); 
+                    break;
+                    case 'npcredit' :
+                        //$credit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($transaction['txn_id']);
+                        $query = $this->db->query('
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            FROM accounting_delayed_credit                         
+                            WHERE id ='.$transaction['txn_id'].'
+                        ');                         
+                    break;
+                    case 'credit memo' :
+                        //$creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($transaction['txn_id']);
+                        $query = $this->db->query('
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            FROM accounting_credit_memo                         
+                            WHERE id ='.$transaction['txn_id'].'
+                        '); 
+
+                    break;
+                    case 'invoice' :
+                        //$invoice = $this->invoice_model->getinvoice($transaction['txn_id']);
+                        $query = $this->db->query('
+                            SELECT COALESCE(grand_total,0) AS total_amount,company_id
+                            FROM accounting_credit_memo                         
+                            WHERE id ='.$transaction['txn_id'].'
+                        '); 
+                    break;
+                    case 'refund' :
+                        //$refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($transaction['txn_id']);
+                        $query = $this->db->query('
+                            SELECT COALESCE(grand_total,0) AS total_amount,company_id
+                            FROM accounting_refund_receipt                         
+                            WHERE id ='.$transaction['txn_id'].'
+                        '); 
+                    break;
+                    case 'sales receipt' :
+                        //$salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($transaction['txn_id']);
+                        $query = $this->db->query('
+                            SELECT COALESCE(grand_total,0) AS total_amount,company_id
+                            FROM accounting_sales_receipt                         
+                            WHERE id ='.$transaction['txn_id'].'
+                        ');
+                        $total = number_format($salesReceipt->total_amount, 2, '.', ',');
+                        $company_id = $salesReceipt->company_id;
+                    break;
+                }
+
+                $result = $query->result();
+
+                if( $result ){
+                    $start_date = date("Y-m-d", strtotime($transaction['start_date']));
+                    $previous   = !is_null($transaction['previous_date']) && $transaction['previous_date'] !== '' ? date("Y-m-d", strtotime($transaction['previous_date'])) : null;
+                    $next       = date("Y-m-d", strtotime($transaction['next_date']));
+
+                    $every = $transaction['recurr_every'];
+                    switch ($transaction['recurring_interval']) {
+                        case 'daily' :
+                            $interval = 'days';
+                        break;
+                        case 'weekly' :
+                            $interval = 'weeks';
+                        break;
+                        case 'monthly' :
+                            $interval = 'months';
+                        break;
+                        case 'yearly' :
+                            $interval = 'years';
+                        break;
+                        default :
+                            $interval = 'days';
+                        break;
+                    }
+
+                    if(intval($every) > 1) {
+                        if( $previous == null ){
+                            $bill_date = date("Y-m-d", strtotime($start_date . " +".$every." ".$interval));
+                        }else{
+                            $bill_date     = date("Y-m-d", strtotime($previous . " +".$every." ".$interval));
+                        }
+                    }else{
+                        if( $previous == null ){
+                            $bill_date = date("Y-m-d", strtotime($start_date . " +1 ".$interval));
+                        }else{
+                            $bill_date = date("Y-m-d", strtotime($previous . " +1 ".$interval));
+                        }
+                    }
+
+                    //Process payment
+                    $new_current_occurence = $transaction['current_occurence'] + 1;
+                    $previous_date = $date;
+                    $next_date     = $date;
+                    $status = 1;
+                    if( $new_current_occurence < $transaction['max_occurences'] ){
+                        $next_date = $bill_date;
+                    }else{
+                        $status = 3;
+                    }   
+
+                    $data_update = [
+                        'current_occurence' => $new_current_occurence,
+                        'previous_date' => $previous_date,
+                        'next_date' => $next_date,
+                        'status' => $status,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+
+                    $this->Accounting_recurring_transactions_model->update($transaction['id'], $data);
+
+                    //Create payment
+                    $data_payment = [
+                        'company_id' => $result->company_id,
+                        'accounting_recurring_transaction_id' => $transaction['id'],
+                        'payment_date' => $previous_date,
+                        'amount' => $result->total_amount,
+                        'date_created' => date("Y-m-d H:i:s")
+                    ];
+
+                    $this->AccountingRecurringTransactionPayment_model->create($data_payment);
+
+                    $total_data++;
+                }                
+            }
+        }
+
+        echo 'Total updated ' . $total_data;
+    }
 }
 

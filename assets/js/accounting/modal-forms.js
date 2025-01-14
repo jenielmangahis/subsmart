@@ -88,9 +88,11 @@ function getDefaultAccount() {
             url: base_url + "accounting/getDefaultAccount",
             dataType: "JSON",
             success: function (response) {
-                $('#bank_account, .checkBankNameSelect').empty();
-                const newOption = new Option(response.account_name, response.account_id, true, true);
-                $('#bank_account, .checkBankNameSelect').append(newOption).trigger('change');
+                if (response) {
+                    $('#bank_account, .checkBankNameSelect').empty();
+                    const newOption = new Option(response.account_name, response.account_id, true, true);
+                    $('#bank_account, .checkBankNameSelect').append(newOption).trigger('change');
+                }
             }
         });
         // $("#checkPrintLater").prop("checked", true).change();

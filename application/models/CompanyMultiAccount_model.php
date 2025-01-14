@@ -146,7 +146,7 @@ class CompanyMultiAccount_model extends MY_Model
 
     public function maxLinkAccount()
     {
-        return 6;
+        return 5;
     }
 }
 
