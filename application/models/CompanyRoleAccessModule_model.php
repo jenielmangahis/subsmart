@@ -130,6 +130,7 @@ class CompanyRoleAccessModule_model extends MY_Model
             'job-setitngs' => 'Job Settings', 
             'service-tickets' => 'Service Tickets',
             'estimates' => 'Estimates',
+            'estimate-settings' => 'Estimate Settings',
             'work-orders' => 'Work Orders',
             'invoices' => 'Invoices',
             'invoice-settings' => 'Invoice Settings',

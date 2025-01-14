@@ -1057,6 +1057,20 @@ class Estimate_model extends MY_Model
         $this->db->where('id', $id);      
         $this->db->update($this->table, array("view_flag" => 0, 'archived_date' => null));        
     }
+
+    public function countTotalEstimateByCompanyIdAndStatus($cid, $status)
+    {
+        $this->db->select('COALESCE(COUNT(id),0) AS total');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+        if( $status != '' ){
+            $this->db->where('status', $status);
+        }        
+        $this->db->where('view_flag', 0);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
 
 /* End of file Estimate_model.php */
