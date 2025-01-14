@@ -3,7 +3,7 @@ $('.dropdown-menu.table-settings, .dropdown-menu.table-filter').on('click', func
 });
 
 $("#transactions-table").nsmPagination({
-    itemsPerPage: parseInt($('#table-rows li a.active').html().trim())
+    itemsPerPage: 10
 });
 
 $('.dropdown-menu#table-rows a.dropdown-item').on('click', function() {
@@ -67,6 +67,10 @@ $("#reset-button").on('click', function() {
 
 $("#btn_print_recurring_transactions").on("click", function() {
     $("#recurring_transactions_table_print").printThis();
+});
+
+$("#btn_print_recurring_transaction_payments").on("click", function() {
+    $("#recurring_transaction_payments_table_print").printThis();
 });
 
 $('#transaction-type-modal #submit-transaction-type').on('click', function(e) {
