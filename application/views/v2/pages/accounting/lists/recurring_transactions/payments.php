@@ -61,8 +61,8 @@
                         <?php if(count($recurringPayments) > 0) { ?>
 						    <?php foreach($recurringPayments as $rp) { ?>
                                 <tr>
-                                    <td class="fw-bold nsm-text-primary"><?= $rp->payee; ?></td>
-                                    <td class="nsm-text-primary"><?= ucwords(strtolower($rp->txn_type)); ?></td>
+                                    <td class="fw-bold nsm-text-primary"><?= isset($rp->payee) ? $rp->payee : '--'; ?></td>
+                                    <td class="nsm-text-primary"><?= isset($rp->txn_type) ? ucwords(strtolower($rp->txn_type)) : '---'; ?></td>
                                     <td><?= date("m/d/Y", strtotime($rp->payment_date)); ?></td>
                                     <td style="text-align:right;">$<?= number_format($rp->amount, 2,".",","); ?></td>
                                 </tr>

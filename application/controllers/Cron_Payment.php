@@ -699,6 +699,7 @@ class Cron_Payment extends MY_Controller {
         $total_data = 0;
         $date = date("Y-m-d");
         $transactions = $this->Accounting_recurring_transactions_model->getAllByNextDateAndStatus($date, 1);
+
         if( $transactions ){
             foreach($transactions as $transaction) {
                 $total = 0;
@@ -823,7 +824,7 @@ class Cron_Payment extends MY_Controller {
                     break;
                 }
 
-                $result = $query->result();
+                $result = $query->row();
 
                 if( $result ){
                     $start_date = date("Y-m-d", strtotime($transaction['start_date']));
@@ -853,7 +854,7 @@ class Cron_Payment extends MY_Controller {
                         if( $previous == null ){
                             $bill_date = date("Y-m-d", strtotime($start_date . " +".$every." ".$interval));
                         }else{
-                            $bill_date     = date("Y-m-d", strtotime($previous . " +".$every." ".$interval));
+                            $bill_date = date("Y-m-d", strtotime($previous . " +".$every." ".$interval));
                         }
                     }else{
                         if( $previous == null ){
@@ -875,14 +876,14 @@ class Cron_Payment extends MY_Controller {
                     }   
 
                     $data_update = [
-                        'current_occurence' => $new_current_occurence,
+                        'current_occurrence' => $new_current_occurence,
                         'previous_date' => $previous_date,
                         'next_date' => $next_date,
                         'status' => $status,
                         'updated_at' => date("Y-m-d H:i:s")
                     ];
 
-                    $this->Accounting_recurring_transactions_model->update($transaction['id'], $data);
+                    $this->Accounting_recurring_transactions_model->update($transaction['id'], $data_update);
 
                     //Create payment
                     $data_payment = [
