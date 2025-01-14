@@ -924,6 +924,8 @@ $route['nsmart_plans/update_plan'] = 'Nsmart_Plans/update_plan';
 $route['nsmart_plans/delete_plan'] = 'Nsmart_Plans/delete_plan';
 
 $route['plans/delete'] = 'Plans/delete_plan';
+$route['plans/_create_estimate_plan'] = 'Plans/ajax_create_estimate_plan';
+$route['plans/_update_estimate_plan'] = 'Plans/ajax_update_estimate_plan';
 
 $route['nsmart_addons/index'] = 'Nsmart_Addons/index';
 $route['nsmart_addons/add_new_addon'] = 'Nsmart_Addons/add_new_addon';
