@@ -390,7 +390,7 @@ if ($this->session->userdata('usertimezone') == null) {
                         <i class='bx bx-fw bx-notepad'></i> Cashflow
                     </a>
                 </li>
-                <li class="<?=$page->parent === 'Accounting' ? 'selected active' : ''?>">
+                <li class="<?=$page->parent === 'Accounting' || $page->title === 'Recurring Transactions' ? 'selected active' : ''?>">
                     <a href="javascript:void(0);">
                         <i class='bx bx-fw bx-calculator'></i> Transactions
                         <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
@@ -404,6 +404,11 @@ if ($this->session->userdata('usertimezone') == null) {
                         <li class="<?=$page->title === 'Reconcile' || $page->title === 'Reconciliation Summary' || $page->title === 'History by account' ? 'selected' : ''?>">
                             <a href="<?= base_url('accounting/reconcile'); ?>">
                                 Reconcile
+                            </a>
+                        </li>
+                        <li class="<?= $page->title === 'Recurring Transactions' ? 'selected' : ''?>">
+                            <a href="<?= base_url('accounting/recurring-transactions'); ?>">
+                                Recurring Transactions
                             </a>
                         </li>
                     </ul>
