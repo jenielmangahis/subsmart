@@ -1,6 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
-<?php include viewPath('v2/includes/accounting/recurring_transactions_modals'); ?>
-
+<?php include viewPath('v2/includes/accounting/recurring_transaction_payments_modals'); ?>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/recurring_transactions'); ?>
@@ -18,15 +17,13 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
-                        <form action="<?php echo base_url('accounting/recurring-transactions') ?>" method="get">
-                            <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" name="search" id="search_field" placeholder="Find by Name" value="<?php echo (!empty($search)) ? $search : '' ?>">
-                            </div>
-                        </form>
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_recurring_transactions_modal">
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_recurring_transaction_payments_modal">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
@@ -37,15 +34,14 @@
                                 <div class="dropdown d-inline-block">
                                     <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                         <span>
-                                            50
+                                            10
                                         </span> <i class='bx bx-fw bx-chevron-down'></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
-                                        <li><a class="dropdown-item active" href="javascript:void(0);">50</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
+                                        <li><a class="dropdown-item active" href="javascript:void(0);">10</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">25</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">50</a></li>                                        
                                         <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
                                     </ul>
                                 </div>
                             </ul>
@@ -55,7 +51,9 @@
                 <table class="nsm-table" id="transactions-table">
                     <thead>
                         <tr>
-                            <td data-name="PaymentDate">PAYMENT DATE</td>
+                            <td data-name="Payee" style="width:70%;">PAYEE</td>
+                            <td data-name="Type" style="width:10%;">TYPE</td>
+                            <td data-name="PaymentDate" style="width:10%;">PAYMENT DATE</td>
                             <td data-name="Amount" style="width:15%;text-align:right;">AMOUNT</td>
                         </tr>
                     </thead>
@@ -63,6 +61,8 @@
                         <?php if(count($recurringPayments) > 0) { ?>
 						    <?php foreach($recurringPayments as $rp) { ?>
                                 <tr>
+                                    <td class="fw-bold nsm-text-primary"><?= isset($rp->payee) ? $rp->payee : '--'; ?></td>
+                                    <td class="nsm-text-primary"><?= isset($rp->txn_type) ? ucwords(strtolower($rp->txn_type)) : '---'; ?></td>
                                     <td><?= date("m/d/Y", strtotime($rp->payment_date)); ?></td>
                                     <td style="text-align:right;">$<?= number_format($rp->amount, 2,".",","); ?></td>
                                 </tr>
@@ -82,5 +82,11 @@
         </div>
     </div>
 </div>
-
 <?php include viewPath('v2/includes/footer'); ?>
+<script>
+$(function(){
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));        
+    }, 1000));
+});
+</script>

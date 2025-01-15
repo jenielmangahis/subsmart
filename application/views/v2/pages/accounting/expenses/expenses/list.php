@@ -361,7 +361,7 @@
         const currentPath = window.location.href;
         const origin =  window.location.origin;
         if (currentPath.includes(origin + "/check")) {
-            $('a[data-view="check_modal"]').click();
+            $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="check_modal"], li.ajax-modal[data-view="check_modal"]').trigger('click');
         }
     });
 </script>

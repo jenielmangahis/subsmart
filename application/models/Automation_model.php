@@ -79,4 +79,50 @@ class Automation_model extends CI_Model
         // Return the result
         return $query->result_array();
     }
+
+    public function updateAutomationsByParams($filters, $id)
+    {
+        $update = $this->db->update('automations', $filters, ['id' => $id]);
+
+        if ($update) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function delete_automation($id)
+    {
+        $this->db->where('id', $id);
+        return $this->db->delete('automations');
+    }
+
+    public function insertQueue($data)
+    {
+        $this->db->insert('automation_queue', $data);
+    }
+
+    public function markEventTriggered($id)
+    {
+        $this->db->update('automation_queue', ['is_triggered' => 1], ['id' => $id]);
+    }
+
+    public function getPendingActions()
+    {
+        $this->db->where('is_triggered', 0);
+        $this->db->where('trigger_time <=', date('Y-m-d H:i:s'));
+        return $this->db->get('automation_queue')->result_array();
+    }
+
+    public function getExistingQueue($automationId, $targetId)
+    {
+        $this->db->select('id')
+            ->from('automation_queue')
+            ->where('automation_id', $automationId)
+            ->where('target_id', $targetId);
+
+        $query = $this->db->get();
+
+        return $query->row();
+    }
 }

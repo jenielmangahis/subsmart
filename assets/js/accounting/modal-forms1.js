@@ -31,6 +31,49 @@ $(document).ready(function () {
 
     });
 
+    function getDefaultAccount() {
+        const base_url = window.location.origin + "/";
+        setTimeout(() => {
+            $.ajax({
+                type: "POST",
+                url: base_url + "accounting/getDefaultAccount",
+                dataType: "JSON",
+                success: function (response) {
+                    if (response) {
+                        $('#bank_account, .checkBankNameSelect').empty();
+                        const newOption = new Option(response.account_name, response.account_id, true, true);
+                        $('#bank_account, .checkBankNameSelect').append(newOption).trigger('change');
+                    }
+                }
+            });
+            // $("#checkPrintLater").prop("checked", true).change();
+            $('#checkAmountInput').val(null).change();
+            $('#checkWrittenText').text("{WRITTEN_AMOUNT}");
+            $('#checkMemoInput').val(null).change();
+            $('#checkDateInput').val(new Date().toISOString().split('T')[0]).change();
+        }, 500);
+    } getDefaultAccount();
+    
+    //  Override script, Select the last check no.
+    function getLastCheckNo() {
+        const base_url = window.location.origin + "/";
+        setTimeout(() => {
+            $.ajax({
+                type: "POST",
+                url: base_url + "accounting/getCheckNo",
+                dataType: "JSON",
+                success: function (response) {
+                    const check_no = (response == null || response == "") ? 0 : parseInt(response.check_no);
+                    $('#starting-check-no').val(check_no + 1).change();
+                    $('#starting-check-no, #check_no, #checkNumberInput').val(check_no + 1).change(); 
+    
+                    $('#successPrintCheck').modal('hide');
+                    $('#printChecksModal #payment_account').trigger('change');
+                    window.currentCheckNo = check_no  + 1;
+                }
+            });
+        }, 500);
+    }
 
     $(".nsm-sidebar-menu #new-popup ul li a.ajax-modal, a.ajax-modal, #new_estimate_modal .modal-body button.nsm-button, li.ajax-modal").on("click", function (e) {
         e.preventDefault();
@@ -45,7 +88,6 @@ $(document).ready(function () {
             modal_element = target.target;
             modalName = target.target;
         }
-
         $('#createEntryShortcut').modal('hide');
 
         //$.get(GET_OTHER_MODAL_URL + view, function(res) {
@@ -59,6 +101,9 @@ $(document).ready(function () {
                     </div>
                 `);
             }
+
+            getDefaultAccount();
+            getLastCheckNo();
 
             if (modal_element != '#invoiceModal' && modal_element != '#salesReceiptModal' && modal_element != '#delayedCreditModal') {
                 $(`${modal_element} [data-bs-toggle="popover"]`).popover();

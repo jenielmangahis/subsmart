@@ -374,7 +374,7 @@ class Register extends MYF_Controller {
         ]);
 
         $uid = $this->users_model->create([
-            'role' => 3,
+            'role' => 7,
             'FName' => $post['firstname'],
             'LName' => $post['lastname'],
             'username' => $post['email'],
@@ -782,7 +782,7 @@ class Register extends MYF_Controller {
             ]);
 
             $uid = $this->users_model->create([
-                'role' => 3,
+                'role' => 7,
                 'FName' => $post['firstname'],
                 'LName' => $post['lastname'],
                 'username' => $post['email'],
@@ -826,7 +826,7 @@ class Register extends MYF_Controller {
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
 
-        }elseif( $post['offer_code'] == 'CPNSMART2023' ){
+        }elseif( $post['offer_code'] == 'CPNSMART202324' ){
             $num_days_trial = 30;
             $next_billing_date = date("Y-m-d", strtotime("+".$num_days_trial." day"));
             $today = strtotime(date("Y-m-d"));
@@ -860,7 +860,7 @@ class Register extends MYF_Controller {
             ]);
 
             $uid = $this->users_model->create([
-                'role' => 3,
+                'role' => 7,
                 'FName' => $post['firstname'],
                 'LName' => $post['lastname'],
                 'username' => $post['email'],
@@ -1003,11 +1003,6 @@ class Register extends MYF_Controller {
         echo json_encode($json_data);        
         exit;
 
-        $json_data = ['is_success' => $is_success];
-
-        echo json_encode($json_data);        
-        exit;
-
         $post = $this->input->post(); 
         if( $post['subscription_type'] != 'trial' ){
             if( $post['payment_method'] == 'paypal' ){
@@ -1080,7 +1075,7 @@ class Register extends MYF_Controller {
             ]);
 
             $uid = $this->users_model->create([
-                'role' => 3,
+                'role' => 7,
                 'FName' => $post['firstname'],
                 'LName' => $post['lastname'],
                 'username' => $post['email'],

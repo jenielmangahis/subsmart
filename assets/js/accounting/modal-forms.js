@@ -96,10 +96,6 @@ function getDefaultAccount() {
             }
         });
         // $("#checkPrintLater").prop("checked", true).change();
-        $('#checkAmountInput').val(null).change();
-        $('#checkWrittenText').text("{WRITTEN_AMOUNT}");
-        $('#checkMemoInput').val(null).change();
-        $('#checkDateInput').val(new Date().toISOString().split('T')[0]).change();
     }, 500);
 } getDefaultAccount();
 
@@ -112,8 +108,12 @@ function getLastCheckNo() {
             dataType: "JSON",
             success: function (response) {
                 const check_no = (response == null || response == "") ? 0 : parseInt(response.check_no);
-                $('#starting-check-no').val(check_no + 1).change();
-                $('#starting-check-no, #check_no, #checkNumberInput').val(check_no + 1).change(); 
+                if ($('#print_later').is(':checked') == false) {
+                    $('#starting-check-no').val(check_no + 1).change();
+                    $('#starting-check-no, #check_no, #checkNumberInput').val(check_no + 1).change(); 
+                } else {
+                    $('#checkPrintLater').prop('checked', true).change();
+                }
 
                 $('#successPrintCheck').modal('hide');
                 $('#printChecksModal #payment_account').trigger('change');
@@ -122,12 +122,6 @@ function getLastCheckNo() {
         });
     }, 500);
 }
-
-$('#new-check').on('click', function(e) {
-    e.preventDefault();
-    getDefaultAccount();
-    getLastCheckNo();
-});
 
 $(function () {
     $(document).on('change', '#adjust-starting-value-modal #location', function () {
@@ -1043,6 +1037,7 @@ $(function () {
 
     // Category details Customer row function
     $(document).on('click', 'div#modal-container .modal-body table#category-details-table tbody tr td:not(:last-child)', function () {
+
         var row = $(this).parent();
         if (row.find('input').length < 1) {
             var rowNum = row.children().html();
@@ -11910,7 +11905,7 @@ const makeRecurring = (modalName) => {
             //$(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
             //$(`#${modalId} #account-balance`).parent().parent().remove();
             $(`#${modalId} label[for="bank_account"]`).html('Account');
-            $(`#${modalId} div.modal-body #payment_date`).parent().parent().html('');
+            //$(`#${modalId} div.modal-body #payment_date`).parent().parent().html('');
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Check');
 
             $('#modal-help-popover-scheduled-create').popover({
@@ -12068,11 +12063,22 @@ const makeRecurring = (modalName) => {
             modalId = 'refundReceiptModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
-            $(`#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
+            //$(`#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
             $(`#${modalId} div.modal-body #refund-receipt-date`).parent().prev().remove();
             $(`#${modalId} div.modal-body #refund-receipt-date`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Refund Receipt');
             $(`#${modalId} div.modal-body #sales-rep`).parent().removeClass('w-100').parent().removeClass('d-flex').removeClass('align-items-end');
+
+            $('#modal-help-popover-scheduled-create').popover({
+                placement: 'top',
+                html: true,
+                trigger: "hover focus",
+                content: function () {
+                    return 'Days in advance.';
+                }
+            });
+
+            $('#open-customer-info-window-container').show();
             break;
         case 'delayed_credit':
             modalId = 'delayedCreditModal';
@@ -12344,6 +12350,8 @@ const computeTransactionTotal = () => {
     }
 
     $('#modal-container .transaction-total-amount').html(formatter.format(parseFloat(total)));
+
+    $('#checkAmountInput').val(parseFloat(total)).change();
 }
 
 // const loadBills = () => {
@@ -14066,14 +14074,23 @@ const clearForm = () => {
     $('#mailing_address, #memo, #tags').empty().change();
     $('#check_no, #permit_number').val(null).change();
     $('#account-balance').text('$0.00');
-    $('.delete-row').click();
+    // $('.delete-row').click();
     if (modalName == 'creditMemoModal') {
         $('#sales-rep').empty().change();
         $('#billing-address').val('');
         $('#purchase-order-no').val('');
     }
-    getDefaultAccount();
+
+
+    $('.checkPayeeSelect').val(null).change();
+    // $('select[name="category[]"]').val(null).change();
+    $('#checkAmountInput').val(null).change();
+    $('#checkWrittenText').text("{WRITTEN_AMOUNT}");
+    $('#checkMemoInput').val(null).change();
+    $('#checkDateInput').val(new Date().toISOString().split('T')[0]).change();
+    // getDefaultAccount();
     getLastCheckNo();
+    $('#category-details-table td').click().change();
 
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');

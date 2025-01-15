@@ -27,7 +27,7 @@
 <?php if(!isset($receipt)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
 <?php else : ?>
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/refund-receipt/<?=$receipt->id?>">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="<?php echo base_url(); ?>accounting/update-transaction/refund-receipt/<?=$receipt->id?>">
 <?php endif; ?>
     <div id="refundReceiptModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
         <div class="modal-dialog">
@@ -62,6 +62,7 @@
                                     <div class="row">
                                         <div class="col-12 col-md-3">
                                             <label for="customer">Customer</label>
+                                            <div id="open-customer-info-window-container" style='display:none; float:right;'><span class="float-end"><a href="javascript:void(0)" class="nsm-button btn-small open-customer-info-window" style="margin-bottom:3px;display:inline-block;" id="open-customer-info-window">View Customer Info</a></span></div> 
                                             <select name="customer" id="customer" class="form-control nsm-field" required>
                                                 <?php if(isset($receipt)) : ?>
                                                     <option value="<?=$receipt->customer_id?>">
@@ -204,14 +205,14 @@
                                 <div class="col-md-12">
                                     <table class="nsm-table" id="item-table">
                                         <thead>
-                                            <td data-name="Item">ITEM</td>
-                                            <td data-name="Type">TYPE</td>
-                                            <td data-name="Location">LOCATION</td>
-                                            <td data-name="Quantity">QUANTITY</td>
-                                            <td data-name="Price">PRICE</td>
-                                            <td data-name="Discount">DISCOUNT</td>
-                                            <td data-name="Tax">TAX (CHANGE IN %)</td>
-                                            <td data-name="Total">TOTAL</td>
+                                            <td data-name="Item" style="width: 20%">ITEM</td>
+                                            <td data-name="Type" style="width: 10%">TYPE</td>
+                                            <td data-name="Location" style="width: 15%; text-align: center;">LOCATION</td>
+                                            <td data-name="Quantity" style="text-align: center;">QUANTITY</td>
+                                            <td data-name="Price" style="text-align: center;">PRICE</td>
+                                            <td data-name="Discount" style="text-align: center;">DISCOUNT</td>
+                                            <td data-name="Tax" style="text-align: center;">TAX (CHANGE IN %)</td>
+                                            <td data-name="Total" style="width: 5%;">TOTAL</td>
                                             <td data-name="Manage"></td>
                                         </thead>
                                         <tbody>
@@ -414,7 +415,8 @@
                                                         </div>
                                                     </div> -->
                                                     <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($receipt) ? number_format(floatval($receipt->adjustment_value), 2, '.', ',') : ''?>" style="display:inline-block; width:80%;">
-                                                    <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span>                                                    
+                                                    <!-- <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span> -->                                                  
+                                                    <span id="modal-help-popover-adjustment" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=""></span>
                                                 </td>
                                                 <td style="min-width: 60px;">
                                                     <span class="transaction-adjustment">
@@ -519,6 +521,16 @@
 
 <script>
 $(function(){
+    
+    $('#modal-help-popover-adjustment').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
+        } 
+    }); 
+
     $('#sales-rep').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_users',

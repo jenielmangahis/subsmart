@@ -28,8 +28,8 @@
 
         $(document).on('click', '#workflowMenuAccordion', function(event) {
             console.log('test')
-            event.preventDefault(); // Prevent the dropdown from closing
-            event.stopPropagation(); // Stop event bubbling
+            event.preventDefault(); 
+            event.stopPropagation(); 
         });
 
         $(document).on('click', '.task-item', function() {
@@ -92,7 +92,8 @@
                 target: selectedTarget,
                 date_reference: selectedDate,
                 timing_reference: selectedTiming,
-                template: emailBody,
+                email_subject: emailSubject,
+                email_body: emailBody,
                 status: 'active'
             };
 
@@ -141,7 +142,7 @@
             });
         });
 
-        $(document).on('click', '.test-auto', function(e) {
+        $(document).on('click', '.trigger-auto', function(e) {
             e.preventDefault();
             const automationData = {
 
@@ -189,6 +190,114 @@
                     formDisabler(automationData, false);
                 },
             });
+        });
+
+        $(document).on('click', '.process-auto', function(e) {
+            e.preventDefault();
+            const automationData = {
+
+            };
+            $.ajax({
+                type: "POST",
+                url: BASE_URL + "/Automation/processQueuedAutomations",
+                data: automationData,
+                dataType: "JSON",
+                beforeSend: function() {
+                    formDisabler(automationData, true);
+                    Swal.fire({
+                        icon: "info",
+                        title: "Saving Automation!",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                },
+                success: function(response) {
+                    console.log('response')
+                    console.log(response)
+                    $('#emailForm')[0].reset();
+                    formDisabler(automationData, false);
+                    Swal.fire({
+                        icon: "success",
+                        title: "Automation Saved!",
+                        html: "Automation has been saved.",
+                        showConfirmButton: true,
+                        confirmButtonText: "Okay",
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error:", error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        html: "An unexpected error occurred: " + error,
+                        showConfirmButton: true,
+                        confirmButtonText: "Okay",
+                    });
+                    formDisabler(automationData, false);
+                },
+            });
+        });
+
+        $('.toggle-automation').change(function() {
+            var automationId = $(this).data('id');
+            var status = $(this).prop('checked') ? 'active' : 'inactive';
+
+            // Send the toggle request to the server via AJAX
+            $.ajax({
+                url: BASE_URL + "/Automation/toggleStatus",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id: automationId,
+                    status: status
+                },
+                success: function(response) {
+                    if (response.success) {
+                        console.log('Automation ' + automationId + ' updated to ' + status);
+                    } else {
+                        alert('Failed to update automation status. Please try again.');
+                        // Revert the toggle if the update fails
+                        $('#flexSwitchCheck' + automationId).prop('checked', !$('#flexSwitchCheck' + automationId).prop('checked'));
+                    }
+                },
+                error: function() {
+                    alert('Error while updating automation status.');
+                    // Revert the toggle if there's an error
+                    $('#flexSwitchCheck' + automationId).prop('checked', !$('#flexSwitchCheck' + automationId).prop('checked'));
+                }
+            });
+        });
+
+        $('.delete-automation').click(function(e) {
+            e.preventDefault(); 
+
+            var automationId = $(this).data('id');
+
+            if (confirm('Are you sure you want to delete this automation?')) {
+                $.ajax({
+                    url: BASE_URL + "/Automation/deleteAutomation",
+                    method: 'POST',
+                    data: {
+                        id: automationId
+                    },
+                    success: function(response) {
+                        var result = JSON.parse(response);
+                        if (result.success) {
+                            alert('Automation deleted successfully!');
+                            location.reload(); 
+                        } else {
+                            alert('Error: ' + result.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Something went wrong. Please try again.');
+                    }
+                });
+            }
         });
 
         const extractStatuses = (statusArray) =>

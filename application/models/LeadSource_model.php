@@ -27,7 +27,7 @@ class LeadSource_model extends MY_Model
 
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('fk_company_id', $company_id);
+        $this->db->where('ls_id', $company_id);
 
         $query = $this->db->get();
         return $query->result();
@@ -38,7 +38,7 @@ class LeadSource_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('ls_id', $id);
-        $this->db->where('fk_comp_id', $cid);
+        $this->db->where('fk_company_id', $cid);
 
         $query = $this->db->get();
         return $query->row();

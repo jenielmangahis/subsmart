@@ -27,17 +27,17 @@
                         [
                             'title' => 'Immediate Notice / Client Reminder',
                             'description' => 'Send immediate notice to a client.',
-                            'onclick' => "generateAutomationTemplate('job', 'has_status', 'client', 'send_sms', '0')"
+                            'onclick' => "generateAutomationTemplate('job', 'has_status', 'client', 'send_email', '0')"
                         ],
                         [
                             'title' => '2 hours / Tech Reminder',
-                            'description' => 'Send a text to a technician 2 hours ahead of the job.',
-                            'onclick' => "generateAutomationTemplate('job', 'has_status', 'technician', 'send_sms', '120', 'ahead_of', 'scheduled_date')"
+                            'description' => 'Send an email to a technician 2 hours ahead of the job.',
+                            'onclick' => "generateAutomationTemplate('job', 'has_status', 'technician', 'send_email', '120', 'ahead_of', 'scheduled_date')"
                         ],
                         [
                             'title' => '4 hours / Tech Reminder',
-                            'description' => 'Send a text to a technician 4 hours ahead of the job.',
-                            'onclick' => "generateAutomationTemplate('job', 'has_status', 'technician', 'send_sms', '240', 'ahead_of', 'scheduled_date')"
+                            'description' => 'Send an email to a technician 4 hours ahead of the job.',
+                            'onclick' => "generateAutomationTemplate('job', 'has_status', 'technician', 'send_email', '240', 'ahead_of', 'scheduled_date')"
                         ],
                         [
                             'title' => '1 Day Notice/Client Reminder',

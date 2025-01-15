@@ -942,56 +942,39 @@ $(document).on('submit', '#categorize-selected-form', function(e) {
 });
 
 $('#print-checks').on('click', function(e) {
-    e.preventDefault();
-
-    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="print_checks_modal"]').trigger('click');
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="print_checks_modal"], li.ajax-modal[data-view="print_checks_modal"]').trigger('click');
 });
 
 $('#pay-bills').on('click', function(e) {
-    e.preventDefault();
-
-    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="pay_bills_modal"]').trigger('click');
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="pay_bills_modal"], li.ajax-modal[data-view="pay_bills_modal"]').trigger('click');
 });
 
 $('#new-time-activity').on('click', function(e) {
-    e.preventDefault();
-    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="single_time_activity_modal"]').trigger('click');
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="single_time_activity_modal"], li.ajax-modal[data-view="single_time_activity_modal"]').trigger('click');
 });
 
 $('#new-bill').on('click', function(e) {
-    e.preventDefault();
-
-    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="bill_modal"]').trigger('click');
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="bill_modal"], li.ajax-modal[data-view="bill_modal"]').trigger('click');
 });
 
 $('#new-expense').on('click', function(e) {
-    e.preventDefault();
-
-    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="expense_modal"]').trigger('click');
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="expense_modal"], li.ajax-modal[data-view="expense_modal"]').trigger('click');
 });
 
 $('#new-check').on('click', function(e) {
-    e.preventDefault();
-
-    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="check_modal"]').trigger('click');
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="check_modal"], li.ajax-modal[data-view="check_modal"]').trigger('click');
 });
 
 $('#new-purchase-order').on('click', function(e) {
-    e.preventDefault();
-
-    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="purchase_order_modal"]').trigger('click');
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="purchase_order_modal"], li.ajax-modal[data-view="purchase_order_modal"]').trigger('click');
 });
 
 $('#new-vendor-credit').on('click', function(e) {
-    e.preventDefault();
-
-    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="vendor_credit_modal"]').trigger('click');
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="vendor_credit_modal"], li.ajax-modal[data-view="vendor_credit_modal"]').trigger('click');
 });
 
 $('#new-cc-payment').on('click', function(e) {
-    e.preventDefault();
-
-    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="pay_down_credit_card_modal"]').trigger('click');
+    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="pay_down_credit_card_modal"], li.ajax-modal[data-view="pay_down_credit_card_modal"]').trigger('click');
 });
 
 $('#filter-from, #filter-to').on('change', function() {

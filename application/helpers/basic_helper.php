@@ -4668,7 +4668,7 @@ if (!function_exists('is_admin_logged')) {
 
     /*Exempted to account renewal*/
     function exempted_company_ids(){
-        $exempted_company_ids = [1,24,31,58,52,85,3644,3696];
+        $exempted_company_ids = [1,24,31,58,52,85,3644,3696,139];
         return $exempted_company_ids;
     }
 

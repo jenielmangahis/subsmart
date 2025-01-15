@@ -75,62 +75,18 @@
                 <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#addAutomation">
                     <i class='bx bx-fw bx-plus'></i> Add Automation
                 </button>
-                <button type="button" class="nsm-button primary test-auto">
-                    <i class='bx bx-fw bx-plus'></i>Test automation
+                <button type="button" class="nsm-button primary trigger-auto">
+                    <i class='bx bx-fw bx-plus'></i>Trigger automation
+                </button>
+                <button type="button" class="nsm-button primary process-auto">
+                    <i class='bx bx-fw bx-plus'></i>Process automation
                 </button>
 
             </div>
         </div>
     </div>
 
-    <!-- <div class="col-12 mb-3">
-        <div class="nsm-card primary" style="overflow: visible !important;">
-            <div class="nsm-card-header">
-                <div class="nsm-card-title d-flex justify-content-between">
-                    <span>1 Day Notice / Client Reminder</span>
-                    <div class=" form-switch">
-                        <input class="form-check-input primary" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                    </div>
-                </div>
-            </div>
-            <div class="nsm-card-content">
-                <h6>When a job is created send client an email 1 day ahead of the job schedule date.</h6>
-                <hr />
-                <div class="row">
-                    <div class="col-12 d-flex justify-content-between">
-                        <div class="d-flex gap-3 small">
-                            <span>Created on Dec 23, 2024</span>
-                            <span>|</span>
-                            <span>Triggered 0 times</span>
-                        </div>
-
-                        <div class="nsm-card-controls px-3">
-                            <div class="dropup">
-                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                    <i class='bx bx-fw bx-dots-horizontal-rounded'></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="<?= base_url('survey/preview/') ?><?= $survey->id ?>">Preview</a></li>
-                                    <li><a class="dropdown-item" href="<?= base_url('survey/edit/') ?><?= $survey->id ?>">Edit</a></li>
-                                    <li><a class="dropdown-item" href="<?= base_url('survey/share/') ?><?= $survey->id ?>">Rename</a></li>
-                                    <li><a class="dropdown-item" href="<?= base_url('survey/share/') ?><?= $survey->id ?>">Delete</a></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="col-1">
-                        <div class="row">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
     <?php
-    // Assuming you passed the automations data from the controller to the view
     foreach ($automations as $automation) : ?>
         <div class="col-12 mb-3">
             <div class="nsm-card primary" style="overflow: visible !important;">
@@ -139,7 +95,12 @@
                         <span><?= !empty($automation['title']) ? $automation['title'] : 'No Title' ?></span>
 
                         <div class=" form-switch">
-                            <input class="form-check-input primary" type="checkbox" role="switch" id="flexSwitchCheckChecked" <?= $automation['status'] === 'active' ? 'checked' : '' ?>>
+                            <input
+                                class="form-check-input primary toggle-automation"
+                                type="checkbox"
+                                role="switch"
+                                id="flexSwitchCheckChecked"
+                                data-id="<?= $automation['id'] ?>" <?= $automation['status'] === 'active' ? 'checked' : '' ?>>
                         </div>
                     </div>
                 </div>
@@ -164,7 +125,7 @@
                                         <li><a class="dropdown-item" href="<?= base_url('automation/preview/') ?><?= $automation['id'] ?>">Preview</a></li>
                                         <li><a class="dropdown-item" href="<?= base_url('automation/edit/') ?><?= $automation['id'] ?>">Edit</a></li>
                                         <li><a class="dropdown-item" href="<?= base_url('automation/rename/') ?><?= $automation['id'] ?>">Rename</a></li>
-                                        <li><a class="dropdown-item" href="<?= base_url('automation/delete/') ?><?= $automation['id'] ?>">Delete</a></li>
+                                        <li><a class="dropdown-item delete-automation" data-id="<?= $automation['id'] ?>">Delete</a></li>
                                     </ul>
                                 </div>
                             </div>
