@@ -18,11 +18,11 @@
         <div class="row mb-5 mt-5">
             <div class="col-12 mb-3">
                 <label class="content-subtitle d-block mb-2 fw-bold">API Key</label>
-                <input type="text" class="nsm-field form-control api-input" value="<?= $vonage ? maskString(base64_decode($vonage->vn_api_key)) : ''; ?>" readonly disabled />
+                <input type="text" class="nsm-field form-control api-input" value="<?= $vonage ? maskString($vonage->vn_api_key) : ''; ?>" readonly disabled />
             </div>
             <div class="col-12 mb-3">
                 <label class="content-subtitle d-block mb-2 fw-bold">API Secret</label>
-                <input type="text" class="nsm-field form-control api-input" value="<?= $vonage ? maskString(base64_decode($vonage->vn_api_secret)) : ''; ?>" readonly disabled />
+                <input type="text" class="nsm-field form-control api-input" value="<?= $vonage ? maskString($vonage->vn_api_secret) : ''; ?>" readonly disabled />
             </div>
         </div>
         <div class="row mb-5">
@@ -56,11 +56,11 @@
         <div class="row mb-5 mt-5">
             <div class="col-12 mb-3">
                 <label class="content-subtitle d-block mb-2 fw-bold">API Key</label>
-                <input type="text" name="vn_api_key" class="nsm-field form-control api-input" value="<?= $vonage ? base64_decode($vonage->vn_api_key) : ''; ?>" required />
+                <input type="text" name="vn_api_key" class="nsm-field form-control api-input" value="<?= $vonage ? $vonage->vn_api_key : ''; ?>" required />
             </div>
             <div class="col-12 mb-3">
                 <label class="content-subtitle d-block mb-2 fw-bold">API Secret</label>
-                <input type="text" name="vn_api_secret" class="nsm-field form-control api-input" value="<?= $vonage ? base64_decode($vonage->vn_api_secret) : ''; ?>" required />
+                <input type="text" name="vn_api_secret" class="nsm-field form-control api-input" value="<?= $vonage ? $vonage->vn_api_secret : ''; ?>" required />
             </div>
         </div>
         <div class="row mb-5">
