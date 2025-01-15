@@ -2879,7 +2879,7 @@ class Job extends MY_Controller
                 $this->general->update_with_key_field($jobs_data, $isJob->id, 'jobs', 'id');
 
 
-                // Point Rating System update data script for job module
+                // Point Rating System update or insert data script for job module
                 $filtered_employee_ids = array_filter($employee_ids);
                 $unique_employee_ids = array_unique($filtered_employee_ids);
                 $total_employees = count($unique_employee_ids);
@@ -2897,7 +2897,15 @@ class Job extends MY_Controller
 
                 $this->db->where('module', $module);
                 $this->db->where('module_id', $jobs_id);
-                $this->db->update('point_rating_system', $update_data);
+                $query = $this->db->get('point_rating_system');
+
+                if ($query->num_rows() > 0) {
+                    $this->db->where('module', $module);
+                    $this->db->where('module_id', $jobs_id);
+                    $this->db->update('point_rating_system', $update_data);
+                } else {
+                    $this->db->insert('point_rating_system', $update_data);
+                }
 
             }
 

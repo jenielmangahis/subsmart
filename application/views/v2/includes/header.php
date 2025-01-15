@@ -77,6 +77,9 @@ if ($this->session->userdata('usertimezone') == null) {
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <!-- taxes page -->
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
+
     <script>
         var base_url = '<?php echo base_url(); ?>';
         var surveyBaseUrl = '<?php echo base_url(); ?>';

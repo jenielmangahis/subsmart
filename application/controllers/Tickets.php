@@ -805,7 +805,15 @@ class Tickets extends MY_Controller
 
         $this->db->where('module', $module);
         $this->db->where('module_id', $module_id);
-        $this->db->update('point_rating_system', $update_data);
+        $query = $this->db->get('point_rating_system');
+
+        if ($query->num_rows() > 0) {
+            $this->db->where('module', $module);
+            $this->db->where('module_id', $module_id);
+            $this->db->update('point_rating_system', $update_data);
+        } else {
+            $this->db->insert('point_rating_system', $update_data);
+        }
 
         //Activity Logs
         $this->load->model('Activity_model');

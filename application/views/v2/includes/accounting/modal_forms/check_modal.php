@@ -115,6 +115,18 @@
         top: 250px;
     }
 
+    .checkCategoryName_Section {
+        top: 250px;
+        left: 290px;
+        width: 170px;
+    }
+
+    .checkExpenseAccount_Section {
+        top: 250px;
+        left: 470px;
+        width: 240px;
+    }
+
     .checkBankNameSelect+* {
         width: 260px !important;
     }
@@ -391,8 +403,8 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-12">
-                                    <div class="accordion grid-mb">
+                                <div class="col-12 categoryItemSection"> 
+                                    <div class="accordion grid-mb categoryItemCollapsible">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
                                                 <button class="accordion-button content-title" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-category-details" aria-expanded="true" aria-controls="collapse-category-details">
@@ -598,7 +610,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="accordion grid-mb">
+                                    <div class="accordion grid-mb categoryItemCollapsible">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
                                                 <button class="accordion-button content-title <?=isset($items) && count($items) > 0 ? '' : ' collapsed'?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-item-details" aria-expanded="false" aria-controls="collapse-item-details">
@@ -832,6 +844,16 @@
                                         <option value="" selected disabled>Select Bank...</option>
                                     </select>
                                 </div>
+                                <div class="checkCategoryName_Section position-absolute">
+                                    <select name="category[]" class="form-select checkCategorySelect">
+                                        <option value="" selected disabled>Select Category...</option>
+                                    </select>
+                                </div>
+                                <div class="checkExpenseAccount_Section position-absolute">
+                                    <select name="expense_account[]" class="form-select checkExpenseAccountSelect">
+                                        <option value="" selected disabled>Select Expense Account...</option>
+                                    </select>
+                                </div>
                                 <div class="checkMemo_Section position-absolute">
                                     <div class="d-flex align-items-center">
                                         <strong for="checkMemoInput" class="me-2 text-nowrap">Memo</strong>
@@ -840,6 +862,9 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="container mt-3">
+                        <div class="row virtualOtherDetails"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -896,6 +921,10 @@
 </form>
 </div>
 <script>
+    $(document).ready(function () {
+        $('#category-details-table td').click().change();
+    });
+
     var currentCheckNo = $('#checkNumberInput').val();
     var totalAmountInVirtualCheck = 0.00;
 
@@ -1034,9 +1063,11 @@
 
     $('input[name="options-outlined"]').on('click', function() {
         if ($('#standardCheck_toggle').is(':checked')) {
+            // $('.categoryItemCollapsible').appendTo('.categoryItemSection');
             $('.standardCheckContent').fadeIn();
             $('.virtualCheckContent').hide();
         } else if ($('#virtualCheck_toggle').is(':checked')) {
+            // $('.categoryItemCollapsible').appendTo('.virtualOtherDetails');
             $('.standardCheckContent').hide();
             $('.virtualCheckContent').fadeIn();
         }

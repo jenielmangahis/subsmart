@@ -1192,7 +1192,7 @@ a.nsm-button {
 
 .nsm-modal .modal-header,
 .nsm-modal .modal-footer {
-  border: unset !important;
+  /* border: unset !important; */
 }
 
 .nsm-modal .modal-header button {
