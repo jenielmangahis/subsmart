@@ -1,0 +1,53 @@
+{
+    "name": "macfja/phar-builder",
+    "description": "CLI tool for create phar of your composer based project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "MacFJA"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "symfony/console": "~2.7 || ^3.0 || ^4.0",
+        "macfja/symfony-console-filechooser": "~0.2 || ~1",
+        "rych/bytesize": "~1.0",
+        "webignition/readable-duration": "^0.2",
+        "league/event": "^2.1",
+        "symfony/process": "^2.7 || ^3.0 || ^4.0",
+        "symfony/finder": "^4.0",
+        "neutron/signal-handler": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {"MacFJA\\PharBuilder\\": "app/"}
+    },
+    "bin": ["bin/phar-builder", "bin/phar-builder.php"],
+    "extra": {
+        "phar-builder": {
+            "skip-shebang": false,
+            "include-dev": false,
+            "entry-point": "bin/phar-builder.php",
+            "compression": "None",
+            "name": "phar-builder.phar",
+            "output-dir": "./",
+            "include": ["bin"]
+        }
+    },
+    "require-dev": {
+        "phpmd/phpmd": "^2.4",
+        "sebastian/phpcpd": "^2.0",
+        "squizlabs/php_codesniffer": "^2.5"
+    },
+    "scripts": {
+        "test": [
+            "php -l app/",
+            "phpmd app/ text phpmd.xml.dist",
+            "phpcpd app/",
+            "phpcs"
+        ],
+        "build-sign": [
+            "php -d phar.readonly=0 bin/phar-builder package composer.json",
+            "gpg2 --output phar-builder.phar.asc --armor --detach-sign phar-builder.phar"
+        ]
+    }
+}
