@@ -977,15 +977,14 @@ class Tools extends MY_Controller {
         $post = $this->input->post();
         $company_id = logged('company_id');  
 
-        $ringCentral = validateRingCentralAccount($post['client_id'], $post['client_secret'], $post['rc_username'], $post['rc_password'], $post['rc_ext']);
+        $ringCentral = validateRingCentralAccount($post['client_id'], $post['client_secret'], $post['client_jwt']);
         if( $ringCentral['is_valid'] ){
             $companyRingCentral = $this->RingCentralAccounts_model->getByCompanyId($company_id);
             if( $companyRingCentral ){
                 $ring_central_data = [
-                    'client_id' => base64_encode($post['client_id']),
-                    'client_secret' => base64_encode($post['client_secret']),
-                    'rc_username' => $post['rc_username'],
-                    'rc_password' => $post['rc_password'],
+                    'client_id' => $post['client_id'],
+                    'client_secret' => $post['client_secret'],
+                    'jwt' => $post['client_jwt'],
                     'rc_from_number' => $post['rc_from_number'],
                     'rc_ext' => $post['rc_ext']
                 ];
@@ -994,10 +993,9 @@ class Tools extends MY_Controller {
             }else{
                 $ring_central_data = [
                     'company_id' => $company_id,
-                    'client_id' => base64_encode($post['client_id']),
-                    'client_secret' => base64_encode($post['client_secret']),
-                    'rc_username' => $post['rc_username'],
-                    'rc_password' => $post['rc_password'],
+                    'client_id' => $post['client_id'],
+                    'client_secret' => $post['client_secret'],
+                    'jwt' => $post['client_jwt'],
                     'rc_from_number' => $post['rc_from_number'],
                     'rc_ext' => $post['rc_ext'],
                     'created' => date("Y-m-d H:i:s")
@@ -1008,6 +1006,8 @@ class Tools extends MY_Controller {
 
             $msg = '';
             $is_success = true;
+        }else{
+            $msg = $ringCentral['err_msg'];
         }
 
         $json_data = [
@@ -1052,8 +1052,8 @@ class Tools extends MY_Controller {
             $vonageAccount = $this->VonageAccounts_model->getByCompanyId($company_id);
             if( $vonageAccount ){
                 $vonage_data = [                    
-                    'vn_api_key' => base64_encode($post['vn_api_key']),
-                    'vn_api_secret' => base64_encode($post['vn_api_secret']),
+                    'vn_api_key' => $post['vn_api_key'],
+                    'vn_api_secret' => $post['vn_api_secret'],
                     'vn_branding' => $post['vn_branding'],
                     'vn_from_number' => $post['vn_from_number']
                 ];
@@ -1061,8 +1061,8 @@ class Tools extends MY_Controller {
             }else{
                 $vonage_data = [
                     'company_id' => $company_id,
-                    'vn_api_key' => base64_encode($post['vn_api_key']),
-                    'vn_api_secret' => base64_encode($post['vn_api_secret']),
+                    'vn_api_key' => $post['vn_api_key'],
+                    'vn_api_secret' => $post['vn_api_secret'],
                     'vn_branding' => $post['vn_branding'],
                     'vn_from_number' => $post['vn_from_number']
                 ];
@@ -1097,8 +1097,8 @@ class Tools extends MY_Controller {
             $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($company_id);
             if( $twilioAccount ){
                 $twilio_data = [
-                    'tw_sid' => base64_encode($post['tw_sid']),
-                    'tw_token' => base64_encode($post['tw_token']),
+                    'tw_sid' => $post['tw_sid'],
+                    'tw_token' => $post['tw_token'],
                     'tw_number' => $post['tw_number'],   
                     'tw_capability_token_url' => $post['tw_capability_token_url'],                 
                     'created' => date("Y-m-d H:i:s")
@@ -1108,8 +1108,8 @@ class Tools extends MY_Controller {
             }else{
                 $twilio_data = [
                     'company_id' => $company_id,
-                    'tw_sid' => base64_encode($post['tw_sid']),
-                    'tw_token' => base64_encode($post['tw_token']),
+                    'tw_sid' => $post['tw_sid'],
+                    'tw_token' => $post['tw_token'],
                     'tw_number' => $post['tw_number'], 
                     'tw_capability_token_url' => $post['tw_capability_token_url'],                   
                     'created' => date("Y-m-d H:i:s")
@@ -1336,7 +1336,7 @@ class Tools extends MY_Controller {
         $msg = 'Cannot find user';
         $user_email = '';
 
-        $user_id = getLoggedUserID();
+        $user_id = logged('id');
         $key     = generateRandomString(10) . $user_id;
 
         $user = $this->Users_model->getUserByID($user_id);
@@ -1371,7 +1371,8 @@ class Tools extends MY_Controller {
                 $msg = 'Email not valid';
             }            
         }
-
+        
+        $is_success = 1;
         $json_data = ['is_success' => $is_success, 'msg' => $msg, 'user_email' => $user_email];
         echo json_encode($json_data);
         
@@ -1385,7 +1386,7 @@ class Tools extends MY_Controller {
 
         $post = $this->input->post();
 
-        $user_id = getLoggedUserID();
+        $user_id = logged('id');
         $user    = $this->Users_model->getUserByID($user_id);
         if( $user ){
             if( $user->auth_key == $post['auth_key'] ){

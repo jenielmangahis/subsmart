@@ -12,7 +12,6 @@ class Cron_Notification extends MYF_Controller {
     public function auto_sms_notification()
     {
         $this->load->helper('sms_helper');
-        $this->load->model('RingCentralSmsLogs_model');
         $this->load->model('RingCentralAccounts_model');
         $this->load->model('TwilioAccounts_model');
         $this->load->model('TwilioSmsLogs_model');
@@ -111,9 +110,10 @@ class Cron_Notification extends MYF_Controller {
                         }else{
                             if( $smsApi == 'ring_central' ){
                                 $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_message);                            
-                                if( $isSent['is_success'] == 1 ){
+                                if( $isSent['is_sent'] == 1 ){
                                     $cronSms = $this->CronAutoSmsNotification_model->getById($sms->id);
                                     $data = [
+                                        'msg_id' => $isSent['msg_id'],
                                         'is_sent' => 1,
                                         'date_sent' => date('Y-m-d H:i:s')
                                     ];

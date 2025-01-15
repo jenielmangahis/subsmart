@@ -6,7 +6,6 @@ class Debug extends MYF_Controller {
     {
 
         parent::__construct();
-        //$this->checkLogin();
 
         $this->load->model('IndustryType_model');
         $this->load->model('Users_model');
@@ -2942,6 +2941,30 @@ class Debug extends MYF_Controller {
         } 
 
         echo 'Total updated : ' . $total_updated;
+    }
+
+    public function testValidateIndustrySpecificFields()
+    {
+        if(checkIndustryAllowedSpecificField('installation_cost')){
+            echo 'Allowed';
+        }else{
+            echo 'Not Allowed';
+        }
+    }
+
+    public function ringcentralSmsV2()
+    {
+        
+
+        $this->load->helper('sms_helper');
+        $this->load->model('RingCentralAccounts_model');
+
+        $cid  = logged('company_id');
+        $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
+
+        $to  = '8506199845';
+        $sms_message = 'This is a test sms';
+        $sms = smsRingCentral($ringCentralAccount, $to, $sms_message);
     }
 }
 /* End of file Debug.php */
