@@ -2,47 +2,38 @@
 
 function smsRingCentral($ringCentral, $to_number, $txt_message)
 {   
-    include_once APPPATH . 'libraries/ringcentral_lite/src/ringcentrallite.php';    
+    include APPPATH . 'libraries/ringcentral-php-master/vendor/autoload.php';
 
+    $is_sent = 0;
+    $msg    = 'Cannot send sms.';
+    $msg_id = 0;
+    
     $to_number   = cleanMobileNumber($to_number);
     $to_number   = '+1'.$to_number;  
-    //$from_number = RINGCENTRAL_FROM;
+    $server_url  = 'https://platform.ringcentral.com';
 
-    //$message = replaceSmartTags($txt_message);
-    $message = $txt_message;
+    $rcsdk = new RingCentral\SDK\SDK( $ringCentral->client_id,$ringCentral->client_secret,$server_url);
+    $platform = $rcsdk->platform();
+    try {
+        $platform->login(["jwt" => $ringCentral->jwt]);
+        $requestBody = array(
+            'from' => array ('phoneNumber' => $ringCentral->rc_from_number),
+            'to' => array( array('phoneNumber' => $to_number) ),            
+            'text' => $txt_message
+        );
+        $endpoint = "/account/~/extension/~/sms";
+        $resp = $platform->post($endpoint, $requestBody);
+        $jsonObj = $resp->json();
+        $msg_id  = $jsonObj->id;
 
-    $rc = new RingCentralLite(
-        base64_decode($ringCentral->client_id), //Client id
-        base64_decode($ringCentral->client_secret), //Client secret
-        RINGCENTRAL_DEV_URL //server url
-    );
-     
-    $res = $rc->authorize(
-        $ringCentral->rc_username, //username
-        $ringCentral->rc_ext, //extension
-        $ringCentral->rc_password //password
-    ); //password
-
-    $params = array(
-        'json'     => array(
-            'to'   => array( array('phoneNumber' => $to_number) ), //Send to
-            'from' => array('phoneNumber' => $ringCentral->rc_from_number), 
-            'text' => $message
-        )
-    );
-
-    $res = $rc->post('/restapi/v1.0/account/~/extension/~/sms', $params);
-    
-    $is_success = 0;
-    $msg     = '';
-
-    if (isset($res['errorCode'])) {
-        $msg = $res['errorCode'] . " " . $res['message'];
-    } else {
-        $is_success = 1;
+        $msg = '';
+        $is_sent = 1;
+        
+    } catch (\RingCentral\SDK\Http\ApiException $e) {
+        $msg = "Unable to authenticate to platform. Check credentials. " . $e->getMessage() . PHP_EOL;        
     }
-
-    $return = ['is_success' => $is_success, 'msg' => $msg, 'from_number' => $ringCentral->rc_from_number];
+    
+    $return = ['is_sent' => $is_sent, 'msg' => $msg, 'from_number' => $ringCentral->rc_from_number, 'msg_id' => $msg_id];
     return $return;
 }
 
