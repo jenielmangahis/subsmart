@@ -219,8 +219,7 @@ foreach ($jobs as $job) {
                             <td data-name="Date">Date</td>
                             <td data-name="Customer">Customer</td>
                             <td data-name="Sales Rep">Sales Rep</td>
-                            <td data-name="Tech Rep">Tech Reps</td>                            
-                            <td data-name="Amount">Job Amount</td>
+                            <td data-name="Tech Rep">Assigned Tech</td>    
                             <td data-name="Job Type">Job Type</td>
                             <td data-name="Job Tag">Job Tag</td>
                             <td data-name="Priority">Priority</td>
@@ -294,18 +293,8 @@ foreach ($jobs as $job) {
                                         <?php endforeach; ?>
                                     </div>
                                 <?php endif; ?>
-                            </td>
-                            <td>
-                                <div>
-                                    <?php for($x=1;$x<=$badgeCount;$x++){ ?> 
-                                        <span class="nsm-badge primary-enhanced"></span>
-                                    <?php } for($y=1;$y < 9 - $badgeCount;$y++){ ?> 
-                                        <span class="nsm-badge primary"></span>
-                                    <?php } ?>
-                                </div>
-                                <small class="content-subtitle d-block mt-1"><?= $job->status; ?></small>
-                            </td>                            
-                            <td><?php echo $job->job_type; ?></td>
+                            </td>                          
+                            <td><?php echo $job->job_type != '' ? $job->job_type : '---'; ?></td>
                             <td>
                                 <?php if(!empty($tags)): ?>
                                     <?php foreach ($tags as $tag): ?>
@@ -392,7 +381,7 @@ JOB_LIST_TABLE_SETTINGS = JOB_LIST_TABLE.settings();
 
 $('#CUSTOM_FILTER_DROPDOWN').change(function(event) {
     $('#CUSTOM_FILTER_SEARCHBAR').val($('#CUSTOM_FILTER_DROPDOWN').val());
-    JOB_LIST_TABLE.columns(10).search(this.value).draw();
+    JOB_LIST_TABLE.columns(9).search(this.value).draw();
 });
 
 function DELETE_JOB(job_id){
