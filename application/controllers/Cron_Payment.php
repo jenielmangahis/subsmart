@@ -695,19 +695,20 @@ class Cron_Payment extends MY_Controller {
     {
         $this->load->model('Accounting_recurring_transactions_model');
         $this->load->model('AccountingRecurringTransactionPayment_model');
+        $this->load->model('Customer_advance_model', 'customer_ad_model');
 
         $total_data = 0;
         $date = date("Y-m-d");
         $transactions = $this->Accounting_recurring_transactions_model->getAllByNextDateAndStatus($date, 1);
-
         if( $transactions ){
             foreach($transactions as $transaction) {
                 $total = 0;
+                $recurring_payee_id = 0;
                 switch($transaction['txn_type']) {
                     case 'expense' :
                         //$expense = $this->vendors_model->get_expense_by_id($transaction['txn_id']);
                         $query = $this->db->query('
-                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id, payee_id AS recurring_payee_id
                             FROM accounting_expense                         
                             WHERE id ='.$transaction['txn_id'].'
                         ');                        
@@ -715,7 +716,7 @@ class Cron_Payment extends MY_Controller {
                     case 'check' :
                         //$check = $this->vendors_model->get_check_by_id($transaction['txn_id'], logged('company_id'));
                         $query = $this->db->query('
-                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id,payee_id AS recurring_payee_id
                             FROM accounting_check                         
                             WHERE id ='.$transaction['txn_id'].'
                         ');    
@@ -723,7 +724,7 @@ class Cron_Payment extends MY_Controller {
                     case 'bill' :
                         //$bill = $this->vendors_model->get_bill_by_id($transaction['txn_id'], logged('company_id'));
                         $query = $this->db->query('
-                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id,vendor_id AS recurring_payee_id
                             FROM accounting_bill                         
                             WHERE id ='.$transaction['txn_id'].'
                         ');   
@@ -731,7 +732,7 @@ class Cron_Payment extends MY_Controller {
                     case 'purchase order' :
                         //$purchaseOrder = $this->vendors_model->get_purchase_order_by_id($transaction['txn_id'], logged('company_id'));
                         $query = $this->db->query('
-                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id,vendor_id AS recurring_payee_id
                             FROM accounting_purchase_order                         
                             WHERE id ='.$transaction['txn_id'].'
                         ');  
@@ -739,7 +740,7 @@ class Cron_Payment extends MY_Controller {
                     case 'vendor credit' :
                         //$vCredit = $this->vendors_model->get_vendor_credit_by_id($transaction['txn_id'], logged('company_id'));
                         $query = $this->db->query('
-                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id,vendor_id AS recurring_payee_id
                             FROM accounting_vendor_credit                         
                             WHERE id ='.$transaction['txn_id'].'
                         '); 
@@ -747,7 +748,7 @@ class Cron_Payment extends MY_Controller {
                     case 'credit card credit' :
                         //$ccCredit = $this->vendors_model->get_credit_card_credit_by_id($transaction['txn_id'], logged('company_id'));
                         $query = $this->db->query('
-                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id,payee_id AS recurring_payee_id
                             FROM accounting_credit_card_credits                         
                             WHERE id ='.$transaction['txn_id'].'
                         '); 
@@ -774,7 +775,7 @@ class Cron_Payment extends MY_Controller {
                     case 'npcharge' :
                         //$charge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($transaction['txn_id']);
                         $query = $this->db->query('
-                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id,customer_id AS recurring_payee_id
                             FROM accounting_delayed_charge                         
                             WHERE id ='.$transaction['txn_id'].'
                         '); 
@@ -782,7 +783,7 @@ class Cron_Payment extends MY_Controller {
                     case 'npcredit' :
                         //$credit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($transaction['txn_id']);
                         $query = $this->db->query('
-                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id,customer_id AS recurring_payee_id
                             FROM accounting_delayed_credit                         
                             WHERE id ='.$transaction['txn_id'].'
                         ');                         
@@ -790,7 +791,7 @@ class Cron_Payment extends MY_Controller {
                     case 'credit memo' :
                         //$creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($transaction['txn_id']);
                         $query = $this->db->query('
-                            SELECT COALESCE(total_amount,0) AS total_amount,company_id
+                            SELECT COALESCE(total_amount,0) AS total_amount,company_id,customer_id AS recurring_payee_id
                             FROM accounting_credit_memo                         
                             WHERE id ='.$transaction['txn_id'].'
                         '); 
@@ -799,7 +800,7 @@ class Cron_Payment extends MY_Controller {
                     case 'invoice' :
                         //$invoice = $this->invoice_model->getinvoice($transaction['txn_id']);
                         $query = $this->db->query('
-                            SELECT COALESCE(grand_total,0) AS total_amount,company_id
+                            SELECT COALESCE(grand_total,0) AS total_amount,company_id,customer_id AS recurring_payee_id
                             FROM accounting_credit_memo                         
                             WHERE id ='.$transaction['txn_id'].'
                         '); 
@@ -807,7 +808,7 @@ class Cron_Payment extends MY_Controller {
                     case 'refund' :
                         //$refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($transaction['txn_id']);
                         $query = $this->db->query('
-                            SELECT COALESCE(grand_total,0) AS total_amount,company_id
+                            SELECT COALESCE(grand_total,0) AS total_amount,company_id,customer_id AS recurring_payee_id
                             FROM accounting_refund_receipt                         
                             WHERE id ='.$transaction['txn_id'].'
                         '); 
@@ -815,7 +816,7 @@ class Cron_Payment extends MY_Controller {
                     case 'sales receipt' :
                         //$salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($transaction['txn_id']);
                         $query = $this->db->query('
-                            SELECT COALESCE(grand_total,0) AS total_amount,company_id
+                            SELECT COALESCE(grand_total,0) AS total_amount,company_id,customer_id AS recurring_payee_id
                             FROM accounting_sales_receipt                         
                             WHERE id ='.$transaction['txn_id'].'
                         ');
@@ -864,12 +865,28 @@ class Cron_Payment extends MY_Controller {
                         }
                     }
 
-                    //Process payment
-                    $new_current_occurence = $transaction['current_occurence'] + 1;
+                    $customer_credit_card = null;
+                    $recurring_payee_id = isset($result->recurring_payee_id) ? $result->recurring_payee_id : null;
+                    if(isset($recurring_payee_id) && $recurring_payee_id > 0) {
+                        $bill_info = $this->customer_ad_model->get_data_by_id('fk_prof_id', $recurring_payee_id, 'acs_billing');
+                        if($bill_info) {
+                            if($billing_info->credit_card_num != null && $billing_info->credit_card_num != 0) {
+                                $customer_credit_card = $billing_info->credit_card_num;
+                            }
+                        }
+                    }
+
+                    //Add stripe payment here..
+                    if($customer_credit_card != null) {
+
+                    }
+
+                    //Process Payment
+                    $new_current_occurence = $transaction['current_occurrence'] + 1;
                     $previous_date = $date;
                     $next_date     = $date;
                     $status = 1;
-                    if( $new_current_occurence < $transaction['max_occurences'] ){
+                    if( $new_current_occurence < $transaction['max_occurrences'] ){
                         $next_date = $bill_date;
                     }else{
                         $status = 3;
