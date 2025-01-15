@@ -55,7 +55,7 @@ class Jobs_model extends MY_Model
                         ->group_end();
                 }
             }
-        }        
+        }
 
         $this->db->order_by('id', "DESC");
         $query = $this->db->get();
@@ -103,7 +103,7 @@ class Jobs_model extends MY_Model
     /**
      * @return mixed
      */
-    public function get_all_jobs_by_status($status, $userId = null, $leaderBoardType = null)
+    public function get_all_jobs_by_params($params, $userId = null, $leaderBoardType = null)
     {
         $cid = logged('company_id');
         date_default_timezone_set('Asia/Manila');
@@ -135,8 +135,9 @@ class Jobs_model extends MY_Model
             }
         }
 
-        $this->db->where("jobs.status", $status);
-        $this->db->where("DATE(jobs.start_date) =", $today);
+        if (!empty($params)) {
+            $this->db->where($params);
+        }
         $this->db->order_by('id', "DESC");
         $query = $this->db->get();
         return $query->result();

@@ -31,7 +31,6 @@ class Automation extends MY_Controller
         $this->page_data['job_status'] = $this->customer_ad_model->get_select_options('jobs', 'status');
         $this->page_data['automations']  = $this->automation_model->getAutomationsByParams([
             'user_id' => logged('id'),
-            'status' => 'active',
         ]);
 
         $this->load->view('v2/pages/automation/list', $this->page_data);
@@ -91,7 +90,8 @@ class Automation extends MY_Controller
             'target'          => $data['target'],
             'date_reference'  => $data['date_reference'],
             'timing_reference' => $data['timing_reference'],
-            'template'        => $data['template'],
+            'email_subject'     => $data['email_subject'],
+            'email_body'        => $data['email_body'],
             'status'          => isset($data['status']) ? $data['status'] : 'active',
         ];
 
@@ -105,70 +105,67 @@ class Automation extends MY_Controller
         }
     }
 
-    public function addAutomation()
+
+    public function toggleStatus()
     {
-        $company_id = logged('company_id');
-        $user_id = logged('id');
-        $automationData = $this->input->post();
+        $id = $this->input->post('id');
+        $status = $this->input->post('status');
 
-        $automationData = [
-            'company_id' => $company_id,
-            'user_id' => $user_id,
-            'subject' => $automationData['subject'],
-            'sender' => $automationData['sender'],
-            'recepient' => 'leahcreer111@gmail.com',
-            'message' => $automationData['message'],
-        ];
+        if ($id && $status) {
+            // Update the automation status in the database
+            $data = [
+                'status' => $status,
+            ];
 
-        $send = $this->sendEmail(
-            $automationData['recepient'],
-            '',
-            $automationData['subject'],
-            $automationData['message']
-        );
-
-        // $send = false;
-
-        echo json_encode([
-            'success' => $send ? 'true' : 'false',
-            'data' => $automationData,
-        ]);
-    }
-
-    function log_debug_message($message, $file = 'debug_log.txt')
-    {
-        // Ensure the file path is correct
-        $log_file = APPPATH . 'logs/' . $file;
-
-        // Log the message with a timestamp
-        $timestamp = date('Y-m-d H:i:s');
-        $full_message = "[$timestamp] $message" . PHP_EOL;
-
-        // Append the message to the log file
-        file_put_contents($log_file, $full_message, FILE_APPEND);
-    }
-
-    private function nameCleanup($firstName, $lastName)
-    {
-        $fullName = '';
-
-        if (empty($firstName) && empty($lastName)) {
-            $fullName = $firstName . ' ' . $lastName;
-        } elseif (!empty($firstName)) {
-            $fullName = $firstName;
-        } elseif (!empty($lastName)) {
-            $fullName = $lastName;
+            $res = $this->automation_model->updateAutomationsByParams($data, $id);
+            // Return success response
+            echo json_encode(['success' => true, 'response' => $res]);
         } else {
-            $fullName = '';
+            // Return error if data is invalid
+            echo json_encode(['success' => false, 'message' => 'Invalid data']);
+        }
+    }
+
+    public function deleteAutomation()
+    {
+        $id = $this->input->post('id');
+
+        if ($id) {
+            $deleted = $this->automation_model->delete_automation($id);
+
+            if ($deleted) {
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to delete automation']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Invalid automation ID']);
+        }
+    }
+
+
+    private function calculateTriggerTime($data, $automation)
+    {
+        $eventTime = strtotime($data->start_date . ' ' . $data->start_time); // e.g., scheduled date
+        if ($automation['trigger_event'] === 'created') {
+            $eventTime = strtotime($data->created_at); // e.g., creation date
         }
 
+        return ($automation['timing_reference'] === 'ahead_of')
+            ? $eventTime - ($automation['trigger_time'] * 60)
+            : $eventTime + ($automation['trigger_time'] * 60);
+    }
 
-        return $fullName;
+    private function isEventAlreadyQueued($automationId, $targetId)
+    {
+        return $this->automation_model->getExistingQueue($automationId, $targetId) !== null;
     }
 
 
     public function trigger_automations()
     {
+        $current_time = time();
+
         try {
             // Get all active automations
             $automations = $this->automation_model->getAutomationsByParams([
@@ -187,53 +184,54 @@ class Automation extends MY_Controller
                 );
 
                 foreach ($event_data as $data) {
-                    $this->log_debug_message('event ' . print_r($data, true));
-                    // Calculate the time difference
-                    $start_datetime = $data->start_date . ' ' . $data->start_time;  // Combine date and time //2024-11-28 5:30 am
-                    $event_time = strtotime($start_datetime); // Convert combined datetime string to timestamp
-                    date_default_timezone_set('Asia/Manila');
-                    $current_time = time();
+                    $triggerTime = $this->calculateTriggerTime($data, $automation);
 
-                    $trigger_time_ahead = $event_time - ($automation['trigger_time'] * 60); // Offset by trigger_time //2024-11-28 03:30:00
-                    $trigger_time_after = $event_time + ($automation['trigger_time'] * 60); // Offset by trigger_time //2024-11-28 07:30:00
+                    if ($this->isEventAlreadyQueued($automation['id'], $data->id)) {
+                        continue; // Skip if already queued
+                    }
 
-                    if ($event_time <= $current_time) continue;
-
-                    // If the current time is the correct trigger time (ahead or after)
-                    if (($automation['timing_reference'] == 'ahead_of' && time() >= $trigger_time_ahead) ||
-                        ($automation['timing_reference'] == 'after' && time() >= $trigger_time_after)
-                    ) {
-
-                        $recipient = $this->getRecepient('technician', $data);
-
-                        $debug[$automation['id']][] = [
-                            'event' => $data,
-                            'body' => $this->prepareEmailBody($data, $automation),
-                            'automation' => $automation,
-                            'recipient' => $recipient
-                        ];
-
+                    $queueToInsert = [
+                        'automation_id' => $automation['id'],
+                        'target_id' => $data->id,
+                        'entity_type' =>  $automation['entity'],
+                        'is_triggered' => 0,
+                    ];
+                    if ($automation['trigger_time'] == 0) {
+                        // Trigger immediately, no need to compare time
+                        $this->log_debug_message('$triggerTime === 0: ');
+                        $queueToInsert['trigger_time'] = date('Y-m-d H:i:s', time());
+                        $this->automation_model->insertQueue($queueToInsert);
+                        $this->processQueuedAutomations();
+                    } else if ($triggerTime > time()) {
+                        $queueToInsert['trigger_time'] = date('Y-m-d H:i:s', $triggerTime);
+                        $this->automation_model->insertQueue($queueToInsert);
+                    } else {
                         $this->triggerAction($data, $automation);
                     }
                 }
             }
 
-            echo json_encode(['status' => 'success', 'debug' => $debug]);
+            echo json_encode(['status' => 'success']);
         } catch (Exception $error) {
             echo json_encode(['status' => 'false', 'error' => $error->getMessage()]);
         }
     }
 
+
     private function triggerAction($data, $automation)
     {
         $body = $this->prepareEmailBody($data, $automation);
         $recipient = $this->getRecepient($automation['target'], $data);
-        $subject = $automation['title'] ? $automation['title'] : 'na';
+        $subject = $automation['email_subject'] ? $automation['email_subject'] : 'na';
+
+        $this->log_debug_message('body: ' . $body);
+        $this->log_debug_message('subject: ' . $subject);
 
 
         switch ($automation['action']) {
             case 'send_email':
                 // $this->sendEmail($recipient, '', $subject, $body);
+
                 break;
             case 'send_sms':
                 break;
@@ -245,18 +243,60 @@ class Automation extends MY_Controller
 
     private function getEventData($entity, $user_id, $trigger_event, $trigger_status = null)
     {
+
+        $filters = [];
+
+
         switch ($entity) {
             case 'job':
-                if ($trigger_event == 'has_status') {
-                    if (!$trigger_status) return null;
-
-                    return $this->jobs_model->get_all_jobs_by_status($trigger_status, $user_id);
+                if ($trigger_event === 'has_status') {
+                    $filters['jobs.status'] = $trigger_status;
                 }
+
+                if ($trigger_event === 'created') {
+                    $filters['jobs.date_created >='] = date('Y-m-d H:i:s', strtotime('-1 day'));  // Example: Get records created in the last 24 hours
+                }
+
+                return $this->jobs_model->get_all_jobs_by_params($filters, $user_id);
+
                 break;
             case 'lead':
                 if ($trigger_event == 'has_status') {
                     return null;
                 }
+                break;
+        }
+
+        return [];
+    }
+
+    public function processQueuedAutomations()
+    {
+        $this->log_debug_message('processQueuedAutomations ');
+
+        $pendingItem = $this->automation_model->getPendingActions();
+
+        foreach ($pendingItem as $item) {
+            $automation = $this->automation_model->getAutomationById($item['automation_id']);
+            $data = $this->getEventDataById($automation['entity'], $item['target_id']);
+
+            $this->triggerAction($data, $automation);
+            $this->automation_model->markEventTriggered($item['id']);
+        }
+
+        //TODO: REMOVE PENDING ITEM
+        echo json_encode(['status' => 'success', 'pendingItem' => $pendingItem]);
+    }
+
+    private function getEventDataById($entity, $target_id)
+    {
+        switch ($entity) {
+            case 'job':
+                return $this->jobs_model->get_specific_job($target_id);
+
+                break;
+            case 'lead':
+
                 break;
         }
 
@@ -300,7 +340,7 @@ class Automation extends MY_Controller
 
     private function prepareEmailBody($data, $automationData)
     {
-        $template = $automationData['template'];
+        $template = $automationData['email_body'];
 
         //replace key
         foreach ($data as $key => $value) {
@@ -322,7 +362,8 @@ class Automation extends MY_Controller
     {
         switch ($target) {
             case 'client':
-                return $data->email;
+                $email = $data->email ? $data->email : $data->cust_email;
+                return $email;
             case 'technician':
                 $technicians = $this->getTechnician($data);
                 $emails = array_map(fn($user) => $user->email, $technicians);
@@ -371,12 +412,34 @@ class Automation extends MY_Controller
         return $technicians;
     }
 
-    // private function prepare_email_body($template, $event_data)
-    // {
-    //     return str_replace(
-    //         ['{client_name}', '{scheduled_date}', '{job_address}'],
-    //         [$event_data->client_name, $event_data->scheduled_date, $event_data->job_address],
-    //         $template
-    //     );
-    // }
+    function log_debug_message($message, $file = 'debug_log.txt')
+    {
+        // Ensure the file path is correct
+        $log_file = APPPATH . 'logs/' . $file;
+
+        // Log the message with a timestamp
+        $timestamp = date('Y-m-d H:i:s');
+        $full_message = "[$timestamp] $message" . PHP_EOL;
+
+        // Append the message to the log file
+        file_put_contents($log_file, $full_message, FILE_APPEND);
+    }
+
+    private function nameCleanup($firstName, $lastName)
+    {
+        $fullName = '';
+
+        if (empty($firstName) && empty($lastName)) {
+            $fullName = $firstName . ' ' . $lastName;
+        } elseif (!empty($firstName)) {
+            $fullName = $firstName;
+        } elseif (!empty($lastName)) {
+            $fullName = $lastName;
+        } else {
+            $fullName = '';
+        }
+
+
+        return $fullName;
+    }
 }

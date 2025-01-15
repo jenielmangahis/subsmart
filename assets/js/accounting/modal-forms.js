@@ -96,10 +96,6 @@ function getDefaultAccount() {
             }
         });
         // $("#checkPrintLater").prop("checked", true).change();
-        $('#checkAmountInput').val(null).change();
-        $('#checkWrittenText').text("{WRITTEN_AMOUNT}");
-        $('#checkMemoInput').val(null).change();
-        $('#checkDateInput').val(new Date().toISOString().split('T')[0]).change();
     }, 500);
 } getDefaultAccount();
 
@@ -112,8 +108,12 @@ function getLastCheckNo() {
             dataType: "JSON",
             success: function (response) {
                 const check_no = (response == null || response == "") ? 0 : parseInt(response.check_no);
-                $('#starting-check-no').val(check_no + 1).change();
-                $('#starting-check-no, #check_no, #checkNumberInput').val(check_no + 1).change(); 
+                if ($('#print_later').is(':checked') == false) {
+                    $('#starting-check-no').val(check_no + 1).change();
+                    $('#starting-check-no, #check_no, #checkNumberInput').val(check_no + 1).change(); 
+                } else {
+                    $('#checkPrintLater').prop('checked', true).change();
+                }
 
                 $('#successPrintCheck').modal('hide');
                 $('#printChecksModal #payment_account').trigger('change');
@@ -122,12 +122,6 @@ function getLastCheckNo() {
         });
     }, 500);
 }
-
-$('#new-check').on('click', function(e) {
-    e.preventDefault();
-    getDefaultAccount();
-    getLastCheckNo();
-});
 
 $(function () {
     $(document).on('change', '#adjust-starting-value-modal #location', function () {
@@ -1043,6 +1037,7 @@ $(function () {
 
     // Category details Customer row function
     $(document).on('click', 'div#modal-container .modal-body table#category-details-table tbody tr td:not(:last-child)', function () {
+
         var row = $(this).parent();
         if (row.find('input').length < 1) {
             var rowNum = row.children().html();
@@ -12355,6 +12350,8 @@ const computeTransactionTotal = () => {
     }
 
     $('#modal-container .transaction-total-amount').html(formatter.format(parseFloat(total)));
+
+    $('#checkAmountInput').val(parseFloat(total)).change();
 }
 
 // const loadBills = () => {
@@ -14077,14 +14074,23 @@ const clearForm = () => {
     $('#mailing_address, #memo, #tags').empty().change();
     $('#check_no, #permit_number').val(null).change();
     $('#account-balance').text('$0.00');
-    $('.delete-row').click();
+    // $('.delete-row').click();
     if (modalName == 'creditMemoModal') {
         $('#sales-rep').empty().change();
         $('#billing-address').val('');
         $('#purchase-order-no').val('');
     }
-    getDefaultAccount();
+
+
+    $('.checkPayeeSelect').val(null).change();
+    // $('select[name="category[]"]').val(null).change();
+    $('#checkAmountInput').val(null).change();
+    $('#checkWrittenText').text("{WRITTEN_AMOUNT}");
+    $('#checkMemoInput').val(null).change();
+    $('#checkDateInput').val(new Date().toISOString().split('T')[0]).change();
+    // getDefaultAccount();
     getLastCheckNo();
+    $('#category-details-table td').click().change();
 
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');

@@ -33,9 +33,9 @@ if (!function_exists('get_automation_options')) {
                 'user' => 'to user',
             ],
             'actionOptions' => [
-                'send_sms' => 'a text message',
+                // 'send_sms' => 'a text message',
                 'send_email' => 'an email',
-                'send_sms_and_email' => 'a text and an email',
+                // 'send_sms_and_email' => 'a text and an email',
             ],
             'timeOptions' => [
                 '10' => '10 minutes',
