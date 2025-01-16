@@ -4673,7 +4673,7 @@ if (!function_exists('is_admin_logged')) {
     }
 
     function adi_company_ids(){
-        $adi_company_ids = [24,31,58,1];
+        $adi_company_ids = [24,31,58,1,3696,139];
         return $adi_company_ids;
     }
 

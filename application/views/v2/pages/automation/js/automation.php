@@ -1,11 +1,11 @@
 <script type="text/javascript">
-    const eventOptions = <?= json_encode($options['eventOptions']); ?>;
-    const targetOptions = <?= json_encode($options['targetOptions']); ?>;
-    const actionOptions = <?= json_encode($options['actionOptions']); ?>;
-    const timeOptions = <?= json_encode($options['timeOptions']); ?>;
-    const timingOptions = <?= json_encode($options['timingOptions']); ?>;
-    const dateOptions = <?= json_encode($options['dateOptions']); ?>;
-    const automationConfig = <?php echo json_encode(get_automation_email_config()); ?>;
+    const eventOptions =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <?php echo json_encode($options['eventOptions']); ?>;
+    const targetOptions =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   <?php echo json_encode($options['targetOptions']); ?>;
+    const actionOptions =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   <?php echo json_encode($options['actionOptions']); ?>;
+    const timeOptions =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <?php echo json_encode($options['timeOptions']); ?>;
+    const timingOptions =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   <?php echo json_encode($options['timingOptions']); ?>;
+    const dateOptions =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <?php echo json_encode($options['dateOptions']); ?>;
+    const automationConfig =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <?php echo json_encode(get_automation_email_config()); ?>;
 
     $(document).ready(function() {
 
@@ -28,8 +28,8 @@
 
         $(document).on('click', '#workflowMenuAccordion', function(event) {
             console.log('test')
-            event.preventDefault(); 
-            event.stopPropagation(); 
+            event.preventDefault();
+            event.stopPropagation();
         });
 
         $(document).on('click', '.task-item', function() {
@@ -67,9 +67,11 @@
         });
 
         $(document).on('submit', '#emailForm', function(e) {
+            console.log('close')
             e.preventDefault();
 
             let formData = $(this).serializeArray();
+            console.log(formData)
             emailBody = formData.find(field => field.name === 'message').value;
             emailSubject = formData.find(field => field.name === 'subject').value;
 
@@ -77,8 +79,82 @@
             $('#addEmail').modal('hide');
         });
 
+        $('.preview-automation').click(function(e) {
+            e.preventDefault();
+            const automationId = $(this).data('id');
 
-        $(document).on('click', '#submitAutomation', function(e) {
+            // Fetch automation details via AJAX
+            $.ajax({
+                url: '<?php echo base_url("automation/getAutomation") ?>',
+                type: 'POST',
+                data: { id: automationId },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        let data = response.data[0]
+                        console.log(data)
+                        document.querySelector('[name="preview_subject"]').value = data.email_subject;
+                        document.getElementById('preview_automation_msg').value = data.email_body;
+                        CKEDITOR.instances.preview_automation_msg.setData(data.email_body);
+
+                        $('#previewEmail').modal('show');
+                    } else {
+                        alert(response.message || 'Failed to fetch automation details.');
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while fetching automation details.');
+                }
+            });
+        });
+
+        $('.edit-automation').click(function(e) {
+            e.preventDefault();
+            const automationId = $(this).data('id');
+
+            // Fetch automation details via AJAX
+            $.ajax({
+                url: '<?php echo base_url("automation/getAutomation") ?>',
+                type: 'POST',
+                data: { id: automationId },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        let data = response.data[0]
+                        selectedStatus =data.trigger_status;
+                        selectedTarget = data.target;
+                        selectedAction = data.trigger_action;
+                        selectedTime = data.trigger_time;
+                        selectedTiming = data.timing_reference;
+                        selectedDate = data.date_reference;
+                        selectedEvent = data.trigger_event
+                        type = data.entity
+                        selectedTitle = data.title
+
+                        emailSubject = data.email_subject;
+                        emailBody = data.email_body;
+
+                        $("#automation_title").val(selectedTitle)
+
+                        setActiveTimelineItem();
+                        $('#addAutomation').modal('show');
+
+                        displayFirstParagraphSelection(type, selectedEvent);
+                        displaySecondParagraphSelection('send');
+
+
+                    } else {
+                        alert(response.message || 'Failed to fetch automation details.');
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while fetching automation details.');
+                }
+            });
+        });
+
+
+        $('#submitAutomation').click(function(e) {
             e.preventDefault();
             let scheduledForm = $(this);
 
@@ -99,57 +175,26 @@
 
             console.log(automationData)
 
-            $.ajax({
-                type: "POST",
-                url: BASE_URL + "/Automation/saveAutomation",
-                data: automationData,
-                dataType: "JSON",
-                beforeSend: function() {
-                    formDisabler(automationData, true);
-                    Swal.fire({
-                        icon: "info",
-                        title: "Saving Automation!",
-                        html: "Please wait while the process is running...",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        },
-                    });
-                },
-                success: function(response) {
-                    formDisabler(automationData, false);
-                    Swal.fire({
-                        icon: "success",
-                        title: "Automation Saved!",
-                        html: "Automation has been saved.",
-                        showConfirmButton: true,
-                        confirmButtonText: "Okay",
-                    });
-                    $('#addAutomation').modal('hide');
-
-                },
-                error: function(xhr, status, error) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error!",
-                        html: "An unexpected error occurred: " + error,
-                        showConfirmButton: true,
-                        confirmButtonText: "Okay",
-                    });
-                    formDisabler(automationData, false);
-                },
-            });
+             let message = {
+                icon: 'success',
+                title: 'Automation Saved!',
+                body: 'Automation has been saved.'
+            }
+            let res = sendPost(automationData, "/Automation/saveAutomation", message )
+            if(res) {
+                $('#addAutomation').modal('hide');
+                location.reload();
+            }
         });
 
-        $(document).on('click', '.trigger-auto', function(e) {
+        $('.trigger-auto').click(function(e) {
             e.preventDefault();
             const automationData = {
 
             };
             $.ajax({
                 type: "POST",
-                url: BASE_URL + "/Automation/trigger_automations",
+                url: BASE_URL + "/Automation/triggerAutomations",
                 data: automationData,
                 dataType: "JSON",
                 beforeSend: function() {
@@ -177,6 +222,8 @@
                         showConfirmButton: true,
                         confirmButtonText: "Okay",
                     });
+
+                    return response;
                 },
                 error: function(xhr, status, error) {
                     console.error("AJAX Error:", error);
@@ -192,88 +239,40 @@
             });
         });
 
-        $(document).on('click', '.process-auto', function(e) {
+        $('.process-auto').click(function(e) {
             e.preventDefault();
             const automationData = {
-
             };
-            $.ajax({
-                type: "POST",
-                url: BASE_URL + "/Automation/processQueuedAutomations",
-                data: automationData,
-                dataType: "JSON",
-                beforeSend: function() {
-                    formDisabler(automationData, true);
-                    Swal.fire({
-                        icon: "info",
-                        title: "Saving Automation!",
-                        html: "Please wait while the process is running...",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        },
-                    });
-                },
-                success: function(response) {
-                    console.log('response')
-                    console.log(response)
-                    $('#emailForm')[0].reset();
-                    formDisabler(automationData, false);
-                    Swal.fire({
-                        icon: "success",
-                        title: "Automation Saved!",
-                        html: "Automation has been saved.",
-                        showConfirmButton: true,
-                        confirmButtonText: "Okay",
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX Error:", error);
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error!",
-                        html: "An unexpected error occurred: " + error,
-                        showConfirmButton: true,
-                        confirmButtonText: "Okay",
-                    });
-                    formDisabler(automationData, false);
-                },
-            });
+
+            let message = {
+                icon: 'success',
+                title: 'Automation Saved!',
+                body: 'Automation has been saved.'
+            }
+
+           let res = sendPost(automationData, "/Automation/processQueuedAutomations", message )
+
         });
 
         $('.toggle-automation').change(function() {
             var automationId = $(this).data('id');
             var status = $(this).prop('checked') ? 'active' : 'inactive';
 
-            // Send the toggle request to the server via AJAX
-            $.ajax({
-                url: BASE_URL + "/Automation/toggleStatus",
-                type: 'POST',
-                dataType: 'json',
-                data: {
+            let data= {
                     id: automationId,
                     status: status
-                },
-                success: function(response) {
-                    if (response.success) {
-                        console.log('Automation ' + automationId + ' updated to ' + status);
-                    } else {
-                        alert('Failed to update automation status. Please try again.');
-                        // Revert the toggle if the update fails
-                        $('#flexSwitchCheck' + automationId).prop('checked', !$('#flexSwitchCheck' + automationId).prop('checked'));
-                    }
-                },
-                error: function() {
-                    alert('Error while updating automation status.');
-                    // Revert the toggle if there's an error
-                    $('#flexSwitchCheck' + automationId).prop('checked', !$('#flexSwitchCheck' + automationId).prop('checked'));
                 }
-            });
+            let message = {
+                icon: 'success',
+                title: 'Success!',
+                body: 'Automation has been updated.'
+            }
+            let res = sendPost(data, "/Automation/toggleAutomationStatus", message )
+            $('#flexSwitchCheck' + automationId).prop('checked', !$('#flexSwitchCheck' + automationId).prop('checked'));
         });
 
         $('.delete-automation').click(function(e) {
-            e.preventDefault(); 
+            e.preventDefault();
 
             var automationId = $(this).data('id');
 
@@ -288,7 +287,7 @@
                         var result = JSON.parse(response);
                         if (result.success) {
                             alert('Automation deleted successfully!');
-                            location.reload(); 
+                            location.reload();
                         } else {
                             alert('Error: ' + result.message);
                         }
@@ -299,6 +298,49 @@
                 });
             }
         });
+
+        function sendPost(data, url, message){
+            $.ajax({
+                type: "POST",
+                url: BASE_URL + url,
+                data: data,
+                dataType: "JSON",
+                beforeSend: function() {
+                    formDisabler(data, true);
+                    Swal.fire({
+                        icon: "info",
+                        title: "Processing!",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                },
+                success: function(response) {
+                    formDisabler(data, false);
+                    Swal.fire({
+                        icon: message.icon,
+                        title: message.title,
+                        html: message.body,
+                        showConfirmButton: true,
+                        confirmButtonText: "Okay",
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error:", error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        html: "An unexpected error occurred: " + error,
+                        showConfirmButton: true,
+                        confirmButtonText: "Okay",
+                    });
+                    formDisabler(data, false);
+                },
+            });
+        }
 
         const extractStatuses = (statusArray) =>
             statusArray
@@ -567,20 +609,20 @@
                 .map(([type, options], index) => `
                     <div class="accordion-item" style="border: none !important;">
                         <h2 class="accordion-header" id="heading${index}">
-                            <button 
-                                class="accordion-button collapsed" 
-                                type="button" 
-                                data-bs-toggle="collapse" 
-                                data-bs-target="#collapse${index}" 
-                                aria-expanded="false" 
+                            <button
+                                class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapse${index}"
+                                aria-expanded="false"
                                 aria-controls="collapse${index}">
                                 <i class='bx ${typeIcon(type)} me-3'></i> ${determineArticle(type)} ${type}
                             </button>
                         </h2>
-                        <div 
-                            id="collapse${index}" 
-                            class="accordion-collapse collapse" 
-                            aria-labelledby="heading${index}" 
+                        <div
+                            id="collapse${index}"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="heading${index}"
                             data-bs-parent="#workflowMenuAccordion">
                             <div class="accordion-body">
                                 <ul class="list-group list-group-flush">
@@ -597,9 +639,9 @@
             return Object.entries(options) // Convert object to array of [key, value]
                 .map(
                     ([value, text]) => `
-                <li 
-                    class="list-group-item event-item cursor-pointer" 
-                    data-type="${type}" 
+                <li
+                    class="list-group-item event-item cursor-pointer"
+                    data-type="${type}"
                     data-event="${value}">
                     ${text}
                 </li>
@@ -690,6 +732,22 @@
                 {
                     name: 'links'
                 }
+            ],
+        });
+
+        if (CKEDITOR.instances['preview_automation_msg']) {
+            CKEDITOR.instances['preview_automation_msg'].destroy(true);
+        }
+
+        CKEDITOR.replace('preview_automation_msg', {
+            height: 250,
+            toolbarGroups: [
+                '/',
+                {
+                    name: 'basicstyles',
+                    groups: ['basicstyles', 'cleanup']
+                },
+
             ],
         });
 

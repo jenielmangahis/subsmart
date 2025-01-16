@@ -92,11 +92,9 @@
                 </div>
                 <div class="row mt-5">
                     <div class="col-12 col-md-4">
-                        <form action="<?php echo base_url('admin/companies'); ?>" method="GET">
-                            <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="PERSON_SEARCHBAR" name="search" placeholder="Search Residential" value="<?php echo (!empty($search)) ? $search : ''; ?>">                                
-                            </div>
-                        </form>
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="PERSON_SEARCHBAR" name="search" placeholder="Search Residential" value="<?php echo (!empty($search)) ? $search : ''; ?>">                                
+                        </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                     <div class="dropdown d-inline-block">
