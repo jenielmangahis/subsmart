@@ -104,12 +104,9 @@
                 </div>
                 <div class="row mt-5">
                     <div class="col-12 col-md-4">
-                        <form >
-                            <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="COMMERCIAL_SEARCHBAR" name="search" placeholder="Search Commercials" >                                
-                            </div>
-     
-                        </form>
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="COMMERCIAL_SEARCHBAR" name="search" placeholder="Search Commercials" >                                
+                        </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
