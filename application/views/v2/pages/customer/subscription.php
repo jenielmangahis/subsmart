@@ -497,7 +497,8 @@
                                     </div>
                                 </div>
                                 <div class="text-end mt-2">
-                                    <button type="button" class="nsm-button primary" id="btn-add-subscription-plan"><span class="fa fa-plus"></span> Add New Subcription Plan</button>                                                    
+                                    <!-- <button type="button" class="nsm-button primary" id="btn-add-subscription-plan"><span class="fa fa-plus"></span> Add New Subcription Plan</button>                                                     -->
+                                    <button type="submit" class="nsm-button primary"><span class="fa fa-money"></span>Save</button>
                                     <div id="payment-button" style="display:inline-block;">
                                         <button type="submit" class="nsm-button primary" id="btn-pre-auth"><span class="fa fa-money"></span> Pre Auth Now</button>
                                         <button type="submit" class="nsm-button primary" id="btn-capture-now"><span class="fa fa-money"></span> Capture Now</button>
