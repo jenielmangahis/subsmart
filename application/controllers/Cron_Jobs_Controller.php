@@ -3090,7 +3090,9 @@ class Cron_Jobs_Controller extends CI_Controller
 						'billing_id'  	 => $as->bill_id,
 						'invoice_id'  	 => $invoice_id,
 						'recurring_date' => $recurring_date ? $recurring_date : date("Y-m-d"),
-						'amount'         => $total_amount,
+						'subscription_amount' => $totalUnpaidSubscriptions->total_amount + $as->mmr,
+                        'late_fee_amount' => $payment_fee,
+                        'total_amount' => $total_amount,
                         'status'         => 'Unpaid',
 						'date_created'   => date("Y-m-d H:i:s")
 					];
