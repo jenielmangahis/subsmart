@@ -846,16 +846,13 @@
             </div>
         </div>
     
-        <div class="row">
+        <div class="row mt-4">
             <div class="col-12 text-end">
-                <br>
-                <a href="<?= base_url('customer') ?>">
-                    <button type="button" class="nsm-button primary"><i class='bx bx-fw bx-x'></i>Cancel</button>
-                </a>
+                <button type="button" class="nsm-button primary btn-cancel"><i class='bx bx-fw bx-x'></i>Cancel</button>
                 <?php if(isset($profile_info)): ?>
                     <input type="hidden" name="customer_id" value="<?= $profile_info->prof_id; ?>"/>
                 <?php endif; ?>
-                <button type="submit" class="nsm-button primary" >
+                <button type="submit" class="nsm-button primary">
                     <i class="bx bx-fw bx-paper-plane"></i> <?=isset($profile_info) ? 'Save Changes' : 'Save'; ?>
                 </button>
             </div>
