@@ -226,7 +226,7 @@ class Customer extends MY_Controller
 
         $default_status_ids = defaultCompanyCustomerStatusIds();
         $this->page_data['statusCounts']= $statusCounts;
-        $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), $default_status_ids);
+        $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), []);
         $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
         $this->page_data['enabled_table_headers'] = $enabled_table_headers;
         $this->page_data['page']->title = 'Commercial';
@@ -795,7 +795,7 @@ class Customer extends MY_Controller
 
         $default_status_ids = defaultCompanyCustomerStatusIds();
         $this->page_data['statusCounts']= $statusCounts;
-        $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), $default_status_ids);
+        $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), []);
         $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
         $this->page_data['page']->title = 'Residential';
         $this->page_data['page']->parent = 'Customers';
@@ -2223,9 +2223,6 @@ class Customer extends MY_Controller
 
         $this->hasAccessModule(9);
 
-        $this->page_data['page']->parent = 'Customers';
-        $this->page_data['page']->title = 'Subscription Payment';
-
         $company_id = logged('company_id');
         $user_id = logged('id');
         
@@ -2268,7 +2265,8 @@ class Customer extends MY_Controller
         }
 
         $this->page_data['payment_subscrition_history'] = $payment_subscrition_history;
-
+        $this->page_data['page']->parent = 'Customers';
+        $this->page_data['page']->title = 'Subscription Payment';
         $this->page_data['accountingTerms'] = $accountingTerms;
         $this->load->view('v2/pages/customer/subscription', $this->page_data);
     }
@@ -3305,7 +3303,7 @@ class Customer extends MY_Controller
         // fetch customer statuses
         // $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
         $default_status_ids = defaultCompanyCustomerStatusIds();
-        $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), $default_status_ids);
+        $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), []);
 
         if (isset($this->page_data['profile_info']->fk_sa_id)) {
             foreach ($this->page_data['sales_area'] as $area) {
@@ -4107,7 +4105,8 @@ class Customer extends MY_Controller
         $input_billing['contract_term'] = $input['contract_term'];
         $input_billing['bill_start_date'] = date("Y-m-d",strtotime($input['bill_start_date']));
         $input_billing['bill_end_date'] = date("Y-m-d",strtotime($input['bill_end_date']));
-
+        $input_billing['late_fee'] = $input['late_fee'];
+        $input_billing['payment_fee'] = $input['payment_fee'];
         $input_billing['bill_method'] = $input['bill_method'];
         $input_billing['check_num'] = $input['check_num'];
         $input_billing['bank_name'] = $input['bank_name'];
@@ -6787,15 +6786,39 @@ class Customer extends MY_Controller
 
     public function ticketslist()
     {   
+        $this->load->model('Users_model');
+        $this->hasAccessModule(39);
+
+        if(!checkRoleCanAccessModule('service-tickets', 'read')){
+            show403Error();
+            return false;
+        }
+
+        $cid = logged('company_id');
+        $filters[]   = ['field' => 'tickets.is_archived', 'value' => 0];
+        $tickets     = $this->tickets_model->getAllByCompanyId($cid, $filters);
+        foreach($tickets as $t){
+            $tech = unserialize($t->technicians);
+            $assigned_tech = [];
+            if( $tech ){
+                foreach($tech as $eid){
+                    $user = $this->Users_model->getUserByID($eid);
+                    if( $user ){
+                        $assigned_tech[] = ['id' => $user->id, 'first_name' => $user->FName, 'last_name' => $user->LName, 'image' => $user->profile_img];
+                    }
+                }
+            }      
+            $t->assigned_tech = $assigned_tech;
+        }
+
+        $openTickets = $this->tickets_model->getCompanyOpenServiceTickets($cid,[],$filters);
+        $ticketTotalAmount = $this->tickets_model->getCompanyTotalAmountServiceTickets($cid,[],$filters);
+
+        $this->page_data['tickets'] = $tickets;
+        $this->page_data['openTickets'] = $openTickets;
+        $this->page_data['ticketTotalAmount'] = $ticketTotalAmount;        
         $this->page_data['page']->title = 'Service Tickets';
         $this->page_data['page']->parent = 'Sales';
-
-        $this->hasAccessModule(39);
-        // $user_id = logged('id');
-        $cid = logged('company_id');
-        $this->page_data['openTickets'] = $this->tickets_model->getCompanyOpenServiceTickets($cid);
-        $this->page_data['ticketTotalAmount'] = $this->tickets_model->getCompanyTotalAmountServiceTickets($cid);
-        $this->page_data['tickets'] = $this->tickets_model->get_tickets_data();
         $this->load->view('v2/pages/tickets/list', $this->page_data);
     }
 

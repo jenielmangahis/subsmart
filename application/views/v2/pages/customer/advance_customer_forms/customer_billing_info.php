@@ -195,7 +195,41 @@
                     ?>
                 </select>
             </div>
+        </div>   
+        <div class="row form_line">
+            <div class="col-md-6">
+                Late Fee
+            </div>
+            <div class="col-md-6">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width:35px;" id="">$</span>
+                    </div>
+                    <input type="number" step="any" class="form-control input_select" name="late_fee" value="<?= isset($billing_info) ? $billing_info->late_fee : '0.00'; ?>" >
+                </div>
+            </div>
         </div>
+        <div class="row form_line">
+            <div class="col-md-6">
+            Payment Fee
+            </div>
+            <div class="col-md-6">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width:35px;" id="">%</span>
+                    </div>
+                    <input type="number" step="any" class="form-control" name="payment_fee" value="<?= isset($billing_info) ? $billing_info->payment_fee : '0.00'; ?>">
+                </div>
+            </div>
+        </div>      
+        <?php if(isset($billing_info)): ?>
+            <!-- <a href="<?= base_url('customer/subscription_new/'.$this->uri->segment(3)) ?>">
+                <button type="button" class="nsm-button primary"><span class="fa fa-plus"></span> Add Subscription</button>
+            </a> -->
+            <div class="mt-4 text-end">
+                <button type="button" class="nsm-button primary btn-view-subscription"><span class="fa fa-list"></span> View Subscription</button>
+            </div>
+        <?php endif; ?>     
     </div>
 </div>
 
@@ -402,19 +436,6 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                Amount
-            </div>
-            <div class="col-md-6">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">$</span>
-                    </div>
-                    <input data-type="subscription_amount" type="number" step="0.01" class="form-control input_select" name="mmr" value="<?= isset($billing_info) ? $billing_info->mmr : '0.00'; ?>">
-                </div>
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-6">
                 Category
             </div>
             <div class="col-md-6">
@@ -442,16 +463,6 @@
                     <option <?php if(isset($billing_info)){ if($billing_info->frequency == "12"){echo "selected";} } ?> value="12">Every 1 Year</option>
                 </select>
             </div>
-        </div>        
-        <?php if(isset($billing_info)): ?>
-            <hr>
-            <a href="<?= base_url('customer/subscription_new/'.$this->uri->segment(3)) ?>">
-                <button type="button" class="nsm-button primary"><span class="fa fa-plus"></span> Add Subscription</button>
-            </a>
-            <a href="<?= base_url('customer/subscription/'.$this->uri->segment(3)) ?>">
-                <button type="button" class="nsm-button primary"><span class="fa fa-list"></span> View Subscription</button>
-            </a>
-        <?php endif; ?>
-
+        </div>          
     </div>
 </div>

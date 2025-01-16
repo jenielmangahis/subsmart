@@ -28,7 +28,6 @@ class Accounting_recurring_transactions_model extends MY_Model
     public function getAllByNextDateAndStatus($date, $status)
     {
         $this->db->select('*');
-        $this->db->from($this->table);
         $this->db->where('next_date', $date);
         $this->db->where('status', $status);
         

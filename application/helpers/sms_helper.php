@@ -244,27 +244,27 @@ function ringCentralCreateContact($info = array())
     return $replies;
 }
 
-function validateRingCentralAccount($client_id, $client_secret, $rc_user, $rc_password, $rc_ext)
+function validateRingCentralAccount($client_id, $client_secret, $rc_jwt)
 {   
-    require_once APPPATH . 'libraries/ringcentral-sdk/vendor/autoload.php';
-        
-    $err_msg  = '';
-    $is_valid = false;
+    include APPPATH . 'libraries/ringcentral-php-master/vendor/autoload.php';
 
-    $rcsdk    = new RingCentral\SDK\SDK(base64_decode($client_id), base64_decode($client_secret), RINGCENTRAL_DEV_URL, 'Demo', '1.0.0');
+    $is_valid = 0;
+    $err_msg  = 'Invalid credentials.';
+    $server_url  = 'https://platform.ringcentral.com';
 
+    $rcsdk = new RingCentral\SDK\SDK( $client_id,$client_secret,$server_url);
+    $platform = $rcsdk->platform();
     try {
-        $platform = $rcsdk->platform();
-        $platform->login($rc_user, $rc_ext, $rc_password);
-        $is_valid = true;
-    } catch (Exception $e) {
-        $err_msg = $e->getMessage();
+        $platform->login(["jwt" => $rc_jwt]);
+        
+        $is_valid = 1;
+        $err_msg  = '';
+        
+    } catch (\RingCentral\SDK\Http\ApiException $e) {
+        $err_msg = "Unable to authenticate to platform. Check credentials.";        
     }
-
-    $is_valid = true; //Remove if done with call demo
-
+    
     $return = ['is_valid' => $is_valid, 'err_msg' => $err_msg];
-
     return $return;
 }
 

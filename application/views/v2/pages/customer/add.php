@@ -94,6 +94,9 @@
                             <div class="col-md-6 customer-inputs">
                                 <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_billing_info'); ?>
                             </div>
+                            <div class="col-md-4 customer-inputs">
+                                <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_other_info'); ?>
+                            </div>
                         <?php } ?>
                         
                         <div class="col-md-12">
@@ -140,64 +143,8 @@
 </div> -->
 
 <script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
-
 <?php include viewPath('v2/includes/footer'); ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=places&v=weekly&sensor=false"></script>
-    <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
     <script >
-    var autocomplete;
-    function initMap() {
-        var input = document.getElementById('mail_add');
-        autocomplete = new google.maps.places.Autocomplete(input);
-        autocomplete.addListener("place_changed", fillInAddress);
-
-    }
-    function fillInAddress(){
-        var place = autocomplete.getPlace();
-        var street="";
-        for (const component of place.address_components) {
-            const componentType = component.types[0];
-            switch (componentType) {
-                case "street_number": {
-                    //$('#cross_street').val(component.long_name);
-                    street = component.long_name;
-                    break;
-                }
-                case "postal_code": {
-                    $('#zip_code').val(component.long_name);
-                    $('#billing_zip').val(component.long_name);
-                    break;
-                }
-                case "country": {
-                    $('#country').val(component.long_name);
-                    break;
-                }
-                case "route": {
-                    $('#mail_add').val(street +' '+ component.long_name);
-                    $('#card_address').val(street +' '+ component.long_name);
-                    break;
-                }
-                case "locality": {
-                    $('#city').val(component.long_name);
-                    $('#billing_city').val(component.long_name);
-                    break;
-                }
-                case "administrative_area_level_1": {
-                    $('#state').val(component.short_name);
-                    $('#billing_state').val(component.short_name);
-                    break;
-                }
-            }
-        }
-        console.log(place);
-    }
-
     window.document.addEventListener("DOMContentLoaded", () => {
         const params = new Proxy(new URLSearchParams(window.location.search), {
             get: (searchParams, prop) => searchParams.get(prop),
@@ -213,6 +160,14 @@
     });
 
     $(function(){
+        $('.btn-cancel').on('click', function(){
+            location.href = base_url + 'customer';
+        });
+        <?php if($profile_info){ ?>
+        $('.btn-view-subscription').on('click', function(){
+            location.href = base_url + 'customer/subscription/<?= $profile_info->prof_id; ?>';
+        });
+        <?php } ?>
         $('#search-customer').select2({
             ajax: {
                 url: base_url + 'autocomplete/_company_customer',

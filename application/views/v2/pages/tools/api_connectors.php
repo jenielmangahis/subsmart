@@ -519,7 +519,7 @@
                                     <div class="nsm-card-content h-100">
                                         <div class="row h-100 align-content-between">
                                             <div class="col-12 text-center mb-3">
-                                                <img class="nsm-card-img-lg" src="<?php echo $url->assets ?>img/converge-logo.png">
+                                                <img class="nsm-card-img-lg" style="height:100px;" src="<?php echo $url->assets ?>img/converge-logo.png">
 
                                                 <div class="nsm-card-title">
                                                     <span>Converge</span>
@@ -1176,7 +1176,7 @@
             let _this = $(this);
             e.preventDefault();
 
-            var url = "<?php echo base_url(); ?>tools/_activate_company_ring_central";
+            var url = base_url + "tools/_activate_company_ring_central";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -1188,9 +1188,8 @@
                 success: function(result) {
                     if (result.is_success) {
                         $("#setup_ring_central").modal('hide');
-
                         Swal.fire({
-                            title: 'Update Successful!',
+                            title: 'RingCentral',
                             text: "Your Ring Central account was successfully saved.",
                             icon: 'success',
                             showCancelButton: false,

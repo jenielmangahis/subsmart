@@ -266,7 +266,7 @@ add_css(array(
                                                                 Card Number
                                                             </div>
                                                             <div class="col-md-8">
-                                                                <input type="text" class="form-control" name="card_number" id="card_number" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" required/>
+                                                                <input type="text" class="form-control" name="card_number" id="card_number" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>"/>
                                                             </div>
                                                         </div>
                                                         <div class="row form_line">
@@ -276,7 +276,7 @@ add_css(array(
                                                             <div class="col-md-8">
                                                                 <div class="row">
                                                                     <div class="col-md-4">
-                                                                        <select id="exp_month" name="exp_month" data-customer-source="dropdown" class="input_select" required>
+                                                                        <select id="exp_month" name="exp_month" data-customer-source="dropdown" class="input_select">
                                                                             <option  value=""></option>
                                                                             <option  value="1">01</option>
                                                                             <option  value="2">02</option>
@@ -293,7 +293,7 @@ add_css(array(
                                                                         </select>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <select id="exp_year" name="exp_year" data-customer-source="dropdown" class="input_select" required>
+                                                                        <select id="exp_year" name="exp_year" data-customer-source="dropdown" class="input_select">
                                                                             <option  value=""></option>
                                                                             <option  value="2021">2021</option>
                                                                             <option  value="2022">2022</option>
@@ -309,7 +309,7 @@ add_css(array(
                                                                         </select>
                                                                     </div>
                                                                     <div class="col-md-4">
-                                                                        <input type="text" maxlength="3" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC" required/>
+                                                                        <input type="text" maxlength="3" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC" />
                                                                     </div>
                                                                 </div>
                                                             </div>
