@@ -515,7 +515,7 @@
                     <div class="nsm-card primary">     
                         <div class="nsm-card-header">
                             <div class="nsm-card-title">
-                                <span class="custom-ticket-header"><i class='bx bx-money'></i> Payment Subscription History</span>
+                                <span class="custom-ticket-header"><i class='bx bx-money'></i> Subscription Invoice</span>
                             </div>
                             <div class="col-6 col-md-4 grid-mb">
                                 <form action="<?php echo base_url('customer/subscription/' . $profile_info->prof_id) ?>" method="get">
@@ -570,6 +570,9 @@
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('invoice/genview/' . $psh->invoice_id) ?>">View Invoice</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item row-mark-as-paid" href="javascript:void(0);" data-id="<?= $psh->id; ?>">Mark as Paid</a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('invoice/preview/'. $psh->invoice_id . '?format=pdf') ?>" target="_blank">Invoice PDF</a>
