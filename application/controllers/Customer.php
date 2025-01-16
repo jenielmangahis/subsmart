@@ -2223,9 +2223,6 @@ class Customer extends MY_Controller
 
         $this->hasAccessModule(9);
 
-        $this->page_data['page']->parent = 'Customers';
-        $this->page_data['page']->title = 'Subscription Payment';
-
         $company_id = logged('company_id');
         $user_id = logged('id');
         
@@ -2268,7 +2265,8 @@ class Customer extends MY_Controller
         }
 
         $this->page_data['payment_subscrition_history'] = $payment_subscrition_history;
-
+        $this->page_data['page']->parent = 'Customers';
+        $this->page_data['page']->title = 'Subscription Payment';
         $this->page_data['accountingTerms'] = $accountingTerms;
         $this->load->view('v2/pages/customer/subscription', $this->page_data);
     }
@@ -4107,7 +4105,8 @@ class Customer extends MY_Controller
         $input_billing['contract_term'] = $input['contract_term'];
         $input_billing['bill_start_date'] = date("Y-m-d",strtotime($input['bill_start_date']));
         $input_billing['bill_end_date'] = date("Y-m-d",strtotime($input['bill_end_date']));
-
+        $input_billing['late_fee'] = $input['late_fee'];
+        $input_billing['payment_fee'] = $input['payment_fee'];
         $input_billing['bill_method'] = $input['bill_method'];
         $input_billing['check_num'] = $input['check_num'];
         $input_billing['bank_name'] = $input['bank_name'];
