@@ -734,6 +734,135 @@ class Accounting_model extends MY_Model
             return $arrayStdObject;
         }
         
+        if ($reportType == 'employee_performance_rating') {
+            $this->db->select('
+                point_rating_system.id AS id, 
+                point_rating_system.company_id AS company_id, 
+                point_rating_system.employee_type AS employee_type, 
+                point_rating_system.employee_id AS employee_id, 
+                point_rating_system.module AS module, 
+                point_rating_system.module_id AS module_id, 
+                point_rating_system.points AS points, 
+                invoices_a.grand_total AS job_amount,
+                invoices_b.grand_total AS ticket_amount,
+                point_rating_system.status AS status, 
+                point_rating_system.date_created AS date_created,
+                point_rating_system.date_updated AS date_updated
+            ');
+            $this->db->from('point_rating_system');
+            $this->db->where('point_rating_system.company_id', $companyID);
+            $this->db->where('point_rating_system.status', 1);
+            $this->db->join('invoices AS invoices_a', 'invoices_a.job_id = point_rating_system.module_id', 'left');
+            $this->db->join('invoices AS invoices_b', 'invoices_b.ticket_id = point_rating_system.module_id', 'left');
+            $this->db->where("DATE_FORMAT(point_rating_system.date_created,'%Y-%m-%d') >= '{$reportConfig['date_from']}'");
+            $this->db->where("DATE_FORMAT(point_rating_system.date_created,'%Y-%m-%d') <= '{$reportConfig['date_to']}'");
+            $query = $this->db->get();
+            $prs_data = $query->result();
+        
+            $this->db->select('
+                users.id AS id,
+                CONCAT(users.FName, " ", users.LName) AS employee_name
+            ');
+            $this->db->from('users');
+            $this->db->where('users.company_id', $companyID);
+            $query = $this->db->get();
+            $employee_data = $query->result();
+        
+            // Map employee IDs to names
+            $employee_map = [];
+            foreach ($employee_data as $employee) {
+                $employee_map[$employee->id] = $employee->employee_name;
+            }
+        
+            // Process data into individual records
+            $processed_data = [];
+            foreach ($prs_data as $entry) {
+                $employee_ids = json_decode($entry->employee_id, true);
+                if (is_array($employee_ids)) {
+                    foreach ($employee_ids as $employee_id) {
+                        if (isset($employee_map[$employee_id])) {
+                            $processed_data[] = (object)[
+                                'id' => $entry->id,
+                                'company_id' => $entry->company_id,
+                                'employee_id' => $employee_id,
+                                'employee_name' => $employee_map[$employee_id],
+                                'employee_type' => $entry->employee_type,
+                                'module' => $entry->module,
+                                'module_id' => $entry->module_id,
+                                'points' => $entry->points,
+                                'job_amount' => $entry->module === 'job' ? $entry->job_amount : 0,
+                                'ticket_amount' => $entry->module === 'service_ticket' ? $entry->ticket_amount : 0,
+                            ];
+                        }
+                    }
+                }
+            }
+        
+            // Aggregate data by employee
+            $prs_processed_data = [];
+            foreach ($processed_data as $entry) {
+                $key = $entry->employee_id;
+                if (!isset($prs_processed_data[$key])) {
+                    $prs_processed_data[$key] = (object)[
+                        'id' => $entry->id,
+                        'company_id' => $entry->company_id,
+                        'employee_id' => $entry->employee_id,
+                        'employee_name' => $entry->employee_name,
+                        'employee_type' => $entry->employee_type,
+                        'job_count' => 0,
+                        'job_amount' => 0,
+                        'ticket_count' => 0,
+                        'ticket_amount' => 0,
+                        'total_points' => 0,
+                        'distinct_jobs' => [],
+                        'distinct_tickets' => [],
+                    ];
+                }
+        
+                $prs_processed_data[$key]->total_points += $entry->points;
+        
+                if ($entry->module === 'job') {
+                    if (!in_array($entry->module_id, $prs_processed_data[$key]->distinct_jobs)) {
+                        $prs_processed_data[$key]->job_count++;
+                        $prs_processed_data[$key]->distinct_jobs[] = $entry->module_id;
+                    }
+                    $prs_processed_data[$key]->job_amount += $entry->job_amount;
+                }
+        
+                if ($entry->module === 'service_ticket') {
+                    if (!in_array($entry->module_id, $prs_processed_data[$key]->distinct_tickets)) {
+                        $prs_processed_data[$key]->ticket_count++;
+                        $prs_processed_data[$key]->distinct_tickets[] = $entry->module_id;
+                    }
+                    $prs_processed_data[$key]->ticket_amount += $entry->ticket_amount;
+                }
+            }
+        
+            foreach ($prs_processed_data as &$entry) {
+                unset($entry->distinct_jobs);
+                unset($entry->distinct_tickets);
+            }
+        
+            // Apply sorting
+            $sort_by = $reportConfig['sort_by'];
+            $sort_order = strtolower($reportConfig['sort_order']) === 'asc' ? SORT_ASC : SORT_DESC;
+        
+            if (!empty($prs_processed_data)) {
+                usort($prs_processed_data, function ($a, $b) use ($sort_by, $sort_order) {
+                    if (!property_exists($a, $sort_by) || !property_exists($b, $sort_by)) {
+                        return 0; // Skip sorting if the property doesn't exist
+                    }
+                    if ($sort_order === SORT_ASC) {
+                        return $a->$sort_by <=> $b->$sort_by; // Numeric and string safe
+                    } else {
+                        return $b->$sort_by <=> $a->$sort_by;
+                    }
+                });
+            }
+        
+            return $prs_processed_data;
+        }
+        
         // Get Recent Customers data in Database
         if ($reportType == 'recent_customers') {
             $this->db->select('acs_profile.prof_id AS id, acs_profile.company_id AS company_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, acs_profile.customer_type AS customer_type, acs_profile.status AS status, acs_profile.email AS email, acs_profile.phone_h AS phone, acs_profile.phone_m AS mobile, acs_profile.created_at AS date_created');

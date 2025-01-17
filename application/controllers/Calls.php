@@ -171,7 +171,13 @@ class Calls extends Widgets {
                     ($getDatas->type == "Residential") ? "<span>$getDatas->firstname $getDatas->lastname</span>" : "<span>$getDatas->business_name</span>",
                     $getDatas->type,
                     $getDatas->phone_h,
-                    "<div class='noWidth dropdown table-management'><a href='#' name='dropdown_link' class='dropdown-toggle dotsOption' data-bs-toggle='dropdown'><i class='bx bx-fw bx-dots-vertical-rounded'></i></a><ul class='dropdown-menu dropdown-menu-end'><li><a class='dropdown-item call-customer' name='dropdown_call' data-id='$getDatas->id' data-phone='$getDatas->phone_h' href='call:$getDatas->phone_h' data-action='call'>Call</a></li></ul></div>",
+                    "<div class='noWidth dropdown table-management'>
+                        <a href='#' name='dropdown_link' class='dropdown-toggle dotsOption' data-bs-toggle='dropdown'><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
+                        <ul class='dropdown-menu dropdown-menu-end'>
+                            <li><a href='#' class='dropdown-item contact_customer' name='dropdown_call' data-id='$getDatas->id' data-phone='$getDatas->phone_h' data-action='call'>Call</a></li>
+                            <li><a href='#' class='dropdown-item contact_customer' name='dropdown_call' data-id='$getDatas->id' data-phone='$getDatas->phone_h' data-action='sms'>Send a message</a></li>
+                        </ul>
+                    </div>",
                 );
                 $i++;
             }
