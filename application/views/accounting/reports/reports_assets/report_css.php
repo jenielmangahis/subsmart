@@ -85,6 +85,10 @@
         cursor: pointer;
     }
 
+    table.dataTable thead th, table.dataTable thead td {
+        padding: 10px 10px !important;
+    }
+
     /* table.dataTable > tbody {
         font-size: 14px;
     } */

@@ -210,6 +210,7 @@ class AccountingMailer extends MY_Controller
             "recent_customers",
             "job_activities",
             "sales",
+            "employee_performance_rating",
         );
 
         // Conditional Statements on the array

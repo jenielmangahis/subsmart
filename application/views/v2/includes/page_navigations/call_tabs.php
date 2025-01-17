@@ -6,16 +6,16 @@
                 <span>Make Call</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Call Logs'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?= base_url('calls/logs') ?>">
-                <i class='bx bx-list-ul' ></i>
-                <span>Call Logs</span>
-            </a>
-        </li>
         <li class="<?php if($page->title == 'Scheduled Calls'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('calls/scheduled_calls') ?>">
                 <i class='bx bx-file-find' ></i>
                 <span>Scheduled Calls</span>
+            </a>
+        </li>
+        <li class="<?php if($page->title == 'Call Logs'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?= base_url('calls/logs') ?>">
+                <i class='bx bx-list-ul' ></i>
+                <span>Call Logs</span>
             </a>
         </li>
         <!-- Do not remove the last li -->

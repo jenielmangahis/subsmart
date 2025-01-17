@@ -72,9 +72,37 @@
         }, 1500);
     });
 
-    $(document).on('click', '.call-customer', function () {
-        if ($('header[class="Adapter_header Adapter_minimized"]').length === 1) {
-            $('.Adapter_minimizeIcon').click();
+    $(document).on('click', '.contact_customer', function () {
+        const phone_h = $(this).attr('data-phone');
+        const action = $(this).attr('data-action');
+        const phonePattern = /^\(\d{3}\) \d{3}-\d{4}$/;
+        const alertMessage = (action == "call") ? "Unable to call" : "Unable to send a message" ;
+        let callUrl = "";
+
+        if (phonePattern.test(phone_h)) {
+            switch (action) {
+                case "call":
+                    callUrl = `call:${phone_h}`;
+                    window.location.href = callUrl;
+                    break;
+                case "sms":
+                    callUrl = `sms:${phone_h}`;
+                    window.location.href = callUrl;
+                    break;
+            }
+
+            if ($('header[class="Adapter_header Adapter_minimized"]').length === 1) {
+                $('.Adapter_minimizeIcon').click();
+            }
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: alertMessage,
+                html: "The phone no. provided was invalid.",
+                showConfirmButton: true,
+                confirmButtonText: "Okay",
+                showCloseButton: true,
+            });
         }
     });
 
