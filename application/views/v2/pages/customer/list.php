@@ -1233,10 +1233,10 @@
         $(document).on('click', '#btn-customer-send-esign-template', function(){
             var prof_id = $('#customer-esign').val();
             var esign_template_id = $('#customer-send-esign-template').val();
-            var url = base_url + `'eSign_v2/templatePrepare?id=${esign_template_id}&job_id=0&customer_id=${prof_id}`;
+            var url = base_url + `eSign_v2/templatePrepare?id=${esign_template_id}&job_id=0&customer_id=${prof_id}`;
 
             window.open(
-                urlencode,
+                url,
                 '_blank'
             );
 
