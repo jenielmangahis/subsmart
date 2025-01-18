@@ -441,7 +441,7 @@ class Customer extends MY_Controller
                 $favorite_action = " <li><a class='dropdown-item favorite-customer' data-favorite='".$customer->is_favorite."' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' href='javascript:void(0);'>Add to Favorites</a></li>";
                 $call_action = "<li><a class='dropdown-item call-item' href='javascript:void(0);' data-id='".$customer->phone_m."'>Call</a></li>";
                 $schedule_action = "<li><a class='dropdown-item' href='".base_url('job/new_job1?cus_id='.$customer->prof_id)."'>Schedule</a></li>";
-                $email_action = "<li><a class='dropdown-item send-email' data-id='".$customer->prof_id."' data-email='".$customer->email."' href='javascript:void(0);'>Email</a></li>";
+                $email_action = "<li><a class='dropdown-item send-email' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' data-email='".$customer->email."' href='javascript:void(0);'>Email</a></li>";
             }
             
             $delete_action = '';
@@ -864,8 +864,6 @@ class Customer extends MY_Controller
         $customers = $this->customer_ad_model->getCustomerLists($param, $start, $length,null,$filter_status == 'All Status' ? '' :$filter_status);
         $allCustomers = $this->customer_ad_model->getCustomerLists($param, 0, 0,null,$filter_status == 'All Status' ? '' :$filter_status);
         $all_customer_ids = [];
-
-  
         
         foreach ($allCustomers as $c) {
             if (!in_array($c->prof_id, $all_customer_ids)) {
@@ -1097,12 +1095,14 @@ class Customer extends MY_Controller
             $call_action     = '';
             $schedule_action = '';
             $email_action    = '';
+            $send_esign_action = '';
             if( checkRoleCanAccessModule('customers', 'write') ){
                 $edit_action = "<li><a class='dropdown-item' href='".base_url('customer/add_advance/'.$customer->prof_id)."'>Edit</a></li>";
                 $favorite_action = " <li><a class='dropdown-item favorite-customer' data-favorite='".$customer->is_favorite."' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' href='javascript:void(0);'>Add to Favorites</a></li>";
                 $call_action = "<li><a class='dropdown-item call-item' href='javascript:void(0);' data-id='".$customer->phone_m."'>Call</a></li>";
                 $schedule_action = "<li><a class='dropdown-item' href='".base_url('job/new_job1?cus_id='.$customer->prof_id)."'>Schedule</a></li>";
                 $email_action = "<li><a class='dropdown-item send-email' data-id='".$customer->prof_id."' data-email='".$customer->email."' href='javascript:void(0);'>Email</a></li>";
+                $send_esign_action = " <li><a class='dropdown-item send-esign' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' href='javascript:void(0);'>Send eSign</a></li>";
             }
             
             $delete_action = '';
@@ -1121,6 +1121,7 @@ class Customer extends MY_Controller
                         ".$edit_action."
                         ".$email_action."
                         ".$call_action."
+                        ".$send_esign_action."
                         <li>
                             <a class='dropdown-item' href='".base_url('invoice/add?cus_id='.$customer->prof_id)."'>Invoice</a>
                         </li>
@@ -10805,5 +10806,25 @@ class Customer extends MY_Controller
         
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
+    }
+
+    public function ajax_send_esign_form()
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('User_docflies_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $esignTemplates  = $this->User_docflies_model->getAllDocfileTemplatesByCompanyId($company_id);
+        $defaultTemplate = $this->User_docflies_model->getDefaultTemplateByCompanyId($company_id);
+        if( $defaultTemplate ){
+            foreach($esignTemplates as $record){
+                $record->is_default = $defaultTemplate->template_id == $record->id ? 1 : 0;
+            }
+        }
+        
+        $this->page_data['esignTemplates'] = $esignTemplates;
+        $this->load->view('v2/pages/customer/ajax_send_esign_form', $this->page_data);
     }
 }
