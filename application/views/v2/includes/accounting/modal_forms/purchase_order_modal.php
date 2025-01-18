@@ -12,7 +12,7 @@
     <?php if (!isset($purchaseOrder)) : ?>
         <form onsubmit="submitModalForm(event, this)" id="modal-form">
         <?php else : ?>
-            <form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/purchase-order/<?= $purchaseOrder->id ?>">
+            <form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="<?php echo base_url(); ?>accounting/update-transaction/purchase-order/<?= $purchaseOrder->id ?>">
             <?php endif; ?>
             <div id="purchaseOrderModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
                 <div class="modal-dialog">
@@ -171,7 +171,7 @@
                                                 <div class="accordion-item">
                                                     <h2 class="accordion-header">
                                                         <button class="accordion-button content-title" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-category-details" aria-expanded="true" aria-controls="collapse-category-details">
-                                                            Category details
+                                                            Category Details
                                                         </button>
                                                     </h2>
                                                     <div class="accordion-collapse collapse show" id="collapse-category-details">
@@ -179,14 +179,14 @@
                                                             <table class="nsm-table" id="category-details-table">
                                                                 <thead>
                                                                     <tr>
-                                                                        <td data-name="Num" style="width:3%;">#</td>
-                                                                        <td data-name="Customer" style="width:18%;">CUSTOMER</td>
-                                                                        <td data-name="Expense Name">EXPENSE NAME</td>
-                                                                        <td data-name="Category" style="width:15%;">CATEGORY</td>
+                                                                        <td data-name="Num" style="width:3%;text-align:center;">#</td>
+                                                                        <td data-name="Customer" style="width:14%;">CUSTOMER</td>
+                                                                        <td data-name="Expense Name" style="width:14%;">EXPENSE NAME</td>
+                                                                        <td data-name="Category" style="width:14%;">CATEGORY</td>
                                                                         <td data-name="Description">DESCRIPTION</td>
-                                                                        <td data-name="Amount" style="width:8%;">AMOUNT</td>
-                                                                        <td data-name="Billable" style="width:5%;text-align:center;">BILLABLE</td>
-                                                                        <td data-name="Markup %" style="width:8%;">MARKUP %</td>
+                                                                        <td data-name="Amount" style="width:7%;">AMOUNT</td>
+                                                                        <td data-name="Billable" style="width:7%;text-align:center;">BILLABLE</td>
+                                                                        <td data-name="Markup %" style="width:7%;">MARKUP %</td>
                                                                         <td data-name="Tax" style="width:5%;text-align:center;">TAX</td>                                                                        
                                                                         <?php if (isset($purchaseOrder) && !$is_copy) : ?>
                                                                             <td data-name="Received">RECEIVED</td>
@@ -241,6 +241,14 @@
                                                                             <tr>
                                                                                 <td><?= $count ?></td>
                                                                                 <td>
+                                                                                    <select name="category_customer[]" class="nsm-field form-control">
+                                                                                        <option value="<?= $category->customer_id ?>">
+                                                                                            <?php $customer = $this->accounting_customers_model->get_by_id($category->customer_id); ?>
+                                                                                            <?= $customer->first_name . ' ' . $customer->last_name ?>
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td>
                                                                                     <select name="expense_account[]" class="nsm-field form-control" required>
                                                                                         <option value="<?= $category->expense_account_id ?>"><?= $this->chart_of_accounts_model->getName($category->expense_account_id) ?></option>
                                                                                     </select>
@@ -266,14 +274,7 @@
                                                                                         <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1" <?= $category->tax === "1" ? 'checked' : '' ?>>
                                                                                     </div>
                                                                                 </td>
-                                                                                <td>
-                                                                                    <select name="category_customer[]" class="nsm-field form-control">
-                                                                                        <option value="<?= $category->customer_id ?>">
-                                                                                            <?php $customer = $this->accounting_customers_model->get_by_id($category->customer_id); ?>
-                                                                                            <?= $customer->first_name . ' ' . $customer->last_name ?>
-                                                                                        </option>
-                                                                                    </select>
-                                                                                </td>
+                                                                                
                                                                                 <?php if (isset($purchaseOrder) && !$is_copy) : ?>
                                                                                     <td class="text-end"><?= number_format(floatval($category->received), 2, '.', ',') ?></td>
                                                                                     <td>

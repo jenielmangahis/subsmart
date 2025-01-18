@@ -11942,10 +11942,10 @@ const makeRecurring = (modalName) => {
             modalId = 'purchaseOrderModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
+            //$(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
             $(`#${modalId} div.modal-body #purchase_order_date`).parent().prev().remove();
-            $(`#${modalId} div.modal-body #purchase_order_date`).parent().remove();
-            $(`#${modalId} div.modal-body #status`).parent().parent().remove();
+            //$(`#${modalId} div.modal-body #purchase_order_date`).parent().remove();
+            //$(`#${modalId} div.modal-body #status`).parent().parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Purchase Order');
 
             $('#modal-help-popover-scheduled-create').popover({
