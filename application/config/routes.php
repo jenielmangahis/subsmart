@@ -1579,6 +1579,7 @@ $route['customer/_load_customer_sms_messages'] = 'Customer/ajax_load_customer_sm
 $route['customer/_load_all_subscriptions'] = 'Customer/ajax_load_all_subscriptions';
 $route['customer/_quick_search'] = 'Customer/ajax_quick_search';
 $route['customer/_update_sub_payment_customer_info'] = 'Customer/ajax_update_sub_payment_customer_info';
+$route['customer/_send_esign_form'] = 'Customer/ajax_send_esign_form';
 
 // Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';
@@ -1930,6 +1931,8 @@ $route['ticket/_create_service_type'] = 'Tickets/ajax_create_servicetype';
 $route['tickets/_delete_selected_tickets'] = 'Tickets/ajax_delete_selected_tickets';
 $route['tickets/_update_status_selected_tickets'] = 'Tickets/ajax_update_status_selected_tickets';
 $route['ticket/add'] = 'Tickets/addTicket';
+$route['ticket/_archived_list'] = 'Tickets/ajax_archived_list';
+$route['ticket/_restore_archived'] = 'Tickets/ajax_restore_archived';
 
 //Setting : Index
 $route['tickets/settings'] = 'Tickets/settings_tickets';
