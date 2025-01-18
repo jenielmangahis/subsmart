@@ -638,7 +638,7 @@ class Tickets_model extends MY_Model
         return $query->row();
     }
 
-    public function getCompanyTotalAmountServiceTickets($cid, $date_range = array())
+    public function getCompanyTotalAmountServiceTickets($cid, $date_range = array(), $filters = [])
     {
         $this->db->select('id, COALESCE(SUM(grandtotal),0) AS total_amount');       
         $this->db->from($this->table);   
@@ -649,11 +649,38 @@ class Tickets_model extends MY_Model
             $this->db->where('ticket_date <=', $date_range['to']);
         }
 
+        if( !empty($filters) ){
+            foreach( $filters as $f ){
+                $this->db->where($f['field'], $f['value']);
+            }
+        }
+
         $query = $this->db->get()->row();
         return $query;
     }
 
-    public function getCompanyOpenServiceTickets($cid, $date_range = array())
+    public function getAllByCompanyId($cid, $filters = [])
+    {
+        $this->db->select('tickets.*, acs_profile.first_name, acs_profile.last_name');        
+        $this->db->from($this->table);   
+        $this->db->where('tickets.company_id', $cid);       
+        $this->db->join('acs_profile', 'tickets.customer_id  = acs_profile.prof_id'); 
+
+        if( !empty($filters) ){
+            //$this->db->group_start();
+            foreach( $filters as $f ){
+                $this->db->where($f['field'], $f['value']);
+            }
+            //$this->db->group_end();
+        }
+        
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getCompanyOpenServiceTickets($cid, $date_range = [], $filters = [])
     {
         $this->db->select('*');        
         $this->db->from($this->table);   
@@ -664,6 +691,12 @@ class Tickets_model extends MY_Model
         if( !empty($date_range) ){
             $this->db->where('date_issued >=', $date_range['from']);
             $this->db->where('date_issued <=', $date_range['to']);
+        }
+
+        if( !empty($filters) ){
+            foreach( $filters as $f ){
+                $this->db->where($f['field'], $f['value']);
+            }
         }
         
         $this->db->order_by('id', 'DESC');
@@ -756,6 +789,25 @@ class Tickets_model extends MY_Model
 
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function getAllIsArchivedByCompanyId($cid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+        $this->db->where('is_archived', 1);
+        $this->db->order_by('archived_date', 'DESC');
+        
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    public function restoreTicket($id)
+    {
+        $this->db->where('id', $id);      
+        $this->db->update($this->table, array("is_archived" => 0, 'updated_at' => date("Y-m-d H:i:s")));        
     }
 }
 
