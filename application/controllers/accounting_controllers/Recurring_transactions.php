@@ -192,13 +192,13 @@ class Recurring_transactions extends MY_Controller {
                     case 'purchase order' :
                         $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($transaction['txn_id'], logged('company_id'));
                         $total = number_format($purchaseOrder->total_amount, 2, '.', ',');
-                        $payee = $this->vendors_model->get_vendor_by_id($purchaseOrder->payee_id);
+                        $payee = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
                         $payeeName = $payee->display_name;
                     break;
                     case 'vendor credit' :
                         $vCredit = $this->vendors_model->get_vendor_credit_by_id($transaction['txn_id'], logged('company_id'));
                         $total = number_format($vCredit->total_amount, 2, '.', ',');
-                        $payee = $this->vendors_model->get_vendor_by_id($vCredit->payee_id);
+                        $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
                         $payeeName = $payee->display_name;
                     break;
                     case 'credit card credit' :
