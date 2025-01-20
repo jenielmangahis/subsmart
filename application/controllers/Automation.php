@@ -49,8 +49,12 @@ class Automation extends MY_Controller
 
     public function marketing()
     {
+        $this->load->helper('automation_helper');
         $this->page_data['page']->title  = 'Automation Marketing';
         $this->page_data['page']->parent = 'Automation';
+        $this->page_data['lead_status']  = $this->customer_ad_model->get_select_options('ac_leads', 'status');
+        $this->page_data['job_status']   = $this->customer_ad_model->get_select_options('jobs', 'status');
+
         $this->load->view('v2/pages/automation/marketing', $this->page_data);
     }
 
@@ -232,18 +236,6 @@ class Automation extends MY_Controller
         echo json_encode(['status' => 'success', 'pendingItem' => $pendingItem]);
     }
 
-    private function calculateTriggerTime($data, $automation)
-    {
-        $eventTime = strtotime($data->start_date . ' ' . $data->start_time); // e.g., scheduled date
-        if ($automation['trigger_event'] === 'created') {
-            $eventTime = strtotime($data->created_at); // e.g., creation date
-        }
-
-        return ($automation['timing_reference'] === 'ahead_of')
-        ? $eventTime - ($automation['trigger_time'] * 60)
-        : $eventTime + ($automation['trigger_time'] * 60);
-    }
-
     private function triggerAction($data, $automation)
     {
         $body      = $this->prepareEmailBody($data, $automation);
@@ -263,6 +255,18 @@ class Automation extends MY_Controller
                 log_message('error', 'Unknown action type');
                 break;
         }
+    }
+
+    private function calculateTriggerTime($data, $automation)
+    {
+        $eventTime = strtotime($data->start_date . ' ' . $data->start_time); // e.g., scheduled date
+        if ($automation['trigger_event'] === 'created') {
+            $eventTime = strtotime($data->created_at); // e.g., creation date
+        }
+
+        return ($automation['timing_reference'] === 'ahead_of')
+        ? $eventTime - ($automation['trigger_time'] * 60)
+        : $eventTime + ($automation['trigger_time'] * 60);
     }
 
     private function getEventData($entity, $user_id, $trigger_event, $trigger_status = null)

@@ -31,6 +31,7 @@ class Tickets extends MY_Controller
         $this->load->model('General_model', 'general');
         $this->load->model('Tickets_model', 'tickets_model');
         $this->load->model('Customer_model', 'customer_model');
+        $this->load->model('PointRatingSystem_model', 'PointRatingSystemModel');
         
         $user_id = getLoggedUserID();
 
@@ -141,22 +142,9 @@ class Tickets extends MY_Controller
         );        
 
         $addQuery = $this->tickets_model->save_tickets($new_data);
-        
-        // Point Rating System insert data script for service ticket module
-        $filtered_employee_ids = array_filter($employee_ids);
-        $unique_employee_ids = array_unique($filtered_employee_ids);
-        $total_employees = count($unique_employee_ids);
-        $points_per_employee = $point / $total_employees;
 
-        $insert_data = [
-            'company_id'    => $comp_id,
-            'employee_type' => $employee_type,
-            'employee_id'   => json_encode($unique_employee_ids), 
-            'module'        => $module,
-            'module_id'     => $addQuery,
-            'points'        => number_format($points_per_employee, 2),
-            'status'        => 1,
-        ]; $this->db->insert('point_rating_system', $insert_data);
+        // Point Rating System insert action
+        $this->PointRatingSystemModel->addPointRating($company_id, $employee_type, $employee_ids, $module, $addQuery, $point);
 
         $this->load->helper(array('hashids_helper'));
         // $hasID = bin2hex(random_bytes(18));
@@ -787,33 +775,8 @@ class Tickets extends MY_Controller
 
         $addQuery = $this->tickets_model->updateTickets($update_data);
 
-        // Point Rating System update data script for service ticket module
-        $filtered_employee_ids = array_filter($employee_ids);
-        $unique_employee_ids = array_unique($filtered_employee_ids);
-        $total_employees = count($unique_employee_ids);
-        $points_per_employee = $point / $total_employees;
-
-        $update_data = [
-            'company_id'    => $company_id,
-            'employee_type' => $employee_type,
-            'employee_id'   => json_encode($unique_employee_ids),
-            'module'        => $module,
-            'module_id'     => $module_id,
-            'points'        => number_format($points_per_employee, 2),
-            'status'        => 1,
-        ];
-
-        $this->db->where('module', $module);
-        $this->db->where('module_id', $module_id);
-        $query = $this->db->get('point_rating_system');
-
-        if ($query->num_rows() > 0) {
-            $this->db->where('module', $module);
-            $this->db->where('module_id', $module_id);
-            $this->db->update('point_rating_system', $update_data);
-        } else {
-            $this->db->insert('point_rating_system', $update_data);
-        }
+        // Point Rating System update action
+        $this->PointRatingSystemModel->updatePointRating($company_id, $employee_type, $employee_ids, $module, $module_id, $point);
 
         //Activity Logs
         $this->load->model('Activity_model');
@@ -1571,11 +1534,8 @@ class Tickets extends MY_Controller
         $ticketInfo = $this->tickets_model->getByIdAndCompanyId($ticketID,$cid);
         if( $ticketInfo ){
 
-            // Point Rating System delete / set status = 0 data script for service ticket module
-            $this->db->where('module', 'service_ticket');
-            $this->db->where('company_id', $cid);
-            $this->db->where('module_id', $ticketID);
-            $this->db->update('point_rating_system', ['status' => 0,]);
+            // Point Rating System delete / set status = 0 data action
+            $this->PointRatingSystemModel->deletePointRating($cid, $ticketID, "service_ticket");
 
             // Record Job delete to Customer Activities Module in Customer Dashboard
             $action = "$user_login deleted a service ticket. $ticketInfo->ticket_no";
@@ -1890,6 +1850,12 @@ class Tickets extends MY_Controller
         $user_id     = logged('id');
         $card_type = '';
 
+        // Point Rating System Variables
+        $point = 1;
+        $employee_type = "tech_rep";
+        $module = "service_ticket";
+        $employee_ids = $this->input->post('assign_tech');
+
         if( $this->input->post('customer_id') == '' || $this->input->post('customer_id') == 0 ){
             $msg = 'Please select customer';
             $is_valid = 0;
@@ -2043,8 +2009,11 @@ class Tickets extends MY_Controller
                 'updated_at'                => date("Y-m-d H:i:s")
             );
             
-
             $addQuery = $this->tickets_model->save_tickets($new_data);
+
+            // Point Rating System insert action
+            $this->PointRatingSystemModel->addPointRating($company_id, $employee_type, $employee_ids, $module, $addQuery, $point);
+
             $hasID    = hashids_encrypt($addQuery, '', 15);
 
             $update_data = array(

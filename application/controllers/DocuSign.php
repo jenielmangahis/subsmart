@@ -1273,6 +1273,7 @@ class DocuSign extends MYF_Controller
         }
         
         $default_timezone = 'America/New_York';
+        //date_default_timezone_set($default_timezone);
         $payload = json_decode(file_get_contents('php://input'), true);        
         $isCreated = false;
 
@@ -1308,7 +1309,7 @@ class DocuSign extends MYF_Controller
         $record = $this->db->get($tableName)->row();
 
         header('content-type: application/json');
-        echo json_encode(['data' => $record, 'is_created' => $isCreated]);
+        echo json_encode(['data' => $record, 'is_created' => $isCreated, 'created_at' => $date_created]);
     }
 
     public function apiCopy($documentId)
@@ -2638,7 +2639,7 @@ SQL;
             '%message%' => nl2br(htmlentities($envelope['message'], ENT_QUOTES, 'UTF-8')),
             '%inviter_email%' => $inviter->email,
             '%document_name%' => $envelope['name'],
-            '%company_logo%' => is_null($companyLogo) ? 'https://nsmartrac.com/uploads/users/business_profile/1/logo.jpg?1624851442' : $companyLogo,
+            '%company_logo%' => is_null($companyLogo) ? 'https://nsmartrac.com/assets/frontend/images/logo.png' : $companyLogo,
         ];
 
         $message = strtr($template, $data);

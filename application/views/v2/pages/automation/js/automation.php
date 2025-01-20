@@ -1,11 +1,14 @@
 <script type="text/javascript">
-    const eventOptions =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <?php echo json_encode($options['eventOptions']); ?>;
-    const targetOptions =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   <?php echo json_encode($options['targetOptions']); ?>;
-    const actionOptions =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   <?php echo json_encode($options['actionOptions']); ?>;
-    const timeOptions =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <?php echo json_encode($options['timeOptions']); ?>;
-    const timingOptions =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   <?php echo json_encode($options['timingOptions']); ?>;
-    const dateOptions =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <?php echo json_encode($options['dateOptions']); ?>;
-    const automationConfig =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <?php echo json_encode(get_automation_email_config()); ?>;
+    <?php
+$options = get_automation_options();
+?>
+    const eventOptions = <?php echo json_encode($options['eventOptions']); ?>;
+    const targetOptions =   <?php echo json_encode($options['targetOptions']); ?>;
+    const actionOptions =   <?php echo json_encode($options['actionOptions']); ?>;
+    const timeOptions =  <?php echo json_encode($options['timeOptions']); ?>;
+    const timingOptions =<?php echo json_encode($options['timingOptions']); ?>;
+    const dateOptions =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <?php echo json_encode($options['dateOptions']); ?>;
+    const automationConfig =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <?php echo json_encode(get_automation_email_config()); ?>;
 
     $(document).ready(function() {
 
@@ -21,13 +24,274 @@
         let emailSubject = '';
         let emailBody = '';
         let activeAutoTemplate = ''
+        let selectedEntity = '';
+        let selectedOperation = '';
+        let operationOptions = ["send", "create"]
+
+        const extractStatuses = (statusArray) =>
+            statusArray
+            .filter(item => item.status) // Remove any empty or falsy status values
+            .reduce((acc, item) => {
+                acc[item.status] = item.status; // Dynamically set key-value pairs in the accumulator object
+                return acc;
+            }, {});
+
+        const leadStatus = extractStatuses(<?php echo json_encode($lead_status); ?>);
+        const jobStatus = extractStatuses(<?php echo json_encode($job_status); ?>);
+
+        const statusOptions = {
+            lead: leadStatus,
+            job: jobStatus
+        };
+
+        function setupDropdownToggle(dropdownBtnId, dropdownMenuId) {
+            $(dropdownBtnId).on('click', function () {
+            console.log(dropdownMenuId)
+                toggleDropdown(dropdownMenuId);
+                closeDropdownsExcept(dropdownMenuId);
+            });
+        }
+
+        setupDropdownToggle('#entityDropdownBtn', '#entityDropdownMenu');
+        setupDropdownToggle('#timeDropdownBtn', '#timeDropdownMenu');
+        setupDropdownToggle('#eventDropdownBtn', '#eventDropdownMenu');
+        setupDropdownToggle('#statusDropdownBtn', '#statusDropdownMenu');
+        setupDropdownToggle('#operationDropdownBtn', '#operationDropdownMenu');
+        setupDropdownToggle('#targetDropdownBtn', '#targetDropdownMenu');
+        setupDropdownToggle('#actionDropdownBtn', '#actionDropdownMenu');
+        setupDropdownToggle('#dateDropdownBtn', '#dateDropdownMenu');
+
+        // Handle entity and event selection
+        $(".entity-event-item").on("click", function () {
+            selectedEntity = $(this).data("type");
+            selectedEvent = $(this).data("value");
+            $("#entityDropdownBtn").text(determineArticle(selectedEntity));
+            populateEventDropdown(selectedEntity);
+            populateOperationDropdown(selectedEntity);
+            $("#entityDropdownMenu").hide();
+            $(".event-dropdown-container").show();
+            handleEventClick();
+        });
+
+        // Populate Dropdowns
+        function populateDropdown(menuId, options, selectedValue, className, buttonId) {
+            if (!options) return; // Check if options are null or undefined
+            
+            $(buttonId).text(options[selectedValue] || selectedValue);
+
+            $(menuId).empty();
+            Object.entries(options).forEach(([value, text]) => {
+                $(menuId).append(
+                    `<li class="list-group-item ${className} cursor-pointer ${selectedValue == value ? 'active' : ''}" data-value="${value}">${text}</li>`
+                );
+            });
+
+            $(`.${className}`).on("click", function () {
+                const selected = $(this).data("value");
+                $(buttonId).text(options[selected] || selectedValue);
+                $(buttonId).addClass('primary');
+                $(menuId).hide();
+                $(`${menuId} .${className}`).removeClass('active');
+                $(this).addClass('active');
+
+                if (menuId === '#eventDropdownMenu') {
+                    selectedEvent = selected;
+                } else if (menuId === '#statusDropdownMenu') {
+                    selectedStatus = selected;
+                } else if (menuId === '#targetDropdownMenu') {
+                    selectedTarget = selected;
+                } else if (menuId === '#actionDropdownMenu') {
+                    selectedAction = selected;
+                } else if (menuId === '#operationDropdownMenu') {
+                    selectedOperation = selected;
+                } else if (menuId === '#dateDropdownMenu') {
+                    selectedDate = selected;
+                }
+
+                if(menuId == '#eventDropdownMenu'){
+                 handleEventClick()
+
+                }
+            });
+        }
+
+
+
+        function populateModal(data) {
+            console.log(data)
+             const template = generateEmailTemplate(data.target);
+
+            if (!template) {
+                console.error("Failed to generate automation template.");
+                return;
+            }
+
+            const {
+                subject,
+                body
+            } = template;
+            emailSubject = subject;
+            emailBody = body;
+            selectedStatus = Object.values(statusOptions[data.entity])[0];
+            selectedTarget = data.target;
+            selectedAction = data.action;
+            selectedTime = data.time;
+            selectedTiming = data.timing;
+            selectedDate = data.date;
+            selectedEvent = data.event
+            selectedEntity = data.entity
+            selectedOperation = 'send'
+
+            //first
+            $("#entityDropdownBtn").text(determineArticle(selectedEntity));
+            populateEventDropdown(selectedEntity);
+            handleEventClick()
+
+            //second
+            $("#operationDropdownBtn").text(selectedOperation);
+            populateOperationDropdown(selectedEntity);
+            handleSecondParagraph()
+
+            setActiveTimelineItem();
+            $('#addAutomation').modal('show');
+        }
+
+            console.log(eventOptions)
+
+
+         function populateEventDropdown(entity) {
+            console.log(entity)
+            const item = eventOptions[entity];
+            if (item) {
+                populateDropdown('#eventDropdownMenu', item, selectedEvent, 'event-item-2', '#eventDropdownBtn');
+            }
+        }
+      
+        function populateStatusDropdown(entity) {
+            const item = statusOptions[entity]; // Get status options for the selected entity
+            selectedStatus = Object.values(statusOptions[entity])[0];
+
+            if (item) {
+                populateDropdown('#statusDropdownMenu', item, selectedStatus, 'status-item', '#statusDropdownBtn');
+            }
+        }
+
+         function populateOperationDropdown(entity) {
+            // Clear the operation dropdown menu
+            $('#operationDropdownMenu').empty();
+
+            // Iterate over the statuses object and populate the dropdown
+            let operationItem = ["send", "create"]
+
+              operationItem.forEach(value => {
+                if (value !== "create" || entity === "job") { // Only include "create" if entity is "job"
+                    $('#operationDropdownMenu').append(
+                        `<li class="list-group-item operation-item cursor-pointer ${selectedOperation === value ? 'active' : ''}" data-value="${value}">${value}</li>`
+                    );
+                }
+            });
+
+
+           // Handle operation item click
+            $(".operation-item").on("click", function () {
+                selectedOperation = $(this).data("value");
+
+                // Update the button text with the selected operation
+                $("#operationDropdownBtn").text(selectedOperation);
+                $(this).addClass('active');
+                
+
+                handleSecondParagraph()
+            });
+        }
+
+        function handleSecondParagraph(){
+            $('#operationDropdownBtn').addClass('primary');
+            $("#operationDropdownMenu").hide();
+            $('.operation-item').removeClass('active'); 
+
+            $(".target-dropdown-container").removeClass('d-none');
+            $(".action-dropdown-container").removeClass('d-none');
+            $(".time-dropdown-container").removeClass('d-none');
+            $(".date-dropdown-container").removeClass('d-none');
+
+            populateDropdown('#targetDropdownMenu', targetOptions, selectedTarget, 'target-item', '#targetDropdownBtn');
+            populateDropdown('#actionDropdownMenu', actionOptions, selectedAction, 'action-item', '#actionDropdownBtn');
+            populateTimeDropdown(selectedEntity)
+            populateDropdown('#dateDropdownMenu', dateOptions, selectedDate, 'date-item', '#dateDropdownBtn');
+        }
+
+        // Time and Timing selection logic
+        $('.time-btn').on('click', function () {
+            handleTimeClick('.time-btn', this);
+            selectedTime = $(this).data("value");
+            $(".timing-btn").each(function() {
+                if ($(this).text() == selectedTiming) {
+                    handleTimeClick('.timing-btn', this);
+                }
+            });
+            let text = formatTriggerTime(selectedTime) + ' ' + selectedTiming;
+            $("#timeDropdownBtn").text(text);
+            $('#timeDropdownBtn').addClass('primary');
+        });
+
+        $('.timing-btn').on('click', function () {
+            handleTimeClick('.timing-btn', this);
+            selectedTiming = $(this).text();
+            let text = formatTriggerTime(selectedTime) + ' ' + selectedTiming;
+            $("#timeDropdownBtn").text(text);
+        });
+
+        // Handle button selection and toggling
+        function handleTimeClick(name, clickedButton) {
+            $(name).removeClass('nsm-button primary').addClass('nsm-button-outlined primary');
+            $(clickedButton).removeClass('nsm-button-outlined primary').addClass('nsm-button primary');
+        }
+
+         function handleEventClick(){
+            if (selectedEvent === 'has_status') {
+                $(".status-dropdown-container").removeClass('d-none');
+                populateStatusDropdown(selectedEntity);
+            } else {
+                $(".status-dropdown-container").addClass('d-none');
+            }
+        }
+
+        function populateTimeDropdown(entity) {
+            let text = selectedTime ? formatTriggerTime(selectedTime) + ' ' + timingOptions[selectedTiming] : "within a defined time"
+            $("#timeDropdownBtn").text(text);
+        }
+
+
+        // Close all dropdowns except the one passed as argument
+        function closeDropdownsExcept(except) {
+            $('.dropdown-menu').not(except).slideUp("fast"); // Close all other dropdowns
+        }
+
+        // Close all dropdowns
+        function closeDropdowns() {
+            $('.dropdown-menu').slideUp("fast"); // Close all open dropdowns
+        }
+
+        // Toggle the visibility of a specific dropdown
+        function toggleDropdown(dropdown) {
+            const isOpen = $(dropdown).is(":visible");
+
+            if (isOpen) {
+                $(dropdown).slideUp("fast");
+            } else {
+                $(dropdown).slideDown("fast");
+            }
+        }
+
+
+
 
         $(document).on('click', '.timeline-item', function() {
             setActiveTimelineItem(this.id);
         });
 
         $(document).on('click', '#workflowMenuAccordion', function(event) {
-            console.log('test')
             event.preventDefault();
             event.stopPropagation();
         });
@@ -342,27 +606,6 @@
             });
         }
 
-        const extractStatuses = (statusArray) =>
-            statusArray
-            .filter(item => item.status) // Remove any empty or falsy status values
-            .reduce((acc, item) => {
-                acc[item.status] = item.status; // Dynamically set key-value pairs in the accumulator object
-                return acc;
-            }, {});
-
-        const leadStatus = extractStatuses(<?php echo json_encode($lead_status); ?>);
-        const jobStatus = extractStatuses(<?php echo json_encode($job_status); ?>);
-
-        const statusOptions = {
-            lead: leadStatus,
-            job: jobStatus
-        };
-
-        const recipientMapping = {
-            1: "assigned tech",
-            2: "client",
-            3: "to user",
-        };
 
         function typeIcon(type) {
             const icons = {
@@ -374,32 +617,12 @@
             return icons[type] || "bx-file";
         }
 
-        function preventDropdownClose(event) {
-            event.stopPropagation(); // Prevents the dropdown from closing
-        }
 
         function determineArticle(type) {
-            return /^[aeiou]/i.test(type) ? "an" : "a";
+            return /^[aeiou]/i.test(type) ? `an ${type}` :  `a ${type}`;
         }
 
-        function appendElement(parentNode, elementName, className, text) {
-            const $element = $(`<${elementName} class="${className}">${text}</${elementName}>`);
-            parentNode.append($element);
-        }
 
-        function clearAppendedElements(dropdownToggleId, className) {
-            $(`${dropdownToggleId}`).parent().find(className).remove();
-        }
-
-        function updateSelectedValue({
-            value,
-            dropdownId,
-            category
-        }) {
-            $(`#${dropdownId}`).text(value);
-            const dropdownItemId = `${category}-${value}`;
-            updateDropdownActiveClass(dropdownId, dropdownItemId);
-        }
 
         function setActiveTimelineItem(itemId = null) {
             if (itemId) {
@@ -411,252 +634,18 @@
 
         // DYNAMIC DISPLAY OF SELECTION
 
-
-        // eg. When a lead has a status of new
-        function displayFirstParagraphSelection(type, event) {
-            selectedType = type || '';
-
-            const $parentNode = $('#workflowMenuBtn').parent();
-
-            // Clear previously appended elements
-            clearAppendedElements('#workflowMenuBtn', '.added-first-paragraph');
-            clearAppendedElements('#taskMenuBtn', '.added-second-paragraph');
-
-            // Update the text of the original dropdown
-            $('#workflowMenuBtn').text(`${determineArticle(type)} ${type}`);
-
-            // Append event dropdown
-            createDropdown({
-                parentNode: $parentNode,
-                category: 'event',
-                options: eventOptions,
-                value: eventOptions[type][selectedEvent],
-                dropdownId: 'eventDropdown',
-                className: 'added-first-paragraph',
-                type: type,
-                callback: function(selected) {
-                    selectedEvent = selected
-                    displayFirstParagraphSelection(type, selected);
-                }
-            });
-
-            // Append status dropdown if type is LEAD OR JOB
-            if (selectedEvent === 'has_status' && (type === 'lead' || type === 'job')) {
-                appendElement($parentNode, 'span', 'h4 fw-bold added-first-paragraph me-2 nsm-text secondary', 'of');
-                createDropdown({
-                    parentNode: $parentNode,
-                    category: 'status',
-                    options: statusOptions,
-                    value: statusOptions[type][selectedStatus] || 'new',
-                    dropdownId: 'statusDropdown',
-                    className: 'added-first-paragraph',
-                    type: type,
-                    callback: function(selected) {
-                        selectedStatus = selected;
-                    }
-                });
+        function formatTriggerTime(triggerTime) {
+            if (triggerTime >= 1440) { // 1440 minutes = 1 day
+                const days = Math.floor(triggerTime / 1440);
+                return days + " day" + (days > 1 ? "s" : "");
             }
-        }
-
-        // eg. send assigned tech a text message 10 minutes after the lead end date
-        function displaySecondParagraphSelection(task) {
-            const $parentNode = $('#taskMenuBtn').parent();
-
-            // Clear previously appended elements
-            clearAppendedElements('#taskMenuBtn', '.added-second-paragraph');
-
-            // Update the text of the original dropdown
-            $('#taskMenuBtn').text(task).removeClass('secondary').addClass('primary');
-
-            let className = 'added-second-paragraph';
-            createDropdown({
-                parentNode: $parentNode,
-                category: 'target',
-                options: targetOptions,
-                value: targetOptions[selectedTarget] || 'someone',
-                dropdownId: 'targetDropdown',
-                className: className,
-                callback: function(selected) {
-                    selectedTarget = selected;
-                }
-            });
-            createDropdown({
-                parentNode: $parentNode,
-                category: 'action',
-                options: actionOptions,
-                value: actionOptions[selectedAction] || 'a reminder',
-                dropdownId: 'actionDropdown',
-                className: className,
-                callback: function(selected) {
-                    selectedAction = selected;
-                    $('#addEmail').modal('show');
-                }
-            });
-            createDropdown({
-                parentNode: $parentNode,
-                category: 'time',
-                options: timeOptions,
-                value: timeOptions[selectedTime] || 'within a defined time',
-                dropdownId: 'timeDropdown',
-                className: className,
-                callback: function(selected) {
-                    selectedTime = selected;
-                    displaySecondParagraphSelection(task)
-                }
-            });
-            if (selectedTime !== '0') {
-                createDropdown({
-                    parentNode: $parentNode,
-                    category: 'timing',
-                    options: timingOptions,
-                    value: timingOptions[selectedTiming] || 'ahead of',
-                    dropdownId: 'timingDropdown',
-                    className: className,
-                    callback: function(selected) {
-                        selectedTiming = selected;
-                    }
-                });
-                appendElement($parentNode, 'span', `h4 fw-bold added me-2 nsm-text secondary ${className}`, `the ${selectedType}`);
-                createDropdown({
-                    parentNode: $parentNode,
-                    category: 'date',
-                    options: dateOptions,
-                    value: dateOptions[selectedDate] || 'date',
-                    dropdownId: 'dateDropdown',
-                    className: className,
-                    callback: function(selected) {
-                        selectedDate = selected;
-                    }
-                });
+            if (triggerTime >= 60) { // 60 minutes = 1 hour
+                const hours = Math.floor(triggerTime / 60);
+                return hours + " hour" + (hours > 1 ? "s" : "");
             }
+
+            return triggerTime + " minute" + (triggerTime > 1 ? "s" : "");
         }
-
-        /**
-         * Creates and appends a dropdown menu to the specified parent node with selectable options.
-         *
-         * @param {Object} params - An object containing the following properties:
-         * @param {HTMLElement} parentNode - The parent DOM element to which the dropdown will be appended.
-         * @param {string} category - A string representing the category for the dropdown (e.g., 'action', 'status', 'task').
-         * @param {Array|Object} options - The options to populate the dropdown with.
-         *                                        If 'type' is specified, it is used to select a specific set of options from the 'options' object.
-         *                                        If no 'type' is provided, the entire array of options is used.
-         * @param {string} value - The current value that should be selected in the dropdown (e.g., 'new', 'completed').
-         * @param {string} dropdownId - The unique identifier for the dropdown element
-         * @param {string} className - The CSS class to apply to both the dropdowns.
-         * @param {string|null} [params.type=null] - (Optional) A string key to select a subset of options from the 'options' object.
-         *                                           If 'type' is provided, it will be used to select the corresponding set of options
-         *                                           from the 'options' object (e.g., `options[type]`).
-         */
-        function createDropdown({
-            parentNode,
-            category,
-            options,
-            value,
-            dropdownId,
-            className,
-            type = null,
-            callback
-        }) {
-
-            const $toggle = createDropdownToggle(value, dropdownId, className);
-            parentNode.append($toggle);
-
-            const data = type ? options[type] : options
-            const items = Object.entries(data).map(([optionValue, optionText]) => {
-                const dropdownItemId = `${category}-${optionValue}`;
-                const $item = createDropdownItem(optionValue, optionText, dropdownItemId, () => {
-                    if (callback) {
-                        callback(optionValue);
-                    }
-
-                    $toggle.text(optionText); //update text based on selected item
-                    updateDropdownActiveClass(dropdownId, dropdownItemId); //add active class
-                });
-                return $item;
-            });
-
-            parentNode.append(createDropdownMenu(items, `${dropdownId}-Menu`, className));
-        }
-
-        function createDropdownToggle(text, id, className) {
-            return $(`<a href="#" class="dropdown-toggle nsm-text primary h4 fw-bold me-2 ${className}" id="${id}" role="button" data-bs-toggle="dropdown" aria-expanded="false">${text}</a>`);
-        }
-
-        function createDropdownMenu(items, id, className) {
-            const $container = $(`<div class="dropdown-menu ${className}" id="${id}" aria-labelledby="${id}"></div>`);
-            items.forEach($item => $container.append($item));
-            return $container;
-        }
-
-        function createDropdownItem(value, text, id, onClickCallback) {
-            return $(`<a href="#" class="dropdown-item" data-value="${value}" id="${id}">${text}</a>`).on('click', () => {
-                if (onClickCallback) {
-                    onClickCallback(value);
-                }
-            });
-        }
-
-        function updateDropdownActiveClass(dropdownId, dropdownItemId) {
-            $(`#${dropdownId}-Menu .dropdown-item`).removeClass('active')
-                .filter(`#${dropdownItemId}`).addClass('active');
-        }
-
-        // Dynamic Accordion Initialization
-        $("#workflowMenuAccordion").html(generateAccordion());
-
-        function generateAccordion() {
-            return Object.entries(eventOptions)
-                .map(([type, options], index) => `
-                    <div class="accordion-item" style="border: none !important;">
-                        <h2 class="accordion-header" id="heading${index}">
-                            <button
-                                class="accordion-button collapsed"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapse${index}"
-                                aria-expanded="false"
-                                aria-controls="collapse${index}">
-                                <i class='bx ${typeIcon(type)} me-3'></i> ${determineArticle(type)} ${type}
-                            </button>
-                        </h2>
-                        <div
-                            id="collapse${index}"
-                            class="accordion-collapse collapse"
-                            aria-labelledby="heading${index}"
-                            data-bs-parent="#workflowMenuAccordion">
-                            <div class="accordion-body">
-                                <ul class="list-group list-group-flush">
-                                    ${generateLi(type, options)}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                `)
-                .join("");
-        }
-
-        function generateLi(type, options) {
-            return Object.entries(options) // Convert object to array of [key, value]
-                .map(
-                    ([value, text]) => `
-                <li
-                    class="list-group-item event-item cursor-pointer"
-                    data-type="${type}"
-                    data-event="${value}">
-                    ${text}
-                </li>
-            `
-                )
-                .join("");
-        }
-
-        $(document).on('click', '.event-item', function() {
-            const type = $(this).data('type');
-            const event = $(this).data('event');
-            selectedEvent = event
-
-            displayFirstParagraphSelection(type, event);
-        });
 
         //AUTOMATION TEMPLATE
 
