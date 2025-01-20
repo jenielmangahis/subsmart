@@ -23,28 +23,8 @@
                     </div>
                     <!-- Card Group -->
                     <?php
-                    $cards = [
-                        [
-                            'title' => 'Immediate Notice / Client Reminder',
-                            'description' => 'Send immediate notice to a client.',
-                            'onclick' => "generateAutomationTemplate('job', 'has_status', 'client', 'send_email', '0')"
-                        ],
-                        [
-                            'title' => '2 hours / Tech Reminder',
-                            'description' => 'Send an email to a technician 2 hours ahead of the job.',
-                            'onclick' => "generateAutomationTemplate('job', 'has_status', 'technician', 'send_email', '120', 'ahead_of', 'scheduled_date')"
-                        ],
-                        [
-                            'title' => '4 hours / Tech Reminder',
-                            'description' => 'Send an email to a technician 4 hours ahead of the job.',
-                            'onclick' => "generateAutomationTemplate('job', 'has_status', 'technician', 'send_email', '240', 'ahead_of', 'scheduled_date')"
-                        ],
-                        [
-                            'title' => '1 Day Notice/Client Reminder',
-                            'description' => 'Send an email to a client 1 day ahead of the job.',
-                            'onclick' => "generateAutomationTemplate('job', 'created', 'client', 'send_email', '1440 day', 'after', 'scheduled_date')"
-                        ]
-                    ];
+                 $cards = getRemindersTemplate();
+
 
                     foreach ($cards as $card) : ?>
                         <div class="col-3 mb-3">
@@ -69,9 +49,7 @@
     </div>
 </div>
 
-<?php
-$options = get_automation_options();
-?>
+
 
 <?php include viewPath('v2/includes/automation/add_automation_modal'); ?>
 <?php include viewPath('v2/includes/automation/add_email_modal'); ?>

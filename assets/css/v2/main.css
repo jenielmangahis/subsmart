@@ -566,6 +566,15 @@ body {
   font-weight: 700;
 }
 
+.nsm-button-outlined {
+  border: 1px solid #d3d3d3;
+  border-radius: 5px;
+  padding: 0.5em 0.7em;
+  background-color: transparent;
+  font-size: 14px;
+  font-weight: 700;
+}
+
 .nsm-button:disabled {
   opacity: 0.9;
 }
@@ -587,11 +596,21 @@ a.nsm-button {
   color: #6a4a86;
 }
 
+.nsm-button-outlined:hover {
+  background-color: #6a4a86;
+  color: #fff !important;
+}
+
 .nsm-button .bx {
   color: #9b9b9b;
 }
 
 .nsm-button:hover .bx {
+  color: #6a4a86;
+}
+
+.nsm-button-outlined.primary {
+  border: 1px solid #6a4a86;
   color: #6a4a86;
 }
 
