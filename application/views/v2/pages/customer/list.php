@@ -390,7 +390,8 @@
                      <div class="col-12 col-md-4 grid-mb">
                         <div class="nsm-field-group search">
                             <!-- <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Item"> -->
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOMER_SEARCHBAR" placeholder="Search Customer...">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" style="display:inline-block;width:80%;" id="CUSTOMER_SEARCHBAR" placeholder="Search Customer...">
+                            <a href="javascript:void(0);" id="btn-reset-customer-list" class="nsm-button primary">Reset</a>
                         </div>
                     </div>
                     <div class="col-md-8 grid-mb text-end">
@@ -745,6 +746,7 @@
                     return json.data;
                 }
             },
+            "bDestroy": true,
             "language": {
                 "processing": "<div class='custom-loader'><p>Processing, please wait...</p></div>"
             },
@@ -775,6 +777,11 @@
             CUSTOMER_LIST_TABLE.search($(this).val()).draw()
         });
 
+        $('#btn-reset-customer-list').on('click', function(){
+            CUSTOMER_LIST_TABLE.state.clear(); 
+            location.reload();
+        });
+
         // Remove bug css on DataTable Serverside
         $('#customer-list').removeClass('dataTable');
 
@@ -797,7 +804,7 @@
         $('.select-filter-card').on('click', function(e) {
             e.preventDefault();
             var filterValue = $(this).attr('data-value');
-            console.log('filterValue', filterValue)
+            //console.log('filterValue', filterValue)
             $('#filter-selected').text(filterValue);
 
             CUSTOMER_LIST_TABLE.ajax.reload();
