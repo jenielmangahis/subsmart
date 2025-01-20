@@ -972,17 +972,24 @@ class Customer extends MY_Controller
                     array_push($data_arr, $techician);
                 }
                 if (in_array('plan_type', $enabled_table_headers)) {
+                    $this->load->model('RatePlan_model');
+                    $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($customer->mmr, logged('company_id'));
+                    
                     $plan_type= 'Not Specified';
-                    if( $customer->system_type != '' ){
-                        $plan_type= $customer->system_type;
+                    if( $ratePlan ){
+                        $plan_type = $ratePlan->plan_name;
                     }
+                    // if( $customer->system_type != '' ){
+                    //     $plan_type= $customer->system_type;
+                    // }
                     array_push($data_arr, $plan_type);
                 }
                 if (in_array('rate_plan', $enabled_table_headers)) {
                     array_push($data_arr, ($customer->mmr) ? "$$customer->mmr" : '$0.00');
                 }
                 if (in_array('subscription_amount', $enabled_table_headers)) {
-                    $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
+                    //$subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
+                    $subs_amt = $customer->mmr > 0 ? number_format(floatval($customer->mmr), 2, '.', ',') : 0.00;
                     array_push($data_arr, '$'.$subs_amt);
                 }
                 if (in_array('job_amount', $enabled_table_headers)) {
