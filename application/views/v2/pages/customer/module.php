@@ -139,6 +139,44 @@
             );
             return $container;
         }
+
+        $(document).on('click', '#sendEsign', function(){
+            var prof_id = $(this).attr('data-id');
+
+            $('#customer-esign').val(prof_id);
+            $('#modal-send-esign').modal('show');
+
+            $.ajax({
+                type: "POST",
+                url: base_url + "customer/_send_esign_form",
+                data: {prof_id:prof_id},
+                beforeSend: function(data) {
+                    $("#customer-send-esign").html('<span class="bx bx-loader bx-spin"></span>');
+                },
+                success: function(html) {
+                    $("#customer-send-esign").html(html);
+                },
+                complete: function() {
+
+                },
+                error: function(e) {
+                    console.log(e);
+                }
+            });
+        });
+
+        $(document).on('click', '#btn-customer-send-esign-template', function(){
+            var prof_id = $('#customer-esign').val();
+            var esign_template_id = $('#customer-send-esign-template').val();
+            var url = base_url + `eSign_v2/templatePrepare?id=${esign_template_id}&job_id=0&customer_id=${prof_id}`;
+
+            window.open(
+                url,
+                '_blank'
+            );
+
+            $('#modal-send-esign').modal('hide');
+        });
     });
 
     $(document).on('click', '.sent-messages', function(){
