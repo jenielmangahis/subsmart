@@ -2922,23 +2922,52 @@ class Cron_Jobs_Controller extends CI_Controller
 		$success_count = 0;
 
         $activeSubscriptions = $this->customer_ad_model->get_all_active_subscriptions();	
-
 		foreach( $activeSubscriptions as $as ) {
-            $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);            
-
+            $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);    
             if( $as->mmr > 0 && $customer ){
                 $totalUnpaidSubscriptions   = $this->AcsCustomerSubscriptionBilling_model->getTotalAmountUnpaidByCustomerId($as->fk_prof_id);
 				$unpaidSubscriptionsDetails = $this->AcsCustomerSubscriptionBilling_model->getUnpaidDetailsByCustomerId($as->fk_prof_id);
                 $total_amount               = $totalUnpaidSubscriptions->total_amount + $as->mmr;	
                 
                 $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($customer->company_id);
+
+                $current_date    = date('Y-m-d');
 				$late_fee        = 0;
 				$payment_fee     = 0;
 
-				$current_date = date('Y-m-d');
+                if($unpaidSubscriptionsDetails) {
+
+                    //Invoice is due, need to add late fee
+                    $late_fee_activated_date = $unpaidSubscriptionsDetails->due_date;
+                    if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
+                        $date1 = new DateTime($current_date);
+                        $date2 = new DateTime($late_fee_activated_date);
+                        $total_days = $date2->diff($date1)->format("%a");
+
+                        $late_fee_percentage = $as->payment_fee != null ? $as->payment_fee : 0; 
+                        $late_fee += ($late_fee_percentage / 100) * $as->mmr;
+
+                        if($total_days > 0) {
+                            $default_late_fee = $as->late_fee != null ? $as->late_fee : 0;
+                            if($total_days >= 10) {
+                                $late_fee += $default_late_fee * $total_days;
+
+                                //Note: for clarification on 'default_late_fee_minus_30_percent' computation
+                                /*$total_default_late_fee            = $default_late_fee * $total_days;
+                                $default_late_fee_minus_30_percent = $total_default_late_fee - ($total_default_late_fee * 0.30);
+                                $late_fee += $default_late_fee_minus_30_percent;*/
+                                
+                            } else {
+                                $late_fee += $default_late_fee * $total_days;
+                            }   
+                        }
+                    }
+
+                }
+
                 if( $invoiceSettings ){            
                     $next_number = (int) $invoiceSettings->invoice_num_next;     
-                    $prefix      = $invoiceSettings->invoice_num_prefix;
+                    $prefix      = $invoiceSettings->invoice_num_prefix;	
                     
                     if( $invoiceSettings->payment_fee_percent > 0  ){                        
                         $payment_fee = $total_amount * ($invoiceSettings->payment_fee_percent/100);
@@ -2946,26 +2975,6 @@ class Cron_Jobs_Controller extends CI_Controller
                         $payment_fee = $invoiceSettings->payment_fee_amount;
                     }
 
-					if($invoiceSettings->num_days_activate_late_fee > 0) {
-						$late_fee_activated_date = date('Y-m-d', strtotime($unpaidSubscriptionsDetails->due_date . ' + ' . $invoiceSettings->num_days_activate_late_fee . ' days'));
-					} else {
-						$late_fee_activated_date = $unpaidSubscriptionsDetails->due_date;
-					}				
-					
-					//Invoice is due, need to add late fee
-					if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
-						$date1 = new DateTime($current_date);
-						$date2 = new DateTime($late_fee_activated_date);
-						$total_days = $date2->diff($date1)->format("%a");
-
-						if($total_days > 0) {
-							$late_fee = $invoiceSettings->late_fee_amount_per_day * $total_days;
-						} else {
-							$late_fee = $invoiceSettings->late_fee_amount_per_day;
-						}
-					}elseif(strtotime($current_date) == strtotime($late_fee_activated_date)) {
-						$late_fee = $invoiceSettings->late_fee_amount_per_day;
-					}
                 }else{
                     $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($customer->company_id);
                     $prefix     = 'INV-';
@@ -2974,9 +2983,6 @@ class Cron_Jobs_Controller extends CI_Controller
                     }else{
                         $next_number   = 1;
                     }
-
-                    $payment_fee = 0;
-					$late_fee    = 0;
                 }
 
                 $total_amount = $total_amount + $payment_fee + $late_fee;
@@ -2988,7 +2994,6 @@ class Cron_Jobs_Controller extends CI_Controller
 				$filter['company_id']      = $customer->company_id;
 
 				$isCustomerSubscriptionBillingDuplicate = $this->AcsCustomerSubscriptionBilling_model->getCustomerSubscriptionBillingByFilter($filter);	
-
 				if(!$isCustomerSubscriptionBillingDuplicate) {
 					/**
 					 *  Note: no records founds, proceed to add invoice
@@ -3090,7 +3095,9 @@ class Cron_Jobs_Controller extends CI_Controller
 						'billing_id'  	 => $as->bill_id,
 						'invoice_id'  	 => $invoice_id,
 						'recurring_date' => $recurring_date ? $recurring_date : date("Y-m-d"),
-						'amount'         => $total_amount,
+						'subscription_amount' => $totalUnpaidSubscriptions->total_amount + $as->mmr,
+                        'late_fee_amount' => $late_fee,
+                        'total_amount' => $total_amount,
                         'status'         => 'Unpaid',
 						'date_created'   => date("Y-m-d H:i:s")
 					];

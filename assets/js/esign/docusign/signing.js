@@ -2233,8 +2233,8 @@ function Signing(hash) {
         value: signatureDataUrl,
       });
       
-      //const promises = fieldIds.map((id) => storeFieldValue({ id, value: signatureDataUrl })); // prettier-ignore
-      //await Promise.all(promises);
+      const promises = fieldIds.map((id) => storeFieldValue({ id, value: signatureDataUrl })); // prettier-ignore
+      await Promise.all(promises);
       //console.log('fields',data);
 
       // Using company set timezone

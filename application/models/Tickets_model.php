@@ -790,6 +790,25 @@ class Tickets_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getAllIsArchivedByCompanyId($cid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+        $this->db->where('is_archived', 1);
+        $this->db->order_by('archived_date', 'DESC');
+        
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    public function restoreTicket($id)
+    {
+        $this->db->where('id', $id);      
+        $this->db->update($this->table, array("is_archived" => 0, 'updated_at' => date("Y-m-d H:i:s")));        
+    }
 }
 
 ?>

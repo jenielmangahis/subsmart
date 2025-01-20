@@ -804,6 +804,7 @@ function TemplateCreate() {
       const workorderId = urlParams.get("workorder_id");
       const jobId = urlParams.get("job_id");
       const ticketId = urlParams.get("ticket_id");
+      const customerId = urlParams.get("customer_id");
 
       if (workorderId) {
         await getWorkorderCustomer(workorderId);

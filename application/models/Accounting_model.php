@@ -988,6 +988,8 @@ class Accounting_model extends MY_Model
             $this->db->select('prof_id, CONCAT(first_name  , " ", last_name) AS customer, phone_h AS phoneNumber, email, CONCAT(mail_add, " ", city, ", ", state, " ", zip_code) AS billingAddress, CONCAT(mail_add, " ", city, ", ", state, " ", zip_code) AS shippingAddress');
             $this->db->from('acs_profile');
             $this->db->where('company_id', $companyID);
+            $this->db->where("DATE_FORMAT(acs_profile.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(acs_profile.created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
@@ -1728,6 +1730,8 @@ class Accounting_model extends MY_Model
             $this->db->join('items_has_storage_loc', 'items_has_storage_loc.item_id = items.id', 'left');
             $this->db->where('items.title !=', '');
             $this->db->where('items.company_id', $companyID);
+            $this->db->where("DATE_FORMAT(items.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(items.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $query = $this->db->get();

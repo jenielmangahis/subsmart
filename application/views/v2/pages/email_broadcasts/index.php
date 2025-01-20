@@ -811,10 +811,10 @@ $(function(){
                                 window.location.reload();
                             });
                         } else {
-                           Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: result.msg,
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
                             });
                         }
                     }
