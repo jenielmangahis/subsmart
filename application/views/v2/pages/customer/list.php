@@ -806,7 +806,6 @@
         });
 
         $('#print-customer-list').on('click', function() {
-            var profid = $(this).attr('data-id');
             var url = base_url + 'customer/_get_customer_lists';
 
             $('#print_customer_list_modal').modal('show');
