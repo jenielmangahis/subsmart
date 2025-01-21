@@ -565,7 +565,8 @@ class Customer extends MY_Controller
                     }
                 }
                 if (in_array('city', $enabled_table_headers)) {
-                    array_push($data_arr, $customer->city != '' ? $customer->city : '---');
+                    $city = trim($customer->city) != '' ? '' .$customer->city : '---';
+                    array_push($data_arr, $city);
                 }
                 if (in_array('state', $enabled_table_headers)) {
                     $state = 'Not Specified';
@@ -576,7 +577,7 @@ class Customer extends MY_Controller
                 }
 
                 if (in_array('source', $enabled_table_headers)) {
-                    $lead = 'Door';
+                    $lead = 'Not Specified';
                     array_push($data_arr, $lead);
                 }
                 if (in_array('added', $enabled_table_headers)) {
@@ -658,17 +659,24 @@ class Customer extends MY_Controller
                         array_push($data_arr, 'Not Specified');
                     }
                 }
-                array_push($data_arr, $customer->city);
+                $city = $customer->city != '' ? $customer->city : '---';
+                array_push($data_arr, $city);
+
+                $state = $customer->state != '' ? $customer->state : '---';
                 array_push($data_arr, $customer->state);
-                $lead = $customer->lead_source != '' ? $customer->lead_source : 'Door';
+
+                $lead = $customer->lead_source != '' ? $customer->lead_source : '---';
                 array_push($data_arr, $lead);
+
                 $added_by = trim($customer->entered_by2) != '' ? $customer->entered_by2 : '---';
                 array_push($data_arr, $added_by);
+
                 $sales_rep = trim(get_sales_rep_name($customer->fk_sales_rep_office));
                 if ($sales_rep == '') {
                     $sales_rep = '---';
                 }
                 array_push($data_arr, $sales_rep);
+
                 $techician = !empty($customer->technician) ? get_employee_name($customer->technician) : 'Not Assigned';
                 array_push($data_arr, $techician);
 
@@ -689,11 +697,12 @@ class Customer extends MY_Controller
                 $this->db->join('jobs', 'job_items.job_id = jobs.id', 'left');
                 $this->db->where('jobs.customer_id', $customer->prof_id);
                 $totalJobItems = $this->db->get()->row();
-                $job_amount = 0;
+                $job_amount = '0.00';
                 if ($totalJobItems->total_amount > 0) {
                     $job_amount = number_format(floatval($totalJobItems->total_amount), 2, '.', ',');
                 }
                 array_push($data_arr, '$'.$job_amount);
+
                 $phone = trim($customer->phone_m) != '' ? $customer->phone_m : '---';
                 array_push($data_arr, formatPhoneNumber($phone));
 

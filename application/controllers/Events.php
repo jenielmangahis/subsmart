@@ -31,7 +31,13 @@ class Events extends MY_Controller
         return $this->wizardlib->getStreetView($addr);
     }
 
-    public function index() {        
+    public function index() 
+    {        
+        if(!checkRoleCanAccessModule('events', 'read')){
+            show403Error();
+            return false;
+        }
+
         $get = $this->input->get();
         $filter_status = '';
 
@@ -135,6 +141,11 @@ class Events extends MY_Controller
 
     public function event_add($id=null) {
         $this->load->model('Users_model');
+
+        if(!checkRoleCanAccessModule('events', 'write')){
+            show403Error();
+            return false;
+        }
 
 		$this->page_data['page']->title = 'Event Scheduler Tool';
         $this->page_data['page']->parent = 'Sales';
@@ -1856,10 +1867,16 @@ class Events extends MY_Controller
 
         $event = $this->event_model->getEvent($post['schedule_id']);
         if( $event && ($event->company_id == $cid) ){
+            $event_number = $event->event_number;
             $this->event_model->delete($event->id);
 
             $is_valid = 1;
             $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Events : Deleted event ' . $event_number; 
+            createActivityLog($activity_name);
+            
         }else{
             $msg = 'Cannot find data';
         }
