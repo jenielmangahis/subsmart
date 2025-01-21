@@ -861,13 +861,26 @@ class Customer extends MY_Controller
 
     public function ajax_customer_lists()
     {
-        $get_company_settings = [
-            'where' => [
-                'company_id' => logged('company_id'),
-            ],
-            'table' => 'customer_settings_headers',
-            'select' => '*',
-        ];
+        $post = $this->input->post();
+        if( $post['type'] && $post['type'] == 'residential' ){
+            $get_company_settings = [
+                'where' => [
+                    'company_id' => logged('company_id'),
+                    'customer_type' => 'Residential'
+                ],
+                'table' => 'customer_settings_headers',
+                'select' => '*',
+            ];    
+        }else{
+            $get_company_settings = [
+                'where' => [
+                    'company_id' => logged('company_id'),
+                ],
+                'table' => 'customer_settings_headers',
+                'select' => '*',
+            ];
+        }
+        
         $customer_settings = $this->general->get_data_with_param($get_company_settings);
         $enabled_table_headers = [];
         if (isset($customer_settings[0])) {
