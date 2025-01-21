@@ -861,6 +861,7 @@ class Customer extends MY_Controller
 
     public function ajax_customer_lists()
     {
+        $post = $this->input->post();
         $get_company_settings = [
             'where' => [
                 'company_id' => logged('company_id'),
@@ -868,14 +869,21 @@ class Customer extends MY_Controller
             'table' => 'customer_settings_headers',
             'select' => '*',
         ];
+
         $customer_settings = $this->general->get_data_with_param($get_company_settings);
         $enabled_table_headers = [];
         if (isset($customer_settings[0])) {
             $enabled_table_headers = unserialize($customer_settings[0]->headers);
         }
 
+        if( $post['type'] ){
+            $customers = $this->customer_ad_model->getCustomerLists($search, 0, 0, $post['type']);
+        }else{
+            $customers = $this->customer_ad_model->getCustomerLists($search, 0, 0);
+        }
+
         $search = ['search' => ''];
-        $this->page_data['profiles'] = $this->customer_ad_model->getCustomerLists($search, 0, 0);
+        $this->page_data['profiles'] = $customers;
         $this->page_data['enabled_table_headers'] = $enabled_table_headers;
         $this->load->view('v2/pages/customer/ajax_customer_lists', $this->page_data);
     }

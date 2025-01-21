@@ -110,11 +110,25 @@
                                 <?php } ?>
                             </ul>
                         </div>
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" id="btn-residential-export-list">
-                                <i class='bx bx-fw bx-file'></i> Export
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button primary" data-bs-toggle="dropdown" style="width:122px;">
+                                <span>More Action <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
+                            <ul class="dropdown-menu dropdown-menu-end">                                    
+                                <li>
+                                    <a class="dropdown-item" id="btn-residential-export-list" href="javascript:void(0);"><i class='bx bx-fw bx-file'></i> Export</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" id="print-customer-list" href="javascript:void(0)"><i class='bx bx-fw bx-printer'></i> Print</a>
+                                </li>
+                                <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
+                                <li>
+                                    <a class="dropdown-item" id="favorite-customer-list" href="javascript:void(0)"><i class='bx bx-fw bxs-heart'></i> Favorite Customers</a>
+                                </li>
+                                <?php } ?>
+                            </ul>     
                         </div>
+                        
                         <?php if(checkRoleCanAccessModule('customers', 'write')){ ?>
                         <div class="nsm-page-buttons page-button-container">
                             <a class="nsm-button primary" id="openModalBtn" style="margin-left: 10px; cursor: pointer;"> <i class='bx bx-fw bxs-user-plus'></i> New Customer</a>
@@ -674,6 +688,39 @@ $(document).ready(function() {
                 $('#customer-archived-list-container').html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
+    });
+
+    $('#favorite-customer-list').on('click', function(){
+        $('#modal-favorite-customers').modal('show');
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer/_favorite_list",  
+            success: function(html) {    
+                $('#customer-favorite-list-container').html(html);                          
+            },
+            beforeSend: function() {
+                $('#customer-favorite-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $('#print-customer-list').on('click', function() {
+        var url  = base_url + 'customer/_get_customer_lists';
+        var type = 'Residential';
+
+        $('#print_customer_list_modal').modal('show');
+        $("#print-customer-list-container").html('<span class="bx bx-loader bx-spin"></span> loading customer list...');
+
+        setTimeout(function() {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {type:type},
+                success: function(o) {
+                    $("#print-customer-list-container").html(o);
+                }
+            });
+        }, 800);
     });
     
     $(document).on('click', '.send-esign', function(){
