@@ -414,7 +414,7 @@
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
                                     <li>
-                                        <a class="dropdown-item" href="<?= url('customer/import_customer') ?>'"><i class='bx bx-fw bx-chart'></i> Import</a>
+                                        <a class="dropdown-item" href="<?= url('customer/import_customer') ?>"><i class='bx bx-fw bx-chart'></i> Import</a>
                                     </li>
                                     <?php } ?>
                                     <li>
