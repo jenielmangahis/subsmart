@@ -702,12 +702,14 @@ class Customer extends MY_Controller
             $call_action     = '';
             $schedule_action = '';
             $email_action    = '';
+            $send_esign_action = '';
             if( checkRoleCanAccessModule('customers', 'write') ){
                 $edit_action = "<li><a class='dropdown-item' href='".base_url('customer/add_advance/'.$customer->prof_id)."'>Edit</a></li>";
                 $favorite_action = " <li><a class='dropdown-item favorite-customer' data-favorite='".$customer->is_favorite."' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' href='javascript:void(0);'>Add to Favorites</a></li>";
                 $call_action = "<li><a class='dropdown-item call-item' href='javascript:void(0);' data-id='".$customer->phone_m."'>Call</a></li>";
                 $schedule_action = "<li><a class='dropdown-item' href='".base_url('job/new_job1?cus_id='.$customer->prof_id)."'>Schedule</a></li>";
                 $email_action = "<li><a class='dropdown-item send-email' data-id='".$customer->prof_id."' data-email='".$customer->email."' href='javascript:void(0);'>Email</a></li>";
+                $send_esign_action = " <li><a class='dropdown-item send-esign' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' href='javascript:void(0);'>Send eSign</a></li>";
             }
             
             $delete_action = '';
@@ -725,7 +727,8 @@ class Customer extends MY_Controller
                     </li>
                     ".$edit_action."
                     ".$email_action."
-                    ".$call_action."                    
+                    ".$call_action."  
+                    ".$send_esign_action."                  
                     <li>
                         <a class='dropdown-item' href='".base_url('invoice/add?cus_id='.$customer->prof_id)."'>Invoice</a>
                     </li>
@@ -1003,7 +1006,7 @@ class Customer extends MY_Controller
                 }
                 if (in_array('subscription_amount', $enabled_table_headers)) {
                     //$subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
-                    $subs_amt = $customer->mmr > 0 ? number_format(floatval($customer->mmr), 2, '.', ',') : 0.00;
+                    $subs_amt = $customer->mmr > 0 ? number_format(floatval($customer->mmr), 2, '.', ',') : '0.00';
                     array_push($data_arr, '$'.$subs_amt);
                 }
                 if (in_array('job_amount', $enabled_table_headers)) {
@@ -1082,10 +1085,16 @@ class Customer extends MY_Controller
                 $techician = !empty($customer->technician) ? get_employee_name($customer->technician) : 'Not Assigned';
                 array_push($data_arr, $techician);
                 // plan type
-                $plan_type = trim($customer->system_type) != '' ? $customer->system_type : '---';
+                $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($customer->mmr, logged('company_id'));
+                $plan_type= 'Not Specified';
+                if( $ratePlan ){
+                    $plan_type = $ratePlan->plan_name;
+                }
+                //$plan_type = trim($customer->system_type) != '' ? $customer->system_type : '---';
                 array_push($data_arr, $plan_type);
                 // sub amount
-                $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
+                $subs_amt = $customer->mmr > 0 ? number_format(floatval($customer->mmr), 2, '.', ',') : '0.00';         
+                //$subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
                 array_push($data_arr, '$'.$subs_amt);
                 // job amount
                 $this->db->select('SUM(job_items.qty * job_items.cost) AS total_amount');
@@ -4090,6 +4099,9 @@ class Customer extends MY_Controller
 
     public function save_billing_information($input, $id)
     {
+        $this->load->model('RatePlan_model');
+        $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($input['mmr'], logged('company_id'));
+
         $input_billing = [];
         // billing data
         switch ($input['bill_freq']) {
@@ -4113,6 +4125,7 @@ class Customer extends MY_Controller
                 break;
         }
         $input_billing['fk_prof_id'] = $id;
+        $input_billing['ac_rate_plan_id'] = $ratePlan->id;
         $input_billing['card_fname'] = $input['card_fname'];
         $input_billing['card_lname'] = $input['card_lname'];
         $input_billing['card_address'] = $input['card_address'];
@@ -4121,7 +4134,7 @@ class Customer extends MY_Controller
         $input_billing['zip'] = $input['billing_zip'];
         $input_billing['equipment'] = $input['equipment'];
         $input_billing['initial_dep'] = $input['initial_dep'];
-        $input_billing['mmr'] = $input['mmr'];
+        $input_billing['mmr'] = $ratePlan->amount;
         $input_billing['bill_freq'] = $input['bill_freq'];
         $input_billing['bill_day'] = $input['bill_day'];
         $input_billing['contract_term'] = $input['contract_term'];
