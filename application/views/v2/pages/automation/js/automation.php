@@ -8,18 +8,19 @@ $options = get_automation_options();
     const timeOptions =  <?php echo json_encode($options['timeOptions']); ?>;
     const timingOptions =<?php echo json_encode($options['timingOptions']); ?>;
     const dateOptions =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <?php echo json_encode($options['dateOptions']); ?>;
-    const automationConfig =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <?php echo json_encode(get_automation_email_config()); ?>;
+    const automationConfig =     <?php echo json_encode(get_automation_email_config()); ?>;
 
     $(document).ready(function() {
 
-        let selectedStatus = 'Approved';
+        let selectedAutomationId = '';
+        let selectedStatus = '';
         let selectedType = '';
         let selectedEvent = '';
-        let selectedTarget = 'someone';
-        let selectedAction = 'a reminder';
-        let selectedTime = 'within a defined time';
-        let selectedTiming = 'after';
-        let selectedDate = 'date';
+        let selectedTarget = '';
+        let selectedAction = '';
+        let selectedTime = '';
+        let selectedTiming = '';
+        let selectedDate = '';
         let selectedTitle = '';
         let emailSubject = '';
         let emailBody = '';
@@ -45,8 +46,8 @@ $options = get_automation_options();
         };
 
         function setupDropdownToggle(dropdownBtnId, dropdownMenuId) {
-            $(dropdownBtnId).on('click', function () {
             console.log(dropdownMenuId)
+            $(dropdownBtnId).on('click', function () {
                 toggleDropdown(dropdownMenuId);
                 closeDropdownsExcept(dropdownMenuId);
             });
@@ -65,12 +66,14 @@ $options = get_automation_options();
         $(".entity-event-item").on("click", function () {
             selectedEntity = $(this).data("type");
             selectedEvent = $(this).data("value");
+
             $("#entityDropdownBtn").text(determineArticle(selectedEntity));
-            populateEventDropdown(selectedEntity);
-            populateOperationDropdown(selectedEntity);
             $("#entityDropdownMenu").hide();
-            $(".event-dropdown-container").show();
-            handleEventClick();
+
+            populateEventDropdown(selectedEntity);
+            handleEventItemClick();
+            populateOperationDropdown(selectedEntity);
+            $(".event-dropdown-container").removeClass('d-none');
         });
 
         // Populate Dropdowns
@@ -89,7 +92,7 @@ $options = get_automation_options();
             $(`.${className}`).on("click", function () {
                 const selected = $(this).data("value");
                 $(buttonId).text(options[selected] || selectedValue);
-                $(buttonId).addClass('primary');
+                $(buttonId).addClass('primary').removeClass('secondary');
                 $(menuId).hide();
                 $(`${menuId} .${className}`).removeClass('active');
                 $(this).addClass('active');
@@ -109,59 +112,61 @@ $options = get_automation_options();
                 }
 
                 if(menuId == '#eventDropdownMenu'){
-                 handleEventClick()
+                    handleEventItemClick()
+                }
 
+                if(menuId == '#actionDropdownMenu'){
+                    populateEmailModal('automation_msg', '#addEmail')
                 }
             });
         }
 
 
-
         function populateModal(data) {
             console.log(data)
-             const template = generateEmailTemplate(data.target);
+            if(data){
+                const template = generateEmailTemplate(data.target);
+                if (template) {
+                    const {
+                        subject,
+                        body
+                    } = template;
+                    emailSubject = subject;
+                    emailBody = body;
+                }
 
-            if (!template) {
-                console.error("Failed to generate automation template.");
-                return;
+                selectedStatus = statusOptions[data.entity] ? Object.values(statusOptions[data.entity])[0] : null;
+                selectedTitle = data.title || selectedTitle
+                selectedTarget = data.target;
+                selectedAction = data.action;
+                selectedTime = data.time;
+                selectedTiming = data.timing;
+                selectedDate = data.date;
+                selectedEvent = data.event
+                selectedEntity = data.entity
+                selectedOperation = 'send'
             }
-
-            const {
-                subject,
-                body
-            } = template;
-            emailSubject = subject;
-            emailBody = body;
-            selectedStatus = Object.values(statusOptions[data.entity])[0];
-            selectedTarget = data.target;
-            selectedAction = data.action;
-            selectedTime = data.time;
-            selectedTiming = data.timing;
-            selectedDate = data.date;
-            selectedEvent = data.event
-            selectedEntity = data.entity
-            selectedOperation = 'send'
-
+         
             //first
-            $("#entityDropdownBtn").text(determineArticle(selectedEntity));
-            populateEventDropdown(selectedEntity);
-            handleEventClick()
+            handleFirstParagraph(selectedEntity)
 
             //second
-            $("#operationDropdownBtn").text(selectedOperation);
-            populateOperationDropdown(selectedEntity);
-            handleSecondParagraph()
+            $("#operationDropdownBtn").text(selectedOperation || 'do this');
+            if(selectedOperation){
+                populateOperationDropdown(selectedEntity);
+                handleSecondParagraph()
+                setActiveTimelineItem();
+            }
 
-            setActiveTimelineItem();
             $('#addAutomation').modal('show');
         }
 
-            console.log(eventOptions)
 
-
-         function populateEventDropdown(entity) {
-            console.log(entity)
+        function populateEventDropdown(entity) {
             const item = eventOptions[entity];
+            if(entity){
+                $(".event-dropdown-container").removeClass('d-none');
+            }
             if (item) {
                 populateDropdown('#eventDropdownMenu', item, selectedEvent, 'event-item-2', '#eventDropdownBtn');
             }
@@ -176,7 +181,7 @@ $options = get_automation_options();
             }
         }
 
-         function populateOperationDropdown(entity) {
+        function populateOperationDropdown(entity) {
             // Clear the operation dropdown menu
             $('#operationDropdownMenu').empty();
 
@@ -198,49 +203,53 @@ $options = get_automation_options();
 
                 // Update the button text with the selected operation
                 $("#operationDropdownBtn").text(selectedOperation);
-                $(this).addClass('active');
                 
 
                 handleSecondParagraph()
             });
         }
 
+        function populateTimeDropdown(entity) {
+            let text = selectedTime ? formatTriggerTime(selectedTime) + ' ' + timingOptions[selectedTiming] : "within a defined time"
+            console.log(formatTriggerTime(selectedTime) + ' ' + timingOptions[selectedTiming])
+            $("#timeDropdownBtn").text(text);
+        }
+
+        function populateEmailModal(ckId, modalId){
+            document.querySelector('[name="subject"]').value = emailSubject;
+            document.getElementById('automation_msg').value = emailBody;
+            if (CKEDITOR.instances[ckId]) {
+                CKEDITOR.instances[ckId].setData(emailBody);
+            } else {
+                console.error(`CKEditor instance with id "${ckId}" not found.`);
+            }
+
+            $(modalId).modal('show');
+        }
+
+        function handleFirstParagraph(){
+            let entity = selectedEntity != '' ? determineArticle(selectedEntity) : 'this happens'
+            $("#entityDropdownBtn").text(entity);
+            populateEventDropdown(selectedEntity);
+            handleEventItemClick()
+        }
+
         function handleSecondParagraph(){
             $('#operationDropdownBtn').addClass('primary');
             $("#operationDropdownMenu").hide();
-            $('.operation-item').removeClass('active'); 
 
             $(".target-dropdown-container").removeClass('d-none');
             $(".action-dropdown-container").removeClass('d-none');
             $(".time-dropdown-container").removeClass('d-none');
-            $(".date-dropdown-container").removeClass('d-none');
+            if(selectedDate){
+                $(".date-dropdown-container").removeClass('d-none');
+            }
 
-            populateDropdown('#targetDropdownMenu', targetOptions, selectedTarget, 'target-item', '#targetDropdownBtn');
-            populateDropdown('#actionDropdownMenu', actionOptions, selectedAction, 'action-item', '#actionDropdownBtn');
+            populateDropdown('#targetDropdownMenu', targetOptions, selectedTarget || 'someone', 'target-item', '#targetDropdownBtn');
+            populateDropdown('#actionDropdownMenu', actionOptions, selectedAction || 'a reminder', 'action-item', '#actionDropdownBtn');
             populateTimeDropdown(selectedEntity)
-            populateDropdown('#dateDropdownMenu', dateOptions, selectedDate, 'date-item', '#dateDropdownBtn');
+            populateDropdown('#dateDropdownMenu', dateOptions, selectedDate || 'date', 'date-item', '#dateDropdownBtn');
         }
-
-        // Time and Timing selection logic
-        $('.time-btn').on('click', function () {
-            handleTimeClick('.time-btn', this);
-            selectedTime = $(this).data("value");
-            $(".timing-btn").each(function() {
-                if ($(this).text() == selectedTiming) {
-                    handleTimeClick('.timing-btn', this);
-                }
-            });
-            let text = formatTriggerTime(selectedTime) + ' ' + selectedTiming;
-            $("#timeDropdownBtn").text(text);
-            $('#timeDropdownBtn').addClass('primary');
-        });
-
-        $('.timing-btn').on('click', function () {
-            handleTimeClick('.timing-btn', this);
-            selectedTiming = $(this).text();
-            let text = formatTriggerTime(selectedTime) + ' ' + selectedTiming;
-            $("#timeDropdownBtn").text(text);
-        });
 
         // Handle button selection and toggling
         function handleTimeClick(name, clickedButton) {
@@ -248,7 +257,7 @@ $options = get_automation_options();
             $(clickedButton).removeClass('nsm-button-outlined primary').addClass('nsm-button primary');
         }
 
-         function handleEventClick(){
+         function handleEventItemClick(){
             if (selectedEvent === 'has_status') {
                 $(".status-dropdown-container").removeClass('d-none');
                 populateStatusDropdown(selectedEntity);
@@ -256,12 +265,6 @@ $options = get_automation_options();
                 $(".status-dropdown-container").addClass('d-none');
             }
         }
-
-        function populateTimeDropdown(entity) {
-            let text = selectedTime ? formatTriggerTime(selectedTime) + ' ' + timingOptions[selectedTiming] : "within a defined time"
-            $("#timeDropdownBtn").text(text);
-        }
-
 
         // Close all dropdowns except the one passed as argument
         function closeDropdownsExcept(except) {
@@ -284,31 +287,43 @@ $options = get_automation_options();
             }
         }
 
+        // Time and Timing selection logic
+        $('.time-btn').on('click', function () {
+            handleTimeClick('.time-btn', this);
+            selectedTime = $(this).data("value");
+            $(".timing-btn").each(function() {
+                if ($(this).text() == selectedTiming) {
+                    handleTimeClick('.timing-btn', this);
+                }
+            });
+            let text = formatTriggerTime(selectedTime) + ' ' + selectedTiming;
+            $("#timeDropdownBtn").text(text);
+            $('#timeDropdownBtn').addClass('primary').removeClass('secondary');
+            $(".date-dropdown-container").removeClass('d-none');
 
+        });
 
+        $('.timing-btn').on('click', function () {
+            handleTimeClick('.timing-btn', this);
+            selectedTiming = $(this).data('value');
+            let text = formatTriggerTime(selectedTime) + ' ' + timingOptions[selectedTiming];
+            $("#timeDropdownBtn").text(text);
+            $(".date-dropdown-container").removeClass('d-none');
+        });
 
-        $(document).on('click', '.timeline-item', function() {
+        $('.timeline-item').on('click', function() {
             setActiveTimelineItem(this.id);
-        });
-
-        $(document).on('click', '#workflowMenuAccordion', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-        });
-
-        $(document).on('click', '.task-item', function() {
-            const value = $(this).data('value');
-            displaySecondParagraphSelection(value);
         });
 
         $('#automation_title').on('change', function() {
             selectedTitle = $(this).val();
         });
 
-        $(document).on('click', '.reminder-item', function() {
+        $('.reminder-item').on('click', function() {
             var action = $(this).data('onclick');
             var value = $(this).data('value');
             var type = $(this).data('type');
+
             if (value) {
                 // Set the value of the input field inside the modal
                 $('input[type="text"].nsm-field').val(value);
@@ -320,19 +335,17 @@ $options = get_automation_options();
             }
         });
 
-        $(document).on('click', '.preview-message', function() {
-            //autopolate subject and body
-            document.querySelector('[name="subject"]').value = emailSubject;
-            document.getElementById('automation_msg').value = emailBody;
-            CKEDITOR.instances.automation_msg.setData(emailBody);
-
-            $('#addEmail').modal('show');
+        $('.preview-message').on('click', function() {
+            populateEmailModal('automation_msg', '#addEmail')
 
         });
 
-        $(document).on('submit', '#emailForm', function(e) {
+        $('#emailForm').on('submit', function(e) {
             console.log('close')
             e.preventDefault();
+
+            const messageContent = CKEDITOR.instances['automation_msg'].getData(); // Fetch the CKEditor content
+            $('textarea[name="message"]').val(messageContent); // Update the textarea value
 
             let formData = $(this).serializeArray();
             console.log(formData)
@@ -385,28 +398,25 @@ $options = get_automation_options();
                 success: function (response) {
                     if (response.success) {
                         let data = response.data[0]
-                        selectedStatus =data.trigger_status;
-                        selectedTarget = data.target;
-                        selectedAction = data.trigger_action;
-                        selectedTime = data.trigger_time;
-                        selectedTiming = data.timing_reference;
-                        selectedDate = data.date_reference;
-                        selectedEvent = data.trigger_event
-                        type = data.entity
-                        selectedTitle = data.title
+                        selectedAutomationId = data.id
 
                         emailSubject = data.email_subject;
                         emailBody = data.email_body;
 
-                        $("#automation_title").val(selectedTitle)
+                        automationData = {
+                            selectedStatus: data.trigger_status,
+                            target: data.target,
+                            action: data.trigger_action,
+                            time : data.trigger_time,
+                            timing: data.timing_reference,
+                            date: data.date_reference,
+                            event: data.trigger_event,
+                            entity: data.entity,
+                            title: data.title
+                        }
 
                         setActiveTimelineItem();
-                        $('#addAutomation').modal('show');
-
-                        displayFirstParagraphSelection(type, selectedEvent);
-                        displaySecondParagraphSelection('send');
-
-
+                        openAutomationModal('edit', automationData);
                     } else {
                         alert(response.message || 'Failed to fetch automation details.');
                     }
@@ -417,16 +427,15 @@ $options = get_automation_options();
             });
         });
 
-
-        $('#submitAutomation').click(function(e) {
+        $('#submitAutomation').click(async function(e) {
             e.preventDefault();
             let scheduledForm = $(this);
 
             const automationData = {
                 title: selectedTitle,
-                entity: selectedType,
+                entity: selectedEntity,
                 trigger_event: selectedEvent,
-                trigger_status: selectedEvent == 'has_status' ? selectedStatus : null, // For non-status triggers
+                trigger_status: selectedEvent == 'has_status' ? selectedStatus : '', // For non-status triggers
                 trigger_time: selectedTime, // 2 hours in minutes
                 trigger_action: selectedAction,
                 target: selectedTarget,
@@ -439,16 +448,58 @@ $options = get_automation_options();
 
             console.log(automationData)
 
+              // Check for missing fields
+            const missingFields = getMissingFields(automationData);
+            if (missingFields.length > 0) {
+                alert(`Please fill in the following fields: ${missingFields.join(', ')}`);
+                return; // Stop further execution
+            }
+
              let message = {
                 icon: 'success',
                 title: 'Automation Saved!',
                 body: 'Automation has been saved.'
             }
-            let res = sendPost(automationData, "/Automation/saveAutomation", message )
-            if(res) {
-                $('#addAutomation').modal('hide');
-                location.reload();
+            let res = await sendPost(automationData, "/Automation/saveAutomation", message, true )
+       
+        });
+
+         $('#editAutomation').click(async function(e) {
+            e.preventDefault();
+            let scheduledForm = $(this);
+
+            const automationData = {
+                title: selectedTitle,
+                entity: selectedEntity,
+                trigger_event: selectedEvent,
+                trigger_status: selectedEvent == 'has_status' ? selectedStatus : '', // For non-status triggers
+                trigger_time: selectedTime, // 2 hours in minutes
+                trigger_action: selectedAction,
+                target: selectedTarget,
+                date_reference: selectedDate,
+                timing_reference: selectedTiming,
+                email_subject: emailSubject,
+                email_body: emailBody,
+                id: selectedAutomationId
+            };
+
+            console.log(automationData)
+
+              // Check for missing fields
+            const missingFields = getMissingFields(automationData);
+            if (missingFields.length > 0) {
+                alert(`Please fill in the following fields: ${missingFields.join(', ')}`);
+                return; // Stop further execution
             }
+
+             let message = {
+                icon: 'success',
+                title: 'Automation Updated!',
+                body: 'Automation has been updated.'
+            }
+            let res = await sendPost(automationData, "/Automation/updateAutomation", message, true )
+            selectedAutomationId = '';
+       
         });
 
         $('.trigger-auto').click(function(e) {
@@ -531,8 +582,8 @@ $options = get_automation_options();
                 title: 'Success!',
                 body: 'Automation has been updated.'
             }
-            let res = sendPost(data, "/Automation/toggleAutomationStatus", message )
-            $('#flexSwitchCheck' + automationId).prop('checked', !$('#flexSwitchCheck' + automationId).prop('checked'));
+            let res = sendPost(data, "/Automation/toggleAutomationStatus", message, true )
+            // $('#flexSwitchCheck' + automationId).prop('checked', !$('#flexSwitchCheck' + automationId).prop('checked'));
         });
 
         $('.delete-automation').click(function(e) {
@@ -563,48 +614,134 @@ $options = get_automation_options();
             }
         });
 
-        function sendPost(data, url, message){
-            $.ajax({
-                type: "POST",
-                url: BASE_URL + url,
-                data: data,
-                dataType: "JSON",
-                beforeSend: function() {
-                    formDisabler(data, true);
-                    Swal.fire({
-                        icon: "info",
-                        title: "Processing!",
-                        html: "Please wait while the process is running...",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        },
-                    });
-                },
-                success: function(response) {
-                    formDisabler(data, false);
-                    Swal.fire({
-                        icon: message.icon,
-                        title: message.title,
-                        html: message.body,
-                        showConfirmButton: true,
-                        confirmButtonText: "Okay",
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX Error:", error);
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error!",
-                        html: "An unexpected error occurred: " + error,
-                        showConfirmButton: true,
-                        confirmButtonText: "Okay",
-                    });
-                    formDisabler(data, false);
-                },
+        $('#addAutomationBtn').click(function (e) {
+            console.log('asda')
+            openAutomationModal('add');
+        });
+
+        function sendPost(data, url, message, isReload = false) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: "POST",
+                    url: BASE_URL + url,
+                    data: data,
+                    dataType: "JSON",
+                    beforeSend: function () {
+                        formDisabler(data, true);
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing!",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    },
+                    success: function (response) {
+                        formDisabler(data, false);
+                        Swal.fire({
+                            icon: message.icon,
+                            title: message.title,
+                            html: message.body,
+                            showConfirmButton: true,
+                            confirmButtonText: "Okay",
+                        }).then((result) => {
+                            if (result.isConfirmed && isReload) {
+                                location.reload(); // Reload the page when "Okay" is clicked
+                            }
+                        });
+                        resolve(response); // Resolve the promise with the response
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", error);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error!",
+                            html: "An unexpected error occurred: " + error,
+                            showConfirmButton: true,
+                            confirmButtonText: "Okay",
+                        });
+                        formDisabler(data, false);
+                        reject(error); // Reject the promise with the error
+                    },
+                });
             });
         }
+
+        function openAutomationModal(mode, data = null) {
+            const $modal = $('#addAutomation');
+            const $addButton = $('#submitAutomation');
+            const $editButton = $('#editAutomation');
+
+            if (mode === "edit") {
+                // Set modal title and button text for editing
+
+                $editButton.removeClass('d-none');
+                $addButton.addClass('d-none');
+
+                if (data) {
+                    $('#automation_title').val(data.title || '');
+                    populateModal(data)
+                }
+            } else {
+                 // Show "Add" button and hide "Edit" button
+                $addButton.removeClass('d-none');
+                $editButton.addClass('d-none');
+
+                // Clear fields
+                $('#automation_title').val('');
+                resetAutomationModal()
+                populateModal(data)
+
+            }
+        }
+
+        function resetAutomationModal() {
+            selectedStatus = '';
+            selectedType = '';
+            selectedEvent = '';
+            selectedTarget = 'someone';
+            selectedAction = 'a reminder';
+            selectedTime = '';
+            selectedTiming = 'after';
+            selectedDate = '';
+            selectedTitle = '';
+            emailSubject = '';
+            emailBody = '';
+            activeAutoTemplate = '';
+            selectedEntity = '';
+            selectedOperation = '';
+         
+
+            $(".event-dropdown-container").addClass('d-none');
+            $(".status-dropdown-container").addClass('d-none');
+            $(".target-dropdown-container").addClass('d-none');
+            $(".action-dropdown-container").addClass('d-none');
+            $(".time-dropdown-container").addClass('d-none');
+            $(".date-dropdown-container").addClass('d-none');
+            
+        }
+
+
+
+
+
+        function getMissingFields(data) {
+            let missingFields = [];
+            Object.entries(data).forEach(([key, value]) => {
+                if (key === 'trigger_status' && data.trigger_event !== 'has_status') {
+                    // Skip checking `trigger_status` if `trigger_event` is not 'has_status'
+                    return;
+                }
+                if (!value) {
+                    missingFields.push(key); // Add missing field to the list
+                }
+            });
+            return missingFields;
+        }
+
 
 
         function typeIcon(type) {

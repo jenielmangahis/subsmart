@@ -41,7 +41,7 @@
                             <span><i class="bx bx-receipt"></i>
                                 Active
                             </span>
-                            <h2 id="total_this_year">4</h2>
+                            <h2 id="total_this_year"><?php echo $automation_status['active']; ?></h2>
 
                         </div>
                     </div>
@@ -53,9 +53,9 @@
 
                         <div class=" w-100 col-md-8 text-start d-flex align-items-center  justify-content-between">
                             <span><i class="bx bx-receipt"></i>
-                                Triggered
+                                Inactive
                             </span>
-                            <h2 id="total_this_year">1</h2>
+                            <h2 id="total_this_year"><?php echo $automation_status['inactive']; ?></h2>
 
                         </div>
                     </div>
@@ -65,24 +65,21 @@
     </div>
 
     <div class="row mb-3">
-        <div class="col-12 col-md-6 grid-mb">
+        <div class="col-sm-12 col-md-6 grid-mb">
             <div class="nsm-field-group search">
                 <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOMER_SEARCHBAR" placeholder="Search...">
             </div>
         </div>
-        <div class="col-md-6 grid-mb text-end">
-            <div class="nsm-page-buttons primary page-button-container">
-                <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#addAutomation">
-                    <i class='bx bx-fw bx-plus'></i> Add Automation
-                </button>
-                <button type="button" class="nsm-button primary trigger-auto">
-                    <i class='bx bx-fw bx-plus'></i>Trigger automation
-                </button>
-                <button type="button" class="nsm-button primary process-auto">
-                    <i class='bx bx-fw bx-plus'></i>Process automation
-                </button>
-
-            </div>
+        <div class="col-md-6 col-sm-12 grid-mb text-end">
+            <button type="button" class="nsm-button primary" id="addAutomationBtn">
+                <i class='bx bx-fw bx-plus'></i> Add Automation
+            </button>
+            <!-- <button type="button" class="nsm-button primary trigger-auto">
+                <i class='bx bx-fw bx-plus'></i>Trigger automation
+            </button>
+            <button type="button" class="nsm-button primary process-auto">
+                <i class='bx bx-fw bx-plus'></i>Process automation
+            </button> -->
         </div>
     </div>
 

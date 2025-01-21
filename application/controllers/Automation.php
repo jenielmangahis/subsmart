@@ -32,6 +32,7 @@ class Automation extends MY_Controller
         $this->page_data['automations'] = $this->automation_model->getAutomationsByParams([
             'user_id' => logged('id'),
         ]);
+        $this->page_data['automation_status'] = $this->automation_model->countAutomationsByStatus( logged('id'));
 
         $this->load->view('v2/pages/automation/list', $this->page_data);
     }
@@ -145,6 +146,26 @@ class Automation extends MY_Controller
         }
     }
 
+    public function updateAutomation()
+    {
+        $id = $this->input->post('id');
+        $updatedData = $this->input->post();
+
+        if (!$id || empty($updatedData)) {
+            echo json_encode(['success' => false, 'message' => 'Invalid automation ID or data']);
+            return;
+        }
+
+        // Remove the ID from updated data, as it's already in the parameter
+        unset($updatedData['id']);
+
+        // Update the automation in the database
+        $res = $this->automation_model->updateAutomationsByParams($updatedData, $id);
+
+        echo json_encode(['success' => true, 'response' => $res]);
+    }
+
+
     public function toggleAutomationStatus()
     {
         $id     = $this->input->post('id');
@@ -160,6 +181,18 @@ class Automation extends MY_Controller
         } else {
             echo json_encode(['success' => false, 'message' => 'Invalid data']);
         }
+    }
+
+    function countActiveAutomations($automations) {
+        $activeCount = 0;
+
+        foreach ($automations as $automation) {
+            if (isset($automation['status']) && $automation['status'] === 'active') {
+                $activeCount++;
+            }
+        }
+
+        return $activeCount;
     }
 
     public function triggerAutomations()

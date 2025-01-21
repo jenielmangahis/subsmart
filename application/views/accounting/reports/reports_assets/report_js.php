@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    $(function() { $('select').select2('destroy'); });
+    // $(function() { $('select').select2('destroy'); });
 
     CKEDITOR.replace('emailBody', {
         toolbarGroups: [
@@ -11,7 +11,65 @@
     
     var setDataTable;
     var currentTable = '<?php echo $tableID; ?>';
-    var reportTables = ['vendorcontactlist_table', 'salesbycustomersummary_table',  'customerbalancesummary_table', 'customercontactlist_table', 'expensesbyvendorsummary_table', 'incomebycustomerysummary_table', 'invoicelistbydate_table', 'paymentmethodlist_table', 'physicalinventoryworksheet_table', 'productservicelist_table', 'salesbyproductservicesummary_table', 'taxablesalessummary_table', 'vendorbalancesummary_table', 'statementlist_table', 'employeedetails_table', 'accountsreceivableagingsummarylist_table', 'accountlist_table', 'incomebycustomerysummary_table', 'contractorbalancesummary_table', 'transactionlistwithsplits_table', 'transactionlistcustomer_table', 'employeedirectory_table', 'reconciliationreports_table', 'salesbyitems_table', 'accountreceivable_table', 'auditlogs_table', 'active_subscriptions_table', 'earned_table', 'invoiceamount_table', 'jobscompleted_table', 'newjobs_table', 'lostaccounts_table', 'serviceprojectiveincome_table', 'customergroups_table', 'jobstatus_table', 'estimates_table', 'jobtags_table', 'leadsource_table', 'paidinvoices_table', 'openinvoices_table', 'pastdueinvoices_table', 'overdueinvoices_table', 'unpaidinvoices_table', 'taskhub_table', 'openestimates_table', 'timesheet_table', 'recentleads_table', 'customerstatus_table', 'servicetickets_table', 'bankaccounts_table', 'salesleaderboard_table', 'techleaderboard_table', 'recentcustomers_table', 'jobactivities_table', 'sales_table', 'collections_table', 'employeeperformancerating_table', ];
+    var reportTables = [
+        'vendorcontactlist_table',
+        'salesbycustomersummary_table',
+        'customerbalancesummary_table',
+        'customercontactlist_table',
+        'expensesbyvendorsummary_table',
+        // 'incomebycustomersummary_table',
+        'invoicelistbydate_table',
+        'paymentmethodlist_table',
+        'physicalinventoryworksheet_table',
+        'productservicelist_table',
+        'salesbyproductservicesummary_table',
+        'taxablesalessummary_table',
+        'vendorbalancesummary_table',
+        'statementlist_table',
+        'employeedetails_table',
+        'accountsreceivableagingsummarylist_table',
+        'accountlist_table',
+        'contractorbalancesummary_table',
+        'transactionlistwithsplits_table',
+        'transactionlistcustomer_table',
+        'employeedirectory_table',
+        'reconciliationreports_table',
+        'salesbyitems_table',
+        'accountreceivable_table',
+        'auditlogs_table',
+        'active_subscriptions_table',
+        'earned_table',
+        'invoiceamount_table',
+        'jobscompleted_table',
+        'newjobs_table',
+        'lostaccounts_table',
+        'serviceprojectiveincome_table',
+        'customergroups_table',
+        'jobstatus_table',
+        'estimates_table',
+        'jobtags_table',
+        'leadsource_table',
+        'paidinvoices_table',
+        'openinvoices_table',
+        'pastdueinvoices_table',
+        'overdueinvoices_table',
+        'unpaidinvoices_table',
+        'taskhub_table',
+        'openestimates_table',
+        'timesheet_table',
+        'recentleads_table',
+        'customerstatus_table',
+        'servicetickets_table',
+        'bankaccounts_table',
+        'salesleaderboard_table',
+        'techleaderboard_table',
+        'recentcustomers_table',
+        'jobactivities_table',
+        'sales_table',
+        'collections_table',
+        'employeeperformancerating_table'
+    ];
+
     var base_url = window.location.origin;
     var REPORT_CATEGORY = "<?php echo $reportCategory; ?>";
     var REPORT_ID = "<?php echo $reportTypeId; ?>";
@@ -62,6 +120,7 @@
     // =========================
 
     // Date Filter 
+    var dateFilterText = '';
     $('select[name="date_filter"]').on('change', function() {
         const dateFilterOption = $(this).val();
         const $dateFromInput = $('input[name="date_from"]');
@@ -70,7 +129,6 @@
         const currentDate = new Date();
         let dateFrom = '';
         let dateTo = '';
-        let dateFilterText = '';
 
         if (dateFilterOption === 'get_all') {
             dateFrom = `1970-01-01`;
@@ -106,8 +164,6 @@
             $('.dateRangeFilterSection').fadeIn();
         }
 
-
-
         if (dateFrom && dateTo) {
             $dateFromInput.val(dateFrom);
             $dateToInput.val(dateTo);
@@ -116,7 +172,6 @@
     });
 
     function initializeDateFilterText() {
-        let dateFilterText = '';
         const dateFilterOption = $('select[name="date_filter"').val();
         const currentDate = new Date();
         if (dateFilterOption === 'get_all') {
@@ -418,7 +473,7 @@
                 $('#reportSettings').modal('hide');
 
                 if (reportTables.includes(currentTable)) {
-                    window.setDataTable = $('table').DataTable({
+                    window.setDataTable = $('#<?php echo $tableID; ?>').DataTable({
                         "ordering": false,
                         "pageLength": 10,
                         "searching": false,

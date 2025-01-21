@@ -1,5 +1,11 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
+<?php
+    $currentMonth = date("n");
+    $startMonth = ceil($currentMonth / 3) * 3 - 2;
+    $endMonth = $startMonth + 2;
+    $currentQuarter = "This Quarter (" . date("M", mktime(0, 0, 0, $startMonth, 1)) . " - " . date("M", mktime(0, 0, 0, $endMonth, 1)) . ")";
+?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-1"></div>
@@ -39,7 +45,7 @@
                                     <div class="reportTitleInfo">
                                         <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?></h3>
                                         <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
-                                        <h5><small id="reportDate"><span id="date_from_text"></span> &mdash; <span id="date_to_text"></span></small></h5>
+                                        <h5><small id="reportDate"><span id="filter_by_text"></span></small></h5>
                                     </div>
                                 </div>
                             </div>
@@ -204,18 +210,27 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12"><hr class="mt-0"></div>
-                                <div class="col-md-5 mb-3">
-                                    <label class="mb-1 fw-xnormal">Date Range <small class="text-muted">(From &mdash; To)</small></label>
-                                    <div class="input-group">
-                                        <input name="date_from" class="form-control mt-0" type="date" value="<?php echo (isset($reportSettings->report_date_from_text)) ? $reportSettings->report_date_from_text : date('Y').'-01-01'; ?>">
-                                        <input name="date_to" class="form-control mt-0" type="date" value="<?php echo (isset($reportSettings->report_date_to_text)) ? $reportSettings->report_date_to_text : date('Y-m-d'); ?>">
-                                    </div>  
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Date Filter</label>
+                                    <select name="date_filter" id="date-filter" class="nsm-field form-select">
+                                        <option value="get_all" <?php echo ($reportSettings->filter_by == "get_all") ? "selected" : "" ?>>None (get all records)</option>
+                                        <option value="current_month" <?php echo ($reportSettings->filter_by == "current_month") ? "selected" : "" ?>>This Month (<?php echo date('M') . ' 1 - ' . date('t'); ?>)</option>
+                                        <option value="current_quarter" <?php echo ($reportSettings->filter_by == "current_quarter") ? "selected" : "" ?>><?php echo $currentQuarter;?></option>
+                                        <option selected value="current_year" <?php echo ($reportSettings->filter_by == "current_year") ? "selected" : "" ?>>This Year (<?php echo date('Y'); ?>)</option>
+                                        <option value="custom" <?php echo ($reportSettings->filter_by == "custom") ? "selected" : "" ?>>Custom</option>
+                                    </select>
                                 </div>
+                                <div class="col-md-5 mb-3 dateRangeFilterSection" style="display: none;">
+                                    <label class="mb-1 fw-xnormal">Date Range <small class="text-muted"><i>(Specify From &mdash; To Dates)</i></small></label>
+                                    <div class="input-group">
+                                        <input name="date_from" class="form-control mt-0" type="date" value="<?= date('Y').'-01-01'; ?>">
+                                        <input name="date_to" class="form-control mt-0" type="date" value="<?= date('Y-m-t'); ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-12"><hr class="mt-0"></div>
                             </div>
                         </div>
                     </div>
-                    <hr class="mt-0">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="float-start">

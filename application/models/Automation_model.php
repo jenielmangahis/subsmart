@@ -93,4 +93,26 @@ class Automation_model extends CI_Model
 
         return $query->row();
     }
+
+    public function countAutomationsByStatus($user_id) {
+        // Retrieve all automations for the given user
+        $this->db->where('user_id', $user_id);
+        $query = $this->db->get('automations');
+        $automations = $query->result_array();
+
+        $statusCounts = [];
+
+        // Count automations by their status
+        foreach ($automations as $automation) {
+            if (isset($automation['status'])) {
+                $status = $automation['status'];
+                if (!isset($statusCounts[$status])) {
+                    $statusCounts[$status] = 0; // Initialize the counter for this status
+                }
+                $statusCounts[$status]++;
+            }
+        }
+
+        return $statusCounts;
+    }
 }
