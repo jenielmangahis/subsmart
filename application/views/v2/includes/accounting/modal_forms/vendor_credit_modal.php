@@ -1,4 +1,34 @@
 <!-- Modal for bank deposit-->
+<style>
+.btn-custom-close {
+    background: none;
+    border: none;
+    outline: none !important;
+    font-size: 1em;
+    color: #8b8b8b;
+    float:right;
+}
+#vendorCreditModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+#vendorCreditModal .modal-body{
+    overflow-x:hidden;
+}
+#vendorCreditModal .nsm-table .table-checkbox{
+    margin: 0 auto;
+}
+#vendorCreditModal #item-details-table td:nth-child(8){
+ text-align:right !important;
+}
+.hide-delete{
+    display:none;
+}
+.nsm-table > tbody td {
+    border:none !important;
+}
+</style>
+
 <div class="full-screen-modal">
 <?php if(!isset($vendorCredit)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
@@ -135,7 +165,7 @@
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
                                                 <button class="accordion-button content-title" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-category-details" aria-expanded="true" aria-controls="collapse-category-details">
-                                                    Category details
+                                                    Category Details
                                                 </button>
                                             </h2>
                                             <div class="accordion-collapse collapse show" id="collapse-category-details">
@@ -143,17 +173,17 @@
                                                     <table class="nsm-table" id="category-details-table">
                                                         <thead>
                                                             <tr>
-                                                                <td data-name="Num">#</td>
-                                                                <td data-name="Customer"  style="width: 15%;">CUSTOMER</td>
-                                                                <td data-name="Expense Name"  style="width: 15%;">EXPENSE NAME</td>
-                                                                <td data-name="Category" style="width: 15%;">CATEGORY</td>
+                                                                <td data-name="Num" style="width:3%;">#</td>
+                                                                <td data-name="Customer" style="width:15%;">CUSTOMER</td>
+                                                                <td data-name="Expense Name">EXPENSE NAME</td>
+                                                                <td data-name="Category" style="width:15%;">CATEGORY</td>
                                                                 <td data-name="Description">DESCRIPTION</td>
-                                                                <td data-name="Amount"  style="width: 10%;">AMOUNT</td>
-                                                                <td data-name="Billable">BILLABLE</td>
-                                                                <td data-name="Markup %"  style="width: 10%;">MARKUP %</td>
-                                                                <td data-name="Tax">TAX</td>
-                                                                <td data-name="Manage"></td>
-                                                            </tr>
+                                                                <td data-name="Amount" style="width:10%;">AMOUNT</td>
+                                                                <td data-name="Billable" style="width:8%;text-align:center;">BILLABLE</td>
+                                                                <td data-name="Markup %" style="width:8%;">MARKUP %</td>
+                                                                <td data-name="Tax" style="width:5%;text-align:center;">TAX</td>
+                                                                <td data-name="Manage" style="width:3%;"></td>
+                                                            </tr>                                                            
                                                         </thead>
                                                         <tbody>
                                                             <tr >
@@ -300,7 +330,7 @@
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
                                                 <button class="accordion-button content-title <?=isset($items) && count($items) > 0 ? '' : ' collapsed'?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-item-details" aria-expanded="false" aria-controls="collapse-item-details">
-                                                    Item details
+                                                    Item Details
                                                 </button>
                                             </h2>
                                             <div id="collapse-item-details" class="accordion-collapse collapse <?=isset($items) && count($items) > 0 ? 'show' : ''?>">
@@ -311,10 +341,10 @@
                                                                 <td data-name="Product/Service">PRODUCT/SERVICE</td>
                                                                 <td data-name="Type">TYPE</td>
                                                                 <td data-name="Location" style="width: 15%;">LOCATION</td>
-                                                                <td data-name="Quantity" style="width: 10%;">QUANTITY</td>
-                                                                <td data-name="Price" style="width: 10%;">PRICE</td>
-                                                                <td data-name="Discount" style="width: 10%;">DISCOUNT</td>
-                                                                <td data-name="Tax" style="width: 10%;">TAX (CHANGE IN %)</td>
+                                                                <td data-name="Quantity" style="width: 10%; text-align: center;">QUANTITY</td>
+                                                                <td data-name="Price" style="width: 10%; text-align: center;">PRICE</td>
+                                                                <td data-name="Discount" style="width: 10%; text-align: center;">DISCOUNT</td>
+                                                                <td data-name="Tax" style="width: 10%;  text-align: center;">TAX (CHANGE IN %)</td>
                                                                 <td data-name="Total" style="width: 8%">TOTAL</td>
                                                                 <td data-name="Manage"></td>
                                                             </tr>
@@ -350,7 +380,7 @@
                                                                                 ?>
                                                                             </span>
                                                                         </td>
-                                                                        <td>
+                                                                        <td style="text-align: center;">
                                                                             <button type="button" class="nsm-button delete-row">
                                                                                 <i class='bx bx-fw bx-trash'></i>
                                                                             </button>

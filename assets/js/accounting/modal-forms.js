@@ -13033,10 +13033,14 @@ const updateTransaction = (event, el) => {
                 if (submitType === 'save-and-new') {
                     clearForm();
                 }
-            }
 
-            submitType = '';
-            location.reload();
+                submitType = '';
+                setTimeout(function() {
+                    location.reload();     
+                }, 1500);                           
+            } else {
+
+            }
             // $('#transactions-table').DataTable().ajax.reload(null, true);
         }
     });
