@@ -611,7 +611,7 @@ class Customer extends MY_Controller
                 }
                 if (in_array('subscription_amount', $enabled_table_headers)) {
                     //$subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
-                    $subs_amt = $customer->mmr > 0 ? number_format(floatval($customer->mmr), 2, '.', ',') : 0.00;
+                    $subs_amt = $customer->mmr > 0 ? number_format(floatval($customer->mmr), 2, '.', ',') : '0.00';
                     array_push($data_arr, '$'.$subs_amt);
                 }
                 if (in_array('job_amount', $enabled_table_headers)) {
