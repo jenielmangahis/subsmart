@@ -877,9 +877,20 @@ class Customer extends MY_Controller
         }
 
         if( $post['type'] ){
-            $customers = $this->customer_ad_model->getCustomerLists($search, 0, 0, $post['type']);
+            $customers = $this->customer_ad_model->getCustomerLists($search, 0, 0, 0, [], $post['type']);
         }else{
             $customers = $this->customer_ad_model->getCustomerLists($search, 0, 0);
+        }
+
+        foreach($customers as $c){
+            $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($c->mmr, logged('company_id'));
+                    
+            $plan_type= 'Not Specified';
+            if( $ratePlan ){
+                $plan_type = $ratePlan->plan_name;
+            }
+
+            $c->plan_type = $plan_type;
         }
 
         $search = ['search' => ''];
