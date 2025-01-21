@@ -545,6 +545,8 @@ class Onboarding extends MY_Controller {
 	}
 
 	public function ajax_complete_onboarding(){
+		$this->load->model('CustomerStatus_model');
+
 		$is_success = true;
 		$msg = '';
 
@@ -553,6 +555,25 @@ class Onboarding extends MY_Controller {
 
 		$data_client = ['is_startup' => 0];
 		$this->Clients_model->update($client->id, $data_client);
+
+		//Create default customer status
+		$data[] = [
+			'company_id' => $comp_id,
+			'name' => 'Active',
+			'date_created' => date("Y-m-d H:i:d")
+		];
+		$data[] = [
+			'company_id' => $comp_id,
+			'name' => 'Inactive',
+			'date_created' => date("Y-m-d H:i:d")
+		];
+		$data[] = [
+			'company_id' => $comp_id,
+			'name' => 'Collection',
+			'date_created' => date("Y-m-d H:i:d")
+		];
+
+		$this->CustomerStatus_model->batchInsert($data);
 		
 		$json_data = ['is_success' => $is_success, 'msg' => $msg];
 		echo json_encode($json_data);
