@@ -96,7 +96,10 @@
                 <div class="row">
                     <div class="col-md-12">
                         <select data-value="<?=$billing_info->mmr?>" id="mmr" name="mmr" data-type="billing_rate_plan" class="form-control" >
-                            <option><?=isset($billing_info) ? $billing_info->mmr : ""?></option>
+                            <?php if( isset($billing_info) ){ ?>
+                                <option value="<?= $billing_info->mmr; ?>"><?= $billing_info->mmr; ?></option>
+                            <?php } ?>
+                            
                         </select>
                         <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-rate-plan"><span class="fa fa-plus"></span> Add Rate Plan</a>        
                     </div>

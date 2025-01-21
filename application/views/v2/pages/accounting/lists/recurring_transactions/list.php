@@ -100,7 +100,7 @@
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
-                                <i class="bx bx-fw bx-cog"></i>
+                                <i class="bx bx-fw bx-cog"></i> 
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
                                 <p class="m-0">Rows</p>

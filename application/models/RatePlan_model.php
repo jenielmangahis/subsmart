@@ -37,6 +37,17 @@ class RatePlan_model extends MY_Model
         return $query->row();
     }
 
+    public function getByAmountAndCompanyId($amount, $cid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('amount', $amount);
+        $this->db->where('company_id', $cid);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getAll()
     {
         $this->db->select('*');

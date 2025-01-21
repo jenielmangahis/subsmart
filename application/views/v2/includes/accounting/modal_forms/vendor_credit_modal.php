@@ -3,7 +3,7 @@
 <?php if(!isset($vendorCredit)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
 <?php else : ?>
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/vendor-credit/<?=$vendorCredit->id?>">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="<?php echo base_url(); ?>accounting/update-transaction/vendor-credit/<?=$vendorCredit->id?>">
 <?php endif; ?>
     <div id="vendorCreditModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
         <div class="modal-dialog">
@@ -109,8 +109,8 @@
                             <div class="row">
                                 <div class="col-12 col-md-6 grid-mb">
                                     <div id="label">
-                                        <label for="tags">Tags</label>
-                                        <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
+                                        <label for="tags" style="margin-top: 10px; margin-bottom: 5px;">Tags</label>
+                                        <span class="float-end" style="margin-top: 10px; margin-bottom: 5px;"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
                                     </div>
                                     <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                                         <?php if(isset($tags) && count($tags) > 0) : ?>

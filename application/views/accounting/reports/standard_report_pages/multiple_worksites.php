@@ -1,5 +1,11 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
+<?php
+    $currentMonth = date("n");
+    $startMonth = ceil($currentMonth / 3) * 3 - 2;
+    $endMonth = $startMonth + 2;
+    $currentQuarter = "This Quarter (" . date("M", mktime(0, 0, 0, $startMonth, 1)) . " - " . date("M", mktime(0, 0, 0, $endMonth, 1)) . ")";
+?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-1"></div>
@@ -39,7 +45,7 @@
                                     <div class="reportTitleInfo">
                                         <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?></h3>
                                         <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
-                                        <!-- <h5><small id="reportDate"><span id="date_from_text"></span> &mdash; <span id="date_to_text"></span></small></h5> -->
+                                        <!-- <h5><small id="reportDate"><span id="filter_by_text"></span></small></h5> -->
                                     </div>
                                 </div>
                             </div>

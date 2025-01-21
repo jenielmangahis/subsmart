@@ -221,7 +221,11 @@
                                 <i class='bx bx-fw bx-trash'></i> Archived List
                             </button>                            
                         </div>
-
+                        <div class="col-6 col-md-6 mb-2">
+                            <button type="button" class="nsm-button primary w-100 ms-0" id="sendEsign" data-id="<?= $cus_id; ?>">
+                                <i class='bx bx-fw bx-pen'></i> Send eSign
+                            </button>                            
+                        </div>
                         <!-- <div class="col-6 col-md-6 mb-2">
                             <button type="submit" class="nsm-button w-100 ms-0 amt-3" id="managecustomerdocumentsbtn--download">
                                 <i class='bx bx-fw bx-import'></i> Download Selected

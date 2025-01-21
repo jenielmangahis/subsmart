@@ -93,7 +93,8 @@
                 <div class="row mt-5">
                     <div class="col-12 col-md-4">
                         <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="PERSON_SEARCHBAR" name="search" placeholder="Search Residential" value="<?php echo (!empty($search)) ? $search : ''; ?>">                                
+                        <input type="text" class="nsm-field nsm-search form-control mb-2" style="display:inline-block;width:80%;" id="PERSON_SEARCHBAR" placeholder="Search Customer...">
+                        <a href="javascript:void(0);" id="btn-reset-customer-list" class="nsm-button primary">Reset</a>                  
                         </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
@@ -118,7 +119,12 @@
                         <div class="nsm-page-buttons page-button-container">
                             <a class="nsm-button primary" id="openModalBtn" style="margin-left: 10px; cursor: pointer;"> <i class='bx bx-fw bxs-user-plus'></i> New Customer</a>
                         </div>
-                        <?php } ?>                        
+                        <?php } ?> 
+                        <?php if( checkRoleCanAccessModule('customers', 'delete') ){ ?>
+                        <button type="button" class="nsm-button primary" id="archived-customer-list">
+                            <i class='bx bx-fw bx-trash'></i> Manage Archived
+                        </button>
+                        <?php } ?>                       
                     </div>
                 </div>
                 <input type="hidden" id="page_type" value="person">
@@ -332,7 +338,32 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade nsm-modal fade" id="modal-archived-customers" aria-labelledby="modal-archived-customers-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form method="post" id="quick-add-event-form">   
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Manage Archived Customers</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="customer-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal fade nsm-modal fade" id="modal-favorite-customers" aria-labelledby="modal-favorite-customers-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form method="post" id="quick-add-event-form">   
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Manage Favorite Customers</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="customer-favorite-list-container" style="max-height: 800px; overflow: auto;"></div>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="modal fade nsm-modal fade" id="person_modal" tabindex="-1" aria-labelledby="person_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <form id="person_and_company_form">
@@ -522,41 +553,23 @@
         </form>
     </div>
 </div>
-<div class="modal fade nsm-modal fade" id="modal-favorite-customers" aria-labelledby="modal-favorite-customers-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form method="post" id="quick-add-event-form">   
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Manage Favorite Customers</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body" id="customer-favorite-list-container" style="max-height: 800px; overflow: auto;"></div>
-            </div>
-        </form>
-    </div>
-</div>
-
 <?php include viewPath('v2/includes/footer'); ?>
 <script>    
 var PERSON_LIST_TABLE = $('#person-list').DataTable({
     "ordering": false,
     "processing": true,
     "serverSide": true,
-    //"lengthMenu": [10, 25, 50, 75, 100], // Display options for the length menu
+    "cache": true,
+    "stateSave": true,    
     "pageLength": 10,
     "ajax": {
         "url": "<?php echo base_url('customer/getPersonList'); ?>",
         "type": "POST",
-        "data": function (d) {
-        // Include custom parameters for filtering
-        d.filter_status = $('#filter-selected').text().trim(); // Get filter value from UI element
+        "data": function (d) {        
+            d.filter_status = $('#filter-selected').text().trim(); // Get filter value from UI element
         },
-        "dataSrc": function (json) {
-            // Handle the response here
-            //console.log(json);
-            // Return the data portion of the response
-            csv_data = json.data;
-            //console.log(csv_data);
+        "dataSrc": function (json) {            
+            csv_data = json.data;            
             return json.data;
         }
     },
@@ -570,12 +583,18 @@ var PERSON_LIST_TABLE = $('#person-list').DataTable({
 
 $(document).ready(function() {
     var csv_data;
+
     $('#btn-residential-export-list').on('click', function(){
         location.href = base_url + 'customer/export_residential_list';
     });
     
     $("#PERSON_SEARCHBAR").keyup(function() {
         PERSON_LIST_TABLE.search($(this).val()).draw();
+    });
+
+    $('#btn-reset-customer-list').on('click', function(){
+        PERSON_LIST_TABLE.state.clear(); 
+        location.reload();
     });
 
     $('.select-filter .dropdown-item').on('click', function(e) {
@@ -641,7 +660,102 @@ $(document).ready(function() {
         let phone = $(this).attr("data-id");
 
         window.open('tel:' + phone);
-    }); 
+    });
+
+    $('#archived-customer-list').on('click', function(){
+        $('#modal-archived-customers').modal('show');
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer/_archived_list",  
+            success: function(html) {    
+                $('#customer-archived-list-container').html(html);                          
+            },
+            beforeSend: function() {
+                $('#customer-archived-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+    
+    $(document).on('click', '.send-esign', function(){
+        var prof_id = $(this).attr('data-id');
+        var name = $(this).attr('data-name');
+
+        $('#customer-esign').val(prof_id);
+        $('#modal-send-esign-customer-name').text(name);
+        $('#modal-send-esign').modal('show');
+
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer/_send_esign_form",
+            data: {prof_id:prof_id},
+            beforeSend: function(data) {
+                $("#customer-send-esign").html('<span class="bx bx-loader bx-spin"></span>');
+            },
+            success: function(html) {
+                $("#customer-send-esign").html(html);
+            },
+            complete: function() {
+
+            },
+            error: function(e) {
+                console.log(e);
+            }
+        });
+    });
+
+    $(document).on('click', '#btn-customer-send-esign-template', function(){
+        var prof_id = $('#customer-esign').val();
+        var esign_template_id = $('#customer-send-esign-template').val();
+        var url = base_url + `eSign_v2/templatePrepare?id=${esign_template_id}&job_id=0&customer_id=${prof_id}`;
+
+        window.open(
+            url,
+            '_blank'
+        );
+
+        $('#modal-send-esign').modal('hide');
+    });
+
+    $(document).on('click', '.btn-restore-customer', function(){
+        var cid = $(this).attr('data-id');
+        var name = $(this).attr('data-name');
+
+        Swal.fire({
+            title: 'Restore Customer Data',
+            html: `Proceed with restoring customer data <b>${name}</b>?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {                    
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "customer/_restore_archived",
+                    data: {cid:cid},
+                    dataType:'json',
+                    success: function(result) {                            
+                        if( result.is_success == 1 ) {
+                            $('#modal-archived-customers').modal('hide');
+                            Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Customer data was successfully restored.',
+                            }).then((result) => {
+                                PERSON_LIST_TABLE.ajax.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
 
     $(document).on('click', '.favorite-customer', function(){
         var cid = $(this).attr('data-id');

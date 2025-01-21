@@ -1119,6 +1119,11 @@ class Tickets extends MY_Controller
         $this->load->model('PanelType_model');
         $this->load->model('Invoice_model');
 
+        if(!checkRoleCanAccessModule('service-tickets', 'write')){
+            show403Error();
+            return false;
+        }
+
         $this->page_data['page']->title = 'Service Tickets';
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
@@ -1213,7 +1218,10 @@ class Tickets extends MY_Controller
         $this->load->model('PanelType_model');
         $this->load->model('Customer_advance_model');
 
-        $this->page_data['page']->title = 'Service Tickets';
+        if(!checkRoleCanAccessModule('service-tickets', 'write')){
+            show403Error();
+            return false;
+        }
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -1281,6 +1289,7 @@ class Tickets extends MY_Controller
         $ratePlans = $this->Customer_advance_model->getAllSettingsRatePlansByCompanyId($company_id);
         $type = $this->input->get('type');
 
+        $this->page_data['page']->title = 'Service Tickets';
         $this->page_data['prefix'] = $prefix;
         $this->page_data['next_num'] = $next_num;
         $this->page_data['settingsPlanTypes'] = $settingsPlanTypes;
@@ -1543,7 +1552,8 @@ class Tickets extends MY_Controller
             $activity_name = 'Service Ticket : Deleted Ticket # ' . $ticketInfo->ticket_no; 
             createActivityLog($activity_name);
 
-            $result =  $this->tickets_model->delete_tickets($ticketID);
+            $data = ['is_archived' => 1, 'archived_date' => date("Y-m-d H:i:s")];
+            $result =  $this->tickets_model->update($ticketInfo->id, $data);
 
 
             $is_success = 1;
@@ -2916,6 +2926,11 @@ class Tickets extends MY_Controller
     {
         $this->load->model('PanelType_model');
 
+        if(!checkRoleCanAccessModule('service-ticket-settings', 'read')){
+            show403Error();
+            return false;
+        }
+
         $cid = logged('company_id');
         $panelTypes = $this->PanelType_model->getAllByCompanyId($cid);
 
@@ -3047,6 +3062,11 @@ class Tickets extends MY_Controller
     public function settings_plan_types()
     {
         $this->load->model('SettingsPlanType_model');
+
+        if(!checkRoleCanAccessModule('service-ticket-settings', 'read')){
+            show403Error();
+            return false;
+        }
 
         $cid = logged('company_id');
         $planTypes = $this->SettingsPlanType_model->getAllByCompanyId($cid);
@@ -3295,6 +3315,42 @@ class Tickets extends MY_Controller
 
         $is_success = 1;
         $msg = '';      
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_archived_list()
+    {
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $tickets = $this->tickets_model->getAllIsArchivedByCompanyId($cid);
+
+        $this->page_data['tickets'] = $tickets;
+        $this->load->view("v2/pages/tickets/ajax_archived_list", $this->page_data);
+    }
+
+    public function ajax_restore_archived()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find invoice data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $ticket = $this->tickets_model->getTicketInfo($post['ticket_id']);
+        if ($ticket && $ticket->company_id == $company_id) {                        
+            $this->tickets_model->restoreTicket($ticket->id);
+
+            //Activity Logs
+            $activity_name = 'Archived : Restore service ticket data  ' . $invoice->invoice_number; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);

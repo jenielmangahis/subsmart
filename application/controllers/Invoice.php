@@ -2952,8 +2952,6 @@ class Invoice extends MY_Controller
 
     public function ajax_archived_list()
     {
-        $this->load->model('Customer_model');
-
         $post = $this->input->post();
         $cid  = logged('company_id');
 

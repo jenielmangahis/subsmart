@@ -62,6 +62,11 @@ class CustomerStatus_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function batchInsert($data)
+    {
+        return $this->db->insert_batch($this->table, $data); 
+    }
 }
 
 /* End of file CustomerStatus_model.php */

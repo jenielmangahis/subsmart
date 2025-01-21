@@ -1,5 +1,11 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
+<?php
+    $currentMonth = date("n");
+    $startMonth = ceil($currentMonth / 3) * 3 - 2;
+    $endMonth = $startMonth + 2;
+    $currentQuarter = "This Quarter (" . date("M", mktime(0, 0, 0, $startMonth, 1)) . " - " . date("M", mktime(0, 0, 0, $endMonth, 1)) . ")";
+?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-1"></div>
