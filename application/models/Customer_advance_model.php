@@ -474,10 +474,8 @@ class Customer_advance_model extends MY_Model
         return $query->result();
     }
 
-    public function getCustomerLists($param = null, $start = 0, $length = 0, $record = 0 ,  $filter_status = null)
+    public function getCustomerLists($param = null, $start = 0, $length = 0, $record = 0 ,  $filter_status = null, $customer_type = '')
     {
-    
-
         $cid = logged('company_id');
         $this->db->from('acs_profile');
         if ($record != 0) {
@@ -495,9 +493,7 @@ class Customer_advance_model extends MY_Model
           
             if ($param['search'] != '') {
                 $this->db->group_start();
-                $this->db->or_like("CONCAT(acs_profile.first_name, ' ', acs_profile.last_name)", $param['search'], 'both');                
-                // $this->db->or_like('acs_profile.email', $param['search'], 'both');
-                //$this->db->or_like('acs_profile.business_name', $param['search'], 'both');
+                $this->db->or_like("CONCAT(acs_profile.first_name, ' ', acs_profile.last_name)", $param['search'], 'both');     
                 $this->db->group_end();
             }
             $query = $this->db->get();
@@ -507,19 +503,12 @@ class Customer_advance_model extends MY_Model
             // Outputs, 2
         }
         if ($cid == 58) {
-            // $this->db->select('users.id,acs_profile.prof_id,acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m,acs_profile.status,acs_b.mmr,
-            // acs_alarm.system_type,acs_office.entered_by,acs_office.lead_source,acs_profile.city,acs_profile.state,users.LName,users.FName,acs_profile.customer_type,
-            // acs_profile.business_name,acs_office.technician,acs_b.transaction_amount as total_amount,industry_type.name AS industry_type, acs_profile.industry_type_id,
-            // acs_office.fk_sales_rep_office,acs_info_solar.proposed_solar,acs_info_solar.proposed_payment,acs_profile.company_id,acs_profile.adt_sales_project_id');
             $this->db->select('users.id,acs_profile.prof_id,acs_profile.is_favorite,acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m,acs_profile.status,acs_b.mmr,
             acs_alarm.system_type,acs_office.entered_by,acs_office.lead_source,acs_profile.city,acs_profile.state,users.LName,users.FName,acs_profile.customer_type,
             acs_profile.business_name,acs_office.technician,acs_b.transaction_amount as total_amount,industry_type.name AS industry_type, acs_profile.industry_type_id,
             acs_office.fk_sales_rep_office,acs_info_solar.proposed_solar,acs_info_solar.proposed_payment,acs_profile.company_id');
             $this->db->join('acs_info_solar', 'acs_info_solar.fk_prof_id = acs_profile.prof_id', 'left');
         } else {
-            // $this->db->select('users.id,acs_profile.prof_id,acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m,acs_profile.status,acs_b.mmr,
-            // acs_alarm.system_type,acs_office.entered_by,acs_office.lead_source,acs_profile.city,acs_profile.state,users.LName,users.FName,acs_profile.customer_type,
-            // acs_profile.business_name,acs_office.technician,acs_b.transaction_amount as total_amount,industry_type.name AS industry_type, acs_profile.industry_type_id,acs_office.fk_sales_rep_office,acs_profile.company_id,acs_profile.adt_sales_project_id');
             $this->db->select('users.id,acs_profile.prof_id,acs_profile.is_favorite,acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m,acs_profile.status,acs_b.mmr,
             acs_alarm.system_type,acs_office.entered_by, CONCAT(users.FName, " ", users.LName) AS entered_by2, acs_office.lead_source,acs_profile.city,acs_profile.state,users.LName,users.FName,acs_profile.customer_type,
             acs_profile.business_name,acs_office.technician,acs_b.transaction_amount as total_amount,industry_type.name AS industry_type, acs_profile.industry_type_id,acs_office.fk_sales_rep_office,acs_profile.company_id');
@@ -542,24 +531,16 @@ class Customer_advance_model extends MY_Model
         if ($length > 0) {
             $this->db->limit($length, $start);
         }
+
+        if( $customer_type != '' ){
+            $this->db->where('customer_type', $customer_type);
+        }
         $this->db->where('acs_profile.company_id', $cid);
         $this->db->where('acs_profile.is_archived', 0);
 
-        // $search = isset($param['search']) ? $param['search'] : '';
-        // if (!empty($search)) {
-        //     $this->db->group_start(); // Start grouping the OR conditions
-        //     $this->db->like('acs_profile.last_name', $search, 'both');
-        //     $this->db->or_like('acs_profile.first_name', $search, 'both');
-        //     $this->db->or_like('acs_profile.email', $search, 'both');
-        //     $this->db->or_like('acs_profile.business_name', $search, 'both');
-        //     $this->db->group_end(); // End grouping
-        // }
-
         if ($param['search'] != '') {
             $this->db->group_start();
-            $this->db->or_like("CONCAT(acs_profile.first_name, ' ', acs_profile.last_name)", $param['search'], 'both');           
-            // $this->db->or_like('acs_profile.email', $param['search'], 'both');
-            //$this->db->or_like('acs_profile.business_name', $param['search'], 'both');
+            $this->db->or_like("CONCAT(acs_profile.first_name, ' ', acs_profile.last_name)", $param['search'], 'both');    
             $this->db->group_end();
         }
     
