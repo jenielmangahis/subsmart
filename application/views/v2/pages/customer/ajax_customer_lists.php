@@ -1,5 +1,5 @@
 <?php if (!empty($enabled_table_headers)) : ?>
-    <table class="nsm-table" id="customer_table_print">
+    <table class="nsm-table" id="customer-table-print">
         <thead>
             <tr>
                 <td class="table-icon"></td>
@@ -61,7 +61,8 @@
                         </td>
                     <?php endif; ?>
                     <?php if (in_array('city', $enabled_table_headers)) : ?>
-                        <td><?php echo $customer->city; ?></td>
+                        <?php $city = $customer->city != '' ? $customer->city : '---'; ?>
+                        <td><?php echo $city; ?></td>
                     <?php endif; ?>
                     <?php if (in_array('state', $enabled_table_headers)) : ?>
                         <?php 
@@ -73,7 +74,7 @@
                         <td><?= $customer_state; ?></td>
                     <?php endif; ?>
                     <?php if (in_array('source', $enabled_table_headers)) : ?>
-                        <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
+                        <td><?= $customer->lead_source != "" ? $customer->lead_source : '---'; ?></td>
                     <?php endif; ?>
                     <?php if (in_array('added', $enabled_table_headers)) : ?>
                         <td><?php echo $customer->entered_by; ?></td>
@@ -91,16 +92,11 @@
                         <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
                     <?php endif; ?>
                     <?php if (in_array('plan_type', $enabled_table_headers)) : ?>
-                        <?php 
-                            $plan_type = 'Not Specified';
-                            if( $customer->system_type != '' ){
-                                $plan_type = $customer->system_type;
-                            }     
-                        ?>
-                        <td><?= $plan_type; ?></td>
+                        <td><?= $customer->plan_type; ?></td>
                     <?php endif; ?>
                     <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
-                        <td>$<?= $customer->total_amount; ?></td>
+                        <?php $subs_amt = $customer->mmr > 0 ? number_format(floatval($customer->mmr), 2, '.', ',') : '0.00'; ?>
+                        <td>$<?= $subs_amt; ?></td>
                     <?php endif; ?>
                     <?php if (in_array('phone', $enabled_table_headers)) : ?>
                         <?php 
@@ -134,7 +130,7 @@
         </tbody>
     </table>
 <?php else : ?>
-    <table class="nsm-table">
+    <table class="nsm-table" id="customer-table-print">
         <thead>
             <tr>
                 <td class="table-icon"></td>
@@ -191,23 +187,29 @@
                             <label class="nsm-link default d-block fw-bold"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
                             <label class="content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
                         </td>
-                        <td><?php echo $customer->city; ?></td>
+                        <td>
+                            <?php 
+                                $city = $customer->city != '' ? $customer->city : '---';
+                                echo $city; 
+                            ?>
+                        </td>
                         <td><?php echo $customer->state; ?></td>
-                        <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
+                        <td><?= $customer->lead_source != "" ? $customer->lead_source : '---'; ?></td>
                         <td><?php echo $customer->entered_by; ?></td>
                         <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
                         <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
-                        <td><?php echo $customer->system_type; ?></td>
-                        <td>$<?= $customer->total_amount; ?></td>
+                        <td><?php echo $customer->plan_type; ?></td>
+                        <td>
+                            <?php $subs_amt = $customer->mmr > 0 ? number_format(floatval($customer->mmr), 2, '.', ',') : '0.00'; ?>
+                            $<?= $subs_amt; ?>
+                        </td>
                         <td><?php echo $customer->phone_m; ?></td>
                         <td><span class="nsm-badge <?= $badge ?>"><?= $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
                     </tr>
                 <?php
                 endforeach;
                 ?>
-            <?php
-            else :
-            ?>
+            <?php else : ?>
                 <tr>
                     <td colspan="13">
                         <div class="nsm-empty">
@@ -215,12 +217,11 @@
                         </div>
                     </td>
                 </tr>
-            <?php
-            endif;
-            ?>
+            <?php endif; ?>
         </tbody>
     </table>
 <?php endif; ?>
+
 <div style="display:none;">
 <table class="w-100" id="customer_table_print_ajax">
     <?php if (!empty($enabled_table_headers)) : ?>
@@ -288,7 +289,7 @@
                         <td><?= $customer_state; ?></td>
                     <?php endif; ?>
                     <?php if (in_array('source', $enabled_table_headers)) : ?>
-                        <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
+                        <td><?= $customer->lead_source != "" ? $customer->lead_source : '---'; ?></td>
                     <?php endif; ?>
                     <?php if (in_array('added', $enabled_table_headers)) : ?>
                         <td><?php echo $customer->entered_by; ?></td>
@@ -306,16 +307,11 @@
                         <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
                     <?php endif; ?>
                     <?php if (in_array('plan_type', $enabled_table_headers)) : ?>
-                        <?php 
-                            $plan_type = 'Not Specified';
-                            if( $customer->system_type != '' ){
-                                $plan_type = $customer->system_type;
-                            }     
-                        ?>
-                        <td><?= $plan_type; ?></td>
+                        <td><?= $customer->plan_type; ?></td>
                     <?php endif; ?>
                     <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
-                        <td>$<?= $customer->total_amount; ?></td>
+                        <?php $subs_amt = $customer->mmr > 0 ? number_format(floatval($customer->mmr), 2, '.', ',') : '0.00'; ?>
+                        <td>$<?= $subs_amt; ?></td>
                     <?php endif; ?>
                     <?php if (in_array('phone', $enabled_table_headers)) : ?>
                         <?php 
@@ -394,14 +390,20 @@
                             <label class="nsm-link default d-block fw-bold"><?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?></label>
                             <label class="content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
                         </td>
-                        <td><?php echo $customer->city; ?></td>
+                        <td>
+                            <?php $city = $customer->city != '' ? $customer->city : '---'; ?>
+                            <?php echo $city; ?>
+                        </td>
                         <td><?php echo $customer->state; ?></td>
-                        <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
+                        <td><?= $customer->lead_source != "" ? $customer->lead_source : '---'; ?></td>
                         <td><?php echo $customer->entered_by; ?></td>
                         <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
                         <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
-                        <td><?php echo $customer->system_type; ?></td>
-                        <td>$<?= $customer->total_amount; ?></td>
+                        <td><?php echo $customer->plan_type; ?></td>
+                        <td>
+                            <?php $subs_amt = $customer->mmr > 0 ? number_format(floatval($customer->mmr), 2, '.', ',') : '0.00'; ?>
+                            $<?= $subs_amt; ?>
+                        </td>
                         <td><?php echo $customer->phone_m; ?></td>
                         <td><span class="nsm-badge <?= $badge ?>"><?= $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
                     </tr>
@@ -428,6 +430,6 @@
 
 <script>
 $(function(){
-    $(".nsm-table").nsmPagination();
+    $("#customer-table-print").nsmPagination({itemsPerPage:10});
 });
 </script>
