@@ -22,6 +22,7 @@ class Customer extends MY_Controller
         $this->load->model('General_model', 'general');
         $this->load->model('Tickets_model', 'tickets_model');
         $this->load->model('Workorder_model', 'workorder_model');
+        $this->load->model('RatePlan_model');
         $this->load->model('Serversidetable_model', 'serverside_table');
 
         $this->load->helper(array('hashids_helper'));
@@ -333,8 +334,7 @@ class Customer extends MY_Controller
                     $techician = !empty($customer->technician) ? get_employee_name($customer->technician) : 'Not Assigned';
                     array_push($data_arr, $techician);
                 }
-                if (in_array('plan_type', $enabled_table_headers)) {
-                    $this->load->model('RatePlan_model');
+                if (in_array('plan_type', $enabled_table_headers)) {                    
                     $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($customer->mmr, logged('company_id'));
                     
                     $plan_type= 'Not Specified';
@@ -594,7 +594,6 @@ class Customer extends MY_Controller
                     array_push($data_arr, $techician);
                 }
                 if (in_array('plan_type', $enabled_table_headers)) {
-                    $this->load->model('RatePlan_model');
                     $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($customer->mmr, logged('company_id'));
                     
                     $plan_type= 'Not Specified';
@@ -672,10 +671,19 @@ class Customer extends MY_Controller
                 array_push($data_arr, $sales_rep);
                 $techician = !empty($customer->technician) ? get_employee_name($customer->technician) : 'Not Assigned';
                 array_push($data_arr, $techician);
-                $plan_type = trim($customer->system_type) != '' ? $customer->system_type : '---';
+
+                $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($customer->mmr, logged('company_id'));
+                $plan_type= 'Not Specified';
+                if( $ratePlan ){
+                    $plan_type = $ratePlan->plan_name;
+                }                
+                //$plan_type = trim($customer->system_type) != '' ? $customer->system_type : '---';
                 array_push($data_arr, $plan_type);
-                $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
+
+                $subs_amt = $customer->mmr > 0 ? number_format(floatval($customer->mmr), 2, '.', ',') : '0.00';       
+                //subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
                 array_push($data_arr, '$'.$subs_amt);
+                
                 $this->db->select('SUM(job_items.qty * job_items.cost) AS total_amount');
                 $this->db->from('job_items');
                 $this->db->join('jobs', 'job_items.job_id = jobs.id', 'left');
@@ -989,7 +997,6 @@ class Customer extends MY_Controller
                     array_push($data_arr, $techician);
                 }
                 if (in_array('plan_type', $enabled_table_headers)) {
-                    $this->load->model('RatePlan_model');
                     $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($customer->mmr, logged('company_id'));
                     
                     $plan_type= 'Not Specified';
@@ -4099,7 +4106,6 @@ class Customer extends MY_Controller
 
     public function save_billing_information($input, $id)
     {
-        $this->load->model('RatePlan_model');
         $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($input['mmr'], logged('company_id'));
 
         $input_billing = [];
@@ -5359,8 +5365,6 @@ class Customer extends MY_Controller
 
     public function ajax_delete_rate_plan()
     {
-        $this->load->model('RatePlan_model');
-
         if(!checkRoleCanAccessModule('customer-settings', 'delete')){
 			show403Error();
 			return false;
@@ -10520,8 +10524,6 @@ class Customer extends MY_Controller
 
     public function ajax_create_rate_plan()
     {
-        $this->load->model('RatePlan_model');
-
         if(!checkRoleCanAccessModule('customer-settings', 'write')){
 			show403Error();
 			return false;
@@ -10568,8 +10570,6 @@ class Customer extends MY_Controller
 
     public function ajax_update_rate_plan()
     {
-        $this->load->model('RatePlan_model');
-
         if(!checkRoleCanAccessModule('customer-settings', 'write')){
 			show403Error();
 			return false;
