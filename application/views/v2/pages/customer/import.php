@@ -32,94 +32,103 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="progress-wrapper" style="padding-bottom: 100px;">
-                        <div id="progress-bar-container">
-                                <ul>
-                                <li class="step step01 active">
-                                    <div class="step-inner">Step 1</div>
-                                </li>
-                                <li class="step step02">
-                                    <div class="step-inner">Step 2</div>
-                                </li>
-                                <li class="step step03">
-                                    <div class="step-inner">Step 3</div>
-                                </li>
-                                </ul>
-                                <div id="line">
-                                <div id="line-progress"></div>
-                                </div>
-                                <!-- progress-bar-container -->
-                                <div id="progress-content-section">
-                                <div class="section-content step1 active">
-                                    <h2>Step 1</h2>
-                                    <p>Industry Type Select and CSV Upload</p>
-
-                                    <form id="import_customer" enctype="multipart/form-data" style="text-align: center;">
-                                        <input id="file-upload" name="file" type="file" accept=".csv"/>
-                                        <input  name="file2" value="1" type="hidden"/>
-                                        <br><br>
-                                        <button type="button" id="nextBtn1" class="btn btn-primary btn-sm step step02" disabled ><span class="fa fa-arrow-right"></span> Next</button>
-                                    </form>
-                                </div>
-                                <div class="section-content step2">
-                                    <h2>Step 2</h2>
-                                    <p>Map Headings</p>
-                                    <?php $fieldsValue = $import_settings->value ? explode(',', $import_settings->value) : array() ; ?>
-                                    <?php $headers = $importFieldsList;?>
-                                    <?php 
-                                            $i = 0;
-
-                                    foreach ($headers as $header): 
-                                            ?>
-                                        
-                                        <?php if (in_array($header->id, $fieldsValue)) : 
-                                            ?>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <b ><?= $header->field_description; ?></b> <span class='mapping-line'>-----------------</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <select name="headers[]" class="form-control headersSelector" id="headersSelector<?= $i ?>" onclick="test()">
-                                                            <option value="">Select Heading</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <?php 
-                                    $i++;
-                                     endif; ?>
-                                    <?php  
-                                endforeach; ?>
-                                    <div class="result"></div>
-                                    <br>
-                                    <button type="button" class="btn btn-primary btn-sm step step01" ><span class="fa fa-arrow-left"></span> Back</button>
-                                    <button type="button" class="btn btn-primary btn-sm step step03" ><span class="fa fa-arrow-right"></span> Next</button>
-                                </div>
-                                <div class="section-content step3">
-                                    <h2>Step 3</h2>
-                                    <p>Customer Preview </p>
-
-                                    <?php $headers = $importFieldsList;?>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <table class="table tbl" style="height: 100px;overflow-y: auto; overflow-x: hidden;border-collapse: collapse; ">
-                                                <thead>
-                                                    <tr id='tableHeader'></tr>
-                                                </thead>
-                                                <tbody id="imported_customer"></tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <button type="button" class="btn btn-primary btn-sm step step02" ><span class="fa fa-arrow-left"></span> Back</button>
-                                    <button type="button" class="btn btn-primary btn-sm" id="importCustomer"><span class="fa fa-upload"></span> Import</button>
-                                
+                    <div class="col-12">
+                        <div class="nsm-card primary">
+                            <div class="nsm-card-header d-block">
+                                <div class="nsm-card-title">
+                                    <span><i class='bx bx-import'></i> Import Customer</span>
+                                    <a class="nsm-button default btn-download-template" href="<?= base_url('uploads/import_templates/import_customer_template.csv'); ?>">Download Template</a>      
                                 </div>
                             </div>
-                            <!-- progress-wrapper -->
+                            <div class="nsm-card-content">
+
+                                <div class="progress-wrapper" style="padding-bottom: 100px;">
+                                    <div id="progress-bar-container">
+                                            <ul>
+                                                <li class="step step01 active">
+                                                    <div class="step-inner">Step 1</div>
+                                                </li>
+                                                <li class="step step02">
+                                                    <div class="step-inner">Step 2</div>
+                                                </li>
+                                                <li class="step step03">
+                                                    <div class="step-inner">Step 3</div>
+                                                </li>
+                                            </ul>
+                                            <div id="line"><div id="line-progress"></div></div>
+                                            <!-- progress-bar-container -->
+                                            <form id="import_customer" enctype="multipart/form-data" style="text-align: center;"> 
+                                                <div id="progress-content-section">
+                                                    <div class="section-content step1 active">
+                                                        <h2><i class='bx bx-file'></i> Select CSV</h2>
+                                                            <input id="file-upload" name="file" type="file" style="margin-top:21px;" accept=".csv"/>
+                                                            <input  name="file2" value="1" type="hidden"/>           
+                                                            <br />      
+                                                            <br />                 
+                                                            <button type="button" id="nextBtn1" class="nsm-button primary step step02 mt-4" disabled >Next <i class='bx bx-chevrons-right' ></i></button>                                                    
+                                                    </div>
+                                                    <div class="section-content step2">
+                                                        <h2><i class='bx bx-table' ></i> Map Headings</h2>
+                                                        <?php $fieldsValue = $import_settings->value ? explode(',', $import_settings->value) : array() ; ?>
+                                                        <?php $headers = $importFieldsList;?>
+                                                        <?php $i = 0; ?>
+                                                        <table class="nsm-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td data-name="Field"></td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php foreach ($headers as $header){ ?>        
+                                                                    <?php if (in_array($header->id, $fieldsValue)) { ?>
+                                                                        <tr>
+                                                                            <td class="fw-bold nsm-text-primary" style="text-align:right;">
+                                                                                <input type="hidden" name="settingHeaders[]" value="<?= $header->field_description; ?>" />
+                                                                                <?php 
+                                                                                    if( trim($header->field_description) == 'Phone (M)' ){
+                                                                                        echo 'Mobile Number';
+                                                                                    }elseif( trim($header->field_description) == 'Phone (H)' ){
+                                                                                        echo 'Phone Number';
+                                                                                    }else{
+                                                                                        echo trim($header->field_description);
+                                                                                    }
+                                                                                ?>
+                                                                            </td>
+                                                                            <td>
+                                                                                <select name="headers[]" class="form-control headersSelector" style="width:50%;" id="headersSelector<?= $i ?>">
+                                                                                        <option value="">Select Heading</option>
+                                                                                </select>
+                                                                            </td>
+                                                                        </tr>
+                                                                    <?php $i++; ?>
+                                                                    <?php } ?>
+                                                                <?php } ?>
+                                                            </tbody>
+                                                        </table>                                                   
+                                                        <div class="result"></div>
+                                                        <br>
+                                                        <button type="button" class="nsm-button primary step step01" ><i class='bx bx-chevrons-left' ></i> Back</button>
+                                                        <button type="button" class="nsm-button primary step step03" >Next <i class='bx bx-chevrons-right' ></i></button>
+                                                    </div>
+                                                    <div class="section-content step3">
+                                                        <h2><i class='bx bx-search-alt-2' ></i> Import Preview</h2>
+                                                        <?php $headers = $importFieldsList;?>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div id="preview-import"></div>                                                                
+                                                            </div>
+                                                        </div>
+                                                        <br>
+                                                        <button type="button" class="nsm-button primary step step02" ><i class='bx bx-chevrons-left' ></i> Back</button>
+                                                        <button type="button" class="nsm-button primary" id="importCustomer"><i class='bx bx-import'></i> Import</button>                                            
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        <!-- progress-wrapper -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -133,49 +142,69 @@
         <center><p>Processing...</p></center></div>
 </div>
 <?php include viewPath('v2/includes/footer'); ?>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-    
-    $(".step").click(function () {
-        $(this).addClass("active").prevAll().addClass("active");
-        $(this).nextAll().removeClass("active");
-    });
-
-    $(".step01").click(function () {
-        $("#line-progress").css("width", "8%");
-        $(".step1").addClass("active").siblings().removeClass("active");
-    });
-
-    $(".step02").click(function () {
-        $("#line-progress").css("width", "50%");
-        $(".step2").addClass("active").siblings().removeClass("active");
-    });
-
-    $(".step03").click(function () {
-        $("#line-progress").css("width", "100%");
-        $(".step3").addClass("active").siblings().removeClass("active");
-    });
-    
-//     $('#headersSelector').change(function() {
-//   alert('yawa');
-// });
-    const $overlay = document.getElementById('overlay');
-    var customerData = csvHeaders = [];
     $(document).ready(function() {
-        
-        
+        const $overlay = document.getElementById('overlay');
+        var customerData = csvHeaders = [];
+
+        $(".step").click(function () {
+            $(this).nextAll().removeClass("active");
+            $(this).addClass("active").prevAll().addClass("active");            
+        });
+
+        $(".step01").click(function () {
+            $("#line-progress").css("width", "10%");
+            $(".step1").addClass("active").siblings().removeClass("active");
+
+            $(".step01").addClass("active");
+            $(".step02").removeClass("active");
+            $(".step03").removeClass("active");
+        });
+
+        $(".step02").click(function () {
+            $("#line-progress").css("width", "50%");
+            $(".step2").addClass("active").siblings().removeClass("active");
+
+            $(".step02").addClass("active");         
+            $(".step03").removeClass("active");   
+        });
+
+        $(".step03").click(function () {
+            $("#line-progress").css("width", "100%");
+            $(".step3").addClass("active").siblings().removeClass("active");
+            $(".step03").addClass("active");         
+
+            var form = new FormData($("#import_customer")[0]);
+
+            $.ajax({    
+                type: "POST",
+                url: base_url + "customer/_import_preview",  
+                data: form,
+                processData: false,
+                contentType: false,
+                success: function(html) {    
+                    $('#preview-import').html(html);                          
+                },
+                beforeSend: function() {
+                    $('#preview-import').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+
+        });
+
         $("#importCustomer").click(function(e) {
             // prepare form data to be posted
-            
             var selectedHeader = [];
             $('select[name="headers[]"]').each(function() {
                 selectedHeader.push(this.value);
             });
 
             const formData = new FormData();
+            var settingHeaders = $('input[name="settingHeaders[]"]')
             formData.append('customers', JSON.stringify(customerData));
             formData.append('mapHeaders', JSON.stringify(selectedHeader));
             formData.append('csvHeaders', JSON.stringify(csvHeaders));
+            formData.append('settingHeaders', JSON.stringify(csvHeaders));
             
             if ($overlay) $overlay.style.display = "flex";
             // perform post request
@@ -186,7 +215,7 @@
                 if ($overlay) $overlay.style.display = "none";
                 var { customer, csv, mapping, fields, dataValue, office, billing, profile, message, success }  = response;
                 if(success){
-                    sweetAlert('Awesome!','success',message ,1);
+                    sweetAlert('Import Customer','success',message ,1);
                 }else{
                     sweetAlert('Sorry!','error',message);
                 }
@@ -197,18 +226,7 @@
             });
         });
 
-        $('#customer_list_table').DataTable({
-            "lengthChange": false,
-            "searching" : true,
-            "pageLength": 100,
-            "info": true,
-            "responsive": true,
-            "order": [],
-        });
-
-
         $("#file-upload").change(function(){
-            console.log("A file has been selected.");
             const formData = new FormData();
             const fileInput = document.getElementById('file-upload');
             formData.append('file', fileInput.files[0]);
@@ -222,8 +240,7 @@
                 if ($overlay) $overlay.style.display = "none";
                 if(!success){
                     sweetAlert('Sorry!','error',message);
-                }else{
-                    console.log(response);                    
+                }else{                 
                     $.each(headers,function(i,o){
                         $('.headersSelector').append(
                             '<option value="'+i+'">'+o+'</option>'
@@ -232,19 +249,6 @@
                             '<th><strong>'+o+'</strong></th>'
                         );
                     });
-                    csvHeaders = headers;
-                    customerData = data; // save customer array data
-                    // process mapping preview
-                    $.each(data,function(i,o){
-                        var toAppend = '';
-                        $.each(o,function(index,data){
-                            toAppend += '<td>'+data+'</td>';
-                        });
-                        $('#imported_customer').append(
-                            '<tr>'+toAppend+'</tr>'
-                        );
-                    });
-
                     $('#nextBtn1').prop("disabled", false);
                 }
                 }).catch((error) => {
@@ -266,113 +270,41 @@
                 confirmButtonText: 'Ok'
             }).then((result) => {
                 if(is_reload === 1){
-                    if (result.value) {
+                    //if (result.value) {
                         window.location.reload();
-                    }
+                    //}
                 }
             });
         }
-        // var previous;
-        // var previousTxt;
-        // var selectedHeader = [];
-        // var head = [];
 
-    // $("#headersSelector0").on('focus', function () {
-    //     selectedHeader = [];
-    //     head = [];
-    //         $('select[name="headers[]"]').each(function() {
-    //             selectedHeader.push(this.value);
-    //         });
-    //         var ar = selectedHeader.length;
-    //         for(var x=0; x<ar; x++){
-    //             head.push(x);
-    //             if(selectedHeader[x] != ""){
-    //                 previousTxt = $('#headersSelector'+x+' :selected').text();
+        $('.headersSelector').on('change', function(){
+            // var selected = this.value;
+            // var selectedHeader = [];
+            // var head = [];
 
-    //             }
-    //         }
+            // $('select[name="headers[]"]').each(function() {
+            //     selectedHeader.push(this.value);
+            // });
 
-    // }).change(function() {
-    //     var firstAr = selectedHeader.length;
-    //     var arHead1 = head.length;
+            // var ar = selectedHeader.length;
+            // for(var x=0; x<ar; x++){
+            //     head.push(x);
+            // }
 
-    //     for(var x=0; x<firstAr; x++){
-    //         if(selectedHeader[x] != ""){
-    //             previous = selectedHeader[x];
-    //             var t = "headersSelector"+x+"";
-    //             for(var i=0; i<arHead1; i++){
-    //                 var t1 = "headersSelector"+i+"";
-    //                 if(t != t1){
-    //                     $('#headersSelector'+i).append('<option value="'+selectedHeader[x]+'">'+previousTxt+'</option>');
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     selectedHeader.length= 0;
-    //     head = [];
+            // var arHead = head.length;
 
-    //     $('select[name="headers[]"]').each(function() {
-    //         selectedHeader.push(this.value);
-    //     });
-    //     var ar = selectedHeader.length;
-    
-    //     for(var x=0; x<ar; x++){
-    //         head.push(x);
-    //     }
-    //     var arHead = head.length;
-
-    //     console.log(selectedHeader);
-
-
-    //     for(var x=0; x<ar; x++){
-    //         if(selectedHeader[x] != ""){
-    //             document.getElementById('headersSelector'+x).value = selectedHeader[x];
-    //             var text = "headersSelector"+x+"";
-    //             for(var i=0; i<arHead; i++){
-    //                 var text1 = "headersSelector"+i+"";
-    //                 if(text != text1){
-    //                     $("#headersSelector"+i+" option[value='"+selectedHeader[x]+"'").remove();
-    //                 }
-    //             }
-    //         }
-    //     }
-    // });
+            // for(var x=0; x<ar; x++){
+            //     if(selectedHeader[x] != ""){
+            //         document.getElementById('headersSelector'+x).value = selectedHeader[x];
+            //         var text = "headersSelector"+x+"";
+            //         for(var i=0; i<arHead; i++){
+            //             var text1 = "headersSelector"+i+"";
+            //             if(text != text1){
+            //                 $("#headersSelector"+i+" option[value='"+selectedHeader[x]+"'").remove();
+            //             }
+            //         }
+            //     }
+            // }
+        });
     });
-    // function test(){
-    //     var t = document.getElementById('headersSelector');
-    //     var e = t.options[t.selectedIndex].text;
-    //     alert(e);
-    //     //$("#headersSelector option:selected").remove();
-
-    // }
-    
-        function test(){
-            //var t = $(".headersSelector");
-            // $("#headersSelector option:selected").remove();
-            
-            var selectedHeader = [];
-            var head = [];
-            $('select[name="headers[]"]').each(function() {
-                selectedHeader.push(this.value);
-            });
-            var ar = selectedHeader.length;
-            for(var x=0; x<ar; x++){
-                head.push(x);
-            }
-
-            var arHead = head.length;
-
-            for(var x=0; x<ar; x++){
-                if(selectedHeader[x] != ""){
-                    document.getElementById('headersSelector'+x).value = selectedHeader[x];
-                    var text = "headersSelector"+x+"";
-                    for(var i=0; i<arHead; i++){
-                        var text1 = "headersSelector"+i+"";
-                        if(text != text1){
-                            $("#headersSelector"+i+" option[value='"+selectedHeader[x]+"'").remove();
-                        }
-                    }
-                }
-            }
-        }
 </script>
