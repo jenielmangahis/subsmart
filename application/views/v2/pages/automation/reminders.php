@@ -53,6 +53,5 @@
 
 <?php include viewPath('v2/includes/automation/add_automation_modal'); ?>
 <?php include viewPath('v2/includes/automation/add_email_modal'); ?>
-<script src="<?php echo $url->assets ?>js/automation/options.js" type="text/javascript"></script>
 <?php include viewPath('v2/pages/automation/js/automation'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
