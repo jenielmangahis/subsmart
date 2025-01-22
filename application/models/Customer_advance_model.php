@@ -531,10 +531,7 @@ class Customer_advance_model extends MY_Model
         if ($length > 0) {
             $this->db->limit($length, $start);
         }
-
-        if( $customer_type != '' ){
-            $this->db->where('customer_type', $customer_type);
-        }
+        
         $this->db->where('acs_profile.company_id', $cid);
         $this->db->where('acs_profile.is_archived', 0);
 
@@ -543,7 +540,11 @@ class Customer_advance_model extends MY_Model
             $this->db->or_like("CONCAT(acs_profile.first_name, ' ', acs_profile.last_name)", $param['search'], 'both');    
             $this->db->group_end();
         }
-    
+        
+        if( $customer_type != '' ){
+            $this->db->where('customer_type', $customer_type);
+        }
+
         $this->db->where("(acs_profile.first_name != '')");
         $this->db->where("(acs_profile.last_name != '')");
     
