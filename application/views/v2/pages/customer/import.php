@@ -65,7 +65,7 @@
                                                             <input  name="file2" value="1" type="hidden"/>           
                                                             <br />      
                                                             <br />                 
-                                                            <button type="button" id="nextBtn1" class="nsm-button primary step step02 mt-4" disabled >Next <i class='bx bx-chevrons-right' ></i></button>                                                    
+                                                            <button type="button" id="nextBtn1" class="nsm-button primary step step02 mt-4">Next <i class='bx bx-chevrons-right' ></i></button>                                                    
                                                     </div>
                                                     <div class="section-content step2">
                                                         <h2><i class='bx bx-table' ></i> Map Headings</h2>
@@ -162,11 +162,15 @@
         });
 
         $(".step02").click(function () {
-            $("#line-progress").css("width", "50%");
-            $(".step2").addClass("active").siblings().removeClass("active");
+            if( $('#file-upload').get(0).files.length === 0 ) {
+                sweetAlert('CSV Error','error','Please select csv file');
+            }else{
+                $("#line-progress").css("width", "50%");
+                $(".step2").addClass("active").siblings().removeClass("active");
 
-            $(".step02").addClass("active");         
-            $(".step03").removeClass("active");   
+                $(".step02").addClass("active");         
+                $(".step03").removeClass("active");   
+            }
         });
 
         $(".step03").click(function () {
