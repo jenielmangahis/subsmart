@@ -385,7 +385,7 @@
                      <div class="col-12 col-md-4 grid-mb">
                         <div class="nsm-field-group search">
                             <!-- <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Item"> -->
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" style="display:inline-block;width:80%;" id="CUSTOMER_SEARCHBAR" placeholder="Search Customer...">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" style="display:inline-block;width:80%;" id="CUSTOMER_SEARCHBAR" placeholder="Search Customer">
                             <a href="javascript:void(0);" id="btn-reset-customer-list" class="nsm-button primary">Reset</a>
                         </div>
                     </div>
