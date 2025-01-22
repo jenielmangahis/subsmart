@@ -105,7 +105,8 @@
                 <div class="row mt-5">
                     <div class="col-12 col-md-4">
                         <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="COMMERCIAL_SEARCHBAR" name="search" placeholder="Search Commercials" >                                
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" style="display:inline-block;width:80%;" id="COMMERCIAL_SEARCHBAR" name="search" placeholder="Search Customer" >       
+                            <a href="javascript:void(0);" id="btn-reset-customer-list" class="nsm-button primary">Reset</a>                              
                         </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
@@ -121,16 +122,34 @@
                                 <?php } ?>
                             </ul>
                         </div>
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button primary" data-bs-toggle="dropdown" style="width:122px;">
+                                <span>More Action <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">                                    
+                                <li>
+                                    <a class="dropdown-item" id="btn-commercial-export-list" href="javascript:void(0);"><i class='bx bx-fw bx-file'></i> Export</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" id="print-customer-list" href="javascript:void(0)"><i class='bx bx-fw bx-printer'></i> Print</a>
+                                </li>
+                                <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
+                                <li>
+                                    <a class="dropdown-item" id="favorite-customer-list" href="javascript:void(0)"><i class='bx bx-fw bxs-heart'></i> Favorite Customers</a>
+                                </li>
+                                <?php } ?>
+                            </ul>     
+                        </div>
                         <?php if(checkRoleCanAccessModule('customers', 'write')){ ?>
                         <div class="nsm-page-buttons page-button-container">
                             <a class="nsm-button primary" id="openModalBtn"  style="margin-left: 10px; cursor:pointer"><i class='bx bx-fw bxs-user-plus'></i> New Customer</a>
                         </div>
                         <?php } ?>
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" id="btn-commercial-export-list">
-                                <i class='bx bx-fw bx-file'></i> Export
-                            </button>
-                        </div>
+                        <?php if( checkRoleCanAccessModule('customers', 'delete') ){ ?>
+                        <button type="button" class="nsm-button primary" id="archived-customer-list">
+                            <i class='bx bx-fw bx-trash'></i> Manage Archived
+                        </button>
+                        <?php } ?>    
                     </div>
                 </div>
                 <input type="hidden" id="page_type" value="company">
@@ -562,35 +581,66 @@ var COMPANY_LIST_TABLE = $('#company-list').DataTable({
     "ordering": false,
     "processing": true,
     "serverSide": true,
-    //"lengthMenu": [10, 25, 50, 75, 100], // Display options for the length menu
+    "cache": true,
+    "stateSave": true,    
     "pageLength": 10,
     "ajax": {
         "url": "<?= base_url('customer/getCompanyList'); ?>",
         "type": "POST",
         "data": function (d) {
-        // Include custom parameters for filtering
-        d.filter_status = $('#filter-selected').text().trim(); // Get filter value from UI element
+        d.filter_status = $('#filter-selected').text().trim(); 
         },
         "dataSrc": function (json) {
-            // Handle the response here
-            //console.log(json);
-            // Return the data portion of the response
             csv_data = json.data;
-            //console.log(csv_data);
             return json.data;
         }
     },
 });
+
 $(document).ready(function() {
     var csv_data;
     $('#btn-commercial-export-list').on('click', function(){
         location.href = base_url + 'customer/export_commercial_list';
     });
 
+    $('#btn-reset-customer-list').on('click', function(){
+        COMPANY_LIST_TABLE.state.clear(); 
+        location.reload();
+    });
+
     $("#COMMERCIAL_SEARCHBAR").keyup(function() {
         COMPANY_LIST_TABLE.search($(this).val()).draw();
 
     });
+
+    $('#archived-customer-list').on('click', function(){
+        $('#modal-archived-customers').modal('show');
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer/_archived_list",  
+            success: function(html) {    
+                $('#customer-archived-list-container').html(html);                          
+            },
+            beforeSend: function() {
+                $('#customer-archived-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+    
+    $('#favorite-customer-list').on('click', function(){
+        $('#modal-favorite-customers').modal('show');
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer/_favorite_list",  
+            success: function(html) {    
+                $('#customer-favorite-list-container').html(html);                          
+            },
+            beforeSend: function() {
+                $('#customer-favorite-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+    
     $('.select-filter .dropdown-item').on('click', function(e) {
         e.preventDefault();
 
@@ -830,6 +880,52 @@ $(document).ready(function() {
             }
         });
         }, 800);
+    });
+
+    $('#print-customer-list').on('click', function() {
+        var url  = base_url + 'customer/_get_customer_lists';
+        var type = 'Commercial';
+
+        $('#print_customer_list_modal').modal('show');
+        $("#print-customer-list-container").html('<span class="bx bx-loader bx-spin"></span> loading customer list...');
+
+        setTimeout(function() {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {type:type},
+                success: function(o) {
+                    $("#print-customer-list-container").html(o);
+                }
+            });
+        }, 800);
+    });
+
+    $(document).on('click', '.send-esign', function(){
+        var prof_id = $(this).attr('data-id');
+        var name = $(this).attr('data-name');
+
+        $('#customer-esign').val(prof_id);
+        $('#modal-send-esign-customer-name').text(name);
+        $('#modal-send-esign').modal('show');
+
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer/_send_esign_form",
+            data: {prof_id:prof_id},
+            beforeSend: function(data) {
+                $("#customer-send-esign").html('<span class="bx bx-loader bx-spin"></span>');
+            },
+            success: function(html) {
+                $("#customer-send-esign").html(html);
+            },
+            complete: function() {
+
+            },
+            error: function(e) {
+                console.log(e);
+            }
+        });
     });
 
     $(document).on('click', '.send-email', function(){
