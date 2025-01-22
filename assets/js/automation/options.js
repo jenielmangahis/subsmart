@@ -1,7 +1,5 @@
 // options.js
 
-console.log('test')
-
 const eventOptions = {
     lead: [
         { text: "is created", value: "created" },
@@ -58,4 +56,3 @@ const dateOptions = [
 ];
 
 // Export all options as a module to use in other files
-export { eventOptions, targetOptions, actionOptions, timeOptions, timingOptions, dateOptions };
