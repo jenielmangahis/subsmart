@@ -5647,6 +5647,7 @@ class Customer extends MY_Controller
     public function getImportData()
     {
         addJSONResponseHeader();
+
         if (is_uploaded_file($_FILES['file']['tmp_name'])) {
             $csv = array_map('str_getcsv', file($_FILES['file']['tmp_name'], FILE_SKIP_EMPTY_LINES));
             $csvHeader = array_shift($csv);
@@ -5677,6 +5678,7 @@ class Customer extends MY_Controller
         } else {
             // echo 'No upload' . PHP_EOL;
         }
+
         exit(json_encode($data_arr));
     }
 
@@ -10913,5 +10915,39 @@ class Customer extends MY_Controller
         
         $this->page_data['esignTemplates'] = $esignTemplates;
         $this->load->view('v2/pages/customer/ajax_send_esign_form', $this->page_data);
+    }
+
+    public function ajax_import_preview()
+    {
+        $this->load->library('CSVReader');
+
+        $post = $this->input->post();
+        $csv  = array_map('str_getcsv', file($_FILES['file']['tmp_name'], FILE_SKIP_EMPTY_LINES));
+        $csvHeader = array_shift($csv);           
+        $csvData   = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+
+        $preview_headers  = [];
+        $selected_headers = [];        
+        foreach( $post['headers'] as $key => $value ){
+            if( $value >= 0 && $csvHeader[$value] && $post['settingHeaders'][$value] ){
+                $selected_headers[$csvHeader[$value]] = ['name' => $csvHeader[$value], 'setting_header' => $post['settingHeaders'][$key]]; 
+            }
+            
+        }
+
+        $preview_data = [];
+        $row = 0;
+        foreach( $csvData as $value ){
+            foreach( $value as $subKey => $subValue ){
+                if( $selected_headers[$subKey]['name'] ){
+                    $preview_data[$row][$selected_headers[$subKey]['name']] = $subValue;
+                }
+            }
+            $row++;
+        }
+        
+        $this->page_data['preview_headers'] = $selected_headers;
+        $this->page_data['preview_data']    = $preview_data;
+        $this->load->view('v2/pages/customer/ajax_preview_import', $this->page_data);
     }
 }
