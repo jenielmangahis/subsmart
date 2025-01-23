@@ -1,11 +1,10 @@
-<?php include viewPath('v2/includes/header'); ?>
-<?php include viewPath('v2/includes/customer/customer_modals'); ?>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<?php
+
+defined('BASEPATH') or exit('No direct script access allowed');
+include viewPath('v2/includes/header');
+?>
 
 <link rel="stylesheet" href="<?php echo $url->assets; ?>css/automation/automation.css">
-
 
 <div class="row page-content g-0">
     <!-- TABS -->
