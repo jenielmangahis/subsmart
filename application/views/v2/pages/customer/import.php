@@ -84,7 +84,7 @@
                                                                     <?php if (in_array($header->id, $fieldsValue)) { ?>
                                                                         <tr>
                                                                             <td class="fw-bold nsm-text-primary" style="text-align:right;">
-                                                                                <input type="hidden" name="settingHeaders[]" value="<?= $header->field_description; ?>" />
+                                                                                <input type="hidden" name="settingHeaders[]" value="<?= $header->id; //$header->field_description; ?>" />
                                                                                 <?php 
                                                                                     if( trim($header->field_description) == 'Phone (M)' ){
                                                                                         echo 'Mobile Number';
@@ -179,7 +179,6 @@
             $(".step03").addClass("active");         
 
             var form = new FormData($("#import_customer")[0]);
-
             $.ajax({    
                 type: "POST",
                 url: base_url + "customer/_import_preview",  
@@ -203,12 +202,17 @@
                 selectedHeader.push(this.value);
             });
 
-            const formData = new FormData();
-            var settingHeaders = $('input[name="settingHeaders[]"]')
+            //const formData = new FormData();
+            const formData = new FormData($("#import_customer")[0]);
+
+            //var settingHeaders = $('input[name="settingHeaders[]"]');
+            //formData.append('settingHeaders', JSON.stringify(csvHeaders));
+            
+            /*
             formData.append('customers', JSON.stringify(customerData));
             formData.append('mapHeaders', JSON.stringify(selectedHeader));
             formData.append('csvHeaders', JSON.stringify(csvHeaders));
-            formData.append('settingHeaders', JSON.stringify(csvHeaders));
+            */
             
             if ($overlay) $overlay.style.display = "flex";
             // perform post request
@@ -262,7 +266,6 @@
         });
 
         
-
         function sweetAlert(title,icon,information,is_reload){
             Swal.fire({
                 title: title,
