@@ -1,4 +1,6 @@
-<?php if (! defined('BASEPATH')) {
+<?php
+
+if (! defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
@@ -35,9 +37,8 @@ if (! function_exists('get_automation_options')) {
                 'user'       => 'to user',
             ],
             'actionOptions' => [
-                // 'send_sms' => 'a text message',
+                'send_sms' => 'a text message',
                 'send_email' => 'an email',
-                // 'send_sms_and_email' => 'a text and an email',
             ],
             'timeOptions'   => [
                 '10'   => '10 minutes',
@@ -192,14 +193,14 @@ if (! function_exists('generateAutomationDescription')) {
 
     function formatTriggerTime($triggerTime)
     {
-       
+
         if ($triggerTime >= 1440) { // 1440 minutes = 1 day
             $days = floor($triggerTime / 1440);
             return $days . " day" . ($days > 1 ? "s" : "");
         } elseif ($triggerTime >= 60) { // 60 minutes = 1 hour
             $hours = floor($triggerTime / 60);
             return $hours . " hour" . ($hours > 1 ? "s" : "");
-        }else if ($triggerTime == 0) { // 0
+        } elseif ($triggerTime == 0) { // 0
             return 'immediately';
         } else {
             return $triggerTime . " minute" . ($triggerTime > 1 ? "s" : "");
@@ -224,11 +225,7 @@ if (!function_exists('getRemindersTemplate')) {
     function getRemindersTemplate()
     {
         return [
-            [
-                'title' => 'Immediate Notice / Client Reminder',
-                'description' => 'Send immediate notice to a client.',
-                'onclick' => "populateModal({'entity': 'job', 'event': 'has_status', 'target': 'client', 'action': 'send_email', 'time': '0'})"
-            ],
+
             [
                 'title' => '2 hours / Tech Reminder',
                 'description' => 'Send an email to a technician 2 hours ahead of the job.',
@@ -247,4 +244,3 @@ if (!function_exists('getRemindersTemplate')) {
         ];
     }
 }
-

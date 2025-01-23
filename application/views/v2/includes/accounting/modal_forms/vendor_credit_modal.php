@@ -28,7 +28,6 @@
     border:none !important;
 }
 </style>
-
 <div class="full-screen-modal">
 <?php if(!isset($vendorCredit)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
@@ -54,7 +53,7 @@
                                 </div>
                             </div>
                             <span class="modal-title content-title">
-                                Vendor Credit <span><?=isset($vendorCredit) ? "#$vendorCredit->ref_no" : ''?></span>
+                                Vendor Credit <span><?=isset($vendorCredit->ref_no) ? "#$vendorCredit->ref_no" : ''?></span>
                             </span>
                         </div>
                     </div>

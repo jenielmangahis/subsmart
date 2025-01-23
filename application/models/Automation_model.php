@@ -2,6 +2,8 @@
 
 class Automation_model extends CI_Model
 {
+    public $table = 'automations';
+
     // Constructor method to initialize the model
     public function __construct()
     {
@@ -15,7 +17,7 @@ class Automation_model extends CI_Model
      */
     public function getAllAutomations()
     {
-        $query = $this->db->get('automations');
+        $query = $this->db->get($this->table);
 
         // If records exist, return them, otherwise return an empty array
         if ($query->num_rows() > 0) {
@@ -33,7 +35,7 @@ class Automation_model extends CI_Model
      */
     public function saveAutomation($automationData)
     {
-        $this->db->insert('automations', $automationData);
+        $this->db->insert($this->table, $automationData);
 
         // Check if insertion is successful
         return $this->db->affected_rows() > 0;
@@ -43,14 +45,14 @@ class Automation_model extends CI_Model
     {
         $this->db->where($params);
         $this->db->order_by('created_at', 'DESC');
-        $query = $this->db->get('automations');
+        $query = $this->db->get($this->table);
 
         return $query->result_array();
     }
 
     public function updateAutomationsByParams($filters, $id)
     {
-        $update = $this->db->update('automations', $filters, ['id' => $id]);
+        $update = $this->db->update($this->table, $filters, ['id' => $id]);
 
         if ($update) {
             return true;
@@ -94,7 +96,8 @@ class Automation_model extends CI_Model
         return $query->row();
     }
 
-    public function countAutomationsByStatus($user_id) {
+    public function countAutomationsByStatus($user_id)
+    {
         // Retrieve all automations for the given user
         $this->db->where('user_id', $user_id);
         $query = $this->db->get('automations');

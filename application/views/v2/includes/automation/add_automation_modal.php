@@ -27,35 +27,35 @@
                                                     <?php
                                                         $automationOptions = get_automation_options();
 
-                                                        $eventOptions = $automationOptions['eventOptions'];
-                                                        $index        = 0;
+                                                    $eventOptions = $automationOptions['eventOptions'];
+                                                    $index        = 0;
 
-                                                        foreach ($eventOptions as $type => $options) {
-                                                            $iconClass = "bx bx-" . $type; // You can modify the icon class based on the type
-                                                            $article   = ($type == 'estimate' || $type == 'invoice') ? 'an ' : 'a ';
+                                                    foreach ($eventOptions as $type => $options) {
+                                                        $iconClass = "bx bx-" . $type; // You can modify the icon class based on the type
+                                                        $article   = ($type == 'estimate' || $type == 'invoice') ? 'an ' : 'a ';
                                                         ?>
                                                         <div class="accordion-item" style="border: none !important;">
-                                                            <h2 class="accordion-header" id="heading<?php echo $index ?>">
-                                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?php echo $index ?>" aria-expanded="false" aria-controls="collapse<?php echo $index ?>">
+                                                            <h2 class="accordion-header" id="heading<?php echo $index; ?>">
+                                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?php echo $index; ?>" aria-expanded="false" aria-controls="collapse<?php echo $index; ?>">
                                                                     <i class="bx
-                                                                    <?php echo $iconClass ?> me-2"></i><?php echo $article ?><?php echo $type ?>
+                                                                    <?php echo $iconClass; ?> me-2"></i><?php echo $article; ?><?php echo $type; ?>
                                                                 </button>
                                                             </h2>
-                                                            <div id="collapse<?php echo $index ?>" class="accordion-collapse collapse" aria-labelledby="heading<?php echo $index ?>" data-bs-parent="#entityMenuAccordion">
+                                                            <div id="collapse<?php echo $index; ?>" class="accordion-collapse collapse" aria-labelledby="heading<?php echo $index; ?>" data-bs-parent="#entityMenuAccordion">
                                                                 <div class="accordion-body">
                                                                     <ul class="list-group list-group-flush">
                                                                         <?php
                                                                             foreach ($options as $value => $text) {
                                                                                 echo "<li class='list-group-item entity-event-item cursor-pointer' data-type='{$type}' data-value='{$value}'>{$text}</li>";
                                                                             }
-                                                                            ?>
+                                                        ?>
                                                                     </ul>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     <?php
                                                         $index++;
-                                                        }
+                                                    }
                                                     ?>
                                                 </div>
                                                 <!-- Hidden inputs to store selected entity and event -->
