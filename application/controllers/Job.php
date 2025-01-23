@@ -34,6 +34,11 @@ class Job extends MY_Controller
     public function index()
     {
         $this->isAllowedModuleAccess(15);
+        if(!checkRoleCanAccessModule('jobs', 'read')){
+			show403Error();
+			return false;
+		}
+        
         $userId = get('user_id');
         $leaderBoardType = get('leader_board_type');
 
@@ -83,6 +88,12 @@ class Job extends MY_Controller
         $this->load->model('CalendarSettings_model');
         $this->load->model('Tickets_model');
         $this->load->helper('functions');
+
+        if(!checkRoleCanAccessModule('jobs', 'write')){
+            show403Error();
+            return false;
+        }
+
         $comp_id = logged('company_id');
         $user_id = logged('id');
 
@@ -1925,8 +1936,10 @@ class Job extends MY_Controller
         $this->load->model('Icons_model');
 
         $this->hasAccessModule(26);
-        $this->page_data['page']->title = 'Job Types';
-        $this->page_data['page']->parent = 'Sales';
+        if(!checkRoleCanAccessModule('job-setitngs', 'read')){
+            show403Error();
+            return false;
+        }
 
         $get_job_types = array(
             'where' => array(
@@ -1944,6 +1957,8 @@ class Job extends MY_Controller
         $icons = $this->Icons_model->getAll();
         $this->page_data['icons'] = $icons;
         $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
+        $this->page_data['page']->title = 'Job Types';
+        $this->page_data['page']->parent = 'Sales';
         $this->load->view('v2/pages/job/job_types', $this->page_data);
     }
 
@@ -2010,6 +2025,11 @@ class Job extends MY_Controller
 
     public function delete_job()
     {
+        if(!checkRoleCanAccessModule('jobs', 'delete')){
+			show403Error();
+			return false;
+		}
+
         $user_login = logged('FName') . ' ' . logged('LName');
         $remove_job = array(
             'where' => array(
@@ -6196,6 +6216,10 @@ class Job extends MY_Controller
 
     public function ajax_restore_archived()
     {
+        if(!checkRoleCanAccessModule('customers', 'write')){
+			show403Error();
+			return false;
+		}
 
         $is_success = 0;
         $msg = 'Cannot find job data';
