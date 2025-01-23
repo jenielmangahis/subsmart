@@ -4,6 +4,21 @@
 .dataTables_filter, .dataTables_length{
     display: none;
 }
+.techs {
+    display: flex;
+    padding-left: 12px;
+}
+.techs > .nsm-profile {
+    border: 2px solid #fff;
+    box-sizing: content-box;
+    margin-left: -12px;
+}
+.nsm-profile {
+    --size: 35px;
+    max-width: var(--size);
+    height: var(--size);
+    min-width: var(--size);
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">
@@ -102,11 +117,16 @@
                                 <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=amount-desc">Amount: Highest</a></li>
                             </ul>
                         </div>
+                        <?php if(checkRoleCanAccessModule('service-tickets', 'write')){ ?>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('ticket/add') ?>'">
                                 <i class='bx bx-fw bx-note'></i> New Service Ticket
                             </button>
+                            <button type="button" class="nsm-button primary" id="archived-ticket-list">
+                                <i class='bx bx-fw bx-trash'></i> Manage Archived
+                            </button>
                         </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <form id="frm-with-selected">
@@ -119,8 +139,10 @@
                                 </td>
                                 <td class="table-icon"></td>
                                 <td data-name="Work Order Number">Service Ticket No.</td>
-                                <td data-name="Customer">Customer</td>
-                                <td data-name="Date Issued">Date</td>
+                                <td data-name="AssignedTech">Assigned Tech</td>
+                                <td data-name="Customer">Customer</td>                                
+                                <td data-name="Date Issued">
+                                    Date</td>                                
                                 <td data-name="Time From">Time</td>                            
                                 <td data-name="Status">Status</td>
                                 <td data-name="Amount" style="width:8%; !important;text-align:right;">Amount</td>
@@ -132,8 +154,25 @@
                             <tr>
                                 <td style="text-align:center;"><input class="form-check-input row-select table-select" name="tickets[]" type="checkbox" name="id_selector" value="<?= $ticket->id; ?>"></td>
                                 <td><div class="table-row-icon"><i class='bx bx-briefcase'></i></div></td>
-                                <td><b><?php echo $ticket->ticket_no; ?></b></td>
-                                <td><?php echo $ticket->first_name.' '.$ticket->last_name; ?></td>
+                                <td style="width:10%;"><b><?php echo $ticket->ticket_no; ?></b></td>
+                                <td style="width:15%;">
+                                    <?php if( $ticket->assigned_tech ){ ?>
+                                        <div class="techs">   
+                                        <?php foreach($ticket->assigned_tech as $user){ ?>
+                                            <?php 
+                                                $name     = $user['first_name'] . ' ' . $user['last_name']; 
+                                                $initials = $user['first_name'][0] . '' . $user['last_name'][0];
+                                            ?>
+                                            <?php if( $user['image'] != 'default.png' && $user['image'] != '' ){ ?>
+                                                <div title="<?= $name; ?>" class="nsm-profile" style="background-image: url('<?= userProfileImage($user['id']); ?>');"></div>
+                                            <?php }else{ ?>
+                                                <div title="<?= $name; ?>" class="nsm-profile"><span><?= $initials; ?></span></div>
+                                            <?php } ?>
+                                        <?php } ?>
+                                        </div>
+                                    <?php } ?>
+                                </td>
+                                <td style="width:20%;"><?php echo $ticket->first_name.' '.$ticket->last_name; ?></td>                                
                                 <td>
                                     <?php 
                                         $date = '---';
@@ -143,7 +182,7 @@
 
                                         echo $date;
                                     ?>
-                                </td>
+                                </td>                                
                                 <td>
                                     <?php 
                                         $ticket_time = '---';
@@ -157,7 +196,7 @@
                                     ?>
                                 </td>                            
                                 <td><?php echo $ticket->ticket_status; ?></td>
-                                <td style="width:8%; !important;text-align:right;">$<?php echo number_format($ticket->grandtotal,2); ?></td>
+                                <td style="width:15%; !important;text-align:right;">$<?php echo number_format($ticket->grandtotal,2); ?></td>
                                 <td>
                                     <div class="dropdown table-management">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -165,8 +204,12 @@
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li><a class="dropdown-item row-view-ticket" href="javascript:void(0);" data-id="<?= $ticket->id; ?>">View</a></li>
+                                            <?php if(checkRoleCanAccessModule('service-tickets', 'write')){ ?>
                                             <li><a class="dropdown-item" tabindex="-1" href="<?php echo base_url('tickets/editDetails/' . $ticket->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
+                                            <?php } ?>
+                                            <?php if(checkRoleCanAccessModule('service-tickets', 'delete')){ ?>
                                             <li><a class="dropdown-item delete-ticket" href="javascript:void(0);" data-tk-id="<?php echo $ticket->id; ?>">Delete</a></li>
+                                            <?php } ?>
                                         </ul>
                                     </div>
                                 </td>
@@ -231,6 +274,20 @@
         </div>
     </div>
 
+    <div class="modal fade nsm-modal fade" id="modal-archived-tickets" aria-labelledby="modal-archived-tickets-label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form method="post" id="quick-add-event-form">   
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title">Archived Service Tickets</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body" id="tickets-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
 </div>
 
@@ -253,6 +310,62 @@
     $(document).on('change', '#select-all', function(){
         $('.row-select:checkbox').prop('checked', this.checked);  
     });
+    <?php if(checkRoleCanAccessModule('service-tickets', 'write')){ ?>
+    $('#archived-ticket-list').on('click', function(){
+        $('#modal-archived-tickets').modal('show');
+        $.ajax({
+            type: "POST",
+            url: base_url + "ticket/_archived_list",  
+            success: function(html) {    
+                $('#tickets-archived-list-container').html(html);                          
+            },
+            beforeSend: function() {
+                $('#tickets-archived-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on('click', '.btn-restore-ticket', function(){
+        var ticket_id = $(this).attr('data-id');
+        var ticket_number = $(this).attr('data-ticketnumber');
+
+        Swal.fire({
+            title: 'Restore Service Ticket',
+            html: `Proceed with restoring service ticket <b>${ticket_number}</b>?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {                    
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "ticket/_restore_archived",
+                    data: {ticket_id:ticket_id},
+                    dataType:'json',
+                    success: function(result) {                            
+                        if( result.is_success == 1 ) {
+                            $('#modal-archived-tickets').modal('hide');
+                            Swal.fire({
+                            icon: 'success',
+                            title: 'Restore Service Ticket',
+                            text: 'Service ticket data was successfully restored.',
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
+    <?php } ?>
 
     $(document).on('click', '#with-selected-delete', function(){
         Swal.fire({
