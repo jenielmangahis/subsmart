@@ -110,6 +110,7 @@ $route['customer/export_residential_list'] = 'Customer/export_residential_list';
 $route['customer/export_commercial_list'] = 'Customer/export_commercial_list';
 $route['customer/_archived_list'] = 'Customer/ajax_archived_list';
 $route['customer/_create_customer_group'] = 'Customer/ajax_create_customer_group';
+$route['customer/_import_preview'] = 'Customer/ajax_import_preview';
 
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';

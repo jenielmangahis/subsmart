@@ -7,7 +7,7 @@
     const actionOptions =   <?php echo json_encode($options['actionOptions']); ?>;
     const timeOptions =  <?php echo json_encode($options['timeOptions']); ?>;
     const timingOptions =<?php echo json_encode($options['timingOptions']); ?>;
-    const dateOptions =                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <?php echo json_encode($options['dateOptions']); ?>;
+    const dateOptions =  <?php echo json_encode($options['dateOptions']); ?>;
     const automationConfig =     <?php echo json_encode(get_automation_email_config()); ?>;
 
     $(document).ready(function() {
@@ -126,7 +126,7 @@
                 selectedStatus = statusOptions[data.entity]
                 ? Object.values(statusOptions[data.entity])[0]
                 : null;
-                selectedTitle = data.title || selectedTitle;
+                selectedTitle = data.title;
                 selectedTarget = data.target;
                 selectedAction = data.action;
                 selectedTime = data.time;

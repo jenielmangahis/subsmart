@@ -247,7 +247,6 @@ class Customer extends MY_Controller
      
       
         $persons = $this->company->getAllCustomerByCustomerType($search,logged('company_id'), 'Commercial',$filter_status == 'All Status' ? '' :$filter_status);
-       
         $filteredPersons = array_slice($persons, $start, $length);
 
         $get_company_settings = [
@@ -306,7 +305,8 @@ class Customer extends MY_Controller
                     }
                 }
                 if (in_array('city', $enabled_table_headers)) {
-                    array_push($data_arr, $customer->city);
+                    $city = trim($customer->city) != '' ? '' .$customer->city : '---';
+                    array_push($data_arr, $city);
                 }
                 if (in_array('state', $enabled_table_headers)) {
                     $state = 'Not Specified';
@@ -351,7 +351,7 @@ class Customer extends MY_Controller
                 }
                 if (in_array('subscription_amount', $enabled_table_headers)) {
                     //$subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
-                    $subs_amt = $customer->mmr > 0 ? number_format(floatval($customer->mmr), 2, '.', ',') : 0.00;
+                    $subs_amt = $customer->mmr > 0 ? number_format(floatval($customer->mmr), 2, '.', ',') : '0.00';
                     array_push($data_arr, '$'.$subs_amt);
                 }
                 if (in_array('job_amount', $enabled_table_headers)) {
@@ -360,7 +360,7 @@ class Customer extends MY_Controller
                     $this->db->join('jobs', 'job_items.job_id = jobs.id', 'left');
                     $this->db->where('jobs.customer_id', $customer->prof_id);
                     $totalJobItems = $this->db->get()->row();
-                    $job_amount = 0;
+                    $job_amount = '0.00';
                     if ($totalJobItems->total_amount > 0) {
                         $job_amount = number_format(floatval($totalJobItems->total_amount), 2, '.', ',');
                     }
@@ -400,23 +400,40 @@ class Customer extends MY_Controller
                         array_push($data_arr, 'Not Specified');
                     }
                 }
-                array_push($data_arr, $customer->city);
-                array_push($data_arr, $customer->state);
+
+                $city = trim($customer->city) != '' ? '' .$customer->city : '---';
+                array_push($data_arr, $city);
+                
+                $state = trim($customer->state) != '' ? '' .$customer->state : '---';
+                array_push($data_arr, $state);
+
                 $lead = $customer->lead_source != '' ? $customer->lead_source : 'Door';
                 array_push($data_arr, $lead);
+
                 $added_by = trim($customer->entered_by2) != '' ? $customer->entered_by2 : '---';
                 array_push($data_arr, $added_by);
+
                 $sales_rep = trim(get_sales_rep_name($customer->fk_sales_rep_office));
                 if ($sales_rep == '') {
                     $sales_rep = '---';
                 }
                 array_push($data_arr, $sales_rep);
+
                 $techician = !empty($customer->technician) ? get_employee_name($customer->technician) : 'Not Assigned';
                 array_push($data_arr, $techician);
-                $plan_type = trim($customer->system_type) != '' ? $customer->system_type : '---';
+
+                $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($customer->mmr, logged('company_id'));
+                $plan_type= 'Not Specified';
+                if( $ratePlan ){
+                    $plan_type = $ratePlan->plan_name;
+                }    
+                //$plan_type = trim($customer->system_type) != '' ? $customer->system_type : '---';
                 array_push($data_arr, $plan_type);
-                $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
+
+                $subs_amt = $customer->mmr > 0 ? number_format(floatval($customer->mmr), 2, '.', ',') : '0.00';       
+                //$subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
                 array_push($data_arr, '$'.$subs_amt);
+
                 $this->db->select('SUM(job_items.qty * job_items.cost) AS total_amount');
                 $this->db->from('job_items');
                 $this->db->join('jobs', 'job_items.job_id = jobs.id', 'left');
@@ -443,12 +460,14 @@ class Customer extends MY_Controller
             $call_action     = '';
             $schedule_action = '';
             $email_action    = '';
+            $send_esign_action = '';
             if( checkRoleCanAccessModule('customers', 'write') ){
                 $edit_action = "<li><a class='dropdown-item' href='".base_url('customer/add_advance/'.$customer->prof_id)."'>Edit</a></li>";
                 $favorite_action = " <li><a class='dropdown-item favorite-customer' data-favorite='".$customer->is_favorite."' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' href='javascript:void(0);'>Add to Favorites</a></li>";
                 $call_action = "<li><a class='dropdown-item call-item' href='javascript:void(0);' data-id='".$customer->phone_m."'>Call</a></li>";
                 $schedule_action = "<li><a class='dropdown-item' href='".base_url('job/new_job1?cus_id='.$customer->prof_id)."'>Schedule</a></li>";
                 $email_action = "<li><a class='dropdown-item send-email' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' data-email='".$customer->email."' href='javascript:void(0);'>Email</a></li>";
+                $send_esign_action = " <li><a class='dropdown-item send-esign' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' href='javascript:void(0);'>Send eSign</a></li>";
             }
             
             $delete_action = '';
@@ -466,7 +485,8 @@ class Customer extends MY_Controller
                     </li>
                     ".$edit_action."
                     ".$email_action."
-                    ".$call_action."      
+                    ".$call_action."    
+                    ".$send_esign_action."        
                     <li>
                         <a class='dropdown-item' href='".base_url('invoice/add?cus_id='.$customer->prof_id)."'>Invoice</a>
                     </li>
@@ -877,9 +897,20 @@ class Customer extends MY_Controller
         }
 
         if( $post['type'] ){
-            $customers = $this->customer_ad_model->getCustomerLists($search, 0, 0, $post['type']);
+            $customers = $this->customer_ad_model->getCustomerLists($search, 0, 0, 0, [], $post['type']);
         }else{
             $customers = $this->customer_ad_model->getCustomerLists($search, 0, 0);
+        }
+
+        foreach($customers as $c){
+            $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($c->mmr, logged('company_id'));
+                    
+            $plan_type= 'Not Specified';
+            if( $ratePlan ){
+                $plan_type = $ratePlan->plan_name;
+            }
+
+            $c->plan_type = $plan_type;
         }
 
         $search = ['search' => ''];
@@ -5616,6 +5647,7 @@ class Customer extends MY_Controller
     public function getImportData()
     {
         addJSONResponseHeader();
+
         if (is_uploaded_file($_FILES['file']['tmp_name'])) {
             $csv = array_map('str_getcsv', file($_FILES['file']['tmp_name'], FILE_SKIP_EMPTY_LINES));
             $csvHeader = array_shift($csv);
@@ -5646,6 +5678,7 @@ class Customer extends MY_Controller
         } else {
             // echo 'No upload' . PHP_EOL;
         }
+
         exit(json_encode($data_arr));
     }
 
@@ -10010,6 +10043,11 @@ class Customer extends MY_Controller
     {
         $this->load->model('Customer_model');
 
+        if(!checkRoleCanAccessModule('customers', 'delete')){
+			show403Error();
+			return false;
+		}
+
         $post = $this->input->post();
         $cid  = logged('company_id');
 
@@ -10877,5 +10915,39 @@ class Customer extends MY_Controller
         
         $this->page_data['esignTemplates'] = $esignTemplates;
         $this->load->view('v2/pages/customer/ajax_send_esign_form', $this->page_data);
+    }
+
+    public function ajax_import_preview()
+    {
+        $this->load->library('CSVReader');
+
+        $post = $this->input->post();
+        $csv  = array_map('str_getcsv', file($_FILES['file']['tmp_name'], FILE_SKIP_EMPTY_LINES));
+        $csvHeader = array_shift($csv);           
+        $csvData   = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+
+        $preview_headers  = [];
+        $selected_headers = [];        
+        foreach( $post['headers'] as $key => $value ){
+            if( $value >= 0 && $csvHeader[$value] && $post['settingHeaders'][$value] ){
+                $selected_headers[$csvHeader[$value]] = ['name' => $csvHeader[$value], 'setting_header' => $post['settingHeaders'][$key]]; 
+            }
+            
+        }
+
+        $preview_data = [];
+        $row = 0;
+        foreach( $csvData as $value ){
+            foreach( $value as $subKey => $subValue ){
+                if( $selected_headers[$subKey]['name'] ){
+                    $preview_data[$row][$selected_headers[$subKey]['name']] = $subValue;
+                }
+            }
+            $row++;
+        }
+        
+        $this->page_data['preview_headers'] = $selected_headers;
+        $this->page_data['preview_data']    = $preview_data;
+        $this->load->view('v2/pages/customer/ajax_preview_import', $this->page_data);
     }
 }
