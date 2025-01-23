@@ -7,94 +7,97 @@
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
             </div>
             <form id="new_customer_form">
-                <div class="modal-body">
-                    <div class="row">   
-                        <div class="col-md-8 mb-3">
-                            <div class="form-group">
-                                <label>Customer Type</label>
-                                <select id="customer_type" name="customer_type" class="form-control">
-                                    <option value="Residential">Residential</option>
-                                    <option value="Commercial">Commercial</option>
-                                </select>
-                            </div>                            
-                        </div>  
-                        <hr />
-                    </div>             
+                <div class="modal-body">                     
                     <div class="row">  
-                        <div class="col-md-4 mb-3">
-                            <div class="form-group">
-                                <label>First Name</label>
-                                <input type="text" name="first_name" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="form-group">
-                                <label>Last Name</label>
-                                <input type="text" name="last_name" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="form-group">
-                                <label>Middle Name</label>
-                                <input type="text" name="middle_name" class="form-control" placeholder="" >
+                        <div class="col-md-12">
+                            <div class="nsm-card primary">                                
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <div class="form-group">
+                                            <label>Customer Type</label>
+                                            <select id="customer_type" name="customer_type" class="form-control">
+                                                <option value="Residential">Residential</option>
+                                                <option value="Commercial">Commercial</option>
+                                            </select>
+                                        </div>                            
+                                    </div> 
+                                    <div class="col-md-4 mb-3">
+                                        <div class="form-group">
+                                            <label>First Name</label>
+                                            <input type="text" name="first_name" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="form-group">
+                                            <label>Last Name</label>
+                                            <input type="text" name="last_name" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="form-group">
+                                            <label>Middle Name</label>
+                                            <input type="text" name="middle_name" class="form-control" placeholder="" >
+                                        </div>
+                                    </div>                        
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label>Email</label>
+                                            <input type="email" name="email" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label>Social Security Number</label>
+                                            <input type="text" name="ssn" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-3 grp-customer-business" style="display:none;">
+                                        <div class="form-group">
+                                            <label>Business Name</label>
+                                            <input type="text" name="business_name" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-group">
+                                            <label>Mobile</label>
+                                            <input type="text" name="phone_m" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-group">
+                                            <label>Phone</label>
+                                            <input type="text" name="phone_h" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-2">
+                                        <div class="form-group">
+                                            <label>Address</label>
+                                            <input type="text" name="mail_add" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-group">
+                                            <label>City</label>
+                                            <input type="text" name="city" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-group">
+                                            <label>State</label>
+                                            <input type="text" name="state" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="form-group">
+                                            <label>Zip Code</label>
+                                            <input type="text" name="zip_code" class="form-control" required>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>                        
-                        <div class="col-md-6 mb-3">
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input type="email" name="email" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="form-group">
-                                <label>Social Security Number</label>
-                                <input type="text" name="ssn" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-md-12 mb-3 grp-customer-business" style="display:none;">
-                            <div class="form-group">
-                                <label>Business Name</label>
-                                <input type="text" name="business_name" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <div class="form-group">
-                                <label>Mobile</label>
-                                <input type="text" name="phone_m" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <div class="form-group">
-                                <label>Phone</label>
-                                <input type="text" name="phone_h" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" required>
-                            </div>
-                        </div>
-                        <div class="col-md-12 mb-2">
-                            <div class="form-group">
-                                <label>Address</label>
-                                <input type="text" name="mail_add" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <div class="form-group">
-                                <label>City</label>
-                                <input type="text" name="city" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <div class="form-group">
-                                <label>State</label>
-                                <input type="text" name="state" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-4">
-                            <div class="form-group">
-                                <label>Zip Code</label>
-                                <input type="text" name="zip_code" class="form-control" required>
-                            </div>
-                        </div>
                     </div>
-                    <div class="row">
+                    <div class="row mt-2">
                         <div class="col-12">
                             <div class="d-flex justify-content-end">
                                 <button type="submit" class="nsm-button primary">Save</button>
