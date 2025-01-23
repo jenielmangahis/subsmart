@@ -21,19 +21,26 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Manage Tickets Plan Types.
+                            Manage Service Ticket Plan Types.
                         </div>
                     </div>
-                </div>
+                </div>                                
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-12 col-md-4 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div>
+                    </div>
+                    <?php if(checkRoleCanAccessModule('service-ticket-settings', 'write')){ ?>
+                    <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#modal-add-new-plan-type">
                                 <i class='bx bx-plus-medical'></i> Add New
                             </button>
                         </div>
                     </div>
-                </div>
+                    <?php } ?>
+                </div>                
                 <table class="nsm-table">
                     <thead>
                         <tr>
@@ -58,12 +65,16 @@
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('service-ticket-settings', 'write')){ ?>
                                                 <li>
                                                     <a class="dropdown-item row-edit-plan-type" href="javascript:void(0);" data-id="<?= $plan->id; ?>" data-name="<?= $plan->name; ?>">Edit</a>
                                                 </li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('service-ticket-settings', 'delete')){ ?>
                                                 <li>
                                                     <a class="dropdown-item row-delete-plan-type" href="javascript:void(0);" data-id="<?= $plan->id; ?>" data-name="<?= $plan->name; ?>">Delete</a>
                                                 </li>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </td>
@@ -140,6 +151,10 @@
 
 <script type="text/javascript">
 $(function(){
+    $(".nsm-table").nsmPagination();
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));        
+    }, 1000));
     $('.row-edit-plan-type').on('click', function(){
         var pid = $(this).attr('data-id');
         var plan_name = $(this).attr('data-name');
