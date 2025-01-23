@@ -4617,8 +4617,8 @@ class Customer extends MY_Controller
             'table' => 'acs_import_fields',
             'select' => '*',
         ];
-        $this->page_data['importFieldsList'] = $this->general->get_data_with_param($getImportFields);
 
+        $this->page_data['importFieldsList'] = $this->general->get_data_with_param($getImportFields);
         $this->page_data['import_settings'] = $importSettings;
         $this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['page']->title = 'Customer Import';
@@ -5682,7 +5682,7 @@ class Customer extends MY_Controller
         exit(json_encode($data_arr));
     }
 
-    public function importCustomerData()
+    public function importCustomerDataBackup()
     {
         addJSONResponseHeader();
         $getImportFields = [
@@ -5704,6 +5704,7 @@ class Customer extends MY_Controller
         $importFieldSettings = $this->general->get_data_with_param($getCompanyImportSettings, false);
 
         $input = $this->input->post();
+
         if ($input) {
             $customers = json_decode($input['customers']); // data CSV
             $mappingSelected = json_decode($input['mapHeaders'], true); // selected Headers
@@ -5797,6 +5798,125 @@ class Customer extends MY_Controller
         }
         exit(json_encode($data_arr));
     }
+
+    public function importCustomerData()
+    {
+        addJSONResponseHeader();
+        $getImportFields = [
+            'table' => 'acs_import_fields',
+            'select' => '*',
+        ];
+        $importFieldsList = $this->general->get_data_with_param($getImportFields);
+
+        $getCompanyImportSettings = [
+            'where' => [
+                'company_id' => logged('company_id'),
+                'setting_type' => 'import',
+            ],
+            'table' => 'customer_settings',
+            'select' => '*',
+        ];
+
+        $importFieldSettings = $this->general->get_data_with_param($getCompanyImportSettings, false);
+
+        $post_data = $this->input->post();
+        if ($post_data) {
+            $customers       = $post_data['customerData'];
+            $mappingSelected = $post_data['settingHeaders']; // selected Headers
+
+            // intialize array
+            $acsProfileData = [];
+            $acsAlarmData   = [];
+            $acsOfficeData  = [];
+            $acsBillingData = [];
+            $dataVal        = [];
+
+            $settingsValue = explode(',', $importFieldSettings->value); // convert values from database to array
+            sort($settingsValue);
+            $fieldCompanyValue  = implode(',', $settingsValue);
+            $fieldCompanyValues = explode(',', $fieldCompanyValue);
+            $exist = $insert = 0;
+
+            foreach ($customers as $customer) {
+
+                $counter = 0;
+                foreach ($fieldCompanyValues as $field) {
+                    $fieldname = '';
+                    $category  = '';
+
+                    foreach ($importFieldsList as $importSetting) { // values from acs_import_fields database
+                        if ($field == $importSetting->id) {
+                            $fieldname = $importSetting->field_name; 
+                            $category  = $importSetting->field_category;                            
+
+                            switch ($category) {
+                                case 1:
+                                    $acsProfileData[$fieldname] = $customer[$importSetting->id];
+                                    break;
+                                case 2:
+                                    $acsBillingData[$fieldname] = $customer[$importSetting->id];
+                                    break;
+                                case 3:
+                                    if ($fieldname == 'technician' || $fieldname == 'fk_sales_rep_office') {
+                                        $acsOfficeData[$fieldname] = getOfficeId($data->$dataValue);
+                                    } else {
+                                        $acsOfficeData[$fieldname] = $customer[$importSetting->id];
+                                    }
+                                    break;
+                                case 4:
+                                    $acsAlarmData[$fieldname] = $customer[$importSetting->id];
+                                    break;
+                                case 5:
+                                    $acsContacts[$fieldname] = $customer[$importSetting->id];
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                        }
+                    }
+                    ++$counter;
+                }
+
+                $check_user = [
+                'where' => [
+                    'first_name' => $customer[5],
+                    'last_name'  => $customer[6],
+                    'company_id' => logged('company_id'),
+                ],
+                'returnType' => 'count',
+                ];
+                $isExist = $this->customer_ad_model->check_if_user_exist($check_user, 'acs_profile');
+                if ($isExist > 0) {
+                    ++$exist;
+                } else {
+                    $acsProfileData['company_id'] = logged('company_id');
+                    $fk_prod_id = $this->customer_ad_model->add($acsProfileData, 'acs_profile');
+                    ++$insert;
+
+                    if ($fk_prod_id) {
+                        $acsAlarmData['fk_prof_id']   = $fk_prod_id;
+                        $acsBillingData['fk_prof_id'] = $fk_prod_id;
+                        $acsOfficeData['fk_prof_id']  = $fk_prod_id;
+                        $acsContacts['customer_id']  = $fk_prod_id;
+
+                        $this->customer_ad_model->add($acsAlarmData, 'acs_alarm');
+                        $this->customer_ad_model->add($acsBillingData, 'acs_billing');
+                        $this->customer_ad_model->add($acsOfficeData, 'acs_office');
+                        $this->customer_ad_model->add($acsContacts, 'contacts');
+                    }
+                   
+                }
+
+            }
+
+            $data_arr = ['success' => true, 'message' => 'Successfully imported '.$insert.' users!', 'alarm' => $acsAlarmData, 'profile' => $acsProfileData, 'billing' => $acsBillingData, 'office' => $acsOfficeData, 'Mapping' => $mappingSelected, 'CSV' => $csvHeaders, 'customers' => $customers];
+        } else {
+            $data_arr = ['success' => false, 'message' => 'Something goes wrong.'];
+        }
+
+        exit(json_encode($data_arr));
+    }    
 
     public function import_customer_data()
     {
@@ -10932,7 +11052,6 @@ class Customer extends MY_Controller
             if( $value >= 0 && $csvHeader[$value] && $post['settingHeaders'][$value] ){
                 $selected_headers[$csvHeader[$value]] = ['name' => $csvHeader[$value], 'setting_header' => $post['settingHeaders'][$key]]; 
             }
-            
         }
 
         $preview_data = [];
