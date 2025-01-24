@@ -950,29 +950,6 @@ $("#attachment-file").change(function() {
             });
         });
 
-        $("#new_customer_form").submit(function(e) {
-            $('#NEW_CUSTOMER_MODAL_CLOSE').click();
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "/customer/add_new_customer_from_jobs",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    $("#select_with_data").append('<option value="5">Twitter</option>');
-                    $("#select_with_data").val('5');
-                    $("#select_with_data").trigger('change');
-                    if(data === "Success"){
-                        sucess_add('Customer Added Successfully!',1);
-                    }else {
-                        warning('There is an error adding Customer. Contact Administrator!');
-                    }
-                }
-            });
-        });
-
         $("#customer_id").on('change', function () {
             
             var customer_selected = this.value;
