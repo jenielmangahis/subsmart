@@ -98,6 +98,11 @@
     color: #000000 !important;
     line-height: 9px;
 }
+@media (min-width: 1200px) {
+    .modal-xl {
+        max-width: 1198px !important;
+    }
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -195,6 +200,7 @@
             </div>
         </div>
     </div>
+    <?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
 </div>
 <?php if ($onlinePaymentAccount) { ?>
     <?php if ($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != '') { ?>
@@ -2507,6 +2513,10 @@
         var url = base_url + "job/_quick_add_job_form";
         var date_selected   = $('#quick-add-date-selected').val();
         calendar_modal_source = 'quick-add-job';
+
+        $('#quick-add-service-ticket-form-container').html('');
+        $('#quick-add-job-form-container').html('');
+
         $('#modal-quick-select-schedule-type').modal('hide');
         $('#modal-quick-add-job').modal('show');
 
@@ -2552,6 +2562,10 @@
         var url = base_url + "ticket/_quick_add_service_ticket_form";
         var date_selected   = $('#quick-add-date-selected').val();
         calendar_modal_source = 'quick-add-service-ticket';
+
+        $('#quick-add-service-ticket-form-container').html('');
+        $('#quick-add-job-form-container').html('');
+        
         $('#modal-quick-select-schedule-type').modal('hide');
         $('#modal-quick-add-service-ticket').modal('show');
 
