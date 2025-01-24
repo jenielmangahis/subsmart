@@ -950,9 +950,13 @@ $("#attachment-file").change(function() {
             });
         });
 
+        $('#btn-add-new-customer').on('click', function(){
+            $('#target-id-dropdown').val('customer_id');
+        });
+
         $("#customer_id").on('change', function () {
-            
             var customer_selected = this.value;
+            
             if(customer_selected !== ""){
                 load_customer_data(customer_selected);
             }else{
@@ -960,8 +964,9 @@ $("#attachment-file").change(function() {
                 $('#cust_address').text('-------------');
                 $('#cust_number').text('(xxx) xxx-xxxx');
                 $('#cust_email').text('xxxxx@xxxxx.xxx');
-                initMap();
+                //initMap();
             }
+
             initializeCustomerData(customer_selected);
         });
 
