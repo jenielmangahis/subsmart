@@ -2,6 +2,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
+                 <h5 class="modal-title nsm-text">Automation</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -88,10 +89,10 @@
 
                                 <li class="timeline-item d-flex mb-5" id="timeline-item-2" style="flex-flow: wrap;">
                                   <div class="operation-dropdown-container">
-                                        <h4 id="operationDropdownBtn" class='cursor-pointer me-2 text-underline nsm-text fw-bold'>
+                                        <h4 id="operationDropdownBtn" class='cursor-pointer me-2 text-underline nsm-text secondary fw-bold'>
                                             do this
                                         </h4>
-                                        <ul class="dropdown-menu list-group list-group-flush" id="operationDropdownMenu">
+                                        <ul class="dropdown-menu list-group list-group-flush" id="operationDropdownMenu" style="display:none;">
                                         
                                         </ul>
                                     </div>

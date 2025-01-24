@@ -226,12 +226,12 @@
         cursor: pointer;
     }
 
-    .customerManagementTable {
+    .customerManagementTable, .updateHistoryTable {
         width: 100% !important;
         border-collapse: collapse !important;
     }
 
-    .customerManagementTable>tbody>tr>td {
+    .customerManagementTable>tbody>tr>td, .updateHistoryTable>tbody>tr>td {
         position: relative;
     }
 
@@ -241,14 +241,16 @@
     }
 
     .customerManagementTable th,
-    .customerManagementTable td {
+    .customerManagementTable td,
+    .updateHistoryTable th,
+    .updateHistoryTable td {
         border: 1px solid lightgray;
         padding: 8px !important;
         text-align: left !important;
         text-wrap: nowrap;
     }
 
-    .customerManagementTable th {
+    .customerManagementTable th, .updateHistoryTable th {
         background-color: #f2f2f2 !important;
     }
 
@@ -256,10 +258,18 @@
         display: none;
     }
 
-    .customerManagementTable~.dataTables_paginate {
+    .customerManagementTable~.dataTables_paginate, .updateHistoryTable~.dataTables_paginate {
         /* position: fixed; */
         /* float: left !important; */
         margin-bottom: 35px;
+    }
+
+    .customerManagementTable {
+        vertical-align: middle;
+    }
+
+    .searchpdateHistoryRecords {
+        width: 30% !important;
     }
 
     .customerProfileBanner {
@@ -273,6 +283,16 @@
 
     .searchCustomerListInput {
         width: 60% !important;
+    }
+
+    .applyRevert {
+        background: #6a4a86;
+        color: white;
+    }
+
+    .applyRevert:hover {
+        border: 1px solid black;
+        color: white;
     }
 
     .custom-loader {

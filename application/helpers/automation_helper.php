@@ -33,12 +33,14 @@ if (! function_exists('get_automation_options')) {
             ],
             'targetOptions' => [
                 'technician' => 'assigned tech',
+                'sales_rep' => 'sales representative',
                 'client'     => 'client',
                 'user'       => 'to user',
             ],
             'actionOptions' => [
                 'send_sms' => 'a text message',
                 'send_email' => 'an email',
+                'send_sms_and_email' => 'a text message and an email',
             ],
             'timeOptions'   => [
                 '10'   => '10 minutes',
@@ -148,45 +150,52 @@ if (! function_exists('generateAutomationDescription')) {
         $description = "When a ";
 
         // Add entity (e.g., job, lead, etc.)
-        $description .= $automation['entity'];
+        $description .= $automation->entity;
 
         // Add the status if available
-        if (! empty($automation['trigger_event'])) {
-            $eventText = isset($options['eventOptions'][$automation['entity']][$automation['trigger_event']])
-            ? $options['eventOptions'][$automation['entity']][$automation['trigger_event']]
+        if (! empty($automation->trigger_event)) {
+            $eventText = isset($options['eventOptions'][$automation->entity][$automation->trigger_event])
+            ? $options['eventOptions'][$automation->entity][$automation->trigger_event]
             : '';
             $description .= " " . $eventText;
         }
 
         // Add event type (if available)
-        if (! empty($automation['trigger_status'])) {
-            $statusText = ucfirst($automation['trigger_status']);
+        if (! empty($automation->trigger_status)) {
+            $statusText = ucfirst($automation->trigger_status);
             $description .= " of " . $statusText;
         }
 
-        if (! empty($automation['target'])) {
-            $actionText = isset($options['targetOptions'][$automation['target']])
-            ? $options['targetOptions'][$automation['target']]
-            : ucfirst($automation['target']);
+        if (! empty($automation->target)) {
+            $actionText = isset($options['targetOptions'][$automation->target])
+            ? $options['targetOptions'][$automation->target]
+            : ucfirst($automation->target);
             $description .= " send " . $actionText;
         }
 
         // Add action (e.g., send an email, send a text message, etc.)
-        if (! empty($automation['trigger_action'])) {
-            $actionText = isset($options['actionOptions'][$automation['trigger_action']])
-            ? $options['actionOptions'][$automation['trigger_action']]
-            : ucfirst($automation['trigger_action']);
+        if (! empty($automation->trigger_action)) {
+            $actionText = isset($options['actionOptions'][$automation->trigger_action])
+            ? $options['actionOptions'][$automation->trigger_action]
+            : ucfirst($automation->trigger_action);
             $description .= " " . $actionText;
         }
 
         // Add time reference (if available)
-        if (! empty($automation['trigger_time'])) {
-            $formattedTime = formatTriggerTime($automation['trigger_time']);
-            $timingText    = $options['timingOptions'][$automation['timing_reference']] ?? '';
-            $dateText      = $options['dateOptions'][$automation['date_reference']] ?? 'scheduled date';
+        if (isset($automation->trigger_time)) {
+            $formattedTime = formatTriggerTime($automation->trigger_time);
 
-            $description .= " " . $formattedTime . " " . $timingText . " the " . $dateText;
+            $description .= " " . $formattedTime;
         }
+
+        // Add timing and date reference (if available)
+        if (!empty($automation->trigger_time)) {
+            $timingText    = $options['timingOptions'][$automation->timing_reference] ?? '';
+            $dateText      = $options['dateOptions'][$automation->date_reference] ?? 'scheduled date';
+
+            $description .= " " . $timingText . " the " . $dateText;
+        }
+
 
         return $description;
     }
@@ -225,6 +234,11 @@ if (!function_exists('getRemindersTemplate')) {
     function getRemindersTemplate()
     {
         return [
+              [
+                'title' => 'Immediate Notice / Client Reminder',
+                'description' => 'Send immediate notice to a client.',
+                'onclick' => "populateModal({'entity': 'job', 'event': 'has_status', 'target': 'client', 'action': 'send_email', 'time': '0'})"
+            ],
 
             [
                 'title' => '2 hours / Tech Reminder',

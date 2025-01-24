@@ -196,7 +196,7 @@
                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
                     <label class="text-muted"></label>
                     <div class="input-group mt-2">
-                        <!-- <button class="btn updateHistory" type="button" tabindex="-1" data-bs-toggle="modal" data-bs-target=".updateHistoryModal" style="border: 1px solid lightgray;"><i class="fas fa-history"></i> History</button> -->
+                        <button class="btn updateHistory" type="button" tabindex="-1" data-bs-toggle="offcanvas" data-bs-target="#updateHistorySidebar" aria-controls="updateHistorySidebar" style="border: 1px solid lightgray;"><i class="fas fa-history"></i> History</button>
                     </div>
                 </div>
                 <div class="col-xl-12 mb-3">
@@ -256,16 +256,108 @@
                         <input class="form-control form-control-sm updateCategory" type="text">
                         <input class="form-control form-control-sm updateColumn" type="text">
                         <input class="form-control form-control-sm updateValue" type="text">
+                        <input class="form-control form-control-sm customerName" type="text">
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="updateHistorySidebar" aria-labelledby="updateHistorySidebarLabel" style="width: 1000px;">
+        <div class="offcanvas-header" style="background: #6a4a86;">
+            <h5 id="updateHistorySidebarLabel" style="font-weight: bold; margin: 0; color: white;">Update History</h5>
+            <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Close" style="color: white !important;float: left;padding: 0;"><span class="float-start"><small>Close</small></span></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12-md mb-3">
+                        <span class="text-mute">Records all changes to customer information, maintains a history of previous values, and allows users to easily revert changes.</span>
+                    </div>
+                
+                    <div class="col-xl-3 mb-3">
+                        <label class="text-muted mb-1">Search Input Filter</label>
+                        <div class="input-group">
+                            <input class="searchpdateHistoryRecords form-control" type="text" placeholder="Search History here..." tabindex="-1">
+                        </div>
+                    </div>
+
+                    <div class="col-xl-2 mb-3 dropdownFilterWidth">
+                        <label class="text-muted">Column Filter</label>
+                        <select class="form-select searchpdateHistoryColumn mt-1" tabindex="-1">
+                            <option value="">None</option>
+                            <option value="Firstname">Firstname</option>
+                            <option value="Lastname">Lastname</option>
+                            <option value="Business Name">Business Name</option>
+                            <option value="Customer Type">Customer Type</option>
+                            <option value="Sales Area">Sales Area</option>
+                            <option value="Address">Address</option>
+                            <option value="City">City</option>
+                            <option value="State">State</option>
+                            <option value="Zip Code">Zip Code</option>
+                            <option value="Social Security No.">Social Security No.</option>
+                            <option value="Birthdate">Birthdate</option>
+                            <option value="Email">Email</option>
+                            <option value="Phone (M)">Phone (M)</option>
+                            <option value="Status">Status</option>
+                            <option value="Sales Rep">Sales Rep</option>
+                            <option value="Technician">Technician</option>
+                            <option value="Install Date">Install Date</option>
+                            <option value="Monitoring Company">Monitoring Company</option>
+                            <option value="Monitoring ID">Monitoring ID</option>
+                            <option value="Account Type">Account Type</option>
+                            <option value="Abort Code/Password">Abort Code/Password</option>
+                            <option value="Panel Type">Panel Type</option>
+                            <option value="System Package Type">System Package Type</option>
+                            <option value="Warranty Type">Warranty Type</option>
+                            <option value="Communication Type">Communication Type</option>
+                            <option value="Monthly Monitorinng Rate">Monthly Monitorinng Rate</option>
+                            <option value="Account Cost">Account Cost</option>
+                            <option value="Pass Thru Cost">Pass Thru Cost</option>
+                            <option value="Rate Plan">Rate Plan</option>
+                            <option value="Billing Frequency">Billing Frequency</option>
+                            <option value="Billing Day of Month">Billing Day of Month</option>
+                            <option value="Contract Term">Contract Term</option>
+                            <option value="Billing Start Date">Billing Start Date</option>
+                            <option value="Billing End Date">Billing End Date</option>
+                            <option value="Billing Method">Billing Method</option>
+                            <option value="Check No.">Check No.</option>
+                            <option value="Routing No.">Routing No.</option>
+                            <option value="Account No.">Account No.</option>
+                            <option value="Credit Card No.">Credit Card No.</option>
+                            <option value="Credit Card Expiration">Credit Card Expiration</option>
+
+                        </select>
+                    </div>
+
+                    <div class="col-12-md mb-3">
+                        <table class="updateHistoryTable table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Column</th>
+                                    <th>Value</th>
+                                    <th>Updated By</th>
+                                    <th>Date Updated</th>
+                                    <th style="width: 0px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 <script>
     var lastOptionInAccType = "";
     var lastOptionInAccTypeCount = 0;
     var customerManagementTable;
+    var updateHistoryTable;
     let horizontalScroll = 0;
     let cell_dragging = false;
     let initialValue;
@@ -286,6 +378,20 @@
         "pageLength": 10,
         "ajax": {
             "url": "<?= base_url('customer/customerServersideLoad'); ?>",
+            "type": "POST",
+        },
+        "language": {
+            "processing": "<div class='custom-loader'><p>Processing, please wait...</p></div>"
+        }
+    });
+
+    updateHistoryTable = $('.updateHistoryTable').DataTable({
+        "ordering": false,
+        "processing": true,
+        "serverSide": true,
+        "pageLength": 10,
+        "ajax": {
+            "url": "<?= base_url('customer/customerUpdateHistoryServersideLoad'); ?>",
             "type": "POST",
         },
         "language": {
@@ -363,6 +469,16 @@
         customerManagementTable.search(searchInput).draw();
     });
 
+    $('.searchpdateHistoryRecords').keyup(function(e) {
+        var searchInput = $(this).val();
+        updateHistoryTable.search(searchInput).draw();
+    });
+
+    $('.searchpdateHistoryColumn').change(function(e) {
+        var filterData = $(this).val();
+        updateHistoryTable.columns(1).search(filterData).draw();
+    });
+    
     // Handle click to show the drag handle and add green border
     $(document).on('click', '.customerManagementTable > tbody > tr > td', function() {
         valueOnText = $(this).closest('td').find('.updateInputValue').is('select') ? $(this).closest('td').find('.updateInputValue option:selected').text() : $(this).closest('td').find('.updateInputValue').val();
@@ -431,43 +547,49 @@
         let category = "";
         let column = "";
         let billEndDates = [];
+        let customerNames = [];
+        let displayColumnName = "";
+        let displayValueOnText = "";
 
         if (cell_dragging) {
+            $('.customerManagementTable td.cell_dragging').each(function() {
+                let customerID = $(this).find('input, select').attr('data-id');
+                let customerName = $(this).find('input, select').attr('data-customername');
+                customerIDs.push(customerID)
+                customerNames.push(' ' + customerName);
+
+                let billEndDate = null;
+                if (column == "contract_term") {
+                    let billStartDate = $('input[data-id="' + customerID + '"][data-column="bill_start_date"]').val();
+                    let contractTerm = $('select[data-id="' + customerIDs[0] + '"][data-column="contract_term"]').val();
+                    if (billStartDate && contractTerm) {
+                        let startDate = new Date(billStartDate);
+                        startDate.setMonth(startDate.getMonth() + parseInt(contractTerm));
+                        billEndDate = startDate.toISOString().split('T')[0];
+                    }
+                } else if (column == "bill_start_date") {
+                    let contractTerm = $('select[data-id="' + customerIDs[0] + '"][data-column="contract_term"]').val();
+                    let billStartDate = $('input[data-id="' + customerID + '"][data-column="bill_start_date"]').val();
+                    if (billStartDate && contractTerm) {
+                        let startDate = new Date(billStartDate);
+                        startDate.setMonth(startDate.getMonth() + parseInt(contractTerm));
+                        billEndDate = startDate.toISOString().split('T')[0];
+                    }
+                }
+                billEndDates.push(billEndDate);
+            });
+
+
             Swal.fire({
                 icon: "warning",
                 title: "Multiple Cell Update",
-                html: "Do you want to apply changes in column <strong>" + columnName + "</strong>?<br><hr><strong class='text-success'>" + valueOnText + "</strong> value will apply",
+                html: "Do you want to apply changes in column <strong>" + columnName + "</strong> for customers <strong>" + customerNames + "</strong>?<br><hr><strong class='text-success'>" + valueOnText + "</strong> value will apply",
                 showCancelButton: true,
                 confirmButtonText: "Proceed",
             }).then((result) => {
                 if (result.isConfirmed) {
                     category = $('.customerManagementTable td.cell_dragging').find('input, select').attr('data-category');
                     column = $('.customerManagementTable td.cell_dragging').find('input, select').attr('data-column');
-
-                    $('.customerManagementTable td.cell_dragging').each(function() {
-                        let customerID = $(this).find('input, select').attr('data-id');
-                        customerIDs.push(customerID)
-
-                        let billEndDate = null;
-                        if (column == "contract_term") {
-                            let billStartDate = $('input[data-id="' + customerID + '"][data-column="bill_start_date"]').val();
-                            let contractTerm = $('select[data-id="' + customerIDs[0] + '"][data-column="contract_term"]').val();
-                            if (billStartDate && contractTerm) {
-                                let startDate = new Date(billStartDate);
-                                startDate.setMonth(startDate.getMonth() + parseInt(contractTerm));
-                                billEndDate = startDate.toISOString().split('T')[0];
-                            }
-                        } else if (column == "bill_start_date") {
-                            let contractTerm = $('select[data-id="' + customerIDs[0] + '"][data-column="contract_term"]').val();
-                            let billStartDate = $('input[data-id="' + customerID + '"][data-column="bill_start_date"]').val();
-                            if (billStartDate && contractTerm) {
-                                let startDate = new Date(billStartDate);
-                                startDate.setMonth(startDate.getMonth() + parseInt(contractTerm));
-                                billEndDate = startDate.toISOString().split('T')[0];
-                            }
-                        }
-                        billEndDates.push(billEndDate);
-                    });
 
                     if (initialValue && customerIDs.length != 1) {
                         let ajaxData = {
@@ -476,6 +598,8 @@
                             dataCategory: category,
                             column: column,
                             value: initialValue,
+                            displayColumnName: columnName,
+                            displayValueOnText: valueOnText,
                         };
 
                         if (column == "contract_term" || column == "bill_start_date") {
@@ -501,6 +625,8 @@
                                 });
                             },
                             success: function(response) {
+                                $('.customerManagementTable').DataTable().draw(false); 
+                                $('.updateHistoryTable').DataTable().draw(false); 
                                 $('.customerManagementTable td.cell_dragging').each(function() {
                                     if (initialValue) {
                                         let selectElement = $(this).find('select');
@@ -637,7 +763,10 @@
         let category = "";
         let column = "";
         let billEndDates = [];
-
+        let customerNames = [];
+        let displayColumnName = "";
+        let displayValueOnText = "";
+        
         if (event.key === "Shift") {
             if ($('.cell_dragging').length > 1) {
                 const firstSelectedCell = $('.customerManagementTable td.cell_dragging').first();
@@ -646,43 +775,44 @@
                     initialValue = firstInputElement.val();
                 }
 
+                $('.customerManagementTable td.cell_dragging').each(function() {
+                    const inputElement = $(this).find('input, select');
+                    const customerID = $(this).find('input, select').attr('data-id');
+                    const customerName = $(this).find('input, select').attr('data-customername');
+                    customerIDs.push(customerID);
+                    customerNames.push(' ' + customerName);
+                    category = inputElement.attr('data-category');
+                    column = inputElement.attr('data-column');
+
+                    let billEndDate = null;
+                    if (column == "contract_term") {
+                        let billStartDate = $('input[data-id="' + customerID + '"][data-column="bill_start_date"]').val();
+                        let contractTerm = $('select[data-id="' + customerIDs[0] + '"][data-column="contract_term"]').val();
+                        if (billStartDate && contractTerm) {
+                            let startDate = new Date(billStartDate);
+                            startDate.setMonth(startDate.getMonth() + parseInt(contractTerm));
+                            billEndDate = startDate.toISOString().split('T')[0];
+                        }
+                    } else if (column == "bill_start_date") {
+                        let contractTerm = $('select[data-id="' + customerIDs[0] + '"][data-column="contract_term"]').val();
+                        let billStartDate = $('input[data-id="' + customerID + '"][data-column="bill_start_date"]').val();
+                        if (billStartDate && contractTerm) {
+                            let startDate = new Date(billStartDate);
+                            startDate.setMonth(startDate.getMonth() + parseInt(contractTerm));
+                            billEndDate = startDate.toISOString().split('T')[0];
+                        }
+                    }
+                    billEndDates.push(billEndDate);
+                });
+
                 Swal.fire({
                     icon: "warning",
                     title: "Multiple Cell Update",
-                    html: "Do you want to apply changes in column <strong>" + columnName + "</strong>?<br><hr><strong class='text-success'>" + valueOnText + "</strong> value will apply",
+                    html: "Do you want to apply changes in column <strong>" + columnName + "</strong> for customers <strong>" + customerNames + "</strong>?<br><hr><strong class='text-success'>" + valueOnText + "</strong> value will apply",
                     showCancelButton: true,
                     confirmButtonText: "Proceed",
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $('.customerManagementTable td.cell_dragging').each(function() {
-                            const inputElement = $(this).find('input, select');
-                            const customerID = $(this).find('input, select').attr('data-id');
-                            customerIDs.push(customerID);
-
-                            category = inputElement.attr('data-category');
-                            column = inputElement.attr('data-column');
-
-                            let billEndDate = null;
-                            if (column == "contract_term") {
-                                let billStartDate = $('input[data-id="' + customerID + '"][data-column="bill_start_date"]').val();
-                                let contractTerm = $('select[data-id="' + customerIDs[0] + '"][data-column="contract_term"]').val();
-                                if (billStartDate && contractTerm) {
-                                    let startDate = new Date(billStartDate);
-                                    startDate.setMonth(startDate.getMonth() + parseInt(contractTerm));
-                                    billEndDate = startDate.toISOString().split('T')[0];
-                                }
-                            } else if (column == "bill_start_date") {
-                                let contractTerm = $('select[data-id="' + customerIDs[0] + '"][data-column="contract_term"]').val();
-                                let billStartDate = $('input[data-id="' + customerID + '"][data-column="bill_start_date"]').val();
-                                if (billStartDate && contractTerm) {
-                                    let startDate = new Date(billStartDate);
-                                    startDate.setMonth(startDate.getMonth() + parseInt(contractTerm));
-                                    billEndDate = startDate.toISOString().split('T')[0];
-                                }
-                            }
-                            billEndDates.push(billEndDate);
-                        });
-
                         if (customerIDs.length > 0) {
                             const ajaxData = {
                                 id: customerIDs,
@@ -690,6 +820,8 @@
                                 dataCategory: category,
                                 column: column,
                                 value: initialValue,
+                                displayColumnName: columnName,
+                                displayValueOnText: valueOnText,
                             };
 
                             if (column === "contract_term" || column === "bill_start_date") {
@@ -713,6 +845,8 @@
                                     });
                                 },
                                 success: function(response) {
+                                    $('.customerManagementTable').DataTable().draw(false); 
+                                    $('.updateHistoryTable').DataTable().draw(false); 
                                     $('.customerManagementTable td.cell_dragging').each(function() {
                                         if (initialValue) {
                                             let selectElement = $(this).find('select');
@@ -930,6 +1064,7 @@
         const updateCategory = $(this).closest('td').find('.updateInputValue').attr('data-category');
         const updateColumn = $(this).closest('td').find('.updateInputValue').attr('data-column');
         const updateValue = $(this).closest('td').find('.updateInputValue').val();
+        const customerName = $(this).closest('td').find('.updateInputValue').attr('data-customername');
 
         if ($(this).closest('td').find('.updateInputValue').is('select')) {
             const option = $(this).closest('td').find('.updateInputValue').find('option:selected').text()
@@ -969,7 +1104,18 @@
             $(this).closest('td').find('.textPreview').html('<small class="text-muted"><i>Not Specified</i></small>');
         }
 
-        saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue, valueOnText, columnName);
+        saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue, valueOnText, columnName, customerName);
+    });
+
+    $(document).on('click', '.applyRevert', function() {
+        const updateID = $(this).attr('data-id');
+        const updateCategory = $(this).attr('data-category');
+        const updateColumn = $(this).attr('data-column');
+        const updateValue = $(this).attr('data-value');
+        const valueOnText = $(this).attr('data-displayvalueontext');
+        const columnName = $(this).attr('data-displaycolumnname');
+        const customerName = $(this).attr('data-displaycustomername');
+        saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue, valueOnText, columnName, customerName);
     });
 
     $('.paginate_button').attr('tabindex', '-1');
@@ -994,13 +1140,15 @@
         }
     }
 
-    function saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue, valueOnText, columnName) {
+    function saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue, valueOnText, columnName, customerName) {
         let billEndDate = null;
         let ajaxData = {
             id: updateID,
             category: updateCategory,
             column: updateColumn,
             value: updateValue,
+            displayColumnName: columnName,
+            displayValueOnText: valueOnText,
         };
 
         if (updateColumn == "contract_term") {
@@ -1028,7 +1176,7 @@
         Swal.fire({
             icon: "warning",
             title: "Cell Update",
-            html: "Do you want to apply changes in column <strong>" + columnName + "</strong>?<br><hr><strong class='text-success'>" + valueOnText + "</strong> value will apply",
+            html: "Do you want to apply changes in column <strong>" + columnName + "</strong> for customer <strong>" + customerName + "</strong>?<br><hr><strong class='text-success'>" + valueOnText + "</strong> value will apply",
             showCancelButton: true,
             confirmButtonText: "Proceed",
         }).then((result) => {
@@ -1050,6 +1198,8 @@
                         });
                     },
                     success: function(response) {
+                        $('.customerManagementTable').DataTable().draw(false); 
+                        $('.updateHistoryTable').DataTable().draw(false); 
                         iziToast.success({
                             displayMode: 2,
                             message: 'Cell updated successfully!',
@@ -1080,7 +1230,7 @@
                             position: 'topCenter',
                         });
                         setTimeout(() => {
-                            saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue, valueOnText, columnName);
+                            saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue, valueOnText, columnName, customerName);
                         }, 3000);
                     },
                 });

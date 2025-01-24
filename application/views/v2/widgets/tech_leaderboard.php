@@ -259,7 +259,7 @@ endif;
         var filter_by = $('#tech-leader-board-filter-date').val();
 
         $.ajax({
-            url: base_url + 'widgets/loadV3TechLeaderBoard',
+            url: base_url + 'widgets/loadV4TechLeaderBoard',
             method: 'post',
             data: {
                 tech_leaderboard_date_from: tech_leaderboard_date_from,
