@@ -127,7 +127,7 @@ class CompanyRoleAccessModule_model extends MY_Model
             'events' => 'Events',
             'events-settings' => 'Events Settings',
             'jobs' => 'Jobs',
-            'job-setitngs' => 'Job Settings', 
+            'job-settings' => 'Job Settings', 
             'service-tickets' => 'Service Tickets',
             'service-ticket-settings' => 'Service Ticket Settings',
             'estimates' => 'Estimates',

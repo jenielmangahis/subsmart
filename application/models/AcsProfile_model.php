@@ -55,6 +55,25 @@ class AcsProfile_model extends MY_Model
         return $query->row();
     }
 
+    public function getByCustomerNameAndCompanyId($first_name, $last_name, $cid, $conditions = [])
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('first_name', $first_name);
+        $this->db->where('last_name', $last_name);
+        $this->db->where('company_id', $cid);
+
+        if (!empty($conditions)) {
+            foreach ($conditions as $c) {
+                $this->db->where($c['field'], $c['value']);
+            }
+        }
+
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+
     public function getCustByProfId($prof_id)
     {
         $this->db->select('*');
@@ -815,6 +834,13 @@ class AcsProfile_model extends MY_Model
         $query = $this->db->get()->row();
 
         return $query;
+    }
+
+    public function saveData($data)
+    {
+        $this->db->insert($this->table, $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
     }
 }
 
