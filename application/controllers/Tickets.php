@@ -417,7 +417,7 @@ class Tickets extends MY_Controller
             //Activity Logs
             $this->load->model('Activity_model');
             $user_id = logged('id');
-            $activity_name = 'Created Service Ticket Number ' . $this->input->post('ticket_no'); 
+            $activity_name = 'Service Ticket : Created service ticket number ' . $this->input->post('ticket_no'); 
             $this->Activity_model->add($activity_name,$user_id);
 
             $temp_items             = $this->input->post('temp_items');
@@ -680,6 +680,10 @@ class Tickets extends MY_Controller
             'logs' => "$getUserInfo->FName $getUserInfo->LName created a service ticket with you. <a href='#' onclick='window.open(`".base_url('tickets/viewDetails/').$addQuery."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>".$this->input->post('ticket_no')."</a>"
         );
         $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
+
+        if( $this->input->post('SEND_EMAIL_ON_SCHEDULE') ){
+            $this->sendCustomerEmailNotification($addQuery);
+        }
 
 
         if( $this->input->post('redirect_calendar') == 1){
@@ -3354,6 +3358,68 @@ class Tickets extends MY_Controller
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
+    }
+
+    public function sendCustomerEmailNotification($ticket_id)
+    {
+        $this->load->helper(['url', 'hashids_helper']);
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Business_model');
+
+        $cid = logged('company_id');
+        $serviceTicket = $this->tickets_model->getByIdAndCompanyId($ticket_id,$cid);
+        if ($serviceTicket) {
+
+            $customer = $this->AcsProfile_model->getByProfId($serviceTicket->customer_id);
+            $company  = $this->Business_model->getByCompanyId($cid);
+            if( $customer && $customer->email != '' ){                
+                $img_source = businessProfileImageByCompanyId($cid);
+                $subject = "nSmartrac: Service Ticket - {$serviceTicket->ticket_no}";                
+                $msg  = "";                
+                $msg .= "<img style='width: 300px;margin-top:41px;margin-bottom:24px;' alt='Logo' src='" . $img_source . "' /><br />";
+                $msg .= "<h1>Your Service Ticket from " . $company->business_name . "</h1><br />";
+                $msg .= "<table>";
+                $msg .= "<tr><td><b>Service Ticket Number</b></td><td>: " . $serviceTicket->ticket_no . "</td></tr>";
+                $msg .= "<tr><td><b>Service Date</b></td><td>: " . date('m/d/Y', strtotime($serviceTicket->ticket_date)) . "</td></tr>";
+                $msg .= "<tr><td><b>Service Time</b></td><td>: " . date('G:i A', strtotime($serviceTicket->scheduled_time)) . "</td></tr>";
+                $msg .= "<tr><td colspan='2'><br /></td></tr>";
+                $msg .= "<tr><td><b>Customer Name</b></td><td>: " . $customer->first_name . ' ' . $customer->last_name . "</td></tr>";
+                $msg .= "<tr><td><b>Service Address</b></td><td>: " . $serviceTicket->acs_city . ' ' . $serviceTicket->acs_state . ' ' . $serviceTicket->acs_zip . "</td></tr>";
+                $msg .= "</table>";
+
+                $items = $this->tickets_model->get_ticket_items_by_ticket_id($serviceTicket->id);
+                $grand_total = 0;
+                foreach ($items as $item) {
+                    $msg .= "<table>";
+                    foreach ($items as $i) {
+                        $msg .= "
+                            <tr>
+                                <td>" . $item->item_name . "</td>
+                                <td>" . $item->qty . "</td>
+                                <td>" . $item->cost . "</td>
+                                <td>" . $item->total . "</td>
+                            </tr>
+                        ";
+                    }
+                }
+
+                $msg .= "<br><br><br><br>";
+
+                $msg .= "<table style='margin-left:48px;'>";
+                $msg .= "<tr><td colspan='2' style='text-align:center;'><span style='display:inline-block;'>Powered By</span> <br><br> <img style='width:328px;margin-bottom:40px;' src='" . $nsmart_logo . "' /></td></tr>";
+                $msg .= "</table>";
+
+                $recipient = $customer->email;
+
+                $mail = email__getInstance(['subject' => $subject]);
+                $mail->FromName = 'nSmarTrac';
+                $mail->addAddress($recipient, $recipient);
+                $mail->isHTML(true);
+                $mail->Subject = $subject;
+                $mail->Body = $msg;
+                $mail->Send();
+            }
+        }
     }
 }
 

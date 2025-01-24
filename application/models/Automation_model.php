@@ -8,6 +8,7 @@ class Automation_model extends CI_Model
     public function __construct()
     {
         parent::__construct();
+
     }
 
     /**
@@ -15,16 +16,19 @@ class Automation_model extends CI_Model
      *
      * @return array - List of all automations
      */
-    public function getAllAutomations()
+    public function getAutomations()
     {
-        $query = $this->db->get($this->table);
+        $company_id = logged('company_id');
 
-        // If records exist, return them, otherwise return an empty array
-        if ($query->num_rows() > 0) {
-            return $query->result_array(); // Return all rows as an array of associative arrays
-        } else {
-            return []; // No records found
-        }
+        $this->db->select('automations.*');
+        $this->db->from($this->table);
+
+        $this->db->join('users', 'automations.user_id = users.id', 'left');
+        $this->db->where('users.company_id', $company_id);
+        $this->db->order_by('automations.created_at', 'DESC');
+
+        return $this->db->get()->result();
+
     }
 
     /**
@@ -98,17 +102,20 @@ class Automation_model extends CI_Model
 
     public function countAutomationsByStatus($user_id)
     {
+
         // Retrieve all automations for the given user
-        $this->db->where('user_id', $user_id);
-        $query = $this->db->get('automations');
-        $automations = $query->result_array();
+        // $this->db->where('user_id', $user_id);
+        // $query = $this->db->get('automations');
+        // $automations = $query->result_array();
 
         $statusCounts = [];
 
+        $automations = $this->getAutomations();
+
         // Count automations by their status
         foreach ($automations as $automation) {
-            if (isset($automation['status'])) {
-                $status = $automation['status'];
+            if (isset($automation->status)) {
+                $status = $automation->status;
                 if (!isset($statusCounts[$status])) {
                     $statusCounts[$status] = 0; // Initialize the counter for this status
                 }

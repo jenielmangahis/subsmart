@@ -47,10 +47,10 @@
         right: 0;
     }
     table{
-    overflow-x:scroll !important;
+    /* overflow-x:scroll !important;
     overflow-y:scroll !important;
     display:block !important;
-    height:500px !important;
+    height:500px !important; */
     }
     /**  */
     * {
@@ -71,7 +71,8 @@
 
     #progress-bar-container li::after {
     content: " ";
-    display: block;
+    /* display: block; */
+    display:none;
     width: 6px;
     height: 6px;
     background-color: #777;
@@ -105,7 +106,7 @@
 
     #progress-bar-container #line-progress {
     content: " ";
-    width: 8%;
+    width: 10%;
     height: 100%;
     background-color: #207893;
     background: linear-gradient(to right #207893 0%, #2ea3b7 100%);
@@ -119,7 +120,7 @@
     top: 100px;
     width: 90%;
     margin: auto;
-    background: #f3f3f3;
+    /* background: #f3f3f3; */
     border-radius: 4px;
     }
     #progress-content-section .section-content {
@@ -128,10 +129,11 @@
     }
 
     .section-content h2 {
-    font-size: 17px;
-    text-transform: uppercase;
-    color: #333;
-    letter-spacing: 1px;
+        font-size: 22px;
+        text-transform: uppercase;
+        color: #333;
+        letter-spacing: 1px;
+        margin-bottom: 12px;
     }
 
     .section-content p {
@@ -183,7 +185,7 @@
     #progress-bar-container li.active::before,
     #progress-bar-container li:hover::before {
     border: 2px solid #fff;
-    background-color: #32243d;
+    background-color: #6a4a86;
     }
 
     #progress-bar-container li {
@@ -223,4 +225,13 @@
     .tbl th, .tbl td { padding: 2px; border: solid 1px #777; }
     .tbl th { background-color: lightblue; }
     .tbl-separate { border-collapse: separate; border-spacing: 5px;}
+    .btn-download-template{
+        float:right;
+        display: inline-block;
+    }
+    #import_customer .nsm-button i{
+        position: relative;
+        top: 3px;
+        font-size: 17px;
+    }
 </style>

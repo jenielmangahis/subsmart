@@ -44,13 +44,18 @@
   width: 300px;
 }
 
-.dropdown-menu {
-  display: none; /* Initially hide the dropdown */
-  position: absolute; /* Position it relative to the button */
-  top: 100%; /* Align it below the button */
-  left: 0; /* Align it to the left edge of the button */
-  z-index: 1050; /* Ensure it's on top */
+.dropdown-menu.show {
+  display: block !important; 
 }
+
+.dropdown-menu {
+  display: none; 
+  position: absolute; 
+  top: 100%;
+  left: 0; 
+  z-index: 1050; 
+}
+
 .time-dropdown-container {
   position: relative;
 }

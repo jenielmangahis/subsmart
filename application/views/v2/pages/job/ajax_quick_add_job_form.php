@@ -756,8 +756,8 @@
                                                     </div>
                                                     <div class="col-md-2 form-group mt-2">
                                                         <label for="customer_cc_cvc"><b>CVC</b></label>
-                                                        <div class="input-group" style="width:35%;">
-                                                            <input type="text" class="form-control cc-cvc" maxlength="3" size="3" name="customer_cc_cvc" id="customer_cc_cvc"/>
+                                                        <div class="input-group" style="width:51%;">
+                                                            <input type="text" class="form-control cc-cvc" maxlength="4" size="4" name="customer_cc_cvc" id="customer_cc_cvc"/>
                                                         </div>
                                                     </div>
                                                 </div>                                

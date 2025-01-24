@@ -186,7 +186,7 @@ foreach ($jobs as $job) {
                 <div class="row mt-5">
                     <div class="col-6 grid-mb">
                         <div class="nsm-field-group search form-group">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_JOB_SEARCHBAR" placeholder="Search Job...">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_JOB_SEARCHBAR" placeholder="Search Job">
                             <input class="d-none" id="CUSTOM_FILTER_SEARCHBAR" type="text" placeholder="Filter" data-index="20">
                         </div>
                     </div>
@@ -201,14 +201,16 @@ foreach ($jobs as $job) {
                                     <option value="Completed">Completed</option>
                                 </select>
                         </div>
+                        <?php if(checkRoleCanAccessModule('jobs', 'write')){ ?>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('job/new_job1') ?>'">
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('job/new') ?>'">
                                 <i class='bx bx-fw bx-briefcase'></i> New Job
                             </button>
                             <button type="button" class="nsm-button primary" id="archived-jobs-list">
                                 <i class='bx bx-fw bx-trash'></i> Manage Archived
                             </button>
                         </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <table id="JOB_LIST_TABLE" class="nsm-table w-100">
@@ -270,7 +272,15 @@ foreach ($jobs as $job) {
                             </td>
                             <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
                             <td><?php echo $job->first_name . ' ' . $job->last_name; ?></td>
-                            <td><?php echo $job->FName . ' ' . $job->LName; ?></td>
+                            <td>
+                                <?php 
+                                    if( $job->FName != '' || $job->LName != '' ){
+                                        echo $job->FName . ' ' . $job->LName; 
+                                    }else{
+                                        echo '---';
+                                    }
+                                ?>
+                            </td>
                             <td>
                                 <?php
                                     $employeeFields = [
@@ -318,7 +328,7 @@ foreach ($jobs as $job) {
                                         </li>
                                         
                                         <?php if( $user_type == 7 || $user_type == 1 ){ //Admin ?>
-                                        <li><a class="dropdown-item" href="<?php echo base_url('job/new_job1/') . $job->id; ?>">Edit</a></li>
+                                        <li><a class="dropdown-item" href="<?php echo base_url('job/edit/') . $job->id; ?>">Edit</a></li>
                                         <li class="DELETE_ITEM" onclick="DELETE_JOB(<?php echo $job->id; ?>)"><a class="dropdown-item" href="javascript:void(0);" data-id="<?= $job->id; ?>">Delete</a></li>
                                         <?php } ?>
 

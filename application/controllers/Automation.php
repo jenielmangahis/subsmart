@@ -17,6 +17,8 @@ class Automation extends MY_Controller
         $this->load->model('Automation_model', 'automation_model');
         $this->load->model('Jobs_model', 'jobs_model');
         $this->load->model('Users_model', 'users_model');
+
+        $company_id = logged('company_id');
     }
 
     public function index()
@@ -24,9 +26,11 @@ class Automation extends MY_Controller
         $this->load->helper('automation_helper');
         $this->page_data['lead_status'] = $this->customer_ad_model->get_select_options('ac_leads', 'status');
         $this->page_data['job_status']  = $this->customer_ad_model->get_select_options('jobs', 'status');
-        $this->page_data['automations'] = $this->automation_model->getAutomationsByParams([
-            'user_id' => logged('id'),
-        ]);
+        $this->page_data['automations'] = $this->automation_model->getAutomations();
+
+
+        // print_r($this->page_data['automations']);
+
         $this->page_data['automation_status'] = $this->automation_model->countAutomationsByStatus(logged('id'));
 
         $this->load->view('v2/pages/automation/list', $this->page_data);
@@ -78,6 +82,7 @@ class Automation extends MY_Controller
     public function getAutomation()
     {
         $id = $this->input->post('id');
+
         if (! $id) {
             echo json_encode(['success' => false, 'message' => 'Invalid Automation ID']);
             return;
@@ -96,6 +101,7 @@ class Automation extends MY_Controller
 
     public function saveAutomation()
     {
+
         $data = $this->input->post();
 
         $automationData = [
@@ -114,14 +120,13 @@ class Automation extends MY_Controller
             'status'           => isset($data['status']) ? $data['status'] : 'active',
         ];
 
-        $automations = $this->automation_model->saveAutomation($automationData);
-
-        // Check if insertion is successful
-        if ($automations) {
-            echo json_encode(['status' => 'success', 'message' => 'Automation saved successfully.']);
-        } else {
+        try {
+            $automations = $this->automation_model->saveAutomation($automationData);
+            echo json_encode(['status' => 'success', 'message' => 'Automation saved successfully.', 'automations' => $automations]);
+        } catch (\Exception $e) {
             echo json_encode(['status' => 'error', 'message' => 'Failed to save automation.']);
         }
+
     }
 
     public function deleteAutomation()

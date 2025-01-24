@@ -36,7 +36,7 @@ include viewPath('v2/includes/header');
                     <div class="row h-100 w-auto">
                         <div class="w-100 col-md-8 text-start d-flex align-items-center justify-content-between">
                             <span><i class="bx bx-receipt"></i> Active</span>
-                            <h2 id="total_this_year"><?php echo $automation_status['active']; ?></h2>
+                            <h2 id="total_this_year"><?php echo $automation_status['active'] ? $automation_status['active'] : '0'; ?></h2>
                         </div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@ include viewPath('v2/includes/header');
                     <div class="row h-100 w-auto">
                         <div class="w-100 col-md-8 text-start d-flex align-items-center justify-content-between">
                             <span><i class="bx bx-receipt"></i> Inactive</span>
-                            <h2 id="total_this_year"><?php echo $automation_status['inactive']; ?></h2>
+                            <h2 id="total_this_year"><?php echo $automation_status['inactive'] ? $automation_status['inactive'] : '0'; ?></h2>
                         </div>
                     </div>
                 </div>
@@ -74,14 +74,14 @@ include viewPath('v2/includes/header');
             <div class="nsm-card primary" style="overflow: visible !important;">
                 <div class="nsm-card-header">
                     <div class="nsm-card-title d-flex justify-content-between">
-                        <span><?php echo !empty($automation['title']) ? $automation['title'] : 'No Title'; ?></span>
+                        <span><?php echo !empty($automation->title) ? $automation->title : 'No Title'; ?></span>
                         <div class="form-switch">
                             <input
                                 class="form-check-input primary toggle-automation"
                                 type="checkbox"
                                 role="switch"
-                                data-id="<?php echo $automation['id']; ?>"
-                                <?php echo $automation['status'] === 'active' ? 'checked' : ''; ?>
+                                data-id="<?php echo $automation->id; ?>"
+                                <?php echo $automation->status === 'active' ? 'checked' : ''; ?>
                             >
                         </div>
                     </div>
@@ -92,19 +92,19 @@ include viewPath('v2/includes/header');
                     <div class="row">
                         <div class="col-12 d-flex justify-content-between">
                             <div class="d-flex gap-3 small">
-                                <span>Created on <?php echo date('M d, Y', strtotime($automation['created_at'])); ?></span>
+                                <span>Created on <?php echo date('M d, Y', strtotime($automation->created_at)); ?></span>
                                 <span>|</span>
                                 <span>Triggered 0 times</span>
                             </div>
                             <div class="nsm-card-controls px-3">
                                 <div class="dropup">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" id="actionsDropdown" aria-expanded="false">
                                         <i class='bx bx-fw bx-dots-horizontal-rounded'></i>
                                     </a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item cursor-pointer preview-automation" data-id="<?php echo $automation['id']; ?>">Preview</a></li>
-                                        <li><a class="dropdown-item cursor-pointer edit-automation" data-id="<?php echo $automation['id']; ?>">Edit</a></li>
-                                        <li><a class="dropdown-item cursor-pointer delete-automation" data-id="<?php echo $automation['id']; ?>">Delete</a></li>
+                                    <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
+                                        <li><a class="dropdown-item cursor-pointer preview-automation" data-id="<?php echo $automation->id; ?>">Preview</a></li>
+                                        <li><a class="dropdown-item cursor-pointer edit-automation" data-id="<?php echo $automation->id; ?>">Edit</a></li>
+                                        <li><a class="dropdown-item cursor-pointer delete-automation" data-id="<?php echo $automation->id; ?>">Delete</a></li>
                                     </ul>
                                 </div>
                             </div>

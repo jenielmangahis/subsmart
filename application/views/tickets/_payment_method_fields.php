@@ -90,7 +90,7 @@
         <div class="col-md-2 form-group">
             <label for="customer_cc_cvc">CVC</label>
             <div class="input-group" style="width:35%;">
-                <input type="text" class="form-control cc-cvc" maxlength="3" size="3" value="<?= $invoicePayment ? $invoicePayment->credit_cvc : ''; ?>" name="customer_cc_cvc" placeholder="123" id="customer_cc_cvc"/>
+                <input type="text" class="form-control cc-cvc" maxlength="4" size="4" value="<?= $invoicePayment ? $invoicePayment->credit_cvc : ''; ?>" name="customer_cc_cvc" placeholder="123" id="customer_cc_cvc"/>
             </div>
         </div>                                         
     </div>
@@ -122,7 +122,7 @@
         <div class="col-md-2 form-group">
             <label for="customer_cc_cvc">CVC</label>
             <div class="input-group" style="width:35%;">
-                <input type="text" class="form-control cc-cvc" maxlength="3" size="3" name="credit_cvc" value="<?= $invoicePayment ? $invoicePayment->credit_cvc : ''; ?>" placeholder="123" id="credit_cvc"/>
+                <input type="text" class="form-control cc-cvc" maxlength="4" size="4" name="credit_cvc" value="<?= $invoicePayment ? $invoicePayment->credit_cvc : ''; ?>" placeholder="123" id="credit_cvc"/>
             </div>
         </div>                                         
     </div>

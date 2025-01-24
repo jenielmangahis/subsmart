@@ -113,27 +113,27 @@
             <tr>
                 <td>
                     <div class="widget-item position-relative">
-                        <?php $image = userProfilePicture($tech->id); ?>
+                        <?php $image = userProfilePicture($tech->employee_id); ?>
                         <div class="profile-wrapper">
                             <?php if (is_null($image)){ ?>
                             <div class="profile">
-                                <span><?php echo getLoggedNameInitials($tech->id); ?></span>
+                                <span><?php echo getLoggedNameInitials($tech->employee_id); ?></span>
                             </div>
                             <?php }else{ ?>
                             <div class="profile" style="background-image: url('<?php echo $image; ?>');"></div>
                             <?php } ?>
                         </div>
                         <div class="details">
-                            <span class="content-title"><?= $tech->tech_rep ?></span>
+                            <span class="content-title"><?= $tech->employee_name ?></span>
                             <span class="content-subtitle d-block"><?php echo 'rep# '.$tech->employee_number; ?></span>
                         </div>
                     </div>
                 </td>
                 <td class="jobs"><label
-                       ><?= $tech->total_jobs ?></label></td>
+                       ><?= $tech->job_count ?></label></td>
                 <td class="ticket"><label
-                        ><?= $tech->total_tickets ?></label></td>
-                <td class="sales"><label for="">$<?= number_format($tech->total_amount, 2) ?></label></td>
+                        ><?= $tech->ticket_count ?></label></td>
+                <td class="sales"><label for="">$<?= number_format(($tech->job_amount+ $tech->ticket_amount), 2,".", ",") ?></label></td>
 
             </tr>
             <?php  $count++;} ?>

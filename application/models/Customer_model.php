@@ -655,24 +655,31 @@ class Customer_model extends MY_Model
         $this->db->update($this->table, array("is_favorite" => 0, 'updated_at' => NULL));        
     }
 
-    public function updateCustomerSpecificData($primaryKey, $id, $table, $data, $updateType) 
+    public function updateCustomerSpecificData($primaryKey, $id, $table, $data, $updateType, $displayColumnName, $displayValueOnText, $dataCategory) 
     {
+        $user_id = logged('id');
         $company_id = logged('company_id');
         $this->db->select('acs_profile.prof_id');
         $this->db->from('acs_profile');
         $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $company_id);
         $allEntries = $this->db->get()->result_array();
-        
+
         if ($updateType == "all_rows") {
             $this->db->where_in($primaryKey, json_decode($allEntries, true));
-            return $this->db->update($table, $data);
+            $result = $this->db->update($table, $data);
+            $this->logCustomerUpdateHistory($company_id, $user_id, json_decode($allEntries, true), $data, $displayColumnName, $displayValueOnText, $dataCategory);
+            return $result;
         } else if ($updateType == "ten_rows") {
             $this->db->where_in($primaryKey, json_decode($id, true));
-            return $this->db->update($table, $data);
+            $result = $this->db->update($table, $data);
+            $this->logCustomerUpdateHistory($company_id, $user_id, json_decode($id, true), $data, $displayColumnName, $displayValueOnText, $dataCategory);
+            return $result;
         } else if ($updateType == "specific_update") {
             $this->db->where($primaryKey, $id);
-            return $this->db->update($table, $data);
+            $result = $this->db->update($table, $data);
+            $this->logCustomerUpdateHistory($company_id, $user_id, [$id], $data, $displayColumnName, $displayValueOnText, $dataCategory);
+            return $result;
         } else if ($updateType == "cell_grid_update") {
             $idsArray = json_decode($id, true);
             if (isset($data['bill_end_date']) && is_array($data['bill_end_date'])) {
@@ -684,11 +691,35 @@ class Customer_model extends MY_Model
                     $this->db->where($primaryKey, $id);
                     $this->db->update($table, $dataToUpdate); 
                 }
+                $this->logCustomerUpdateHistory($company_id, $user_id, $idsArray, $data, $displayColumnName, $displayValueOnText, $dataCategory);
                 return true;
             } else {
                 $this->db->where_in($primaryKey, $idsArray);
-                $this->db->update($table, $data);
-                return true;
+                $result = $this->db->update($table, $data);
+                $this->logCustomerUpdateHistory($company_id, $user_id, $idsArray, $data, $displayColumnName, $displayValueOnText, $dataCategory);
+                return $result;
+            }
+        }
+    }
+
+    private function logCustomerUpdateHistory($company_id, $user_id, $customerIds, $data, $displayColumnName, $displayValueOnText, $dataCategory) 
+    {
+        foreach ($customerIds as $customerId) {
+            foreach ($data as $columnName => $value) {
+                if (is_array($value)) {
+                    $value = json_encode($value); 
+                }
+                $historyData = [
+                    'company_id' => $company_id,
+                    'customer_id' => $customerId,
+                    'user_id' => $user_id,
+                    'column_name' => $columnName,
+                    'value' => $value,
+                    'data_category' => $dataCategory,
+                    'displayColumnName' => $displayColumnName,
+                    'displayValueOnText' => $displayValueOnText,
+                ];
+                $this->db->insert('customer_update_history', $historyData);
             }
         }
     }

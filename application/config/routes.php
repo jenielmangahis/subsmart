@@ -1224,6 +1224,8 @@ $route['job/create_invoice/(:num)'] = 'Job/createInvoice/$1';
 $route['job/_update_job'] = 'Job/ajax_update_job';
 $route['job/_quick_create_job_type'] = 'Job/ajax_quick_create_job_type';
 $route['job/_quick_create_job_tag'] = 'Job/ajax_quick_create_job_tag';
+$route['job/new'] = 'job/new_job1';
+$route['job/edit/(:num)'] = 'job/new_job1/$1';
 
 // Trac360
 $route['job/bird_eye_view'] = 'JobMap/index';
