@@ -362,19 +362,8 @@ class Job extends MY_Controller
         $this->page_data['default_customer_name'] = $default_customer_name;
         $this->page_data['estimate_dp_amount'] = $estimate_dp_amount;
 
-        add_css([
-            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-            'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-        ]);
-
         add_footer_js([
             'assets/js/esign/fill-and-sign/job/approve.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.0/jspdf.umd.min.js',
-            'https://html2canvas.hertzen.com/dist/html2canvas.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
         ]);
 
         $default_start_date = date("Y-m-d");
@@ -1908,6 +1897,11 @@ class Job extends MY_Controller
     public function job_tags()
     {
         $this->load->model('Icons_model');
+
+        if(!checkRoleCanAccessModule('job-settings', 'read')){
+            show403Error();
+            return false;
+        }
         
         $this->page_data['page']->title = 'Job Tags';
         $this->page_data['page']->parent = 'Sales';
@@ -1936,7 +1930,7 @@ class Job extends MY_Controller
         $this->load->model('Icons_model');
 
         $this->hasAccessModule(26);
-        if(!checkRoleCanAccessModule('job-setitngs', 'read')){
+        if(!checkRoleCanAccessModule('job-settings', 'read')){
             show403Error();
             return false;
         }
