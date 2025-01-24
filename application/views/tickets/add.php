@@ -232,6 +232,9 @@ a.btn-primary.btn-md {
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/service_tickets_tabs'); ?>
     </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/service_ticket_subtabs'); ?>
+    </div>
     
     <?php echo form_open_multipart('tickets/savenewTicket', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
     <div class="col-12">
@@ -256,7 +259,7 @@ a.btn-primary.btn-md {
                         <div class="nsm-card primary">
                             <div class="nsm-card-content">
                                 <label for="customers" class="required"><b>Customer</b></label>
-                                <a class="link-modal-open nsm-button btn-small" href="<?= base_url('customer/add_advance'); ?>" style="float:right;">Add New</a>
+                                <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" style="float:right;">Add New</a>
                                 <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
                                     <option value="">- Select Customer -</option>
                                     <?php foreach($customers as $c){ ?>                                        
@@ -929,7 +932,7 @@ a.btn-primary.btn-md {
         </div> 
 
 <?php //echo $file_selection; ?>
-<?php include viewPath('v2/pages/job/modals/new_customer'); ?>
+<?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
 
 <?php include viewPath('v2/includes/footer'); ?>
@@ -1360,6 +1363,11 @@ $(document).ready(function(){
 
     $('#btn-quick-add-service-type').on('click', function(){
         $('#modal-quick-add-service-type').modal('show');
+    });
+
+    $('#btn-add-new-customer').on('click', function(){
+        $('#target-id-dropdown').val('sel-customer_t');
+        $('#origin-modal-id').val('');
     });
 
     $("#scheduled_time").on( 'change', function () {

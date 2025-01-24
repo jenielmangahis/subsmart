@@ -58,7 +58,7 @@
         <div class="nsm-card primary">
             <div class="nsm-card-content">
                     <label for="sel-customer_t" class="required"><b>Customer</b></label>
-                    <a class="link-modal-open nsm-button btn-small" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="float:right;"> Add New</a>
+                    <a class="link-modal-open nsm-button btn-small" id="btn-add-new-customer" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#quick-add-customer" style="float:right;"> Add New</a>
                     <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
                         <option value="0">- Select Customer -</option>
                         <?php foreach($customers as $c){ ?>
@@ -722,7 +722,7 @@
                     </div>
             </div>
         </div>
-    </div>
+    </div>    
 </div>
 <script>
 $(document).ready(function(){
@@ -732,6 +732,11 @@ $(document).ready(function(){
     //     dropdownParent: $("#service-ticket-esign-template"),
     //     placeholder: 'Select template',
     // });
+
+    $('#btn-add-new-customer').on('click', function(){
+        $('#target-id-dropdown').val('sel-customer_t');
+        $('#origin-modal-id').val('modal-quick-add-service-ticket');
+    });
 
     $('#employee_id').select2({
         ajax: {
