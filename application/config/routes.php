@@ -1583,6 +1583,9 @@ $route['customer/_load_all_subscriptions'] = 'Customer/ajax_load_all_subscriptio
 $route['customer/_quick_search'] = 'Customer/ajax_quick_search';
 $route['customer/_update_sub_payment_customer_info'] = 'Customer/ajax_update_sub_payment_customer_info';
 $route['customer/_send_esign_form'] = 'Customer/ajax_send_esign_form';
+$route['customer/_customer_add_billing_information'] = 'Customer/ajax_customer_add_billing_information';
+$route['customer/_customer_add_basic_information'] = 'Customer/ajax_customer_add_basic_information';
+$route['customer/_quick_save'] = 'Customer/ajax_quick_save_customer_v2';
 
 // Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';
