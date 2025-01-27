@@ -24,11 +24,18 @@
                                 <div class="form-check" style="float:right;">
                                     <input class="form-check-input" type="checkbox" value="1" name="customer_add_billing_information" id="chk-show-billing">
                                     <label class="form-check-label" for="chk-show-billing">
-                                        Show Billing Information
+                                        Billing Information
+                                    </label>
+                                </div>
+                                <div class="form-check" style="margin-right:15px;float:right;">
+                                    <input class="form-check-input" type="checkbox" value="1" name="customer_add_emergency_contacts_information" id="chk-show-emergency-contacts">
+                                    <label class="form-check-label" for="chk-show-emergency-contacts">
+                                        Emergency Contacts Information
                                     </label>
                                 </div>
                                 <div style="clear:both;" class="mb-2"></div>
                                 <div class="add-basic-information-container"></div>                                
+                                <div class="add-emergency-contacts-information-container"></div>
                                 <div class="add-billing-information-container"></div>
                             </div>
                         </div>                        
@@ -90,11 +97,27 @@ $(function(){
                 success: function(o) {
                     $('.add-billing-information-container').html(o);
                 }, beforeSend: function() {
-                    $(".add-billing-information-container").html('<span class="bx bx-loader bx-spin"></span>');
+                    $('.add-billing-information-container').html('<span class="bx bx-loader bx-spin"></span>');
                 }
             });
         }else{
-            $(".add-billing-information-container").html('');
+            $('.add-billing-information-container').html('');
+        }   
+    });
+
+    $('#chk-show-emergency-contacts').on('change', function(){
+        if( $(this).is(':checked') ){
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customer/_customer_add_emergency_contacts_information',
+                success: function(o) {
+                    $('.add-emergency-contacts-information-container').html(o);
+                }, beforeSend: function() {
+                    $(".add-emergency-contacts-information-container").html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        }else{
+            $('.add-emergency-contacts-information-container').html('');
         }   
     });
 
@@ -103,9 +126,10 @@ $(function(){
         if( origin_modal_id != '' ){
             $(`#${origin_modal_id}`).modal('show');
         }
-        $(".add-basic-information-container").html('');
-        $(".add-billing-information-container").html('');
-        $(".add-basic-information-container").html('Save');
+        $('.add-basic-information-container').html('');
+        $('.add-billing-information-container').html('');
+        $('.add-emergency-contacts-information-container').html('');
+        $('.add-basic-information-container').html('Save');
     });
 
     $('#quick-add-customer').on('shown.bs.modal', function (e) {
