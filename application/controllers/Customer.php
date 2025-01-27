@@ -4919,6 +4919,37 @@ class Customer extends MY_Controller
             $customer_name = $post['first_name'] . ' ' . $post['last_name'];
             $activity_name = 'Customer : Created customer ' . $customer_name; 
             createActivityLog($activity_name);
+
+            if( $post['customer_add_emergency_contacts_information'] ){
+                $saveToPayload = function ($index) use (&$payload, $post, $prof_id) {
+                    if (empty(trim($post['contact_first_name'.$index]))) {
+                        return; 
+                    }
+        
+                    $name = trim($post['contact_first_name'.$index]) . ' ' . trim($post['contact_last_name'.$index]);
+                    array_push($payload, [
+                        'first_name' => trim($post['contact_first_name'.$index]),
+                        'last_name' => trim($post['contact_last_name'.$index]),
+                        'relation' => $post['contact_relationship'.$index],
+                        'phone' => $post['contact_phone'.$index],
+                        'customer_id' => $prof_id,
+                        'phone_type' => 'mobile',
+                        'name' => $name
+                    ]);
+                };
+        
+                $saveToPayload(1);
+                $saveToPayload(2);
+                $saveToPayload(3);
+
+                if (!empty($payload)) {
+                    $this->db->insert_batch('contacts', $payload);
+
+                    $activity_name = 'Customer : Created customer emergency contacts data for ' . $customer_name; 
+                    createActivityLog($activity_name);
+                }
+        
+            }
     
             if( $post['customer_add_billing_information'] ){
                 $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($post['mmr'], $cid);
@@ -4968,15 +4999,13 @@ class Customer extends MY_Controller
                 $exist = $this->AcsBilling_model->getByProfId($prof_id);
                 if ($exist) {
                     $this->AcsBilling_model->updateRecord($exist->bill_id, $data_billing);
-    
-                    $customer_name = $post['first_name'] . ' ' . $post['last_name'];
+
                     $activity_name = 'Customer : Updated customer billing record for ' . $customer_name; 
                     createActivityLog($activity_name);
     
                 } else {
                     $this->AcsBilling_model->saveData($data_billing);
-    
-                    $customer_name = $post['first_name'] . ' ' . $post['last_name'];
+
                     $activity_name = 'Customer : Created customer billing data for ' . $customer_name; 
                     createActivityLog($activity_name);
                 }
@@ -11253,5 +11282,15 @@ class Customer extends MY_Controller
 
         $this->page_data['ratePlans'] = $ratePlans;
         $this->load->view('v2/pages/customer/advance_customer_forms/modal_forms/_billing_infromation', $this->page_data);
+    }
+
+    public function ajax_customer_add_emergency_contacts_information()
+    {
+        $this->load->model('Contacts_model');
+
+        $optionRelations = $this->Contacts_model->optionRelations();
+
+        $this->page_data['optionRelations'] = $optionRelations;
+        $this->load->view('v2/pages/customer/advance_customer_forms/modal_forms/_emergency_contacts_infromation', $this->page_data);
     }
 }
