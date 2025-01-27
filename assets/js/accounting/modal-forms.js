@@ -728,7 +728,7 @@ $(function () {
         var value = el.val();
 
         if (value !== '' && value !== null && value !== 'add-new') {
-            $.get('/accounting/get-account-balance/' + value, function (res) {
+            $.get(base_url + 'accounting/get-account-balance/' + value, function (res) {
                 var result = JSON.parse(res);
 
                 el.parent().next().find('h3').html(result.balance);
