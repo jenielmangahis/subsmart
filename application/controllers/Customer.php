@@ -4879,6 +4879,152 @@ class Customer extends MY_Controller
         }
     }
 
+    public function ajax_quick_save_customer_v2()
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('AcsBilling_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $uid  = logged('id');
+        $cid  = logged('company_id');
+        
+        $isNameExists = $this->AcsProfile_model->getByCustomerNameAndCompanyId($post['first_name'], $post['last_name'], $cid);
+        if( $isNameExists ){
+            $msg = 'Customer name ' . $customer_name . ' already exists';
+        }else{
+            $data = [
+                'fk_user_id' => $uid,
+                'company_id' => $cid,
+                'first_name' => $post['first_name'],
+                'middle_name' => $post['middle_name'],
+                'last_name' => $post['last_name'],
+                'customer_type' => $post['customer_type'],
+                'email' => $post['email'],
+                'ssn' => $post['ssn'],
+                'status' => $post['status'],
+                'business_name' => $post['customer_type'] == 'Commercial' ? $post['customer_type'] : '',
+                'phone_m' => formatPhoneNumber($post['phone_m']),
+                'phone_h' => formatPhoneNumber($post['phone_h']),
+                'mail_add' => $post['mail_add'],
+                'city' => $post['city'],
+                'state' => $post['state'],
+                'zip_code' => $post['zip_code'],
+            ];
+    
+            $prof_id = $this->AcsProfile_model->saveData($data);
+
+            $customer_name = $post['first_name'] . ' ' . $post['last_name'];
+            $activity_name = 'Customer : Created customer ' . $customer_name; 
+            createActivityLog($activity_name);
+
+            if( $post['customer_add_emergency_contacts_information'] ){
+                $saveToPayload = function ($index) use (&$payload, $post, $prof_id) {
+                    if (empty(trim($post['contact_first_name'.$index]))) {
+                        return; 
+                    }
+        
+                    $name = trim($post['contact_first_name'.$index]) . ' ' . trim($post['contact_last_name'.$index]);
+                    array_push($payload, [
+                        'first_name' => trim($post['contact_first_name'.$index]),
+                        'last_name' => trim($post['contact_last_name'.$index]),
+                        'relation' => $post['contact_relationship'.$index],
+                        'phone' => $post['contact_phone'.$index],
+                        'customer_id' => $prof_id,
+                        'phone_type' => 'mobile',
+                        'name' => $name
+                    ]);
+                };
+        
+                $saveToPayload(1);
+                $saveToPayload(2);
+                $saveToPayload(3);
+
+                if (!empty($payload)) {
+                    $this->db->insert_batch('contacts', $payload);
+
+                    $activity_name = 'Customer : Created customer emergency contacts data for ' . $customer_name; 
+                    createActivityLog($activity_name);
+                }
+        
+            }
+    
+            if( $post['customer_add_billing_information'] ){
+                $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($post['mmr'], $cid);
+    
+                switch ($post['bill_freq']) {
+                    case 'One Time Only':
+                        $billing_frequency = 1;
+                        break;
+                    case 'Every 1 Month':
+                        $billing_frequency = 1;
+                        break;
+                    case 'Every 3 Months':
+                        $billing_frequency = 3;
+                        break;
+                    case 'Every 6 Months':
+                        $billing_frequency = 6;
+                        break;
+                    case 'Every 1 Year':
+                        $billing_frequency = 12;
+                        break;
+                    default:
+                        $billing_frequency = 0;
+                        break;
+                }
+    
+                $data_billing['fk_prof_id'] = $prof_id;
+                $data_billing['ac_rate_plan_id'] = $ratePlan->id;
+                $data_billing['card_fname'] = $post['card_fname'];
+                $data_billing['card_lname'] = $post['card_lname'];
+                $data_billing['card_address'] = $post['card_address'];
+                $data_billing['city'] = $post['billing_city'];
+                $data_billing['state'] = $post['billing_state'];
+                $data_billing['zip'] = $post['billing_zip'];
+                $data_billing['equipment'] = $post['equipment'];
+                $data_billing['initial_dep'] = $post['initial_dep'];
+                $data_billing['mmr'] = $ratePlan->amount;
+                $data_billing['bill_freq'] = $post['bill_freq'];
+                $data_billing['bill_day'] = $post['bill_day'];
+                $data_billing['contract_term'] = $post['contract_term'];
+                $data_billing['bill_start_date'] = date("Y-m-d",strtotime($post['bill_start_date']));
+                $data_billing['bill_end_date'] = date("Y-m-d",strtotime($post['bill_end_date']));
+                $data_billing['late_fee'] = $post['late_fee'];
+                $data_billing['payment_fee'] = $post['payment_fee'];
+                $data_billing['billing_frequency'] = $billing_frequency;
+                $data_billing['next_billing_date'] = date('n/j/Y', strtotime('+'.$billing_frequency.' months', strtotime($post['bill_start_date'])));
+    
+                $exist = $this->AcsBilling_model->getByProfId($prof_id);
+                if ($exist) {
+                    $this->AcsBilling_model->updateRecord($exist->bill_id, $data_billing);
+
+                    $activity_name = 'Customer : Updated customer billing record for ' . $customer_name; 
+                    createActivityLog($activity_name);
+    
+                } else {
+                    $this->AcsBilling_model->saveData($data_billing);
+
+                    $activity_name = 'Customer : Created customer billing data for ' . $customer_name; 
+                    createActivityLog($activity_name);
+                }
+            }
+    
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,            
+            'customer_id' => $prof_id,
+            'customer_name' => $customer_name
+        ];
+
+        echo json_encode($return);
+    }
+
     public function ajax_quick_save_customer()
     {
         $is_success = 0;
@@ -11113,5 +11259,38 @@ class Customer extends MY_Controller
         $this->page_data['preview_headers'] = $selected_headers;
         $this->page_data['preview_data']    = $preview_data;
         $this->load->view('v2/pages/customer/ajax_preview_import', $this->page_data);
+    }
+
+    public function ajax_customer_add_basic_information()
+    {
+        $this->load->model('CustomerStatus_model');
+
+        $cid = logged('company_id');
+        $customerStatus = $this->CustomerStatus_model->getAllByCompanyId($cid);
+
+        $this->page_data['customerStatus'] = $customerStatus;
+        $this->load->view('v2/pages/customer/advance_customer_forms/modal_forms/_basic_infromation', $this->page_data);
+    }
+
+    public function ajax_customer_add_billing_information()
+    {
+        $this->load->model('RatePlan_model');
+
+        $cid = logged('company_id');
+
+        $ratePlans = $this->RatePlan_model->getAllByCompanyId($cid);
+
+        $this->page_data['ratePlans'] = $ratePlans;
+        $this->load->view('v2/pages/customer/advance_customer_forms/modal_forms/_billing_infromation', $this->page_data);
+    }
+
+    public function ajax_customer_add_emergency_contacts_information()
+    {
+        $this->load->model('Contacts_model');
+
+        $optionRelations = $this->Contacts_model->optionRelations();
+
+        $this->page_data['optionRelations'] = $optionRelations;
+        $this->load->view('v2/pages/customer/advance_customer_forms/modal_forms/_emergency_contacts_infromation', $this->page_data);
     }
 }

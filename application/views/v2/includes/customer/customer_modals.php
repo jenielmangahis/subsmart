@@ -650,23 +650,6 @@
     </div>
 </div>
 
-
-<div class="modal fade nsm-modal fade" id="print_customer_list_modal" tabindex="-1" aria-labelledby="print_customer_list_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-xxl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title">Print Customer List</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>
-            <div class="modal-body" id="print-customer-list-container"></div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="nsm-button primary" id="btn_print_customer_list">Print</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="modal fade nsm-modal fade" id="messages_modal" tabindex="-1" aria-labelledby="messages_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -728,6 +711,22 @@
             <div class="modal-footer">
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="nsm-button primary" id="btn-customer-send-esign-template">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="print_customer_list_modal" tabindex="-1" aria-labelledby="print_customer_list_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-xxl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Print Customer List</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body" id="print-customer-list-container"></div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn_print_customer_list">Print</button>
             </div>
         </div>
     </div>

@@ -1,11 +1,3 @@
-<?php     
-    add_css(array(
-        'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-        'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-        'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-    ));
-?>
 <?php include viewPath('v2/pages/job/css/job_new'); ?>
 <style>
     .custom-job-header{
@@ -603,9 +595,10 @@
                             <div class="nsm-card-content">
                                 <div class="row">                                                                                        
                                     <div class="col-md-5">                                                
-                                        <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
+                                        <a class="link-modal-open nsm-button btn-small" id="btn-add-new-customer" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#quick-add-customer" style="float:right;"> Add New</a>
+                                        <select style="display:inline;" id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
                                             <option selected value="">- Select Customer -</option>
-                                        </select>
+                                        </select>                                        
                                         <table id="customer_info" class="table">
                                             <thead>
                                             <tr>
@@ -1075,6 +1068,11 @@ $('#EMPLOYEE_SELECT_6').on('change', function(event) {
 $(function() {
     // JUST A COUNTER VARIABLE
     var TOTAL = 1;
+
+    $('#btn-add-new-customer').on('click', function(){
+        $('#target-id-dropdown').val('customer_id');
+        $('#origin-modal-id').val('modal-quick-add-job');
+    });
     
     // HIDDEN INPUTS
     var HIDDEN_1 = $('.ASSIGNED_TO_1 > select');

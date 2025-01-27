@@ -1,14 +1,4 @@
-<?php 
-    include viewPath('v2/includes/header'); 
-    add_css(array(
-        'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-        'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-        'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-        //'assets/frontend/css/workorder/main.css',
-        // 'assets/css/beforeafter.css',
-    ));
-?>
+<?php include viewPath('v2/includes/header');?>
 <!-- add css for this page -->
 <?php include viewPath('v2/pages/job/css/job_new'); ?>
 
@@ -377,7 +367,7 @@
     }
 
     .modal {
-        z-index: 999999 !important;
+        /* z-index: 999999 !important; */
     }
 
     .a-bold {
@@ -531,7 +521,12 @@
                             <div class="col-md-4">
                                 <div class="nsm-card primary" style="margin-top: 30px;">
                                     <div class="nsm-card-header d-block">
-                                        <div class="nsm-card-title"><span><i class='bx bx-time'></i>&nbsp;Schedule Job</span></div>
+                                        <div class="nsm-card-title">
+                                            <span><i class='bx bx-time'></i>&nbsp;Schedule Job</span>
+                                            <?php if( $jobs_data ){ ?>
+                                            <span style="float:right;"><?= $jobs_data->job_number; ?></span>
+                                            <?php } ?>
+                                        </div>
                                     </div>
                                     <hr>
                                     <div class="nsm-card-content">
@@ -788,7 +783,7 @@
                                                     <strong>Created By:</strong>&nbsp;<strong style="font-size: 20px;"> <?= ' '.$created_by; ?></strong style="font-size: 17px;">
                                                 </div>
                                                 <div class="col-sm-6">
-                                                     <button type="button" id="add_another_invoice" data-bs-toggle="modal" data-bs-target="#new_customer" class="nsm-button primary small text-end" style="float: right;"><i class='bx bx-fw bx-plus'></i><strong>Add New Customer</strong></button>
+                                                     <button type="button" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" class="nsm-button primary small text-end" style="float: right;"><i class='bx bx-fw bx-plus'></i><strong>Add New Customer</strong></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -1146,51 +1141,20 @@
                                                         </div>
                                                     <?php } ?>
                                                     <div class="row mt-3 d-none">
-                                                            <div class="col-sm-6 d-none">
-                                                                <label>Commission<br><small class="text-muted COMMISSION_TYPE"></small></label>
-                                                            </div>
-                                                            <div class="col-sm-6 d-none">
-                                                                <label  id="invoice_overall_total">$0</label>
-                                                            </div>
-                                                            <div class="col-sm-6">
-                                                                Commission Type: <input type="number" name="commission_type" value="" readonly>
-                                                                <br>
-                                                                Percentage: <input step="any" type="number" name="commission_percentage" value="" readonly>
-                                                                <br>
-                                                                Total Commission: <input step="any" type="number" name="commission_amount" value="<?php echo $jobs_data->commission; ?>" readonly>
-                                                            </div>
+                                                        <div class="col-sm-6 d-none">
+                                                            <label>Commission<br><small class="text-muted COMMISSION_TYPE"></small></label>
                                                         </div>
-                                                    <!-- <div class="col-sm-6"> -->
-                                                        <!-- <small>Tax Rate</small> -->
-                                                        <!--<a href="<?= base_url('job/settings') ?>"><span class="fa fa-plus" style="margin-left:50px;"></span></a>-->
-                                                    <!-- </div> -->
-                                                    <!-- <div class="col-sm-6 text-right pr-3"> -->
-                                                    <!-- </div> -->
-                                                    <!-- <div class="col-sm-12"> -->
-                                                        <!-- <hr> -->
-                                                    <!-- </div> -->
-                                                    <!--<div class="col-sm-6 text-right pr-3">
-                                                        <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
-                                                            <span class="fa fa-plus-square fa-margin-right"></span>Discount
-                                                        </a>
-                                                    </div>
-                                                    <div class="col-sm-12">
-                                                        <hr>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                    </div>
-                                                    <div class="col-sm-6 text-right pr-3">
-                                                        <a class="link-modal-open pt-1 pl-2" href="javascript:void(0)" id="add_another_invoice">
-                                                            <span class="fa fa-plus-square fa-margin-right"></span>Deposit
-                                                        </a>
-                                                    </div>-->
-                                                    <!-- <div class="col-sm-6"> -->
-                                                        <!-- <label style="padding: 0 .75rem;">Total</label> -->
-                                                    <!-- </div> -->
-                                                    <!-- <div class="col-sm-6 text-right pr-3"> -->
-                                                        <!-- <label id="invoice_overall_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label> -->
-                                                        <!-- <input step="any" type="number" name="total_amount" id="total2" value="<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0'; ?>" hidden> -->
-                                                    <!-- </div> -->
+                                                        <div class="col-sm-6 d-none">
+                                                            <label  id="invoice_overall_total">$0</label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            Commission Type: <input type="number" name="commission_type" value="" readonly>
+                                                            <br>
+                                                            Percentage: <input step="any" type="number" name="commission_percentage" value="" readonly>
+                                                            <br>
+                                                            Total Commission: <input step="any" type="number" name="commission_amount" value="<?php echo $jobs_data->commission; ?>" readonly>
+                                                        </div>
+                                                    </div>                                                    
                                                 </div>
                                                 <div class="col-sm-12">
                                                     <hr>
@@ -1521,7 +1485,7 @@
 </div>
 
 <!-- Modals -->
-<?php include viewPath('v2/pages/job/modals/new_customer'); ?>
+<?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
 <?php include viewPath('v2/pages/job/modals/inventory_location'); ?>
 <?php include viewPath('v2/pages/job/modals/new_inventory'); ?>
 <?php include viewPath('v2/includes/job/quick_add'); ?>
@@ -1926,13 +1890,6 @@ add_footer_js(array(
 ?>
 <!-- s -->
 <?php include viewPath('v2/includes/footer'); ?>
-<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
-<script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
-
 <?php include viewPath('v2/pages/job/js/job_new_js'); ?>
 <!-- Modals -->
 

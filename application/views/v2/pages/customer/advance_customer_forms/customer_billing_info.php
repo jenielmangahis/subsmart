@@ -1,7 +1,7 @@
 <div class="nsm-card primary">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span><i class="bx bx-fw bx-user"></i>Billing Information</span>
+            <span><i class='bx bx-fw bx-credit-card'></i>Billing Information</span>
         </div>
     </div>
     <div class="nsm-card-content"><hr>

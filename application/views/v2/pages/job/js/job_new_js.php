@@ -950,32 +950,13 @@ $("#attachment-file").change(function() {
             });
         });
 
-        $("#new_customer_form").submit(function(e) {
-            $('#NEW_CUSTOMER_MODAL_CLOSE').click();
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "/customer/add_new_customer_from_jobs",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    $("#select_with_data").append('<option value="5">Twitter</option>');
-                    $("#select_with_data").val('5');
-                    $("#select_with_data").trigger('change');
-                    if(data === "Success"){
-                        sucess_add('Customer Added Successfully!',1);
-                    }else {
-                        warning('There is an error adding Customer. Contact Administrator!');
-                    }
-                }
-            });
+        $('#btn-add-new-customer').on('click', function(){
+            $('#target-id-dropdown').val('customer_id');
         });
 
         $("#customer_id").on('change', function () {
-            
             var customer_selected = this.value;
+            
             if(customer_selected !== ""){
                 load_customer_data(customer_selected);
             }else{
@@ -983,8 +964,9 @@ $("#attachment-file").change(function() {
                 $('#cust_address').text('-------------');
                 $('#cust_number').text('(xxx) xxx-xxxx');
                 $('#cust_email').text('xxxxx@xxxxx.xxx');
-                initMap();
+                //initMap();
             }
+
             initializeCustomerData(customer_selected);
         });
 
