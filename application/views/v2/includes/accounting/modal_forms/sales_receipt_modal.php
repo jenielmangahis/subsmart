@@ -624,7 +624,10 @@ $(function(){
         templateResult: formatRepoUser,
         templateSelection: formatRepoSelectionUser,
         initSelection: function(element, callback) {
-            callback({id: 'default', text: '<?php echo isset($receipt->sales_rep) ? $receipt->sales_rep : ''; ?>' });
+            callback({
+                id: 'default', 
+                text: '<?php echo isset($receipt->sales_rep) ? $default_sales_representative : ''; ?>',
+             });
         }       
     });
 
