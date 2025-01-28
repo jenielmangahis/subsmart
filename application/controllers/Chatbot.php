@@ -9,41 +9,68 @@ class Chatbot extends CI_Controller
 
     private $company_id = 31;
 
-    private function findPreset($userInput, $predefinedQuestions) 
+    private function findPresetWide($userInput, $combinedPresets)
     {
-        // Function to normalize a string: remove punctuation, convert to lowercase, and trim spaces
-        function normalize($str) {
-            return strtolower(trim(preg_replace('/[^a-z0-9 ]/i', '', $str)));
+        $emptyQueries = [
+            'is', 'a', 'what', 'when', 'how', 'who', 'why', 'the', 'i', 'you', 'am', 'do', 'are', 'it', 'in', 'to', 'for', 'and', 'but', 'or', 'nor', 'so', 'as', 'if', 'then', 'by', 'with', 'on', 'at', 'from', 'about', 'that', 'this', 'these', 'those', 'each', 'every', 'all', 'some', 'no', 'not', 'such', 'more', 'less', 'one', 'two', 'three', 'four', 'five', 'all', 'own', 'an', 'the', 'which', 'whose', 'off', 'out', 'into', 'during', 'between', 'under', 'above', 'after', 'before', 'while', 'until', 'without', 'within', 'along', 'through', 'across', 'against', 'along', 'among', 'behind', 'beyond', 'over', 'up', 'down', 'since', 'upon', 'to', 'for', 'of'
+        ];        
+
+        $normalize = function ($str) {
+            $str = strtolower(trim(preg_replace('/[^a-z0-9 ]/i', '', $str)));
+
+            $words = explode(' ', $str);
+            foreach ($words as &$word) {
+                if (substr($word, -3) === 'ies') {
+                    $word = substr($word, 0, -3) . 'y';
+                } elseif (substr($word, -2) === 'es') {
+                    $word = substr($word, 0, -2);
+                } elseif (substr($word, -1) === 's') {
+                    $word = substr($word, 0, -1);
+                }
+            }
+            return implode(' ', $words);
+        };
+
+        $normalizedInput = $normalize($userInput);
+
+        if (empty($normalizedInput) || in_array($normalizedInput, $emptyQueries) || strlen($normalizedInput) <= 1) {
+            return "It seems like you didn't ask a clear question. Could you please provide more details?";
         }
 
-        // Step 1: Exact match with normalization to remove special characters and spaces
-        $normalizedInput = normalize($userInput);
+        $bestMatch = null;
+        $bestScore = 0;
 
-        foreach ($predefinedQuestions as $question => $response) {
-            $normalizedQuestion = normalize($question);
+        foreach ($combinedPresets as $preset) {
+            $titleNormalized = $normalize($preset['title']);
+            $responseNormalized = $normalize($preset['response']);
 
-            if ($normalizedInput === $normalizedQuestion) { // Exact match after normalization
-                return $response; // Return immediately if an exact match is found
+            $titleScore = 0;
+            $responseScore = 0;
+
+            $inputWords = explode(' ', $normalizedInput);
+            $titleWords = explode(' ', $titleNormalized);
+            $responseWords = explode(' ', $responseNormalized);
+
+            foreach ($inputWords as $word) {
+                if (in_array($word, $titleWords)) {
+                    $titleScore += 2;
+                }
+                if (in_array($word, $responseWords)) {
+                    $responseScore += 1;
+                }
+            }
+
+            $totalScore = $titleScore + $responseScore;
+
+            if ($totalScore > $bestScore) {
+                $bestScore = $totalScore;
+                $bestMatch = $preset['response'];
             }
         }
 
-        // Step 2: Fallback to normalized pattern matching if exact match fails
-        foreach ($predefinedQuestions as $question => $response) {
-            $normalizedQuestion = normalize($question); // Normalize predefined question
-
-            // Create a regex pattern with word boundaries to match keywords in the predefined question
-            $keywords = explode(' ', $normalizedQuestion);  
-            $regexPattern = '/\\b(' . implode('|', $keywords) . ')\\b/i';  
-
-            // Check if regex matches normalized user input
-            if (preg_match($regexPattern, $normalizedInput)) {  
-                return $response; // Return if there's a pattern match
-            }
-        }
-
-        // Default response when no match is found
-        return "My apologies, I could not find an appropriate match for this. Could you please help rephrase your question?";
+        return $bestMatch ?? "My apologies, I could not find an appropriate match for this. Could you please help rephrase your question?";
     }
+
     
     public function request() 
     {
@@ -52,16 +79,23 @@ class Chatbot extends CI_Controller
         $query = $this->Chatbot_model->fetchAllPreset($requestData);
 
         $presets = array();
-        foreach($query as $querys) {
+        foreach ($query as $querys) {
             $presets["$querys->title"] = "$querys->response";
         }
 
-        // // Find the most similar answer based on the user's input
-        $findAutoResponse = $this->findPreset($requestData['request'], $presets);
-        
-        // // Outputs the answer for the most similar question
+        $combinedPresets = array();
+        foreach ($query as $querys) {
+            $combinedPresets[] = [
+                'title' => $querys->title,
+                'response' => $querys->response
+            ];
+        }
+
+        $findAutoResponse = $this->findPresetWide($requestData['request'], $combinedPresets);
+
         echo json_encode($findAutoResponse);
     }
+
 
     public function testing() 
     {

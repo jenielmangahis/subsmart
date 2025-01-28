@@ -250,22 +250,20 @@ class VideoBinder extends MY_Controller
             array('title'),
             array('title'),
             null,  
-            array('company_id' => $company_id,),
+            // array('company_id' => $company_id,),
         );
 
-        $whereCondition = array('company_id' => $company_id);
+        // $whereCondition = array('company_id' => $company_id);
         $getData = $this->serverside_table->getRows($this->input->post(), $whereCondition);
 
         $data = $row = array();
         $i = $this->input->post('start');
         
         foreach($getData as $getDatas){
-            if ($getDatas->company_id == $company_id) {
-                $data[] = array(
-                    "<span class='float-start'>$getDatas->title</span><span class='float-end watchClip cursorPointer' data-id='$getDatas->id' data-filename='$getDatas->file'><i class='bx bx-play-circle playCirleSize'></i></span>",
-                );
-                $i++;
-            }
+            $data[] = array(
+                "<span class='float-start'>$getDatas->title</span><span class='float-end watchClip cursorPointer' data-id='$getDatas->id' data-filename='$getDatas->file'><i class='bx bx-play-circle playCirleSize'></i></span>",
+            );
+            $i++;
         }
 
         $output = array(

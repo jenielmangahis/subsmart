@@ -1014,7 +1014,7 @@ if (is_null($image)) {
                             <div class="typing_status"><small class="text-muted"><span class="chatbot_name fw-normal">Chatbot</span> is typing...</small></div>
                             <form id="sendchat_form">
                                 <div class="input-group message_form_container">
-                                    <input name="request" class="form-control" type="text" placeholder="Type your message here..." required>
+                                    <input name="request" class="form-control" type="text" placeholder="Type your message here..." autocomplete="off" required>
                                     <button type="submit" class="btn message_form_button">
                                         <strong><i class='bx bxs-send message_form_button_icon'></i></strong>
                                     </button>
@@ -1223,14 +1223,20 @@ if (is_null($image)) {
             }
         });
 
-        $('.openCallUs').click(function(e) {
+        $(document).on('click', '.pricing_page_redirect', function (e) {
+            e.preventDefault();
+            window.open(BASE_URL + "/pricing", "_blank");
+        });
+
+        $(document).on('click', '.openCallUs, .schedule_call_redirect', function () {
             $('.techSupportMenu').hide();
             $('.callUs').fadeIn();
             $('.videoBinder').hide();
             $('.chatBotMessenger').hide();
         });
 
-        $('.openVideoBinder').click(function(e) {
+        
+        $(document).on('click', '.openVideoBinder, .video_binder_redirect', function () {
             if (!$.fn.DataTable.isDataTable('#previewBinder_table')) {
                 const previewBinder_table = $('#previewBinder_table').DataTable({
                     "processing": true,
@@ -1258,7 +1264,7 @@ if (is_null($image)) {
             $('.chatBotMessenger').hide();
         });
 
-        $('.openChatbotButton').click(function(e) {
+        $(document).on('click', '.openChatbotButton', function () {
             $('.techSupportMenu').hide();
             $('.callUs').hide();
             $('.videoBinder').hide();
@@ -1268,12 +1274,14 @@ if (is_null($image)) {
             $('.chat_content').css('height', chatContent_height + 'px');
         });
 
-        $('.returnToMenu').click(function(e) {
+        $(document).on('click', '.returnToMenu', function () {
             $('.techSupportMenu').fadeIn();
             $('.callUs').hide();
             $('.videoBinder').hide();
             $('.chatBotMessenger').hide();
         });
+        
+        
 
         $(document).on('click', '.watchClip', function() {
             const fileName = $(this).attr('data-filename');

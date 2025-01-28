@@ -263,15 +263,14 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <select id="frequency" name="frequency" data-customer-source="dropdown" class="input_select" >
-                                                    <option  value=""></option>
-                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == ""){echo "selected";} } ?> value="">- Select -</option>
-                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == 0){echo "selected";} } ?> value="0">One Time Only</option>
-                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == 1){echo "selected";} } ?> value="1">Monthly</option>
-                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == 3){echo "selected";} } ?> value="3">Quarterly</option>
-                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == 6){echo "selected";} } ?> value="6">Semi-Annual</option>
-                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == 12){echo "selected";} } ?> value="12">Anually</option>
+                                                    <option <?= $billing_info && $billing_info->frequency == "" ? 'selected="selected"' : ''; ?> value="">- Select -</option>
+                                                    <option <?= $billing_info && $billing_info->frequency == 0 ? 'selected="selected"' : ''; ?> value="0">One Time Only</option>
+                                                    <option <?= $billing_info && $billing_info->frequency == 1 ? 'selected="selected"' : ''; ?> value="1">Monthly</option>
+                                                    <option <?= $billing_info && $billing_info->frequency == 3 ? 'selected="selected"' : ''; ?> value="3">Quarterly</option>
+                                                    <option <?= $billing_info && $billing_info->frequency == 6 ? 'selected="selected"' : ''; ?> value="6">Semi-Annual</option>
+                                                    <option <?= $billing_info && $billing_info->frequency == 12 ? 'selected="selected"' : ''; ?> value="12">Anually</option>
                                                 </select>
-                                                <input type="hidden" class="form-control" name="num_frequency" id="num_frequency" value="<?= $billing_info->frequency; ?>" readonly/>
+                                                <input type="hidden" class="form-control" name="num_frequency" id="num_frequency" value="<?= $billing_info ?  $billing_info->frequency : ''; ?>" readonly/>
                                             </div>
                                         </div>
                                     </div>
@@ -343,23 +342,19 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">
+                                                    <?php 
+                                                        $min_year = date("Y"); 
+                                                        $max_year = date("Y", strtotime("+20 years"));
+                                                    ?>
                                                     <select id="exp_year" name="exp_year" data-customer-source="dropdown" class="input_select" required>
                                                         <option  value=""></option>
-                                                        <option  value="2021">2021</option>
-                                                        <option  value="2022">2022</option>
-                                                        <option  value="2023">2023</option>
-                                                        <option  value="2024">2024</option>
-                                                        <option  value="2025">2025</option>
-                                                        <option  value="2026">2026</option>
-                                                        <option  value="2027">2027</option>
-                                                        <option  value="2028">2028</option>
-                                                        <option  value="2029">2029</option>
-                                                        <option  value="2030">2030</option>
-                                                        <option  value="2031">2031</option>
+                                                        <?php for( $x = $min_year; $x<$max_year; $x++ ){ ?>
+                                                        <option  value="<?= $x; ?>"><?= $x; ?></option>
+                                                        <?php } ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="text" maxlength="3" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC" required/>
+                                                    <input type="text" maxlength="4" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC" required/>
                                                 </div>
                                             </div>
                                         </div>
@@ -417,7 +412,7 @@
                                         Account Credential
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="number" class="form-control" name="account_credential" id="account_credential" value="<?= isset($billing_info) ? $billing_info->account_credential : ''; ?>" />
+                                        <input type="text" class="form-control" name="account_credential" id="account_credential" value="<?= isset($billing_info) ? $billing_info->account_credential : ''; ?>" />
                                     </div>
                                 </div>
                                 <div class="row form_line account_cred" >
@@ -425,7 +420,7 @@
                                         Account Note
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="number" class="form-control" name="account_note" id="account_note" value="<?= isset($billing_info) ? $billing_info->account_note : ''; ?>"/>
+                                        <input type="text" class="form-control" name="account_note" id="account_note" value="<?= isset($billing_info) ? $billing_info->account_note : ''; ?>"/>
                                     </div>
                                 </div>
                                 <div class="row form_line account_cred" id="confirmationPD">
@@ -433,7 +428,7 @@
                                         Confirmation
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="number" class="form-control" name="confirmation" id="confirmation" value="<?= isset($billing_info) ? $billing_info->confirmation : ''; ?>"/>
+                                        <input type="text" class="form-control" name="confirmation" id="confirmation" value="<?= isset($billing_info) ? $billing_info->confirmation : ''; ?>"/>
                                     </div>
                                 </div>
 
@@ -498,12 +493,12 @@
                                 </div>
                                 <div class="text-end mt-2">
                                     <!-- <button type="button" class="nsm-button primary" id="btn-add-subscription-plan"><span class="fa fa-plus"></span> Add New Subcription Plan</button>                                                     -->
-                                    <button type="submit" class="nsm-button primary"><span class="fa fa-money"></span>Save</button>
+                                    <button type="submit" class="nsm-button primary" id="btn-save-payment"><span class="fa fa-money"></span>Save</button>
                                     <div id="payment-button" style="display:inline-block;">
-                                        <button type="submit" class="nsm-button primary" id="btn-pre-auth"><span class="fa fa-money"></span> Pre Auth Now</button>
-                                        <button type="submit" class="nsm-button primary" id="btn-capture-now"><span class="fa fa-money"></span> Capture Now</button>
+                                        <!-- <button type="submit" class="nsm-button primary" id="btn-pre-auth"><span class="fa fa-money"></span> Pre Auth Now</button>
+                                        <button type="submit" class="nsm-button primary" id="btn-capture-now"><span class="fa fa-money"></span> Capture Now</button> -->
                                     </div>
-                                    <div id="paypal-button-container" style="display: none;"></div>
+                                    <div id="paypal-button-container" style="display: none;width:30%;float:right;"></div>
                                     <input type="hidden" name="customer_id" id="customer_id" value="<?= $this->uri->segment(3); ?>"/>
                                     <input type="hidden" name="method" id="method" value="CC"/>
                                 </div>
@@ -658,7 +653,7 @@
     paypal.Buttons({
         style: {
             layout: 'horizontal',
-            //tagline: false,
+            tagline: false,
             //height:25,
             color:'blue'
         },
@@ -666,7 +661,7 @@
             return actions.order.create({
                 payer: {
                     name: {
-                        given_name: 'Testing Paypal'
+                        given_name: 'Subscription Payment'
                     },
                 },
                 purchase_units: [{

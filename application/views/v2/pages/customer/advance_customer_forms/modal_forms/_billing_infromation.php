@@ -1,5 +1,5 @@
 <div class="row billing-information">
-	<div class="col-md-12">
+	<div class="col-md-12 mb-3">
 		<h1 class="customer-info-heading"><i class='bx bx-fw bx-credit-card'></i>Billing Information</h1>
 	</div>
 	<div class="col-md-6 mb-3">

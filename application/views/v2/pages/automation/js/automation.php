@@ -864,9 +864,10 @@
                 }
 
                 // Skip `timing_reference` and `date_reference` if `trigger_time` is 0
+                let triggerTime = Number(data.trigger_time)
                 if (
                     (key == "timing_reference" || key == "date_reference" || key ==="trigger_time") &&
-                    data.trigger_time === 0
+                    triggerTime === 0
                 ) {
                     return;
                 }
