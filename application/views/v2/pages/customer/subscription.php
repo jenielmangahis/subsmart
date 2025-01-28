@@ -412,7 +412,7 @@
                                         Account Credential
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="number" class="form-control" name="account_credential" id="account_credential" value="<?= isset($billing_info) ? $billing_info->account_credential : ''; ?>" />
+                                        <input type="text" class="form-control" name="account_credential" id="account_credential" value="<?= isset($billing_info) ? $billing_info->account_credential : ''; ?>" />
                                     </div>
                                 </div>
                                 <div class="row form_line account_cred" >
@@ -420,7 +420,7 @@
                                         Account Note
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="number" class="form-control" name="account_note" id="account_note" value="<?= isset($billing_info) ? $billing_info->account_note : ''; ?>"/>
+                                        <input type="text" class="form-control" name="account_note" id="account_note" value="<?= isset($billing_info) ? $billing_info->account_note : ''; ?>"/>
                                     </div>
                                 </div>
                                 <div class="row form_line account_cred" id="confirmationPD">
@@ -428,7 +428,7 @@
                                         Confirmation
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="number" class="form-control" name="confirmation" id="confirmation" value="<?= isset($billing_info) ? $billing_info->confirmation : ''; ?>"/>
+                                        <input type="text" class="form-control" name="confirmation" id="confirmation" value="<?= isset($billing_info) ? $billing_info->confirmation : ''; ?>"/>
                                     </div>
                                 </div>
 
