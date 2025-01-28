@@ -124,7 +124,8 @@
     border-radius: 4px;
     }
     #progress-content-section .section-content {
-    padding: 30px 40px;
+    /* padding: 30px 40px; */
+    padding:30px;
     text-align: center;
     }
 
