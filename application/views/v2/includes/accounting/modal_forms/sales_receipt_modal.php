@@ -239,7 +239,7 @@
                                             <td data-name="Price" style="text-align: center;">PRICE</td>
                                             <td data-name="Discount" style="text-align: center;">DISCOUNT</td>
                                             <td data-name="Tax" style="text-align: center;">TAX (CHANGE IN %)</td>
-                                            <td data-name="Total">TOTAL</td>
+                                            <td data-name="Total" style="width: 6%;">TOTAL</td>
                                             <td data-name="Manage"></td>
                                         </thead>
                                         <tbody>
@@ -264,7 +264,7 @@
                                                         <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->price), 2, '.', ',')?>"></td>
                                                         <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
                                                         <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?=number_format(floatval($item->tax), 2, '.', ',')?>"></td>
-                                                        <td>
+                                                        <td style="">
                                                             <span class="row-total">
                                                                 <?php
                                                                     $rowTotal = '$'.number_format(floatval($item->total), 2, '.', ',');
@@ -454,7 +454,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <input style="float: right; width: 75px;" type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control sales-receipt-adjustment-value nsm-field adjustment_input_cm_c" disabled onchange="convertToDecimal(this)" value="<?=isset($receipt) ? number_format(floatval($receipt->adjustment_value), 2, '.', ',') : ''?>">
+                                                    <input style="float: right; width: 90px;" type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control sales-receipt-adjustment-value nsm-field adjustment_input_cm_c" disabled onchange="convertToDecimal(this)" value="<?=isset($receipt) ? number_format(floatval($receipt->adjustment_value), 2, '.', ',') : ''?>">
                                                     <!-- <span class="transaction-adjustment">
                                                     <?php if(isset($receipt)) : ?>
                                                         <?php
@@ -624,7 +624,10 @@ $(function(){
         templateResult: formatRepoUser,
         templateSelection: formatRepoSelectionUser,
         initSelection: function(element, callback) {
-            callback({id: 'default', text: '<?php echo isset($receipt->sales_rep) ? $receipt->sales_rep : ''; ?>' });
+            callback({
+                id: 'default', 
+                text: '<?php echo isset($receipt->sales_rep) ? $default_sales_representative : ''; ?>',
+             });
         }       
     });
 

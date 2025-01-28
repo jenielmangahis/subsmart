@@ -117,6 +117,7 @@ class Automation extends MY_Controller
             'timing_reference' => $data['timing_reference'],
             'email_subject'    => $data['email_subject'],
             'email_body'       => $data['email_body'],
+            'sms_body'       => $data['sms_body'],
             'status'           => isset($data['status']) ? $data['status'] : 'active',
         ];
 

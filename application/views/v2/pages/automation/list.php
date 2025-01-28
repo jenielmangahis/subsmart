@@ -104,7 +104,7 @@ include viewPath('v2/includes/header');
                                     <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
                                         <li><a class="dropdown-item cursor-pointer preview-automation" data-id="<?php echo $automation->id; ?>">Preview</a></li>
                                         <li><a class="dropdown-item cursor-pointer edit-automation" data-id="<?php echo $automation->id; ?>">Edit</a></li>
-                                        <li><a class="dropdown-item cursor-pointer delete-automation" data-id="<?php echo $automation->id; ?>">Delete</a></li>
+                                        <li><a class="dropdown-item cursor-pointer delete-automation" data-id="<?php echo $automation->id; ?>" data-title="<?php echo $automation->title; ?>">Delete</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -123,6 +123,8 @@ include viewPath('v2/includes/header');
 
 <?php include viewPath('v2/includes/automation/add_automation_modal'); ?>
 <?php include viewPath('v2/includes/automation/preview_automation_modal'); ?>
+<?php include viewPath('v2/includes/automation/preview_sms_modal'); ?>
 <?php include viewPath('v2/includes/automation/add_email_modal'); ?>
+<?php include viewPath('v2/includes/automation/add_sms_modal'); ?>
 <?php include viewPath('v2/pages/automation/js/automation'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
