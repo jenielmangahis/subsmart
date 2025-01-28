@@ -129,7 +129,7 @@
         $('#payment-button').show();
 
         if(method !== 'PP'){
-            //document.getElementById('payment-button').style.display = "flex";
+            //document.getElementById('payment-button').style.display = "flex";            
             document.getElementById('paypal-button-container').style.display = "none";
         }
 
@@ -137,38 +137,46 @@
             hide_all();
             $("#payment_collected").show('slow');
             $('#is_collected').prop("required", true);
+            $('#btn-save-payment').show();
         }else if(method === 'CC' || method === 'OCCP' || method === 'NMI'){
             hide_all();
             $("#credit_card").show('slow');
             $('#exp_month').prop("required", true);
             $('#exp_year').prop("required", true);
             $('#cvc').prop("required", true);
+            $('#btn-save-payment').show();
         }else if(method === 'CHECK'){
             hide_all();
             $("#check_number").show('slow');
             $(".CNRN").show('slow');
+            $('#btn-save-payment').show();
         }else if(method === 'ACH'){
             hide_all();
             $(".CNRN").show('slow');
             $("#day_of_month").show('slow');
+            $('#btn-save-payment').show();
         }else if(method === 'PP'){
             hide_all();
             $(".account_cred").show('slow');
             document.getElementById('payment-button').style.display = "none";
             document.getElementById('paypal-button-container').style.display = "flex";
+            $('#btn-save-payment').hide();
         }else if(method === 'VENMO' || method === 'PP' || method === 'SQ'){
             hide_all();
             $(".account_cred").show('slow');
+            $('#btn-save-payment').show();
         }else if(method === 'WW' || method === 'HOF' || method === 'OPT'){
             hide_all();
             $(".account_cred").show('slow');
             $("#confirmationPD").hide('slow');
             $("#docu_signed").show('slow');
+            $('#btn-save-payment').show();
         }else if(method === 'Invoicing'){
             hide_all();
             $('#card_number').prop("required", false);
             $('#payment-button').hide();
             $(".invoicing_field").show("slow");
+            $('#btn-save-payment').show();
         }
     });
 
@@ -195,18 +203,38 @@
         e.preventDefault(); // avoid to execute the actual submit of the form.
         var form = $(this);
         var url = form.attr('action');
-        $.ajax({
-            type: "POST",
-            url: base_url + "customer/save_subscription",
-            data: form.serialize(), // serializes the form's elements.
-            success: function(data)
-            {
-                if(data === '0'){
-                    sweetalert('Good Job!','Payment has been Captured.','success')
-                }else{
-                    sweetalert('Sorry',data,'error')
-                }
-                console.log(data);
+        Swal.fire({
+            title: 'Confirmation',
+            html: 'Are all entries correct? Proceeding will create customer subscription payment.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "customer/save_subscription",
+                    data: form.serialize(), 
+                    dataType:'json',
+                    success: function(result) {
+                        if( result.is_success == 1 ) {
+                            Swal.fire({
+                            icon: 'success',
+                            title: 'Subscription Payment',
+                            text: result.msg,
+                            }).then((result) => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    }
+                });
             }
         });
     });
