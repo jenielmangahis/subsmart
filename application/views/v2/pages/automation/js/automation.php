@@ -23,6 +23,7 @@
         let selectedTitle = "";
         let emailSubject = "";
         let emailBody = "";
+        let smsBody = "";
         let activeAutoTemplate = "";
         let selectedEntity = "";
         let selectedOperation = "";
@@ -100,7 +101,12 @@
                 }
 
                 if (menuId == "#actionDropdownMenu") {
-                populateEmailModal("automation_msg", "#addEmail");
+                    if(selectedAction == "send_email"){
+                        populateEmailModal("automation_msg", "#addEmail");
+                    }
+                    if(selectedAction == "send_sms"){
+                        populateSmsModal("sms_automation_msg", "#addSms");
+                    }
                 }
             });
         }
@@ -158,13 +164,8 @@
             $(".action-dropdown-container").removeClass("d-none");
             $(".time-dropdown-container").removeClass("d-none");
 
-            populateDropdown(
-                "#targetDropdownMenu",
-                targetOptions,
-                selectedTarget || "someone",
-                "target-item",
-                "#targetDropdownBtn",
-            );
+            
+            populateTargetDropdown(selectedEntity)
             populateDropdown(
                 "#actionDropdownMenu",
                 actionOptions,
@@ -176,6 +177,9 @@
 
              if (selectedDate && selectedTime > 0) {
                 $(".date-dropdown-container").removeClass("d-none");
+            }else{
+                $(".date-dropdown-container").addClass("d-none");
+
             }
             
             populateDropdown(
@@ -220,6 +224,26 @@
             }
         }
 
+        function populateTargetDropdown(entity) {
+            const item = targetOptions; // Get status options for the selected entity
+             if(selectedEntity == 'lead'){
+                delete item.technician; // Remove the 'assigned tech' option
+            }else{
+                item.technician = "assigned tech"; 
+                console.log(item)
+            }
+
+            if (item) {
+                 populateDropdown(
+                "#targetDropdownMenu",
+                item,
+                selectedTarget || "someone",
+                "target-item",
+                "#targetDropdownBtn",
+            );
+            }
+        }
+
         function populateOperationDropdown(entity) {
             // Clear the operation dropdown menu
             $("#operationDropdownMenu").empty();
@@ -242,6 +266,7 @@
             //if no selected time set text to default
             //if selected time is 0 set text to immediately
             //if selected time > 0 set text to selectedTime (20 minutes) + selectedTiming (after) (eg. 20 minutes after)
+            console.log('selectedTiming', selectedTiming)
             if(selectedTime == ""){
                 text = "within a defined time";
             }else{
@@ -256,6 +281,17 @@
             document.getElementById("automation_msg").value = emailBody;
             if (CKEDITOR.instances[ckId]) {
                 CKEDITOR.instances[ckId].setData(emailBody);
+            } else {
+                console.error(`CKEditor instance with id "${ckId}" not found.`);
+            }
+
+            $(modalId).modal("show");
+        }
+
+         function populateSmsModal(ckId, modalId) {
+            document.getElementById(ckId).value = smsBody;
+            if (CKEDITOR.instances[ckId]) {
+                CKEDITOR.instances[ckId].setData(smsBody);
             } else {
                 console.error(`CKEditor instance with id "${ckId}" not found.`);
             }
@@ -293,10 +329,10 @@
             selectedStatus = "";
             selectedType = "";
             selectedEvent = "";
-            selectedTarget = "someone";
-            selectedAction = "a reminder";
+            selectedTarget = "";
+            selectedAction = "";
             selectedTime = "";
-            selectedTiming = "after";
+            selectedTiming = "";
             selectedDate = "";
             selectedTitle = "";
             emailSubject = "";
@@ -372,6 +408,7 @@
 
           // Handle entity and event selection
         $(".entity-event-item").on("click", function () {
+            console.log('clicked')
             selectedEntity = $(this).data("type");
             selectedEvent = $(this).data("value");
 
@@ -382,6 +419,8 @@
             handleEventItemClick();
             populateOperationDropdown(selectedEntity);
             $(".event-dropdown-container").removeClass("d-none");
+
+           populateTargetDropdown(selectedEntity)
         });
 
         // Handle operation item click using event delegation
@@ -460,7 +499,13 @@
         });
 
         $(".preview-message").on("click", function () {
-            populateEmailModal("automation_msg", "#addEmail");
+            if(selectedAction == "send_email"){
+                populateEmailModal("automation_msg", "#addEmail");
+            }
+            if(selectedAction == "send_sms"){
+                populateSmsModal("sms_automation_msg", "#addSms");
+
+            }
         });
 
         $("#emailForm").on("submit", function (e) {
@@ -477,6 +522,19 @@
             $("#addEmail").modal("hide");
         });
 
+         $("#smsForm").on("submit", function (e) {
+            e.preventDefault();
+
+            const messageContent = CKEDITOR.instances["sms_automation_msg"].getData(); // Fetch the CKEditor content
+            $('textarea[name="sms_message"]').val(messageContent); // Update the textarea value
+
+            let formData = $(this).serializeArray();
+            smsBody = formData.find((field) => field.name === "sms_message").value;
+
+            // Close modal or perform further actions
+            $("#addSms").modal("hide");
+        });
+
         $(".preview-automation").click(function (e) {
             e.preventDefault();
             const automationId = $(this).data("id");
@@ -490,13 +548,22 @@
                 success: function (response) {
                     if (response.success) {
                         let data = response.data[0];
-                        document.querySelector('[name="preview_subject"]').value =
-                        data.email_subject;
-                        document.getElementById("preview_automation_msg").value =
-                        data.email_body;
-                        CKEDITOR.instances.preview_automation_msg.setData(data.email_body);
+                        console.log(data)
 
-                        $("#previewEmail").modal("show");
+                        if(data.trigger_action == "send_email"){
+                            document.querySelector('[name="preview_subject"]').value =
+                            data.email_subject;
+                            document.getElementById("preview_automation_msg").value =
+                            data.email_body;
+                            CKEDITOR.instances.preview_automation_msg.setData(data.email_body);
+
+                            $("#previewEmail").modal("show");
+                        }
+
+                        if(data.trigger_action == "send_sms"){
+                            smsBody = data.sms_body;
+                            populateSmsModal('preview_sms_automation_msg', '#previewSms')
+                        }
                     } else {
                         Swal.fire({
                             icon: "error",
@@ -533,17 +600,18 @@
 
                         emailSubject = data.email_subject;
                         emailBody = data.email_body;
+                        smsBody = data.sms_body;
 
                         automationData = {
-                        status: data.trigger_status,
-                        target: data.target,
-                        action: data.trigger_action,
-                        time: data.trigger_time,
-                        timing: data.timing_reference,
-                        date: data.date_reference,
-                        event: data.trigger_event,
-                        entity: data.entity,
-                        title: data.title,
+                            status: data.trigger_status,
+                            target: data.target,
+                            action: data.trigger_action,
+                            time: data.trigger_time,
+                            timing: data.timing_reference,
+                            date: data.date_reference,
+                            event: data.trigger_event,
+                            entity: data.entity,
+                            title: data.title,
                         };
 
                         setActiveTimelineItem();
@@ -582,6 +650,7 @@
                 timing_reference: selectedTiming,
                 email_subject: emailSubject,
                 email_body: emailBody,
+                sms_body: smsBody,
                 status: "active",
             };
 
@@ -628,6 +697,7 @@
                 timing_reference: selectedTiming,
                 email_subject: emailSubject,
                 email_body: emailBody,
+                sms_body: smsBody,
                 id: selectedAutomationId,
             };
 
@@ -662,11 +732,12 @@
             e.preventDefault();
 
             var automationId = $(this).data("id");
+            var automationTitle = $(this).data("title");
 
              Swal.fire({
                 title: 'Are you sure?',
                 title: 'Delete Automation',
-                html: "Are you sure you want to delete this automation?",
+                html: `Are you sure you want to delete automation <b>${automationTitle}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -795,7 +866,22 @@
                 // Skip `timing_reference` and `date_reference` if `trigger_time` is 0
                 if (
                     (key == "timing_reference" || key == "date_reference" || key ==="trigger_time") &&
-                    data.trigger_time == 0
+                    data.trigger_time === 0
+                ) {
+                    return;
+                }
+
+                // Skip `email_body` and `email_subject` if `trigger_action` is send_sms
+                if (
+                    (key == "email_body" || key == "email_subject") &&
+                    data.trigger_action == "send_sms"
+                ) {
+                    return;
+                }
+
+                if (
+                    (key == "sms_body") &&
+                    data.trigger_action == "send_email"
                 ) {
                     return;
                 }
@@ -900,11 +986,57 @@
             ],
         });
 
+        // Handle the Insert Smart Tag button click
+        $('#insertTagButton').on('click', function () {
+            const selectedTag = $('#smartTags').val(); // Get the selected smart tag
+
+            if (!selectedTag) {
+                alert('Please select a smart tag to insert.');
+                return;
+            }
+
+            // Insert the smart tag into the CKEditor at the current cursor position
+            const editorInstance = CKEDITOR.instances['automation_msg'];
+            if (editorInstance) {
+                editorInstance.insertText(selectedTag); // Insert the tag
+            }
+        });
+
         if (CKEDITOR.instances["preview_automation_msg"]) {
          CKEDITOR.instances["preview_automation_msg"].destroy(true);
         }
 
         CKEDITOR.replace("preview_automation_msg", {
+            height: 250,
+            toolbarGroups: [
+                "/",
+                {
+                name: "basicstyles",
+                groups: ["basicstyles", "cleanup"],
+                },
+            ],
+        });
+
+        if (CKEDITOR.instances["sms_automation_msg"]) {
+         CKEDITOR.instances["sms_automation_msg"].destroy(true);
+        }
+
+        CKEDITOR.replace("sms_automation_msg", {
+            height: 250,
+            toolbarGroups: [
+                "/",
+                {
+                name: "basicstyles",
+                groups: ["basicstyles", "cleanup"],
+                },
+            ],
+        });
+
+        if (CKEDITOR.instances["preview_sms_automation_msg"]) {
+         CKEDITOR.instances["preview_sms_automation_msg"].destroy(true);
+        }
+
+        CKEDITOR.replace("preview_sms_automation_msg", {
             height: 250,
             toolbarGroups: [
                 "/",

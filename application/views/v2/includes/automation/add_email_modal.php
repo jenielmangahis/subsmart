@@ -25,6 +25,18 @@
                             </div>
                         </div>
                         <div class="col-12">
+    <label class="mb-1 fw-xnormal">Smart Tags</label>
+    <div class="input-group mb-3">
+        <select id="smartTags" class="form-select">
+            <option value="" disabled selected>Insert Smart Tag</option>
+            <option value="{email}">{email}</option>
+            <option value="{first_name}">{first_name}</option>
+            <option value="{last_name}">{last_name}</option>
+        </select>
+        <button type="button" class="btn btn-primary" id="insertTagButton">Insert</button>
+    </div>
+</div>
+                        <div class="col-12">
                             <textarea name="message" id="automation_msg" cols="30" rows="2" class="form-control ckeditor"></textarea>
                         </div>
                     </form>

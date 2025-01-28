@@ -32,10 +32,10 @@ if (! function_exists('get_automation_options')) {
                 ],
             ],
             'targetOptions' => [
-                'technician' => 'assigned tech',
                 'sales_rep' => 'sales representative',
                 'client'     => 'client',
                 'user'       => 'to user',
+                'technician' => 'assigned tech',
             ],
             'actionOptions' => [
                 'send_sms' => 'a text message',
@@ -237,23 +237,23 @@ if (!function_exists('getRemindersTemplate')) {
               [
                 'title' => 'Immediate Notice / Client Reminder',
                 'description' => 'Send immediate notice to a client.',
-                'onclick' => "populateModal({'entity': 'job', 'event': 'has_status', 'target': 'client', 'action': 'send_email', 'time': '0'})"
+                'onclick' => "populateModal({'entity': 'job', 'event': 'has_status', 'target': 'client', 'action': 'send_email', 'time': '0', 'title': 'Immediate Notice / Client Reminder'})"
             ],
 
             [
                 'title' => '2 hours / Tech Reminder',
                 'description' => 'Send an email to a technician 2 hours ahead of the job.',
-                'onclick' => "populateModal({'entity': 'job', 'event': 'has_status', 'target': 'technician', 'action': 'send_email', 'time': '120', 'timing': 'ahead_of', 'date': 'scheduled_date'})"
+                'onclick' => "populateModal({'entity': 'job', 'event': 'has_status', 'target': 'technician', 'action': 'send_email', 'time': '120', 'timing': 'ahead_of', 'date': 'scheduled_date', 'title': '2 hours / Tech Reminder'})"
             ],
             [
                 'title' => '4 hours / Tech Reminder',
                 'description' => 'Send an email to a technician 4 hours ahead of the job.',
-                'onclick' => "populateModal({'entity': 'job', 'event': 'has_status', 'target': 'technician', 'action': 'send_email', 'time': '240', 'timing': 'ahead_of', 'date': 'scheduled_date'})"
+                'onclick' => "populateModal({'entity': 'job', 'event': 'has_status', 'target': 'technician', 'action': 'send_email', 'time': '240', 'timing': 'ahead_of', 'date': 'scheduled_date', 'title': '4 hours / Tech Reminder'})"
             ],
             [
                 'title' => '1 Day Notice / Client Reminder',
                 'description' => 'Send an email to a client 1 day ahead of the job.',
-                'onclick' => "populateModal({'entity': 'job', 'event': 'created', 'target': 'client', 'action': 'send_email', 'time': '1440', 'timing': 'after', 'date': 'scheduled_date'})"
+                'onclick' => "populateModal({'entity': 'job', 'event': 'created', 'target': 'client', 'action': 'send_email', 'time': '1440', 'timing': 'ahead_of', 'date': 'scheduled_date', 'title': '1 Day Notice / Client Reminder'})"
             ]
         ];
     }
