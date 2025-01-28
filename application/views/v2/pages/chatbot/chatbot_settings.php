@@ -2,26 +2,44 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
 <script src="https://cdn.datatables.net/2.0.6/js/dataTables.js"></script>
 <style>
+    .custom-loader {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #d3d3d3;
+        z-index: 9999;
+    }
+
+    .custom-loader p {
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+    }
+
     .fw-xnormal {
         font-weight: 500;
     }
 
-    table.dataTable.no-footer {
-        border-bottom: 0px solid #dee2e6 !important;
+    #quickresponse_table {
+        width: 100% !important;
+        border-collapse: collapse !important;
     }
 
-    table.dataTable thead th,
-    table.dataTable thead td,
-    table.dataTable tbody td {
-        padding: 6px;
+    #quickresponse_table th,
+    #quickresponse_table td {
+        border: 1px solid lightgray;
+        padding: 8px !important;
+        text-align: left !important;
     }
 
-    table.dataTable>thead>tr>th {
-        border-bottom: 1px solid lightgray !important;
-    }
-
-    table>tbody {
-        font-size: 16px;
+    #quickresponse_table th {
+        background-color: #f2f2f2 !important;
     }
 
     .dataTables_length,
@@ -32,17 +50,17 @@
     .addPresetButton {
         margin-top: -38px;
     }
-    
+
     .actionColumn {
         font-size: 16px;
         font-weight: bolder;
     }
-    
+
     .noWidth {
         width: 0% !important;
     }
-    
-    textarea[name="response"] { 
+
+    textarea[name="response"] {
         height: 100px;
     }
 </style>
@@ -58,7 +76,7 @@
     </div>
     <div class="col-lg-12">
         <div class="row g-3">
-            <div class="col-lg-5 mb-3">
+            <div class="col-lg-3 mb-3">
                 <div class="row g3">
                     <div class="col-lg-12">
                         <div class="nsm-card primary">
@@ -71,11 +89,11 @@
                             <div class="nsm-card-content">
                                 <form id="chatbotPreferenceForm">
                                     <div class="row g-3">
-                                        <div class="col-lg-8">
+                                        <div class="col-lg-7">
                                             <label class="form-label">Chatbot Name</label>
                                             <input name="chatbot_name" type="text" class="form-control" placeholder="Chatbot (Default)" value="<?php echo ($preference[0]->chatbot_name) ? $preference[0]->chatbot_name : "Chatbot" ?>" required>
                                         </div>
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-5">
                                             <label class="form-label">Color</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
@@ -104,7 +122,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-7 mb-3">
+            <div class="col-lg-9 mb-3">
                 <div class="row g3">
                     <div class="col-lg-12">
                         <div class="nsm-card primary">
@@ -117,8 +135,8 @@
                             <div class="nsm-card-content">
                                 <div class="row g-3">
                                     <div class="col-lg-12">
-                                        <input id="quickresponse_table_search" class="form-control mt-0 mb-2 w-25" type="text" placeholder="Search...">
-                                        <button type="button" class="nsm-button small primary float-end addPresetButton" data-bs-toggle="modal" data-bs-target=".addPresetModal">Add Preset</button>
+                                        <input id="quickresponse_table_search" class="form-control mt-0 mb-2 w-25" type="text" placeholder="Search a preset...">
+                                        <button type="button" class="nsm-button small float-end mb-3 addPresetButton" data-bs-toggle="modal" data-bs-target=".addPresetModal">Add Preset</button>
                                         <table id="quickresponse_table" class="table table-bordered table-hover table-sm w-100">
                                             <thead>
                                                 <tr>
@@ -151,7 +169,7 @@
                 <form id="addPresetForm">
                     <div class="row">
                         <div class="col-lg-12 mb-3">
-                            <label class="form-label">Title</label>
+                            <label class="form-label">..</label>
                             <input name="title" type="text" class="form-control" required>
                         </div>
                         <div class="col-lg-12 mb-3">
