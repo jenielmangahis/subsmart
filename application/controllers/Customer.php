@@ -2022,9 +2022,6 @@ class Customer extends MY_Controller
 
     public function save_billing()
     {
-        $is_success = 0;
-        $msg = 'Cannot create payment.';
-
         $input = $this->input->post();
         if ($input) {
             $is_valid = true;
@@ -2078,16 +2075,14 @@ class Customer extends MY_Controller
                 $transaction_details['datetime'] = date('m-d-Y h:i A');
 
                 if ($this->general->add_($transaction_details, 'acs_transaction_history')) {
-                    $is_success = 1;
-                    $msg = 'Subscription payment was created successfully.';
-                } 
+                    echo '0';
+                } else {
+                    echo 'Database Error!';
+                }
             } else {
-                $msg = $err_msg;
+                echo $err_msg;
             }
         }
-
-        $return = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($return);
     }
 
     public function ajax_update_sub_payment_customer_info()
@@ -2117,10 +2112,12 @@ class Customer extends MY_Controller
 
     public function save_subscription()
     {
+        $is_success = 0;
+        $msg = 'Cannot create payment.';
+
         $input = $this->input->post();
         if ($input) {
             $is_valid = true;
-            $err_msg = '';
             if ($input['method'] == 'CC') {
                 $customer = $this->customer_ad_model->get_data_by_id('prof_id', $input['customer_id'], 'acs_profile');
                 $converge_data = [
@@ -2134,7 +2131,7 @@ class Customer extends MY_Controller
                 ];
                 $result = $this->converge_send_sale($converge_data);
                 $is_valid = $result['is_success'];
-                $err_msg = $result['msg'];
+                $msg = $result['msg'];
             }
 
             if ($input['method'] == 'NMI') {
@@ -2153,7 +2150,7 @@ class Customer extends MY_Controller
                 ];
                 $result = $this->nmi_send_sale($nmi_data);
                 $is_valid = $result['is_success'];
-                $err_msg = $result['msg'];
+                $msg = $result['msg'];
             }
 
             if ($is_valid) {
@@ -2169,14 +2166,14 @@ class Customer extends MY_Controller
                 $subscription_details['status'] = 'Approved';
 
                 if ($this->general->add_($subscription_details, 'acs_subscriptions')) {
-                    echo '0';
-                } else {
-                    echo 'Database Error!';
-                }
-            } else {
-                echo $err_msg;
+                    $is_success = 1;
+                    $msg = 'Subscription payment was created successfully.';
+                } 
             }
         }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 
     public function converge_send_sale($data)
