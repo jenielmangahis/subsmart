@@ -72,40 +72,31 @@
                                                         <?php $fieldsValue = $import_settings->value ? explode(',', $import_settings->value) : array() ; ?>
                                                         <?php $headers = $importFieldsList;?>
                                                         <?php $i = 0; ?>
-                                                        <table class="nsm-table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <td></td>
-                                                                    <td data-name="Field"></td>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php foreach ($headers as $header){ ?>        
-                                                                    <?php if (in_array($header->id, $fieldsValue)) { ?>
-                                                                        <tr>
-                                                                            <td class="fw-bold nsm-text-primary" style="text-align:right;">
-                                                                                <input type="hidden" name="settingHeaders[]" value="<?= $header->id; //$header->field_description; ?>" />
-                                                                                <?php 
-                                                                                    if( trim($header->field_description) == 'Phone (M)' ){
-                                                                                        echo 'Mobile Number';
-                                                                                    }elseif( trim($header->field_description) == 'Phone (H)' ){
-                                                                                        echo 'Phone Number';
-                                                                                    }else{
-                                                                                        echo trim($header->field_description);
-                                                                                    }
-                                                                                ?>
-                                                                            </td>
-                                                                            <td>
-                                                                                <select name="headers[]" class="form-control headersSelector" style="width:50%;" id="headersSelector<?= $i ?>">
-                                                                                        <option value="">Select Heading</option>
-                                                                                </select>
-                                                                            </td>
-                                                                        </tr>
+                                                        <div class="row mt-5">
+                                                            <?php foreach ($headers as $header){ ?>        
+                                                                <?php if (in_array($header->id, $fieldsValue)) { ?>
+                                                                    <label class="col-sm-2 col-form-label mb-2" style="text-align:right;font-weight:bold;">
+                                                                        <?php 
+                                                                            $field_name = trim($header->field_description);
+                                                                            if( trim($header->field_description) == 'Phone (M)' ){
+                                                                                $field_name = 'Mobile Number';
+                                                                            }elseif( trim($header->field_description) == 'Phone (H)' ){
+                                                                                $field_name = 'Phone Number';
+                                                                            }
+                                                                        ?>
+                                                                        <?= $field_name; ?>
+                                                                        <input type="hidden" name="settingHeaders[]" value="<?= $header->id; ?>" />
+                                                                    </label>
+                                                                    <div class="col-sm-2 mb-2">
+                                                                        <select name="headers[]" class="form-control headersSelector" id="headersSelector<?= $i ?>">
+                                                                            <option value="">Select Heading</option>
+                                                                        </select>
+                                                                    </div>
                                                                     <?php $i++; ?>
-                                                                    <?php } ?>
                                                                 <?php } ?>
-                                                            </tbody>
-                                                        </table>                                                   
+                                                            <?php } ?>
+                                                        </div>
+                                                                                                          
                                                         <div class="result"></div>
                                                         <br>
                                                         <button type="button" class="nsm-button primary step step01" ><i class='bx bx-chevrons-left' ></i> Back</button>
@@ -253,9 +244,9 @@
                         $('.headersSelector').append(
                             '<option value="'+i+'">'+o+'</option>'
                         );
-                        $('#tableHeader').append(
-                            '<th><strong>'+o+'</strong></th>'
-                        );
+                        // $('#tableHeader').append(
+                        //     '<th><strong>'+o+'</strong></th>'
+                        // );
                     });
                     $('#nextBtn1').prop("disabled", false);
                 }

@@ -126,7 +126,12 @@
                             <button type="button" class="dropdown-toggle nsm-button primary" data-bs-toggle="dropdown" style="width:122px;">
                                 <span>More Action <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end">                                    
+                            <ul class="dropdown-menu dropdown-menu-end">      
+                                <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
+                                <li>
+                                    <a class="dropdown-item" href="<?= url('customer/import_customer') ?>"><i class='bx bx-fw bx-chart'></i> Import</a>
+                                </li>
+                                <?php } ?>                              
                                 <li>
                                     <a class="dropdown-item" id="btn-commercial-export-list" href="javascript:void(0);"><i class='bx bx-fw bx-file'></i> Export</a>
                                 </li>
