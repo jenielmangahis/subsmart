@@ -2022,6 +2022,9 @@ class Customer extends MY_Controller
 
     public function save_billing()
     {
+        $is_success = 0;
+        $msg = 'Cannot create payment.';
+
         $input = $this->input->post();
         if ($input) {
             $is_valid = true;
@@ -2075,14 +2078,16 @@ class Customer extends MY_Controller
                 $transaction_details['datetime'] = date('m-d-Y h:i A');
 
                 if ($this->general->add_($transaction_details, 'acs_transaction_history')) {
-                    echo '0';
-                } else {
-                    echo 'Database Error!';
-                }
+                    $is_success = 1;
+                    $msg = 'Subscription payment was created successfully.';
+                } 
             } else {
-                echo $err_msg;
+                $msg = $err_msg;
             }
         }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 
     public function ajax_update_sub_payment_customer_info()
@@ -4658,6 +4663,10 @@ class Customer extends MY_Controller
             'select' => '*',
         ];
         $importSettings = $this->general->get_data_with_param($get_company_settings, false);
+        if( $importSettings->value == '' ){
+            $importSettings->value = '1,2,5,6,7,8,9,10,12,13,14,15,16,61';
+        }
+
         $getImportFields = [
             'table' => 'acs_import_fields',
             'select' => '*',
@@ -8263,6 +8272,7 @@ class Customer extends MY_Controller
                 $customer_setting['value'] = implode(',', $importFields);
                 $customer_setting['status'] = 1;
                 $customer_setting['company_id'] = logged('company_id');
+                $customer_settings['created_at'] = date("Y-m-d H:i:s");
                 if ($this->general->add_($customer_setting, $table)) {
                     $data_arr = ['success' => true, 'message' => 'Customer Settings Export added.'];
                     $is_updated = 1;
@@ -11292,5 +11302,34 @@ class Customer extends MY_Controller
 
         $this->page_data['optionRelations'] = $optionRelations;
         $this->load->view('v2/pages/customer/advance_customer_forms/modal_forms/_emergency_contacts_infromation', $this->page_data);
+    }
+
+    public function customer_advance_form_settings()
+    {
+        $this->load->model('CompanyCustomerFormSetting_model');
+
+        $formFields = $this->CompanyCustomerFormSetting_model->formFields();
+
+        $this->page_data['formFields'] = $formFields;
+        $this->load->view('v2/pages/customer/customer_advance_form_settings', $this->page_data);
+    }
+
+    public function ajax_save_form_settings()
+    {
+        $this->load->model('CompanyCustomerFormSetting_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $this->CompanyCustomerFormSetting_model->deleteAllByCompanyId($cid);
+        echo "<pre>";
+        print_r($post);
+        exit;
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 }

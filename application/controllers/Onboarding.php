@@ -546,6 +546,7 @@ class Onboarding extends MY_Controller {
 
 	public function ajax_complete_onboarding(){
 		$this->load->model('CustomerStatus_model');
+		$this->load->model('CustomerSettings_model');
 
 		$is_success = true;
 		$msg = '';
@@ -555,25 +556,32 @@ class Onboarding extends MY_Controller {
 
 		$data_client = ['is_startup' => 0];
 		$this->Clients_model->update($client->id, $data_client);
-
+		
 		//Create default customer status
-		$data[] = [
+		$customer_status[] = [
 			'company_id' => $comp_id,
 			'name' => 'Active',
 			'date_created' => date("Y-m-d H:i:d")
 		];
-		$data[] = [
+		$customer_status[] = [
 			'company_id' => $comp_id,
 			'name' => 'Inactive',
 			'date_created' => date("Y-m-d H:i:d")
 		];
-		$data[] = [
+		$customer_status[] = [
 			'company_id' => $comp_id,
 			'name' => 'Collection',
 			'date_created' => date("Y-m-d H:i:d")
 		];
+		$this->CustomerStatus_model->batchInsert($customer_status);
 
-		$this->CustomerStatus_model->batchInsert($data);
+		//Create default import settings
+		$import_settings['setting_type'] = 'import';
+		$import_settings['value'] = '1,2,5,6,7,8,9,10,12,13,14,15,16,61';
+		$import_settings['status'] = 1;
+		$import_settings['company_id'] = $comp_id;
+		$import_settings['created_at'] = date("Y-m-d H:i:s");
+		$this->CustomerSettings_model->save($import_settings);
 		
 		$json_data = ['is_success' => $is_success, 'msg' => $msg];
 		echo json_encode($json_data);
