@@ -212,7 +212,7 @@
                                             <td data-name="Price" style="text-align: center;">PRICE</td>
                                             <td data-name="Discount" style="text-align: center;">DISCOUNT</td>
                                             <td data-name="Tax" style="text-align: center;">TAX (CHANGE IN %)</td>
-                                            <td data-name="Total" style="width: 5%;">TOTAL</td>
+                                            <td data-name="Total" style="width: 7%;">TOTAL</td>
                                             <td data-name="Manage"></td>
                                         </thead>
                                         <tbody>
