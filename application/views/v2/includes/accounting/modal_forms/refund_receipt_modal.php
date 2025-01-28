@@ -354,7 +354,7 @@
                                             <tr>
                                                 <td>&nbsp;</td>
                                                 <td>Subtotal</td>
-                                                <td style="min-width: 60px;">
+                                                <td style="min-width: 75px;">
                                                     <span class="transaction-subtotal">
                                                     <?php if(isset($receipt)) : ?>
                                                         <?php
@@ -558,7 +558,11 @@ $(function(){
         templateResult: formatRepoUser,
         templateSelection: formatRepoSelectionUser,
         initSelection: function(element, callback) {
-            callback({id: 'default', text: '<?php echo isset($receipt) ? $receipt->sales_rep : ''; ?>' });
+            //callback({id: 'default', text: '<?php echo isset($receipt) ? $receipt->sales_rep : ''; ?>' });
+            callback({
+                id: 'default', 
+                text: '<?php echo isset($receipt->sales_rep) ? $default_sales_representative : ''; ?>',
+             });            
         }       
     });
 

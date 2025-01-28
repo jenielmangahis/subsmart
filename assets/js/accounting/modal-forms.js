@@ -12063,7 +12063,7 @@ const makeRecurring = (modalName) => {
             modalId = 'refundReceiptModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.customer-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
-            //$(`#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
+            $(`#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
             $(`#${modalId} div.modal-body #refund-receipt-date`).parent().prev().remove();
             $(`#${modalId} div.modal-body #refund-receipt-date`).parent().remove();
             $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Refund Receipt');

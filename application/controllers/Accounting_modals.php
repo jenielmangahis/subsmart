@@ -14715,6 +14715,31 @@ class Accounting_modals extends MY_Controller
             }
         }
 
+        $comp_id = logged('company_id');
+        $get_sales_rep = array(
+            'where' => array(
+                'users.company_id' => $comp_id
+            ),
+            'table' => 'users',
+            'distinct' => true,
+            'select' => 'users.id, users.FName, users.LName',
+            'join' => array(
+                'table' => 'acs_office',
+                'statement' => 'users.id = acs_office.fk_sales_rep_office',
+                'join_as' => 'left',
+            ),
+        );        
+
+        $default_sales_representative = "--";
+        $sales_reps = $this->general->get_data_with_param($get_sales_rep);         
+        $default_sales_rep = $refundReceipt->sales_rep;
+        foreach ($sales_reps as $sales_rep) {
+            if($default_sales_rep == $sales_rep->id) {
+                $default_sales_representative = $sales_rep->FName.' '.$sales_rep->LName;
+            }
+        }  
+
+        $this->page_data['default_sales_representative'] = $default_sales_representative;        
         $this->page_data['receipt'] = $refundReceipt;
         $this->page_data['items'] = $items;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Refund Receipt', $refundReceiptId);
@@ -19456,7 +19481,7 @@ class Accounting_modals extends MY_Controller
                 'sales_receipt_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['sales_receipt_date'])) : null,
                 'location_of_sale' => $data['location_of_sale'],
                 'po_number' => $data['purchase_order_no'],
-                'sales_rep' => $data['sales_rep'],
+                'sales_rep' => isset($data['sales_rep']) ? $data['sales_rep'] : $salesReceipt->sales_rep,
                 'payment_method' => $data['payment_method'],
                 'reference_no' => $data['ref_no'],
                 'deposit_to_account' => $data['deposit_to_account'],
@@ -19715,7 +19740,7 @@ class Accounting_modals extends MY_Controller
             'refund_receipt_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['refund_receipt_date'])) : null,
             'location_of_sale' => $data['location_of_sale'],
             'po_number' => $data['purchase_order_no'],
-            'sales_rep' => $data['sales_rep'],
+            'sales_rep' => isset($data['sales_rep']) ? $data['sales_rep'] : $refundReceipt->sales_rep,
             'payment_method' => $data['payment_method'],
             'refund_from_account' => $data['refund_from_account'],
             'check_no' => !is_null($data['print_later']) ? null : $data['check_no'],
