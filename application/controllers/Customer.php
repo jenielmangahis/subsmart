@@ -2114,7 +2114,7 @@ class Customer extends MY_Controller
     {
         $is_success = 0;
         $msg = 'Cannot create payment.';
-
+        
         $input = $this->input->post();
         if ($input) {
             $is_valid = true;
