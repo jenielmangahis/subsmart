@@ -116,7 +116,7 @@
             var new_due_date = moment(moment(), "YYYY-MM-DD").add(days + 5, 'days');
         }
         
-        $('#invoice_date').val(new_date.format('YYYY-MM-DD'));
+        //$('#invoice_date').val(new_date.format('YYYY-MM-DD'));
         $('#invoice_due_date').val(new_due_date.format('YYYY-MM-DD'));
     });
 
