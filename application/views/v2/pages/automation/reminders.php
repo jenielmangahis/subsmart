@@ -18,25 +18,23 @@
                     </div>
                     <!-- Card Group -->
                     <?php
-                 $cards = getRemindersTemplate();
-
-
-foreach ($cards as $card) : ?>
-                        <div class="col-3 mb-3">
-                            <div class="nsm-card primary cursor-pointer reminder-item" style="overflow: visible !important;"
-                                data-value="<?php echo htmlspecialchars($card['title']); ?>"
-                                data-type="reminders"
-                                data-onclick="<?php echo htmlspecialchars($card['onclick']); ?>">
-                                <div class="nsm-card-header">
-                                    <div class="nsm-card-text text-muted">
-                                        <span><?php echo $card['title']; ?></span>
+                        $cards = getRemindersTemplate();
+                        foreach ($cards as $card) : ?>
+                            <div class="col-3 mb-3">
+                                <div class="nsm-card primary cursor-pointer reminder-item" style="overflow: visible !important;"
+                                    data-title="<?php echo htmlspecialchars($card['title']); ?>"
+                                    data-type="reminders"
+                                    data-onclick="<?php echo htmlspecialchars($card['onclick']); ?>">
+                                    <div class="nsm-card-header">
+                                        <div class="nsm-card-text text-muted">
+                                            <span><?php echo $card['title']; ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="nsm-card-content">
+                                        <h5><?php echo $card['description']; ?></h5>
                                     </div>
                                 </div>
-                                <div class="nsm-card-content">
-                                    <h5><?php echo $card['description']; ?></h5>
-                                </div>
                             </div>
-                        </div>
                     <?php endforeach; ?>
                 </div>
             </div>

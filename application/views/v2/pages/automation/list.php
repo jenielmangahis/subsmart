@@ -58,7 +58,7 @@ include viewPath('v2/includes/header');
     <div class="row mb-3">
         <div class="col-sm-12 col-md-6 grid-mb">
             <div class="nsm-field-group search">
-                <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOMER_SEARCHBAR" placeholder="Search...">
+                <input type="text" class="nsm-field nsm-search form-control mb-2" id="automation_searchbar" placeholder="Search...">
             </div>
         </div>
         <div class="col-md-6 col-sm-12 grid-mb text-end">
@@ -69,7 +69,8 @@ include viewPath('v2/includes/header');
     </div>
 
     <!-- AUTOMATIONS -->
-    <?php foreach ($automations as $automation): ?>
+    <div class="row" id="automationResults">
+        <?php foreach ($automations as $automation): ?>
         <div class="col-12 mb-3">
             <div class="nsm-card primary" style="overflow: visible !important;">
                 <div class="nsm-card-header">
@@ -117,6 +118,7 @@ include viewPath('v2/includes/header');
             </div>
         </div>
     <?php endforeach; ?>
+    </div>
 
 </div>
 

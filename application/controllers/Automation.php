@@ -27,8 +27,8 @@ class Automation extends MY_Controller
         $this->page_data['lead_status'] = $this->customer_ad_model->get_select_options('ac_leads', 'status');
         $this->page_data['job_status']  = $this->customer_ad_model->get_select_options('jobs', 'status');
         $this->page_data['automations'] = $this->automation_model->getAutomations();
-
-
+        $jobs = $this->jobs_model->get_all_jobs_by_params([], logged('id'));
+        // $this->log_debug_message(print_r($jobs));
         // print_r($this->page_data['automations']);
 
         $this->page_data['automation_status'] = $this->automation_model->countAutomationsByStatus(logged('id'));
@@ -186,6 +186,39 @@ class Automation extends MY_Controller
 
         $res = $this->automation_model->updateAutomationsByParams($data, $id);
         echo json_encode(['success' => true, 'response' => $res]);
+    }
+
+
+    public function searchAutomation() {
+        $this->load->helper('automation_helper');
+        $query = $this->input->get('query');
+        $automations = $this->automation_model->searchAutomations($query);
+        if (empty($data['automations'])) {
+            $data['message'] = "No automations found.";
+        }
+
+        foreach ($automations as &$automation) {
+            $automation->description = generateAutomationDescription($automation); // Call the PHP function
+        }
+          echo json_encode(['automations' => $automations]);
+    }
+
+    public function loadAllAutomations() {
+        $data['automations'] = $this->automation_model->getAutomations();
+        $this->load->view('v2/pages/automation/search_results', $data);
+    }
+
+    public function log_debug_message($message, $file = 'debug_log.txt')
+    {
+        // Ensure the file path is correct
+        $log_file = APPPATH . 'logs/' . $file;
+
+        // Log the message with a timestamp
+        $timestamp    = date('Y-m-d H:i:s');
+        $full_message = "[$timestamp] $message" . PHP_EOL;
+
+        // Append the message to the log file
+        file_put_contents($log_file, $full_message, FILE_APPEND);
     }
 
 
