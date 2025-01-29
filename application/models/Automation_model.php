@@ -125,4 +125,12 @@ class Automation_model extends CI_Model
 
         return $statusCounts;
     }
+
+     public function searchAutomations($query) {
+        $this->db->like('title', $query);
+        $this->db->order_by('created_at', 'DESC');
+        $query = $this->db->get('automations'); 
+
+        return $query->result(); // Return the results
+    }
 }

@@ -45,8 +45,6 @@
             job: {'Draft': 'Draft','Scheduled': 'Scheduled','Arrival': 'Arrival','Started': 'Started','Approved': 'Approved','Finished': 'Finished','Cancelled': 'Cancelled','Invoiced': 'Invoiced','Completed': 'Completed'},
         };
 
-        console.log(leadStatus)
-
         function setupDropdownToggle(dropdownBtnId, dropdownMenuId) {
             $(dropdownBtnId).on("click", function () {
                 if(selectedEntity == "" && dropdownBtnId == '#operationDropdownBtn'){ //do not toggle unless entity is set
@@ -114,25 +112,28 @@
         function populateModal(data) {
             console.log(data);
             if (data) {
-                selectedStatus = data.status ? data.status
-                    : Object.values(statusOptions[data.entity])[0];
+                selectedStatus = data.trigger_status 
+                    ?? Object.values(statusOptions[data.entity] || {})[0] 
+                    ?? null;
                 selectedTitle = data.title;
                 selectedTarget = data.target;
-                selectedAction = data.action;
-                selectedTime = data.time;
-                selectedTiming = data.timing;
-                selectedDate = data.date;
-                selectedEvent = data.event;
+                selectedAction = data.trigger_action;
+                selectedTime = data.trigger_time;
+                selectedTiming = data.timing_reference;
+                selectedDate = data.date_reference;
+                selectedEvent = data.trigger_event;
                 selectedEntity = data.entity;
+                smsBody = data.sms_body;
                 selectedOperation = 'send';
-
-                console.log(selectedStatus)
 
                 const template = generateEmailTemplate(data.target);
                 if (template) {
                     const { subject, body } = template;
                     emailSubject = subject;
                     emailBody = body;
+                    if(!smsBody){
+                        smsBody = body;
+                    }
                 }
              
             }
@@ -149,6 +150,10 @@
             }
 
             $("#addAutomation").modal("show");
+        }
+
+        function handleAutomationTemplate(){
+
         }
 
         function handleFirstParagraph() {
@@ -175,12 +180,7 @@
             );
             populateTimeDropdownBtn(selectedEntity);
 
-             if (selectedDate && selectedTime > 0) {
-                $(".date-dropdown-container").removeClass("d-none");
-            }else{
-                $(".date-dropdown-container").addClass("d-none");
-
-            }
+            
             
             populateDropdown(
                 "#dateDropdownMenu",
@@ -226,11 +226,17 @@
 
         function populateTargetDropdown(entity) {
             const item = targetOptions; // Get status options for the selected entity
-             if(selectedEntity == 'lead'){
+             if(selectedEntity == 'lead' || selectedEntity == 'invoice' || selectedEntity == 'estimate'){
                 delete item.technician; // Remove the 'assigned tech' option
             }else{
                 item.technician = "assigned tech"; 
-                console.log(item)
+            }
+
+            if( selectedEntity == 'estimate'){
+                delete item.sales_rep; // Remove the 'assigned tech' option
+            }else{
+                item.sales_rep = "sales representative"; 
+
             }
 
             if (item) {
@@ -263,16 +269,24 @@
         }
 
         function populateTimeDropdownBtn(entity) {
+            //hide date if selectedTime is immediately
+            toggleDateDropdown();
+
             //if no selected time set text to default
             //if selected time is 0 set text to immediately
             //if selected time > 0 set text to selectedTime (20 minutes) + selectedTiming (after) (eg. 20 minutes after)
-            console.log('selectedTiming', selectedTiming)
             if(selectedTime == ""){
                 text = "within a defined time";
             }else{
-                text = selectedTime == 0 ? formatTriggerTime(selectedTime) : formatTriggerTime(selectedTime) + " " + timingOptions[selectedTiming];
+                if(selectedTime == 0){
+                    text = formatTriggerTime(selectedTime);
+                    toggleTimingButtons();
+                }else{
+                    text = formatTriggerTime(selectedTime) + " " + timingOptions[selectedTiming];
+                }
             }
 
+            //update the timedropdown text
             $("#timeDropdownBtn").text(text);
         }
 
@@ -281,8 +295,6 @@
             document.getElementById("automation_msg").value = emailBody;
             if (CKEDITOR.instances[ckId]) {
                 CKEDITOR.instances[ckId].setData(emailBody);
-            } else {
-                console.error(`CKEditor instance with id "${ckId}" not found.`);
             }
 
             $(modalId).modal("show");
@@ -292,9 +304,7 @@
             document.getElementById(ckId).value = smsBody;
             if (CKEDITOR.instances[ckId]) {
                 CKEDITOR.instances[ckId].setData(smsBody);
-            } else {
-                console.error(`CKEditor instance with id "${ckId}" not found.`);
-            }
+            } 
 
             $(modalId).modal("show");
         }
@@ -340,6 +350,7 @@
             activeAutoTemplate = "";
             selectedEntity = "";
             selectedOperation = "";
+            smsBody = "";
 
             $(".event-dropdown-container").addClass("d-none");
             $(".status-dropdown-container").addClass("d-none");
@@ -347,10 +358,10 @@
             $(".action-dropdown-container").addClass("d-none");
             $(".time-dropdown-container").addClass("d-none");
             $(".date-dropdown-container").addClass("d-none");
+            disableTimeDropdownBtns()
         }
 
         function updateSelectedValues(menuId, value) {
-            console.log('menuId', menuId)
             if (menuId === "#eventDropdownMenu") {
                 selectedEvent = value;
             } else if (menuId === "#statusDropdownMenu") {
@@ -367,13 +378,36 @@
         }
 
         // Handle button selection and toggling
-        function handleTimeClick(name, clickedButton) {
+        function toggleHighlightBtn(name, clickedButton) {
             $(name)
                 .removeClass("nsm-button primary")
                 .addClass("nsm-button-outlined primary");
             $(clickedButton)
                 .removeClass("nsm-button-outlined primary")
                 .addClass("nsm-button primary");
+        }
+
+        function disableTimeDropdownBtns(){
+            $(".timing-btn").removeClass("nsm-button primary").addClass("nsm-button-outlined primary");
+            $(".time-btn").removeClass("nsm-button primary").addClass("nsm-button-outlined primary");
+        }
+
+        function toggleTimingButtons(){
+            if (selectedTime == 0) {
+                $(".timing-btn").attr("disabled", true);
+                $(".timing-btn").addClass("secondary").removeClass("primary");
+            } else {
+                $(".timing-btn").removeClass("disabled").attr("disabled", false);
+                $(".timing-btn").addClass("primary").removeClass("secondary");
+            }
+        }
+
+        function toggleDateDropdown(){
+            if(selectedTime > 0){ //show if selectedTime to send is NOT immediately
+                $(".date-dropdown-container").removeClass("d-none");
+            }else{
+                $(".date-dropdown-container").addClass("d-none");
+            }
         }
 
         function handleEventItemClick() {
@@ -408,7 +442,6 @@
 
           // Handle entity and event selection
         $(".entity-event-item").on("click", function () {
-            console.log('clicked')
             selectedEntity = $(this).data("type");
             selectedEvent = $(this).data("value");
 
@@ -425,7 +458,6 @@
 
         // Handle operation item click using event delegation
         $(document).on("click", ".operation-item", function () {
-            console.log($(this));
             selectedOperation = $(this).data("value");
 
             // Update the button text with the selected operation
@@ -439,34 +471,45 @@
 
         // Time and Timing selection logic
         $(".time-btn").on("click", function () {
-            handleTimeClick(".time-btn", this);
+
+            //highlight selected time btn
+            toggleHighlightBtn(".time-btn", this);
             selectedTime = $(this).data("value");
             
-            if(selectedTime > 0){ //highlight timing-btn if selectedTime is NOT immediately
+            // Disable timing buttons if selectedTime is 0, enable otherwise
+            toggleTimingButtons()
+
+            if(selectedTime > 0){ 
+                //highlight timing-btn if selectedTime is NOT immediately
+                selectedTiming = selectedTiming || 'after';
                 $(".timing-btn").each(function () {
                     if ($(this).data('value') == selectedTiming) {
-                        handleTimeClick(".timing-btn", this);
+                        toggleHighlightBtn(".timing-btn", this);
                     }
                 });
+            }else{
+                selectedTiming = '';
+                selectedDate = '';
             }
 
-            let text = selectedTime == 0 ? formatTriggerTime(selectedTime) :  formatTriggerTime(selectedTime) + " " + selectedTiming;
+            //update time btn text
+            let timingBtnText = selectedTiming ? timingOptions[selectedTiming] : '';
+            let timeBtnText = formatTriggerTime(selectedTime);
+            let text = selectedTime == 0 ? timeBtnText :  timeBtnText + " " + timingBtnText;
             $("#timeDropdownBtn").text(text);
+
+            //highlight the text
             $("#timeDropdownBtn").addClass("primary").removeClass("secondary");
 
-            if(selectedTime > 0){ //show if selectedTime to send is NOT immediately
-                $(".date-dropdown-container").removeClass("d-none");
-            }else{
-                $(".date-dropdown-container").addClass("d-none");
-
-            }
+            //hide or show date
+            toggleDateDropdown();
         });
 
         
         // Timing selection logic
 
         $(".timing-btn").on("click", function () {
-            handleTimeClick(".timing-btn", this);
+            toggleHighlightBtn(".timing-btn", this);
             selectedTiming = $(this).data("value");
             let text =
                 formatTriggerTime(selectedTime) + " " + timingOptions[selectedTiming];
@@ -484,13 +527,16 @@
 
         $(".reminder-item").on("click", function () {
             let action = $(this).data("onclick");
-            let value = $(this).data("value");
+            let title = $(this).data("title");
             let type = $(this).data("type");
 
-            if (value) {
+
+            if (title) {
                 // Set the value of the input field inside the modal
-                $('input[type="text"].nsm-field').val(value);
-                selectedTitle = value;
+                $('input[type="text"].nsm-field').val(title);
+                // Update the modal title dynamically
+                $('.automation-title').text(`Automation: ${title}`);
+                selectedTitle = title;
                 activeAutoTemplate = type;
             }
             if (action) {
@@ -548,7 +594,6 @@
                 success: function (response) {
                     if (response.success) {
                         let data = response.data[0];
-                        console.log(data)
 
                         if(data.trigger_action == "send_email"){
                             document.querySelector('[name="preview_subject"]').value =
@@ -585,7 +630,6 @@
         $(".edit-automation").click(function (e) {
             e.preventDefault();
             const automationId = $(this).data("id");
-            console.log(automationId)
 
             // Fetch automation details via AJAX
             $.ajax({
@@ -600,22 +644,10 @@
 
                         emailSubject = data.email_subject;
                         emailBody = data.email_body;
-                        smsBody = data.sms_body;
-
-                        automationData = {
-                            status: data.trigger_status,
-                            target: data.target,
-                            action: data.trigger_action,
-                            time: data.trigger_time,
-                            timing: data.timing_reference,
-                            date: data.date_reference,
-                            event: data.trigger_event,
-                            entity: data.entity,
-                            title: data.title,
-                        };
+                       
 
                         setActiveTimelineItem();
-                        openAutomationModal("edit", automationData);
+                        openAutomationModal("edit", data);
                     } else {
                         Swal.fire({
                             icon: "error",
@@ -653,8 +685,6 @@
                 sms_body: smsBody,
                 status: "active",
             };
-
-            console.log(automationData);
 
             // Check for missing fields
             const missingFields = getMissingFields(automationData);
@@ -700,8 +730,6 @@
                 sms_body: smsBody,
                 id: selectedAutomationId,
             };
-
-            console.log(automationData);
 
             // Check for missing fields
             const missingFields = getMissingFields(automationData);
@@ -802,7 +830,6 @@
                     resolve(response); // Resolve the promise with the response
                 },
                 error: function (xhr, status, error) {
-                    console.error("AJAX Error:", error, xhr, status);
                     Swal.fire({
                     icon: "error",
                     title: "Error!",
@@ -948,7 +975,6 @@
                 !automationConfig[automationType] ||
                 !automationConfig[automationType].templates[recipientType]
             ) {
-                console.error("Invalid automation type or recipient.");
                 return null;
             }
 
@@ -988,20 +1014,77 @@
         });
 
         // Handle the Insert Smart Tag button click
-        $('#insertTagButton').on('click', function () {
-            const selectedTag = $('#smartTags').val(); // Get the selected smart tag
+        $('#smartTags').on('change', function () {
+            const selectedTag = $(this).val(); // Get the selected smart tag
 
             if (!selectedTag) {
                 alert('Please select a smart tag to insert.');
                 return;
             }
 
-            // Insert the smart tag into the CKEditor at the current cursor position
+            // Get the CKEditor instance
             const editorInstance = CKEDITOR.instances['automation_msg'];
+
             if (editorInstance) {
-                editorInstance.insertText(selectedTag); // Insert the tag
-            }
+                // Insert the selected smart tag into the CKEditor at the current cursor position
+                editorInstance.insertText(selectedTag); // You can use insertHtml() if needed
+                $('#smartTags').val("");
+
+               
+            } 
         });
+
+        $('#automation_searchbar').on('keyup', function() {
+            var searchQuery = $(this).val(); 
+
+            $.ajax({
+                url: BASE_URL + "/Automation/searchAutomation",
+                method: 'GET',
+                data: { query: searchQuery }, 
+                 success: function(response) {
+                    var data = JSON.parse(response); 
+                    if (data.automations && data.automations.length > 0) {
+                        var html = '';
+                        data.automations.forEach(function(automation) {
+                            html += `
+                             <div class="col-12 mb-3">
+                                <div class="nsm-card primary" style="overflow: visible !important;">
+                                    <div class="nsm-card-header">
+                                        <div class="nsm-card-title d-flex justify-content-between">
+                                            <span>${automation.title || 'No Title'}</span>
+                                            <div class="form-switch">
+                                                <input class="form-check-input primary toggle-automation" type="checkbox" role="switch" data-id="${automation.id}" ${automation.status === 'active' ? 'checked' : ''}>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="nsm-card-content">
+                                        <h6>${automation.description}</h6> <!-- Use the description from PHP -->
+                                        <hr />
+                                        <div class="row">
+                                            <div class="col-12 d-flex justify-content-between">
+                                                <div class="d-flex gap-3 small">
+                                                    <span>Created on ${new Date(automation.created_at).toLocaleDateString()}</span>
+                                                    <span>|</span>
+                                                    <span>Triggered 0 times</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                        });
+
+                        $('#automationResults').html(html);
+                    } else {
+                        $('#automationResults').html('<p>No automations found.</p>');
+                    }
+                },
+                error: function() {
+                    $('#automationResults').html('<p>Error occurred while searching.</p>'); // Show error if failed
+                }
+            });
+        });
+
 
         if (CKEDITOR.instances["preview_automation_msg"]) {
          CKEDITOR.instances["preview_automation_msg"].destroy(true);

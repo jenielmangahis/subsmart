@@ -454,7 +454,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <input style="float: right; width: 90px;" type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control sales-receipt-adjustment-value nsm-field adjustment_input_cm_c" disabled onchange="convertToDecimal(this)" value="<?=isset($receipt) ? number_format(floatval($receipt->adjustment_value), 2, '.', ',') : ''?>">
+                                                    <input style="width:58%;float:right;direction:rtl;" type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control sales-receipt-adjustment-value nsm-field adjustment_input_cm_c" disabled onchange="convertToDecimal(this)" value="<?=isset($receipt) ? number_format(floatval($receipt->adjustment_value), 2, '.', ',') : ''?>">
                                                     <!-- <span class="transaction-adjustment">
                                                     <?php if(isset($receipt)) : ?>
                                                         <?php
