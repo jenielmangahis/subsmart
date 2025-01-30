@@ -79,6 +79,7 @@
                             </div>
                             <div class="col-md-4 customer-inputs">
                                 <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_profile'); ?>
+                                <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_property'); ?>
                             </div>
                             <div class="col-md-4 customer-inputs">
                                 <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_office_info'); ?>
@@ -90,6 +91,7 @@
                             <div class="col-md-6 customer-inputs">
                                 <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_profile_non_adi'); ?>
                                 <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_office_info_no_funding'); ?>
+                                <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_property'); ?>
                             </div>
                             <div class="col-md-6 customer-inputs">
                                 <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_billing_info'); ?>

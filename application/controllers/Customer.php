@@ -2114,7 +2114,7 @@ class Customer extends MY_Controller
     {
         $is_success = 0;
         $msg = 'Cannot create payment.';
-
+        
         $input = $this->input->post();
         if ($input) {
             $is_valid = true;
@@ -3285,6 +3285,7 @@ class Customer extends MY_Controller
     {
         $this->load->model('FinancingPaymentCategory_model');
         $this->load->model('IndustryType_model');
+        $this->load->model('CompanyCustomerFormSetting_model');
 
         $this->hasAccessModule(9);
 
@@ -3420,6 +3421,32 @@ class Customer extends MY_Controller
             $this->page_data['solar_info_settings'] = $this->general->get_data_with_param($solar_info_settings_query);
         }
 
+        //Customer setting : form fields
+        $companyCustomerFormSettings = $this->CompanyCustomerFormSetting_model->getByCompanyId(logged('company_id'));
+        $companyFormSetting = [];
+        $formGroups = [];
+
+        if( $companyCustomerFormSettings ){
+            $fieldSettings = json_decode($companyCustomerFormSettings->field_settings);
+            foreach( $fieldSettings as $setting ){
+                $companyFormSetting[$setting->field_group][$setting->field_name] = ['value' => $setting->field_value, 'is_enabled' => $setting->is_enabled];
+                
+                if( $setting->is_enabled == 1 ){
+                    if( $formGroups[$setting->field_group]['total_enabled'] ){
+                        $formGroups[$setting->field_group]['total_enabled'] += 1;   
+                    }else{
+                        $formGroups[$setting->field_group]['total_enabled'] = 1;
+                    }
+                }else{
+                    if( $formGroups[$setting->field_group]['total_disabled'] ){
+                        $formGroups[$setting->field_group]['total_disabled'] += 1;   
+                    }else{
+                        $formGroups[$setting->field_group]['total_disabled'] = 1;
+                    }
+                }         
+            }
+        }   
+
         $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
         $this->page_data['rate_plans'] = $this->general->get_data_with_param($rate_plan_query);
         $this->page_data['system_package_types'] = $this->general->get_data_with_param($spt_query);
@@ -3457,8 +3484,11 @@ class Customer extends MY_Controller
             'assets/css/customer/add_advance/add_advance.css',
         ]);
 
+        
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
+        $this->page_data['companyFormSetting'] = $companyFormSetting;
+        $this->page_data['formGroups'] = $formGroups;
         $this->page_data['financingCategories'] = $financingCategories;
         $this->page_data['sales_tech_paid'] = $this->customer_ad_model->getJobSalesTechPaid($id);
         $this->page_data['sales_tech_commission'] = $this->customer_ad_model->getJobSalesTechCommission($id)[0];
@@ -3466,6 +3496,7 @@ class Customer extends MY_Controller
         $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
         $this->page_data['LEAD_SOURCE_OPTION'] = $this->customer_ad_model->getAllSettingsLeadSourceByCompanyId(logged('company_id'));
         $this->load->view('v2/pages/customer/add', $this->page_data);
+        //$this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
 
     public function leads()
@@ -11305,13 +11336,42 @@ class Customer extends MY_Controller
     {
         $this->load->model('CompanyCustomerFormSetting_model');
 
-        $formFields = $this->CompanyCustomerFormSetting_model->formFields();
+        $cid = logged('company_id');
 
+        $formFields = $this->CompanyCustomerFormSetting_model->formFields();
+        $companyCustomerFormSettings = $this->CompanyCustomerFormSetting_model->getByCompanyId($cid);
+
+        $companyFormSetting = [];
+        $formGroups = [];
+
+        if( $companyCustomerFormSettings ){
+            $fieldSettings = json_decode($companyCustomerFormSettings->field_settings);
+            foreach( $fieldSettings as $setting ){
+                $companyFormSetting[$setting->field_group][$setting->field_name] = ['value' => $setting->field_value, 'is_enabled' => $setting->is_enabled];
+                
+                if( $setting->is_enabled == 1 ){
+                    if( $formGroups[$setting->field_group]['total_enabled'] ){
+                        $formGroups[$setting->field_group]['total_enabled'] += 1;   
+                    }else{
+                        $formGroups[$setting->field_group]['total_enabled'] = 1;
+                    }
+                }else{
+                    if( $formGroups[$setting->field_group]['total_disabled'] ){
+                        $formGroups[$setting->field_group]['total_disabled'] += 1;   
+                    }else{
+                        $formGroups[$setting->field_group]['total_disabled'] = 1;
+                    }
+                }         
+            }
+        }        
+        
         $this->page_data['formFields'] = $formFields;
+        $this->page_data['companyFormSetting'] = $companyFormSetting;
+        $this->page_data['formGroups'] = $formGroups;
         $this->load->view('v2/pages/customer/customer_advance_form_settings', $this->page_data);
     }
 
-    public function ajax_save_form_settings()
+    public function ajax_save_customer_form_settings()
     {
         $this->load->model('CompanyCustomerFormSetting_model');
 
@@ -11321,10 +11381,44 @@ class Customer extends MY_Controller
         $cid  = logged('company_id');
         $post = $this->input->post();
 
-        $this->CompanyCustomerFormSetting_model->deleteAllByCompanyId($cid);
-        echo "<pre>";
-        print_r($post);
-        exit;
+        foreach( $post['fieldName'] as $field_group => $fields ){
+            foreach( $fields as $key => $value ){                
+                $is_enabled = 1;
+                if( $post['isHiddenField'][$field_group][$key] ){
+                    $is_enabled = 0;
+                }
+
+                $settings_data[] = [
+                    'field_name' => $key,
+                    'field_value' => $value,
+                    'field_group' => $field_group,
+                    'is_enabled' => $is_enabled,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s"),
+                ];
+            }
+        }
+        
+        $companyCustomerFormSetting = $this->CompanyCustomerFormSetting_model->getByCompanyId($cid);
+        if( $companyCustomerFormSetting ){
+            $data = [
+                'field_settings' => json_encode($settings_data), 
+                'date_modified' => date("Y-m-d H:i:s")
+            ];
+            $this->CompanyCustomerFormSetting_model->update($companyCustomerFormSetting->id, $data);
+        }else{
+            $data = [
+                'company_id' => $cid,
+                'field_settings' => json_encode($settings_data),
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s")
+            ];
+
+            $this->CompanyCustomerFormSetting_model->create($data);
+        }
+
+        $is_success = 1;
+        $msg = '';
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);

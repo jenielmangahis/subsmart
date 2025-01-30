@@ -110,7 +110,6 @@
         }
 
         function populateModal(data) {
-            console.log(data);
             if (data) {
                 selectedStatus = data.trigger_status 
                     ?? Object.values(statusOptions[data.entity] || {})[0] 
@@ -228,12 +227,14 @@
             const item = targetOptions; // Get status options for the selected entity
              if(selectedEntity == 'lead' || selectedEntity == 'invoice' || selectedEntity == 'estimate'){
                 delete item.technician; // Remove the 'assigned tech' option
+                selectedTarget = selectedTarget == "technician" ? '' : selectedTarget;
             }else{
                 item.technician = "assigned tech"; 
             }
 
             if( selectedEntity == 'estimate'){
                 delete item.sales_rep; // Remove the 'assigned tech' option
+                selectedTarget = selectedTarget == "sales_rep" ? '' : selectedTarget;
             }else{
                 item.sales_rep = "sales representative"; 
 
@@ -816,17 +817,30 @@
                 },
                 success: function (response) {
                     formDisabler(data, false);
-                    Swal.fire({
-                    icon: message.icon,
-                    title: message.title,
-                    html: message.body,
-                    showConfirmButton: true,
-                    confirmButtonText: "Okay",
-                    }).then((result) => {
-                        
-                        location.reload(); 
+                    if(response.code == 1062){
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Automation',
+                            html: response.message,
+                            showConfirmButton: true,
+                            confirmButtonText: "Okay",
+                            }).then((result) => {
+                                
+                        });
+                    }else{
+                     Swal.fire({
+                            icon: message.icon,
+                            title: message.title,
+                            html: message.body,
+                            showConfirmButton: true,
+                            confirmButtonText: "Okay",
+                            }).then((result) => {
+                                
+                                location.reload(); 
 
-                    });
+                        });
+                    }
+                  
                     resolve(response); // Resolve the promise with the response
                 },
                 error: function (xhr, status, error) {
@@ -839,6 +853,8 @@
                     });
                     formDisabler(data, false);
                     reject(error); // Reject the promise with the error
+
+                    console.log(error, xhr, status)
                 },
                 });
             });
@@ -1015,20 +1031,35 @@
 
         // Handle the Insert Smart Tag button click
         $('#smartTags').on('change', function () {
-            const selectedTag = $(this).val(); // Get the selected smart tag
-
+            const selectedTag = $(this).val(); 
             if (!selectedTag) {
                 alert('Please select a smart tag to insert.');
                 return;
             }
 
-            // Get the CKEditor instance
             const editorInstance = CKEDITOR.instances['automation_msg'];
 
             if (editorInstance) {
-                // Insert the selected smart tag into the CKEditor at the current cursor position
-                editorInstance.insertText(selectedTag); // You can use insertHtml() if needed
+                editorInstance.insertText(selectedTag); 
                 $('#smartTags').val("");
+
+               
+            } 
+        });
+
+        // Handle the Insert Smart Tag button click
+        $('#smsSmartTags').on('change', function () {
+            const selectedTag = $(this).val(); 
+            if (!selectedTag) {
+                alert('Please select a smart tag to insert.');
+                return;
+            }
+
+            const editorInstance = CKEDITOR.instances['sms_automation_msg'];
+
+            if (editorInstance) {
+                editorInstance.insertText(selectedTag); 
+                $('#smsSmartTags').val("");
 
                
             } 
@@ -1080,7 +1111,7 @@
                     }
                 },
                 error: function() {
-                    $('#automationResults').html('<p>Error occurred while searching.</p>'); // Show error if failed
+                    $('#automationResults').html('<p>Error occurred while searching.</p>'); 
                 }
             });
         });

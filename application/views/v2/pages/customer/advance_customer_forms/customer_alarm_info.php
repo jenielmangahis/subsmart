@@ -509,7 +509,7 @@
 
             <div class="row form_line field-custom-name-container">
                 <div class="col-md-6">
-                    <field-custom-name default="Monhtly Monitoring Rate" form="alarm_info"></field-custom-name>
+                    <field-custom-name default="Monthly Monitoring Rate" form="alarm_info"></field-custom-name>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="monthly_monitoring" id="monthly_monitoring" value="<?= $alarm_info ? ($alarm_info->monthly_monitoring !=0 ? $alarm_info->monthly_monitoring : '') : '';  ?>"/>

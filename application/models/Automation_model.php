@@ -37,13 +37,33 @@ class Automation_model extends CI_Model
      * @param array $automationData - Data for the new automation
      * @return bool - True if the save was successful, otherwise false
      */
-    public function saveAutomation($automationData)
-    {
-        $this->db->insert($this->table, $automationData);
+public function saveAutomations($automationData) {
+    try {
+        // Check if the title already exists for the user before inserting
+        $this->db->where('user_id', $automationData['user_id']);
+        $this->db->where('title', $automationData['title']);
+        $query = $this->db->get('automations');
 
-        // Check if insertion is successful
-        return $this->db->affected_rows() > 0;
+        if ($query->num_rows() > 0) {
+            return ['error' => true, 'code' => 1062, 'message' => 'Duplicate entry detected. Please use a unique title.'];
+        }
+
+        $this->db->insert('automations', $automationData);
+        $error = $this->db->error();
+
+        if ($error['code'] == 1062) {
+            return ['error' => true, 'code' => 1062, 'message' => 'Duplicate entry detected. Please use a unique title.'];
+        } elseif ($error['code'] != 0) {
+            throw new Exception($error['message']);
+        }
+
+        return $this->db->insert_id(); 
+    } catch (Exception $e) {
+        return ['error' => true, 'message' => $e->getMessage()]; 
     }
+}
+
+
 
     public function getAutomationsByParams($params)
     {
@@ -103,11 +123,6 @@ class Automation_model extends CI_Model
     public function countAutomationsByStatus($user_id)
     {
 
-        // Retrieve all automations for the given user
-        // $this->db->where('user_id', $user_id);
-        // $query = $this->db->get('automations');
-        // $automations = $query->result_array();
-
         $statusCounts = [];
 
         $automations = $this->getAutomations();
@@ -117,7 +132,7 @@ class Automation_model extends CI_Model
             if (isset($automation->status)) {
                 $status = $automation->status;
                 if (!isset($statusCounts[$status])) {
-                    $statusCounts[$status] = 0; // Initialize the counter for this status
+                    $statusCounts[$status] = 0; 
                 }
                 $statusCounts[$status]++;
             }
@@ -131,6 +146,6 @@ class Automation_model extends CI_Model
         $this->db->order_by('created_at', 'DESC');
         $query = $this->db->get('automations'); 
 
-        return $query->result(); // Return the results
+        return $query->result();
     }
 }

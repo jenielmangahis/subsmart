@@ -5,17 +5,10 @@ class CompanyRoleAccessModule_model extends MY_Model
 {
     public $table = 'company_role_access_modules';
 
-    public function getAll($filters=array())
+    public function getAll()
     {
         $this->db->select('*');
         $this->db->from($this->table);
-
-        if ( !empty($filters) ) {
-            if ( !empty($filters['search']) ) {
-                $this->db->like('offer_code', $filters['search'], 'both');
-            }
-        }
-
         $this->db->order_by('id', 'ASC');
 
         $query = $this->db->get();
