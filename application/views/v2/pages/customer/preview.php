@@ -178,6 +178,7 @@
                     <tr>
                         <td>
                             <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_customer_info'); ?>
+                            <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_property_info'); ?>
                         </td>
                         <td>
                             <?php include viewPath('v2/pages/customer/advance_customer_forms/preview_office_info'); ?>

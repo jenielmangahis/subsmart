@@ -487,65 +487,8 @@
             var form = $(this);
             var is_valid = 1;
             var err_msg = '';
-
-            // if ($('#lead_source').val() == null) {
-            //     is_valid = 0;
-            //     err_msg = 'Please specify lead source';
-            // }
-
-            if (is_valid == 1) {
-                const formArray = form.serializeArray();
-                const payload = {};
-                formArray.forEach(({
-                    name,
-                    value
-                }) => payload[name] = value);
-                //const prefixURL = location.hostname === "localhost" ? "/ci/nsmart_v2" : "";
-                const prefixURL = base_url;
-                const response = await fetch(`${prefixURL}Customer_Form/apiCheckDuplicate`, {
-                    method: "post",
-                    body: JSON.stringify(payload),
-                    headers: {
-                        accept: "application/json",
-                        "content-type": "application/json"
-                    }
-                });
-                const json = await response.json();
-                if (json.data && json.message) {
-                    const duplicateConfirmation = await Swal.fire({
-                        title: 'Possible duplicate customer',
-                        html: json.message,
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#32243d',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Save anyway'
-                    });
-
-                    if (!duplicateConfirmation.isConfirmed) {
-                        return;
-                    }
-                }
-
-                //var url = form.attr('action');
-                // const payload1 = new FormData();
-                // console.log(payload1);
-                // fetch('<?= base_url('customer/save_customer_profile') ?>', {
-                //     method: 'POST',
-                //     body: payload1,
-                // }) .then(response => response.json() ).then(response => {
-                //     document.getElementById('overlay').style.display = "none";
-                //     if(success){
-                //         alert('yawa');
-                //     }else{
-                //         sweetAlert('Sorry!','error',message);
-                //     }
-
-                //     console.log(response);
-                // }).catch((error) => {
-                //     console.log('Error:', error);
-                // });
-
+            
+            if (is_valid == 1) {                
                 $.ajax({
                     type: "POST",
                     url: base_url + "customer/save_customer_profile",
@@ -600,38 +543,7 @@
             const isCompany = $("#page_type").val() == "company" ? true : false;
                console.log(isCompany);
 
-            if (is_valid == 1) {
-                const formArray = form.serializeArray();
-                const payload = {};
-                formArray.forEach(({
-                    name,
-                    value
-                }) => payload[name] = value);
-                const prefixURL = base_url;
-                const response = await fetch(`${prefixURL}Customer_Form/apiCheckDuplicate`, {
-                    method: "post",
-                    body: JSON.stringify(payload),
-                    headers: {
-                        accept: "application/json",
-                        "content-type": "application/json"
-                    }
-                });
-                const json = await response.json();
-                if (json.data && json.message) {
-                    const duplicateConfirmation = await Swal.fire({
-                        title: 'Possible duplicate customer',
-                        html: json.message,
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#32243d',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Save anyway'
-                    });
-
-                    if (!duplicateConfirmation.isConfirmed) {
-                        return;
-                    }
-                }
+            if (is_valid == 1) {                
                 $.ajax({
                     type: "POST",
                     url: base_url + "customer/save_person_profile",
