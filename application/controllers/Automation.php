@@ -27,8 +27,6 @@ class Automation extends MY_Controller
         $this->page_data['lead_status'] = $this->customer_ad_model->get_select_options('ac_leads', 'status');
         $this->page_data['job_status']  = $this->customer_ad_model->get_select_options('jobs', 'status');
         $this->page_data['automations'] = $this->automation_model->getAutomations();
-        $jobs = $this->jobs_model->get_all_jobs_by_params([], logged('id'));
-        // $this->log_debug_message(print_r($jobs));
         // print_r($this->page_data['automations']);
 
         $this->page_data['automation_status'] = $this->automation_model->countAutomationsByStatus(logged('id'));
@@ -121,12 +119,22 @@ class Automation extends MY_Controller
             'status'           => isset($data['status']) ? $data['status'] : 'active',
         ];
 
-        try {
-            $automations = $this->automation_model->saveAutomation($automationData);
-            echo json_encode(['status' => 'success', 'message' => 'Automation saved successfully.', 'automations' => $automations]);
-        } catch (\Exception $e) {
-            echo json_encode(['status' => 'error', 'message' => 'Failed to save automation.']);
-        }
+         $result = $this->automation_model->saveAutomations($automationData);
+
+    if (isset($result['error']) && $result['error']) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => $result['message'],
+            'code' => $result['code'],
+            
+        ]);
+    } else {
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Automation saved successfully.',
+            'insert_id' => $result
+        ]);
+    }
 
     }
 

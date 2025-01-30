@@ -8,6 +8,39 @@
             <div class="modal-body">
                 <div class="row h-100">
                     <form id='smsForm'>
+                         <div class="col-12">
+                            <label class="mb-1 fw-xnormal">Smart Tags</label>
+                            <div class="input-group mb-3">
+                                <select id="smsSmartTags" class="form-select">
+                                    <option value="" disabled selected>Insert Smart Tag</option>
+                                    <optgroup label="Client">
+                                        <option value="{first_name}">First Name</option>
+                                        <option value="{last_name}">Last Name</option>
+                                        <option value="{email}">Email</option>
+                                        <option value="{company_name}">Company Name</option>
+                                        <option value="{mail_add}">Billing Address</option>
+                                        <option value="{phone_h}">Phone</option>
+                                    </optgroup>
+                                    
+                                    <optgroup label="Business">
+                                        <option value="{business_name}">Business Name</option>
+                                        <option value="{business_address}">Business Address</option>
+                                    </optgroup>
+                                    
+                                    <optgroup label="Job">
+                                        <option value="{job_number}">Job Number</option>
+                                        <option value="{job_location}">Job Location</option>
+                                        <option value="{job_type}">Job Type</option>
+                                        <option value="{job_description}">Job Description</option>
+                                        <option value="{start_time}">Job Start Time</option>
+                                        <option value="{end_time}">Job End Time</option>
+                                        <option value="{amount}">Job Total</option>
+                                        <option value="{status}">Job Status</option>
+                                        <option value="{techs}">Assigned Techs</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-12">
                             <textarea name="sms_message" id="sms_automation_msg" cols="30" rows="2" class="form-control ckeditor"></textarea>
                         </div>

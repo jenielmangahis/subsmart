@@ -237,18 +237,18 @@ if (!function_exists('getRemindersTemplate')) {
               [
                 'title' => 'Immediate Notice / Client Reminder',
                 'description' => 'Send immediate notice to a client.',
-                'onclick' => "populateModal({'entity': 'job', 'trigger_event': 'has_status', 'status': 'Scheduled', 'target': 'client', 'trigger_action': 'send_email', 'trigger_time': '0', 'title': 'Immediate Notice / Client Reminder'})"
+                'onclick' => "populateModal({'entity': 'job', 'trigger_event': 'has_status', 'trigger_status': 'Scheduled','trigger_status': 'Scheduled', 'target': 'client', 'trigger_action': 'send_email', 'trigger_time': '0', 'title': 'Immediate Notice / Client Reminder'})"
             ],
 
             [
                 'title' => '2 hours / Tech Reminder',
                 'description' => 'Send an email to a technician 2 hours ahead of the job.',
-                'onclick' => "populateModal({'entity': 'job', 'trigger_event': 'has_status', 'target': 'technician', 'trigger_action': 'send_email', 'trigger_time': '120', 'timing_reference': 'ahead_of', 'date_reference': 'scheduled_date', 'title': '2 hours / Tech Reminder'})"
+                'onclick' => "populateModal({'entity': 'job', 'trigger_event': 'has_status', 'trigger_status': 'Scheduled','target': 'technician', 'trigger_action': 'send_email', 'trigger_time': '120', 'timing_reference': 'ahead_of', 'date_reference': 'scheduled_date', 'title': '2 hours / Tech Reminder'})"
             ],
             [
                 'title' => '4 hours / Tech Reminder',
                 'description' => 'Send an email to a technician 4 hours ahead of the job.',
-                'onclick' => "populateModal({'entity': 'job', 'trigger_event': 'has_status', 'target': 'technician', 'trigger_action': 'send_email', 'trigger_time': '240', 'timing_reference': 'ahead_of', 'date_reference': 'scheduled_date', 'title': '4 hours / Tech Reminder'})"
+                'onclick' => "populateModal({'entity': 'job', 'trigger_event': 'has_status', 'trigger_status': 'Scheduled','target': 'technician', 'trigger_action': 'send_email', 'trigger_time': '240', 'timing_reference': 'ahead_of', 'date_reference': 'scheduled_date', 'title': '4 hours / Tech Reminder'})"
             ],
             [
                 'title' => '1 Day Notice / Client Reminder',
