@@ -21,10 +21,36 @@
                             Automate your daily essential workflows
                         </div>
                     </div>
+                      <!-- Card Group -->
+                    <?php
+                        $cards = getActionsTemplate();
+                        foreach ($cards as $card) : ?>
+                            <div class="col-3 mb-3">
+                                <div class="nsm-card primary cursor-pointer actions-item" style="overflow: visible !important;"
+                                    data-title="<?php echo htmlspecialchars($card['title']); ?>"
+                                    data-type="actions"
+                                    data-onclick="<?php echo htmlspecialchars($card['onclick']); ?>">
+                                    <div class="nsm-card-header">
+                                        <div class="nsm-card-text text-muted">
+                                            <span><?php echo $card['title']; ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="nsm-card-content">
+                                        <h5><?php echo $card['description']; ?></h5>
+                                    </div>
+                                </div>
+                            </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<?php include viewPath('v2/includes/automation/add_automation_modal'); ?>
+<?php include viewPath('v2/includes/automation/add_email_modal'); ?>
+<?php include viewPath('v2/includes/automation/preview_sms_modal'); ?>
+<?php include viewPath('v2/includes/automation/add_sms_modal'); ?>
+<?php include viewPath('v2/includes/automation/add_condition_modal'); ?>
+<?php include viewPath('v2/pages/automation/js/automation'); ?>
 <?php include viewPath('v2/includes/footer'); ?>

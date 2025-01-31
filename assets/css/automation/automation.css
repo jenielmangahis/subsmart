@@ -1,5 +1,5 @@
 .timeline {
-  border-left: 1px solid hsl(0, 0%, 90%);
+  border-left: 2px solid hsl(0, 0%, 90%);
   position: relative;
   list-style: none;
 }
@@ -45,15 +45,15 @@
 }
 
 .dropdown-menu.show {
-  display: block !important; 
+  display: block !important;
 }
 
 .dropdown-menu {
-  display: none; 
-  position: absolute; 
+  display: none;
+  position: absolute;
   top: 100%;
-  left: 0; 
-  z-index: 1050; 
+  left: 0;
+  z-index: 1050;
 }
 
 .time-dropdown-container {

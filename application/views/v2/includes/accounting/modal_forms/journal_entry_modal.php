@@ -12,7 +12,7 @@
 <?php if(!isset($journal_entry)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
 <?php else : ?>
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/journal/<?=$journal_entry->id?>">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="<?php echo base_url(); ?>accounting/update-transaction/journal/<?=$journal_entry->id?>">
 <?php endif; ?>
     <div id="journalEntryModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
         <div class="modal-dialog">
@@ -97,9 +97,13 @@
                                                     </button>
                                                 </td>
                                             </tr>
-                                            <?php $count = 1; ?>
+                                            <?php $count = 1; $total_debits = 0; $total_credits = 0; ?>
                                             <?php if(isset($entries) && count($entries) > 0) : ?>
                                             <?php foreach($entries as $entry) : ?>
+                                                <?php 
+                                                    $total_debits += $entry->debit;
+                                                    $total_credits += $entry->credit;
+                                                ?>
                                                 <tr>
                                                     <td><?=$count?></td>
                                                     <td>
@@ -161,8 +165,8 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td class="text-end">Total</td>
-                                                <td><input type="text" class="form-control text-end" id="journal-debit-total" disabled="" value="0.00" /></td>
-                                                <td><input type="text" class="form-control text-end" id="journal-credit-total" disabled="" value="0.00" /></td>
+                                                <td><input type="text" class="form-control text-end" id="journal-debit-total" disabled="" value="<?php echo isset($total_debits) ? number_format($total_debits,2) : "0.00"?>" /></td>
+                                                <td><input type="text" class="form-control text-end" id="journal-credit-total" disabled="" value="<?php echo isset($total_credits) ? number_format($total_credits,2) : "0.00"?>" /></td>
                                             </tr>
                                             <tr>
                                                 <td colspan="7">
@@ -183,18 +187,22 @@
 
                             <div class="row">
                                 <div class="col-12 col-md-6">
-                                    <div class="row">
+                                    <!-- <div class="row">
                                         <div class="col-12 col-md-4">
                                             <label for="memo">Memo</label>
                                             <textarea name="memo" id="memo" class="nsm-field form-control mb-2"><?=isset($journal_entry) ? str_replace("<br />", "", $journal_entry->memo) : ''?></textarea>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <label for="memo">Memo</label>
+                                            <textarea name="memo" id="memo" rows="7" class="nsm-field form-control mb-2"><?=isset($journal_entry) ? str_replace("<br />", "", $journal_entry->memo) : ''?></textarea>
+                                        </div>                                        
                                         <div class="col-12 col-md-6">
                                             <div class="attachments">
                                                 <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
                                                 <span>Maximum size: 20MB</span>
-                                                <div id="journal-entry-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                <div id="journal-entry-attachments" class="dropzone d-block justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                     <div class="dz-message" style="margin: 20px;border">
                                                         <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                         <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
