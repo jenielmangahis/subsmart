@@ -2122,12 +2122,12 @@ class Customer extends MY_Controller
         $is_success = 0;
         $msg = 'Cannot create payment.';
         
-        //$this->load->model('AcsProfile_model');
-        //$this->load->model('Invoice_model');
-        //$this->load->model('Invoice_settings_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Invoice_model');
+        $this->load->model('Invoice_settings_model');
+        $this->load->model('AcsCustomerSubscriptionBilling_model');
 
         $input = $this->input->post();
-
         if ($input) {
             $is_valid = true;
             if ($input['method'] == 'CC') {
@@ -2166,122 +2166,159 @@ class Customer extends MY_Controller
             }
 
             /**
-             * Todo: create invoice? (for clarification)
-             */      
-            /*      
+             * Todo: create invoice? 
+             */        
             if($input['method'] == 'Invoicing') {
 
-                $customer = $this->AcsProfile_model->getByProfId($input['customer_id']);   
+                $customer           = $this->AcsProfile_model->getByProfId($input['customer_id']);   
+                $activeSubscription = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($input['customer_id']);
+                
+                if($activeSubscription) {
 
-                $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($customer->company_id);
-                if( $invoiceSettings ){            
-                    $next_number = (int) $invoiceSettings->invoice_num_next;     
-                    $prefix      = $invoiceSettings->invoice_num_prefix;  
-                }else{
-                    $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($customer->company_id);
-                    $prefix     = 'INV-';
-                    if( $lastInsert ){
-                        $next_number   = $lastInsert->id + 1;
-                    }else{
-                        $next_number   = 1;
+                    $filter['recurring_date']  = $input['invoice_date'];
+                    $filter['billing_id']      = $activeSubscription->bill_id;
+                    $filter['customer_id']     = $customer->prof_id;
+                    $filter['company_id']      = $customer->company_id;
+                    $isCustomerSubscriptionBillingDuplicate = $this->AcsCustomerSubscriptionBilling_model->getCustomerSubscriptionBillingByFilter($filter);	
+                    if(!$isCustomerSubscriptionBillingDuplicate) {
+
+                        $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($customer->company_id);
+                        if( $invoiceSettings ){            
+                            $next_number = (int) $invoiceSettings->invoice_num_next;     
+                            $prefix      = $invoiceSettings->invoice_num_prefix;  
+                        }else{
+                            $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($customer->company_id);
+                            $prefix     = 'INV-';
+                            if( $lastInsert ){
+                                $next_number   = $lastInsert->id + 1;
+                            }else{
+                                $next_number   = 1;
+                            }
+                        }
+        
+                        $invoice_number = formatInvoiceNumberV2($prefix, $next_number);
+                        $total_amount   = $input['transaction_amount'];
+                        $payment_fee    = 0;
+                        $late_fee       = 0;
+        
+                        //Create invoice
+                        $address = $customer->mail_add . ' ' . $customer->city . ', ' . $customer->state . ' ' . $customer->zip_code; 
+                        $data_invoice = [
+                            'job_id' => 0,
+                            'ticket_id' => 0,
+                            'customer_id' => $customer->prof_id,
+                            'job_location' => $address,
+                            'billing_address' => $address,
+                            'location_scale' => $address,
+                            'business_name' => '',
+                            'job_name' => '',
+                            'job_number' => '',
+                            'estimate_id' => 0,
+                            'invoice_type' => 'Total Due',
+                            'work_order_number' => '',
+                            'invoice_number' => $invoice_number, 
+                            'date_issued' => isset($input['invoice_date']) ? $input['invoice_date'] : date("Y-m-d"),
+                            'due_date' => isset($input['invoice_due_date']) ? $input['invoice_due_date'] : date("Y-m-d"),
+                            'status' => 'Due',
+                            'customer_email' => $customer->email,
+                            'total_due' => $total_amount,
+                            'balance' => $total_amount,
+                            'date_created' => date("Y-m-d H:i:s"),
+                            'date_updated' => date("Y-m-d H:i:s"),
+                            'company_id' => $customer->company_id,
+                            'is_recurring' => 1,
+                            'invoice_totals' => $total_amount,
+                            'user_id' => 0,
+                            'adjustment_name' => 'Customer Subscription',
+                            'adjustment_value' => $total_amount,
+                            'sub_total' => $total_amount,
+                            'taxes' => 0,
+                            'grand_total' => $total_amount,
+                            'view_flag' => 0,
+                            'no_tax' => 0,
+                            'late_fee' => $late_fee,
+                            'payment_fee' => $payment_fee,
+                            'terms' => isset($input['invoice_term']) ? $input['invoice_term'] : 0,
+                        ];
+        
+                        $invoice_id = $this->Invoice_model->create($data_invoice);
+        
+                        //Update invoice settings
+                        if( $invoiceSettings ){
+                            $invoice_settings_data = ['invoice_num_next' => $next_number + 1];
+                            $this->Invoice_settings_model->update($invoiceSettings->id, $invoice_settings_data);
+                        }else{
+                            $invoice_settings_data = [
+                                'invoice_num_prefix' => $prefix,
+                                'invoice_num_next' => $next_number,
+                                'check_payable_to' => '',
+                                'accept_credit_card' => 1,
+                                'accept_check' => 0,
+                                'accept_cash'  => 1,
+                                'accept_direct_deposit' => 0,
+                                'accept_credit' => 0,
+                                'mobile_payment' => 1,
+                                'capture_customer_signature' => 1,
+                                'hide_item_price' => 0,
+                                'hide_item_qty' => 0,
+                                'hide_item_tax' => 0,
+                                'hide_item_discount' => 0,
+                                'hide_item_total' => 0,
+                                'hide_from_email' => 0,
+                                'hide_item_subtotal' => 0,
+                                'hide_business_phone' => 0,
+                                'hide_office_phone' => 0,
+                                'accept_tip' => 0,
+                                'due_terms' => '',
+                                'auto_convert_completed_work_order' => 0,
+                                'message' => 'Thank you for your business.',
+                                'terms_and_conditions' => 'Thank you for your business.',
+                                'company_id' => $company_id,
+                                'commercial_message' => 'Thank you for your business.',
+                                'commercial_terms_and_conditions' => 'Thank you for your business.',
+                                'logo' => '',
+                                'payment_fee_percent' => 0,
+                                'payment_fee_amount' => 0,
+                                'recurring' => '',
+                                'invoice_template' => 1,
+                                'residential_message' => 'Thank you for your business.',
+                                'residential_terms_and_conditions' => 'Thank you for your business.',
+                                'invoice_template' => 0,
+                                'late_fee_amount_per_day' => 0,
+                                'num_days_activate_late_fee' => 0,
+                            ];
+        
+                            $this->Invoice_settings_model->create($invoice_settings_data);
+                        }  
+                        
+                        $recurring_date = isset($input['invoice_date']) ? $input['invoice_date'] : date("Y-m-d");
+                        $data_subscription_billing = [
+                            'company_id'  	 => $customer->company_id,
+                            'customer_id' 	 => $customer->prof_id,
+                            'billing_id'  	 => $activeSubscription->bill_id,
+                            'invoice_id'  	 => $invoice_id,
+                            'recurring_date' => $recurring_date ? $recurring_date : date("Y-m-d"),
+                            'subscription_amount' => $total_amount,
+                            'late_fee_amount' => $late_fee,
+                            'total_amount' => $total_amount,
+                            'status'         => 'Unpaid',
+                            'date_created'   => date("Y-m-d H:i:s")
+                        ];
+        
+                        $this->AcsCustomerSubscriptionBilling_model->create($data_subscription_billing);	                    
+                        
+                        $is_valid = true;                    
+                    } else {
+                        $is_valid = false;
+                        $msg      = "Invoice already exist";
                     }
+
+                } else {
+                    $is_valid = false;
+                    $msg = "No active subscriptions.";
                 }
 
-                $invoice_number = formatInvoiceNumberV2($prefix, $next_number);
-                $total_amount   = $input['transaction_amount'];
-                $payment_fee    = 0;
-
-                //Create invoice
-                $address = $customer->mail_add . ' ' . $customer->city . ', ' . $customer->state . ' ' . $customer->zip_code; 
-                $data_invoice = [
-                    'job_id' => 0,
-                    'ticket_id' => 0,
-                    'customer_id' => $customer->prof_id,
-                    'job_location' => $address,
-                    'billing_address' => $address,
-                    'location_scale' => $address,
-                    'business_name' => '',
-                    'job_name' => '',
-                    'job_number' => '',
-                    'estimate_id' => 0,
-                    'invoice_type' => 'Total Due',
-                    'work_order_number' => '',
-                    'invoice_number' => $invoice_number, 
-                    'date_issued' => isset($input['invoice_date']) ? $input['invoice_date'] : date("Y-m-d"),
-                    'due_date' => isset($input['invoice_due_date']) ? $input['invoice_due_date'] : date("Y-m-d"),
-                    'status' => 'Due',
-                    'customer_email' => $customer->email,
-                    'total_due' => $total_amount,
-                    'balance' => $total_amount,
-                    'date_created' => date("Y-m-d H:i:s"),
-                    'date_updated' => date("Y-m-d H:i:s"),
-                    'company_id' => $customer->company_id,
-                    'is_recurring' => 1,
-                    'invoice_totals' => $total_amount,
-                    'user_id' => 0,
-                    'adjustment_name' => 'Customer Subscription',
-                    'adjustment_value' => $total_amount,
-                    'sub_total' => $total_amount,
-                    'taxes' => 0,
-                    'grand_total' => $total_amount,
-                    'view_flag' => 0,
-                    'no_tax' => 0,
-                    'late_fee' => 0,
-                    'payment_fee' => $payment_fee
-                ];
-
-                $invoice_id = $this->Invoice_model->create($data_invoice);
-
-                //Update invoice settings
-                if( $invoiceSettings ){
-                    $invoice_settings_data = ['invoice_num_next' => $next_number + 1];
-                    $this->Invoice_settings_model->update($invoiceSettings->id, $invoice_settings_data);
-                }else{
-                    $invoice_settings_data = [
-                        'invoice_num_prefix' => $prefix,
-                        'invoice_num_next' => $next_number,
-                        'check_payable_to' => '',
-                        'accept_credit_card' => 1,
-                        'accept_check' => 0,
-                        'accept_cash'  => 1,
-                        'accept_direct_deposit' => 0,
-                        'accept_credit' => 0,
-                        'mobile_payment' => 1,
-                        'capture_customer_signature' => 1,
-                        'hide_item_price' => 0,
-                        'hide_item_qty' => 0,
-                        'hide_item_tax' => 0,
-                        'hide_item_discount' => 0,
-                        'hide_item_total' => 0,
-                        'hide_from_email' => 0,
-                        'hide_item_subtotal' => 0,
-                        'hide_business_phone' => 0,
-                        'hide_office_phone' => 0,
-                        'accept_tip' => 0,
-                        'due_terms' => '',
-                        'auto_convert_completed_work_order' => 0,
-                        'message' => 'Thank you for your business.',
-                        'terms_and_conditions' => 'Thank you for your business.',
-                        'company_id' => $company_id,
-                        'commercial_message' => 'Thank you for your business.',
-                        'commercial_terms_and_conditions' => 'Thank you for your business.',
-                        'logo' => '',
-                        'payment_fee_percent' => 0,
-                        'payment_fee_amount' => 0,
-                        'recurring' => '',
-                        'invoice_template' => 1,
-                        'residential_message' => 'Thank you for your business.',
-                        'residential_terms_and_conditions' => 'Thank you for your business.',
-                        'invoice_template' => 0,
-                        'late_fee_amount_per_day' => 0,
-                        'num_days_activate_late_fee' => 0,
-                    ];
-
-                    $this->Invoice_settings_model->create($invoice_settings_data);
-                }                
-                
             }
-            */
 
             if ($is_valid) {
                 $subscription_details = [];
