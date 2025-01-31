@@ -38,6 +38,16 @@ class JobType_model extends MY_Model
         return $query->result();
     }
 
+    public function getSpecificColumnJobTypes($select, $company_id)
+    {
+        $this->db->select($select);
+        $this->db->from('job_types');
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
     public function getById($id)
     {
         $this->db->select('*');
