@@ -69,15 +69,12 @@
         <input type="hidden" name="cid" value="<?php echo $checklist->id; ?>" id="checklist-id">
 
         <div class="form-group">
-            <label>Checklist Name</label> <span class="form-required">*</span>
+            <label>Checklist Name</label>
             <input type="text" name="checklist_name" value="<?= $checklist->checklist_name; ?>"  class="form-control" required="" autocomplete="off" />
         </div>
-        <div class="form-group">
-            <label>Attach this checklist to all Work Orders for</label> <span class="form-required">*</span><br />                              
-            <small>Select from the options below to which this checklist will be automatically attached when you create a new Work Order.</small>
-            <br />
+        <div class="form-group mt-2">                           
+            <label>Customer Type <span style="margin-left:0px;" class="bx bxs-help-circle" id="help-popover-checklist"></span></label>
             <select class="form-control" id="attach-to-job-id" name="attach_to_job_id" required="">
-            <option value="">- Select -</option>
             <?php foreach($checklistAttachType as $key => $value){ ?>
                 <option <?= $checklist->attach_to_job_id == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
             <?php } ?>
@@ -127,10 +124,17 @@
 <?php include viewPath('v2/pages/job_checklists/modals/edit_checklist_modal'); ?>
 
 <?php include viewPath('v2/includes/footer'); ?>
-<script src="<?php echo $url->assets ?>js/custom.js"></script>
-
 <script>
 $(function(){
+    $('#help-popover-checklist').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Customer type in which checklist will be automatically attached when you create a new work order.';
+        } 
+    });
+
     $(".btn-add-checklist-item").click(function(){
         $("#modalAddChecklistItem").modal("show");
     });
