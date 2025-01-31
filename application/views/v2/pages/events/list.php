@@ -29,6 +29,10 @@ table.dataTable.no-footer {
      color: black !important;
      cursor: pointer; 
 }
+.btn-view-event{
+    text-decoration:none;
+    color:unset;
+}
 </style>
 
 <div class="nsm-fab-container">
@@ -62,22 +66,15 @@ table.dataTable.no-footer {
                             <input class="d-none" id="CUSTOM_FILTER_SEARCHBAR" type="text" placeholder="Filter" data-index="20">
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('events', 'write')){ ?>
                     <div class="col-6 grid-mb text-end">
-                        <!-- <div class="dropdown d-inline-block">
-                            <select id="CUSTOM_FILTER_DROPDOWN" class="dropdown-toggle nsm-button">
-                                <option selected value="">All</option>
-                                <option value="Draft">Draft</option>
-                                <option value="Scheduled">Scheduled</option>
-                                <option value="Started">Started</option>
-                                <option value="Finished">Finished</option>
-                            </select>
-                        </div> -->
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('events/event_add') ?>'">
                             <i class='bx bx-fw bx-calendar-event'></i> New Event
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
                 <table id="EVENT_TABLE" class="nsm-table w-100">
                     <thead>
@@ -112,7 +109,7 @@ table.dataTable.no-footer {
                                 <div class="nsm-profile me-3" style="background-color:<?= $event->event_color; ?>; width: 40px;"></div>
                             </td>
                             <td>
-                                <div class="d-flex align-items-center">                            
+                                <div class="techs">                   
                                     <?php $attendees = json_decode($event->employee_id); ?>
                                     <?php foreach($attendees as $eid){ ?>
                                         <div class="nsm-profile me-3" style="background-image: url('<?= userProfileImage($eid); ?>'); width: 40px;"></div>
@@ -127,8 +124,12 @@ table.dataTable.no-footer {
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li><a class="dropdown-item btn-view-event" href="javascript:void(0);" data-id="<?= $event->id; ?>" data-event-number="<?= $event->event_number; ?>">Preview</a></li>
+                                        <?php if(checkRoleCanAccessModule('events', 'write')){ ?>
                                         <li><a class="dropdown-item" href="<?php echo base_url('events/event_edit/') . $event->id; ?>">Edit</a></li>
-                                        <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $event->id; ?>">Delete</a></li>
+                                        <?php } ?>
+                                        <?php if(checkRoleCanAccessModule('events', 'delete')){ ?>
+                                        <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-event-number="<?= $event->event_number; ?>" data-id="<?php echo $event->id; ?>">Delete</a></li>
+                                        <?php } ?>
                                     </ul>
                                 </div>
                             </td>
@@ -208,30 +209,44 @@ $(document).ready(function () {
     });
 
     $(document).on("click", ".delete-item", function (event) {
-        var ID = $(this).data("id");
+        var eid = $(this).data("id");
+        var event_number = $(this).data('event-number');
+
         Swal.fire({
-            title: 'Continue to REMOVE this Event?',
-            text: "",
-            icon: 'warning',
+            title: 'Delete Event',
+            html: `Are you sure you want to delete event number <b>${event_number}</b>?`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
             showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
+            cancelButtonText: "Cancel"
         }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Event was deleted successfully!',
-                }).then((result) => {
-                    window.location.href = "/events";
-                });
+            if (result.value) {
                 $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url('events/delete_event') ?>",
-                    data: {
-                        job_id: ID
-                    }, // serializes the form's elements.
-                    success: function (data) { }
+                    type: 'POST',
+                    url: base_url + "events/_delete_event",
+                    data: {schedule_id: eid},
+                    dataType:"json",
+                    success: function(result) {
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Events',
+                                text: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: result.msg
+                            });
+                        }
+                    },
                 });
             }
         });
