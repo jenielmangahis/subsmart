@@ -448,8 +448,6 @@ body {
   display: block;
 }
 
-
-
 .nsm-card {
   border: 1px solid #d3d3d3;
   border-radius: 5px;
@@ -527,7 +525,7 @@ body {
 .nsm-card .nsm-card-controls a > .bx {
   width: 12px !important;
 }
-.nsm-card .nsm-card-content .banner img{ 
+.nsm-card .nsm-card-content .banner img {
   width: 100% !important;
 }
 .nsm-card .nsm-card-content {
@@ -612,6 +610,11 @@ a.nsm-button {
 .nsm-button-outlined.primary {
   border: 1px solid #6a4a86;
   color: #6a4a86;
+}
+
+.nsm-button-outlined.active {
+  background-color: #6a4a86 !important;
+  color: #fff;
 }
 
 .nsm-button.primary {
@@ -1974,7 +1977,7 @@ div.workspace-list > ul > li .nsm-badge {
 
 /*.nsm-field.datepicker {  
   padding: 0.375rem 0.75rem !important;
-}*/  
+}*/
 
 .nsm-input-group {
   display: inline-block;
@@ -2185,9 +2188,9 @@ span.select2-selection {
 }
 
 /*Custom*/
-.customer-favorite{
-  color:#db3a18 !important;
-  font-size:15px !important;
+.customer-favorite {
+  color: #db3a18 !important;
+  font-size: 15px !important;
 }
 .pull-right {
   float: right;

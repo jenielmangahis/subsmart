@@ -1907,6 +1907,8 @@ class Customer extends MY_Controller
     public function preview($id = null)
     {
         $this->load->model('jobs_model');
+        $this->load->model('AcsProperties_model');
+
         $is_allowed = $this->isAllowedModuleAccess(9);
         if (!$is_allowed) {
             $this->page_data['module'] = 'customer';
@@ -1923,12 +1925,16 @@ class Customer extends MY_Controller
         }
 
         if (isset($userid) || !empty($userid)) {
+            $customerProperty = $this->AcsProperties_model->getByCustomerId($id);
+
             $this->page_data['commission']   = $this->customer_ad_model->getTotalCommission($userid);
             $this->page_data['profile_info'] = $customer;
             $this->page_data['access_info']  = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_access');
             $this->page_data['office_info']  = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_office');
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
-            $this->page_data['alarm_info']   = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_alarm');
+            $this->page_data['alarm_info']   = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_alarm');   
+            $this->page_data['customerProperty'] = $customerProperty;
+                     
             $get_customer_notes = [
                 'where' => [
                     'fk_prof_id' => $userid,
@@ -1966,6 +1972,7 @@ class Customer extends MY_Controller
             ];
             $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
         }
+        
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'ac_salesarea', 'sa_id');
         $this->page_data['employees'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'users', 'id');
         $this->page_data['users'] = $this->users_model->getUsers();
@@ -3286,6 +3293,7 @@ class Customer extends MY_Controller
         $this->load->model('FinancingPaymentCategory_model');
         $this->load->model('IndustryType_model');
         $this->load->model('CompanyCustomerFormSetting_model');
+        $this->load->model('AcsProperties_model');
 
         $this->hasAccessModule(9);
 
@@ -3484,11 +3492,13 @@ class Customer extends MY_Controller
             'assets/css/customer/add_advance/add_advance.css',
         ]);
 
+        $customerProperty = $this->AcsProperties_model->getByCustomerId($id);
         
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
         $this->page_data['companyFormSetting'] = $companyFormSetting;
         $this->page_data['formGroups'] = $formGroups;
+        $this->page_data['customerProperty'] = $customerProperty;
         $this->page_data['financingCategories'] = $financingCategories;
         $this->page_data['sales_tech_paid'] = $this->customer_ad_model->getJobSalesTechPaid($id);
         $this->page_data['sales_tech_commission'] = $this->customer_ad_model->getJobSalesTechCommission($id)[0];
@@ -3707,6 +3717,7 @@ class Customer extends MY_Controller
                 $save_access = $this->save_access_information($input, $profile_id);
                 $save_papers = $this->save_papers_information($input, $profile_id);
                 $save_contacts = $this->save_contacts($input, $profile_id);
+                $save_property = $this->save_property_information($input, $profile_id);
 
                 if ($companyId == 58 || $companyId == 1) {
                     $this->save_solar_info($input, $profile_id);
@@ -3735,6 +3746,57 @@ class Customer extends MY_Controller
             $data_arr = ['success' => false, 'message' => 'Customer Already Exist!'];
         }
         exit(json_encode($data_arr));
+    }
+
+    public function save_property_information($input, $prof_id)
+    {
+        $this->load->model('AcsProperties_model');
+
+        $customerProperty = $this->AcsProperties_model->getByCustomerId($prof_id);
+        if( $customerProperty ){
+            $data = [
+                'inventory' => $input['prop_inventory'],
+                'plan_type' => $input['prop_plan_type'],
+                'deductible' => $input['prop_deductible'],
+                'revenue' => $input['prop_revenue'],
+                'territory' => $input['prop_territory'],
+                'property_tax' => $input['prop_property_tax'],
+                'add_on' => $input['prop_add_on'],
+                'ac_type' => $input['prop_ac_type'],
+                'payment_history' => $input['prop_payment_history'],
+                'late_fee_collected' => $input['prop_late_fee_collected'],
+                'alarm_system' => $input['prop_alarm_system'],
+                'key_code' => $input['prop_key_code'],
+                'source' => $input['prop_source'],
+                'ownership' => $input['prop_ownership'],
+                'date_modified' => date("Y-m-d H:i:s")
+            ];
+            $this->AcsProperties_model->update($customerProperty->id, $data);            
+
+        }else{
+            $data = [
+                'customer_id' => $prof_id,
+                'inventory' => $input['prop_inventory'],
+                'plan_type' => $input['prop_plan_type'],
+                'deductible' => $input['prop_deductible'],
+                'revenue' => $input['prop_revenue'],
+                'territory' => $input['prop_territory'],
+                'property_tax' => $input['prop_property_tax'],
+                'add_on' => $input['prop_add_on'],
+                'ac_type' => $input['prop_ac_type'],
+                'payment_history' => $input['prop_payment_history'],
+                'late_fee_collected' => $input['prop_late_fee_collected'],
+                'alarm_system' => $input['prop_alarm_system'],
+                'key_code' => $input['prop_key_code'],
+                'source' => $input['prop_source'],
+                'ownership' => $input['prop_ownership'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s")
+            ];
+            $this->AcsProperties_model->create($data);
+        }
+
+        return true;
     }
 
     public function save_person_profile()

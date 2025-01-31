@@ -35,6 +35,17 @@ class JobTags_model extends MY_Model
         return $query->result();
     }
 
+    public function getSpecificColumn($column, $company_id)
+    {
+
+        $this->db->select($column);
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getById($id)
     {
         $user_id = logged('id');

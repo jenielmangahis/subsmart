@@ -81,6 +81,7 @@
                     <li><a class="dropdown-item" href="<?php echo base_url('customer/settings_headers') ?>">Header</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('customer/settings_import') ?>">Import Settings</a></li>
                     <li><a class="dropdown-item" href="<?= base_url('customer/settings_export') ?>">Export Settings</a></li>
+                    <li><a class="dropdown-item" href="<?= base_url('customer/form_settings') ?>">Form Fields</a></li>
                     <?php if ( isSolarCompany() == 1 ) { ?>
                         <li><a class="dropdown-item btn-adt-sync-settings" href="javascript:void(0);">ADT Sales Portal : Data Sync Settings</a></li>
                     <?php } ?>

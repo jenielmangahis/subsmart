@@ -29,6 +29,7 @@ if (! function_exists('get_automation_options')) {
                     'sent'     => 'is sent',
                     'due'      => 'is due',
                     'past_due' => 'is past due',
+                    'paid' => 'is paid',
                 ],
             ],
             'targetOptions' => [
@@ -255,6 +256,165 @@ if (!function_exists('getRemindersTemplate')) {
                 'description' => 'Send an email to a client 1 day ahead of the job.',
                 'onclick' => "populateModal({'entity': 'job', 'trigger_event': 'created', 'target': 'client', 'trigger_action': 'send_email', 'trigger_time': '1440', 'timing_reference': 'ahead_of', 'date_reference': 'scheduled_date', 'title': '1 Day Notice / Client Reminder'})"
             ]
+        ];
+    }
+}
+
+if (!function_exists('getMarketingTemplate')) {
+    /**
+     * Get predefined card configurations.
+     *
+     * @return array
+     */
+    function getMarketingTemplate()
+    {
+        return [
+              [
+                'title' => 'Maintenance / Email',
+                'description' => '6 months after the job ends, send an email to the client.',
+                'onclick' => "populateModal({'entity': 'job', 'trigger_event': 'has_status', 'trigger_status': 'Completed','target': 'client', 'trigger_action': 'send_email', 'trigger_time': '259200', 'timing_reference': 'after', 'date_reference': 'end_date', 'title': 'Maintenance / Email'})"
+            ],
+
+            [
+                'title' => 'Remarketing / Text Coupon',
+                'description' => '6 months after the job ends, send a text to the client',
+                'onclick' => "populateModal({'entity': 'job', 'trigger_event': 'has_status', 'trigger_status': 'Completed','target': 'client', 'trigger_action': 'send_sms', 'trigger_time': '259200', 'timing_reference': 'after', 'date_reference': 'end_date', 'title': 'Remarketing / Text Coupon'})"
+            ],
+            [
+                'title' => 'Collect Reviews / 1 day after',
+                'description' => '1 day after the job ends, send an email with a review request to the client.',
+                'onclick' => "populateModal({'entity': 'job', 'trigger_event': 'has_status', 'trigger_status': 'Completed','target': 'client', 'trigger_action': 'send_email', 'trigger_time': '1440', 'timing_reference': 'after', 'date_reference': 'end_date', 'title': 'Collect Reviews / 1 day after'})"
+            ],
+            [
+                'title' => 'Maintenance / Text',
+                'description' => '6 months after the job ends, send a text to the client.',
+                'onclick' => "populateModal({'entity': 'job', 'trigger_event': 'has_status', 'trigger_status': 'Completed', 'target': 'client', 'trigger_action': 'send_sms', 'trigger_time': '259200', 'timing_reference': 'after', 'date_reference': 'end_date', 'title': 'Maintenance / Text'})"
+            ],
+              [
+                'title' => 'Remarketing / Text',
+                'description' => '6 months after the job ends, send a text to the client.',
+                'onclick' => "populateModal({
+                                            'entity': 'job', 
+                                            'trigger_event': 'has_status', 
+                                            'trigger_status': 'Completed', 
+                                            'target': 'client', 
+                                            'trigger_action': 'send_sms', 
+                                            'trigger_time': '259200', 
+                                            'timing_reference': 'after', 
+                                            'date_reference': 'end_date', 
+                                            'title': 'Remarketing / Text'})"
+            ]
+        ];
+    }
+}
+
+if (!function_exists('getFollowUpsTemplate')) {
+    /**
+     * Get predefined card configurations.
+     *
+     * @return array
+     */
+    function getFollowUpsTemplate()
+    {
+        return [
+              [
+                'title' => 'Email Follow up / 3 days after',
+                'description' => '3 days after an estimate is sent, send client an email.',
+                'onclick' => "populateModal({
+                                        'entity': 'estimate', 
+                                        'trigger_event': 'sent', 
+                                        'target': 'client', 
+                                        'trigger_action': 'send_email', 
+                                        'trigger_time': '4320 ', 
+                                        'timing_reference': 'after', 
+                                        'date_reference': 'end_date', 
+                                        'title': 'Email Follow up / 3 days after'})"
+            ],
+
+            [
+                'title' => 'Estimate Follow Up / 7 days after',
+                'description' => '7 days after an estimate is sent, send client an email.',
+                'onclick' => "populateModal({
+                                        'entity': 'estimate', 
+                                        'trigger_event': 'sent', 
+                                        'target': 'client', 
+                                        'trigger_action': 'send_email', 
+                                        'trigger_time': '10080', 
+                                        'timing_reference': 'after', 
+                                        'date_reference': 'end_date', 
+                                        'title': 'Estimate Follow Up / 7 days after'})"
+            ],
+            [
+                'title' => 'Text Follow Up / 1 day after',
+                'description' => 'Follow up on an invoice with due amount the next day by text message.',
+                'onclick' => "populateModal({
+                                    'entity': 'invoice', 
+                                    'trigger_event': 'sent', 
+                                    'target': 'client', 
+                                    'trigger_action': 'send_email', 
+                                    'trigger_time': '1440', 
+                                    'timing_reference': 'after', 
+                                    'date_reference': 'end_date', 
+                                    'title': 'Text Follow Up / 1 day after'})"
+            ],
+            [
+                'title' => 'Email Follow up / 1 day after',
+                'description' => 'Follow up an invoice with a due amount the next day by email.',
+                'onclick' => "populateModal({
+                                        'entity': 'invoice', 
+                                        'trigger_event': 'sent', 
+                                        'target': 'client', 
+                                        'trigger_action': 'send_email', 
+                                        'trigger_time': '1440', 
+                                        'timing_reference': 'after', 
+                                        'date_reference': 'end_date', 
+                                        'title': 'Email Follow up / 1 day after'})"
+            ],
+            [
+                'title' => 'Email Follow up / 7 day after',
+                'description' => 'After 7 days, follow up by email on an invoice with a due amount.',
+                'onclick' => "populateModal({
+                                            'entity': 'invoice', 
+                                            'trigger_event': 'sent', 
+                                            'target': 'client', 
+                                            'trigger_action': 'send_email', 
+                                            'trigger_time': '10080', 
+                                            'timing_reference': 'after', 
+                                            'date_reference': 'end_date', 
+                                            'title': 'Email Follow up / 7 day after'})"
+            ],
+            [
+                'title' => 'Client Payment Thankyou',
+                'description' => 'Send Thank you email immediately to client when an invoice is pain in full.',
+                'onclick' => "populateModal({'entity': 'invoice', 'trigger_event': 'paid', 'target': 'client', 
+                                            'trigger_action': 'send_sms', 
+                                            'trigger_time': '0', 
+                                            'title': 'Client Payment Thankyou'})"
+            ]
+        ];
+    }
+}
+
+if (!function_exists('getActionsTemplate')) {
+    /**
+     * Get predefined card configurations.
+     *
+     * @return array
+     */
+    function getActionsTemplate()
+    {
+        return [
+              [
+                'title' => 'Create Invoice / Immediately',
+                'description' => 'Create an invoice immediately after job ends',
+                'onclick' => "populateModal({
+                                        'entity': 'job', 
+                                        'trigger_event': 'has_status', 
+                                        'trigger_status': 'Completed',
+                                        'trigger_time': '0', 
+                                        'title': 'Create Invoice / Immediately'})"
+            ],
+
         ];
     }
 }

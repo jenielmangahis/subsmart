@@ -8,40 +8,36 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-12 mb-2">
-                        <input id="ITEM_CUSTOM_SEARCH" style="width: 200px;" class="form-control" type="text" placeholder="Search Item...">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" for="estimate-items-table" id="items_search_field" placeholder="Search List">
+                        </div>
                     </div>
                     <div class="col-sm-12">
-                        <table id="items_table" class="table table-hover table-sm w-100">                                    
-                            <thead class="bg-light">
+                        <table id="estimate-items-table" class="nsm-table" style="width: 100%;">                             
+                            <thead>
                                 <tr>
-                                    <td></td>
-                                    <td><strong>Name</strong></td>
-                                    <td><strong>On Hand</strong></td>
-                                    <td><strong>Price</strong></td>
-                                    <td><strong>Type</strong></td>
+                                    <td data-name="Name" style="width:50%;"> Name</td>
+                                    <td data-name="Type" style="width:10%;">Type</td>
+                                    <td data-name="Qty" style="width:10%;">Qty</td>
+                                    <td data-name="Price" style="width:10%;text-align:right">Price</td>
+                                    <td data-name="Manage" style="width:5%;"></td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($items as $item) { ?>
-                                    <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
+                                    <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">  
+                                        <?php
+                                            $qty = $this->items_model->countQty($item->id);
+                                            $disabled = $qty <= 0 ? "disabled" : ""; 
+                                            $buttonClass = $qty <= 0 ? "disabled-button" : "";
+                                        ?>                                      
+                                        <td class="nsm-text-primary"><?php echo $item->title; ?></td>
+                                        <td class="nsm-text-primary"><?php echo $item->type; ?></td>
+                                        <td><?= $qty; ?></td>
+                                        <td style="text-align:right;"><?= number_format($item->price,2,".",""); ?></td>
                                         <td style="width: 0% !important;">
-                                            <button type="button" data-bs-dismiss="modal" class='nsm-button primary small select_item2a' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                            <button type="button" data-bs-dismiss="modal" class='nsm-button select_item2a' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
                                         </td>
-                                        <td><?php echo $item->title; ?></td>
-                                        <td>
-                                            <?php 
-                                                foreach($itemsLocation as $itemLoc){
-                                                    if($itemLoc->item_id == $item->id){
-                                                        echo "<div class='data-block'>";
-                                                        echo $itemLoc->name. " = " .$itemLoc->qty;
-                                                        echo "</div>";
-                                                    } 
-                                                }
-                                            ?>
-                                        </td>
-                                        <td><?php echo $item->price; ?></td>
-                                        <td><?php echo $item->type; ?></td>
-
                                 <?php } ?>
                             </tbody>
                         </table>

@@ -5521,3 +5521,26 @@ function checkRoleCanAccessWidget($wid){
     
     return $allow_access;
 }
+
+function isCustomerFieldEnabled($formSettings, $field_group, $field_name){
+    $is_enabled = 1;
+    if( $formSettings[$field_group][$field_name] ){
+        $is_enabled = $formSettings[$field_group][$field_name]['is_enabled'];
+    }
+
+    return $is_enabled;
+}
+
+function getCustomerFieldValue($formSettings, $field_group, $field_name){
+    $CI =& get_instance();
+    $CI->load->model('CompanyCustomerFormSetting_model');
+
+    $defaultFormSettings = $CI->CompanyCustomerFormSetting_model->formFields();
+
+    $field_value = $defaultFormSettings[$field_group][$field_name]['field_name'];
+    if( $formSettings[$field_group][$field_name] ){
+        $field_value = $formSettings[$field_group][$field_name]['value'];
+    }
+
+    return $field_value;
+}

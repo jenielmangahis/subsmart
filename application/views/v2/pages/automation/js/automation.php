@@ -28,6 +28,8 @@
         let selectedEntity = "";
         let selectedOperation = "";
         let operationOptions = ["send", "create"];
+        let jobTypes = []; 
+        let jobTags = []; 
 
         const extractStatuses = (statusArray) =>
         statusArray
@@ -109,7 +111,7 @@
             });
         }
 
-        function populateModal(data) {
+        async function populateModal(data) {
             if (data) {
                 selectedStatus = data.trigger_status 
                     ?? Object.values(statusOptions[data.entity] || {})[0] 
@@ -124,6 +126,7 @@
                 selectedEntity = data.entity;
                 smsBody = data.sms_body;
                 selectedOperation = 'send';
+                conditions = data.conditions ? JSON.parse(data.conditions) : [];
 
                 const template = generateEmailTemplate(data.target);
                 if (template) {
@@ -134,8 +137,15 @@
                         smsBody = body;
                     }
                 }
+
+                console.log('smsBody', smsBody)
              
             }
+
+            let tagData = await sendGet("/Automation/getJobTags");
+            jobTags = tagData.data || [];
+            typeData = await sendGet("/Automation/getJobTypes");
+            jobTypes = typeData.data || [];
 
             //first
             handleFirstParagraph(selectedEntity);
@@ -148,11 +158,9 @@
                 setActiveTimelineItem();
             }
 
+            renderConditions();
+
             $("#addAutomation").modal("show");
-        }
-
-        function handleAutomationTemplate(){
-
         }
 
         function handleFirstParagraph() {
@@ -359,7 +367,7 @@
             $(".action-dropdown-container").addClass("d-none");
             $(".time-dropdown-container").addClass("d-none");
             $(".date-dropdown-container").addClass("d-none");
-            disableTimeDropdownBtns()
+            disableTimeDropdownBtns();
         }
 
         function updateSelectedValues(menuId, value) {
@@ -555,6 +563,36 @@
             }
         });
 
+        $(".delete-first-line").click(function () {
+            console.log('asdasd')
+           resetAutomationModal();
+           $("#entityDropdownBtn").text("this happens");
+           $("#operationDropdownBtn").text("do this");
+        });
+
+         $(".delete-second-line").click(function () {
+
+            selectedTarget = "";
+            selectedAction = "";
+            selectedTime = "";
+            selectedTiming = "";
+            selectedDate = "";
+            emailSubject = "";
+            emailBody = "";
+            activeAutoTemplate = "";
+            selectedEntity = "";
+            selectedOperation = "";
+            smsBody = "";
+
+            $(".target-dropdown-container").addClass("d-none");
+            $(".action-dropdown-container").addClass("d-none");
+            $(".time-dropdown-container").addClass("d-none");
+            $(".date-dropdown-container").addClass("d-none");
+            disableTimeDropdownBtns();
+
+           $("#operationDropdownBtn").text("do this");
+        });
+
         $("#emailForm").on("submit", function (e) {
             e.preventDefault();
 
@@ -685,6 +723,7 @@
                 email_body: emailBody,
                 sms_body: smsBody,
                 status: "active",
+                conditions: JSON.stringify(conditions) 
             };
 
             // Check for missing fields
@@ -730,6 +769,7 @@
                 email_body: emailBody,
                 sms_body: smsBody,
                 id: selectedAutomationId,
+                conditions: JSON.stringify(conditions) 
             };
 
             // Check for missing fields
@@ -794,6 +834,241 @@
          $("#addAutomationBtn").click(function (e) {
             openAutomationModal("add");
         });
+
+        let conditions = [];
+        
+
+        const conditionOptions = {
+            lead: [
+                { value: "job_types", text: "Job Type" },
+                { value: "job_tags", text: "Job Tag" }
+            ],
+            job: [
+                { value: "job_types", text: "Job Type" },
+                { value: "job_tags", text: "Job Tag" },
+                { value: "amount", text: "Amount" }
+            ],
+            estimate: [
+                { value: "amount", text: "Amount" }
+            ],
+            invoice: [
+                { value: "amount", text: "Amount" }
+            ]
+        };
+        
+        //open condition modal
+        $(".add-condition").on("click", function () {
+            $(".operator-btns button").removeClass("d-none");
+            $(".operator-btns button").removeClass("active");
+            handleConditionOptions();
+            handleConditionValueOptions("#conditionValueSelect")
+            $("#addCondition").modal("show");
+            conditions = []; 
+            $(".list-condition").empty(); 
+
+        console.log(jobTags)
+
+        });
+
+        $("#conditionSelect").on("change", async function () {
+            let selectedValue = $(this).val();
+            let res = null;
+
+            $(".operator-btns button").removeClass("d-none");
+
+            try {
+                if (selectedValue === "amount") {
+                    //show amount input field, hide select dropdown
+                    $(".cond-value-amount-container").removeClass("d-none");
+                    $(".cond-value-select-container").addClass("d-none");
+
+                    //only show =, >, and < for amount
+                    $(".operator-btns button[data-value='!=']").addClass("d-none");
+                } else {
+                    //show select dropdown, hide amount input field
+                    $(".cond-value-amount-container").addClass("d-none");
+                    $(".cond-value-select-container").removeClass("d-none");
+
+                    $(".operator-btns button").removeClass("d-none");
+
+                    if (selectedValue === "job_tags" || selectedValue === "job_types") {
+                        //hide > and < for job_tags and job_types
+                        $(".operator-btns button[data-value='>']").addClass("d-none");
+                        $(".operator-btns button[data-value='<']").addClass("d-none");
+
+                        //fetch data
+                        res = selectedValue === "job_tags"
+                            ? jobTags
+                            : jobTypes;
+
+                        console.log(res)
+                    }
+                }
+
+                //populate select dropdown if data is available
+                if (res) {
+                    handleConditionValueOptions("#conditionValueSelect", res);
+                }
+
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        });
+
+
+        $(".or-condition").on("click", function () {
+            let selectedProperty = $("#conditionSelect").val();
+            let selectedOperator = $(".operator-btns button.active").data("value");
+            let selectedValue = $("#conditionValueSelect").val() || $(".cond-value-amount-container input").val();
+
+            let selectedValueName = getConditionValueName(selectedProperty, selectedValue);
+
+
+            //validate if the user has selected values
+            if (!selectedProperty || !selectedOperator || !selectedValue) {
+                alert("Please select a property, operator, and value before adding a condition.");
+                return;
+            }
+
+            let newCondition = {
+                property: selectedProperty,
+                operator: selectedOperator,
+                value: selectedValue
+            };
+
+            conditions.push(newCondition); // Save condition to array
+
+            $(".list-condition").append(`
+                <h6 class="nsm-text cursor-pointer fw-bold px-5">
+                    ${selectedProperty} ( ${selectedOperator} ) ${selectedValueName}
+                </h6>
+                <label class="mb-1 fw-xnormal">or...</label>
+            `);
+
+            // Reset select and input fields
+            resetForm();
+            console.log(conditions);
+        });
+
+        $(".operator-btns button").on("click", function () {
+            //remove active class from all buttons in the same group
+            $(this).siblings().removeClass("active");
+
+            //add active class to the clicked button
+            $(this).addClass("active");
+        });
+
+        $("#addCondition .nsm-button.primary").on("click", function () {
+            let property = $("#conditionSelect").val(); 
+            let operator = $(".operator-btns button.active").data("value");
+            let value = $("#conditionValueSelect").val() || $(".cond-value-amount-container input").val();
+            if (!property || !operator || !value) {
+                alert("Please select all fields.");
+                return;
+            }
+
+            let condition = {
+                property: property,
+                operator: operator,
+                value: value
+            };
+
+         
+            conditions.push(condition);
+            renderConditions();
+
+            $("#addCondition").modal("hide");
+            console.log(condition)
+        });
+
+         $(document).on("click", ".remove-condition", function () {
+            let index = $(this).data("index");
+            console.log(index)
+            conditions.splice(index, 1);
+            console.log(conditions)
+            renderConditions();
+        });
+
+        function resetForm() {
+            $("#conditionSelect").val("");
+            $("#conditionValueSelect").empty().append('<option value="" disabled selected>Select Property</option>');
+            $(".cond-value-amount-container input").val("");
+            $(".cond-value-amount-container").addClass("d-none");
+            $(".cond-value-select-container").removeClass("d-none");
+            $(".operator-btns button").removeClass("active");
+        }
+
+        function renderConditions() {
+            $(".conditions-list").empty(); 
+
+            if (conditions.length === 0) {
+                $(".conditions-listn").append("<p class='text-muted px-5'>No conditions added yet.</p>");
+                return;
+            }
+
+            conditions.forEach((condition, index) => {
+                let selectedValueName = getConditionValueName(condition.property, condition.value);
+                $(".conditions-list").append(`
+                    <div class="condition-item d-flex justify-content-between align-items-center px-3 mb-2">
+                        <h6 class="nsm-text cursor-pointer fw-bold">
+                            Only if ${condition.property} ${condition.operator} ${selectedValueName}
+                        </h6>
+                      
+                        <i class="bx bx-fw bx-x primary cursor-pointer remove-condition" data-index="${index}"></i>
+
+                    </div>
+                `);
+            });
+        }
+
+        function getNameById(array, id) {
+            let item = array.find(obj => obj.id === id);
+            return item ? item.name : null;
+        }
+
+        function getConditionValueName(property, value) {
+            let selectedValueName = '';
+
+            if (property === "job_types") {
+                selectedValueName = getNameById(jobTypes, value) || value; 
+            } else if (property === "job_tags") {
+                selectedValueName = getNameById(jobTags, value) || value; 
+            } else {
+                selectedValueName = value;
+            }
+
+            return selectedValueName;
+        }
+
+        function handleConditionOptions () {
+            let $conditionSelect = $("#conditionSelect");
+            $conditionSelect.empty();
+            $conditionSelect.append(new Option("Select Property", "", true, true));
+            if (selectedEntity && conditionOptions[selectedEntity]) {
+                conditionOptions[selectedEntity].forEach(option => {
+                    $conditionSelect.append(new Option(option.text, option.value));
+                });
+            }
+        }
+
+        function handleConditionValueOptions(selectId, options) {
+            if(!selectId) return;
+            let $conditionSelect = $(selectId);
+
+            // Clear the existing options
+            $conditionSelect.empty();
+
+            // Optionally, add a default "Select" option
+            $conditionSelect.append(new Option("Select Property", "", true, true));
+
+            if (options && options.length > 0) {
+                // Append new options
+                options.forEach(option => {
+                    $conditionSelect.append(new Option(option.name, option.id));
+                });
+            }
+        }
+
 
         function sendPost(data, url, message, isReload = false) {
             return new Promise((resolve, reject) => {
@@ -860,6 +1135,23 @@
             });
         }
 
+        function sendGet(url, message, isReload = false) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                type: "GET",
+                url: BASE_URL + url,
+                success: function (response) {
+                    const parsedResponse = typeof response === "string" ? JSON.parse(response) : response;
+                    resolve(parsedResponse);
+                },
+                error: function (xhr, status, error) {
+                    reject(error);
+                    console.log(error, xhr, status)
+                },
+                });
+            });
+        }
+
         $(".process-auto").click(function (e) {
             e.preventDefault();
             const automationData = {};
@@ -892,10 +1184,6 @@
             };
             let res = sendPost(data, "/Automation/toggleAutomationStatus", message, true);
         });
-
-       
-
-       
 
         function getMissingFields(data) {
             let missingFields = [];
@@ -1003,32 +1291,6 @@
             };
         }
 
-        if (CKEDITOR.instances["automation_msg"]) {
-         CKEDITOR.instances["automation_msg"].destroy(true);
-        }
-
-        CKEDITOR.replace("automation_msg", {
-            height: 250,
-            toolbarGroups: [
-                {
-                name: "document",
-                groups: ["mode", "document"],
-                },
-                {
-                name: "clipboard",
-                groups: ["clipboard", "undo"],
-                },
-                "/",
-                {
-                name: "basicstyles",
-                groups: ["basicstyles", "cleanup"],
-                },
-                {
-                name: "links",
-                },
-            ],
-        });
-
         // Handle the Insert Smart Tag button click
         $('#smartTags').on('change', function () {
             const selectedTag = $(this).val(); 
@@ -1064,6 +1326,33 @@
                
             } 
         });
+
+        if (CKEDITOR.instances["automation_msg"]) {
+         CKEDITOR.instances["automation_msg"].destroy(true);
+        }
+
+        CKEDITOR.replace("automation_msg", {
+            height: 250,
+            toolbarGroups: [
+                {
+                name: "document",
+                groups: ["mode", "document"],
+                },
+                {
+                name: "clipboard",
+                groups: ["clipboard", "undo"],
+                },
+                "/",
+                {
+                name: "basicstyles",
+                groups: ["basicstyles", "cleanup"],
+                },
+                {
+                name: "links",
+                },
+            ],
+        });
+
 
         $('#automation_searchbar').on('keyup', function() {
             var searchQuery = $(this).val(); 

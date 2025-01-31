@@ -39,12 +39,7 @@
                 <span>Follow-ups</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Automation Phone'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('automation/phone') ?>">
-            <i class='bx bx-phone'></i>
-                <span>Phone</span>
-            </a>
-        </li>
+     
         <li class="<?php if($page->title == 'Automation Actions'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('automation/actions') ?>">
             <i class='bx bx-bolt-circle'></i>
