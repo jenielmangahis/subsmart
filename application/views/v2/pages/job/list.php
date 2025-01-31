@@ -38,9 +38,6 @@ function jobsmodule__getEmployeeAvatar($employee) {
 }
 ?>
 <?php include viewPath('v2/includes/header'); ?>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
-<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-
 <style>
     .nsm-table {
         /*display: none;*/
@@ -112,7 +109,7 @@ foreach ($jobs as $job) {
 ?>
 
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('job/new_job1') ?>'">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('job/new') ?>'">
         <i class='bx bx-briefcase'></i>
     </div>
 </div>
@@ -266,8 +263,7 @@ foreach ($jobs as $job) {
                             <td>
                                 <div class="table-row-icon"><i class='bx bx-briefcase'></i></div>
                             </td>
-                            <td class="fw-bold nsm-text-primary">
-                                <!-- <?= jobsmodule__formatJobNumber($job->job_number); ?> -->                                    
+                            <td class="fw-bold nsm-text-primary">                                
                                 <?= $job->job_number; ?>
                             </td>
                             <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
@@ -327,9 +323,14 @@ foreach ($jobs as $job) {
                                             <a class="dropdown-item view-job-row" href="javascript:void(0);" data-id="<?= $job->id; ?>">Preview</a>
                                         </li>
                                         
-                                        <?php if( $user_type == 7 || $user_type == 1 ){ //Admin ?>
-                                        <li><a class="dropdown-item" href="<?php echo base_url('job/edit/') . $job->id; ?>">Edit</a></li>
-                                        <li class="DELETE_ITEM" onclick="DELETE_JOB(<?php echo $job->id; ?>)"><a class="dropdown-item" href="javascript:void(0);" data-id="<?= $job->id; ?>">Delete</a></li>
+                                        <?php if(checkRoleCanAccessModule('jobs', 'write')){ ?>
+                                            <li><a class="dropdown-item" href="<?php echo base_url('job/edit/') . $job->id; ?>">Edit</a></li>
+                                        <?php } ?>
+
+                                        <?php if(checkRoleCanAccessModule('jobs', 'delete')){ ?>
+                                            <li class="DELETE_ITEM">
+                                                <a class="dropdown-item btn-delete-job" href="javascript:void(0);" data-id="<?= $job->id; ?>" data-jobnumber="<?= $job->job_number; ?>">Delete</a>
+                                            </li>
                                         <?php } ?>
 
                                         <?php if( $user_type == 6 ){ //Field tech ?>
@@ -375,7 +376,7 @@ foreach ($jobs as $job) {
         </div>
     </div>
 </div>
-
+<?php include viewPath('v2/includes/footer'); ?>
 <script type="text/javascript">
 var JOB_LIST_TABLE = $("#JOB_LIST_TABLE").DataTable({
     "ordering": false,
@@ -394,10 +395,12 @@ $('#CUSTOM_FILTER_DROPDOWN').change(function(event) {
     JOB_LIST_TABLE.columns(9).search(this.value).draw();
 });
 
-function DELETE_JOB(job_id){
+$(document).on('click', '.btn-delete-job', function(){
+    var job_id = $(this).attr('data-id');
+    var job_number = $(this).attr('data-jobnumber');
     Swal.fire({
         title: 'Delete Job',
-        text: "Are you sure you want to delete this Job?",
+        html: `Are you sure you want to delete job number <b>${job_number}</b>?`,
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Proceed',
@@ -414,7 +417,7 @@ function DELETE_JOB(job_id){
                     if (data === "1") {
                         Swal.fire({
                         icon: 'success',
-                        title: 'Success',
+                        title: 'Delete Job',
                         text: 'Job deleted successfully!',
                         }).then((result) => {
                             window.location.reload();
@@ -430,46 +433,7 @@ function DELETE_JOB(job_id){
             });
         }
     });
-}
-
-// $(".DELETE_ITEM > a").click(function(event) {
-//     var job_id = $(".DELETE_ITEM > a").attr("data-id");
-//         Swal.fire({
-//             title: 'Continue to REMOVE this Job?',
-//             text: "",
-//             icon: 'warning',
-//             showCancelButton: true,
-//             confirmButtonText: 'Yes',
-//             cancelButtonText: 'No',
-//         }).then((result) => {
-//             if (result.isConfirmed) {
-//                 $.ajax({
-//                     type: "POST",
-//                     url: "<?php echo base_url('job/delete_job'); ?>",
-//                     data: {
-//                         job_id: job_id
-//                     }, // serializes the form's elements.
-//                     success: function(data) {
-//                         if (data === "1") {
-//                             Swal.fire({
-//                             icon: 'success',
-//                             title: 'Success',
-//                             text: 'Job deleted successfully!',
-//                             }).then((result) => {
-//                                 window.location.reload();
-//                             });
-//                         } else {
-//                            Swal.fire({
-//                             icon: 'error',
-//                             title: 'Error',
-//                             text: 'Failed to Delete Job!',
-//                             });
-//                         }
-//                     }
-//                 });
-//             }
-//         });
-// });
+});
 
 $(document).ready(function() {
     // loadJobs();
@@ -562,11 +526,5 @@ $(document).ready(function() {
             }
         });
     });
-});
-
-// function loadJobs(id = "filter_all") {
-//     $(".nsm-table").hide();
-//     $("#" + id).show();
-// }        
+}); 
 </script>
-<?php include viewPath('v2/includes/footer'); ?>

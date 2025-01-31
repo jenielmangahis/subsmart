@@ -1,5 +1,86 @@
 <script>
-$(document).ready(function() {        
+$(document).ready(function() {      
+
+    $('#btn-quick-add-job-type').on('click', function(){
+        $('#modal-quick-add-job-type').modal('show');
+    });
+
+    $('#quick-add-job-type-form').on('submit', function(e){
+        e.preventDefault();
+        var url = base_url + 'job/_quick_create_job_type';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: $('#quick-add-job-type-form').serialize(),
+            success: function(data) {    
+                $('#btn-quick-add-job-type-submit').html('Save');                   
+                if (data.is_success) {
+                    $('#modal-quick-add-job-type').modal('hide');
+                    $('#job_type_option').append($('<option>', {
+                        value: data.job_type_name,
+                        text: data.job_type_name
+                    }));
+                    $('#job_type_option').val(data.job_type_name);
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-quick-add-job-type-submit').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $('#btn-quick-add-job-tag').on('click', function(){
+        $('#modal-quick-add-job-tag').modal('show');
+    });
+
+    $('#quick-add-job-tag-form').on('submit', function(e){
+        e.preventDefault();
+        var url = base_url + 'job/_quick_create_job_tag';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: $('#quick-add-job-tag-form').serialize(),
+            success: function(data) {    
+                $('#btn-quick-add-job-tag-submit').html('Save');                   
+                if (data.is_success) {
+                    $('#modal-quick-add-job-tag').modal('hide');
+                    $('#job_tags').append($('<option>', {
+                        value: data.job_tag_name,
+                        text: data.job_tag_name
+                    }));
+                    $('#job_tags').val(data.job_tag_name);
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-quick-add-job-tag-submit').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+    
     $(".select_item").click(function () {
         var idd = this.id;
         var title = $(this).data('itemname');

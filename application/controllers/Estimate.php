@@ -650,6 +650,11 @@ class Estimate extends MY_Controller
     {
         $this->load->model('AcsProfile_model');
 
+        if(!checkRoleCanAccessModule('estimates', 'write')){
+            show403Error();
+            return false;
+        }
+
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
 

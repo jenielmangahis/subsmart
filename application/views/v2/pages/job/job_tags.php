@@ -48,14 +48,16 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="nsm-field-group search form-group">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_TAG_SEARCHBAR" placeholder="Search Tag...">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_TAG_SEARCHBAR" placeholder="Search Job Tag">
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('job-settings', 'write')){ ?>
                     <div class="col-sm-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" id="btn-add-new-tag"><i class='bx bx-plus-medical'></i> Add New</button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
                 <table class="nsm-table" id="job-tags-table">
                     <thead>
@@ -92,13 +94,16 @@
                                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <!--<a class="dropdown-item" href="<?= base_url("job/edit_job_tag/" . $tag->id); ?>">Edit Page</a> -->
+                                        <?php if(checkRoleCanAccessModule('job-settings', 'write')){ ?>
+                                        <li>                                            
                                             <a class="dropdown-item row-edit-job-tag" data-id="<?= $tag->id; ?>" data-title="<?= $tag->name; ?>" data-marker="<?= $tag->marker_icon; ?>" href="javascript:void(0);">Edit</a>
                                         </li>
+                                        <?php } ?>
+                                        <?php if(checkRoleCanAccessModule('job-settings', 'delete')){ ?>
                                         <li>
                                             <a class="dropdown-item delete-item" href="javascript:void(0);" data-title="<?= $tag->name; ?>" data-id="<?= $tag->id; ?>">Delete</a>
                                         </li>
+                                        <?php } ?>
                                     </ul>
                                 </div>
                             </td>

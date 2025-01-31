@@ -19,6 +19,11 @@ class Job_Checklists extends MY_Controller
 
     public function index()
     {        
+        if(!checkRoleCanAccessModule('job-settings', 'read')){
+            show403Error();
+            return false;
+        }
+
         $this->page_data['page']->title = 'Checklist';
         $this->page_data['page']->menu = 'job_checklists';
         $this->page_data['title'] = 'Checklist';
@@ -33,6 +38,11 @@ class Job_Checklists extends MY_Controller
 
     public function add_new()
     {
+        if(!checkRoleCanAccessModule('job-settings', 'write')){
+            show403Error();
+            return false;
+        }
+        
         $this->page_data['title '] = 'Checklist';
         $this->page_data['page']->title = 'Add New Job Checklist';
         $this->page_data['page']->menu = 'job_checklists';
@@ -58,7 +68,6 @@ class Job_Checklists extends MY_Controller
 
         $cid = $this->JobChecklist_model->create($data);
 
-
         $this->session->set_flashdata('message', 'Checklist created. Now you can start adding the items.');
         $this->session->set_flashdata('alert_class', 'alert-success');
 
@@ -67,6 +76,10 @@ class Job_Checklists extends MY_Controller
 
     public function edit_checklist($id)
     {
+        if(!checkRoleCanAccessModule('job-settings', 'write')){
+            show403Error();
+            return false;
+        }
 
         $company_id = logged('company_id');
 
@@ -204,28 +217,38 @@ class Job_Checklists extends MY_Controller
         $company_id = logged('company_id');
 
         if( !empty($post['checklistItems']) ){
-            $data = [
-                'company_id' => $company_id,
-                'checklist_name' => $post['checklist_name'],
-                'attach_to_job_id' => $post['attach_to_job_order'],
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_modified' => date("Y-m-d H:i:s")
-            ];
+            $isExists = $this->JobChecklist_model->getByNameAndCompanyId($post['checklist_name'], $company_id);
+            if( !$isExists ){
+                $data = [
+                    'company_id' => $company_id,
+                    'checklist_name' => $post['checklist_name'],
+                    'attach_to_job_id' => $post['attach_to_job_order'],
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+    
+                $cid = $this->JobChecklist_model->create($data);
+    
+                if( isset($post['checklistItems']) ){
+                    foreach( $post['checklistItems'] as $key => $item ){
+                        $data = [
+                            'job_checklist_id' => $cid,
+                            'item_name' => $item
+                        ];
+    
+                        $this->JobChecklistItem_model->create($data);
+                    }    
+                }
 
-            $cid = $this->JobChecklist_model->create($data);
+                //Activity Logs
+                $activity_name = 'Checklist : Created checklist' . $post['checklist_name']; 
+                createActivityLog($activity_name);
 
-            if( isset($post['checklistItems']) ){
-                foreach( $post['checklistItems'] as $key => $item ){
-                    $data = [
-                        'job_checklist_id' => $cid,
-                        'item_name' => $item
-                    ];
-
-                    $this->JobChecklistItem_model->create($data);
-                }    
+                $is_success = 1;   
+            }else{
+                $msg = 'Checklist name already exists';
             }
-
-            $is_success = 1;    
+             
         }else{
             $msg = 'Please add checklist item';
         }
@@ -269,10 +292,41 @@ class Job_Checklists extends MY_Controller
                     }    
                 }
 
+                //Activity Logs
+                $activity_name = 'Checklist : Updated checklist' . $checklist->checklist_name; 
+                createActivityLog($activity_name);
+
                 $is_success = 1;
             }else{
                 $msg = 'Please add checklist item';
             }            
+        }
+        
+        $json_data  = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_checklist()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $checklist = $this->JobChecklist_model->getByIdAndCompanyId($post['id'], $cid);
+        
+        if( $checklist ){
+            $this->JobChecklist_model->deleteAllItemsByJobCheklistId($checklist->id);
+            $this->JobChecklist_model->deleteChecklist($checklist->id);
+
+            //Activity Logs
+            $activity_name = 'Checklist : Delete checklist' . $checklist->checklist_name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
         }
         
         $json_data  = ['is_success' => $is_success, 'msg' => $msg];

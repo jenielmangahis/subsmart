@@ -39,6 +39,12 @@ table.dataTable.no-footer {
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/job_subtabs'); ?>
     </div>
+    <?php
+        $input_disabled = "disabled='disabled'"; 
+        if(checkRoleCanAccessModule('job-settings', 'write')){
+            $input_disabled = '';
+        }
+    ?>
     <div class="col-12" style="min-height:750px">
         <div class="nsm-page">
             <div class="nsm-page-content">                
@@ -58,10 +64,10 @@ table.dataTable.no-footer {
                                             <div class="nsm-card-content">
                                                 <div class="row g-2">
                                                     <div class="col-12 col-md-3">
-                                                        <input type="text" placeholder="Prefix" name="job_settings_prefix" id="number-prefix" class="nsm-field form-control" value="<?php echo $settings_prefix ?>" autocomplete="off" />
+                                                        <input type="text" placeholder="Prefix" name="job_settings_prefix" id="number-prefix" class="nsm-field form-control" value="<?php echo $settings_prefix ?>" autocomplete="off" <?= $input_disabled; ?> />
                                                     </div>
                                                     <div class="col-12 col-md-9">
-                                                        <input type="text" placeholder="Next Number" name="job_settings_next_number" id="number-base" class="nsm-field form-control" value="<?php echo $settings_next_num; ?>" autocomplete="off" />
+                                                        <input type="text" placeholder="Next Number" name="job_settings_next_number" id="number-base" class="nsm-field form-control" value="<?php echo $settings_next_num; ?>" autocomplete="off" <?= $input_disabled; ?> />
                                                     </div>
                                                 </div>
                                             </div>
@@ -80,16 +86,17 @@ table.dataTable.no-footer {
                                                         <input type="text" placeholder="" class="nsm-field form-control" value="<?php echo $comp_id.'-'; ?>" disabled="" readonly="" />
                                                     </div>
                                                     <div class="col-12 col-md-9">
-                                                        <input type="text" placeholder="Next Number" name="job_settings_account_number_next_number" id="job-account-number-base" class="nsm-field form-control" value="<?php echo $settings_job_account_next_num; ?>" autocomplete="off" />
+                                                        <input type="text" placeholder="Next Number" name="job_settings_account_number_next_number" id="job-account-number-base" class="nsm-field form-control" value="<?php echo $settings_job_account_next_num; ?>" autocomplete="off" <?= $input_disabled; ?> />
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <?php if(checkRoleCanAccessModule('job-settings', 'write')){ ?>
                                         <div class="col-12 text-end">
                                             <hr>
                                             <button type="submit" class="nsm-button primary">Save Changes</button>
                                         </div>                                        
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
@@ -103,6 +110,7 @@ table.dataTable.no-footer {
                                         <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_TAX_SEARCHBAR" placeholder="Search Tax Rate...">
                                     </div>
                                 </div>
+                                <?php if(checkRoleCanAccessModule('job-settings', 'write')){ ?>
                                 <div class="col-6 grid-mb text-end">
                                     <div class="nsm-page-buttons page-button-container">
                                         <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#new_tax_rate_modal">
@@ -110,6 +118,7 @@ table.dataTable.no-footer {
                                         </button>                                        
                                     </div>
                                 </div>
+                                <?php } ?>
                             </div>
                             <table id="TAX_SETTINGS_TABLE" class="nsm-table">
                                 <thead>
@@ -143,12 +152,16 @@ table.dataTable.no-footer {
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-end">
+                                                    <?php if(checkRoleCanAccessModule('job-settings', 'write')){ ?>
                                                     <li>
                                                         <a class="dropdown-item edit-item" href="javascript:void(0);" data-name="<?php echo $rate->name; ?>" data-percentage="<?php echo $rate->rate; ?>" data-id="<?php echo $rate->id; ?>" data-default="<?php echo $rate->is_default; ?>">Edit</a>
                                                     </li>
+                                                    <?php } ?>
+                                                    <?php if(checkRoleCanAccessModule('job-settings', 'delete')){ ?>
                                                     <li>
-                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $rate->id; ?>">Delete</a>
+                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $rate->id; ?>" data-name="<?php echo $rate->name; ?>">Delete</a>
                                                     </li>
+                                                    <?php } ?>
                                                 </ul>
                                             </div>
                                         </td>
@@ -232,13 +245,14 @@ TAX_SETTINGS_TABLE_SETTINGS = TAX_SETTINGS_TABLE.settings();
             $("#edit_tax_rate_modal").modal('show');
         });
 
+        <?php if(checkRoleCanAccessModule('job-settings', 'delete')){ ?>
         $(document).on("click", ".delete-item", function( event ) {
             var ID = $(this).attr("data-id");
-
+            var name = $(this).attr("data-name");
             Swal.fire({
-                title: 'Are you sure to remove this tax rate?',
-                text: "",
-                icon: 'warning',
+                title: 'Delete Tax Rate',
+                html: `Are you sure you want to delete this tax rate <b>${name}</b>?`,
+                icon: 'question',
                 confirmButtonColor: '#32243d',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
@@ -247,18 +261,27 @@ TAX_SETTINGS_TABLE_SETTINGS = TAX_SETTINGS_TABLE.settings();
                 if (result.value) {
                     $.ajax({
                         type: "POST",
-                        url: "<?php echo base_url('/job/delete_tax_rate') ?>", 
+                        url: base_url + "job/delete_tax_rate", 
                         data: {id : ID}, // serializes the form's elements.
                         success: function(data)
                         {
-                            if(data === "1"){                                
-                                sucess_add('Nice!','Removed Successfully!',1);
+                            if (result.is_success) {
+                                Swal.fire({
+                                    title: 'Tax Rate',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
                             }else{
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Error!',
-                                    confirmButtonColor: '#32243d',
-                                    html: 'Cannot save data'
+                                    html: result.msg
                                 });
                             }
                         }
@@ -266,7 +289,9 @@ TAX_SETTINGS_TABLE_SETTINGS = TAX_SETTINGS_TABLE.settings();
                 }
             });
         });
+        <?php } ?>
 
+        <?php if(checkRoleCanAccessModule('job-settings', 'write')){ ?>
         $("#form_add_tax").submit(function(e) {
             e.preventDefault(); 
             var form = $(this);
@@ -317,7 +342,7 @@ TAX_SETTINGS_TABLE_SETTINGS = TAX_SETTINGS_TABLE.settings();
                 }
             });
         });
-
+        
         $("#frm-update-job-settings").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var is_valid = 1;
@@ -361,6 +386,7 @@ TAX_SETTINGS_TABLE_SETTINGS = TAX_SETTINGS_TABLE.settings();
             }
             
         });
+        <?php } ?>
     });
 
     function sucess_add($title,information,is_reload){

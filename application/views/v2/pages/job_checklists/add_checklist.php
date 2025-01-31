@@ -69,11 +69,9 @@
             <label>Checklist Name</label> <span class="form-required">*</span>
             <input type="text" name="checklist_name" value=""  class="form-control" required="" autocomplete="off" />
         </div>
-        <div class="form-group">
-            <label>Attach this checklist to all Work Orders for</label> <span class="form-required">*</span><br />                              
-            <small>Select from the options below to which this checklist will be automatically attached when you create a new Work Order.</small>
+        <div class="form-group mt-2">                              
+            <label>Customer Type <span style="margin-left:0px;" class="bx bxs-help-circle" id="help-popover-checklist"></span></label>
             <select class="form-control" id="attach-to-work-order" name="attach_to_job_order" required="">
-                <option value="">- Select -</option>
                 <?php foreach($checklistAttachType as $key => $value){ ?>
                     <option value="<?= $key; ?>"><?= $value; ?></option>
                 <?php } ?>
@@ -106,6 +104,15 @@
 $(function(){
     $(".btn-add-checklist-item").click(function(){
         $("#modalAddChecklistItem").modal("show");
+    });
+
+    $('#help-popover-checklist').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Customer type in which checklist will be automatically attached when you create a new work order.';
+        } 
     });
 
     $("#frm-add-checklist-item").submit(function(e){
