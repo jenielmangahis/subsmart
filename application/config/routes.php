@@ -1437,6 +1437,7 @@ $route['job_checklists/update_checklist'] = 'Job_Checklists/update_checklist';
 $route['job_checklists/delete_checklist'] = 'Job_Checklists/delete_checklist';
 $route['job_checklists/_create_checklist'] = 'Job_Checklists/ajax_save_checklist';
 $route['job_checklists/_update_checklist'] = 'Job_Checklists/ajax_update_checklist';
+$route['job_checklists/_delete_checklist'] = 'Job_Checklists/ajax_delete_checklist';
 
 // Business Profile front
 $route['business/(:any)'] = 'Pages/front_company_business_profile/$1';
