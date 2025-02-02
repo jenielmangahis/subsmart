@@ -164,7 +164,7 @@ class CompanyCustomerFormSetting_model extends MY_Model
                 'language' => ['field_name' => 'Language', 'required' => 'yes', 'is_visible' => 'yes'],
                 'system_type' => ['field_name' => 'System Package Type', 'required' => 'yes', 'is_visible' => 'yes'],
             ],
-            'customer-property' => [
+            /*'customer-property' => [
                 'inventory' => ['field_name' => 'Inventory', 'required' => 'yes', 'is_visible' => 'yes'],
                 'plan_type' => ['field_name' => 'Plan Type', 'required' => 'yes', 'is_visible' => 'yes'],
                 'deductible' => ['field_name' => 'Deductible', 'required' => 'yes', 'is_visible' => 'yes'],
@@ -179,7 +179,7 @@ class CompanyCustomerFormSetting_model extends MY_Model
                 'key_code' => ['field_name' => 'Key code', 'required' => 'yes', 'is_visible' => 'yes'],
                 'source' => ['field_name' => 'Source', 'required' => 'yes', 'is_visible' => 'yes'],
                 'ownership' => ['field_name' => 'Ownership', 'required' => 'yes', 'is_visible' => 'yes'],
-            ],
+            ],*/
             /*'Customer Profile' => [
                 'status' => ['field_name' => 'Status', 'required' => 'yes', 'is_visible' => 'yes'],
                 'customer_type' => ['field_name' => 'Customer Type', 'required' => 'yes', 'is_visible' => 'yes'],

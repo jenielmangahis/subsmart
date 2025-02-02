@@ -21,9 +21,9 @@
                         $cards = getFollowUpsTemplate();
                         foreach ($cards as $card) : ?>
                             <div class="col-3 mb-3">
-                                <div class="nsm-card primary cursor-pointer follow-up-item" style="overflow: visible !important;"
+                                <div class="nsm-card primary cursor-pointer followUps-item" style="overflow: visible !important;"
                                     data-title="<?php echo htmlspecialchars($card['title']); ?>"
-                                    data-type="follow-up"
+                                    data-type="followUps"
                                     data-onclick="<?php echo htmlspecialchars($card['onclick']); ?>">
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-text text-muted">
