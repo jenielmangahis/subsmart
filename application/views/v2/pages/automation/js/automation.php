@@ -72,23 +72,51 @@
                 $(".dropdown-menu").hide(); // Hide all dropdowns
             }
         });
+
+        function handleDropdownText(menuId, buttonId, options, selectedVal){
+            if(menuId == "#targetDropdownMenu"){
+                if(selectedTarget == "user" || selectedVal == "user"){
+                    let userName = <?php echo json_encode(logged('FName') . ' ' . logged('LName')); ?>;
+                    $(buttonId).text(userName || selectedValue);
+                }else{
+                    $(buttonId).text(options[selectedVal] || selectedVal);
+                }
+            }else{
+                $(buttonId).text(options[selectedVal] || selectedVal);
+            }
+        }
       
         // Populate Dropdowns
         function populateDropdown(menuId, options, selectedValue, className, buttonId) {
             if (!options) return; 
 
             $(buttonId).text(options[selectedValue] || selectedValue);
-
+            handleDropdownText(menuId, buttonId, options, selectedValue)
             $(menuId).empty();
             Object.entries(options).forEach(([value, text]) => {
-                $(menuId).append(
-                `<li class="list-group-item ${className} cursor-pointer ${selectedValue == value ? "active" : ""}" data-value="${value}">${text}</li>`,
-                );
+                if (value === "user") {
+                    // "To User" dropdown with logged-in user
+                    let userDropdown = `
+                        <li class="list-group-item dropdown-submenu dropright ${className} ${selectedValue == value ? "active" : ""}" data-value="${value}">
+                            <div href="#" class="dropdown-item dropdown-toggle" style="padding: 0px !important">${text}</div>
+                            <ul class="dropdown-menu user-dropdown">
+                                <li class="dropdown-item user-item cursor-pointer" data-value="<?php echo logged('id'); ?>">
+                                    <?php echo logged('FName').' '.logged('LName'); ?>
+                                </li>
+                            </ul>
+                        </li>`;
+
+                    $(menuId).append(userDropdown);
+                } else {
+                    $(menuId).append(
+                        `<li class="list-group-item ${className} cursor-pointer ${selectedValue == value ? "active" : ""}" data-value="${value}">${text}</li>`
+                    );
+                }
             });
 
             $(`.${className}`).on("click", function () {
                 const selectedVal = $(this).data("value");
-                $(buttonId).text(options[selectedVal] || selectedValue);
+                // $(buttonId).text(options[selectedVal] || selectedValue);
                 $(buttonId).addClass("primary").removeClass("secondary");
                 $(menuId).hide();
                 $(`${menuId} .${className}`).removeClass("active");
@@ -96,8 +124,11 @@
 
                 updateSelectedValues(menuId, selectedVal)
 
+                handleDropdownText(menuId, buttonId, options, selectedVal)
+
+
                 if (menuId == "#eventDropdownMenu") {
-                handleEventItemClick();
+                    handleEventItemClick();
                 }
 
                 if (menuId == "#actionDropdownMenu") {
@@ -110,6 +141,21 @@
                 }
             });
         }
+
+        
+        $(document).on("mouseenter", ".dropdown-submenu", function () {
+            console.log('Hover In');
+            $(this).children(".user-dropdown").css({
+                display: "block",
+                position: "absolute",
+                top: 0,
+                left: "100%",
+                zIndex: 1000 
+            });
+        }).on("mouseleave", ".dropdown-submenu", function () {
+            console.log('Hover Out');
+            $(this).children(".user-dropdown").hide();
+        });
 
         async function populateModal(data) {
             if (data) {
@@ -249,13 +295,13 @@
             }
 
             if (item) {
-                 populateDropdown(
+                populateDropdown(
                 "#targetDropdownMenu",
                 item,
                 selectedTarget || "someone",
                 "target-item",
                 "#targetDropdownBtn",
-            );
+                );
             }
         }
 
@@ -535,6 +581,63 @@
         });
 
         $(".reminder-item").on("click", function () {
+            let action = $(this).data("onclick");
+            let title = $(this).data("title");
+            let type = $(this).data("type");
+
+
+            if (title) {
+                // Set the value of the input field inside the modal
+                $('input[type="text"].nsm-field').val(title);
+                // Update the modal title dynamically
+                $('.automation-title').text(`Automation: ${title}`);
+                selectedTitle = title;
+                activeAutoTemplate = type;
+            }
+            if (action) {
+                eval(action);
+            }
+        });
+
+        $(".marketing-item").on("click", function () {
+            let action = $(this).data("onclick");
+            let title = $(this).data("title");
+            let type = $(this).data("type");
+
+
+            if (title) {
+                // Set the value of the input field inside the modal
+                $('input[type="text"].nsm-field').val(title);
+                // Update the modal title dynamically
+                $('.automation-title').text(`Automation: ${title}`);
+                selectedTitle = title;
+                activeAutoTemplate = type;
+            }
+            if (action) {
+                eval(action);
+            }
+        });
+
+        $(".followUps-item").on("click", function () {
+            let action = $(this).data("onclick");
+            let title = $(this).data("title");
+            let type = $(this).data("type");
+
+
+            if (title) {
+                // Set the value of the input field inside the modal
+                $('input[type="text"].nsm-field').val(title);
+                // Update the modal title dynamically
+                $('.automation-title').text(`Automation: ${title}`);
+                selectedTitle = title;
+                activeAutoTemplate = type;
+            }
+            if (action) {
+                eval(action);
+            }
+        });
+
+         $(".actions-item").on("click", function () {
             let action = $(this).data("onclick");
             let title = $(this).data("title");
             let type = $(this).data("type");

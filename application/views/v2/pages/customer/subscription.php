@@ -199,10 +199,10 @@
                                             <input type="text" readonly class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" />
                                         </div>
 
-                                        <div class="col-md-2" style="text-align: right;">
+                                        <div class="col-md-1">
                                             State 
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-5">
                                             <input type="text" readonly class="form-control" name="state" id="state" value="<?php if(isset($profile_info->city)){ echo $profile_info->state; } ?>" />
                                         </div>
                                     </div>

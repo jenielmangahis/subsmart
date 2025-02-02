@@ -122,10 +122,10 @@ if (! function_exists('get_automation_email_config')) {
                     ],
                 ],
             ],
-            'call'      => [
+            'actions'      => [
                 'templates' => [
-                    'tech' => [
-                        'subject' => "Scheduled Call Reminder",
+                    'client' => [
+                        'subject' => "Invoice",
                         'body'    => "
                             <p>Hi {tech_name},</p>
                             <p>You have a scheduled call with the following details:</p>

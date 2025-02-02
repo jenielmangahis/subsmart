@@ -90,6 +90,12 @@
   background-color: #6a4a86 !important;
   border-color: #6a4a86 !important;
 }
+
+.dropdown-submenu.active div {
+  background-color: #6a4a86 !important;
+  border-color: #6a4a86 !important;
+  color: #fff !important;
+}
 .text-underline {
   text-decoration: underline;
 }

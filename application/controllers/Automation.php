@@ -63,6 +63,8 @@ class Automation extends MY_Controller
         $this->load->helper('automation_helper');
         $this->page_data['page']->title  = 'Automation Follow-ups';
         $this->page_data['page']->parent = 'Automation';
+             $this->page_data['lead_status']  = $this->customer_ad_model->get_select_options('ac_leads', 'status');
+        $this->page_data['job_status']   = $this->customer_ad_model->get_select_options('jobs', 'status');
         $this->load->view('v2/pages/automation/follow_ups', $this->page_data);
     }
 
@@ -78,6 +80,8 @@ class Automation extends MY_Controller
         $this->load->helper('automation_helper');
         $this->page_data['page']->title  = 'Automation Actions';
         $this->page_data['page']->parent = 'Automation';
+             $this->page_data['lead_status']  = $this->customer_ad_model->get_select_options('ac_leads', 'status');
+        $this->page_data['job_status']   = $this->customer_ad_model->get_select_options('jobs', 'status');
         $this->load->view('v2/pages/automation/actions', $this->page_data);
     }
 

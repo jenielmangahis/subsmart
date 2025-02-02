@@ -68,6 +68,8 @@ include viewPath('v2/includes/header');
         </div>
     </div>
 
+ 
+
     <!-- AUTOMATIONS -->
     <div class="row" id="automationResults">
         <?php foreach ($automations as $automation): ?>
@@ -87,6 +89,7 @@ include viewPath('v2/includes/header');
                         </div>
                     </div>
                 </div>
+             
                 <div class="nsm-card-content">
                     <h6><?php echo generateAutomationDescription($automation); ?>.</h6>
                     <hr />
