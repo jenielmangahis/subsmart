@@ -11881,7 +11881,7 @@ const makeRecurring = (modalName) => {
             modalId = 'expenseModal';
             $(templateFields).insertBefore($(`#${modalId} div.modal-body div.row.payee-details`));
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.payee-details`));
-            $(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
+            //$(`#${modalId} div.modal-body div.row.payee-details`).children('div:last-child()').remove();
             $(`#${modalId} #account-balance`).parent().parent().remove();
             $(`#${modalId} label[for="expense_payment_account"]`).html('Account');
             $(`#${modalId} div.modal-body #payment_date`).parent().parent().remove();

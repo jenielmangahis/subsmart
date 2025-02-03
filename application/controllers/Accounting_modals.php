@@ -3458,7 +3458,7 @@ class Accounting_modals extends MY_Controller
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Please select payment account.';
+            $return['message'] = validation_errors();
         } elseif (!isset($data['expense_account']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
@@ -15413,167 +15413,233 @@ class Accounting_modals extends MY_Controller
 
     private function update_expense($expenseId, $data)
     {
-        $expense = $this->vendors_model->get_expense_by_id($expenseId, logged('company_id'));
-        $payee = explode('-', $data['payee']);
-        $expenseData = [
-            'payee_type' => $payee[0],
-            'payee_id' => $payee[1],
-            'payment_account_id' => $data['expense_payment_account'],
-            'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
-            'payment_method_id' => $data['payment_method'],
-            'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
-            'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
-            'memo' => $data['memo'],
-            'total_amount' => floatval(str_replace(',', '', $data['total_amount']))
-        ];
 
-        $update = $this->vendors_model->update_expense($expenseId, $expenseData);
+        $this->form_validation->set_rules('expense_payment_account', 'Payment account', 'required');
 
-        if ($update) {
-            $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expense->id);
-            $tags = $this->tags_model->get_transaction_tags('Expense', $expense->id);
-            $this->accounting_linked_transactions_model->unlink_all_from_linked_to('expense', $expenseId);
+        if (isset($data['expense_account'])) {
+            $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
+            $this->form_validation->set_rules('category_amount[]', 'Category amount', 'required');
+        }
 
-            if(!is_null($data['linked_transaction'])) {
-                $linkedTransacsData = [];
-                foreach($data['linked_transaction'] as $linkedTransac) {
-                    $explode = explode('-', $linkedTransac);
+        if (isset($data['item'])) {
+            $this->form_validation->set_rules('item[]', 'Item', 'required');
+            $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+            $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+        }
 
-                    $linkedTransacsData[] = [
-                        'linked_to_type' => 'expense',
-                        'linked_to_id' => $expenseId,
-                        'linked_transaction_type' => str_replace('_', '-', $explode[0]),
-                        'linked_transaction_id' => $explode[1]
-                    ];
-                }
+        if(isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
 
-                $this->accounting_linked_transactions_model->insert_by_batch($linkedTransacsData);
-            }
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
 
-            if(count($tags) > 0) {
-                foreach($tags as $key => $tag) {
-                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
-                        $this->tags_model->unlink_tag(['transaction_type' => 'Expense', 'tag_id' => $tag->id, 'transaction_id' => $expense->id]);
-                    }
-                }
-            }
-
-            if(isset($data['tags']) && is_array($data['tags'])) {
-                $order = 1;
-                foreach($data['tags'] as $key => $tagId) {
-                    $linkTagData = [
-                        'transaction_type' => 'Expense',
-                        'transaction_id' => $expense->id,
-                        'tag_id' => $tagId,
-                        'order_no' => $order
-                    ];
-
-                    if($tags[$key] === null) {
-                        $linkTagId = $this->tags_model->link_tag($linkTagData);
-                    } else {
-                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
                     }
 
-                    $order++;
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
                 }
             }
+        } else {
+            $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
+        }
 
-            if(count($attachments) > 0) {
-                foreach($attachments as $attachment) {
-                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
-                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Expense', 'attachment_id' => $attachment->id, 'linked_id' => $expense->id]);
-                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+        $return = [];
+        if ($this->form_validation->run() === false) {
+            $return['data']    = null;
+            $return['success'] = false;
+            $return['message'] = validation_errors();
+        } elseif (!isset($data['expense_account']) && !isset($data['item'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } elseif (!isset($data['payee'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please select payee.';
+        }elseif (!isset($data['payment_method'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please select payment method.';
+        } else {
+
+            $expense = $this->vendors_model->get_expense_by_id($expenseId, logged('company_id'));
+            $payee = explode('-', $data['payee']);
+            $expenseData = [
+                'payee_type' => $payee[0],
+                'payee_id' => $payee[1],
+                'payment_account_id' => $data['expense_payment_account'],
+                'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'payment_method_id' => $data['payment_method'],
+                'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
+                'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+                'memo' => $data['memo'],
+                'total_amount' => floatval(str_replace(',', '', $data['total_amount']))
+            ];
+
+            $update = $this->vendors_model->update_expense($expenseId, $expenseData);
+
+            if ($update) {
+                $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expense->id);
+                $tags = $this->tags_model->get_transaction_tags('Expense', $expense->id);
+                $this->accounting_linked_transactions_model->unlink_all_from_linked_to('expense', $expenseId);
+
+                if(!is_null($data['linked_transaction'])) {
+                    $linkedTransacsData = [];
+                    foreach($data['linked_transaction'] as $linkedTransac) {
+                        $explode = explode('-', $linkedTransac);
+
+                        $linkedTransacsData[] = [
+                            'linked_to_type' => 'expense',
+                            'linked_to_id' => $expenseId,
+                            'linked_transaction_type' => str_replace('_', '-', $explode[0]),
+                            'linked_transaction_id' => $explode[1]
+                        ];
+                    }
+
+                    $this->accounting_linked_transactions_model->insert_by_batch($linkedTransacsData);
+                }
+
+                if(count($tags) > 0) {
+                    foreach($tags as $key => $tag) {
+                        if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                            $this->tags_model->unlink_tag(['transaction_type' => 'Expense', 'tag_id' => $tag->id, 'transaction_id' => $expense->id]);
+                        }
                     }
                 }
-            }
 
-            if (isset($data['attachments']) && is_array($data['attachments'])) {
-                $order = 1;
-                foreach ($data['attachments'] as $attachmentId) {
-                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
-                        return $v->id === $attachmentId;
-                    }, ARRAY_FILTER_USE_BOTH);
-
-                    if(count($link) > 0) {
-                        $attachmentData = [
-                            'type' => 'Expense',
-                            'attachment_id' => $attachmentId,
-                            'linked_id' => $expenseId,
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $key => $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Expense',
+                            'transaction_id' => $expense->id,
+                            'tag_id' => $tagId,
                             'order_no' => $order
                         ];
 
-                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                        if($tags[$key] === null) {
+                            $linkTagId = $this->tags_model->link_tag($linkTagData);
+                        } else {
+                            $updateOrder = $this->tags_model->update_link($linkTagData);
+                        }
+
+                        $order++;
+                    }
+                }
+
+                if(count($attachments) > 0) {
+                    foreach($attachments as $attachment) {
+                        if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                            $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Expense', 'attachment_id' => $attachment->id, 'linked_id' => $expense->id]);
+                            $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                        }
+                    }
+                }
+
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    $order = 1;
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                            return $v->id === $attachmentId;
+                        }, ARRAY_FILTER_USE_BOTH);
+
+                        if(count($link) > 0) {
+                            $attachmentData = [
+                                'type' => 'Expense',
+                                'attachment_id' => $attachmentId,
+                                'linked_id' => $expenseId,
+                                'order_no' => $order
+                            ];
+
+                            $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                        } else {
+                            $linkAttachmentData = [
+                                'type' => 'Expense',
+                                'attachment_id' => $attachmentId,
+                                'linked_id' => $expenseId,
+                                'order_no' => $order
+                            ];
+        
+                            $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                        }
+
+                        $order++;
+                    }
+                }
+
+                $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Expense', $expenseId);
+
+                foreach($accountTransacs as $transac)
+                {
+                    $account = $this->chart_of_accounts_model->getById($transac->account_id);
+                    $accountType = $this->account_model->getById($account->account_id);
+
+                    if($accountType->account_name === 'Credit Card') {
+                        $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
                     } else {
-                        $linkAttachmentData = [
-                            'type' => 'Expense',
-                            'attachment_id' => $attachmentId,
-                            'linked_id' => $expenseId,
-                            'order_no' => $order
-                        ];
-    
-                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                        $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
                     }
 
-                    $order++;
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $accData = [
+                        'id' => $account->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => floatval(str_replace(',', '', $newBalance))
+                    ];
+        
+                    $this->chart_of_accounts_model->updateBalance($accData);
                 }
-            }
 
-            $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Expense', $expenseId);
+                $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('Expense', $expenseId);
 
-            foreach($accountTransacs as $transac)
-            {
-                $account = $this->chart_of_accounts_model->getById($transac->account_id);
-                $accountType = $this->account_model->getById($account->account_id);
-
-                if($accountType->account_name === 'Credit Card') {
-                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+                $paymentAcc = $this->chart_of_accounts_model->getById($data['expense_payment_account']);
+                $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+                if ($paymentAccType->account_name === 'Credit Card') {
+                    $newBalance = floatval(str_replace(',', '', $paymentAcc->balance)) + floatval(str_replace(',', '', $data['total_amount']));
                 } else {
-                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+                    $newBalance = floatval(str_replace(',', '', $paymentAcc->balance)) - floatval(str_replace(',', '', $data['total_amount']));
                 }
-
                 $newBalance = number_format($newBalance, 2, '.', ',');
 
-                $accData = [
-                    'id' => $account->id,
+                $paymentAccData = [
+                    'id' => $paymentAcc->id,
                     'company_id' => logged('company_id'),
                     'balance' => floatval(str_replace(',', '', $newBalance))
                 ];
-    
-                $this->chart_of_accounts_model->updateBalance($accData);
-            }
 
-            $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('Expense', $expenseId);
+                $this->chart_of_accounts_model->updateBalance($paymentAccData);
 
-            $paymentAcc = $this->chart_of_accounts_model->getById($data['expense_payment_account']);
-            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
-            if ($paymentAccType->account_name === 'Credit Card') {
-                $newBalance = floatval(str_replace(',', '', $paymentAcc->balance)) + floatval(str_replace(',', '', $data['total_amount']));
-            } else {
-                $newBalance = floatval(str_replace(',', '', $paymentAcc->balance)) - floatval(str_replace(',', '', $data['total_amount']));
-            }
-            $newBalance = number_format($newBalance, 2, '.', ',');
+                $accTransacData = [
+                    'account_id' => $paymentAcc->id,
+                    'transaction_type' => 'Expense',
+                    'transaction_id' => $expenseId,
+                    'amount' => floatval(str_replace(',', '', $data['total_amount'])),
+                    'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                    'type' => 'decrease',
+                ];
 
-            $paymentAccData = [
-                'id' => $paymentAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => floatval(str_replace(',', '', $newBalance))
-            ];
+                $this->accounting_account_transactions_model->create($accTransacData);
 
-            $this->chart_of_accounts_model->updateBalance($paymentAccData);
-
-            $accTransacData = [
-                'account_id' => $paymentAcc->id,
-                'transaction_type' => 'Expense',
-                'transaction_id' => $expenseId,
-                'amount' => floatval(str_replace(',', '', $data['total_amount'])),
-                'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
-                'type' => 'decrease',
-            ];
-
-            $this->accounting_account_transactions_model->create($accTransacData);
-
-            $this->update_categories('Expense', $expenseId, $data);
-            $this->update_items('Expense', $expenseId, $data);
+                $this->update_categories('Expense', $expenseId, $data);
+                $this->update_items('Expense', $expenseId, $data);
+            }            
+            
         }
 
         return [
@@ -20363,538 +20429,510 @@ class Accounting_modals extends MY_Controller
 
         $invoice = $this->invoice_model->getinvoice($invoiceId);
 
-        if ($data['credit_card_payments'] == 1) {
-            $credit_card = 'Credit Card';
+        $this->form_validation->set_rules('customer', 'Customer', 'required');
+        $this->form_validation->set_rules('item[]', 'Item', 'required');
+        $this->form_validation->set_rules('quantity[]', 'Item total', 'required');
+        $this->form_validation->set_rules('item_amount[]', 'Item total', 'required');
+        $this->form_validation->set_rules('item_total[]', 'Item total', 'required');
+
+        if(isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                    }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+                }
+            }
         } else {
-            $credit_card = '0';
+            $this->form_validation->set_rules('date_issued', 'Date issued', 'required');
+            $this->form_validation->set_rules('due_date', 'Due date', 'required');
+            $this->form_validation->set_rules('status', 'Status', 'required');
+            $this->form_validation->set_rules('invoice_no', 'Invoice #', 'required');
+            $this->form_validation->set_rules('total_amount', 'Grand Total', 'callback_check_grand_total');
         }
 
-        if ($data['bank_transfer'] == 1) {
-            $bank_transfer = 'Bank Transfer';
+        if ($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = validation_errors();
         } else {
-            $bank_transfer = '0';
-        }
+            if ($data['credit_card_payments'] == 1) {
+                $credit_card = 'Credit Card';
+            } else {
+                $credit_card = '0';
+            }
 
-        if ($data['instapay'] == 1) {
-            $instapay = 'Instapay';
-        } else {
-            $instapay = '0';
-        }
+            if ($data['bank_transfer'] == 1) {
+                $bank_transfer = 'Bank Transfer';
+            } else {
+                $bank_transfer = '0';
+            }
 
-        if ($data['check'] == 1) {
-            $check = 'Check';
-        } else {
-            $check = '0';
-        }
+            if ($data['instapay'] == 1) {
+                $instapay = 'Instapay';
+            } else {
+                $instapay = '0';
+            }
 
-        if ($data['cash'] == 1) {
-            $cash = 'Cash';
-        } else {
-            $cash = '0';
-        }
+            if ($data['check'] == 1) {
+                $check = 'Check';
+            } else {
+                $check = '0';
+            }
 
-        if ($data['deposit'] == 1) {
-            $deposit = 'Deposit';
-        } else {
-            $deposit = '0';
-        }
+            if ($data['cash'] == 1) {
+                $cash = 'Cash';
+            } else {
+                $cash = '0';
+            }
 
-        if($data['term'] != 0) {
-            $accountingTermData = $this->AccountingTerm_model->getById($data['term']);
-            if($accountingTermData) {
-                $due_data_current    = date("Y-m-d", strtotime($data['due_date']));
-                $net_due_day = isset($accountingTermData->net_due_days) ? $accountingTermData->net_due_days : 0;
-                $due_data = date('Y-m-d', strtotime($due_data_current. ' + ' . $net_due_day . ' days'));
+            if ($data['deposit'] == 1) {
+                $deposit = 'Deposit';
+            } else {
+                $deposit = '0';
+            }
+
+            if($data['term'] != 0) {
+                $accountingTermData = $this->AccountingTerm_model->getById($data['term']);
+                if($accountingTermData) {
+                    $due_data_current    = date("Y-m-d", strtotime($data['due_date']));
+                    $net_due_day = isset($accountingTermData->net_due_days) ? $accountingTermData->net_due_days : 0;
+                    $due_data = date('Y-m-d', strtotime($due_data_current. ' + ' . $net_due_day . ' days'));
+                } else {
+                    $due_data = date("Y-m-d", strtotime($data['due_date']));
+                }
             } else {
                 $due_data = date("Y-m-d", strtotime($data['due_date']));
             }
-        } else {
-            $due_data = date("Y-m-d", strtotime($data['due_date']));
-        }
 
-        $invoice_no = $invoice->invoice_number;
-        if(isset($data['invoice_no']) && $data['invoice_no'] != 'undefined') {
-            $invoice_no = $data['invoice_no'];
-        }
+            $invoice_no = $invoice->invoice_number;
+            if(isset($data['invoice_no']) && $data['invoice_no'] != 'undefined') {
+                $invoice_no = $data['invoice_no'];
+            }
 
-        $diff = floatval(str_replace(',', '', $invoice->grand_total)) - floatval(str_replace(',', '', $invoice->balance));
-        $balance = floatval(str_replace(',', '', $data['total_amount'])) - floatval(str_replace(',', '', $diff));
+            $diff = floatval(str_replace(',', '', $invoice->grand_total)) - floatval(str_replace(',', '', $invoice->balance));
+            $balance = floatval(str_replace(',', '', $data['total_amount'])) - floatval(str_replace(',', '', $diff));
 
-        $invoiceData = [
-            'customer_id' => $data['customer'],
-            'job_location' => $data['job_location'],
-            'job_name' => $data['job_name'],
-            'work_order_number' => $data['job_no'],
-            'purchase_order' => $data['purchase_order_no'],
-            'invoice_number' => $invoice_no,
-            'date_issued' => date("Y-m-d", strtotime($data['date_issued'])),
-            'due_date' => isset($due_data) ? $due_data : null,
-            'status' => $data['status'],
-            'customer_email' => $data['customer_email'],
-            'billing_address' => nl2br($data['billing_address']),
-            'shipping_to_address' => nl2br($data['shipping_to']),
-            'ship_via' => $data['ship_via'],
-            'shipping_date' => date("Y-m-d", strtotime($data['shipping_date'])),
-            'tracking_number' => $data['tracking_no'],
-            'terms' => $data['term'],
-            'location_scale' => $data['location_of_sale'],
-            'attachments' => json_encode($data['attachments']),
-            'tags' => json_encode($data['tags']),
-            'total_due' => floatval(str_replace(',', '', $data['total_amount'])),
-            'balance' => floatval(str_replace(',', '', $balance)),
-            'deposit_request' => $data['deposit_amount'],
-            'deposit_request_type' => $data['deposit_request_type'],
-            'payment_methods' => $credit_card.','.$bank_transfer.','.$instapay.','.$check.','.$cash.','.$deposit,
-            'message_to_customer' => $data['message_to_customer'],
-            'terms_and_conditions' => $data['terms_and_conditions'],
-            'sub_total' => floatval(str_replace(',', '', $data['subtotal'])),
-            'taxes' => floatval(str_replace(',', '', $data['tax_total'])),
-            'adjustment_name' => $data['adjustment_name'],
-            'adjustment_value' => $data['adjustment_value'],
-            'grand_total' => floatval(str_replace(',', '', $data['total_amount'])),
-        ];
+            $invoiceData = [
+                'customer_id' => $data['customer'],
+                'job_location' => $data['job_location'],
+                'job_name' => $data['job_name'],
+                'work_order_number' => $data['job_no'],
+                'purchase_order' => $data['purchase_order_no'],
+                'invoice_number' => $invoice_no,
+                'date_issued' => date("Y-m-d", strtotime($data['date_issued'])),
+                'due_date' => isset($due_data) ? $due_data : null,
+                'status' => $data['status'],
+                'customer_email' => $data['customer_email'],
+                'billing_address' => nl2br($data['billing_address']),
+                'shipping_to_address' => nl2br($data['shipping_to']),
+                'ship_via' => $data['ship_via'],
+                'shipping_date' => date("Y-m-d", strtotime($data['shipping_date'])),
+                'tracking_number' => $data['tracking_no'],
+                'terms' => $data['term'],
+                'location_scale' => $data['location_of_sale'],
+                'attachments' => json_encode($data['attachments']),
+                'tags' => json_encode($data['tags']),
+                'total_due' => floatval(str_replace(',', '', $data['total_amount'])),
+                'balance' => floatval(str_replace(',', '', $balance)),
+                'deposit_request' => $data['deposit_amount'],
+                'deposit_request_type' => $data['deposit_request_type'],
+                'payment_methods' => $credit_card.','.$bank_transfer.','.$instapay.','.$check.','.$cash.','.$deposit,
+                'message_to_customer' => $data['message_to_customer'],
+                'terms_and_conditions' => $data['terms_and_conditions'],
+                'sub_total' => floatval(str_replace(',', '', $data['subtotal'])),
+                'taxes' => floatval(str_replace(',', '', $data['tax_total'])),
+                'adjustment_name' => $data['adjustment_name'],
+                'adjustment_value' => $data['adjustment_value'],
+                'grand_total' => floatval(str_replace(',', '', $data['total_amount'])),
+            ];
 
-        $update = $this->invoice_model->update_invoice($invoiceId, $invoiceData);
+            $update = $this->invoice_model->update_invoice($invoiceId, $invoiceData);
 
-        if($update) {
+            if($update) {
 
-            /**
-             * Update recurring data - start
-             */
-            if($data['recurring_type'] !== 'unscheduled') {
-                $currentDate = date("m/d/Y");
-                $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
-                $every = $data['recurr_every'];
+                /**
+                 * Update recurring data - start
+                 */
+                if($data['recurring_type'] !== 'unscheduled') {
+                    $currentDate = date("m/d/Y");
+                    $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
+                    $every = $data['recurr_every'];
 
-                switch($data['recurring_interval']) {
-                    case 'daily' :
-                        $next = $startDate;
-                    break;
-                    case 'weekly' :
-                        $days = [
-                            'sunday',
-                            'monday',
-                            'tuesday',
-                            'wednesday',
-                            'thursday',
-                            'friday',
-                            'saturday'
-                        ];
+                    switch($data['recurring_interval']) {
+                        case 'daily' :
+                            $next = $startDate;
+                        break;
+                        case 'weekly' :
+                            $days = [
+                                'sunday',
+                                'monday',
+                                'tuesday',
+                                'wednesday',
+                                'thursday',
+                                'friday',
+                                'saturday'
+                            ];
 
-                        $day = $data['recurring_day'];
-                        $dayNum = array_search($day, $days);
-                        $next = $startDate;
-
-                        if(intval(date("w", strtotime($next))) !== $dayNum) {
-                            do {
-                                $next = date("m/d/Y", strtotime("$next +1 day"));
-                            } while(intval(date("w", strtotime($next))) !== $dayNum);
-                        }
-                    break;
-                    case 'monthly' :
-                        if($data['recurring_week'] === 'day') {
-                            $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
-                            $next = date("m/$day/Y", strtotime($startDate));
-
-                            if(strtotime($currentDate) > strtotime($next)) {
-                                $next = date("m/$day/Y", strtotime("$next +$every months"));
-                            }
-                        } else {
-                            $week = $data['recurring_week'];
                             $day = $data['recurring_day'];
-                            $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+                            $dayNum = array_search($day, $days);
+                            $next = $startDate;
+
+                            if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                do {
+                                    $next = date("m/d/Y", strtotime("$next +1 day"));
+                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                            }
+                        break;
+                        case 'monthly' :
+                            if($data['recurring_week'] === 'day') {
+                                $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                $next = date("m/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                }
+                            } else {
+                                $week = $data['recurring_week'];
+                                $day = $data['recurring_day'];
+                                $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                }
+                            }
+                        break;
+                        case 'yearly' :
+                            $month = $data['recurring_month'];
+                            $day = $data['recurring_day'];
+                            $previous = date("$month/$day/Y", strtotime($startDate));
+                            $next = date("$month/$day/Y", strtotime($startDate));
 
                             if(strtotime($currentDate) > strtotime($next)) {
-                                $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                $next = date("$month/$day/Y", strtotime("$next +1 year"));
                             }
-                        }
-                    break;
-                    case 'yearly' :
-                        $month = $data['recurring_month'];
-                        $day = $data['recurring_day'];
-                        $previous = date("$month/$day/Y", strtotime($startDate));
-                        $next = date("$month/$day/Y", strtotime($startDate));
+                        break;
+                    }
+                }            
 
-                        if(strtotime($currentDate) > strtotime($next)) {
-                            $next = date("$month/$day/Y", strtotime("$next +1 year"));
-                        }
-                    break;
+                $recurringData = [
+                    'company_id' => logged('company_id'),
+                    'template_name' => $data['template_name'],
+                    'recurring_type' => $data['recurring_type'],
+                    'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                    'txn_type' => 'invoice',
+                    'recurring_interval' => $data['recurring_interval'],
+                    'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                    'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                    'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                    'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
+                    'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
+                    'end_type' => $data['end_type'],
+                    'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                    'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                    'current_occurrence' => 0,
+                    'next_date' => date("Y-m-d", strtotime($next)),
+                    'status' => 1
+                ];       
+                $recurringUpdate = $this->accounting_recurring_transactions_model->updateRecurringTransactionByTxnId($invoiceId, $recurringData);
+                /**
+                 * Update recurring data - end
+                 */            
+
+                $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Invoice', $invoiceId);
+
+                foreach($accountTransacs as $transac)
+                {
+                    $account = $this->chart_of_accounts_model->getById($transac->account_id);
+                    $accountType = $this->account_model->getById($account->account_id);
+
+                    if($accountType->account_name === 'Credit Card') {
+                        $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+                    } else {
+                        $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+                    }
+
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $accData = [
+                        'id' => $account->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => floatval(str_replace(',', '', $newBalance))
+                    ];
+        
+                    $this->chart_of_accounts_model->updateBalance($accData);
                 }
-            }            
 
-            $recurringData = [
-                'company_id' => logged('company_id'),
-                'template_name' => $data['template_name'],
-                'recurring_type' => $data['recurring_type'],
-                'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
-                'txn_type' => 'invoice',
-                'recurring_interval' => $data['recurring_interval'],
-                'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
-                'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
-                'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
-                'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
-                'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
-                'end_type' => $data['end_type'],
-                'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
-                'current_occurrence' => 0,
-                'next_date' => date("Y-m-d", strtotime($next)),
-                'status' => 1
-            ];       
-            $recurringUpdate = $this->accounting_recurring_transactions_model->updateRecurringTransactionByTxnId($invoiceId, $recurringData);
-            /**
-             * Update recurring data - end
-             */            
+                $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('Invoice', $invoiceId);
 
-            $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Invoice', $invoiceId);
+                $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
+                $newBalance = floatval(str_replace(',', '', $arAcc->balance)) + floatval(str_replace(',', '', $data['total_amount']));
 
-            foreach($accountTransacs as $transac)
-            {
-                $account = $this->chart_of_accounts_model->getById($transac->account_id);
-                $accountType = $this->account_model->getById($account->account_id);
-
-                if($accountType->account_name === 'Credit Card') {
-                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
-                } else {
-                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
-                }
-
-                $newBalance = number_format($newBalance, 2, '.', ',');
-
-                $accData = [
-                    'id' => $account->id,
+                $arAccData = [
+                    'id' => $arAcc->id,
                     'company_id' => logged('company_id'),
                     'balance' => floatval(str_replace(',', '', $newBalance))
                 ];
-    
-                $this->chart_of_accounts_model->updateBalance($accData);
-            }
 
-            $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('Invoice', $invoiceId);
+                $this->chart_of_accounts_model->updateBalance($arAccData);
 
-            $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
-            $newBalance = floatval(str_replace(',', '', $arAcc->balance)) + floatval(str_replace(',', '', $data['total_amount']));
-
-            $arAccData = [
-                'id' => $arAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => floatval(str_replace(',', '', $newBalance))
-            ];
-
-            $this->chart_of_accounts_model->updateBalance($arAccData);
-
-            $accTransacData = [
-                'account_id' => $arAcc->id,
-                'transaction_type' => 'Invoice',
-                'transaction_id' => $invoiceId,
-                'amount' => floatval(str_replace(',', '', $data['total_amount'])),
-                'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
-                'type' => 'increase'
-            ];
-
-            $this->accounting_account_transactions_model->create($accTransacData);
-
-            $attachments = $this->accounting_attachments_model->get_attachments('Invoice', $invoice->id);
-            $tags = $this->tags_model->get_transaction_tags('Invoice', $invoice->id);
-            $linkedTransactions = $this->accounting_linked_transactions_model->get_linked_transactions('invoice', $invoiceId);
-
-            // OLD
-            if(count($attachments) > 0) {
-                foreach($attachments as $attachment) {
-                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
-                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Invoice', 'attachment_id' => $attachment->id, 'linked_id' => $invoice->id]);
-                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
-                    }
-                }
-            }
-
-            if(count($tags) > 0) {
-                foreach($tags as $key => $tag) {
-                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
-                        $this->tags_model->unlink_tag(['transaction_type' => 'Invoice', 'tag_id' => $tag->id, 'transaction_id' => $invoice->id]);
-                    }
-                }
-            }
-
-            if(count($linkedTransactions) > 0) {
-                foreach($linkedTransactions as $linkedData) {
-                    if($linkedData->linked_transaction_type === 'delayed-credit') {
-                        $creditData = [
-                            'status' => 1
-                        ];
-
-                        $creditUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($linkedData->linked_transaction_id, $creditData);
-                    } else {
-                        $chargeData = [
-                            'status' => 1
-                        ];
-
-                        $chargeUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($linkedData->linked_transaction_id, $chargeData);
-                    }
-
-                    $this->accounting_linked_transactions_model->unlink($linkedData->id);
-                }
-            }
-
-            // NEW
-            if (isset($data['attachments']) && is_array($data['attachments'])) {
-                $order = 1;
-                foreach ($data['attachments'] as $attachmentId) {
-                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
-                        return $v->id === $attachmentId;
-                    }, ARRAY_FILTER_USE_BOTH);
-
-                    if(count($link) > 0) {
-                        $attachmentData = [
-                            'type' => 'Invoice',
-                            'attachment_id' => $attachmentId,
-                            'linked_id' => $invoice->id,
-                            'order_no' => $order
-                        ];
-
-                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
-                    } else {
-                        $linkAttachmentData = [
-                            'type' => 'Invoice',
-                            'attachment_id' => $attachmentId,
-                            'linked_id' => $invoice->id,
-                            'order_no' => $order
-                        ];
-    
-                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
-                    }
-
-                    $order++;
-                }
-            }
-
-            if(isset($data['tags']) && is_array($data['tags'])) {
-                $order = 1;
-                foreach($data['tags'] as $key => $tagId) {
-                    $linkTagData = [
-                        'transaction_type' => 'Invoice',
-                        'transaction_id' => $invoice->id,
-                        'tag_id' => $tagId,
-                        'order_no' => $order
-                    ];
-
-                    if($tags[$key] === null) {
-                        $linkTagId = $this->tags_model->link_tag($linkTagData);
-                    } else {
-                        $updateOrder = $this->tags_model->update_link($linkTagData);
-                    }
-
-                    $order++;
-                }
-            }
-
-            $invoiceItems = $this->invoice_model->get_invoice_items($invoice->id);
-            $this->invoice_model->delete_items($invoice->id);
-
-            $linkedTransactions = $this->accounting_linked_transactions_model->get_linked_transactions('invoice', $invoice->id);
-
-            if(count($linkedTransactions) > 0) {
-                foreach($linkedTransactions as $linkedTransac) {
-                    if($linkedTransac->linked_transaction_type === 'delayed_credit') {
-                        $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($linkedTransac->linked_transaction_id);
-
-                        $creditData = [
-                            'status' => 1
-                        ];
-
-                        $creditUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $creditData);
-                    } else {
-                        $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($linkedTransac->linked_transaction_id);
-
-                        $chargeData = [
-                            'status' => 1
-                        ];
-
-                        $chargeUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $chargeData);
-                    }
-
-                    $this->accounting_linked_transactions_model->unlink($linkedTransac->id);
-                }
-            }
-
-            if(!is_null($data['linked_transaction'])) {
-                $linkedTransacsData = [];
-                foreach($data['linked_transaction'] as $linkedTransac) {
-                    $explode = explode('-', $linkedTransac);
-    
-                    if($explode[0] === 'delayed_credit') {
-                        $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($explode[1]);
-    
-                        $creditData = [
-                            'status' => 2
-                        ];
-
-                        $creditUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $creditData);
-                    } else {
-                        $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($explode[1]);
-    
-                        $chargeData = [
-                            'status' => 2
-                        ];
-    
-                        $chargeUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $chargeData);
-                    }
-
-                    $linkedTransacsData[] = [
-                        'linked_to_type' => 'invoice',
-                        'linked_to_id' => $invoiceId,
-                        'linked_transaction_type' => str_replace('_', '-', $explode[0]),
-                        'linked_transaction_id' => $explode[1]
-                    ];
-                }
-
-                $this->accounting_linked_transactions_model->insert_by_batch($linkedTransacsData);
-            }
-
-            foreach($data['item'] as $key => $input) {
-                $linkedTransaction = $data['item_linked'][$key] !== '' ? explode('-', $data['item_linked'][$key]) : null;
-
-                $explode = explode('-', $input);
-
-                if($explode[0] === 'package') {
-                    $package = $this->items_model->get_package_by_id($explode[1]);
-                    $packageItems = $this->items_model->get_package_items($explode[1]);
-
-                    $pItemDetails = [];
-                    foreach($packageItems as $i => $packageItem) {
-                        $pItem = $this->items_model->getItemById($packageItem->item_id)[0];
-                        $totalQty = intval($packageItem->quantity) * intval($data['quantity'][$key]);
-
-                        if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
-                            $packageItems[$i]->balance_change = floatval(str_replace(',', '', $pItem->cost)) * floatval(str_replace(',', '', $totalQty));
-                        } else {
-                            $packageItems[$i]->balance_change = floatval(str_replace(',', '', $item->price)) * floatval(str_replace(',', '', $totalQty));
-                        }
-                    }
-
-                    $balanceChange = null;
-                } else {
-                    $item = $this->items_model->getItemById($explode[1])[0];
-
-                    if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
-                        $balanceChange = floatval(str_replace(',', '', $item->cost));
-                    } else {
-                        $balanceChange = floatval(str_replace(',', '', $data['item_total'][$key]));
-                    }
-                }
-
-                $invoiceItem = [
-                    'invoice_id' => $invoice->id,
-                    'items_id' => $explode[0] === 'item' ? $explode[1] : '',
-                    'location_id' => $data['location'][$key],
-                    'qty' => $data['quantity'][$key],
-                    'package_id' => $explode[0] === 'package' ? $explode[1] : '',
-                    'package_item_details' => $explode[0] === 'package' ? json_encode($packageItems) : null,
-                    'cost' => $data['item_amount'][$key],
-                    'tax' => $data['item_tax'][$key],
-                    'discount' => $data['discount'][$key],
-                    'total' => floatval(str_replace(',', '', $data['item_total'][$key])),
-                    'tax_rate_used' => $data['item_tax'][$key],
-                    'linked_transaction_type' => !is_null($linkedTransaction) ? $linkedTransaction[0] : null,
-                    'linked_transaction_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
-                    'linked_transaction_item_id' => !is_null($linkedTransaction) ? $data['transac_item_id'][$key] : null,
-                    'amount_balance_change' => floatval(str_replace(',', '', $balanceChange))
+                $accTransacData = [
+                    'account_id' => $arAcc->id,
+                    'transaction_type' => 'Invoice',
+                    'transaction_id' => $invoiceId,
+                    'amount' => floatval(str_replace(',', '', $data['total_amount'])),
+                    'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
+                    'type' => 'increase'
                 ];
 
-                if(!is_null($invoiceItems[$key])) {
-                    $invoiceItem['date_created'] = date("Y-m-d H:i:s" , strtotime($invoiceItems->date_created));
-                }
+                $this->accounting_account_transactions_model->create($accTransacData);
 
-                $addInvoiceItem = $this->invoice_model->add_invoice_items($invoiceItem);
+                $attachments = $this->accounting_attachments_model->get_attachments('Invoice', $invoice->id);
+                $tags = $this->tags_model->get_transaction_tags('Invoice', $invoice->id);
+                $linkedTransactions = $this->accounting_linked_transactions_model->get_linked_transactions('invoice', $invoiceId);
 
-                if($explode[0] === 'item') {
-                    $item = $this->items_model->getItemById($explode[1])[0];
-                    $itemAccDetails = $this->items_model->getItemAccountingDetails($explode[1]);
-
-                    if ($itemAccDetails) {
-                        if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
-                            $location = $this->items_model->getItemLocation($data['location'][$key], $explode[1]);
-                            $newQty = intval($location->qty) - intval($data['quantity'][$key]);
-                            $this->items_model->updateLocationQty($data['location'][$key], $explode[1], $newQty);
-
-                            $amount = floatval(str_replace(',', '', $item->cost)) * floatval($data['quantity'][$key]);
-
-                            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                            $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) - $amount;
-                            $newBalance = number_format($newBalance, 2, '.', ',');
-
-                            $invAssetAccData = [
-                                'id' => $invAssetAcc->id,
-                                'company_id' => logged('company_id'),
-                                'balance' => floatval(str_replace(',', '', $newBalance))
-                            ];
-
-                            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-
-                            $accTransacData = [
-                                'account_id' => $invAssetAcc->id,
-                                'transaction_type' => 'Invoice',
-                                'transaction_id' => $invoiceId,
-                                'amount' => $amount,
-                                'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
-                                'type' => 'decrease',
-                                'is_item_category' => 1,
-                                'child_id' => $addInvoiceItem
-                            ];
-
-                            $this->accounting_account_transactions_model->create($accTransacData);
-                        } else {
-                            $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
-                            $incomeAccType = $this->account_model->getById($incomeAcc->account_id);
-
-                            $amount = floatval($data['item_amount'][$key]) * floatval($data['quantity'][$key]);
-
-                            if ($incomeAccType->account_name === 'Credit Card') {
-                                $newBalance = floatval(str_replace(',', '', $incomeAcc->balance)) + $amount;
-                            } else {
-                                $newBalance = floatval(str_replace(',', '', $incomeAcc->balance)) - $amount;
-                            }
-                            $newBalance = number_format($newBalance, 2, '.', ',');
-
-                            $incomeAccData = [
-                                'id' => $incomeAcc->id,
-                                'company_id' => logged('company_id'),
-                                'balance' => floatval(str_replace(',', '', $newBalance))
-                            ];
-
-                            $this->chart_of_accounts_model->updateBalance($incomeAccData);
-
-                            $accTransacData = [
-                                'account_id' => $incomeAcc->id,
-                                'transaction_type' => 'Invoice',
-                                'transaction_id' => $invoiceId,
-                                'amount' => $amount,
-                                'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
-                                'type' => 'decrease',
-                                'is_item_category' => 1,
-                                'child_id' => $addInvoiceItem
-                            ];
-
-                            $this->accounting_account_transactions_model->create($accTransacData);
+                // OLD
+                if(count($attachments) > 0) {
+                    foreach($attachments as $attachment) {
+                        if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                            $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Invoice', 'attachment_id' => $attachment->id, 'linked_id' => $invoice->id]);
+                            $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
                         }
                     }
-                } else {
-                    $package = $this->items_model->get_package_by_id($explode[1]);
+                }
 
-                    foreach($packageItems as $packageItem) {
-                        $item = $this->items_model->getItemById($packageItem->item_id)[0];
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($packageItem->item_id);
-                        $totalQty = intval($packageItem->quantity) * intval($data['quantity'][$key]);
+                if(count($tags) > 0) {
+                    foreach($tags as $key => $tag) {
+                        if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                            $this->tags_model->unlink_tag(['transaction_type' => 'Invoice', 'tag_id' => $tag->id, 'transaction_id' => $invoice->id]);
+                        }
+                    }
+                }
+
+                if(count($linkedTransactions) > 0) {
+                    foreach($linkedTransactions as $linkedData) {
+                        if($linkedData->linked_transaction_type === 'delayed-credit') {
+                            $creditData = [
+                                'status' => 1
+                            ];
+
+                            $creditUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($linkedData->linked_transaction_id, $creditData);
+                        } else {
+                            $chargeData = [
+                                'status' => 1
+                            ];
+
+                            $chargeUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($linkedData->linked_transaction_id, $chargeData);
+                        }
+
+                        $this->accounting_linked_transactions_model->unlink($linkedData->id);
+                    }
+                }
+
+                // NEW
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    $order = 1;
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                            return $v->id === $attachmentId;
+                        }, ARRAY_FILTER_USE_BOTH);
+
+                        if(count($link) > 0) {
+                            $attachmentData = [
+                                'type' => 'Invoice',
+                                'attachment_id' => $attachmentId,
+                                'linked_id' => $invoice->id,
+                                'order_no' => $order
+                            ];
+
+                            $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                        } else {
+                            $linkAttachmentData = [
+                                'type' => 'Invoice',
+                                'attachment_id' => $attachmentId,
+                                'linked_id' => $invoice->id,
+                                'order_no' => $order
+                            ];
+        
+                            $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                        }
+
+                        $order++;
+                    }
+                }
+
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $key => $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Invoice',
+                            'transaction_id' => $invoice->id,
+                            'tag_id' => $tagId,
+                            'order_no' => $order
+                        ];
+
+                        if($tags[$key] === null) {
+                            $linkTagId = $this->tags_model->link_tag($linkTagData);
+                        } else {
+                            $updateOrder = $this->tags_model->update_link($linkTagData);
+                        }
+
+                        $order++;
+                    }
+                }
+
+                $invoiceItems = $this->invoice_model->get_invoice_items($invoice->id);
+                $this->invoice_model->delete_items($invoice->id);
+
+                $linkedTransactions = $this->accounting_linked_transactions_model->get_linked_transactions('invoice', $invoice->id);
+
+                if(count($linkedTransactions) > 0) {
+                    foreach($linkedTransactions as $linkedTransac) {
+                        if($linkedTransac->linked_transaction_type === 'delayed_credit') {
+                            $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($linkedTransac->linked_transaction_id);
+
+                            $creditData = [
+                                'status' => 1
+                            ];
+
+                            $creditUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $creditData);
+                        } else {
+                            $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($linkedTransac->linked_transaction_id);
+
+                            $chargeData = [
+                                'status' => 1
+                            ];
+
+                            $chargeUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $chargeData);
+                        }
+
+                        $this->accounting_linked_transactions_model->unlink($linkedTransac->id);
+                    }
+                }
+
+                if(!is_null($data['linked_transaction'])) {
+                    $linkedTransacsData = [];
+                    foreach($data['linked_transaction'] as $linkedTransac) {
+                        $explode = explode('-', $linkedTransac);
+        
+                        if($explode[0] === 'delayed_credit') {
+                            $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($explode[1]);
+        
+                            $creditData = [
+                                'status' => 2
+                            ];
+
+                            $creditUpdate = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $creditData);
+                        } else {
+                            $delayedCharge = $this->accounting_delayed_charge_model->getDelayedChargeDetails($explode[1]);
+        
+                            $chargeData = [
+                                'status' => 2
+                            ];
+        
+                            $chargeUpdate = $this->accounting_delayed_charge_model->updateDelayedCharge($delayedCharge->id, $chargeData);
+                        }
+
+                        $linkedTransacsData[] = [
+                            'linked_to_type' => 'invoice',
+                            'linked_to_id' => $invoiceId,
+                            'linked_transaction_type' => str_replace('_', '-', $explode[0]),
+                            'linked_transaction_id' => $explode[1]
+                        ];
+                    }
+
+                    $this->accounting_linked_transactions_model->insert_by_batch($linkedTransacsData);
+                }
+
+                foreach($data['item'] as $key => $input) {
+                    $linkedTransaction = $data['item_linked'][$key] !== '' ? explode('-', $data['item_linked'][$key]) : null;
+
+                    $explode = explode('-', $input);
+
+                    if($explode[0] === 'package') {
+                        $package = $this->items_model->get_package_by_id($explode[1]);
+                        $packageItems = $this->items_model->get_package_items($explode[1]);
+
+                        $pItemDetails = [];
+                        foreach($packageItems as $i => $packageItem) {
+                            $pItem = $this->items_model->getItemById($packageItem->item_id)[0];
+                            $totalQty = intval($packageItem->quantity) * intval($data['quantity'][$key]);
+
+                            if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
+                                $packageItems[$i]->balance_change = floatval(str_replace(',', '', $pItem->cost)) * floatval(str_replace(',', '', $totalQty));
+                            } else {
+                                $packageItems[$i]->balance_change = floatval(str_replace(',', '', $item->price)) * floatval(str_replace(',', '', $totalQty));
+                            }
+                        }
+
+                        $balanceChange = null;
+                    } else {
+                        $item = $this->items_model->getItemById($explode[1])[0];
+
+                        if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
+                            $balanceChange = floatval(str_replace(',', '', $item->cost));
+                        } else {
+                            $balanceChange = floatval(str_replace(',', '', $data['item_total'][$key]));
+                        }
+                    }
+
+                    $invoiceItem = [
+                        'invoice_id' => $invoice->id,
+                        'items_id' => $explode[0] === 'item' ? $explode[1] : '',
+                        'location_id' => $data['location'][$key],
+                        'qty' => $data['quantity'][$key],
+                        'package_id' => $explode[0] === 'package' ? $explode[1] : '',
+                        'package_item_details' => $explode[0] === 'package' ? json_encode($packageItems) : null,
+                        'cost' => $data['item_amount'][$key],
+                        'tax' => $data['item_tax'][$key],
+                        'discount' => $data['discount'][$key],
+                        'total' => floatval(str_replace(',', '', $data['item_total'][$key])),
+                        'tax_rate_used' => $data['item_tax'][$key],
+                        'linked_transaction_type' => !is_null($linkedTransaction) ? $linkedTransaction[0] : null,
+                        'linked_transaction_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
+                        'linked_transaction_item_id' => !is_null($linkedTransaction) ? $data['transac_item_id'][$key] : null,
+                        'amount_balance_change' => floatval(str_replace(',', '', $balanceChange))
+                    ];
+
+                    if(!is_null($invoiceItems[$key])) {
+                        $invoiceItem['date_created'] = date("Y-m-d H:i:s" , strtotime($invoiceItems->date_created));
+                    }
+
+                    $addInvoiceItem = $this->invoice_model->add_invoice_items($invoiceItem);
+
+                    if($explode[0] === 'item') {
+                        $item = $this->items_model->getItemById($explode[1])[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($explode[1]);
 
                         if ($itemAccDetails) {
                             if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
-                                $location = $this->items_model->get_first_location($packageItem->item_id);
-                                $newQty = intval($location->qty) - intval($totalQty);
-                                $this->items_model->updateLocationQty($location->id, $packageItem->item_id, $newQty);
+                                $location = $this->items_model->getItemLocation($data['location'][$key], $explode[1]);
+                                $newQty = intval($location->qty) - intval($data['quantity'][$key]);
+                                $this->items_model->updateLocationQty($data['location'][$key], $explode[1], $newQty);
+
+                                $amount = floatval(str_replace(',', '', $item->cost)) * floatval($data['quantity'][$key]);
 
                                 $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                                $totalAmount = floatval(str_replace(',', '', $item->cost)) * floatval(str_replace(',', '', $totalQty));
-                                $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) - floatval(str_replace(',', '', $totalAmount));
+                                $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) - $amount;
                                 $newBalance = number_format($newBalance, 2, '.', ',');
 
                                 $invAssetAccData = [
@@ -20909,24 +20947,24 @@ class Accounting_modals extends MY_Controller
                                     'account_id' => $invAssetAcc->id,
                                     'transaction_type' => 'Invoice',
                                     'transaction_id' => $invoiceId,
-                                    'amount' => floatval(str_replace(',', '', $totalAmount)),
+                                    'amount' => $amount,
                                     'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
                                     'type' => 'decrease',
                                     'is_item_category' => 1,
-                                    'is_in_package' => 1,
                                     'child_id' => $addInvoiceItem
                                 ];
-    
+
                                 $this->accounting_account_transactions_model->create($accTransacData);
                             } else {
                                 $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
                                 $incomeAccType = $this->account_model->getById($incomeAcc->account_id);
-                                $totalAmount = floatval(str_replace(',', '', $item->price)) * floatval(str_replace(',', '', $totalQty));
+
+                                $amount = floatval($data['item_amount'][$key]) * floatval($data['quantity'][$key]);
 
                                 if ($incomeAccType->account_name === 'Credit Card') {
-                                    $newBalance = floatval(str_replace(',', '', $incomeAcc->balance)) + floatval(str_replace(',', '', $totalAmount));
+                                    $newBalance = floatval(str_replace(',', '', $incomeAcc->balance)) + $amount;
                                 } else {
-                                    $newBalance = floatval(str_replace(',', '', $incomeAcc->balance)) - floatval(str_replace(',', '', $totalAmount));
+                                    $newBalance = floatval(str_replace(',', '', $incomeAcc->balance)) - $amount;
                                 }
                                 $newBalance = number_format($newBalance, 2, '.', ',');
 
@@ -20942,57 +20980,132 @@ class Accounting_modals extends MY_Controller
                                     'account_id' => $incomeAcc->id,
                                     'transaction_type' => 'Invoice',
                                     'transaction_id' => $invoiceId,
-                                    'amount' => floatval(str_replace(',', '', $totalAmount)),
+                                    'amount' => $amount,
                                     'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
                                     'type' => 'decrease',
                                     'is_item_category' => 1,
-                                    'is_in_package' => 1,
                                     'child_id' => $addInvoiceItem
                                 ];
-    
+
                                 $this->accounting_account_transactions_model->create($accTransacData);
                             }
                         }
-                    }
-                }
-            }
+                    } else {
+                        $package = $this->items_model->get_package_by_id($explode[1]);
 
-            foreach($invoiceItems as $invoiceItem) {
-                if(!in_array($invoiceItem->items_id, ['0', null, '']) && in_array($invoiceItem->package_id, ['0', null, ''])) {
-                    $item = $this->items_model->getItemById($invoiceItem->items_id)[0];
-                    $itemAccDetails = $this->items_model->getItemAccountingDetails($invoiceItem->items_id);
+                        foreach($packageItems as $packageItem) {
+                            $item = $this->items_model->getItemById($packageItem->item_id)[0];
+                            $itemAccDetails = $this->items_model->getItemAccountingDetails($packageItem->item_id);
+                            $totalQty = intval($packageItem->quantity) * intval($data['quantity'][$key]);
 
-                    if ($itemAccDetails) {
-                        if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
-                            $location = $this->items_model->getItemLocation($invoiceItem->location_id, $invoiceItem->items_id);
-                            $newQty = intval($location->qty) + intval($invoiceItem->qty);
-                            $this->items_model->updateLocationQty($invoiceItem->location_id, $invoiceItem->items_id, $newQty);
+                            if ($itemAccDetails) {
+                                if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
+                                    $location = $this->items_model->get_first_location($packageItem->item_id);
+                                    $newQty = intval($location->qty) - intval($totalQty);
+                                    $this->items_model->updateLocationQty($location->id, $packageItem->item_id, $newQty);
+
+                                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                    $totalAmount = floatval(str_replace(',', '', $item->cost)) * floatval(str_replace(',', '', $totalQty));
+                                    $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) - floatval(str_replace(',', '', $totalAmount));
+                                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                    $invAssetAccData = [
+                                        'id' => $invAssetAcc->id,
+                                        'company_id' => logged('company_id'),
+                                        'balance' => floatval(str_replace(',', '', $newBalance))
+                                    ];
+
+                                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
+                                    $accTransacData = [
+                                        'account_id' => $invAssetAcc->id,
+                                        'transaction_type' => 'Invoice',
+                                        'transaction_id' => $invoiceId,
+                                        'amount' => floatval(str_replace(',', '', $totalAmount)),
+                                        'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
+                                        'type' => 'decrease',
+                                        'is_item_category' => 1,
+                                        'is_in_package' => 1,
+                                        'child_id' => $addInvoiceItem
+                                    ];
+        
+                                    $this->accounting_account_transactions_model->create($accTransacData);
+                                } else {
+                                    $incomeAcc = $this->chart_of_accounts_model->getById($itemAccDetails->income_account_id);
+                                    $incomeAccType = $this->account_model->getById($incomeAcc->account_id);
+                                    $totalAmount = floatval(str_replace(',', '', $item->price)) * floatval(str_replace(',', '', $totalQty));
+
+                                    if ($incomeAccType->account_name === 'Credit Card') {
+                                        $newBalance = floatval(str_replace(',', '', $incomeAcc->balance)) + floatval(str_replace(',', '', $totalAmount));
+                                    } else {
+                                        $newBalance = floatval(str_replace(',', '', $incomeAcc->balance)) - floatval(str_replace(',', '', $totalAmount));
+                                    }
+                                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                                    $incomeAccData = [
+                                        'id' => $incomeAcc->id,
+                                        'company_id' => logged('company_id'),
+                                        'balance' => floatval(str_replace(',', '', $newBalance))
+                                    ];
+
+                                    $this->chart_of_accounts_model->updateBalance($incomeAccData);
+
+                                    $accTransacData = [
+                                        'account_id' => $incomeAcc->id,
+                                        'transaction_type' => 'Invoice',
+                                        'transaction_id' => $invoiceId,
+                                        'amount' => floatval(str_replace(',', '', $totalAmount)),
+                                        'transaction_date' => date("Y-m-d", strtotime($data['date_issued'])),
+                                        'type' => 'decrease',
+                                        'is_item_category' => 1,
+                                        'is_in_package' => 1,
+                                        'child_id' => $addInvoiceItem
+                                    ];
+        
+                                    $this->accounting_account_transactions_model->create($accTransacData);
+                                }
+                            }
                         }
                     }
-                } else {
-                    $package = $this->items_model->get_package_by_id($invoiceItem->package_id);
-                    $packageItems = json_decode($invoiceItem->package_item_details, true);
+                }
 
-                    foreach($packageItems as $packageItem) {
-                        $item = $this->items_model->getItemById($packageItem['item_id'])[0];
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($packageItem['item_id']);
-                        $totalQty = intval($packageItem['quantity']) * intval($invoiceItem->qty);
+                foreach($invoiceItems as $invoiceItem) {
+                    if(!in_array($invoiceItem->items_id, ['0', null, '']) && in_array($invoiceItem->package_id, ['0', null, ''])) {
+                        $item = $this->items_model->getItemById($invoiceItem->items_id)[0];
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($invoiceItem->items_id);
 
                         if ($itemAccDetails) {
                             if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
-                                $location = $this->items_model->get_first_location($packageItem['item_id']);
-                                $newQty = intval($location->qty) + intval($totalQty);
-                                $this->items_model->updateLocationQty($location->id, $packageItem['item_id'], $newQty);
+                                $location = $this->items_model->getItemLocation($invoiceItem->location_id, $invoiceItem->items_id);
+                                $newQty = intval($location->qty) + intval($invoiceItem->qty);
+                                $this->items_model->updateLocationQty($invoiceItem->location_id, $invoiceItem->items_id, $newQty);
+                            }
+                        }
+                    } else {
+                        $package = $this->items_model->get_package_by_id($invoiceItem->package_id);
+                        $packageItems = json_decode($invoiceItem->package_item_details, true);
+
+                        foreach($packageItems as $packageItem) {
+                            $item = $this->items_model->getItemById($packageItem['item_id'])[0];
+                            $itemAccDetails = $this->items_model->getItemAccountingDetails($packageItem['item_id']);
+                            $totalQty = intval($packageItem['quantity']) * intval($invoiceItem->qty);
+
+                            if ($itemAccDetails) {
+                                if(strtolower($item->type) === 'product' || strtolower($item->type) === 'inventory') {
+                                    $location = $this->items_model->get_first_location($packageItem['item_id']);
+                                    $newQty = intval($location->qty) + intval($totalQty);
+                                    $this->items_model->updateLocationQty($location->id, $packageItem['item_id'], $newQty);
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        $return['data'] = $invoiceId;
-        $return['success'] = $update ? true : false;
-        $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
+            $return['data'] = $invoiceId;
+            $return['success'] = $update ? true : false;
+            $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
+        }
 
         return $return;
     }

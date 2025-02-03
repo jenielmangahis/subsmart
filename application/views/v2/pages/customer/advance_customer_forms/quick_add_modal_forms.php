@@ -244,3 +244,31 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="quick_add_lender_type" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Create Lender Type</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="frm-quick-add-lender-type">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="mb-2">Name</label>
+                            <div class="input-group mb-3">
+                                <input type="text" name="lender_type_name" id="lender_type_name" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">                        
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="nsm-button btn-fixed-width" id="btn-manage-lender-types">Manage</button>
+                        <button type="submit" class="nsm-button primary btn-fixed-width" id="btn-save-lender-type">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
