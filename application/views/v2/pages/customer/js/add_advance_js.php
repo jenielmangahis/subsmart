@@ -1049,5 +1049,52 @@
             );
         });
 
+        $('#btn-quick-add-lender-type').on('click', function(){
+            $('#frm-quick-add-lender-type')[0].reset();
+            $('#quick_add_lender_type').modal('show');
+        }); 
+
+        $('#btn-manage-lender-types').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_solar_lender_type',
+                '_blank' 
+            );
+        });
+
+        $('#frm-quick-add-lender-type').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_lender_type',
+                dataType: 'json',
+                data: $('#frm-quick-add-lender-type').serialize(),
+                success: function(data) {    
+                    $('#btn-save-lender-type').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_lender_type').modal('hide');
+                        $('#lender_type').append($('<option>', {
+                            value: data.name,
+                            text: data.name,
+                        }));
+                        $('#lender_type').val(data.name);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-lender-type').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
     });
 </script>
