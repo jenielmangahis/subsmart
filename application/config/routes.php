@@ -2000,6 +2000,13 @@ $route['customers/_update_activation_fee'] = 'Customer/ajax_update_activation_fe
 $route['customers/_delete_activation_fee'] = 'Customer/ajax_delete_activation_fee';
 $route['customers/_delete_customer_group'] = 'Customer/ajax_delete_customer_group';
 $route['customers/_delete_system_package_type'] = 'Customer/ajax_delete_system_package_type';
+$route['customers/_create_lender_type'] = 'Customer/ajax_create_lender_type';
+$route['customers/_update_lender_type'] = 'Customer/ajax_update_lender_type';
+$route['customers/_delete_lender_type'] = 'Customer/ajax_delete_lender_type';
+$route['customers/_create_system_size'] = 'Customer/ajax_create_system_size';
+$route['customers/_update_system_size'] = 'Customer/ajax_update_system_size';
+$route['customers/_delete_system_size'] = 'Customer/ajax_delete_system_size';
+$route['customers/_create_proposed_module'] = 'Customer/ajax_create_proposed_module';
 
 //Benchmark for Testing
 $route['benchmark/cron_customer_subscription'] = 'Benchmark/cron_customer_subscription';
