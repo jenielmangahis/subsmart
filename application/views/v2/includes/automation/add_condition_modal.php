@@ -30,7 +30,7 @@
 
                             <div class="input-group mb-3 cond-value-amount-container d-none">
                                 <div class="nsm-field-group icon-right">
-                                    <input type="number" class="nsm-field form-control mb-2"  required>
+                                    <input type="number" class="nsm-field form-control mb-2" >
                                 </div>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button secondary outlined" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="smsForm" class="nsm-button primary">
+                <button type="submit" form="conditionForm" class="nsm-button primary">
                     <i class='bx bx-fw bx-check'></i> Apply
                 </button>
             </div>

@@ -131,6 +131,10 @@
                     handleEventItemClick();
                 }
 
+                // if(menuId == "#timeDropdownBtn"){
+                //     $(".entity-text").text(selectedEntity)
+                // }
+
                 if (menuId == "#actionDropdownMenu") {
                     if(selectedAction == "send_email"){
                         populateEmailModal("automation_msg", "#addEmail");
@@ -144,7 +148,6 @@
 
         
         $(document).on("mouseenter", ".dropdown-submenu", function () {
-            console.log('Hover In');
             $(this).children(".user-dropdown").css({
                 display: "block",
                 position: "absolute",
@@ -153,11 +156,11 @@
                 zIndex: 1000 
             });
         }).on("mouseleave", ".dropdown-submenu", function () {
-            console.log('Hover Out');
             $(this).children(".user-dropdown").hide();
         });
 
         async function populateModal(data) {
+            console.log(data)
             if (data) {
                 selectedStatus = data.trigger_status 
                     ?? Object.values(statusOptions[data.entity] || {})[0] 
@@ -171,10 +174,10 @@
                 selectedEvent = data.trigger_event;
                 selectedEntity = data.entity;
                 smsBody = data.sms_body;
-                selectedOperation = 'send';
+                selectedOperation = data.operation || "send";
                 conditions = data.conditions ? JSON.parse(data.conditions) : [];
 
-                const template = generateEmailTemplate(data.target);
+                const template = generateEmailTemplate(data.target, data.index);
                 if (template) {
                     const { subject, body } = template;
                     emailSubject = subject;
@@ -184,8 +187,6 @@
                     }
                 }
 
-                console.log('smsBody', smsBody)
-             
             }
 
             let tagData = await sendGet("/Automation/getJobTags");
@@ -201,6 +202,7 @@
             if (selectedOperation) { //only display the rest of the sentence if there selectedOperation is not empty
                 populateOperationDropdown(selectedEntity);
                 handleSecondParagraph();
+                handleFooterButtons();
                 setActiveTimelineItem();
             }
 
@@ -218,33 +220,43 @@
         }
 
         function handleSecondParagraph() {
-            $(".target-dropdown-container").removeClass("d-none");
-            $(".action-dropdown-container").removeClass("d-none");
-            $(".time-dropdown-container").removeClass("d-none");
+            const isCreate = selectedOperation === "create";
+            $(".job-create-dropdown-container").toggleClass("d-none", !isCreate);
+            $(".target-dropdown-container, .action-dropdown-container, .time-dropdown-container, .date-dropdown-container").toggleClass("d-none", isCreate);
 
-            
-            populateTargetDropdown(selectedEntity)
-            populateDropdown(
-                "#actionDropdownMenu",
-                actionOptions,
-                selectedAction || "a reminder",
-                "action-item",
-                "#actionDropdownBtn",
-            );
-            populateTimeDropdownBtn(selectedEntity);
+            if(isCreate){
+                selectedTime = 0;
+               
+            }else{
+                populateTargetDropdown(selectedEntity)
+                populateDropdown(
+                    "#actionDropdownMenu",
+                    actionOptions,
+                    selectedAction || "a reminder",
+                    "action-item",
+                    "#actionDropdownBtn",
+                );
+                populateTimeDropdownBtn(selectedEntity);
 
-            
-            
-            populateDropdown(
-                "#dateDropdownMenu",
-                dateOptions,
-                selectedDate || "date",
-                "date-item",
-                "#dateDropdownBtn",
-            );
-
-            
+                populateDropdown(
+                    "#dateDropdownMenu",
+                    dateOptions[selectedEntity],
+                    selectedDate || "date",
+                    "date-item",
+                    "#dateDropdownBtn",
+                );
+            }
         }
+
+        function handleFooterButtons() {
+            if (selectedOperation === "create") {
+                $(".preview-message").prop("disabled", true); // Disable the button
+            } else {
+                $(".preview-message").prop("disabled", false); // Enable the button
+            }
+        }
+
+
 
         function populateEventDropdown(entity) {
             const item = eventOptions[entity];
@@ -324,6 +336,8 @@
         }
 
         function populateTimeDropdownBtn(entity) {
+            $(".entity-text").text(selectedEntity)
+
             //hide date if selectedTime is immediately
             toggleDateDropdown();
 
@@ -406,6 +420,7 @@
             selectedEntity = "";
             selectedOperation = "";
             smsBody = "";
+            conditions = [];
 
             $(".event-dropdown-container").addClass("d-none");
             $(".status-dropdown-container").addClass("d-none");
@@ -416,7 +431,7 @@
             disableTimeDropdownBtns();
         }
 
-        function updateSelectedValues(menuId, value) {
+    function updateSelectedValues(menuId, value) {
             if (menuId === "#eventDropdownMenu") {
                 selectedEvent = value;
             } else if (menuId === "#statusDropdownMenu") {
@@ -508,7 +523,9 @@
             populateOperationDropdown(selectedEntity);
             $(".event-dropdown-container").removeClass("d-none");
 
-           populateTargetDropdown(selectedEntity)
+            populateTargetDropdown(selectedEntity);
+            $(".entity-text").text(selectedEntity);
+
         });
 
         // Handle operation item click using event delegation
@@ -518,9 +535,15 @@
             // Update the button text with the selected operation
             $("#operationDropdownBtn").text(selectedOperation);
             $("#operationDropdownBtn").addClass("primary");
+            $("#operationDropdownBtn").removeClass("secondary");
             $("#operationDropdownMenu").hide();
 
+            $(`#operationDropdownMenu .operation-item`).removeClass("active");
+            $(this).addClass("active");
+   
             handleSecondParagraph();
+            handleFooterButtons();
+
         });
 
 
@@ -615,7 +638,7 @@
             }
             if (action) {
                 eval(action);
-            }
+            }   
         });
 
         $(".followUps-item").on("click", function () {
@@ -667,10 +690,10 @@
         });
 
         $(".delete-first-line").click(function () {
-            console.log('asdasd')
-           resetAutomationModal();
-           $("#entityDropdownBtn").text("this happens");
-           $("#operationDropdownBtn").text("do this");
+            resetAutomationModal();
+            $("#entityDropdownBtn").text("this happens");
+            $("#operationDropdownBtn").text("do this");
+            $(".job-create-dropdown-container").addClass("d-none");
         });
 
          $(".delete-second-line").click(function () {
@@ -691,6 +714,8 @@
             $(".action-dropdown-container").addClass("d-none");
             $(".time-dropdown-container").addClass("d-none");
             $(".date-dropdown-container").addClass("d-none");
+            $(".job-create-dropdown-container").addClass("d-none");
+
             disableTimeDropdownBtns();
 
            $("#operationDropdownBtn").text("do this");
@@ -826,7 +851,8 @@
                 email_body: emailBody,
                 sms_body: smsBody,
                 status: "active",
-                conditions: JSON.stringify(conditions) 
+                conditions: JSON.stringify(conditions),
+                operation: selectedOperation
             };
 
             // Check for missing fields
@@ -872,7 +898,9 @@
                 email_body: emailBody,
                 sms_body: smsBody,
                 id: selectedAutomationId,
-                conditions: JSON.stringify(conditions) 
+                conditions: JSON.stringify(conditions) ,
+                operation: selectedOperation
+
             };
 
             // Check for missing fields
@@ -969,7 +997,6 @@
             conditions = []; 
             $(".list-condition").empty(); 
 
-        console.log(jobTags)
 
         });
 
@@ -1004,7 +1031,6 @@
                             ? jobTags
                             : jobTypes;
 
-                        console.log(res)
                     }
                 }
 
@@ -1042,15 +1068,18 @@
             conditions.push(newCondition); // Save condition to array
 
             $(".list-condition").append(`
-                <h6 class="nsm-text cursor-pointer fw-bold px-5">
-                    ${selectedProperty} ( ${selectedOperator} ) ${selectedValueName}
-                </h6>
+                <div class="d-flex justify-content-between">
+                    <h6 class="nsm-text cursor-pointer fw-bold px-5">
+                        ${selectedProperty} ( ${selectedOperator} ) ${selectedValueName}
+                    </h6>
+                    <i class="bx bx-fw bx-x primary cursor-pointer remove-or-condition" data-index="${conditions.length - 1}"></i>
+
+                </div>
                 <label class="mb-1 fw-xnormal">or...</label>
             `);
 
             // Reset select and input fields
             resetForm();
-            console.log(conditions);
         });
 
         $(".operator-btns button").on("click", function () {
@@ -1061,36 +1090,64 @@
             $(this).addClass("active");
         });
 
-        $("#addCondition .nsm-button.primary").on("click", function () {
+        $("#conditionForm").on("submit", function (event) {
+            event.preventDefault();
             let property = $("#conditionSelect").val(); 
             let operator = $(".operator-btns button.active").data("value");
             let value = $("#conditionValueSelect").val() || $(".cond-value-amount-container input").val();
-            if (!property || !operator || !value) {
+           
+            if ((!property || !operator || !value) && conditions.length < 0) {
                 alert("Please select all fields.");
                 return;
             }
+            
+            let condition = {};
 
-            let condition = {
-                property: property,
-                operator: operator,
-                value: value
-            };
+            if(property && operator && value){
+             condition = {
+                    property: property,
+                    operator: operator,
+                    value: value
+                };
+            }
 
-         
-            conditions.push(condition);
+            if ([property, operator, value].every(val => val?.trim())) {
+                conditions.push(condition);
+            }
+
             renderConditions();
 
             $("#addCondition").modal("hide");
-            console.log(condition)
         });
 
          $(document).on("click", ".remove-condition", function () {
             let index = $(this).data("index");
-            console.log(index)
             conditions.splice(index, 1);
-            console.log(conditions)
             renderConditions();
         });
+
+        $(document).on("click", ".remove-or-condition", function () {
+            let index = $(this).data("index");
+            conditions.splice(index, 1);
+            updateOrConditionsUI();
+        });
+
+        function updateOrConditionsUI() {
+            $(".list-condition").empty(); 
+
+            conditions.forEach((cond, index) => {
+                let selectedValueName = getConditionValueName(cond.property, cond.value);
+                $(".list-condition").append(`
+                    <div class="d-flex justify-content-between condition-item" data-index="${index}">
+                        <h6 class="nsm-text cursor-pointer fw-bold px-5">
+                            ${cond.property} ( ${cond.operator} ) ${selectedValueName}
+                        </h6>
+                        <i class="bx bx-fw bx-x primary cursor-pointer remove-or-condition" data-index="${index}"></i>
+                    </div>
+                    <label class="mb-1 fw-xnormal">or...</label>
+                `);
+            });
+        }
 
         function resetForm() {
             $("#conditionSelect").val("");
@@ -1309,17 +1366,25 @@
                 // Skip `email_body` and `email_subject` if `trigger_action` is send_sms
                 if (
                     (key == "email_body" || key == "email_subject") &&
-                    data.trigger_action == "send_sms"
+                    (data.trigger_action == "send_sms" || selectedOperation == "create")
                 ) {
                     return;
                 }
 
                 if (
                     (key == "sms_body") &&
-                    data.trigger_action == "send_email"
+                    (data.trigger_action == "send_email" || selectedOperation == "create")
                 ) {
                     return;
                 }
+
+                
+                if (
+                    (key == "target" || key == "trigger_action") && selectedOperation == "create"
+                ) {
+                    return;
+                }
+
 
 
                 if (!value) {
@@ -1354,6 +1419,11 @@
         // DYNAMIC DISPLAY OF SELECTION
 
         function formatTriggerTime(triggerTime) {
+            if (triggerTime >= 43200) {
+                // 1440 minutes = 1 day
+                const months = Math.floor(triggerTime / 43200);
+                return months + " month" + (months > 1 ? "s" : "");
+            }
             if (triggerTime >= 1440) {
                 // 1440 minutes = 1 day
                 const days = Math.floor(triggerTime / 1440);
@@ -1374,24 +1444,21 @@
 
         //AUTOMATION TEMPLATE
 
-        function generateEmailTemplate(recipient) {
+        function generateEmailTemplate(recipient, index) {
             let automationType = activeAutoTemplate;
 
-            const recipientType = recipient;
-            if (
-                !automationConfig[automationType] ||
-                !automationConfig[automationType].templates[recipientType]
-            ) {
+             if (!automationConfig[automationType]) {
                 return null;
             }
 
-            const { subject, body } =
-                automationConfig[automationType].templates[recipientType];
+            const recipientType = recipient;
+            const recipientTemplates = automationConfig[automationType].templates[recipient];
 
-            return {
-                subject,
-                body,
-            };
+            const data = recipientTemplates?.[index] || recipientTemplates;
+
+            const { subject = '', body = '' } = data || {};
+
+            return { subject, body };
         }
 
         // Handle the Insert Smart Tag button click

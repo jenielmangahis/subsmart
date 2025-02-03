@@ -102,6 +102,11 @@
                                             
                                             </ul>
                                         </div>
+                                        <div class="job-create-dropdown-container d-none">
+                                            <h4 id="jobCreateDropdownBtn" class='cursor-pointer me-2 text-underline nsm-text secondary'>
+                                                an invoice immediately
+                                            </h4>
+                                        </div>
                                         <div class="target-dropdown-container d-none">
                                             <h4 id="targetDropdownBtn" class='cursor-pointer me-2 text-underline nsm-text secondary fw-bold'>
                                                 
@@ -168,7 +173,7 @@
 
                                         <div class="date-dropdown-container d-none">
                                             <h4 class='me-2'>
-                                                the <span id="dateDropdownBtn" class="cursor-pointer text-underline nsm-text secondary fw-bold">date</span>
+                                                the <span class="entity-text"></span> <span id="dateDropdownBtn" class="cursor-pointer text-underline nsm-text secondary fw-bold">date</span>
                                             </h4>
                                             <ul class="dropdown-menu list-group list-group-flush" id="dateDropdownMenu">
                                             
