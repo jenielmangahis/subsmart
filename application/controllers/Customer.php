@@ -8552,73 +8552,20 @@ class Customer extends MY_Controller
      */
     public function settings_solar_lender_type()
     {
-        $lender_types = [];
-        // get solar lender types
-        $solar_info_query = [
-            'where' => [
-                'field_name' => 'lender_type',
-            ],
-            'table' => 'acs_solar_info_settings',
-            'order' => [
-                'order_by' => 'id',
-            ],
-            'select' => '*',
-        ];
-        $lender_types_data = $this->general->get_data_with_param($solar_info_query, false);
-        $results = json_decode($lender_types_data->field_value);
+        $this->load->model('AcsSolarInfoLenderType_model');
 
-        $x = 0;
-        if (!empty($results)) {
-            foreach ($results as $result) {
-                array_push($lender_types, $result);
-                ++$x;
-            }
-        }
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+            show403Error();
+            return false;
+        }   
 
-        $input = $this->input->post();
-        if ($input) {
-            if (isset($input['lenderName'])) {
-                // filter the lender_types array to remove data
-                $a = array_filter($lender_types, function ($v) {
-                    $delete = $_POST['lenderName'];
+        $cid = logged('company_id');
+        $lender_types = $this->AcsSolarInfoLenderType_model->getAllByCompanyId($cid);
 
-                    return $v->name !== $delete;
-                });
-                $lender_types = array_values($a);
-                unset($input['lenderName']);
-            } else {
-                $lender_types[$x]['name'] = $input['lender_name'];
-                $lender_types[$x]['date_created'] = date('Y-m-d H:i:s');
-                unset($input['lender_name']);
-            }
-
-            $input['field_value'] = json_encode($lender_types);
-            $input['id'] = $lender_types_data->id;
-
-            if ($this->customer_ad_model->update_data($input, 'acs_solar_info_settings', 'id')) {
-                echo '1';
-            } else {
-                echo 'Error';
-            }
-        } else {
-            $this->page_data['page']->title = 'Lender Types';
-            $this->page_data['page']->parent = 'Sales';
-
-            $this->load->library('wizardlib');
-            $this->hasAccessModule(9);
-
-            $user_id = logged('id');
-
-            // set a global data for customer profile id
-            $this->page_data['customer_profile_id'] = $user_id;
-
-            if (isset($userid) || !empty($userid)) {
-                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
-                $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-            }
-            $this->page_data['lender_types'] = $lender_types;
-            $this->load->view('v2/pages/customer/solar/settings_lender_type', $this->page_data);
-        }
+        $this->page_data['page']->title = 'Lender Types';
+        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['lender_types'] = $lender_types;
+        $this->load->view('v2/pages/customer/solar/settings_lender_type', $this->page_data);
     }
 
     /**
@@ -8626,73 +8573,20 @@ class Customer extends MY_Controller
      */
     public function settings_solar_system_size()
     {
-        $lender_types = [];
-        // get solar lender types
-        $solar_info_query = [
-            'where' => [
-                'field_name' => 'solar_system_size',
-            ],
-            'table' => 'acs_solar_info_settings',
-            'order' => [
-                'order_by' => 'id',
-            ],
-            'select' => '*',
-        ];
-        $lender_types_data = $this->general->get_data_with_param($solar_info_query, false);
-        $results = json_decode($lender_types_data->field_value);
+        $this->load->model('AcsSolarInfoSystemSize_model');
 
-        $x = 0;
-        if (!empty($results)) {
-            foreach ($results as $result) {
-                array_push($lender_types, $result);
-                ++$x;
-            }
-        }
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+            show403Error();
+            return false;
+        }   
 
-        $input = $this->input->post();
-        if ($input) {
-            if (isset($input['lenderName'])) {
-                // filter the lender_types array to remove data
-                $a = array_filter($lender_types, function ($v) {
-                    $delete = $_POST['lenderName'];
+        $cid = logged('company_id');
+        $systemSizes = $this->AcsSolarInfoSystemSize_model->getAllByCompanyId($cid);
 
-                    return $v->name !== $delete;
-                });
-                $lender_types = array_values($a);
-                unset($input['lenderName']);
-            } else {
-                $lender_types[$x]['name'] = $input['lender_name'];
-                $lender_types[$x]['date_created'] = date('Y-m-d H:i:s');
-                unset($input['lender_name']);
-            }
-
-            $input['field_value'] = json_encode($lender_types);
-            $input['id'] = $lender_types_data->id;
-
-            if ($this->customer_ad_model->update_data($input, 'acs_solar_info_settings', 'id')) {
-                echo '1';
-            } else {
-                echo 'Error';
-            }
-        } else {
-            $this->page_data['page']->title = 'Solar System Size';
-            $this->page_data['page']->parent = 'Sales';
-
-            $this->load->library('wizardlib');
-            $this->hasAccessModule(9);
-
-            $user_id = logged('id');
-
-            // set a global data for customer profile id
-            $this->page_data['customer_profile_id'] = $user_id;
-
-            if (isset($userid) || !empty($userid)) {
-                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
-                $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-            }
-            $this->page_data['lender_types'] = $lender_types;
-            $this->load->view('v2/pages/customer/solar/settings_system_size', $this->page_data);
-        }
+        $this->page_data['page']->title  = 'Solar System Size';
+        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['systemSizes']  = $systemSizes;
+        $this->load->view('v2/pages/customer/solar/settings_system_size', $this->page_data);
     }
 
     /**
@@ -8700,73 +8594,20 @@ class Customer extends MY_Controller
      */
     public function settings_solar_modules()
     {
-        $lender_types = [];
-        // get solar lender types
-        $solar_info_query = [
-            'where' => [
-                'field_name' => 'solar_modules',
-            ],
-            'table' => 'acs_solar_info_settings',
-            'order' => [
-                'order_by' => 'id',
-            ],
-            'select' => '*',
-        ];
-        $lender_types_data = $this->general->get_data_with_param($solar_info_query, false);
-        $results = json_decode($lender_types_data->field_value);
+        $this->load->model('AcsSolarInfoProposedModule_model');
 
-        $x = 0;
-        if (!empty($results)) {
-            foreach ($results as $result) {
-                array_push($lender_types, $result);
-                ++$x;
-            }
-        }
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+            show403Error();
+            return false;
+        }   
 
-        $input = $this->input->post();
-        if ($input) {
-            if (isset($input['lenderName'])) {
-                // filter the lender_types array to remove data
-                $a = array_filter($lender_types, function ($v) {
-                    $delete = $_POST['lenderName'];
+        $cid = logged('company_id');
+        $proposedModules = $this->AcsSolarInfoProposedModule_model->getAllByCompanyId($cid);
 
-                    return $v->name !== $delete;
-                });
-                $lender_types = array_values($a);
-                unset($input['lenderName']);
-            } else {
-                $lender_types[$x]['name'] = $input['lender_name'];
-                $lender_types[$x]['date_created'] = date('Y-m-d H:i:s');
-                unset($input['lender_name']);
-            }
-
-            $input['field_value'] = json_encode($lender_types);
-            $input['id'] = $lender_types_data->id;
-
-            if ($this->customer_ad_model->update_data($input, 'acs_solar_info_settings', 'id')) {
-                echo '1';
-            } else {
-                echo 'Error';
-            }
-        } else {
-            $this->page_data['page']->title = 'Solar Proposed Modules';
-            $this->page_data['page']->parent = 'Sales';
-
-            $this->load->library('wizardlib');
-            $this->hasAccessModule(9);
-
-            $user_id = logged('id');
-
-            // set a global data for customer profile id
-            $this->page_data['customer_profile_id'] = $user_id;
-
-            if (isset($userid) || !empty($userid)) {
-                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
-                $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-            }
-            $this->page_data['lender_types'] = $lender_types;
-            $this->load->view('v2/pages/customer/solar/settings_proposed_modules', $this->page_data);
-        }
+        $this->page_data['page']->title = 'Solar Proposed Modules';
+        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['proposedModules']  = $proposedModules;
+        $this->load->view('v2/pages/customer/solar/settings_proposed_modules', $this->page_data);
     }
 
     /**
@@ -11643,6 +11484,292 @@ class Customer extends MY_Controller
         $msg = '';
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_create_lender_type()
+    {
+        $this->load->model('AcsSolarInfoLenderType_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $amount = 0;
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        
+        if ($post['lender_type_name'] != '' ) {
+            $isExists = $this->AcsSolarInfoLenderType_model->getByNameAndCompanyId($post['lender_type_name'], $cid);
+            if( !$isExists ){
+                $data = [
+                    'company_id' => $cid,
+                    'name' => $post['lender_type_name'],
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->AcsSolarInfoLenderType_model->create($data);
+    
+                //Activity Logs
+                $activity_name = 'Solar Lender Type : Created lender type ' . $post['lender_type_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+            }else{
+                $msg = 'Lender type name already exists';
+            }    
+        }else{
+            $msg = 'Please enter name.';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'name' => $post['lender_type_name']];
+        echo json_encode($return);
+    }
+
+    public function ajax_update_lender_type()
+    {
+        $this->load->model('AcsSolarInfoLenderType_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        $amount = 0;
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $lenderType = $this->AcsSolarInfoLenderType_model->getByIdAndCompanyId($post['lender_type_id'], $cid);
+        if ($lenderType) {            
+            $isExists   = $this->AcsSolarInfoLenderType_model->getByNameAndCompanyId($post['lender_type_name'], $cid);
+            if( $isExists && $lenderType->id != $isExists->id ){
+                $msg = 'Lender type already exists';
+            }else{
+                $data = [
+                    'name' => $post['lender_type_name'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->AcsSolarInfoLenderType_model->update($lenderType->id, $data);
+    
+                //Activity Logs
+                $activity_name = 'Solar Lender Type : Updated lender type ' . $post['lender_type_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+            } 
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_lender_type()
+    {
+        $this->load->model('AcsSolarInfoLenderType_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'delete')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $lenderType = $this->AcsSolarInfoLenderType_model->getByIdAndCompanyId($post['lid'], $cid);
+        if ($lenderType) {    
+            $name = $lenderType->name;                    
+            $this->AcsSolarInfoLenderType_model->delete($lenderType->id);
+
+            //Activity Logs
+            $activity_name = 'Solar Lender Type : Deleted lender type ' . $name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_create_system_size()
+    {
+        $this->load->model('AcsSolarInfoSystemSize_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $amount = 0;
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        
+        if ($post['system_size_name'] != '' ) {
+            $isExists = $this->AcsSolarInfoSystemSize_model->getByNameAndCompanyId($post['system_size_name'], $cid);
+            if( !$isExists ){
+                $data = [
+                    'company_id' => $cid,
+                    'name' => $post['system_size_name'],
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->AcsSolarInfoSystemSize_model->create($data);
+    
+                //Activity Logs
+                $activity_name = 'Solar System Size : Created system size ' . $post['system_size_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+            }else{
+                $msg = 'System size name already exists';
+            }    
+        }else{
+            $msg = 'Please enter name.';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'name' => $post['system_size_name']];
+        echo json_encode($return);
+    }
+
+    public function ajax_update_system_size()
+    {
+        $this->load->model('AcsSolarInfoSystemSize_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        $amount = 0;
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $systemSize = $this->AcsSolarInfoSystemSize_model->getByIdAndCompanyId($post['system_size_id'], $cid);
+        if ($systemSize) {            
+            $isExists   = $this->AcsSolarInfoSystemSize_model->getByNameAndCompanyId($post['system_size_name'], $cid);
+            if( $isExists && $systemSize->id != $isExists->id ){
+                $msg = 'System size already exists';
+            }else{
+                $data = [
+                    'name' => $post['system_size_name'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->AcsSolarInfoSystemSize_model->update($systemSize->id, $data);
+    
+                //Activity Logs
+                $activity_name = 'Solar System Size : Updated system size ' . $post['system_size_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+            } 
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_system_size()
+    {
+        $this->load->model('AcsSolarInfoSystemSize_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'delete')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $systemSize = $this->AcsSolarInfoSystemSize_model->getByIdAndCompanyId($post['sid'], $cid);
+        if ($systemSize) {    
+            $name = $systemSize->name;                    
+            $this->AcsSolarInfoSystemSize_model->delete($systemSize->id);
+
+            //Activity Logs
+            $activity_name = 'Solar System Size : Deleted system size ' . $name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_create_proposed_module()
+    {
+        $this->load->model('AcsSolarInfoProposedModule_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $amount = 0;
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        
+        if ($post['proposed_module_name'] != '' ) {
+            $isExists = $this->AcsSolarInfoProposedModule_model->getByNameAndCompanyId($post['proposed_module_name'], $cid);
+            if( !$isExists ){
+                $data = [
+                    'company_id' => $cid,
+                    'name' => $post['proposed_module_name'],
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->AcsSolarInfoProposedModule_model->create($data);
+    
+                //Activity Logs
+                $activity_name = 'Solar Proposed Module : Created proposed module ' . $post['proposed_module_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+            }else{
+                $msg = 'System size name already exists';
+            }    
+        }else{
+            $msg = 'Please enter name.';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'name' => $post['system_size_name']];
         echo json_encode($return);
     }
 }
