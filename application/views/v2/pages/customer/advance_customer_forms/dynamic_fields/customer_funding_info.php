@@ -28,10 +28,8 @@
             </div>
         </div>
         <hr>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Monitoring Waived" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'monitoring_waived') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'monitoring_waived'); ?></div>
             <div class="col-md-5">
                 <select id="monitoring_waived" name="monitoring_waived" data-customer-source="dropdown" class="input_select" >
                     <option  value=""></option>
@@ -51,52 +49,40 @@
             </div>
         </div>
 
-        <div class="row form_line field-custom-name-container">
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'rebate_offer') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-7">
-                <label for="rebate_offer">
-                    <field-custom-name default="Rebate Offered" form="funding_info"></field-custom-name>
-                </label>
+                <label for="rebate_offer"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'rebate_offer'); ?></label>
             </div>
             <div class="col-md-5">
                 <input type="checkbox" name="rebate_offer" class="form-controls" value="1"  id="rebate_offer" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?> >
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Rebate Check # 1" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'rebate_check1') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'rebate_check1'); ?></div>
             <div class="col-md-5">
                 <input type="number" class="form-control" name="rebate_check1" id="rebate_check1" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check1; } ?>"/>
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Rebate Check # 1 Amount $" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'rebate_check1_amt') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'rebate_check1_amt'); ?></div>
             <div class="col-md-5">
                 <input type="number" step="0.01" class="form-control" name="rebate_check1_amt" id="rebate_check1_amt" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check1_amt; } ?>"/>
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Rebate Check # 2" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'rebate_check2') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'rebate_check2'); ?></div>
             <div class="col-md-5">
                 <input type="number" class="form-control" name="rebate_check2" id="rebate_check2" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check2; } ?>"/>
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Rebate Check # 2 Amount $" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'rebate_check2_amt') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'rebate_check2_amt'); ?></div>
             <div class="col-md-5">
                 <input type="number" step="0.01" class="form-control" name="rebate_check2_amt" id="rebate_check2_amt" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check2_amt; } ?>" />
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Activation Fee" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'activation_fee') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'activation_fee'); ?></div>
             <div class="col-md-5">
                 <select data-value="<?= isset($office_info) ? $office_info->activation_fee : "" ?>" name="activation_fee" id="activation-fee" data-type="funding_info_activation_fee" class="form-control">
                     <option><?= isset($office_info) ? $office_info->activation_fee : "" ?></option>
@@ -118,10 +104,8 @@
             </div>
         </div>
         <hr>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Commision Scheme Override" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'commision_scheme') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'commision_scheme'); ?></div>
             <div class="col-md-5">
                 <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
                 <span >On</span> &nbsp;&nbsp;
@@ -129,10 +113,8 @@
                 <span>Off</span>
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Rep Commission" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'rep_comm') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'rep_comm'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -144,10 +126,8 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Rep Upfront Pay" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'rep_upfront_pay') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'rep_upfront_pay'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -157,10 +137,8 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Rep Tiered Upront Bonus" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'rep_tiered_bonus') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'rep_tiered_bonus'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -170,10 +148,8 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Rep Tiered Holdfund Bonus" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'rep_holdfund_bonus') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'rep_holdfund_bonus'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -184,10 +160,8 @@
             </div>
         </div>
 
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Rep Deduction Total" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'rep_deduction') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'rep_deduction'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -198,10 +172,8 @@
             </div>
         </div>
 
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Tech Commission" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'tech_comm') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'tech_comm'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -212,12 +184,9 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'tech_upfront_pay') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-7">
-                <label for="tech_upfront_pay">
-                    <field-custom-name default="Tech Upfront Pay" form="funding_info"></field-custom-name>
-                 </label>
-            </div>
+                <label for="tech_upfront_pay"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'tech_upfront_pay'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -228,10 +197,8 @@
             </div>
         </div>
 
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Tech Deduction Total" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'tech_deduction') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'tech_deduction'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -244,10 +211,8 @@
 
         <hr>
 
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Rep Hold Fund Charge Back" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'rep_charge_back') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'rep_charge_back'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -257,10 +222,8 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Rep Payroll Charge Back" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'rep_payroll_charge_back') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'rep_payroll_charge_back'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -271,10 +234,8 @@
             </div>
         </div>
         <hr>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Points Scheme Override" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'pso') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'pso'); ?></div>
             <div class="col-md-5">
                 <input type="radio" name="pso[]" class="form-controls" value="1" id="pso1" <?php if(isset($office_info)){ echo $office_info->pso == 1 ? 'checked': ''; } ?> >
                 <span>On</span>
@@ -284,18 +245,14 @@
                 </div>
         </div>
 
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Points Included" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'points_include') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'points_include'); ?></div>
             <div class="col-md-5">
                 <input type="number" step="0.01" class="form-control" name="points_include" id="points_include" value="<?php if(isset($office_info)){ echo $office_info->points_include !=0 ? $office_info->points_include : '';  } ?>"  />
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Price Per Point" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'price_per_point') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'price_per_point'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -306,10 +263,8 @@
             </div>
         </div>
         <hr>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Purchase Price" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'purchase_price') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'purchase_price'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -319,10 +274,8 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Purchase Multiple" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'purchase_multiple') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'purchase_multiple'); ?></div>
             <div class="col-md-5">
                 <select id="purchase_multiple" name="purchase_multiple" data-customer-source="dropdown" class="input_select ">
                     <option <?php if(isset($office_info)){ if($office_info->purchase_multiple == ""){ echo 'selected'; } } ?> value="">Select</option>
@@ -336,10 +289,8 @@
                 </select>
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Purchase Discount" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'purchase_discount') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'purchase_discount'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -350,10 +301,8 @@
             </div>
         </div>
         <hr>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Equipment Cost" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'equipment_cost') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'equipment_cost'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -363,10 +312,8 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Labor Cost" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'labor_cost') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'labor_cost'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -376,10 +323,8 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-7">
-                <field-custom-name default="Job Profit" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'job_profit') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-7"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'job_profit'); ?></div>
             <div class="col-md-5">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -389,10 +334,8 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line field-custom-name-container">
-            <div class="col-md-12">
-                <field-custom-name default="Customer Shareable Link" form="funding_info"></field-custom-name>
-            </div>
+        <div class="row form_line field-custom-name-container" <?= isCustomerFieldEnabled($companyFormSetting, 'funding-information', 'url') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-12"><?= getCustomerFieldValue($companyFormSetting, 'funding-information', 'url'); ?></div>
             <div class="col-md-12">
                 <input type="url" placeholder="https://sample.com" class="form-control" name="url" id="url" value="<?php if(isset($office_info)){ echo  $office_info->url; } ?>" />
             </div>
