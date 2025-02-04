@@ -1096,5 +1096,145 @@
             });
         });
 
+        $('#btn-quick-add-system-size').on('click', function(){
+            $('#frm-quick-add-system-size')[0].reset();
+            $('#quick_add_system_size').modal('show');
+        }); 
+
+        $('#btn-manage-system-size').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_solar_system_size',
+                '_blank' 
+            );
+        });
+
+        $('#frm-quick-add-system-size').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_system_size',
+                dataType: 'json',
+                data: $('#frm-quick-add-system-size').serialize(),
+                success: function(data) {    
+                    $('#btn-save-system-size').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_system_size').modal('hide');
+                        $('#proposed_system_size').append($('<option>', {
+                            value: data.name,
+                            text: data.name,
+                        }));
+                        $('#proposed_system_size').val(data.name);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-system-size').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#btn-quick-add-proposed-module').on('click', function(){
+            $('#frm-quick-add-proposed-module')[0].reset();
+            $('#quick_add_proposed_module').modal('show');
+        }); 
+
+        $('#btn-manage-proposed-module').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_solar_modules',
+                '_blank' 
+            );
+        });
+
+        $('#frm-quick-add-proposed-module').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_proposed_module',
+                dataType: 'json',
+                data: $('#frm-quick-add-proposed-module').serialize(),
+                success: function(data) {    
+                    $('#btn-save-proposed-module').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_proposed_module').modal('hide');
+                        $('#proposed_modules').append($('<option>', {
+                            value: data.name,
+                            text: data.name,
+                        }));
+                        $('#proposed_modules').val(data.name);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-proposed-module').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#btn-quick-add-proposed-inverter').on('click', function(){
+            $('#frm-quick-add-proposed-inverter')[0].reset();
+            $('#quick_add_proposed_inverter').modal('show');
+        }); 
+
+        $('#btn-manage-proposed-inverter').on('click', function(){
+            window.open(
+                base_url + 'customer/settings_solar_inverter',
+                '_blank' 
+            );
+        });
+
+        $('#frm-quick-add-proposed-inverter').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_proposed_inverter',
+                dataType: 'json',
+                data: $('#frm-quick-add-proposed-inverter').serialize(),
+                success: function(data) {    
+                    $('#btn-save-proposed-inverter').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_proposed_inverter').modal('hide');
+                        $('#proposed_inverter').append($('<option>', {
+                            value: data.name,
+                            text: data.name,
+                        }));
+                        $('#proposed_inverter').val(data.name);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-proposed-inverter').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
     });
 </script>

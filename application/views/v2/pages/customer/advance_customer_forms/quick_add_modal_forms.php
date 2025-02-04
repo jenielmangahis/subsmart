@@ -1,5 +1,5 @@
 <div class="modal fade" id="quick_add_financing_category" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Create Financing Category</span>
@@ -33,7 +33,7 @@
 </div>
 
 <div class="modal fade" id="quick_add_transaction_category" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Create Transaction Category</span>
@@ -66,7 +66,7 @@
 </div>
 
 <div class="modal fade" id="quick_add_customer_status" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Create Customer Status</span>
@@ -94,7 +94,7 @@
 </div>
 
 <div class="modal fade" id="quick_add_customer_group" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Create Customer Group</span>
@@ -128,7 +128,7 @@
 </div>
 
 <div class="modal fade" id="quick_add_sales_area" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Create Sales Area</span>
@@ -156,7 +156,7 @@
 </div>
 
 <div class="modal fade" id="quick_add_rate_plan" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Create Rate Plan</span>
@@ -190,7 +190,7 @@
 </div>
 
 <div class="modal fade" id="quick_add_system_package" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Create System Package Type</span>
@@ -218,7 +218,7 @@
 </div>
 
 <div class="modal fade" id="quick_add_activation_fee" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Create Activation Fee</span>
@@ -246,7 +246,7 @@
 </div>
 
 <div class="modal fade" id="quick_add_lender_type" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Create Lender Type</span>
@@ -266,6 +266,90 @@
                         <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="nsm-button btn-fixed-width" id="btn-manage-lender-types">Manage</button>
                         <button type="submit" class="nsm-button primary btn-fixed-width" id="btn-save-lender-type">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="quick_add_system_size" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Create System Size</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="frm-quick-add-system-size">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="mb-2">Name</label>
+                            <div class="input-group mb-3">
+                                <input type="text" name="system_size_name" id="system_size_name" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">                        
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="nsm-button btn-fixed-width" id="btn-manage-system-size">Manage</button>
+                        <button type="submit" class="nsm-button primary btn-fixed-width" id="btn-save-system-size">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="quick_add_proposed_module" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Create Proposed Module</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="frm-quick-add-proposed-module">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="mb-2">Name</label>
+                            <div class="input-group mb-3">
+                                <input type="text" name="proposed_module_name" id="proposed_module_name" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">                        
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="nsm-button btn-fixed-width" id="btn-manage-proposed-module">Manage</button>
+                        <button type="submit" class="nsm-button primary btn-fixed-width" id="btn-save-proposed-module">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="quick_add_proposed_inverter" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Create Proposed Inverter</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="frm-quick-add-proposed-inverter">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="mb-2">Name</label>
+                            <div class="input-group mb-3">
+                                <input type="text" name="proposed_inverter_name" id="proposed_inverter_name" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">                        
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="nsm-button btn-fixed-width" id="btn-manage-proposed-inverter">Manage</button>
+                        <button type="submit" class="nsm-button primary btn-fixed-width" id="btn-save-proposed-inverter">Save</button>
                     </div>
                 </form>
             </div>

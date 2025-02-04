@@ -3665,8 +3665,8 @@ class Customer extends MY_Controller
         $this->page_data['industryTypes'] = $this->IndustryType_model->getAll();
         $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
         $this->page_data['LEAD_SOURCE_OPTION'] = $this->customer_ad_model->getAllSettingsLeadSourceByCompanyId(logged('company_id'));
-        $this->load->view('v2/pages/customer/add', $this->page_data);
-        //$this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
+        //$this->load->view('v2/pages/customer/add', $this->page_data);
+        $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
 
     public function leads()
@@ -8615,73 +8615,20 @@ class Customer extends MY_Controller
      */
     public function settings_solar_inverter()
     {
-        $lender_types = [];
-        // get solar lender types
-        $solar_info_query = [
-            'where' => [
-                'field_name' => 'solar_inverter',
-            ],
-            'table' => 'acs_solar_info_settings',
-            'order' => [
-                'order_by' => 'id',
-            ],
-            'select' => '*',
-        ];
-        $lender_types_data = $this->general->get_data_with_param($solar_info_query, false);
-        $results = json_decode($lender_types_data->field_value);
+        $this->load->model('AcsSolarInfoProposedInverter_model');
 
-        $x = 0;
-        if (!empty($results)) {
-            foreach ($results as $result) {
-                array_push($lender_types, $result);
-                ++$x;
-            }
-        }
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+            show403Error();
+            return false;
+        }   
 
-        $input = $this->input->post();
-        if ($input) {
-            if (isset($input['lenderName'])) {
-                // filter the lender_types array to remove data
-                $a = array_filter($lender_types, function ($v) {
-                    $delete = $_POST['lenderName'];
+        $cid = logged('company_id');
+        $proposedInverters = $this->AcsSolarInfoProposedInverter_model->getAllByCompanyId($cid);
 
-                    return $v->name !== $delete;
-                });
-                $lender_types = array_values($a);
-                unset($input['lenderName']);
-            } else {
-                $lender_types[$x]['name'] = $input['lender_name'];
-                $lender_types[$x]['date_created'] = date('Y-m-d H:i:s');
-                unset($input['lender_name']);
-            }
-
-            $input['field_value'] = json_encode($lender_types);
-            $input['id'] = $lender_types_data->id;
-
-            if ($this->customer_ad_model->update_data($input, 'acs_solar_info_settings', 'id')) {
-                echo '1';
-            } else {
-                echo 'Error';
-            }
-        } else {
-            $this->page_data['page']->title = 'Solar Proposed Inverter';
-            $this->page_data['page']->parent = 'Sales';
-
-            $this->load->library('wizardlib');
-            $this->hasAccessModule(9);
-
-            $user_id = logged('id');
-
-            // set a global data for customer profile id
-            $this->page_data['customer_profile_id'] = $user_id;
-
-            if (isset($userid) || !empty($userid)) {
-                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
-                $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
-            }
-            $this->page_data['lender_types'] = $lender_types;
-            $this->load->view('v2/pages/customer/solar/settings_proposed_inverter', $this->page_data);
-        }
+        $this->page_data['page']->title = 'Solar Proposed Inverter';
+        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['proposedInverters']  = $proposedInverters;
+        $this->load->view('v2/pages/customer/solar/settings_proposed_inverter', $this->page_data);
     }
 
     public function ajax_use_quick_note()
@@ -11763,13 +11710,207 @@ class Customer extends MY_Controller
                 $is_success = 1;
                 $msg = '';
             }else{
-                $msg = 'System size name already exists';
+                $msg = 'Proposed module name already exists';
             }    
         }else{
             $msg = 'Please enter name.';
         }
 
-        $return = ['is_success' => $is_success, 'msg' => $msg, 'name' => $post['system_size_name']];
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'name' => $post['proposed_module_name']];
+        echo json_encode($return);
+    }
+
+    public function ajax_update_proposed_module()
+    {
+        $this->load->model('AcsSolarInfoProposedModule_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        $amount = 0;
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $proposedModule = $this->AcsSolarInfoProposedModule_model->getByIdAndCompanyId($post['proposed_module_id'], $cid);
+        if ($proposedModule) {            
+            $isExists   = $this->AcsSolarInfoProposedModule_model->getByNameAndCompanyId($post['proposed_module_name'], $cid);
+            if( $isExists && $proposedModule->id != $isExists->id ){
+                $msg = 'Proposed module already exists';
+            }else{
+                $data = [
+                    'name' => $post['proposed_module_name'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->AcsSolarInfoProposedModule_model->update($proposedModule->id, $data);
+    
+                //Activity Logs
+                $activity_name = 'Solar Proposed Module : Updated proposed module ' . $post['proposed_module_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+            } 
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_proposed_module()
+    {
+        $this->load->model('AcsSolarInfoProposedModule_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'delete')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $proposedModule = $this->AcsSolarInfoProposedModule_model->getByIdAndCompanyId($post['pid'], $cid);
+        if ($proposedModule) {    
+            $name = $proposedModule->name;                    
+            $this->AcsSolarInfoProposedModule_model->delete($proposedModule->id);
+
+            //Activity Logs
+            $activity_name = 'Solar Proposed Module : Deleted proposed module ' . $name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_create_proposed_inverter()
+    {
+        $this->load->model('AcsSolarInfoProposedInverter_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+        $amount = 0;
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        
+        if ($post['proposed_inverter_name'] != '' ) {
+            $isExists = $this->AcsSolarInfoProposedInverter_model->getByNameAndCompanyId($post['proposed_inverter_name'], $cid);
+            if( !$isExists ){
+                $data = [
+                    'company_id' => $cid,
+                    'name' => $post['proposed_inverter_name'],
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->AcsSolarInfoProposedInverter_model->create($data);
+    
+                //Activity Logs
+                $activity_name = 'Solar Proposed Inverter : Created proposed inverter ' . $post['proposed_inverter_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+            }else{
+                $msg = 'Proposed inverter name already exists';
+            }    
+        }else{
+            $msg = 'Please enter name.';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'name' => $post['proposed_inverter_name']];
+        echo json_encode($return);
+    }
+
+    public function ajax_update_proposed_inverter()
+    {
+        $this->load->model('AcsSolarInfoProposedInverter_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        $amount = 0;
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $proposedInverter = $this->AcsSolarInfoProposedInverter_model->getByIdAndCompanyId($post['proposed_inverter_id'], $cid);
+        if ($proposedInverter) {            
+            $isExists   = $this->AcsSolarInfoProposedInverter_model->getByNameAndCompanyId($post['proposed_inverter_name'], $cid);
+            if( $isExists && $proposedInverter->id != $isExists->id ){
+                $msg = 'Proposed inverter already exists';
+            }else{
+                $data = [
+                    'name' => $post['proposed_inverter_name'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->AcsSolarInfoProposedInverter_model->update($proposedInverter->id, $data);
+    
+                //Activity Logs
+                $activity_name = 'Solar Proposed Inverter : Updated proposed inverter ' . $post['proposed_inverter_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+            } 
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_proposed_inverter()
+    {
+        $this->load->model('AcsSolarInfoProposedInverter_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'delete')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $proposedInverter = $this->AcsSolarInfoProposedInverter_model->getByIdAndCompanyId($post['iid'], $cid);
+        if ($proposedInverter) {    
+            $name = $proposedInverter->name;                    
+            $this->AcsSolarInfoProposedInverter_model->delete($proposedInverter->id);
+
+            //Activity Logs
+            $activity_name = 'Solar Proposed Inverter : Deleted proposed inverter ' . $name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
 }

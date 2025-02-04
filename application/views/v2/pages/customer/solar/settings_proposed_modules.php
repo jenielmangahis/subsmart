@@ -1,7 +1,7 @@
 <?php include viewPath('v2/includes/header'); ?>
 
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" data-bs-toggle="modal" data-bs-target="#new_lead_source_modal">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" data-bs-toggle="modal" data-bs-target="#new_proposed_module_modal">
         <i class="bx bx-plus"></i>
     </div>
 </div>
@@ -101,7 +101,7 @@
     </div>
 
     <div class="modal fade" id="new_proposed_module_modal" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title" style="font-size: 17px;">Create Proposed Module</span>
@@ -127,27 +127,27 @@
         </div>
     </div>
 
-    <div class="modal fade" id="edit_system_size_modal" role="dialog">
-        <div class="modal-dialog">
+    <div class="modal fade" id="edit_proposed_module_modal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="modal-title content-title" style="font-size: 17px;">Edit System Size</span>
+                    <span class="modal-title content-title" style="font-size: 17px;">Edit Proposed Module</span>
                     <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
                 </div>
                 <div class="modal-body">
-                    <form id="edit_system_size_form">
-                        <input type="hidden" name="system_size_id" id="edit_system_size_id" value="" />
+                    <form id="edit_proposed_module_form">
+                        <input type="hidden" name="proposed_module_id" id="edit_proposed_module_id" value="" />
                         <div class="row">
                             <div class="col-sm-12">
                                 <label class="mb-2">Name</label>
                                 <div class="input-group mb-3">
-                                    <input type="text" name="system_size_name" id="edit_system_size_name" value="" class="form-control" required="" autocomplete="off" />
+                                    <input type="text" name="proposed_module_name" id="edit_proposed_module_name" value="" class="form-control" required="" autocomplete="off" />
                                 </div>
                             </div>
                         </div>
                         <div class="d-flex justify-content-end">                        
                             <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="nsm-button primary btn-fixed-width" id="btn-update-system-size">Save</button>
+                            <button type="submit" class="nsm-button primary btn-fixed-width" id="btn-update-proposed-module">Save</button>
                         </div>
                     </form>
                 </div>
@@ -168,10 +168,10 @@
             let id = $(this).attr("data-id");
             let name = $(this).attr("data-name");
 
-            $("#edit_system_size_id").val(id);
-            $("#edit_system_size_name").val(name);
+            $("#edit_proposed_module_id").val(id);
+            $("#edit_proposed_module_name").val(name);
 
-            $("#edit_system_size_modal").modal("show");
+            $("#edit_proposed_module_modal").modal("show");
         });
 
         $("#new_proposed_module_form").on("submit", function(e) {
@@ -215,21 +215,21 @@
             });
         });
 
-        $("#edit_system_size_form").on("submit", function(e) {
+        $("#edit_proposed_module_form").on("submit", function(e) {
             e.preventDefault();
 
             $.ajax({
                 type: "POST",
-                url: base_url + 'customers/_update_system_size',
+                url: base_url + 'customers/_update_proposed_module',
                 dataType: 'json',
-                data: $('#edit_system_size_form').serialize(),
+                data: $('#edit_proposed_module_form').serialize(),
                 success: function(data) {    
-                    $('#btn-update-system-size').html('Save');                   
+                    $('#btn-update-proposed-module').html('Save');                   
                     if (data.is_success) {
-                        $('#edit_system_size_modal').modal('hide');
+                        $('#edit_proposed_module_modal').modal('hide');
                         Swal.fire({
-                            title: 'Solar System Size',
-                            text: "System size has been updated successfully.",
+                            title: 'Solar Proposed Module',
+                            text: "Proposed module has been updated successfully.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -251,7 +251,7 @@
                     }
                 },
                 beforeSend: function() {
-                    $('#btn-update-system-size').html('<span class="bx bx-loader bx-spin"></span>');
+                    $('#btn-update-proposed-module').html('<span class="bx bx-loader bx-spin"></span>');
                 }
             });
         });
@@ -260,8 +260,8 @@
             let id = $(this).attr("data-id");
             let name = $(this).attr('data-name');
             Swal.fire({
-                title: 'Delete System Size',
-                html: `Are you sure you want to delete system size <b>${name}</b>?`,
+                title: 'Delete Proposed Module',
+                html: `Are you sure you want to delete proposed module <b>${name}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -270,13 +270,13 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: base_url + "customers/_delete_system_size",
-                        data: {sid : id},
+                        url: base_url + "customers/_delete_proposed_module",
+                        data: {pid : id},
                         dataType:"json",
                         success: function(data) {
                             if (data.is_success) {
                                 Swal.fire({
-                                    title: 'Delete System Size',
+                                    title: 'Delete Proposed Module',
                                     text: "Data Deleted Successfully!",
                                     icon: 'success',
                                     showCancelButton: false,
