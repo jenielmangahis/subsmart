@@ -101,7 +101,7 @@
     </div>
 
     <div class="modal fade" id="new_lender_type_modal" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title" style="font-size: 17px;">Create Lender Type</span>
@@ -128,7 +128,7 @@
     </div>
 
     <div class="modal fade" id="edit_lender_type_modal" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title" style="font-size: 17px;">Edit Lender Type</span>
