@@ -706,7 +706,7 @@ $(function () {
     $(document).on('change', 'div#billPaymentModal select[name="payment_account"]', function () {
         var value = $(this).val();
 
-        $.get('/accounting/get-account-balance/' + value, function (res) {
+        $.get(base_url + 'accounting/get-account-balance/' + value, function (res) {
             var result = JSON.parse(res);
 
             $('div#billPaymentModal span#account-balance').html(result.balance);
@@ -716,7 +716,7 @@ $(function () {
     $(document).on('change', 'div#depositModal select#bank_deposit_account', function () {
         var value = $(this).val();
 
-        $.get('/accounting/get-account-balance/' + value, function (res) {
+        $.get(base_url + 'accounting/get-account-balance/' + value, function (res) {
             var result = JSON.parse(res);
 
             $('div#depositModal span#account-balance').html(result.balance);
@@ -742,7 +742,7 @@ $(function () {
         var value = $(this).val();
         var el = $(this);
 
-        $.get('/accounting/get-account-balance/' + value, function (res) {
+        $.get(base_url + 'accounting/get-account-balance/' + value, function (res) {
             var result = JSON.parse(res);
 
             el.parent().next().children('h6').html('Balance ' + result.balance);
