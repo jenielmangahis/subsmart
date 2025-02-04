@@ -11829,7 +11829,7 @@ const makeRecurring = (modalName) => {
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.bank-account-details`));
             $(`#${modalId} .bank-account-details #date`).parent().parent().remove();
             $(`#${modalId} #account-balance`).parent().parent().remove();
-            $(`#${modalId} div.modal-body div.row.bank-account-details`).children('div:last-child()').remove();
+            //$(`#${modalId} div.modal-body div.row.bank-account-details`).children('div:last-child()').remove();
             $(`#${modalId} #collapse-nsmartrac-payments`).parent().parent().remove();
 
             $('#modal-help-popover-scheduled-create').popover({
