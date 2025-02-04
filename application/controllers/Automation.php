@@ -58,12 +58,12 @@ class Automation extends MY_Controller
         $this->load->view('v2/pages/automation/marketing', $this->page_data);
     }
 
-    public function followUps()
+    public function followups()
     {
         $this->load->helper('automation_helper');
         $this->page_data['page']->title  = 'Automation Follow-ups';
         $this->page_data['page']->parent = 'Automation';
-             $this->page_data['lead_status']  = $this->customer_ad_model->get_select_options('ac_leads', 'status');
+        $this->page_data['lead_status']  = $this->customer_ad_model->get_select_options('ac_leads', 'status');
         $this->page_data['job_status']   = $this->customer_ad_model->get_select_options('jobs', 'status');
         $this->load->view('v2/pages/automation/follow_ups', $this->page_data);
     }
@@ -80,7 +80,7 @@ class Automation extends MY_Controller
         $this->load->helper('automation_helper');
         $this->page_data['page']->title  = 'Automation Actions';
         $this->page_data['page']->parent = 'Automation';
-             $this->page_data['lead_status']  = $this->customer_ad_model->get_select_options('ac_leads', 'status');
+        $this->page_data['lead_status']  = $this->customer_ad_model->get_select_options('ac_leads', 'status');
         $this->page_data['job_status']   = $this->customer_ad_model->get_select_options('jobs', 'status');
         $this->load->view('v2/pages/automation/actions', $this->page_data);
     }
@@ -125,25 +125,26 @@ class Automation extends MY_Controller
             'email_body'       => $data['email_body'],
             'sms_body'       => $data['sms_body'],
             'conditions'       => $data['conditions'],
+            'operation'       => $data['operation'],
             'status'           => isset($data['status']) ? $data['status'] : 'active',
         ];
 
-         $result = $this->automation_model->saveAutomations($automationData);
+        $result = $this->automation_model->saveAutomations($automationData);
 
-    if (isset($result['error']) && $result['error']) {
-        echo json_encode([
-            'status' => 'error',
-            'message' => $result['message'],
-            'code' => $result['code'],
-            
-        ]);
-    } else {
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'Automation saved successfully.',
-            'insert_id' => $result
-        ]);
-    }
+        if (isset($result['error']) && $result['error']) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => $result['message'],
+                'code' => $result['code'],
+
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Automation saved successfully.',
+                'insert_id' => $result
+            ]);
+        }
 
     }
 
@@ -205,7 +206,8 @@ class Automation extends MY_Controller
         echo json_encode(['success' => true, 'response' => $res]);
     }
 
-    public function searchAutomation() {
+    public function searchAutomation()
+    {
         $this->load->helper('automation_helper');
         $query = $this->input->get('query');
         $automations = $this->automation_model->searchAutomations($query);
@@ -216,32 +218,35 @@ class Automation extends MY_Controller
         foreach ($automations as &$automation) {
             $automation->description = generateAutomationDescription($automation); // Call the PHP function
         }
-          echo json_encode(['automations' => $automations]);
+        echo json_encode(['automations' => $automations]);
     }
 
-    public function loadAllAutomations() {
+    public function loadAllAutomations()
+    {
         $data['automations'] = $this->automation_model->getAutomations();
         $this->load->view('v2/pages/automation/search_results', $data);
     }
 
-    public function getJobTags(){
+    public function getJobTags()
+    {
         $company_id = logged('company_id');
-        $tags = $this->jobtags_model->getSpecificColumn("id, name", $company_id);        
+        $tags = $this->jobtags_model->getSpecificColumn("id, name", $company_id);
 
         $this->returnResponse($tags, "Success", true, 200);
     }
 
-    public function getJobTypes(){
+    public function getJobTypes()
+    {
         $company_id = logged('company_id');
-        $types = $this->jobtype_model->getSpecificColumnJobTypes("id, title", $company_id);        
+        $types = $this->jobtype_model->getSpecificColumnJobTypes("id, title", $company_id);
 
         if ($types) {
-          foreach ($types as &$type) {
-            if (isset($type->title)) {
-                $type->name = $type->title;  // Copy 'title' to 'name'
-                unset($type->title);  // Remove 'title'
+            foreach ($types as &$type) {
+                if (isset($type->title)) {
+                    $type->name = $type->title;  // Copy 'title' to 'name'
+                    unset($type->title);  // Remove 'title'
+                }
             }
-        }
 
             $this->returnResponse($types, "Success", true, 200);
         } else {
@@ -249,12 +254,13 @@ class Automation extends MY_Controller
         }
     }
 
-    public function returnResponse($data, $message, $status, $code){
-         echo json_encode([
-            'data' => $data,
-            'message' => $message,
-            'status' => $status,
-            'code' => $code,
+    public function returnResponse($data, $message, $status, $code)
+    {
+        echo json_encode([
+           'data' => $data,
+           'message' => $message,
+           'status' => $status,
+           'code' => $code,
         ]);
     }
 
