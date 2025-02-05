@@ -159,6 +159,7 @@ if ($this->session->userdata('usertimezone') == null) {
                 <?php
                     $fields = ['id', 'business_name'];
 $cid = logged('company_id');
+$user_type = logged('user_type');
 $hdrCompanyData = getCompanyData($cid, $fields);
 ?>
                 <?php if ($hdrCompanyData) { ?>
@@ -244,7 +245,13 @@ $hdrCompanyData = getCompanyData($cid, $fields);
                     <ul>
                         <li>
                             <div class="dropdown d-flex">
-                                <a id="helpSupportButton" href="#" data-bs-toggle="offcanvas" data-bs-target="#helpSupportSidebar" aria-controls="helpSupportSidebar"><i class='bx bx-support' style="margin-top: 0px !important;"></i></a>
+                                <?php
+                                    if ($user_type == 7 && $cid == 1) {
+                                        echo "<a id='helpSupportButton' href='#' data-bs-toggle='offcanvas' data-bs-target='#admin_supportSidebarID' aria-controls='admin_supportSidebarID'><i class='bx bx-support' style='margin-top: 0px !important;'></i></a>";
+                                    } else {
+                                        echo "<a id='helpSupportButton' href='#' data-bs-toggle='offcanvas' data-bs-target='#client_supportSidebarID' aria-controls='client_supportSidebarID'><i class='bx bx-support' style='margin-top: 0px !important;'></i></a>";
+                                    }
+                                ?>
                             </div>
                         </li>
                         <?php if (isCompanyPlanActive() == 0 && !in_array(logged('company_id'), exempted_company_ids())) { ?>
@@ -612,1006 +619,295 @@ if (is_null($image)) {
             </div>
             <div class="nsm-content-container">
                 <div class="nsm-content">
+                    <!-- Tech Support Sidebar -->
+                    <?php
+                        if ($user_type == 7 && $cid == 1) {
+                            include viewPath('v2/includes/techsupport/admin_techsupport_sidebar');
+                        } else {
+                            include viewPath('v2/includes/techsupport/techsupport_sidebar');
+                        }
+                    ?>
 
-<style>
-    #chatbox {
-        border-radius: 15px;
-    }
-
-    .chatbox_header {
-        border-top-left-radius: 15px !important;
-        border-top-right-radius: 15px !important;
-        background: #6a4a86;
-    }
-
-    .chatbot_image {
-        height: 50px;
-        width: 50px;
-    }
-
-    .chatbot_name_section {
-        margin-left: 10px;
-    }
-
-    .chatbot_name {
-        font-weight: bold;
-    }
-
-    .chatbot_name_section > .chatbot_name {
-        font-size: 15px;
-    }
-
-    .chatbot_minimize {
-        position: absolute;
-        font-size: 25px;
-        right: 25px;
-        cursor: pointer;
-    }
-
-    .chatbot_body {
-        background: #f3f3f3;
-        border-bottom-right-radius: 15px;
-        border-bottom-left-radius: 15px;
-        padding: unset;
-    }
-
-    .chat_content {
-        /* max-height: 500px;
-        height: 500px; */
-        font-weight: 500;
-    }
-
-    .send_chat {
-        padding-right: 10px;
-        padding-top: 20px;
-    }
-
-    .send_chat_container {
-        border-radius: 15px;
-        /* background-color: #6a4a8621;  */
-        max-width: 350px;
-    }
-
-    .receive_chat {
-        padding-left: 10px;
-        padding-top: 20px;
-    }
-
-    .receive_chat_container {
-        border-radius: 15px;
-        background-color: #f7f7f7;
-        max-width: 350px;
-    }
-
-    .message_form_container {
-        padding: 15px;
-        border-top: 1px solid #00000020;
-    }
-
-    .message_form_button {
-        background: #6a4a86;
-        color: white;
-    }
-
-    .message_form_button_icon {
-        font-size: 19px;
-        vertical-align: sub;
-    }
-
-    .spacer {
-        margin: 20px;
-    }
-
-    .sender_name {
-        font-weight: bold;
-        right: 20px;
-    }
-
-    .receiver_name {
-        font-weight: bold;
-        left: 20px;
-    }
-
-    /* .chatbox_container {
-        position: fixed;
-        bottom: 20px;
-        right: 15px;
-        width: 450px;
-        display: none;
-        z-index: 999 !important;
-    } */
-
-    .chaticon {
-        height: auto;
-        width: 70px;
-        position: fixed;
-        bottom: 20px;
-        right: 15px;
-        z-index: 999 !important;
-    }
-
-    .chaticon:hover {
-        height: auto;
-        width: 75px;
-        cursor: pointer;
-    }
-
-    .typing_status {
-        position: absolute;
-        left: 15px;
-        bottom: 70px;
-    }
-
-    @keyframes bounce {
-        0%,
-        100% {
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(-5px);
-        }
-    }
-
-    .typing_status {
-        animation: bounce 0.5s infinite;
-    }
-
-    .send_container,
-    .receive_container {
-        margin-top: 15px;
-        margin-bottom: 15px;
-    }
-
-    .chaticon,
-    .typing_status {
-        display: none;
-    }
-
-    .offcanvas {
-        transition: transform 0.3s ease;
-    }
-
-    .offcanvas-end {
-        border-left: unset;
-    }
-    
-    .cursorPointer {
-        cursor: pointer;
-    }
-    
-    .playCirleSize {
-        font-size: 25px;
-    }
-
-    .watchClip {
-        margin-bottom: -6px;
-        margin-top: -2px;
-    }
-
-    .watchClip:hover {
-        font-weight: bold;
-        color: #ff00009e;
-    }
-
-    #previewBinder_table_info {
-        display: none;
-    }
-
-    #previewBinder_table.dataTable.no-footer {
-    border-bottom: 0px solid #dee2e6 !important;
-    }
-
-    #previewBinder_table.dataTable thead th,
-    #previewBinder_table.dataTable thead td,
-    #previewBinder_table.dataTable tbody td {
-        padding: 6px;
-    }
-
-    #previewBinder_table.dataTable tbody td {
-        border-bottom: 1px solid lightgray !important;
-    }
-
-    #previewBinder_table.dataTable > thead > tr > th {
-        border: 1px solid lightgray !important;
-    }
-
-    #previewBinder_table_wrapper .dataTables_length,
-    #previewBinder_table_wrapper .dataTables_filter {
-        display: none;
-    }
-
-    #previewBinder_table > tbody {
-        font-size: unset;
-    }
-    
-    .techSupportSidebarCanvas {
-        width: 435px;
-    }
-
-    .ccCheckbox {
-        width: 18px;
-        height: 18px;
-    }
-
-    .viewVideoFromBinderModal .modal-body {
-        margin-bottom: -10px;
-    }
-</style>
-
-<!-- <div class="row d-flex position-relative">
-    <img class="chaticon" src="https://static.vecteezy.com/system/resources/previews/014/441/089/original/chat-message-icon-design-in-blue-circle-png.png">
-</div> -->
-
-<div class="offcanvas offcanvas-end techSupportSidebarCanvas" tabindex="-1" id="helpSupportSidebar" aria-labelledby="helpSupportSidebarLabel">
-    <div class="offcanvas-header" style="background: #6a4a86;">
-        <h5 id="helpSupportSidebarLabel" style="font-weight: bold; margin: 0; color: white;">Tech Support</h5>
-        <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Close" style="color: white !important;float: left;padding: 0;"><span class="float-start"><small>Close</small></span></button>
-    </div>
-    <div class="offcanvas-body">
-        <div class="container">
-            <div class="row techSupportMenu" style="display: non;">
-                <div class="col-12-md mb-3">
-                    <h4 class="fw-bold">How do you prefer to get in touch with us?</h4>
-                </div>
-                <div class="col-12-md mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">Call us</h5>
-                            <p class="card-text">Schedule a call, and we'll reach out to you as soon as possible.</p>
-                            <a href="#" class="btn btn-success fw-bold openCallUs"><i class="fas fa-phone"></i>&nbsp;&nbsp;Let's talk in call</a>
-                        </div>
-                        <div class="card-footer text-muted"><i class="fas fa-info-circle"></i>&nbsp;&nbsp;Support via call is available only Monday to Friday from 6:00am to 10:00pm.</div>
-                    </div>
-                </div>
-                <div class="col-12-md mb-2">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">Real-time chat</h5>
-                            <p class="card-text">Engage in real-time chat with us and expect a prompt response.</p>
-                            <a href="#" class="btn btn-success fw-bold"><i class="fas fa-comments"></i>&nbsp;&nbsp;Start chatting</a>
-                        </div>
-                        <div class="card-footer text-muted"><i class="fas fa-info-circle"></i>&nbsp;&nbsp;Our team is ready to assist you during our operational hours.</div>
-                    </div>
-                </div>
-                <div class="col-12-md mb-2">
-                    <hr>
-                </div>
-                <div class="col-12-md mb-3">
-                    <h4 class="fw-bold">Others</h4>
-                </div>
-                <div class="col-12-md mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">Video Binder</h5>
-                            <p class="card-text">Access our video binder for comprehensive pre-recorded information about the system.</p>
-                            <a href="#" class="btn btn-primary fw-bold openVideoBinder"><i class="fas fa-folder"></i>&nbsp;&nbsp;Open Video Binder</a>
-                        </div>
-                        <div class="card-footer text-muted"><i class="fas fa-info-circle"></i>&nbsp;&nbsp;The video binder is a collection of pre-recorded videos providing detailed information about the system.</div>
-                    </div>
-                </div>
-                <div class="col-12-md mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">Chatbot</h5>
-                            <p class="card-text">Interact with our chatbot for quick assistance.</p>
-                            <a href="#" class="btn btn-primary fw-bold openChatbotButton"><i class="fas fa-robot"></i>&nbsp;&nbsp;Open chatbot</a>
-                        </div>
-                        <div class="card-footer text-muted"><i class="fas fa-info-circle"></i>&nbsp;&nbsp;Our chatbot is available 24/7 to help answer questions on system-related inquiries.</div>
-                    </div>
-                </div>
-            </div>
-            <div class="row callUs" style="display: none;">
-                <div class="col-12-md">
-                    <h4 class="fw-bold float-start">Call Us</h4>
-                    <span class="text-muted float-end cursorPointer returnToMenu"><i class='bx bxs-left-top-arrow-circle'></i> Return to Menu</span>
-                </div>
-                <div class="col-12-md mb-3">
-                    <span>Schedule a call, and we'll reach out to you as soon as possible. Support via call is available only <strong>Monday to Friday</strong> from <strong>6:00am to 10:00pm</strong>.</span>
-                </div>
-                <div class="col-12-md">
-                    <form id="scheduleCallForm">
-                        <div class="col-md-12 mb-3">
-                            <label class="mb-1 fw-xnormal">Date&nbsp;<small class="text-muted">(mm/dd/yyyy)</small></label>
-                            <input name="schedule_date" class="form-control mt-0" type="date" required>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <label class="mb-1 fw-xnormal">Time&nbsp;<small class="text-muted">(hh:mm AM/PM)</small></label>
-                            <div class="input-group">
-                                <select name="schedule_time_hrs" class="nsm-field form-select" required>
-                                    <option value="" selected disabled hidden>&mdash;</option>
-                                    <?php
-                                        for ($i = 1; $i <= 12; $i++) {
-                                            $hour = str_pad($i, 2, '0', STR_PAD_LEFT);
-                                            echo "<option value='$hour'>$hour</option>";
-                                        }
-                                    ?>
-                                </select>
-                                <select name="schedule_time_mins" class="nsm-field form-select" required>
-                                    <?php
-                                        for ($i = 0; $i <= 59; $i++) {
-                                            $minute = str_pad($i, 2, '0', STR_PAD_LEFT);
-                                            echo "<option value='$minute'>$minute</option>";
-                                        }
-                                    ?>
-                                </select>
-                                <select name="schedule_time_notation" class="nsm-field form-select" required>
-                                    <option value="" selected disabled hidden>&mdash;</option>
-                                    <option value="AM">AM</option>
-                                    <option value="PM">PM</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <label class="mb-1 fw-xnormal">CC&nbsp;<small class="text-muted">(Send a schedule copy to your email)</small></label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-text">
-                                    <input name="schedule_cc_checkbox" class="form-check-input mt-0 ccCheckbox cursorPointer" type="checkbox" checked>
+                    <!-- Customize menu -->
+                    <div class="modal fade nsm-modal fade" id="modal-customize-menu" tabindex="-1" aria-labelledby="modal-customize-menuLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-md">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="modal-title content-title" id=""><i class='bx bx-edit'></i> Customize Menu</span>
+                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                                 </div>
-                                <input name="schedule_cc" class="form-control mt-0" type="email" value="<?php echo logged('email');; ?>" required>
+                                <form action="" id="frm-company-customize-menu">
+                                <div class="modal-body">
+                                    <p>Choose what you want to see in your menu, and drag and reorder items to fit the way you work :</p>
+                                    <div id="customize-menu-container" style="max-height:500px; overflow-y:auto;overflow-x:hidden;"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="nsm-button primary btn-update-menu-setting">Save</button>
+                                </div>
+                                </form>
                             </div>
                         </div>
-                        <div class="col-md-12 mb-3">
-                            <label class="mb-1 fw-xnormal">Notes&nbsp;<small class="text-muted">(Specify notes, queries etc. Optional)</small></label>
-                            <textarea name="schedule_notes" class="form-control" placeholder="eg. I want help on Job module."></textarea>
+                    </div>
+
+                    <!-- Customer Search -->
+                    <div class="modal fade nsm-modal fade" id="modal-quick-customer-search" tabindex="-1" aria-labelledby="modal-customize-menuLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-md">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="modal-title content-title" id=""><i class='bx bx-search'></i> Search Customer</span>
+                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                </div>            
+                                <div class="modal-body">
+                                    <form id="frm-left-nav-quick-search-customer">
+                                    <div class="input-group">
+                                        <input type="text" name="customer_query" class="form-control rounded" placeholder="Search" />
+                                        <button type="submit" class="nsm nsm-button primary" style="margin-bottom:0px;">search</button>
+                                    </div>
+                                    </form>
+                                    <div id="quick-customer-search-result-container"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-12 mb-3">
-                            <button class="nsm-button primary">Submit</button>
+                    </div>
+
+                    <!-- Getting Started -->
+                    <div class="modal fade nsm-modal fade" id="modal-getting-started" tabindex="-1" aria-labelledby="modal-customize-menuLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-md modal-lg" style="max-width:690px !important;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="modal-title content-title" id="">Getting Started</span>
+                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                </div>            
+                                <div class="modal-body" id="getting-started-container"></div>
+                                <br /><br />
+                            </div>
                         </div>
-                    </form>
-                </div>
-            </div>
-            <div class="row videoBinder" style="display: none;">
-                <div class="col-12-md">
-                    <h4 class="fw-bold float-start">Video Binder</h4>
-                    <span class="text-muted float-end cursorPointer returnToMenu"><i class='bx bxs-left-top-arrow-circle'></i> Return to Menu</span>
-                </div>
-                <div class="col-12-md mb-3">
-                    <span>The video binder is a collection of pre-recorded videos providing detailed information about the system.</span>
-                </div>
-                <div class="col-12-md">
-                    <input id="previewBinder_table_search" class="form-control mt-0 mb-2 w-100" type="text" placeholder="Search...">
-                    <table id="previewBinder_table" class="table table-bordered table-hover table-sm w-100 mb-2">
-                        <thead><tr><th></th></tr></thead>
-                        <tbody><tr></tr></tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="row chatBotMessenger" style="display: none;">
-                <div class="col-12-md">
-                    <h4 class="fw-bold float-start">ChatBot</h4>
-                    <span class="text-muted float-end cursorPointer returnToMenu"><i class='bx bxs-left-top-arrow-circle'></i> Return to Menu</span>
-                </div>
-                <div class="col-12-md mb-3">
-                    <span>A chatbot is a tool that assists users by answering system inquiries and providing relevant information automatically.</span>
-                </div>
-                <div class="col-12-md chatbox_container">
-                    <div id="chatbox" class="card">
-                        <div class="card-header chatbox_header d-flex align-items-center p-3 text-white border-bottom-0">
-                            <img class="chatbot_image" src="https://cdn-icons-png.flaticon.com/512/8943/8943377.png">
-                            <p class="mb-0 chatbot_name_section"><span class="chatbot_name">Chatbot</span><br><small>Chatbot</small></p>
-                            <!-- <i class="fas fa-times chatbot_minimize"></i> -->
-                        </div>
-                        <div class="card-body chatbot_body">
-                            <div class="table-responsive chat_content">
-                                <div class="receive_container position-relative">
-                                    <small class="receiver_name position-absolute">🤖 <span class="chatbot_name">Chatbot</span></small>
-                                    <div class="receive_chat d-flex flex-row justify-content-start">
-                                        <div class="p-3 me-3 border receive_chat_container">
-                                            <p class="mb-0">Hi, I'm <u class="chatbot_name">Chatbot</u>, a chatbot from nSmarTrac, who can help you with your queries.</p>
+                    </div>
+
+                    <!-- Getting Started : Download Mobile App -->
+                    <div class="modal fade nsm-modal fade" id="modal-getting-started-download-mobile-app" tabindex="-1" aria-labelledby="modal-getting-started-download-mobile-app-menuLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-md modal-lg modal-dialog-centered" style="max-width:633px !important;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="modal-title content-title" id="">Download Mobile App</span>
+                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                </div>            
+                                <div class="modal-body">
+                                    <form id="frm-getting-started-send-download-app-link">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <h4>Manage Your Business & Connect with Your Team in the field</h4>
+                                            <p class="mt-2">This app is perfect for your team/techs in the field. View your schedule, invoice client on the spot, clock in and out, send estimates and more…</p>
+                                            <div class="mb-3 mt-4">
+                                                <label for="gettingStartedSendDownloadAppLink" class="form-label">Get the download link sent to your phone</label>
+                                                <input type="text" class="form-control" id="gettingStartedSendDownloadAppLink" name="download_app_phone_number" placeholder="Your Phone" required="">
+                                                <button type="submit" class="nsm-button primary mt-2" id="btn-send-download-link">Send</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <img src="<?= base_url('assets\frontend\images\mobile-app.jpg'); ?>" style="height:258px;" />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="receive_container position-relative">
-                                    <small class="receiver_name position-absolute">🤖 <span class="chatbot_name">Chatbot</span></small>
-                                    <div class="receive_chat d-flex flex-row justify-content-start">
-                                        <div class="p-3 me-3 border receive_chat_container">
-                                            <p class="mb-0">How can I help you today?</p>
-                                        </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
-                            <div class="typing_status"><small class="text-muted"><span class="chatbot_name fw-normal">Chatbot</span> is typing...</small></div>
-                            <form id="sendchat_form">
-                                <div class="input-group message_form_container">
-                                    <input name="request" class="form-control" type="text" placeholder="Type your message here..." autocomplete="off" required>
-                                    <button type="submit" class="btn message_form_button">
-                                        <strong><i class='bx bxs-send message_form_button_icon'></i></strong>
-                                    </button>
-                                </div>
-                            </form>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- preview Video in video Binder -->
-<div class="modal fade viewVideoFromBinderModal"  role="dialog" aria-modal="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <!-- <div class="modal-header d-none">
-                <span class="modal-title content-title" style="font-size: 17px;">Preview Video</span>
-                <i class="bx bx-fw bx-x m-0 text-muted exit_preview_modal" data-bs-dismiss="modal" style="cursor: pointer;"></i>
-            </div> -->
-            <div class="modal-body">
-                <div id="viewVideoContent" class="text-center">
-                    <p class="text-muted">No file selected for preview.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Customize menu -->
-<div class="modal fade nsm-modal fade" id="modal-customize-menu" tabindex="-1" aria-labelledby="modal-customize-menuLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title" id=""><i class='bx bx-edit'></i> Customize Menu</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>
-            <form action="" id="frm-company-customize-menu">
-            <div class="modal-body">
-                <p>Choose what you want to see in your menu, and drag and reorder items to fit the way you work :</p>
-                <div id="customize-menu-container" style="max-height:500px; overflow-y:auto;overflow-x:hidden;"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="nsm-button primary btn-update-menu-setting">Save</button>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Customer Search -->
-<div class="modal fade nsm-modal fade" id="modal-quick-customer-search" tabindex="-1" aria-labelledby="modal-customize-menuLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title" id=""><i class='bx bx-search'></i> Search Customer</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>            
-            <div class="modal-body">
-                <form id="frm-left-nav-quick-search-customer">
-                <div class="input-group">
-                    <input type="text" name="customer_query" class="form-control rounded" placeholder="Search" />
-                    <button type="submit" class="nsm nsm-button primary" style="margin-bottom:0px;">search</button>
-                </div>
-                </form>
-                <div id="quick-customer-search-result-container"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Getting Started -->
-<div class="modal fade nsm-modal fade" id="modal-getting-started" tabindex="-1" aria-labelledby="modal-customize-menuLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md modal-lg" style="max-width:690px !important;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title" id="">Getting Started</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>            
-            <div class="modal-body" id="getting-started-container"></div>
-            <br /><br />
-        </div>
-    </div>
-</div>
-
-<!-- Getting Started : Download Mobile App -->
-<div class="modal fade nsm-modal fade" id="modal-getting-started-download-mobile-app" tabindex="-1" aria-labelledby="modal-getting-started-download-mobile-app-menuLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md modal-lg modal-dialog-centered" style="max-width:633px !important;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title" id="">Download Mobile App</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>            
-            <div class="modal-body">
-                <form id="frm-getting-started-send-download-app-link">
-                <div class="row">
-                    <div class="col-md-8">
-                        <h4>Manage Your Business & Connect with Your Team in the field</h4>
-                        <p class="mt-2">This app is perfect for your team/techs in the field. View your schedule, invoice client on the spot, clock in and out, send estimates and more…</p>
-                        <div class="mb-3 mt-4">
-                            <label for="gettingStartedSendDownloadAppLink" class="form-label">Get the download link sent to your phone</label>
-                            <input type="text" class="form-control" id="gettingStartedSendDownloadAppLink" name="download_app_phone_number" placeholder="Your Phone" required="">
-                            <button type="submit" class="nsm-button primary mt-2" id="btn-send-download-link">Send</button>
+                    <!-- Getting Started : Job Schedule -->
+                    <div class="modal fade nsm-modal fade" id="modal-getting-started-job-schedule" aria-labelledby="modal-getting-started-job-scheduleLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-md modal-md modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="modal-title content-title" id="">Job Schedule</span>
+                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                </div>            
+                                <div class="modal-body" id="getting-started-container">
+                                    <div class="row">
+                                        <div class="col-md-6 text-center">
+                                        <i class='bx bx-calendar-plus' style="font-size: 100px;color:#6a4a86;"></i>
+                                            <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('workcalender'); ?>">
+                                                Use Calendar 
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <i class='bx bx-task' style="font-size: 100px;color:#6a4a86;"></i>                        
+                                            <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('job/new_job1'); ?>">
+                                                Use Job Form 
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>            
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <img src="<?= base_url('assets\frontend\images\mobile-app.jpg'); ?>" style="height:258px;" />
+
+                    <!-- Getting Started : Connect to Quickbooks -->
+                    <div class="modal fade nsm-modal fade" id="modal-connect-to-quickbooks-or-import-customer-list" aria-labelledby="modal-connect-to-quickbooks-or-import-customer-listLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-md modal-md modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="modal-title content-title" id="">Import Your Clients</span>
+                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                </div>            
+                                <div class="modal-body" id="getting-started-container">
+                                    <div class="row">
+                                        <div class="col-md-6" style="text-align: center;">
+                                            <!-- <i class='bx bx-circle' style="font-size: 100px;"></i> -->
+                                            <img class="nsm-logo" src="<?php echo base_url('assets/img/api-tools/thumb_quickbooks_payroll.png'); ?>" style="height: 100px;">
+                                            <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('tools/quickbooks_accounting'); ?>">From Quickbooks</a>
+                                        </div>
+                                        <div class="col-md-6" style="text-align: center;">
+                                            <i class='bx bxs-spreadsheet' style="font-size: 100px;color:#6a4a86;"></i>
+                                            <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('customer/import_customer'); ?>">From Spreadsheet</a>
+                                        </div>
+                                    </div>
+                                </div>            
+                            </div>
+                        </div>
                     </div>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Getting Started : Job Schedule -->
-<div class="modal fade nsm-modal fade" id="modal-getting-started-job-schedule" aria-labelledby="modal-getting-started-job-scheduleLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md modal-md modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title" id="">Job Schedule</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>            
-            <div class="modal-body" id="getting-started-container">
-                <div class="row">
-                    <div class="col-md-6 text-center">
-                    <i class='bx bx-calendar-plus' style="font-size: 100px;color:#6a4a86;"></i>
-                        <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('workcalender'); ?>">
-                            Use Calendar 
-                        </a>
-                    </div>
-                    <div class="col-md-6 text-center">
-                        <i class='bx bx-task' style="font-size: 100px;color:#6a4a86;"></i>                        
-                        <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('job/new_job1'); ?>">
-                            Use Job Form 
-                        </a>
-                    </div>
-                </div>
-            </div>            
-        </div>
-    </div>
-</div>
+                    <script>   
+                        $(document).ready(function() {
+                            $(document).on('click', '#getting-started-schedule-job', function() {
+                                $('#modal-getting-started-job-schedule').modal('show');
+                            });
 
-<!-- Getting Started : Connect to Quickbooks -->
-<div class="modal fade nsm-modal fade" id="modal-connect-to-quickbooks-or-import-customer-list" aria-labelledby="modal-connect-to-quickbooks-or-import-customer-listLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md modal-md modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title" id="">Import Your Clients</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>            
-            <div class="modal-body" id="getting-started-container">
-                <div class="row">
-                    <div class="col-md-6" style="text-align: center;">
-                        <!-- <i class='bx bx-circle' style="font-size: 100px;"></i> -->
-                        <img class="nsm-logo" src="<?php echo base_url('assets/img/api-tools/thumb_quickbooks_payroll.png'); ?>" style="height: 100px;">
-                        <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('tools/quickbooks_accounting'); ?>">From Quickbooks</a>
-                    </div>
-                    <div class="col-md-6" style="text-align: center;">
-                        <i class='bx bxs-spreadsheet' style="font-size: 100px;color:#6a4a86;"></i>
-                        <a class="nsm-button primary getting-started-big-btn" target="_new" href="<?= base_url('customer/import_customer'); ?>">From Spreadsheet</a>
-                    </div>
-                </div>
-            </div>            
-        </div>
-    </div>
-</div>
+                            $(document).on('click', '#getting-started-download-mobile-app', function() {
+                                $('#modal-getting-started-download-mobile-app').modal('show');
+                            });
 
-<script>   
+                            $(document).on('click', '#connect-to-quickbooks-or-import-customer-list', function() {
+                                $('#modal-connect-to-quickbooks-or-import-customer-list').modal('show');
+                            });
 
-    var BASE_URL = window.origin;
+                            $(document).on('click', '#left-nav-customer-search', function() {
+                                $('#modal-quick-customer-search').modal('show');
+                            });
 
-    // Custom Function ===============
-    function formDisabler(selector, state) {
-        const element = $(selector);
-        const submitButton = element.find('button[type="submit"]');
-        element.find("input, button, textarea, select").prop('disabled', state);
+                            $(document).on('click', '#left-getting-started', function() {
+                                $('#modal-getting-started').modal('show');
+                                $.ajax({
+                                    type: "POST",
+                                    url: base_url + "dashboard/_getting_started",
+                                    beforeSend: function() {
+                                        $('#getting-started-container').html('<span class="bx bx-loader bx-spin"></span>');
 
-        if (state) {
-            element.find('a').hide();
-            if (!submitButton.data('original-content')) {
-                submitButton.data('original-content', submitButton.html());
-            }
-            submitButton.prop('disabled', true);
-        } else {
-            element.find('a').show();
-            const originalContent = submitButton.data('original-content');
-            if (originalContent) {
-                submitButton.prop('disabled', false).html(originalContent);
-            }
-        }
-    }
+                                    },
+                                    success: function(html) {
+                                        $('#getting-started-container').html(html);
+                                    }
+                                });
+                            });
 
-    $(document).ready(function() {
-        $.ajax({
-            type: "POST",
-            url: BASE_URL + "/chatbot/preference",
-            dataType: "JSON",
-            success: function(response) {
-                $('.chatbot_name').text(response[0]['chatbot_name']);
-                $('.chatbox_header, .message_form_button').css('background', response[0]['color']);
-                $('.chatbox_header').attr('data-bgcolor', response[0]['color']);
-                $('.chaticon').show();
-            }
-        });
+                            $(document).on('submit', '#frm-left-nav-quick-search-customer', function(e) {
+                                e.preventDefault();
 
-        $(document).on('click', '.pricing_page_redirect', function (e) {
-            e.preventDefault();
-            window.open(BASE_URL + "/pricing", "_blank");
-        });
+                                $.ajax({
+                                    type: "POST",
+                                    url: base_url + "customer/_quick_search",
+                                    data: $('#frm-left-nav-quick-search-customer').serialize(),
+                                    beforeSend: function() {
+                                        $('#quick-customer-search-result-container').html('<span class="bx bx-loader bx-spin"></span>');
 
-        $(document).on('click', '.openCallUs, .schedule_call_redirect', function () {
-            $('.techSupportMenu').hide();
-            $('.callUs').fadeIn();
-            $('.videoBinder').hide();
-            $('.chatBotMessenger').hide();
-        });
+                                    },
+                                    success: function(html) {
+                                        $('#quick-customer-search-result-container').html(html);
+                                    }
+                                });
+                            });
 
-        
-        $(document).on('click', '.openVideoBinder, .video_binder_redirect', function () {
-            if (!$.fn.DataTable.isDataTable('#previewBinder_table')) {
-                const previewBinder_table = $('#previewBinder_table').DataTable({
-                    "processing": true,
-                    "serverSide": true,
-                    "ordering": false,
-                    "pageLength": 20,
-                    "ajax": {
-                        "url": BASE_URL + "/VideoBinder/getAllVideos",
-                        "type": "POST",
-                    },
-                    "language": {
-                        "infoFiltered": "",
-                    },
-                    "order": []
-                });
+                            $('#frm-getting-started-send-download-app-link').on('submit', function(e) {
+                                e.preventDefault();
 
-                $('#previewBinder_table_search').keyup(function() {
-                    previewBinder_table.search($(this).val()).draw();
-                });
-            }
+                                $.ajax({
+                                    type: "POST",
+                                    url: base_url + "dashboard/_send_download_app_link",
+                                    data: $('#frm-getting-started-send-download-app-link').serialize(),
+                                    dataType: "JSON",
+                                    beforeSend: function() {
+                                        $('#btn-send-download-link').html('<span class="bx bx-loader bx-spin"></span>');
+                                    },
+                                    success: function(result) {
+                                        $('#modal-getting-started-download-mobile-app').modal('hide');
+                                        $('#btn-send-download-link').html('Send');
+                                        if (result.is_success == 1) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Download Mobile App',
+                                                text: 'A text message will be sent to you in a short while.',
+                                            }).then((result) => {
+                                                //window.location.reload();
+                                            });
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Error',
+                                                text: result.msg,
+                                            });
+                                        }
+                                    }
+                                });
+                            });
 
-            $('.techSupportMenu').hide();
-            $('.callUs').hide();
-            $('.videoBinder').fadeIn();
-            $('.chatBotMessenger').hide();
-        });
+                            // Customize menu
+                            //$('#modal-customize-menu').modal({backdrop: 'static', keyboard: false});
 
-        $(document).on('click', '.openChatbotButton', function () {
-            $('.techSupportMenu').hide();
-            $('.callUs').hide();
-            $('.videoBinder').hide();
-            $('.chatBotMessenger').fadeIn();
+                            $('.customize-menu').on('click', function() {
+                                $('#modal-customize-menu').modal('show');
 
-            let chatContent_height = $(window).height() - 312;
-            $('.chat_content').css('height', chatContent_height + 'px');
-        });
+                                $.ajax({
+                                    type: "POST",
+                                    url: base_url + "mycrm/_customize_menu",
+                                    beforeSend: function() {
+                                        $('#customize-menu-container').html('<span class="bx bx-loader bx-spin"></span>');
+                                    },
+                                    success: function(html) {
+                                        $('#customize-menu-container').html(html);
+                                    }
+                                });
+                            });
 
-        $(document).on('click', '.returnToMenu', function () {
-            $('.techSupportMenu').fadeIn();
-            $('.callUs').hide();
-            $('.videoBinder').hide();
-            $('.chatBotMessenger').hide();
-        });
-        
-        
+                            $('#frm-company-customize-menu').on('submit', function(e) {
+                                e.preventDefault();
 
-        $(document).on('click', '.watchClip', function() {
-            const fileName = $(this).attr('data-filename');
-            const fileUrl = `${BASE_URL}/uploads/files/${fileName}`;
-            const fileType = fileName.split('.').pop().toLowerCase();
-            const previewContent = $('#viewVideoContent');
+                                $.ajax({
+                                    data: $('#frm-company-customize-menu').serialize(),
+                                    type: "POST",
+                                    dataType: 'json',
+                                    url: base_url + "mycrm/_update_menu_setting",
+                                    beforeSend: function() {
+                                        $('.btn-update-menu-setting').html('<span class="bx bx-loader bx-spin"></span>');
+                                    },
+                                    success: function(result) {
+                                        $('.btn-update-menu-setting').html('Save');
+                                        if (result.is_success == 1) {
+                                            $('#modal-customize-menu').modal('hide');
+                                            Swal.fire({
+                                                text: "Menu settings was successfully updated",
+                                                icon: 'success',
+                                                showCancelButton: false,
+                                                confirmButtonText: 'Okay'
+                                            }).then((result) => {
+                                                //if (result.value) {
+                                                location.reload();
+                                                //}
+                                            });
+                                        } else {
+                                            Swal.fire({
+                                                title: 'Error',
+                                                text: result.msg,
+                                                icon: 'error',
+                                                showCancelButton: false,
+                                                confirmButtonText: 'Okay'
+                                            }).then((result) => {
 
-            let content = '';
-            if (['jpg', 'jpeg', 'png', 'gif'].includes(fileType)) {
-                content = `<img src="${fileUrl}" class="img-fluid" alt="Video Image">`;
-            } else if (['mp4', 'avi', 'mov', 'wmv'].includes(fileType)) {
-                content = `
-                    <video controls class="w-100">
-                        <source src="${fileUrl}" type="video/${fileType}">
-                        Your browser does not support the video tag.
-                    </video>`;
-            } else {
-                content = `<p class="text-danger">Unsupported file format for preview.</p>`;
-            }
+                                            });
+                                        }
 
-            previewContent.html(content);
-            $('.viewVideoFromBinderModal').modal('show');
-        });
-
-        $(document).on('hidden.bs.modal', '.viewVideoFromBinderModal', function() {
-            $(this).find('video').remove();
-        });
-
-        $('select[name="schedule_time_hrs"]').on('change', function() {
-            const hrs = parseInt($(this).val());
-            const mins = $('select[name="schedule_time_mins"]').val();
-            const $notation = $('select[name="schedule_time_notation"]');
-            $notation.empty();
-
-            if (hrs >= 6 && hrs <= 10) {
-                $notation.append(new Option("AM", "AM"));
-                $notation.append(new Option("PM", "PM"));
-            } else if (hrs === 11) {
-                $notation.append(new Option("AM", "AM"));
-            } else {
-                $notation.append(new Option("PM", "PM"));
-            }
-
-            if (hrs == 10 & mins > 0) {
-                $notation.empty();
-                $notation.append(new Option("AM", "AM"));
-            } else if (hrs == 10 & mins == 0) {
-                $notation.empty();
-                $notation.append(new Option("AM", "AM"));
-                $notation.append(new Option("PM", "PM"));
-            }
-        });
-
-        $('select[name="schedule_time_mins"]').on('change', function() {
-            const hrs = $('select[name="schedule_time_hrs"]').val();
-            const mins = parseInt($(this).val());
-            const $notation = $('select[name="schedule_time_notation"]');
-
-            if (hrs == 10 & mins > 0) {
-                $notation.empty();
-                $notation.append(new Option("AM", "AM"));
-            } else if (hrs == 10 & mins == 0) {
-                $notation.empty();
-                $notation.append(new Option("AM", "AM"));
-                $notation.append(new Option("PM", "PM"));
-            }
-        });
-
-        $('input[name="schedule_cc_checkbox"]').on('change', function() {
-            if ($(this).prop('checked')) {
-                $('input[name="schedule_cc"]').prop('required', true);
-            } else {
-                $('input[name="schedule_cc"]').prop('required', false);
-            }
-        });
-
-        $('input[name="schedule_date"]').on("keydown", function(e) {
-            e.preventDefault();
-        });
-
-        const dateInput = $('input[name="schedule_date"]');
-        const today = new Date();
-        const currentDate = today.toISOString().split("T")[0];
-        const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-        const lastDayFormatted = lastDay.getFullYear() + '-' + (lastDay.getMonth() + 1).toString().padStart(2, '0') + '-' + lastDay.getDate().toString().padStart(2, '0');
-        dateInput.attr('min', currentDate);
-        dateInput.attr('max', lastDayFormatted);
-        dateInput.on('change', function () {
-            const selectedDate = new Date($(this).val());
-            const dayOfWeek = selectedDate.getDay(); 
-
-            if (dayOfWeek === 0 || dayOfWeek === 6) {
-                $(this).val(''); // Clear the input
-                Swal.fire({
-                    icon: "error",
-                    title: "Failed to set date!",
-                    html: "Support via call is available only <u>Monday</u> to <u>Friday</u>.",
-                    showConfirmButton: true,
-                    confirmButtonText: "Okay",
-                    showCloseButton: true,
-                });
-            }
-        });
-
-        // $('.chaticon').click(function(e) {
-        //     $('.chatbox_container').slideDown();
-        //     $('.chaticon').fadeOut();
-        // });
-
-        // Disable - For Later development
-        // $('.chatbot_minimize').click(function(e) {
-        //     $('.chatbox_container').slideUp();
-        //     $('.chaticon').fadeIn();
-        // });
-        
-        $(document).on('submit', '#scheduleCallForm', function (e) {
-            e.preventDefault();
-            let scheduledForm = $(this); 
-
-            $.ajax({
-                type: "POST",
-                url: BASE_URL + "/TechSupportSidebar/addSchedule",
-                data: scheduledForm.serialize(),
-                dataType: "JSON",
-                beforeSend: function () {
-                    formDisabler(scheduledForm, true); 
-                    Swal.fire({
-                        icon: "info",
-                        title: "Saving Entry!",
-                        html: "Please wait while the process is running...",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        },
-                    });
-                },
-                success: function (response) {
-                    $('#scheduleCallForm')[0].reset();
-                    formDisabler(scheduledForm, false);
-                    Swal.fire({
-                        icon: "success",
-                        title: "Entry Saved!",
-                        html: "Call support has beed scheduled.",
-                        showConfirmButton: true,
-                        confirmButtonText: "Okay",
-                    });
-                },
-                error: function (xhr, status, error) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error!",
-                        html: "An unexpected error occurred: " + error,
-                        showConfirmButton: true,
-                        confirmButtonText: "Okay",
-                    });
-                    formDisabler(scheduledForm, false);
-                },
-            });
-        });
-        
-        $(document).on('submit', '#sendchat_form', function(e) {
-            e.preventDefault();
-            let sendchatData = $(this);
-            let chatMessage = sendchatData.find('input[name="request"]').val();
-            let chatbot_name = $('.chatbot_name').eq(0).text();
-            let bgcolor = $('.chatbox_header').attr('data-bgcolor');
-
-            $.ajax({
-                type: "POST",
-                url: BASE_URL + "/chatbot/request",
-                data: sendchatData.serialize(),
-                dataType: "JSON",
-                beforeSend: function() {
-                    formDisabler(sendchatData, true);
-                    $('.chat_content').append('<div class="send_container position-relative"> <small class="sender_name position-absolute">You</small> <div class="send_chat d-flex flex-row justify-content-end"> <div class="p-3 send_chat_container" style="background-color: ' + bgcolor + '21;"> <p class="mb-0 send_chat_message">' + chatMessage + '</p> </div> </div> </div>').scrollTop($('.chat_content')[0].scrollHeight);
-                    setTimeout(() => {
-                        $('.typing_status').fadeIn('fast');
-                    }, 500);
-                },
-                success: function(response) {
-                    setTimeout(() => {
-                        $('.chat_content').append('<div class="receive_container position-relative"> <small class="receiver_name position-absolute">🤖 ' + chatbot_name + '</small> <div class="receive_chat d-flex flex-row justify-content-start"> <div class="p-3 me-3 border receive_chat_container"> <p class="mb-0">' + response + '</p> </div> </div> </div>').scrollTop($('.chat_content')[0].scrollHeight);
-                        $('.typing_status').hide();
-                        sendchatData.find('input').val(null);
-                        formDisabler(sendchatData, false);
-                    }, 1000);
-                }
-            });
-        });
-        // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        
-        $(document).on('click', '#getting-started-schedule-job', function() {
-            $('#modal-getting-started-job-schedule').modal('show');
-        });
-
-        $(document).on('click', '#getting-started-download-mobile-app', function() {
-            $('#modal-getting-started-download-mobile-app').modal('show');
-        });
-
-        $(document).on('click', '#connect-to-quickbooks-or-import-customer-list', function() {
-            $('#modal-connect-to-quickbooks-or-import-customer-list').modal('show');
-        });
-
-        $(document).on('click', '#left-nav-customer-search', function() {
-            $('#modal-quick-customer-search').modal('show');
-        });
-
-        $(document).on('click', '#left-getting-started', function() {
-            $('#modal-getting-started').modal('show');
-            $.ajax({
-                type: "POST",
-                url: base_url + "dashboard/_getting_started",
-                beforeSend: function() {
-                    $('#getting-started-container').html('<span class="bx bx-loader bx-spin"></span>');
-
-                },
-                success: function(html) {
-                    $('#getting-started-container').html(html);
-                }
-            });
-        });
-
-        $(document).on('submit', '#frm-left-nav-quick-search-customer', function(e) {
-            e.preventDefault();
-
-            $.ajax({
-                type: "POST",
-                url: base_url + "customer/_quick_search",
-                data: $('#frm-left-nav-quick-search-customer').serialize(),
-                beforeSend: function() {
-                    $('#quick-customer-search-result-container').html('<span class="bx bx-loader bx-spin"></span>');
-
-                },
-                success: function(html) {
-                    $('#quick-customer-search-result-container').html(html);
-                }
-            });
-        });
-
-        $('#frm-getting-started-send-download-app-link').on('submit', function(e) {
-            e.preventDefault();
-
-            $.ajax({
-                type: "POST",
-                url: base_url + "dashboard/_send_download_app_link",
-                data: $('#frm-getting-started-send-download-app-link').serialize(),
-                dataType: "JSON",
-                beforeSend: function() {
-                    $('#btn-send-download-link').html('<span class="bx bx-loader bx-spin"></span>');
-                },
-                success: function(result) {
-                    $('#modal-getting-started-download-mobile-app').modal('hide');
-                    $('#btn-send-download-link').html('Send');
-                    if (result.is_success == 1) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Download Mobile App',
-                            text: 'A text message will be sent to you in a short while.',
-                        }).then((result) => {
-                            //window.location.reload();
+                                    }
+                                });
+                            });
                         });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: result.msg,
-                        });
-                    }
-                }
-            });
-        });
-
-        // Customize menu
-        //$('#modal-customize-menu').modal({backdrop: 'static', keyboard: false});
-
-        $('.customize-menu').on('click', function() {
-            $('#modal-customize-menu').modal('show');
-
-            $.ajax({
-                type: "POST",
-                url: base_url + "mycrm/_customize_menu",
-                beforeSend: function() {
-                    $('#customize-menu-container').html('<span class="bx bx-loader bx-spin"></span>');
-                },
-                success: function(html) {
-                    $('#customize-menu-container').html(html);
-                }
-            });
-        });
-
-        $('#frm-company-customize-menu').on('submit', function(e) {
-            e.preventDefault();
-
-            $.ajax({
-                data: $('#frm-company-customize-menu').serialize(),
-                type: "POST",
-                dataType: 'json',
-                url: base_url + "mycrm/_update_menu_setting",
-                beforeSend: function() {
-                    $('.btn-update-menu-setting').html('<span class="bx bx-loader bx-spin"></span>');
-                },
-                success: function(result) {
-                    $('.btn-update-menu-setting').html('Save');
-                    if (result.is_success == 1) {
-                        $('#modal-customize-menu').modal('hide');
-                        Swal.fire({
-                            text: "Menu settings was successfully updated",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            //if (result.value) {
-                            location.reload();
-                            //}
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Error',
-                            text: result.msg,
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-
-                        });
-                    }
-
-                }
-            });
-        });
-    });
-</script>
+                    </script>

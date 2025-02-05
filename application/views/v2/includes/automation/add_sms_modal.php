@@ -26,8 +26,7 @@
                                         <option value="{business_name}">Business Name</option>
                                         <option value="{business_address}">Business Address</option>
                                     </optgroup>
-                                    
-                                    <optgroup label="Job">
+                                   <optgroup label="Job" class="job-select">
                                         <option value="{job_number}">Job Number</option>
                                         <option value="{job_location}">Job Location</option>
                                         <option value="{job_type}">Job Type</option>
@@ -37,6 +36,20 @@
                                         <option value="{amount}">Job Total</option>
                                         <option value="{status}">Job Status</option>
                                         <option value="{techs}">Assigned Techs</option>
+                                    </optgroup>
+                                    <optgroup label="Invoice" class="invoice-select d-none">
+                                        <option value="{invoice_number}">Invoice #</option>
+                                        <option value="{due_date}">Due Date</option>
+                                        <option value="{total_due}">Due Amount</option>
+                                        <option value="{invoice_totals}">Invoice total</option>
+                                        <option value="{invoice_link}">Invoice link</option>
+                                    </optgroup>
+                                    <optgroup label="Estimate" class="estimate-select d-none">
+                                        <option value="{estimate_status}">Status</option>
+                                        <option value="{estimate_number}">Estimate #</option>
+                                        <option value="{grand_total}">Total</option>
+                                        <option value="{deposit_amount}">Due deposit</option>
+                                        <option value="{estimate_link}">Estimate link</option>
                                     </optgroup>
                                 </select>
                             </div>

@@ -47,5 +47,6 @@
 <?php include viewPath('v2/includes/automation/preview_sms_modal'); ?>
 <?php include viewPath('v2/includes/automation/add_sms_modal'); ?>
 <?php include viewPath('v2/includes/automation/add_condition_modal'); ?>
+<?php include viewPath('v2/includes/automation/custom_window_modal'); ?>
 <?php include viewPath('v2/pages/automation/js/automation'); ?>
 <?php include viewPath('v2/includes/footer'); ?>

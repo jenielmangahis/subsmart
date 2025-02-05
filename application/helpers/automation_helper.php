@@ -56,15 +56,13 @@ if (! function_exists('get_automation_options')) {
                 'after'    => 'after',
             ],
             'dateOptions'   => [
-                'scheduled_date' => 'scheduled date',
-                'end_date'       => 'end date',
                 'lead'     => [
-                    'scheduled_date' => 'scheduled date',
-                    'end_date'       => 'end date',
+                    'create_date' => 'creation date',
+                    'scheduled_date' => 'schedule date',
                 ],
                 'job'      => [
                     'create_date' => 'creation date',
-                    'scheduled_date' => 'scheduled date',
+                    'scheduled_date' => 'schedule date',
                     'end_date'       => 'end date',
                 ],
                 'estimate' => [
@@ -73,9 +71,9 @@ if (! function_exists('get_automation_options')) {
                     'date'       => 'date',
                 ],
                 'invoice'  => [
+                    'due_date'       => 'due date',
                     'send_date' => 'date of sending',
                     'create_date' => 'creation date',
-                    'due_date'       => 'due date',
                 ],
             ],
         ];
@@ -182,7 +180,7 @@ if (! function_exists('get_automation_email_config')) {
                             'body'    => "
                                 <p>Hi {first_name},</p>
                                 <p>Thanks again for choosing {business_name} for your recent service.!</p>
-                                <p>This is just a reminder that your invoice still has a due balance of {amount_total}. </p>
+                                <p>This is just a reminder that your invoice still has a due balance of {amount_total}. You can view and pay the invoice here: {invoice_link}.</p>
                                 <p>Feel free to call or text if you have any questions. </p>
                             ",
                         ],
@@ -191,7 +189,7 @@ if (! function_exists('get_automation_email_config')) {
                             'body'    => "
                                 <p>Hi {first_name},</p>
                                 <p>Thanks again for choosing {business_name} for your recent service.</p>
-                                <p>This is just a reminder that your invoice still has a due balance of {amount_total}. </p>
+                                <p>This is just a reminder that your invoice still has a due balance of {amount_total}. You can view and pay the invoice here: {invoice_link}. </p>
                                 <p>Feel free to reply to this email or give us a call at {business_phone}. if you have any questions.</p>
                                 <p>Best,</p>
                                 <p>{business_name}</p>
@@ -273,7 +271,7 @@ if (! function_exists('generateAutomationDescription')) {
 
         if (! empty($automation->target)) {
             if ($automation->target == "user") {
-                $actionText = logged("FName")." ".logged("LName");
+                $actionText = getUsersFullNames($automation->target_id);
             } else {
                 $actionText = isset($options['targetOptions'][$automation->target])
                     ? $options['targetOptions'][$automation->target]
@@ -314,7 +312,10 @@ if (! function_exists('generateAutomationDescription')) {
 
     function formatTriggerTime($triggerTime)
     {
-        if ($triggerTime >= 43200) { // 43200 minutes = 30 days (approx. 1 month)
+         if ($triggerTime >= 525600) { // 43200 minutes = 30 days (approx. 1 month)
+            $years = floor($triggerTime / 525600);
+            return $years . " year" . ($years > 1 ? "s" : "");
+        }elseif ($triggerTime >= 43200) { // 43200 minutes = 30 days (approx. 1 month)
             $months = floor($triggerTime / 43200);
             return $months . " month" . ($months > 1 ? "s" : "");
         } elseif ($triggerTime >= 1440) { // 1440 minutes = 1 day
@@ -332,6 +333,21 @@ if (! function_exists('generateAutomationDescription')) {
 
 
 }
+
+function getUsersFullNames($id) {
+    $CI =& get_instance(); // Get the CI super-object
+    $CI->load->model('users_model'); // Load the Users model
+
+    $users = $CI->users_model->getCompanyUsersById($id); // Fetch all users
+    $user_names = '';
+
+    foreach ($users as $user) {
+        $user_names = $user->FName . " " . $user->LName; // Combine fname and lname
+    }
+
+    return $user_names;
+}
+
 
 if (! function_exists('isValueValid')) {
     function isValueValid($value)

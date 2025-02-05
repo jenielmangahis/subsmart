@@ -38,28 +38,21 @@ class ChatbotSettings extends MY_Controller
             array('title', 'response'),
             array('title', 'response'),
             null,  
-            array(
-                'company_id' => $company_id,
-            ),
         );
 
         // Define the where condition
-        $whereCondition = array('company_id' => $company_id);
         $getData = $this->serverside_table->getRows($this->input->post(), $whereCondition);
 
         $data = $row = array();
         $i = $this->input->post('start');
         
         foreach($getData as $getDatas){
-            if ($getDatas->company_id == $company_id) {
-                
                 $data[] = array(
                     $getDatas->title,
                     $getDatas->response,
                     "<div class='btn-group' role='group'><button class='nsm-button small editPresetButton' data-id='$getDatas->id' data-bs-toggle='modal' data-bs-target='.editPresetModal'>Edit</button><button class='nsm-button small removePresetButton' data-id='$getDatas->id' data-title='$getDatas->title'>Remove</button></div>",
                 );
                 $i++;
-            }
         }
 
         $output = array(
