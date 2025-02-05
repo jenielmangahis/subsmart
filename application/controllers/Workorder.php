@@ -196,18 +196,12 @@ class Workorder extends MY_Controller
             }
         }
 
-        // $org_id = array('58','31');
-        // if($company_id == 58 || $company_id == 31)
-        // {
-        //     $this->page_data['workorder'] = $this->workorder_model->getByIdArray($org_id);
-        //     $work =  $this->workorder_model->getById($id);
-        // }else{
-        //     $this->page_data['workorder'] = $this->workorder_model->getById($id);
-        //     $work =  $this->workorder_model->getById($id);
-        // }
-
+        $scheduledWorkorders = $this->workorder_model->getAllByCompanyIdAndStatus($company_id, 'Scheduled');
+        $newWorkorders       = $this->workorder_model->getAllByCompanyIdAndStatus($company_id, 'New');
         
         $this->page_data['workorders'] = $workorder;
+        $this->page_data['scheduledWorkorders'] = $scheduledWorkorders;
+        $this->page_data['newWorkorders'] = $newWorkorders;
 
         $company_id = logged('company_id');
         $this->page_data['company_work_order_used'] = $this->workorder_model->getcompany_work_order_used($company_id);
@@ -222,8 +216,6 @@ class Workorder extends MY_Controller
                 $workorder = unserialize($workorder);
             }
         }
-
-//        print_r($this->page_data['workorders']); die;
 
         $this->page_data['tab_status'] = $workorder_status;
         $this->page_data['sort_selected'] = $sort_selected;
@@ -785,6 +777,11 @@ class Workorder extends MY_Controller
     {
         $this->load->model('AcsProfile_model');
 
+        if(!checkRoleCanAccessModule('work-orders', 'write')){
+            show403Error();
+            return false;
+        }
+
         add_footer_js([
 			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
 			'assets/js/jquery.signaturepad.js'
@@ -794,21 +791,6 @@ class Workorder extends MY_Controller
         $user_id    = logged('id');
         $parent_id  = $this->db->query("select id from users where id=$user_id")->row();
         $workOrder  = $this->workorder_model->getById($id);
-        // $checkListsHeader = $this->workorder_model->getchecklistHeaderByCompanyId($company_id);
-
-        // $checkLists = array();
-        // $workorrder_checklists = unserialize($workOrder->checklists);
-        // $selected_checklists    = array();
-        // if( !empty($workorrder_checklists) ){
-        //     foreach( $checkListsHeader as $h ){
-        //         if( in_array($h->id, $workorrder_checklists) ){
-        //             $selected_checklists[$h->id] = ['id' => $h->id, 'name' => $h->checklist_name];
-        //         }   
-        //         $checklistItems = $this->workorder_model->getchecklistHeaderItems($h->id);
-        //         $checklists[] = ['header' => $h, 'items' => $checklistItems];
-        //     }
-        // }
-
         $checkListsHeader = $this->workorder_model->getchecklistHeaderByCompanyId($company_id);
         $workorder_checklists = unserialize($workOrder->checklists);
         $selected_checklists  = array();
@@ -838,23 +820,13 @@ class Workorder extends MY_Controller
         $this->page_data['job_types'] = $this->workorder_model->getjob_types();
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
-        // $this->page_data['items_data'] = $this->items_model->getItemData($id);
         $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
         $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
         $this->page_data['lead_source'] = $this->workorder_model->getLeadSourceByCompanyId($company_id);
         $this->page_data['payment'] = $this->workorder_model->getpayment($id);
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['fieldsName'] = $this->workorder_model->getCustomByID();
-
         $this->page_data['items_data'] = $this->workorder_model->getworkorderItems($id);
-        // foreach ($this->page_data['workorder'] as $key => $workorder) {
-
-        //     if (is_serialized($workorder)) {
-
-        //         $this->page_data['workorder']->$key = unserialize($workorder);
-        //     }
-        // }
-        //$this->load->view('workorder/edit', $this->page_data);
         $this->load->view('v2/pages/workorder/edit', $this->page_data);
     }
 
@@ -12982,6 +12954,44 @@ class Workorder extends MY_Controller
         $this->page_data['page']->title = 'Workorder Status';
         $this->page_data['page']->parent = 'Sales';
 		$this->load->view('v2/pages/workstatus/list', $this->page_data);
+    }
+
+    public function ajax_archived_list()
+    {
+        $cid  = logged('company_id');
+        $workorders = $this->workorder_model->getAllIsArchiveByCompanyId($cid);
+
+        $this->page_data['workorders'] = $workorders;
+        $this->load->view("v2/pages/workorder/ajax_archived_list", $this->page_data);
+    }
+
+    public function ajax_restore_archived()
+    {
+        if(!checkRoleCanAccessModule('work-orders', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find workorder data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $workorder = $this->workorder_model->getById($post['workorder_id']);
+        if($workorder && $workorder->company_id == $company_id) {                        
+            $this->workorder_model->restoreWorkorder($workorder->id);
+
+            //Activity Logs
+            $activity_name = 'Workorder : Restore Workorder Number ' . $workorder->work_order_number; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 }
 /* End of file Workorder.php */
