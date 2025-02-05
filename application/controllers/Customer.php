@@ -8577,7 +8577,7 @@ class Customer extends MY_Controller
         $cid = logged('company_id');
         $lender_types = $this->AcsSolarInfoLenderType_model->getAllByCompanyId($cid);
 
-        $this->page_data['page']->title = 'Lender Types';
+        $this->page_data['page']->title = 'Solar Lender Types';
         $this->page_data['page']->parent = 'Sales';
         $this->page_data['lender_types'] = $lender_types;
         $this->load->view('v2/pages/customer/solar/settings_lender_type', $this->page_data);
@@ -11393,6 +11393,8 @@ class Customer extends MY_Controller
         $this->page_data['formFields'] = $formFields;
         $this->page_data['companyFormSetting'] = $companyFormSetting;
         $this->page_data['formGroups'] = $formGroups;
+        $this->page_data['page']->title = 'Sales Area';
+        $this->page_data['page']->parent = 'Form Settings';
         $this->load->view('v2/pages/customer/customer_advance_form_settings', $this->page_data);
     }
 
