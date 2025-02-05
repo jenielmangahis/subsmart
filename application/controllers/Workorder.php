@@ -49,6 +49,10 @@ class Workorder extends MY_Controller
     public function index($tab_index = 0)
     {        
         $this->hasAccessModule(24); 
+        if(!checkRoleCanAccessModule('work-orders', 'read')){
+			show403Error();
+			return false;
+		}
         
         $role = logged('role');
         
