@@ -34,7 +34,7 @@
             </a>
         </li>
         <li class="<?php if($page->title == 'Automation Follow-ups'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('automation/followUps') ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('automation/followups') ?>">
             <i class='bx bx-time-five'></i>
                 <span>Follow-ups</span>
             </a>

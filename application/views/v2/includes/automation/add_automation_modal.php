@@ -161,14 +161,55 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!-- <div class="container">
+                                                <div>
                                                     <hr />
-                                                    <button type="button" class="nsm-button-outlined primary w-100">
+                                                    <button type="button" class="nsm-button-outlined primary w-100 customize-time">
                                                         <i class="bx bx-cog"></i> Customize
                                                     </button>
-                                                </div> -->
+                                                </div>
+                                            </div>
+
+                                            <div class="dropdown-menu p-3" id="customTimeDropdownMenu" style="width: 350px;">
+                                                <h6>Customize time</h6>
+                                                
+                                                <div class="py-3">
+                                                    <div class="row">
+                                                        <div class="col-12 mb-3">
+                                                            <div class="input-group">
+                                                                <div class="input-group">
+                                                                    <input name="custom_time" class="form-control mt-0" type="number" required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <div class="input-group mb-3">
+                                                                <select id="customTimeUnits" class="form-select">
+                                                                    <option value="" disabled selected>choose</option>
+                                                                    <option value="minutes">minutes</option>
+                                                                    <option value="hours">hours</option>
+                                                                    <option value="days">days</option>
+                                                                    <option value="months">months</option>
+                                                                    <option value="years">years</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-3">
+                                                    <hr />
+                                                    <div class="d-flex justify-content-between">
+                                                        <button type="text" class="btn primary custom-time-back">
+                                                            Back
+                                                        </button>
+                                                        <button type="text" class="btn primary custom-time-apply">
+                                                            <i class="bx bx-check"></i> Apply
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+
+                                       
 
 
                                         <div class="date-dropdown-container d-none">
@@ -200,14 +241,28 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button secondary outlined preview-message" data-bs-toggle="modal">Preview/edit message</button>
-                <button type="button" class="nsm-button primary d-none" id="editAutomation">
-                    <i class="bx bx-fw bx-save"></i> Save Changes
-                </button>
-                <button type="button" class="nsm-button primary" id='submitAutomation'>
-                    <i class='bx bx-fw bx-plus'></i> Add Automation
-                </button>
+            <div class="modal-footer d-flex justify-content-between">
+                <div>
+                    <span class="nsm-text">Automation will be sent</span>
+                    <div class="dropup">
+                        <a href="#" class="dropdown-toggle nsm-text primary text-decoration-none" id="windowDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="nsm-text fw-bold window-text"> </span><i class="bx bx-chevron-down"></i>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="windowDropdownBtn">
+                            <li class="dropdown-item window-item cursor-pointer" data-value="24_7">24/7</li>
+                            <li class="dropdown-item window-item cursor-pointer" data-value="custom">Custom window</li>
+                        </ul>
+                        </div>
+                </div>
+                <div>
+                    <button type="button" class="nsm-button secondary outlined preview-message" data-bs-toggle="modal">Preview/edit message</button>
+                    <button type="button" class="nsm-button primary d-none" id="editAutomation">
+                        <i class="bx bx-fw bx-save"></i> Save Changes
+                    </button>
+                    <button type="button" class="nsm-button primary" id='submitAutomation'>
+                        <i class='bx bx-fw bx-plus'></i> Add Automation
+                    </button>
+                </div>
             </div>
         </div>
     </div>

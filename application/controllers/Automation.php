@@ -19,6 +19,8 @@ class Automation extends MY_Controller
         $this->load->model('Users_model', 'users_model');
         $this->load->model('JobTags_model', 'jobtags_model');
         $this->load->model('JobType_model', 'jobtype_model');
+        $this->load->model('Estimate_model', 'estimate_model');
+        $this->load->model('Users_model', 'users_model');
 
         $company_id = logged('company_id');
     }
@@ -29,6 +31,7 @@ class Automation extends MY_Controller
         $this->page_data['lead_status'] = $this->customer_ad_model->get_select_options('ac_leads', 'status');
         $this->page_data['job_status']  = $this->customer_ad_model->get_select_options('jobs', 'status');
         $this->page_data['automations'] = $this->automation_model->getAutomations();
+        $this->page_data['users'] = $this->users_model->getUsers();
         // print_r($this->page_data['automations']);
 
         $this->page_data['automation_status'] = $this->automation_model->countAutomationsByStatus(logged('id'));
@@ -44,6 +47,7 @@ class Automation extends MY_Controller
         $this->page_data['page']->parent = 'Automation';
         $this->page_data['lead_status']  = $this->customer_ad_model->get_select_options('ac_leads', 'status');
         $this->page_data['job_status']   = $this->customer_ad_model->get_select_options('jobs', 'status');
+        $this->page_data['users'] = $this->users_model->getUsers();
         $this->load->view('v2/pages/automation/reminders', $this->page_data);
     }
 
@@ -54,6 +58,7 @@ class Automation extends MY_Controller
         $this->page_data['page']->parent = 'Automation';
         $this->page_data['lead_status']  = $this->customer_ad_model->get_select_options('ac_leads', 'status');
         $this->page_data['job_status']   = $this->customer_ad_model->get_select_options('jobs', 'status');
+        $this->page_data['users'] = $this->users_model->getUsers();
 
         $this->load->view('v2/pages/automation/marketing', $this->page_data);
     }
@@ -65,6 +70,7 @@ class Automation extends MY_Controller
         $this->page_data['page']->parent = 'Automation';
         $this->page_data['lead_status']  = $this->customer_ad_model->get_select_options('ac_leads', 'status');
         $this->page_data['job_status']   = $this->customer_ad_model->get_select_options('jobs', 'status');
+        $this->page_data['users'] = $this->users_model->getUsers();
         $this->load->view('v2/pages/automation/follow_ups', $this->page_data);
     }
 
@@ -82,6 +88,7 @@ class Automation extends MY_Controller
         $this->page_data['page']->parent = 'Automation';
         $this->page_data['lead_status']  = $this->customer_ad_model->get_select_options('ac_leads', 'status');
         $this->page_data['job_status']   = $this->customer_ad_model->get_select_options('jobs', 'status');
+        $this->page_data['users'] = $this->users_model->getUsers();
         $this->load->view('v2/pages/automation/actions', $this->page_data);
     }
 
@@ -119,6 +126,7 @@ class Automation extends MY_Controller
             'trigger_time'     => isset($data['trigger_time']) ? $data['trigger_time'] : null,
             'trigger_action'   => $data['trigger_action'],
             'target'           => $data['target'],
+            'target_id'           => $data['target_id'],
             'date_reference'   => $data['date_reference'],
             'timing_reference' => $data['timing_reference'],
             'email_subject'    => $data['email_subject'],
@@ -126,6 +134,8 @@ class Automation extends MY_Controller
             'sms_body'       => $data['sms_body'],
             'conditions'       => $data['conditions'],
             'operation'       => $data['operation'],
+            'start_time'       => $data['start_time'],
+            'end_time'       => $data['end_time'],
             'status'           => isset($data['status']) ? $data['status'] : 'active',
         ];
 
@@ -253,6 +263,7 @@ class Automation extends MY_Controller
             $this->returnResponse([], "Failed", false, 500);
         }
     }
+
 
     public function returnResponse($data, $message, $status, $code)
     {
