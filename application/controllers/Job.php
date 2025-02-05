@@ -6215,11 +6215,7 @@ class Job extends MY_Controller
 
     public function ajax_archived_list()
     {
-        $this->load->model('estimate_model');
-
-        $post = $this->input->post();
         $cid  = logged('company_id');
-
         $jobs = $this->jobs_model->getAllIsArchiveByCompanyId($cid);
 
         $this->page_data['jobs'] = $jobs;
