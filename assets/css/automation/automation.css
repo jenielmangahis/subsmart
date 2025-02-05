@@ -59,6 +59,9 @@
 .time-dropdown-container {
   position: relative;
 }
+.custom-time-dropdown-container {
+  position: relative;
+}
 .entity-dropdown-container {
   position: relative;
 }

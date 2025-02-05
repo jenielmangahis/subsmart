@@ -1,7 +1,7 @@
 <?php include viewPath('v2/includes/header'); ?>
 
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" data-bs-toggle="modal" data-bs-target="#new_lead_source_modal">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" data-bs-toggle="modal" data-bs-target="#new_system_size_modal">
         <i class="bx bx-plus"></i>
     </div>
 </div>
@@ -101,7 +101,7 @@
     </div>
 
     <div class="modal fade" id="new_system_size_modal" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title" style="font-size: 17px;">Create System Size</span>
@@ -128,7 +128,7 @@
     </div>
 
     <div class="modal fade" id="edit_system_size_modal" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title" style="font-size: 17px;">Edit System Size</span>

@@ -1,7 +1,12 @@
 <?php include viewPath('v2/includes/header'); ?>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
 <script src="https://cdn.datatables.net/2.0.6/js/dataTables.js"></script>
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 <style>
+    .cke_notification {
+        display: none;
+    }
+
     .custom-loader {
         position: fixed;
         top: 50%;
@@ -145,7 +150,9 @@
                                                     <th class="noWidth"></th>
                                                 </tr>
                                             </thead>
-                                            <tbody><tr></tr></tbody>
+                                            <tbody>
+                                                <tr></tr>
+                                            </tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -157,9 +164,8 @@
         </div>
     </div>
 </div>
-
-<div class="modal addPresetModal" data-bs-backdrop="static" role="dialog" aria-modal="true">
-    <div class="modal-dialog ">
+<div class="modal addPresetModal" data-bs-backdrop="static" role="dialog" aria-modal="true" data-bs-focus="false">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Add Preset Response</span>
@@ -169,12 +175,12 @@
                 <form id="addPresetForm">
                     <div class="row">
                         <div class="col-lg-12 mb-3">
-                            <label class="form-label">..</label>
+                            <label class="form-label">Title</label>
                             <input name="title" type="text" class="form-control" required>
                         </div>
                         <div class="col-lg-12 mb-3">
                             <label class="form-label">Response</label>
-                            <textarea name="response" class="form-control" required></textarea>
+                            <textarea id="addResponseContent" name="response" class="form-control" required></textarea>
                         </div>
                         <div class="col-lg-12">
                             <button type="submit" class="nsm-button primary float-end">Save Preset</button>
@@ -185,9 +191,8 @@
         </div>
     </div>
 </div>
-
-<div class="modal editPresetModal" data-bs-backdrop="static" role="dialog" aria-modal="true">
-    <div class="modal-dialog ">
+<div class="modal editPresetModal" data-bs-backdrop="static" role="dialog" aria-modal="true" data-bs-focus="false">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Edit Preset Response</span>
@@ -205,10 +210,10 @@
                         </div>
                         <div class="col-lg-12 mb-3">
                             <label class="form-label">Response</label>
-                            <textarea name="response" class="form-control" required></textarea>
+                            <textarea id="editResponseContent" name="response" class="form-control" required></textarea>
                         </div>
                         <div class="col-lg-12">
-                            <button type="submit" class="nsm-button primary float-end">Update Preset</button>
+                            <button type="submit" class="nsm-button primary float-end">Update</button>
                         </div>
                     </div>
                 </form>
@@ -216,11 +221,22 @@
         </div>
     </div>
 </div>
-
 <script type="text/javascript">
     var BASE_URL = window.origin;
+    const commonConfig = {
+        // toolbarGroups: [
+        //     { name: 'clipboard', groups: ['clipboard', 'undo'] },
+        //     { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
+        //     { name: 'links', groups: ['links'] },
+        // ],
+        allowedContent: true,
+        height: '165px'
+    };
 
     $(document).ready(function() {
+        CKEDITOR.replace('addResponseContent', commonConfig);
+        CKEDITOR.replace('editResponseContent', commonConfig);
+
         // DataTable Configuration ===============
         const quickresponse_table = $('#quickresponse_table').DataTable({
             "processing": true,
@@ -265,16 +281,37 @@
             e.preventDefault();
             let preferenceData = $(this);
 
-            $.ajax({
-                type: "POST",
-                url: BASE_URL + "/ChatbotSettings/savePreference",
-                data: preferenceData.serialize(),
-                dataType: "JSON",
-                beforeSend: function() {
-                    formDisabler(preferenceData, true);
-                },
-                success: function (response) {
-                    formDisabler(preferenceData, false);
+            Swal.fire({
+                icon: "warning",
+                title: "Update Preference",
+                html: "Are you sure you want to update chatbot preference?",
+                showCancelButton: true,
+                confirmButtonText: "Update",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: BASE_URL + "/ChatbotSettings/savePreference",
+                        data: preferenceData.serialize(),
+                        dataType: "JSON",
+                        beforeSend: function() {
+                            formDisabler(preferenceData, true);
+                            Swal.fire({
+                                icon: "info",
+                                title: "Saving Preference!",
+                                html: "Please wait while the save process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        },
+                        success: function(response) {
+                            Swal.close();
+                            formDisabler(preferenceData, false);
+                        }
+                    });
                 }
             });
         });
@@ -282,42 +319,91 @@
         $(document).on('submit', '#addPresetForm', function(e) {
             e.preventDefault();
             let addPresetData = $(this);
+            let responseContent = CKEDITOR.instances.addResponseContent.getData();
+            let formData = addPresetData.serializeArray();
+            formData.push({
+                name: "response",
+                value: responseContent
+            });
 
             $.ajax({
                 type: "POST",
                 url: BASE_URL + "/ChatbotSettings/addPreset",
-                data: addPresetData.serialize(),
+                data: $.param(formData),
                 dataType: "JSON",
                 beforeSend: function() {
                     formDisabler(addPresetData, true);
+                    CKEDITOR.instances.addResponseContent.setReadOnly(true);
+                    Swal.fire({
+                        icon: "info",
+                        title: "Adding Preset!",
+                        html: "Please wait while the add process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
                 },
-                success: function (response) {
-                    addPresetData.find("input, textarea").val(null);
+                success: function(response) {
+                    Swal.close();
+                    $('.addPresetModal').modal('hide');
+                    addPresetData.find("input").val(null);
+                    CKEDITOR.instances.addResponseContent.setData('');
                     quickresponse_table.ajax.reload();
                     formDisabler(addPresetData, false);
+                    CKEDITOR.instances.addResponseContent.setReadOnly(false);
                 }
             });
-
         });
 
         $(document).on('submit', '#editPresetForm', function(e) {
             e.preventDefault();
             let editPresetData = $(this);
-
-            $.ajax({
-                type: "POST",
-                url: BASE_URL + "/ChatbotSettings/editPreset",
-                data: editPresetData.serialize(),
-                dataType: "JSON",
-                beforeSend: function() {
-                    formDisabler(editPresetData, true);
-                },
-                success: function (response) {
-                    quickresponse_table.ajax.reload();
-                    formDisabler(editPresetData, false);
-                }
+            let responseContent = CKEDITOR.instances.editResponseContent.getData();
+            let formData = editPresetData.serializeArray();
+            formData.push({
+                name: "response",
+                value: responseContent
             });
 
+            Swal.fire({
+                icon: "warning",
+                title: "Update Preset",
+                html: "Are you sure you want to update this preset?",
+                showCancelButton: true,
+                confirmButtonText: "Update",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: BASE_URL + "/ChatbotSettings/editPreset",
+                        data: $.param(formData),
+                        dataType: "JSON",
+                        beforeSend: function() {
+                            formDisabler(editPresetData, true);
+                            CKEDITOR.instances.editResponseContent.setReadOnly(true);
+                            Swal.fire({
+                                icon: "info",
+                                title: "Updating Preset!",
+                                html: "Please wait while the update process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        },
+                        success: function(response) {
+                            Swal.close();
+                            $('.editPresetModal').modal('hide');
+                            quickresponse_table.ajax.reload();
+                            formDisabler(editPresetData, false);
+                            CKEDITOR.instances.editResponseContent.setReadOnly(false);
+                        }
+                    });
+                }
+            });
         });
 
         $(document).on('click', '.editPresetButton', function() {
@@ -329,13 +415,15 @@
                 dataType: "JSON",
                 beforeSend: function() {
                     $('#editPresetForm').find("input, textarea").val(null);
+                    CKEDITOR.instances.editResponseContent.setData('');
+                    CKEDITOR.instances.editResponseContent.setReadOnly(true);
                 },
                 success: function(response) {
                     console.log(response);
+                    CKEDITOR.instances.editResponseContent.setReadOnly(false);
                     $('#editPresetForm').find('input[name="id"]').val(response[0]['id']);
                     $('#editPresetForm').find('input[name="title"]').val(response[0]['title']);
-                    $('#editPresetForm').find('textarea[name="response"]').val(response[0]['response']);
-                    // quickresponse_table.ajax.reload();
+                    CKEDITOR.instances.editResponseContent.setData(response[0]['response']);
                 }
             });
         });
@@ -357,7 +445,20 @@
                         url: BASE_URL + "/ChatbotSettings/removePreset",
                         data: "id=" + presetID,
                         dataType: "JSON",
-                        success: function (response) {
+                        beforeSend: function() {
+                            Swal.fire({
+                                icon: "info",
+                                title: "Removing Preset!",
+                                html: "Please wait while the remove process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        },
+                        success: function(response) {
+                            Swal.close();
                             console.log(response);
                             quickresponse_table.ajax.reload();
                         }

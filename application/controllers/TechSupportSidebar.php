@@ -117,4 +117,77 @@ class TechSupportSidebar extends MY_Controller
     
         return $emailer->Send();
     }
+
+    public function realtimeChatPusherRequest($requestData)
+    {
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+        $data = $this->input->post();
+        $data['company_id'] = $company_id;
+        
+
+        $isTyping = $data['isTyping'];
+
+        // PusherJS access tokens
+        $app_id = "1933160";
+        $key = "33cfc0c407521da10fe6";
+        $secret = "9faa8dc5b4e87bdd0128";
+        $cluster = "ap1";
+
+         // Initialize PusherJS with its access tokens and config
+        $options = array('cluster' => $cluster, 'useTLS' => true);
+        $pusher = new Pusher\Pusher($key, $secret, $app_id, $options);
+
+        if ($requestData == "send_message") {
+            switch ($data['sender_type']) {
+                case 'client':
+                    $channel = "realtime_chat_channel";
+                    $event = "chat_".$user_id."_event";
+                    $data['channel'] = $channel;
+                    $data['event'] = $event;
+                    $data['client_company_id'] = $company_id;
+                    $data['client_id'] = $user_id;
+                    $data['tech_id'] = 0;  // it don't need a specific id for specific tech, it will send to all tech instead.
+                    break;
+                case 'tech':
+                    $data['tech_company_id'] = $company_id;
+                    $data['tech_id'] = $user_id;
+                    break;
+            }
+            $addMessageProcess = $this->techsupport_model->addMessage($data);
+            $pusher->trigger($data['channel'], $data['event'], $data);
+        } 
+       
+        if ($requestData == "client_typing") {
+            $channel = "realtime_chat_channel";
+            $event = "chat_".$user_id."_event";
+            $data['channel'] = $channel;
+            $data['event'] = $event;
+            $status = $isTyping ? "client_isTyping" : "client_isNotTyping";
+            $pusher->trigger($data['channel'], $data['event'], ["status" => $status]);
+        }
+
+        if ($requestData == "tech_typing") {
+            $status = $isTyping ? "tech_isTyping" : "tech_isNotTyping";
+            $pusher->trigger($data['channel'], $data['event'], ["status" => $status]);
+        }
+        
+
+    }
+
+    public function fetchClientChatList()
+    {
+        $messages = $this->techsupport_model->getClientChatList();
+        echo json_encode($messages);
+    }
+    
+    public function fetchClientMessages()
+    {
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+        $data = $this->input->post();
+        $messages = $this->techsupport_model->getClientMessages($data['client_id']);
+        echo json_encode($messages);
+    }
+
 }

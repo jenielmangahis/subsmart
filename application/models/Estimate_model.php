@@ -114,6 +114,8 @@ class Estimate_model extends MY_Model
         return $query->result();
     }
 
+
+
     public function mailIsOpen($data)
     {
         // $this->db->where('id', $id);

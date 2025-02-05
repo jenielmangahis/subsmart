@@ -1927,6 +1927,10 @@ function Signing(hash) {
       if ($element instanceof jQuery && !isOwner) {
         $element.addClass("completed");
         $element.addClass("not-owned");
+
+        let closestInput = $element.find("input");
+        closestInput.addClass('completed-not-owned');
+        closestInput.required = false;
       }
 
       return $element;
@@ -2007,6 +2011,10 @@ function Signing(hash) {
       co_recipients.forEach((coRecipient) => {
         const fields = coRecipient.fields.filter(isDocumentField);
         renderField({ ...coRecipient, fields, context, $page });
+      });
+
+      $(".completed-not-owned").each(function(){        
+        $(this).prop('required',false);
       });
 
       $documentContainer.append($container);
