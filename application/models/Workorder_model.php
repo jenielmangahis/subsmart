@@ -2655,6 +2655,35 @@ class Workorder_model extends MY_Model
 
         return $query->result();
     }
+
+    public function getAllIsArchiveByCompanyId($cid)
+    {
+        $this->db->where('company_id', $cid);
+        $this->db->where('view_flag', 1);
+        $this->db->order_by('date_updated', 'DESC');
+        $query = $this->db->get($this->table);
+        
+        return $query->result();
+    }
+
+    public function restoreWorkorder($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->update($this->table, array("view_flag" => 0, 'date_updated' => date("Y-m-d H:i:s")));
+    }
+
+    public function getAllByCompanyIdAndStatus($cid, $status)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+        $this->db->where('status', $status);
+        $this->db->where('view_flag', 0);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file Workorder_model.php */

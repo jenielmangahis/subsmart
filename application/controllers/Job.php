@@ -1997,7 +1997,7 @@ class Job extends MY_Controller
 
         if ($this->general->delete_($remove_jobtype)) {
             //Activity Logs
-            $activity_name = 'Deleted Job Type '.$jobType->title; 
+            $activity_name = 'Job Type : Deleted job type '.$jobType->title; 
             createActivityLog($activity_name);
 
             echo '1';
@@ -2006,15 +2006,28 @@ class Job extends MY_Controller
 
     public function delete_tax_rate()
     {
-        $remove_tax_rate = array(
-            'where' => array(
-                'id' => $_POST['id']
-            ),
-            'table' => 'tax_rates'
-        );
-        if ($this->general->delete_($remove_tax_rate)) {
-            echo '1';
+        $this->load->model('TaxRates_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $taxRate = $this->TaxRates_model->getByIdAndCompanyId($post['id'], $cid);
+        if( $taxRate ){
+            $this->TaxRates_model->delete($taxRate->id);
+
+            $is_success = 1;
+            $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Tax Rate : Deleted tax rate '.$taxRate->name; 
+            createActivityLog($activity_name);
         }
+        
+        $json_data  = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
     }
 
     public function delete_job()
@@ -2169,6 +2182,11 @@ class Job extends MY_Controller
 
     public function settings()
     {
+        if(!checkRoleCanAccessModule('job-settings', 'read')){
+            show403Error();
+            return false;
+        }
+
         $this->page_data['page']->title = 'Job Settings';
         $this->page_data['page']->parent = 'Sales';
 
@@ -6197,11 +6215,7 @@ class Job extends MY_Controller
 
     public function ajax_archived_list()
     {
-        $this->load->model('estimate_model');
-
-        $post = $this->input->post();
         $cid  = logged('company_id');
-
         $jobs = $this->jobs_model->getAllIsArchiveByCompanyId($cid);
 
         $this->page_data['jobs'] = $jobs;

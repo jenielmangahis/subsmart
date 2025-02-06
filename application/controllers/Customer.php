@@ -3454,6 +3454,10 @@ class Customer extends MY_Controller
         $this->load->model('IndustryType_model');
         $this->load->model('CompanyCustomerFormSetting_model');
         $this->load->model('AcsProperties_model');
+        $this->load->model('AcsSolarInfoProposedInverter_model');
+        $this->load->model('AcsSolarInfoProposedModule_model');
+        $this->load->model('AcsSolarInfoSystemSize_model');
+        $this->load->model('AcsSolarInfoLenderType_model');
 
         $this->hasAccessModule(9);
 
@@ -3588,6 +3592,17 @@ class Customer extends MY_Controller
             ];
             $this->page_data['solar_info_settings'] = $this->general->get_data_with_param($solar_info_settings_query);
         }
+
+        $solarProposedInverters = $this->AcsSolarInfoProposedInverter_model->getAllByCompanyId(logged('company_id'));
+        $solarProposedModules   = $this->AcsSolarInfoProposedModule_model->getAllByCompanyId(logged('company_id'));
+        $solarSystemSizes       = $this->AcsSolarInfoSystemSize_model->getAllByCompanyId(logged('company_id'));
+        $solarLenderTypes       = $this->AcsSolarInfoLenderType_model->getAllByCompanyId(logged('company_id'));
+
+        $this->page_data['solarProposedInverters'] = $solarProposedInverters;
+        $this->page_data['solarProposedModules']   = $solarProposedModules;
+        $this->page_data['solarSystemSizes'] = $solarSystemSizes;
+        $this->page_data['solarLenderTypes'] = $solarLenderTypes;
+
 
         //Customer setting : form fields
         $companyCustomerFormSettings = $this->CompanyCustomerFormSetting_model->getByCompanyId(logged('company_id'));
@@ -3915,18 +3930,18 @@ class Customer extends MY_Controller
         $customerProperty = $this->AcsProperties_model->getByCustomerId($prof_id);
         if( $customerProperty ){
             $data = [
-                'inventory' => $input['prop_inventory'],
-                'plan_type' => $input['prop_plan_type'],
-                'deductible' => $input['prop_deductible'],
-                'revenue' => $input['prop_revenue'],
-                'territory' => $input['prop_territory'],
-                'property_tax' => $input['prop_property_tax'],
-                'add_on' => $input['prop_add_on'],
-                'ac_type' => $input['prop_ac_type'],
-                'payment_history' => $input['prop_payment_history'],
-                'late_fee_collected' => $input['prop_late_fee_collected'],
-                'alarm_system' => $input['prop_alarm_system'],
-                'key_code' => $input['prop_key_code'],
+                'inventory' => $input['prop_inventory'] ? $input['prop_inventory'] : '',
+                'plan_type' => $input['prop_plan_type'] ? $input['prop_plan_type'] : '',
+                'deductible' => $input['prop_deductible'] ? $input['prop_deductible'] : '',
+                'revenue' => $input['prop_revenue'] ? $input['prop_revenue'] : '',
+                'territory' => $input['prop_territory'] ? $input['prop_territory'] : '',
+                'property_tax' => $input['prop_property_tax'] ?  $input['prop_property_tax'] : 0,
+                'add_on' => $input['prop_add_on'] ? $input['prop_add_on'] : '',
+                'ac_type' => $input['prop_ac_type'] ? $input['prop_ac_type'] : '',
+                'payment_history' => $input['prop_payment_history'] ? $input['prop_payment_history'] : '',
+                'late_fee_collected' => $input['prop_late_fee_collected'] ? $input['prop_late_fee_collected'] : '',
+                'alarm_system' => $input['prop_alarm_system'] ? $input['prop_alarm_system'] : '',
+                'key_code' => $input['prop_key_code'] ? $input['prop_key_code'] : '',
                 'source' => $input['prop_source'],
                 'ownership' => $input['prop_ownership'],
                 'date_modified' => date("Y-m-d H:i:s")
@@ -3936,20 +3951,20 @@ class Customer extends MY_Controller
         }else{
             $data = [
                 'customer_id' => $prof_id,
-                'inventory' => $input['prop_inventory'],
-                'plan_type' => $input['prop_plan_type'],
-                'deductible' => $input['prop_deductible'],
-                'revenue' => $input['prop_revenue'],
-                'territory' => $input['prop_territory'],
-                'property_tax' => $input['prop_property_tax'],
-                'add_on' => $input['prop_add_on'],
-                'ac_type' => $input['prop_ac_type'],
-                'payment_history' => $input['prop_payment_history'],
-                'late_fee_collected' => $input['prop_late_fee_collected'],
-                'alarm_system' => $input['prop_alarm_system'],
-                'key_code' => $input['prop_key_code'],
-                'source' => $input['prop_source'],
-                'ownership' => $input['prop_ownership'],
+                'inventory' => $input['prop_inventory'] ? $input['prop_inventory'] : '',
+                'plan_type' => $input['prop_plan_type'] ? $input['prop_plan_type'] : '',
+                'deductible' => $input['prop_deductible'] ? $input['prop_deductible'] : '',
+                'revenue' => $input['prop_revenue'] ? $input['prop_revenue'] : '',
+                'territory' => $input['prop_territory'] ? $input['prop_territory'] : '',
+                'property_tax' => $input['prop_property_tax'] ? $input['prop_property_tax'] : '',
+                'add_on' => $input['prop_add_on'] ? $input['prop_add_on'] : '',
+                'ac_type' => $input['prop_ac_type'] ? $input['prop_ac_type'] : '',
+                'payment_history' => $input['prop_payment_history'] ? $input['prop_payment_history'] : '',
+                'late_fee_collected' => $input['prop_late_fee_collected'] ? $input['prop_late_fee_collected'] : '',
+                'alarm_system' => $input['prop_alarm_system'] ? $input['prop_alarm_system'] : '',
+                'key_code' => $input['prop_key_code'] ? $input['prop_key_code'] : '',
+                'source' => $input['prop_source'] ? $input['prop_source'] : '',
+                'ownership' => $input['prop_ownership'] ? $input['prop_ownership'] : '',
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_modified' => date("Y-m-d H:i:s")
             ];
@@ -4417,28 +4432,28 @@ class Customer extends MY_Controller
     public function save_solar_info($input, $id)
     {
         $solarInfo = [];
-        $solarInfo['fk_prof_id'] = $id;
-        $solarInfo['project_id'] = $input['project_id'];
-        $solarInfo['lender_type'] = $input['lender_type'];
-        $solarInfo['proposed_system_size'] = $input['proposed_system_size'];
-        $solarInfo['proposed_modules'] = $input['proposed_modules'];
-        $solarInfo['proposed_inverter'] = $input['proposed_inverter'];
-        $solarInfo['proposed_offset'] = $input['proposed_offset'];
-        $solarInfo['proposed_solar'] = $input['proposed_solar'];
-        $solarInfo['proposed_utility'] = $input['proposed_utility'];
-        $solarInfo['proposed_payment'] = $input['proposed_payment'];
-        $solarInfo['annual_income'] = $input['annual_income'];
-        $solarInfo['tree_estimate'] = $input['tree_estimate'];
-        $solarInfo['roof_estimate'] = $input['roof_estimate'];
-        $solarInfo['utility_account'] = $input['utility_account'];
-        $solarInfo['utility_login'] = $input['utility_login'];
-        $solarInfo['utility_pass'] = $input['utility_pass'];
-        $solarInfo['meter_number'] = $input['meter_number'];
-        $solarInfo['insurance_name'] = $input['insurance_name'];
-        $solarInfo['insurance_number'] = $input['insurance_number'];
-        $solarInfo['policy_number'] = $input['policy_number'];
-        $solarInfo['kw_dc'] = $input['kw_dc'];
-        $solarInfo['solar_system_size'] = $input['solar_system_size'];
+        $solarInfo['fk_prof_id']  = $id;
+        $solarInfo['project_id']  = $input['project_id'] ? $input['project_id'] : 0;
+        $solarInfo['lender_type'] = $input['lender_type'] ? $input['lender_type'] : '';
+        $solarInfo['proposed_system_size'] = $input['proposed_system_size'] ? $input['proposed_system_size'] : '';
+        $solarInfo['proposed_modules']  = $input['proposed_modules'] ? $input['proposed_modules'] : '';
+        $solarInfo['proposed_inverter'] = $input['proposed_inverter'] ? $input['proposed_inverter'] : '';
+        $solarInfo['proposed_offset']   = $input['proposed_offset'] ? $input['proposed_offset'] : '';
+        $solarInfo['proposed_solar']    = $input['proposed_solar'] ? $input['proposed_solar'] : '';
+        $solarInfo['proposed_utility']  = $input['proposed_utility'] ? $input['proposed_utility'] : '';
+        $solarInfo['proposed_payment']  = $input['proposed_payment'] ? $input['proposed_payment'] : '';
+        $solarInfo['annual_income']     = $input['annual_income'] ? $input['annual_income'] : '';
+        $solarInfo['tree_estimate']     = $input['tree_estimate'] ? $input['tree_estimate'] : '';
+        $solarInfo['roof_estimate']     = $input['roof_estimate'] ? $input['roof_estimate'] : '';
+        $solarInfo['utility_account']   = $input['utility_account'] ? $input['utility_account'] : '';
+        $solarInfo['utility_login']     = $input['utility_login'] ? $input['utility_login'] : '';
+        $solarInfo['utility_pass']      = $input['utility_pass'] ? $input['utility_pass'] : '';
+        $solarInfo['meter_number']      = $input['meter_number'] ? $input['meter_number'] : '';
+        $solarInfo['insurance_name']    = $input['insurance_name'] ? $input['insurance_name'] : '';
+        $solarInfo['insurance_number']  = $input['insurance_number'] ? $input['insurance_number'] : '';
+        $solarInfo['policy_number']     = $input['policy_number'] ? $input['policy_number'] : '';
+        $solarInfo['kw_dc']             = $input['kw_dc'] ? $input['kw_dc'] : '';
+        $solarInfo['solar_system_size'] = $input['solar_system_size'] ? $input['solar_system_size'] : '';
 
         $check = [
             'where' => ['fk_prof_id' => $id],
@@ -4576,26 +4591,26 @@ class Customer extends MY_Controller
         // office data
         $input_office['fk_prof_id'] = $id;
         $input_office['welcome_sent'] = 0;
-        $input_office['entered_by'] = $input['entered_by'];
-        $input_office['time_entered'] = $input['time_entered'];
-        $input_office['sales_date'] = $input['sales_date'];
-        $input_office['credit_score'] = $input['credit_score'];
-        $input_office['pay_history'] = $input['pay_history'];
+        $input_office['entered_by']   = $input['entered_by'] ? $input['entered_by'] : '';
+        $input_office['time_entered'] = $input['time_entered'] ? $input['time_entered'] : '';
+        $input_office['sales_date']   = $input['sales_date'] ? $input['sales_date'] : '';
+        $input_office['credit_score'] = $input['credit_score'] ? $input['credit_score'] : '';
+        $input_office['pay_history']  = $input['pay_history'] ? $input['pay_history'] : '';
         $input_office['fk_sales_rep_office'] = $input['fk_sales_rep_office'];
-        $input_office['technician'] = $input['technician'];
-        $input_office['install_date'] = $input['install_date'];
-        $input_office['tech_arrive_time'] = $input['tech_arrive_time'];
-        $input_office['tech_depart_time'] = $input['tech_depart_time'];
-        $input_office['lead_source'] = $input['lead_source'];
-        $input_office['verification'] = $input['verification'];
-        $input_office['cancel_date'] = $input['cancel_date'];
-        $input_office['cancel_reason'] = $input['cancel_reason'];
-        $input_office['collect_date'] = $input['collect_date'];
-        $input_office['collect_amount'] = $input['collect_amount'];
-        $input_office['language'] = $input['language'];
-        $input_office['pre_install_survey'] = $input['pre_install_survey'];
-        $input_office['post_install_survey'] = $input['post_install_survey'];
-        $input_office['monitoring_waived'] = $input['monitoring_waived'];
+        $input_office['technician']   = $input['technician'] ? $input['technician'] : '';
+        $input_office['install_date'] = $input['install_date'] ? $input['install_date'] : '';
+        $input_office['tech_arrive_time'] = $input['tech_arrive_time'] ? $input['tech_arrive_time'] : '';
+        $input_office['tech_depart_time'] = $input['tech_depart_time'] ? $input['tech_depart_time'] : '';
+        $input_office['lead_source']      = $input['lead_source'] ? $input['lead_source'] : '';
+        $input_office['verification']     = $input['verification'] ? $input['verification'] : '';
+        $input_office['cancel_date']      = $input['cancel_date'] ? $input['cancel_date'] : '';
+        $input_office['cancel_reason']    = $input['cancel_reason'] ? $input['cancel_reason'] : ''; 
+        $input_office['collect_date']     = $input['collect_date'] ? $input['collect_date'] : '';
+        $input_office['collect_amount']   = $input['collect_amount'] ? $input['collect_amount'] : '';
+        $input_office['language']         = $input['language'] ? $input['language'] : '';
+        $input_office['pre_install_survey']  = $input['pre_install_survey'] ? $input['pre_install_survey'] : ''; 
+        $input_office['post_install_survey'] = $input['post_install_survey'] ? $input['post_install_survey'] : '';
+        $input_office['monitoring_waived']   = $input['monitoring_waived'] ? $input['monitoring_waived'] : '';
 
         if (isset($input['rebate_offer'])) {
             $input_office['rebate_offer'] = $input['rebate_offer'];
@@ -4603,12 +4618,12 @@ class Customer extends MY_Controller
             $input_office['rebate_offer'] = 0;
         }
 
-        $input_office['rebate_check1'] = $input['rebate_check1'];
-        $input_office['rebate_check1_amt'] = $input['rebate_check1_amt'];
-        $input_office['rebate_check2'] = $input['rebate_check2'];
-        $input_office['rebate_check2_amt'] = $input['rebate_check2_amt'];
-        $input_office['activation_fee'] = $input['activation_fee'];
-        $input_office['way_of_pay'] = $input['way_of_pay'];
+        $input_office['rebate_check1']     = $input['rebate_check1'] ? $input['rebate_check1'] : '';
+        $input_office['rebate_check1_amt'] = $input['rebate_check1_amt'] ? $input['rebate_check1_amt'] : 0;
+        $input_office['rebate_check2']     = $input['rebate_check2'] ? $input['rebate_check2'] : '';
+        $input_office['rebate_check2_amt'] = $input['rebate_check2_amt'] ? $input['rebate_check2_amt'] : 0;
+        $input_office['activation_fee']    = $input['activation_fee'] ? $input['activation_fee'] : 0;
+        $input_office['way_of_pay']        = $input['way_of_pay'] ? $input['way_of_pay'] : '';
 
         if (isset($input['commision_scheme'])) {
             $input_office['commision_scheme'] = $input['commision_scheme'][0];
@@ -4616,16 +4631,16 @@ class Customer extends MY_Controller
             $input_office['commision_scheme'] = 2;
         }
 
-        $input_office['rep_comm'] = $input['rep_comm'];
-        $input_office['rep_upfront_pay'] = $input['rep_upfront_pay'];
-        $input_office['rep_tiered_bonus'] = $input['rep_tiered_bonus'];
-        $input_office['rep_holdfund_bonus'] = $input['rep_holdfund_bonus'];
-        $input_office['rep_deduction'] = $input['rep_deduction'];
-        $input_office['tech_comm'] = $input['tech_comm'];
-        $input_office['tech_upfront_pay'] = $input['tech_upfront_pay'];
-        $input_office['tech_deduction'] = $input['tech_deduction'];
-        $input_office['rep_charge_back'] = $input['rep_charge_back'];
-        $input_office['rep_payroll_charge_back'] = $input['rep_payroll_charge_back'];
+        $input_office['rep_comm']           = $input['rep_comm'] ? $input['rep_comm'] : 0;
+        $input_office['rep_upfront_pay']    = $input['rep_upfront_pay'] ? $input['rep_upfront_pay'] : 0;
+        $input_office['rep_tiered_bonus']   = $input['rep_tiered_bonus'] ? $input['rep_tiered_bonus'] : 0;
+        $input_office['rep_holdfund_bonus'] = $input['rep_holdfund_bonus'] ? $input['rep_holdfund_bonus'] : 0;
+        $input_office['rep_deduction']      = $input['rep_deduction'] ? $input['rep_deduction'] : 0;
+        $input_office['tech_comm']          = $input['tech_comm'] ? $input['tech_comm'] : 0;
+        $input_office['tech_upfront_pay']   = $input['tech_upfront_pay'] ? $input['tech_upfront_pay'] : 0;
+        $input_office['tech_deduction']     = $input['tech_deduction'] ? $input['tech_deduction'] : 0;
+        $input_office['rep_charge_back']    = $input['rep_charge_back'] ? $input['rep_charge_back'] : 0;
+        $input_office['rep_payroll_charge_back'] = $input['rep_payroll_charge_back'] ? $input['rep_payroll_charge_back'] : 0;
 
         if (isset($input['pso'])) {
             $input_office['pso'] = $input['pso'][0];
@@ -4633,15 +4648,15 @@ class Customer extends MY_Controller
             $input_office['pso'] = 2;
         }
 
-        $input_office['points_include'] = $input['points_include'];
-        $input_office['price_per_point'] = $input['price_per_point'];
-        $input_office['purchase_price'] = $input['purchase_price'];
-        $input_office['purchase_multiple'] = $input['purchase_multiple'];
-        $input_office['purchase_discount'] = $input['purchase_discount'];
-        $input_office['equipment_cost'] = $input['equipment_cost'];
-        $input_office['labor_cost'] = $input['labor_cost'];
-        $input_office['job_profit'] = $input['job_profit'];
-        $input_office['url'] = $input['url'];
+        $input_office['points_include']  = $input['points_include'] ? $input['points_include'] : 0;
+        $input_office['price_per_point'] = $input['price_per_point'] ? $input['price_per_point'] : 0;
+        $input_office['purchase_price']  = $input['purchase_price'] ? $input['purchase_price'] : 0;
+        $input_office['purchase_multiple'] = $input['purchase_multiple'] ? $input['purchase_multiple'] : '';
+        $input_office['purchase_discount'] = $input['purchase_discount'] ? $input['purchase_discount'] : 0;
+        $input_office['equipment_cost']    = $input['equipment_cost'] ? $input['equipment_cost'] : 0;
+        $input_office['labor_cost'] = $input['labor_cost'] ? $input['labor_cost'] : 0;
+        $input_office['job_profit'] = $input['job_profit'] ? $input['job_profit'] : 0;
+        $input_office['url'] = $input['url'] ? $input['url'] : '';
 
         $check = [
             'where' => [
@@ -4662,32 +4677,32 @@ class Customer extends MY_Controller
         $input_alarm = [];
 
         // alarm data
-        $input_alarm['fk_prof_id'] = $id;
-        $input_alarm['monitor_comp'] = $input['monitor_comp'];
-        $input_alarm['monitor_id'] = $input['monitor_id'];
+        $input_alarm['fk_prof_id']   = $id;
+        $input_alarm['monitor_comp'] = $input['monitor_comp'] ? $input['monitor_comp'] : '';
+        $input_alarm['monitor_id']   = $input['monitor_id'] ? $input['monitor_id'] : 0;
         // $input_alarm['install_date'] = $input['install_date'];
-        $input_alarm['acct_type'] = $input['acct_type'];
-        $input_alarm['online'] = $input['online'];
-        $input_alarm['in_service'] = $input['in_service'];
-        $input_alarm['equipment'] = $input['equipment'];
-        $input_alarm['collections'] = $input['collections'];
-        $input_alarm['credit_score_alarm'] = '';
-        $input_alarm['passcode'] = $input['passcode'];
-        $input_alarm['install_code'] = $input['install_code'];
-        $input_alarm['mcn'] = $input['mcn'];
-        $input_alarm['scn'] = $input['scn'];
-        $input_alarm['panel_type'] = $input['panel_type'];
-        $input_alarm['system_type'] = $input['system_type'];
-        $input_alarm['warranty_type'] = $input['warranty_type'];
-        $input_alarm['dealer'] = $input['dealer'];
-        $input_alarm['alarm_login'] = $input['alarm_login'];
-        $input_alarm['alarm_customer_id'] = $input['alarm_customer_id'];
-        $input_alarm['alarm_cs_account'] = $input['alarm_cs_account'];
-        $input_alarm['comm_type'] = $input['comm_type'];
-        $input_alarm['account_cost'] = $input['account_cost'];
-        $input_alarm['pass_thru_cost'] = $input['pass_thru_cost'];
-        $input_alarm['monthly_monitoring'] = $input['monthly_monitoring'];
-        $input_alarm['otps'] = $input['otps'];
+        $input_alarm['acct_type']    = $input['acct_type'] ? $input['acct_type'] : '';
+        $input_alarm['online']       = $input['online'] ? $input['online'] : '';
+        $input_alarm['in_service']   = $input['in_service'] ? $input['in_service'] : '';
+        $input_alarm['equipment']    = $input['equipment'] ? $input['equipment'] : '';
+        $input_alarm['collections']  = $input['collections'] ? $input['collections'] : '';
+        $input_alarm['credit_score_alarm'] = $input['credit_score_alarm'] ? $input['credit_score_alarm'] : '';
+        $input_alarm['passcode']     = $input['passcode'] ? $input['passcode'] : '';
+        $input_alarm['install_code'] = $input['install_code'] ? $input['install_code'] : '';
+        $input_alarm['mcn'] = $input['mcn'] ? $input['mcn'] : '';
+        $input_alarm['scn'] = $input['scn'] ? $input['scn'] : '';
+        $input_alarm['panel_type']    = $input['panel_type'] ? $input['panel_type'] : '';
+        $input_alarm['system_type']   = $input['system_type'] ? $input['system_type'] : '';
+        $input_alarm['warranty_type'] = $input['warranty_type'] ? $input['warranty_type'] : '';
+        $input_alarm['dealer']        = $input['dealer'] ? $input['dealer'] : '';
+        $input_alarm['alarm_login']   = $input['alarm_login'] ? $input['alarm_login']: '';
+        $input_alarm['alarm_customer_id']  = $input['alarm_customer_id'] ? $input['alarm_customer_id'] : 0;
+        $input_alarm['alarm_cs_account']   = $input['alarm_cs_account'] ? $input['alarm_cs_account'] : '';
+        $input_alarm['comm_type']          = $input['comm_type'] ? $input['comm_type'] : '';
+        $input_alarm['account_cost']       = $input['account_cost'] ? $input['account_cost'] : 0;
+        $input_alarm['pass_thru_cost']     = $input['pass_thru_cost'] ? $input['pass_thru_cost'] : '';
+        $input_alarm['monthly_monitoring'] = $input['monthly_monitoring'] ? $input['monthly_monitoring'] : 0;
+        $input_alarm['otps'] = $input['otps'] ? $input['otps'] : 0;
 
         $check = [
             'where' => [
@@ -8562,7 +8577,7 @@ class Customer extends MY_Controller
         $cid = logged('company_id');
         $lender_types = $this->AcsSolarInfoLenderType_model->getAllByCompanyId($cid);
 
-        $this->page_data['page']->title = 'Lender Types';
+        $this->page_data['page']->title = 'Solar Lender Types';
         $this->page_data['page']->parent = 'Sales';
         $this->page_data['lender_types'] = $lender_types;
         $this->load->view('v2/pages/customer/solar/settings_lender_type', $this->page_data);
@@ -11378,6 +11393,8 @@ class Customer extends MY_Controller
         $this->page_data['formFields'] = $formFields;
         $this->page_data['companyFormSetting'] = $companyFormSetting;
         $this->page_data['formGroups'] = $formGroups;
+        $this->page_data['page']->title = 'Sales Area';
+        $this->page_data['page']->parent = 'Form Settings';
         $this->load->view('v2/pages/customer/customer_advance_form_settings', $this->page_data);
     }
 
