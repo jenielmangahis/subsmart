@@ -3146,10 +3146,10 @@ class Cron_Jobs_Controller extends CI_Controller
         $date_to      = date("Y-m-d");
 
         //$activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsBetweenDates($date_from, $date_to);
-        $activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsWithSub14Days($current_date);	
-
+        $activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsWithSub14Days($current_date);	  
 		foreach( $activeSubscriptions as $as ) {
             $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);    
+
             if( $as->mmr > 0 && $customer ){
                 $totalUnpaidSubscriptions   = $this->AcsCustomerSubscriptionBilling_model->getTotalAmountUnpaidByCustomerId($as->fk_prof_id);
 				$unpaidSubscriptionsDetails = $this->AcsCustomerSubscriptionBilling_model->getUnpaidDetailsByCustomerId($as->fk_prof_id);
@@ -3243,7 +3243,7 @@ class Cron_Jobs_Controller extends CI_Controller
 						'invoice_type' => 'Total Due',
 						'work_order_number' => '',
 						'invoice_number' => $invoice_number,
-						'date_issued' => $as->next_billing_date,
+						'date_issued' => date('Y-m-d', strtotime('-13 days', strtotime($as->next_billing_date))),
 						'due_date' => $as->next_billing_date,
 						'status' => 'Unpaid',
 						'customer_email' => $customer->email,
@@ -3333,8 +3333,38 @@ class Cron_Jobs_Controller extends CI_Controller
 					/**
 					 * Note: after adding subscription billing, update the 'acs_billing' next subscription date
 					 */
-					$current_bill_date = strtotime($as->next_billing_date);
-					$next_month_bill_date = date("Y-m-d", strtotime("+1 month", $current_bill_date));			
+                    
+                    //Adjust bill month base on frequency
+                    if($as->frequency == 0) { 
+                        //note 1 time payment
+                        $current_bill_date = strtotime($as->next_billing_date);
+                        $next_month_bill_date = date("Y-m-d", strtotime($as->next_billing_date));	
+
+                    }elseif($as->frequency == 1) {
+                        //note every month
+                        $current_bill_date = strtotime($as->next_billing_date);
+                        $next_month_bill_date = date("Y-m-d", strtotime("+1 month", $current_bill_date));		                
+
+                    }elseif($as->frequency == 3) {
+                        //every 3 months
+                        $current_bill_date = strtotime($as->next_billing_date);
+                        $next_month_bill_date = date("Y-m-d", strtotime("+3 month", $current_bill_date));		
+
+                    }elseif($as->frequency == 6) {
+                        //every 6 months
+                        $current_bill_date = strtotime($as->next_billing_date);
+                        $next_month_bill_date = date("Y-m-d", strtotime("+6 month", $current_bill_date));		
+
+                    }elseif($as->frequency == 12) {
+                        //every year
+                        $current_bill_date = strtotime($as->next_billing_date);
+                        $next_month_bill_date = date("Y-m-d", strtotime("+12 month", $current_bill_date));		
+                    } else {
+                        //default every month
+                        $current_bill_date = strtotime($as->next_billing_date);
+                        $next_month_bill_date = date("Y-m-d", strtotime("+1 month", $current_bill_date));	
+                    }              
+                    
 					$data = [
 						'bill_id' => $as->bill_id,
 						'next_billing_date' => $next_month_bill_date,
