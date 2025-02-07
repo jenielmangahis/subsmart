@@ -1131,9 +1131,13 @@ $route['workorder/_get_offer_code'] = 'Workorder/ajax_get_offer_code';
 $route['workorder/_shareable_email'] = 'Workorder/ajax_shareable_email';
 $route['workorder/_update_workorder'] = 'Workorder/ajax_update_workorder';
 
+$route['workorder/_archived_list'] = 'Workorder/ajax_archived_list';
+$route['workorder/_restore_archived'] = 'Workorder/ajax_restore_archived';
+
 $route['customer/_get_customer_data'] = 'Customer/ajax_get_customer_data';
 $route['customer/_get_lead_data'] = 'Customer/ajax_get_lead_data';
 $route['customer/_convert_lead_to_customer'] = 'Customer/ajax_convert_lead_to_customer';
+
 
 // workstatus
 $route['workstatus/_create_workorder_type'] = 'Workstatus/ajax_save_workorder_type';
