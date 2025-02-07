@@ -57,22 +57,20 @@
 
     .send_chat {
         padding-right: 10px;
-        padding-top: 20px;
     }
 
     .send_chat_container {
-        border-radius: 15px;
+        border-radius: 10px;
         /* background-color: #6a4a8621;  */
         max-width: 350px;
     }
 
     .receive_chat {
         padding-left: 10px;
-        padding-top: 20px;
     }
 
     .receive_chat_container {
-        border-radius: 15px;
+        border-radius: 10px;
         background-color: #f7f7f7;
     }
 
@@ -85,10 +83,12 @@
         border-radius: 5px;
     }
 
-    .admin_chatBubbleContainer:hover {
+    .admin_chatBubbleContainer:hover,
+    .admin_chatBubbleContainer:hover ~ .client_business_image {
         background-color: white;
         cursor: pointer;
     }
+
 
     .initialMessage {
         padding-left: 10px;
@@ -100,11 +100,16 @@
     }
 
     .message_form_container {
-        padding: 15px;
+        padding: 10px;
         border-top: 1px solid #00000020;
     }
 
+    input[name="admin_chatMessage"] {
+        border-bottom-left-radius: 10px;
+    }
+
     .message_form_button {
+        border-bottom-right-radius: 10px;
         background: #6a4a86;
         color: white;
     }
@@ -146,7 +151,7 @@
     .typing_status {
         position: absolute;
         left: 15px;
-        bottom: 70px;
+        bottom: 60px;
     }
 
     @keyframes bounce {
@@ -272,6 +277,53 @@
     .backToChatList:hover {
         color: white;
     }
+
+    .msgPadding {
+        padding: 12px;
+    }
+
+    .admin_chatContent::-webkit-scrollbar,
+    .admin_chatlistContent::-webkit-scrollbar {
+        width: 10px; 
+    }
+
+    .admin_chatContent::-webkit-scrollbar-track,
+    .admin_chatlistContent::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .admin_chatContent::-webkit-scrollbar-thumb,
+    .admin_chatlistContent::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.3); 
+    }
+
+    .admin_chatContent::-webkit-scrollbar-thumb:hover,
+    .admin_chatlistContent::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.5); 
+    }
+
+    .fw-normal {
+        font-weight: 500 !important;
+    }
+    
+    @keyframes pulseRed {
+        0% {
+            color: rgba(255, 0, 0, 0.7);
+        }
+        50% {
+            color: rgb(0, 0, 0);
+        }
+        100% {
+            color: rgba(255, 0, 0, 0.7);
+        }
+    }
+
+    .testIcon {
+        font-size: 40px; /* Adjust icon size */
+        animation: pulseRed 1.5s infinite;
+    }
+
+
 </style>
 <div class="offcanvas offcanvas-end admin_supportSidebarCanvas" tabindex="-1" id="admin_supportSidebarID" aria-labelledby="admin_supportSidebarLabel">
     <div class="offcanvas-header">
@@ -309,15 +361,15 @@
                 </div>
                 <div class="col-12-md admin_chatContainer">
                     <div id="admin_chatlist" class="card" style="display: non;">
-                        <div class="card-header admin_chatboxHeader d-flex align-items-center p-3 text-white border-bottom-0">
-                            <p class="mb-0 admin_chatNameSection"><span>Chat List</span></p>
+                        <div class="card-header admin_chatboxHeader d-flex align-items-center msgPadding text-white border-bottom-0">
+                            <p class="mb-0 admin_chatNameSection"><span class="fw-normal">Chat List</span></p>
                         </div>
                         <div class="card-body admin_chatlistBody">
                             <div class="table-responsive admin_chatlistContent"></div>
                         </div>
                     </div>
                     <div id="admin_chatbox" class="card" style="display: none;">
-                        <div class="card-header admin_chatboxHeader d-flex align-items-center p-3 text-white border-bottom-0">
+                        <div class="card-header admin_chatboxHeader d-flex align-items-center msgPadding text-white border-bottom-0">
                             <img class="admin_realtimeImage" src="https://cdn-icons-png.flaticon.com/256/6009/6009864.png">
                             <p class="mb-0 admin_chatNameSection"><span class="client_name">[CLIENT_NAME]</span><br><small class="client_businessName">[CLIENT_BUSINESS_NAME]</small></p>
                             <i class="fas fa-sign-in-alt backToChatList cursorPointer"></i>
@@ -347,6 +399,12 @@
     var CLIENT_COMPANY_ID = 0;
     var CLIENT_CHANNEL = "";
     var CLIENT_EVENT = "";
+    var CLIENT_IMAGE = "";
+    var adminChatListPusher = null;
+    var adminChatListChannel = null;
+    var adminChatBoxPusher = null;
+    var adminChatBoxChannel = null;
+    var randomNum = () => Math.floor(1e9 + Math.random() * 9e9);
 
     function formDisabler(selector, state) {
         const element = $(selector);
@@ -358,7 +416,7 @@
             if (!submitButton.data('original-content')) {
                 submitButton.data('original-content', submitButton.html());
             }
-            submitButton.prop('disabled', true);
+            submitButton.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin-pulse"></i> Processing...');
         } else {
             element.find('a').show();
             const originalContent = submitButton.data('original-content');
@@ -368,32 +426,192 @@
         }
     }
 
-    $(document).ready(function() {
-        $('input[name="admin_chatMessage"]').on('focus', function() {
-            $.ajax({
-                url: BASE_URL + '/TechSupportSidebar/realtimeChatPusherRequest/tech_typing',
-                type: 'POST',
-                data: {
-                    isTyping: 1,
-                    client_id: CLIENT_ID,
-                    client_company_id: CLIENT_COMPANY_ID,
-                    channel: CLIENT_CHANNEL,
-                    event: CLIENT_EVENT,
-                }
-            });
-        });
+    function fetchChatList() {
+        $.ajax({
+            url: `${BASE_URL}/TechSupportSidebar/fetchChatList`,
+            type: 'POST',
+            beforeSend: function() {
+                $('.fetchingChatlistLoader').remove();
+                $('.admin_chatlistContent').append('<div class="position-relative fetchingChatlistLoader"><div class="receive_chat d-flex flex-row justify-content-center"><div class="msgPadding me-3"><i class="mb-0 text-muted">Fetching chat list, please wait...</i></div></div></div>');
+            },
+            success: function(response) {
+                const data = JSON.parse(response);
+                $('.fetchingChatlistLoader').remove();
+                $('.admin_chatlistContent').html('');
 
-        $('input[name="admin_chatMessage"]').on('blur', function() {
-            $.ajax({
-                url: BASE_URL + '/TechSupportSidebar/realtimeChatPusherRequest/tech_typing',
-                type: 'POST',
-                data: {
-                    isTyping: 0,
-                    client_id: CLIENT_ID,
-                    client_company_id: CLIENT_COMPANY_ID,
-                    channel: CLIENT_CHANNEL,
-                    event: CLIENT_EVENT,
+                if (data.length > 0) {
+                    data.forEach(function(chat) {
+                        var clientName = decodeURIComponent(escape(chat.client_name));
+                        const formattedMessage = chat.message.length > 100 ? chat.message.substr(0, 100) + '...' : chat.message;
+                        const chatHtml = `
+                            <div class="position-relative">
+                                <div class="client_chat_bubble d-flex flex-row justify-content-start">
+                                    <div class="msgPadding me-3 w-100 admin_chatBubbleContainer" 
+                                        data-clientid="${chat.client_id}" 
+                                        data-clientcompanyid="${chat.client_company_id}" 
+                                        data-clientname="${clientName}" 
+                                        data-clientbusinessname="${chat.client_business_name}" 
+                                        data-clientbusinessimage="${BASE_URL}/${chat.client_business_image}?${randomNum()}" 
+                                        data-channel="${chat.channel}" 
+                                        data-event="${chat.event}">
+                                        <div class="d-flex">
+                                            <img src="${BASE_URL}/${chat.client_business_image}?${randomNum()}" alt="${chat.client_business_name}" 
+                                                class="client_business_image me-2" 
+                                                style="width: 50px; height: 50px; border-radius: 50%; align-self: flex-start;">
+                                            <div>
+                                                <strong>${clientName}</strong><br>
+                                                <small>${chat.client_business_name}</small><br>
+                                                <small class="text-muted"><i>${formattedMessage}</i></small>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        $('.admin_chatlistContent').append(chatHtml);
+                    });
+                } else {
+                    $('.admin_chatlistContent').append('<div class="position-relative fetchingChatlistLoader"><div class="receive_chat d-flex flex-row justify-content-center"><div class="msgPadding me-3"><i class="mb-0 text-muted">No chats available</i></div></div></div>');
                 }
+            }
+        });
+    }
+
+    function fetchMessages(client_id) {
+        const bgcolor = "#6a4a86";
+        $.ajax({
+            url: `${BASE_URL}/TechSupportSidebar/fetchMessages`,
+            type: 'POST',
+            data: {
+                client_id: client_id
+            },
+            beforeSend: function() {
+                $('.admin_chatContent').append(`
+                        <div class="position-relative fetchingConversationLoader">
+                            <div class="receive_chat d-flex flex-row justify-content-center">
+                                <div class="msgPadding me-3">
+                                    <i class="mb-0 text-muted">Fetching conversation, please wait...</i>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+            },
+            success: function(response) {
+                const data = JSON.parse(response);
+                $('.fetchingConversationLoader').remove();
+                $('.admin_chatContent').html('');
+
+                data.forEach(msg => {
+                    if (msg.client_id == client_id) {
+                        if (msg.sender_type === "tech") {
+                            $('.admin_chatContent').prepend(`
+                                    <div class="send_container position-relative"> 
+                                        <div class="send_chat d-flex flex-row justify-content-end"> 
+                                            <div class="msgPadding send_chat_container" style="background-color:${bgcolor}21;"> 
+                                                <span class="mb-0 send_chat_message">${msg.message}</span> 
+                                            </div> 
+                                        </div> 
+                                    </div>
+                                `);
+                        } else if (msg.sender_type === "client") {
+                            $('.admin_chatContent').prepend(`
+                                    <div class="receive_container position-relative"> 
+                                        <div class="receive_chat d-flex flex-row justify-content-start"> 
+                                            <div class="msgPadding me-3 border receive_chat_container"> 
+                                                <span class="mb-0">${msg.message}</span> 
+                                            </div> 
+                                        </div> 
+                                    </div>
+                                `);
+                        }
+                    }
+                });
+
+                $('.admin_chatContent').scrollTop($('.admin_chatContent')[0].scrollHeight);
+            }
+        });
+    }
+
+    function sendMessage(formElement) {
+        const message = formElement.find('input[name="admin_chatMessage"]').val();
+        const bgcolor = "#6a4a86";
+        const data = {
+            sender_type: 'tech',
+            client_id: CLIENT_ID,
+            client_company_id: CLIENT_COMPANY_ID,
+            channel: CLIENT_CHANNEL,
+            event: CLIENT_EVENT,
+            message: message,
+        };
+
+        $.ajax({
+            url: `${BASE_URL}/TechSupportSidebar/chatRequestProcess/send_message`,
+            type: 'POST',
+            data: data,
+            beforeSend: function() {
+                formDisabler(formElement, true);
+                $('.fetchingChatlistLoader').remove();
+            },
+            success: function(response) {
+                $('.admin_chatContent').append(`
+                        <div class="send_container position-relative"> 
+                            <div class="send_chat d-flex flex-row justify-content-end"> 
+                                <div class="msgPadding send_chat_container" style="background-color: ${bgcolor}21;"> 
+                                    <span class="mb-0 send_chat_message">${message}</span> 
+                                </div> 
+                            </div> 
+                        </div>
+                    `).scrollTop($('.admin_chatContent')[0].scrollHeight);
+                formElement.find('input').val(null);
+                formDisabler(formElement, false);
+            }
+        });
+    }
+
+    function chatNotification() {
+        if (adminChatListPusher) {
+            adminChatListPusher.disconnect();
+        }
+
+        Pusher.logToConsole = false;
+        adminChatListPusher = new Pusher('33cfc0c407521da10fe6', {
+            cluster: 'ap1'
+        });
+        adminChatListChannel = adminChatListPusher.subscribe('realtime_chatlist_channel');
+
+        adminChatListChannel.unbind('chatlist_event');
+        adminChatListChannel.bind('chatlist_event', function(data) {
+            console.log('test');
+            fetchChatList();
+            if (!$('.admin_supportSidebarCanvas').hasClass('show')) {
+                iziToast.info({
+                    message: 'New messages on support chat. <strong><a href="#" class="openChatList">View</a></strong>',
+                    displayMode: 1,
+                    timeout: 10000,
+                    position: 'bottomRight',
+                });
+            } else if ($('.admin_supportSidebarCanvas').hasClass('show') && $('#admin_chatbox').css('display') === 'none') {
+                iziToast.info({
+                    message: 'New messages on support chat.',
+                    displayMode: 1,
+                    timeout: 3000,
+                    position: 'bottomRight',
+                });
+            }
+        });
+    } 
+
+    $(document).ready(function() {
+        chatNotification();
+        $('input[name="admin_chatMessage"]').on('focus blur', function(event) {
+            $.post(`${BASE_URL}/TechSupportSidebar/chatRequestProcess/tech_typing`, {
+                isTyping: event.type === 'focus' ? 1 : 0,
+                client_id: CLIENT_ID,
+                client_company_id: CLIENT_COMPANY_ID,
+                channel: CLIENT_CHANNEL,
+                event: CLIENT_EVENT
             });
         });
 
@@ -402,47 +620,14 @@
             const bgcolor = "#6a4a86";
             const tech_id = <?php echo $user_id; ?>;
 
-            $.ajax({
-                url: BASE_URL + '/TechSupportSidebar/fetchClientChatList',
-                type: 'POST',
-                beforeSend: function() {
-                    $('.admin_chatlistContent').append('<div class="position-relative fetchingChatlistLoader"><div class="receive_chat d-flex flex-row justify-content-center"><div class="p-3 me-3"><i class="mb-0 text-muted">Fetching chat list, please wait...</i></div></div></div>');
-                },
-                success: function(response) {
-                    const data = JSON.parse(response);
-                    $('.fetchingChatlistLoader').remove();
-
-                    data.forEach(function(chat) {
-                        let clientName = chat.client_name;
-                        clientName = decodeURIComponent(escape(clientName));
-                        const clientMessage = chat.message;
-                        const formattedMessage = chat.message.length > 100 ? chat.message.substr(0, 100) + '...' : chat.message;
-                        const chatHtml = `
-                            <div class="position-relative">
-                                <div class="client_chat_bubble d-flex flex-row justify-content-start">
-                                    <div class="p-3 me-3 w-100 admin_chatBubbleContainer" data-clientid='${chat.client_id}' data-clientcompanyid='${chat.client_company_id}' data-clientname='${clientName}' data-clientbusinessname='${chat.client_business_name}' data-channel='${chat.channel}' data-event='${chat.event}'>
-                                        <span class="mb-0">
-                                            <strong>${clientName}</strong><br>
-                                            <small>${chat.client_business_name}</small><br>
-                                            <small class="text-muted"><i>${formattedMessage}</i></small>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-
-                        $('.admin_chatlistContent').prepend(chatHtml);
-                    });
-                }
-            });
-
+            fetchChatList();
             $('.admin_supportMenuPanel').hide();
             $('.admin_realtimeChat').fadeIn();
             $('#admin_chatlist').fadeIn();
             $('#admin_chatbox').hide();
 
-            let chatListContent_height = $(window).height() - 242;
-            $('.admin_chatlistContent').css('height', chatListContent_height + 'px');
+            const chatListContent_height = $(window).height() - 236;
+            $('.admin_chatlistContent').css('height', `${chatListContent_height}px`);
         });
 
         $(document).on('click', '.admin_chatBubbleContainer', function() {
@@ -451,35 +636,37 @@
             const clientcompanyid = $(this).attr('data-clientcompanyid').trim();
             const clientname = $(this).attr('data-clientname').trim();
             const clientbusinessname = $(this).attr('data-clientbusinessname').trim();
+            const clientbusinessimage = $(this).attr('data-clientbusinessimage').trim();
             const channelName = $(this).attr('data-channel');
             const event = $(this).attr('data-event');
-            const bgcolor = "#6a4a86";
             const tech_id = <?php echo $user_id; ?>;
             CLIENT_ID = clientid;
             CLIENT_COMPANY_ID = clientcompanyid;
             CLIENT_CHANNEL = channelName;
             CLIENT_EVENT = event;
+            CLIENT_IMAGE = clientbusinessimage;
 
-            if (typeof pusher === 'undefined') {
-                Pusher.logToConsole = false;
-                var pusher = new Pusher('33cfc0c407521da10fe6', {
-                    cluster: 'ap1'
-                });
+            $('.client_name').text(clientname);
+            $('.client_businessName').text(clientbusinessname);
+            $('#admin_chatlist').hide();
+            $('#admin_chatbox').fadeIn();
+            $('.admin_realtimeImage').attr('src', `${clientbusinessimage}`);
+
+            if (adminChatBoxPusher) {
+                adminChatBoxPusher.disconnect();
             }
 
-            if (typeof channel !== 'undefined' && channel !== null) {
-                pusher.unsubscribe(channel);
-            }
+            Pusher.logToConsole = false;
+            adminChatBoxPusher = new Pusher('33cfc0c407521da10fe6', { cluster: 'ap1' });
+            adminChatBoxChannel = adminChatBoxPusher.subscribe(channelName);
 
-            var channel = pusher.subscribe(channelName);
-
-            channel.bind(event, function(data) {
+            adminChatBoxChannel.unbind(event);
+            adminChatBoxChannel.bind(event, function(data) {
                 if (data.sender_type === "client") {
                     $('.admin_chatContent').append(`
                         <div class="receive_container position-relative">
-                            <small class="receiver_name position-absolute">${clientname}</small>
                             <div class="receive_chat d-flex flex-row justify-content-start">
-                                <div class="p-3 me-3 border receive_chat_container">
+                                <div class="msgPadding me-3 border receive_chat_container">
                                     <span class="mb-0">${data.message}</span>
                                 </div>
                             </div>
@@ -489,112 +676,38 @@
 
                 switch (data.status) {
                     case 'client_isTyping':
-                        $('.clientTypingAnimation').fadeIn('fast');
+                        $('.clientTypingAnimation').show();
                         $('.techTypingAnimation').hide();
                         break;
                     case 'client_isNotTyping':
+                    case 'tech_isNotTyping':
                         $('.clientTypingAnimation').hide();
                         $('.techTypingAnimation').hide();
                         break;
                     case 'tech_isTyping':
                         $('.clientTypingAnimation').hide();
-                        $('.techTypingAnimation').fadeIn('fast');
-                        break;
-                    case 'tech_isNotTyping':
-                        $('.clientTypingAnimation').hide();
-                        $('.techTypingAnimation').hide();
+                        $('.techTypingAnimation').show();
                         break;
                 }
             });
 
-            $('.client_name').text(clientname);
-            $('.client_businessName').text(clientbusinessname);
-            $('#admin_chatlist').hide();
-            $('#admin_chatbox').fadeIn();
-
-            $.ajax({
-                url: BASE_URL + '/TechSupportSidebar/fetchClientMessages',
-                type: 'POST',
-                data: {
-                    client_id: clientid
-                },
-                beforeSend: function() {
-                    $('.admin_chatContent').append(`
-                        <div class="position-relative fetchingConversationLoader">
-                            <div class="receive_chat d-flex flex-row justify-content-center">
-                                <div class="p-3 me-3">
-                                    <i class="mb-0 text-muted">Fetching conversation, please wait...</i>
-                                </div>
-                            </div>
-                        </div>
-                    `);
-                },
-                success: function(response) {
-                    const data = JSON.parse(response);
-                    $('.fetchingConversationLoader').remove();
-                    data.forEach(msg => {
-                        if (msg.client_id == clientid) {
-                            if (msg.sender_type === "tech") {
-                                $('.admin_chatContent').prepend(`
-                                    <div class="send_container position-relative"> 
-                                        <small class="sender_name position-absolute">You</small> 
-                                        <div class="send_chat d-flex flex-row justify-content-end"> 
-                                            <div class="p-3 send_chat_container" style="background-color:${bgcolor}21;"> 
-                                                <span class="mb-0 send_chat_message">${msg.message}</span> 
-                                            </div> 
-                                        </div> 
-                                    </div>
-                                `);
-                            } else if (msg.sender_type === "client") {
-                                $('.admin_chatContent').prepend(`
-                                    <div class="receive_container position-relative"> 
-                                        <small class="receiver_name position-absolute">${msg.client_name}</small> 
-                                        <div class="receive_chat d-flex flex-row justify-content-start"> 
-                                            <div class="p-3 me-3 border receive_chat_container"> 
-                                                <span class="mb-0">${msg.message}</span> 
-                                            </div> 
-                                        </div> 
-                                    </div>
-                                `);
-                            }
-                        }
-                    });
-
-                    $('.admin_chatContent').scrollTop($('.admin_chatContent')[0].scrollHeight);
-                }
-            });
-
-            let admin_chatContentHeight = $(window).height() - 334;
-            $('.admin_chatContent').css('height', admin_chatContentHeight + 'px');
+            fetchMessages(clientid);
+            const admin_chatContentHeight = $(window).height() - 320;
+            $('.admin_chatContent').css('height', `${admin_chatContentHeight}px`);
         });
 
         $('#admin_chatForm').on('submit', function(e) {
             e.preventDefault();
-            const formElement = $(this);
-            const message = $(this).find('input[name="admin_chatMessage"]').val();
-            let bgcolor = "#6a4a86";
-            const data = {
-                sender_type: 'tech',
-                client_id: CLIENT_ID,
-                client_company_id: CLIENT_COMPANY_ID,
-                channel: CLIENT_CHANNEL,
-                event: CLIENT_EVENT,
-                message: message,
-            };
+            sendMessage($(this));
+        });
 
-            $.ajax({
-                url: BASE_URL + '/TechSupportSidebar/realtimeChatPusherRequest/send_message',
-                type: 'POST',
-                data: data,
-                beforeSend: function() {
-                    formDisabler(formElement, true);
-                    $('.admin_chatContent').append('<div class="send_container position-relative"> <small class="sender_name position-absolute">You</small> <div class="send_chat d-flex flex-row justify-content-end"> <div class="p-3 send_chat_container" style="background-color: ' + bgcolor + '21;"> <span class="mb-0 send_chat_message">' + message + '</span> </div> </div> </div>').scrollTop($('.admin_chatContent')[0].scrollHeight);
-                },
-                success: function(response) {
-                    formElement.find('input').val(null);
-                    formDisabler(formElement, false);
-                }
-            });
+        $(document).on('click', '.openChatList', function () {
+            iziToast.destroy(); 
+            new bootstrap.Offcanvas($('.admin_supportSidebarCanvas').get(0)).show();
+
+            setTimeout(() => {
+                $('.admin_openChat').click();
+            }, 500);
         });
 
         $(document).on('click', '.returnToMenu', function() {

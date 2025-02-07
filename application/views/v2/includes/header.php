@@ -624,7 +624,7 @@ if (is_null($image)) {
                         if ($user_type == 7 && $cid == 1) {
                             include viewPath('v2/includes/techsupport/admin_techsupport_sidebar');
                         } else {
-                            include viewPath('v2/includes/techsupport/techsupport_sidebar');
+                            include viewPath('v2/includes/techsupport/client_techsupport_sidebar');
                         }
                     ?>
 

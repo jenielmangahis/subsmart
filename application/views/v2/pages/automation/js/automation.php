@@ -687,7 +687,11 @@
             let timeUnit = $("#customTimeUnits").val();
 
             if (!customTime || !timeUnit) {
-                alert("Please enter a valid time and select a unit.");
+                 Swal.fire({
+                    icon: "error",
+                    title: "Missing fields!",
+                    text: "Please enter a valid time and select a unit.",
+                });
                 return;
             }
 
@@ -727,7 +731,11 @@
             let endTime = $("#endWindowTime").val();
 
             if (!startTime || !endTime) {
-                alert("Please select both start and end times.");
+                Swal.fire({
+                    icon: "error",
+                    title: "Missing fields!",
+                    text: "Please select both start and end times.",
+                });
                 return;
             }
 
@@ -902,6 +910,19 @@
         }).on("mouseleave", ".dropdown-submenu", function () {
             $(this).children(".user-dropdown").hide();
         });
+
+        $('.condition-amount').on("keydown", function (e) {
+            if (e.key === "-" || e.key === "e") {
+                e.preventDefault(); // Block "-" and "e" (scientific notation)
+            }
+        });
+
+        $('.condition-amount').on("input", function () {
+            if ($(this).val() < 0) {
+                $(this).val(""); // Clear input if negative
+            }
+        });
+
 
         $("#emailForm").on("submit", function (e) {
             e.preventDefault();
@@ -1254,7 +1275,11 @@
 
             //validate if the user has selected values
             if (!selectedProperty || !selectedOperator || !selectedValue) {
-                alert("Please select a property, operator, and value before adding a condition.");
+                Swal.fire({
+                    icon: "error",
+                    title: "Missing fields!",
+                    text: "Please select a property, operator, and value before adding a condition.",
+                });
                 return;
             }
 
@@ -1296,7 +1321,11 @@
             let value = $("#conditionValueSelect").val() || $(".cond-value-amount-container input").val();
            
             if ((!property || !operator || !value) && conditions.length < 0) {
-                alert("Please select all fields.");
+                Swal.fire({
+                    icon: "error",
+                    title: "Missing fields!",
+                    text: "Please select all fields.",
+                });
                 return;
             }
             
@@ -1725,7 +1754,11 @@
         $('#smartTags').on('change', function () {
             const selectedTag = $(this).val(); 
             if (!selectedTag) {
-                alert('Please select a smart tag to insert.');
+                Swal.fire({
+                    icon: "error",
+                    title: "Missing fields!",
+                    text: "Please select a smart tag to insert.",
+                });
                 return;
             }
 
@@ -1743,7 +1776,11 @@
         $('#smsSmartTags').on('change', function () {
             const selectedTag = $(this).val(); 
             if (!selectedTag) {
-                alert('Please select a smart tag to insert.');
+                Swal.fire({
+                    icon: "error",
+                    title: "Missing fields!",
+                    text: "Please select a smart tag to insert",
+                });
                 return;
             }
 

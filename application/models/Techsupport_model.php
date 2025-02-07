@@ -39,7 +39,7 @@ class Techsupport_model extends MY_Model
         return $this->db->insert('techsupport_chats', $data);
     }
 
-    public function getClientChatList()
+    public function getChatList()
     {
         $sql = "SELECT tsc.*
                 FROM techsupport_chats_view tsc
@@ -56,7 +56,7 @@ class Techsupport_model extends MY_Model
         return $query->result(); 
     }
 
-    public function getClientMessages($client_id)
+    public function getMessages($client_id)
     {
         $this->db->where('client_id', $client_id);
         return $this->db->get('techsupport_chats_view')->result();

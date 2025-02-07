@@ -30,7 +30,7 @@
 
                             <div class="input-group mb-3 cond-value-amount-container d-none">
                                 <div class="nsm-field-group icon-right">
-                                    <input type="number" class="nsm-field form-control mb-2" >
+                                    <input type="number" class="nsm-field form-control mb-2 condition-amount" min="0" step="any" >
                                 </div>
                             </div>
                         </div>
