@@ -43,7 +43,6 @@ class Chatbot_model extends MY_Model
         $this->db->select('id, company_id, title, response, created_at, updated_at');
         $this->db->from('chatbot_preset');
         $this->db->where('id', $data['id']);
-        $this->db->where('company_id', $data['company_id']);
         $query = $this->db->get();
         return $query->result();
     }

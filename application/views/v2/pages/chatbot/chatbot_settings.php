@@ -176,7 +176,7 @@
                     <div class="row">
                         <div class="col-lg-12 mb-3">
                             <label class="form-label">Title</label>
-                            <input name="title" type="text" class="form-control" required>
+                            <textarea name="title" class="form-control" required></textarea>
                         </div>
                         <div class="col-lg-12 mb-3">
                             <label class="form-label">Response</label>
@@ -206,7 +206,7 @@
                         </div>
                         <div class="col-lg-12 mb-3">
                             <label class="form-label">Title</label>
-                            <input name="title" type="text" class="form-control" required>
+                            <textarea name="title" class="form-control" required></textarea>
                         </div>
                         <div class="col-lg-12 mb-3">
                             <label class="form-label">Response</label>
@@ -422,7 +422,7 @@
                     console.log(response);
                     CKEDITOR.instances.editResponseContent.setReadOnly(false);
                     $('#editPresetForm').find('input[name="id"]').val(response[0]['id']);
-                    $('#editPresetForm').find('input[name="title"]').val(response[0]['title']);
+                    $('#editPresetForm').find('textarea[name="title"]').val(response[0]['title']);
                     CKEDITOR.instances.editResponseContent.setData(response[0]['response']);
                 }
             });
