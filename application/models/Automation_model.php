@@ -37,31 +37,40 @@ class Automation_model extends CI_Model
      * @param array $automationData - Data for the new automation
      * @return bool - True if the save was successful, otherwise false
      */
-public function saveAutomations($automationData) {
-    try {
-        // Check if the title already exists for the user before inserting
-        $this->db->where('user_id', $automationData['user_id']);
-        $this->db->where('title', $automationData['title']);
-        $query = $this->db->get('automations');
+    public function saveAutomations($automationData) {
+        try {
 
-        if ($query->num_rows() > 0) {
-            return ['error' => true, 'code' => 1062, 'message' => 'Duplicate entry detected. Please use a unique title.'];
+            if ($this->checkDuplicateTitle($automationData['user_id'], $automationData['title'])) {
+                return ['error' => true, 'code' => 1062, 'message' => 'Duplicate entry detected. Please use a unique title.'];
+            }
+
+            $this->db->insert('automations', $automationData);
+            $res = $this->db->insert_id(); 
+
+            return ['data' => $res, 'status' => false, 'code' => 1062, 'message' => 'Inserted successfully.'];
+        } catch (Exception $e) {
+            return ['error' => true, 'message' => $e->getMessage(), 'code' => 500]; 
         }
-
-        $this->db->insert('automations', $automationData);
-        $error = $this->db->error();
-
-        if ($error['code'] == 1062) {
-            return ['error' => true, 'code' => 1062, 'message' => 'Duplicate entry detected. Please use a unique title.'];
-        } elseif ($error['code'] != 0) {
-            throw new Exception($error['message']);
-        }
-
-        return $this->db->insert_id(); 
-    } catch (Exception $e) {
-        return ['error' => true, 'message' => $e->getMessage()]; 
     }
-}
+
+    public function checkDuplicateTitle($user_id, $title) {
+        $company_id = logged("company_id");
+
+        $this->db->from('automations');
+        $this->db->where('user_id', $user_id);
+        $this->db->where('title', $title);
+        $this->db->join('users', 'users.id = automations.user_id');
+        $this->db->where('users.company_id', $company_id);
+        $duplicate_query = $this->db->get();
+
+        // If a duplicate is found, return true
+        if ($duplicate_query->num_rows() > 0) {
+            return true;
+        }
+
+        // If no duplicate, return false
+        return false;
+    }
 
 
 

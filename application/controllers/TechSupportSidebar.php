@@ -118,7 +118,7 @@ class TechSupportSidebar extends MY_Controller
         return $emailer->Send();
     }
 
-    public function realtimeChatPusherRequest($requestData)
+    public function chatRequestProcess($requestData)
     {
         $company_id = logged('company_id');
         $user_id = logged('id');
@@ -155,7 +155,11 @@ class TechSupportSidebar extends MY_Controller
                     break;
             }
             $addMessageProcess = $this->techsupport_model->addMessage($data);
-            $pusher->trigger($data['channel'], $data['event'], $data);
+            
+            if ($addMessageProcess) {
+                $pusher->trigger($data['channel'], $data['event'], $data);
+                $pusher->trigger("realtime_chatlist_channel", "chatlist_event", ["status" => "chatlist_updated"]);
+            }
         } 
        
         if ($requestData == "client_typing") {
@@ -175,18 +179,18 @@ class TechSupportSidebar extends MY_Controller
 
     }
 
-    public function fetchClientChatList()
+    public function fetchChatList()
     {
-        $messages = $this->techsupport_model->getClientChatList();
+        $messages = $this->techsupport_model->getChatList();
         echo json_encode($messages);
     }
     
-    public function fetchClientMessages()
+    public function fetchMessages()
     {
         $company_id = logged('company_id');
         $user_id = logged('id');
         $data = $this->input->post();
-        $messages = $this->techsupport_model->getClientMessages($data['client_id']);
+        $messages = $this->techsupport_model->getMessages($data['client_id']);
         echo json_encode($messages);
     }
 

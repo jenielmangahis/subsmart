@@ -70,7 +70,6 @@ class ChatbotSettings extends MY_Controller
     {
         $company_id = logged('company_id');
         $getPresetData = $this->input->post();
-        $getPresetData['company_id'] = $company_id;
         // ======
         $query = $this->Chatbot_model->fetchPreset($getPresetData);
         echo json_encode($query);
