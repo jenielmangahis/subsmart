@@ -1,7 +1,7 @@
 <div class="nsm-card primary">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span><i class="bx bx-fw bx-user"></i>Custom Field</span>
+            <span><i class='bx bx-fw bx-customize'></i> Custom Field</span>
         </div>
     </div>
     <div class="nsm-card-content" id="custom_field" data-section="custom_field"><hr>
@@ -47,13 +47,11 @@
 <div class="nsm-card primary">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span><i class="bx bx-fw bx-user"></i>Notes</span>
+            <span><i class='bx bx-fw bx-edit-alt'></i> Notes</span>
         </div>
     </div>
     <div class="nsm-card-content"><hr>
-        <div class="row form-line">   
-            <textarea type="text" class="form-controls" name="notes" id="notes" rows="5"><?= isset($profile_info) ? $profile_info->notes : ''; ?></textarea>
-        </div>
+            <textarea type="text" class="form-control" name="notes" id="notes" rows="5"><?= isset($profile_info) ? $profile_info->notes : ''; ?></textarea>
     </div>
 </div>
 <?php if(isset($customer_notes)) :?>
@@ -64,26 +62,24 @@
             </div>
         </div>
         <div class="nsm-card-content">
-                <div class="row">
-                    <div class="customer-notes-list">
-                    <table width="100%" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <?php foreach ($customer_notes as $note) : ?>
-                            <tr>
-                                <td style="width: 880px; text-align: left; vertical-align: top; font-size: 11px; color: #336699; padding:5px;background-color: #d9d9d9;border: 1px; border-style: solid; border-color: #999999;">
-                                    <i class='bx bxs-calendar-event'></i> <?= $note->datetime; ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: left; border: 1px; border-style: solid; border-color: #999999; background-color: #FFFF71; font-size: 11px;padding:5px">
-                                    <?= $note->note; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                    </div>
-                </div>
+            <div class="customer-notes-list">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <?php foreach ($customer_notes as $note) : ?>
+                        <tr>
+                            <td style="width: 880px; text-align: left; vertical-align: top; font-size: 11px; color: #336699; padding:5px;background-color: #d9d9d9;border: 1px; border-style: solid; border-color: #999999;">
+                                <i class='bx bxs-calendar-event'></i> <?= $note->datetime; ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; border: 1px; border-style: solid; border-color: #999999; background-color: #FFFF71; font-size: 11px;padding:5px">
+                                <?= $note->note; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 <?php endif; ?>
