@@ -3144,7 +3144,9 @@ class Cron_Jobs_Controller extends CI_Controller
         $current_date = date("Y-m-d");
         $date_from    = date('Y-m-d', strtotime('-14 days', strtotime($current_date))); 
         $date_to      = date("Y-m-d");
-        $activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsBetweenDates($date_from, $date_to);	
+
+        //$activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsBetweenDates($date_from, $date_to);
+        $activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsWithSub14Days($current_date);	
 
 		foreach( $activeSubscriptions as $as ) {
             $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);    
@@ -3296,7 +3298,7 @@ class Cron_Jobs_Controller extends CI_Controller
 							'auto_convert_completed_work_order' => 0,
 							'message' => 'Thank you for your business.',
 							'terms_and_conditions' => 'Thank you for your business.',
-							'company_id' => $company_id,
+							'company_id' => $customer->company_id,
 							'commercial_message' => 'Thank you for your business.',
 							'commercial_terms_and_conditions' => 'Thank you for your business.',
 							'logo' => '',
