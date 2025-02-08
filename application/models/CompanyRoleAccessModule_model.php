@@ -126,6 +126,7 @@ class CompanyRoleAccessModule_model extends MY_Model
             'estimates' => 'Estimates',
             'estimate-settings' => 'Estimate Settings',
             'work-orders' => 'Work Orders',
+            'work-order-settings' => 'Work Order Settings',
             'invoices' => 'Invoices',
             'invoice-settings' => 'Invoice Settings',
             'accounting-banking' => 'Accounting Banking',

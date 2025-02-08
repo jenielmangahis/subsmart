@@ -971,6 +971,32 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByCustomerIdAndCompanyId($customer_id, $company_id, $filter = [])
+    {
+        $where = array(
+            'invoices.customer_id'      => $customer_id,
+            'invoices.view_flag'                => '0',
+        );
+
+        $this->db->select('invoices.*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');
+        $this->db->from('invoices');
+        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id');
+        $this->db->where($where);
+    
+        if( !empty($filter) ){            
+            $this->db->group_start();
+                foreach( $filter as $f ){
+                    $this->db->where($f['field_name'], $f['field_value'], 'both');
+                }
+            $this->db->group_end();
+        }    
+
+        $this->db->order_by('invoices.id', 'DESC');
+        
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllDataSales($company_id)
     {
         $where = array(
