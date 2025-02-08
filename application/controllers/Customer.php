@@ -2936,21 +2936,40 @@ class Customer extends MY_Controller
 
     public function invoice_list($cid)
     {
-        $this->page_data['page']->title = 'Customer Invoice List';
-        $this->page_data['page']->parent = 'Customers';
-
         $this->load->model('Invoice_model');
         $this->load->model('AcsProfile_model');
 
-        $invoices = $this->Invoice_model->getAllByCustomerId($cid);
+        $company_id = logged('company_id');
+        $invoices = $this->Invoice_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
         $customer = $this->AcsProfile_model->getByProfId($cid);
 
+        $this->page_data['page']->title = 'Customer Invoice List';
+        $this->page_data['page']->parent = 'Customers';
         $this->page_data['cust_active_tab'] = 'invoices';
         $this->page_data['cus_id'] = $cid;
         $this->page_data['invoices'] = $invoices;
         $this->page_data['customer'] = $customer;
 
-        $this->load->view('customer/invoice_list', $this->page_data);
+        $this->load->view('v2/pages/customer/dashboard/invoice_list', $this->page_data);
+    }
+
+    public function job_list($cid)
+    {
+        $this->load->model('Jobs_model');
+        $this->load->model('AcsProfile_model');
+
+        $company_id = logged('company_id');
+        $jobs     = $this->Jobs_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+        $customer = $this->AcsProfile_model->getByProfId($cid);
+
+        $this->page_data['page']->title = 'Customer Job List';
+        $this->page_data['page']->parent = 'Customers';
+        $this->page_data['cust_active_tab'] = 'invoices';
+        $this->page_data['cus_id'] = $cid;
+        $this->page_data['jobs'] = $jobs;
+        $this->page_data['customer'] = $customer;
+
+        $this->load->view('v2/pages/customer/dashboard/job_list', $this->page_data);
     }
 
     public function messages_list($cid)
