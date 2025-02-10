@@ -139,44 +139,74 @@ class Workstatus extends MY_Controller {
 		redirect('workstatus');
 	}
 
-	public function ajax_save_workorder_type()
+	public function ajax_save_workorder_status()
     {
         $is_success = 0;
+		$msg = 'Cannot save data';
 
         $post 		   = $this->input->post();
         $company_id    =  logged('company_id');
-		$workorderType = $this->Workstatus_model->create([
-			'company_id' => $company_id,
-			'title' => $post['title'],
-			'color' => $post['color']
-		]);
+		
+		if( $post['title'] == '' ){
+			$msg = 'Please enter status name';
+		}else{
+			$isExists = $this->Workstatus_model->getByTitleAndCompanyId($post['title'], $company_id);
+			if( $isExists ){
+				$msg = 'Status name ' . $post['title'] . ' already exists';
+			}else{
+				$workorderType = $this->Workstatus_model->create([
+					'company_id' => $company_id,
+					'title' => $post['title'],
+					'color' => $post['color']
+				]);
+	
+				$is_success = 1;
+				$msg = '';
 
-        $is_success = 1;
-        $json_data  = ['is_success' => $is_success];
+				//Activity Logs
+				$activity_name = 'Workorder Status: Created workorder status ' . $post['title']; 
+				createActivityLog($activity_name);
+			}
+		}
 
+        $json_data  = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
     }
 
-    public function ajax_update_workorder_type()
+    public function ajax_update_workorder_status()
     {
         $is_success = 0;
+		$msg = 'Cannot find data';
 
         $post 		   = $this->input->post();
         $company_id    =  logged('company_id');
-        $workorderType = $this->Workstatus_model->getWorkStatusByIdAndCompanyId($post['wtid'], $company_id);
-        if( $workorderType ){
-			$data = [
-				'title' => $post['title'],
-				'color' => $post['color']
-			];
+		if( $post['title'] == '' ){
+			$msg = 'Please enter status name';
+		}else{
+			$isExists = $this->Workstatus_model->getByTitleAndCompanyId($post['title'], $company_id);
+			if( $isExists && $isExists->id != $post['wtid']){
+				$msg = 'Status name ' . $post['title'] . ' already exists';
+			}else{
+				$workorderType = $this->Workstatus_model->getWorkStatusByIdAndCompanyId($post['wtid'], $company_id);
+				if( $workorderType ){
+					$data = [
+						'title' => $post['title'],
+						'color' => $post['color']
+					];
+		
+					$this->Workstatus_model->update($workorderType->id, $data);
+		
+					$is_success = 1;
+					$msg = '';
 
-			$this->Workstatus_model->update($workorderType->id, $data);
-
-	        $is_success = 1;
-        }
+					//Activity Logs
+					$activity_name = 'Workorder Status: Updated workorder status ' . $workorderType->title; 
+					createActivityLog($activity_name);
+				}
+			}
+		}
         
-        $json_data  = ['is_success' => $is_success];
-
+        $json_data  = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
     }
 

@@ -3043,6 +3043,11 @@ class Workorder extends MY_Controller
 
     public function settings()
     {
+        if(!checkRoleCanAccessModule('work-order-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
 		$this->page_data['page']->title = 'Workorder Settings';
 		$this->page_data['page']->parent = 'Sales';
 
@@ -6849,26 +6854,33 @@ class Workorder extends MY_Controller
 
     public function delete_workorder()
     {
-        $is_success = false;
+        $is_success = 0;
+        $msg = 'Cannot find data';
 
         $id = $this->input->post('id');
+        $cid = logged('company_id');
 
         $workOrder = $this->workorder_model->getDataByWO($id);
-        if( $workOrder ){    
+        if( $workOrder && $workOrder->company_id == $cid ){    
             $data = array(
                 'id' => $id,
                 'view_flag' => '1',
             );
-            $is_success = $this->workorder_model->deleteWorkorder($data);
+            $this->workorder_model->deleteWorkorder($data);
+
+            $is_success = 1;
+            $msg = '';
 
             //Activity Logs            
-            $activity_name = 'Deleted Workorder Number : ' . $workOrder->work_order_number; 
+            $activity_name = 'Workorder : Deleted workorder number ' . $workOrder->work_order_number; 
             createActivityLog($activity_name);
 
             customerAuditLog(logged('id'), $workOrder->customer_id, $workOrder->id, 'Workorder', 'Deleted work order #'.$workOrder->work_order_number);
         }        
 
-        echo json_encode($is_success);
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
     }
 
     public function delete_selected_workorders()
@@ -12945,6 +12957,11 @@ class Workorder extends MY_Controller
 
     public function status()
     {
+        if(!checkRoleCanAccessModule('work-order-settings', 'read')){
+			show403Error();
+			return false;
+		}
+        
         add_footer_js(array(
             'assets/js/jquery.minicolors.js'
         ));
