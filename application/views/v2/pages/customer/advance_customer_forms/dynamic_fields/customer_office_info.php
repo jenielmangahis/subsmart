@@ -1,7 +1,7 @@
 <div class="nsm-card primary">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span><i class="bx bx-fw bx-user"></i>Office Use Information</span>
+            <span><i class='bx bx-fw bx-buildings'></i> Office Use Information</span>
         </div>
     </div>
     <div class="nsm-card-content"><hr>
@@ -14,7 +14,7 @@
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'time_entered') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'time_entered'); ?></div>
             <div class="col-md-6">
-                <input type="text" class="form-control timepicker" name="time_entered" id="time_entered" value="<?php if(isset($office_info)){ echo  $office_info->time_entered; } ?>" />
+                <input type="time" class="form-control" name="time_entered" id="time_entered" value="<?php if(isset($office_info)){ echo  $office_info->time_entered; } ?>" />
             </div>
         </div>
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'sales_date') == 0 ? 'style="display:none;"' : ''; ?>>
@@ -93,16 +93,16 @@
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'tech_arrive_time') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'tech_arrive_time'); ?></div>
             <div class="col-md-6">
-                <div class="input-group bootstrap-timepicker timepicker">
-                    <input id="tech_arrive_time" class="form-control timepicker" value="<?php if(isset($office_info)){ echo  $office_info->tech_arrive_time; } ?>" name="tech_arrive_time" data-provide="timepicker" data-template="modal" data-minute-step="1" data-modal-backdrop="true" type="text"/>
+                <div class="input-group bootstrap-timepicker">
+                    <input id="tech_arrive_time" class="form-control" value="<?php if(isset($office_info)){ echo  $office_info->tech_arrive_time; } ?>" name="tech_arrive_time" data-provide="timepicker" type="time"/>
                 </div>
             </div>
         </div>
         <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'office-use-information', 'tech_depart_time') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'office-use-information', 'tech_depart_time'); ?></div>
             <div class="col-md-6">
-                <div class="input-group bootstrap-timepicker timepicker">
-                    <input id="tech_depart_time" class="form-control" value="<?php if(isset($office_info)){ echo  $office_info->tech_depart_time; } ?>" name="tech_depart_time" data-provide="timepicker" data-template="modal" data-minute-step="1" data-modal-backdrop="true" type="text"/>
+                <div class="input-group bootstrap-timepicker">
+                    <input id="tech_depart_time" class="form-control" value="<?php if(isset($office_info)){ echo  $office_info->tech_depart_time; } ?>" name="tech_depart_time" type="time"/>
                 </div>
             </div>
         </div>

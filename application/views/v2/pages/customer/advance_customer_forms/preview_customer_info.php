@@ -299,6 +299,14 @@
                 ?>
                 <label class="content-subtitle"><label class="content-subtitle"><?php echo $end_date; ?></label>
             </div>
+            <?php if( $billing_info && $billing_info->next_billing_date != '' ){ ?>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle fw-bold">Next Billing Date</label>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle"><?= date("m/d/Y", strtotime($billing_info->next_billing_date)); ?></label>
+            </div>
+            <?php } ?>
         </div>
 
         <div class="row mb-3">

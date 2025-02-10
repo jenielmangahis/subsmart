@@ -2936,21 +2936,40 @@ class Customer extends MY_Controller
 
     public function invoice_list($cid)
     {
-        $this->page_data['page']->title = 'Customer Invoice List';
-        $this->page_data['page']->parent = 'Customers';
-
         $this->load->model('Invoice_model');
         $this->load->model('AcsProfile_model');
 
-        $invoices = $this->Invoice_model->getAllByCustomerId($cid);
+        $company_id = logged('company_id');
+        $invoices = $this->Invoice_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
         $customer = $this->AcsProfile_model->getByProfId($cid);
 
+        $this->page_data['page']->title = 'Customer Invoice List';
+        $this->page_data['page']->parent = 'Customers';
         $this->page_data['cust_active_tab'] = 'invoices';
         $this->page_data['cus_id'] = $cid;
         $this->page_data['invoices'] = $invoices;
         $this->page_data['customer'] = $customer;
 
-        $this->load->view('customer/invoice_list', $this->page_data);
+        $this->load->view('v2/pages/customer/dashboard/invoice_list', $this->page_data);
+    }
+
+    public function job_list($cid)
+    {
+        $this->load->model('Jobs_model');
+        $this->load->model('AcsProfile_model');
+
+        $company_id = logged('company_id');
+        $jobs     = $this->Jobs_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+        $customer = $this->AcsProfile_model->getByProfId($cid);
+
+        $this->page_data['page']->title = 'Customer Job List';
+        $this->page_data['page']->parent = 'Customers';
+        $this->page_data['cust_active_tab'] = 'invoices';
+        $this->page_data['cus_id'] = $cid;
+        $this->page_data['jobs'] = $jobs;
+        $this->page_data['customer'] = $customer;
+
+        $this->load->view('v2/pages/customer/dashboard/job_list', $this->page_data);
     }
 
     public function messages_list($cid)
@@ -4493,6 +4512,10 @@ class Customer extends MY_Controller
                 $billing_frequency = 0;
                 break;
         }
+
+        $next_billing_date  = date('m/'.$input['bill_day'].'/Y', strtotime('+'.$billing_frequency.' months', strtotime($input['bill_start_date'])));
+        $next_billing_date  = date('Y-m-d', strtotime($next_billing_date));
+
         $input_billing['fk_prof_id'] = $id;
         $input_billing['ac_rate_plan_id'] = $ratePlan->id;
         $input_billing['card_fname'] = $input['card_fname'];
@@ -4529,9 +4552,7 @@ class Customer extends MY_Controller
         $input_billing['transaction_amount'] = $input['transaction_amount'];
         $input_billing['transaction_category'] = $input['transaction_category'];
         $input_billing['frequency'] = $input['frequency']; // Subscription
-        $input_billing['billing_frequency'] = $billing_frequency; // Billing
-        $input_billing['next_billing_date'] = date('n/j/Y', strtotime('+'.$billing_frequency.' months', strtotime($input['bill_start_date'])));
-        $input_billing['next_subscription_billing_date'] = date('n/j/Y', strtotime('+'.$input['frequency'].' months', strtotime($input['recurring_start_date'])));
+        $input_billing['billing_frequency'] = $input['bill_freq']; // Billing        
 
         $check = [
             'where' => [
@@ -4541,8 +4562,12 @@ class Customer extends MY_Controller
         ];
         $exist = $this->general->get_data_with_param($check, false);
         if ($exist) {
+            $input_billing['next_billing_date'] = $exist->next_billing_date;
+            $input_billing['next_subscription_billing_date'] = $exist->next_subscription_billing_date;
             return $this->general->update_with_key_field($input_billing, $input['customer_id'], 'acs_billing', 'fk_prof_id');
         } else {
+            $input_billing['next_billing_date'] = $next_billing_date;
+            $input_billing['next_subscription_billing_date'] = $next_billing_date;
             return $this->general->add_($input_billing, 'acs_billing');
         }
     }
