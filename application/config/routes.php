@@ -1140,8 +1140,8 @@ $route['customer/_convert_lead_to_customer'] = 'Customer/ajax_convert_lead_to_cu
 
 
 // workstatus
-$route['workstatus/_create_workorder_type'] = 'Workstatus/ajax_save_workorder_type';
-$route['workstatus/_update_workorder_type'] = 'Workstatus/ajax_update_workorder_type';
+$route['workstatus/_create_workorder_status'] = 'Workstatus/ajax_save_workorder_status';
+$route['workstatus/_update_workorder_status'] = 'Workstatus/ajax_update_workorder_status';
 $route['workstatus/_delete_workorder_status'] = 'Workstatus/ajax_delete_workorder_status';
 
 // Addon Upgrades
