@@ -1,6 +1,69 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('v2/includes/header'); ?>
+<?php 
+function jobsmodule__getEmployeeAvatar($employee) {
+    $avatar = $employee->avatar;
+    $firstName = $employee->FName;
+    $lastName = $employee->LName;
+    $name = $firstName . ' ' . $lastName;
 
+    if (!jobsmodule__endsWith($avatar, 'default.png')) {
+        return "<div title=\"$name\" class=\"nsm-profile\" style=\"background-image: url('$avatar');\"></div>";
+    }
+
+    $initials = $firstName[0] . '' . $lastName[0];
+    return "<div title=\"$name\" class=\"nsm-profile\"><span>$initials</span></div>";
+}
+function jobsmodule__endsWith($haystack, $needle) {
+    $length = strlen( $needle );
+    if(!$length) return true;
+    return substr( $haystack, -$length ) === $needle;
+}
+?>
+<style>
+    .nsm-table {
+        /*display: none;*/
+    }
+    .nsm-badge.primary-enhanced {
+        background-color: #6a4a86;
+    }
+        table {
+        width: 100% !important;
+    }
+    .dataTables_filter, .dataTables_length{
+        display: none;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px 18px;
+    border-bottom: 1px solid lightgray;
+}
+table.dataTable.no-footer {
+     border-bottom: 0px solid #111; 
+     margin-bottom: 10px;
+}
+#CUSTOM_FILTER_DROPDOWN:hover {
+     border-color: gray !important; 
+     background-color: white !important; 
+     color: black !important; 
+     cursor: pointer;
+}
+
+.techs {
+    display: flex;
+    padding-left: 12px;
+}
+.techs > .nsm-profile {
+    border: 2px solid #fff;
+    box-sizing: content-box;
+    margin-left: -12px;
+}
+.nsm-profile {
+    --size: 35px;
+    max-width: var(--size);
+    height: var(--size);
+    min-width: var(--size);
+}
+</style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/customer_module_tabs'); ?>
@@ -17,9 +80,16 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-4 grid-mb">
+                    <div class="col-6 grid-mb">
                         <div class="nsm-field-group search">
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div>
+                    </div>
+                    <div class="col-6 grid-mb text-end">
+                        <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('job/new?cus_id='.$cus_id); ?>'">
+                                <i class='bx bx-fw bx-briefcase'></i> New Job
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -94,7 +164,7 @@
                                         <div class="techs">
                                             <?php foreach ($employees as $employee): ?>
                                                 <?php foreach ($employeeFields as $employeeField): ?>
-                                                    <?php if ($job->$employeeField == $employee['id']): ?>
+                                                    <?php if ($job->$employeeField == $employee->id): ?>
                                                         <?= jobsmodule__getEmployeeAvatar($employee); ?>
                                                     <?php endif; ?>
                                                 <?php endforeach; ?>
@@ -110,7 +180,7 @@
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li>
-                                                <a class="dropdown-item view-job-row" href="javascript:void(0);" data-id="<?= $job->id; ?>">Preview</a>
+                                                <a class="dropdown-item view-job-row" href="javascript:void(0);" data-id="<?= $job->id; ?>">View</a>
                                             </li>
                                             <li><a class="dropdown-item" href="<?php echo base_url('job/edit/') . $job->id; ?>">Edit</a></li>
                                         </ul>
@@ -120,6 +190,20 @@
                             <?php } } ?>
                         </tbody>
                     </table>
+                </div>
+
+                <div class="modal fade nsm-modal fade" id="modal-quick-view-job" data-source="" tabindex="-1" aria-labelledby="modal-quick-view-upcoming-schedule-label" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">        
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <span class="modal-title content-title">View Job</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <div class="modal-body" style="max-height:700px; overflow: auto;">
+                                <div class="view-schedule-container row"></div>
+                            </div>                                    
+                        </div>        
+                    </div>
                 </div>
 
             </div>
@@ -134,63 +218,25 @@
         $("#search_field").on("input", debounce(function() {
             tableSearch($(this));        
         }, 1000));
-    });
 
-    $(document).on('click touchstart', '.recordPaymentBtn', function(){
-        var invoice_id = $(this).attr('data-id');
+        $('.view-job-row').on('click', function(){
+            var appointment_id = $(this).attr('data-id');
+            var url = base_url + "job/_quick_view_details";  
 
-        $('#modalRecordPaymentForm').modal('show');
-        $("#modalRecordPaymentForm .modal-body").html('<div class="alert alert-info alert-purple" role="alert">Loading...</div>');
+            $('#modal-quick-view-job').modal('show');
+            showLoader($(".view-schedule-container")); 
 
-        $('#record_payment_invoice_id').val(invoice_id);
-
-        $.ajax({
-            url: base_url + "invoice/_load_record_payment_form",
-            type: "POST",
-            data: {
-                invoice_id: invoice_id
-            },
-            success: function (response) {
-                $("#modalRecordPaymentForm .modal-body").html(response);
-            },
-        });
-    });
-
-    $(document).on('submit', '#frm-record-payment', function(e){
-        e.preventDefault();
-        var url  = base_url + 'invoice/_create_payment';
-        var form = $(this);
-        $.ajax({
-            type: "POST",
-            url: url,
-            dataType:'json',
-            data: form.serialize(), 
-            success: function(data) {
-                if( data.is_success == 1 ){
-                    $('#modalRecordPaymentForm').modal('hide');
-                    
-                    Swal.fire({
-                        text: 'Invoice payment was successfully created',
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonColor: '#6a4a86',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ok'
-                    }).then((result) => {
-                        location.reload();
-                    });    
-                }else{
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        html: data.msg
-                    });
+            setTimeout(function () {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {appointment_id:appointment_id},
+                success: function(o)
+                {          
+                    $(".view-schedule-container").html(o);
                 }
-                
-                $("#btn-record-payment").html('Save');
-            }, beforeSend: function() {
-                $("#btn-record-payment").html('<span class="bx bx-loader bx-spin"></span>');
-            }
+            });
+            }, 500);
         });
     });
 </script>
