@@ -69,12 +69,14 @@
         <i class="bx bx-plus"></i>
     </div>
     <ul class="nsm-fab-options">
+        <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
         <li data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
             <div class="nsm-fab-icon">
                 <i class="bx bx-chart"></i>
             </div>
             <span class="nsm-fab-label">New Estimate</span>
         </li>
+        <?php } ?>
         <?php if (isset($estimates) && count($estimates) > 0) { ?>
         <li onclick="location.href='<?php echo base_url('estimate/print'); ?>'">
             <div class="nsm-fab-icon">
@@ -100,7 +102,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            For any business, getting customers is only half the battle; creating a job workflow will
+                            For any business, getting customers is only half the battle. creating a job workflow will
                             help track each scheduled ticket from draft to receiving payment.
                         </div>
                     </div>
@@ -114,7 +116,35 @@
                         <?php } ?>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <div class="nsm-counter primary h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-calendar'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id=""><?= $totalSubmittedEstimates->total; ?></h2>
+                                    <span>Total Submitted Estimates</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="nsm-counter error h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-calendar-exclamation'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                <h2 id=""><?= $totalLostEstimates->total; ?></h2>
+                                    <span>Total Lost Estimates</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5">
                     <div class="col-12 col-md-4">
                         <form action="<?php echo base_url('estimate'); ?>" method="GET">
                             <div class="nsm-field-group search">
@@ -188,13 +218,15 @@
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal"
-                                data-bs-target="#new_estimate_modal">
-                                <i class='bx bx-fw bx-chart'></i> New Estimate
-                            </button>
-                            <button type="button" class="nsm-button primary" id="archived-estimate-list">
-                                <i class='bx bx-fw bx-trash'></i> Manage Archived
-                            </button>
+                            <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
+                                <button type="button" class="nsm-button primary" data-bs-toggle="modal"
+                                    data-bs-target="#new_estimate_modal">
+                                    <i class='bx bx-fw bx-chart'></i> New Estimate
+                                </button>
+                                <button type="button" class="nsm-button primary" id="archived-estimate-list">
+                                    <i class='bx bx-fw bx-trash'></i> Manage Archived
+                                </button>
+                            <?php } ?>
                             <?php if (isset($estimates) && count($estimates) > 0) { ?>
                             <button type="button" class="nsm-button primary"
                                 onclick="window.open('<?php echo base_url('estimate/print'); ?>','_blank')">
@@ -208,12 +240,13 @@
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
-                            <td data-name="EstimateNumber">Estimate Number</td>
-                            <td data-name="Customer">Customer / Lead</td>
-                            <td data-name="Type">Type</td>
+                            <td data-name="EstimateNumber">Estimate Number</td>                            
+                            <td data-name="Customer">Customer</td>
+                            <td data-name="Date" style="width:10%;">Date</td>
+                            <!-- <td data-name="Type">Type</td> -->
                             <td data-name="Status" style="width:8%;">Status</td>
-                            <td data-name="Amount">Amount</td>
-                            <td data-name="Amount">Is Email Seen</td>
+                            <td data-name="Amount" style="text-align:right;">Amount</td>
+                            <td data-name="Amount" style="text-align:center;">Is Email Seen</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -259,23 +292,22 @@
                                     <?php } ?>
                                 </div>
                             </td>
-                            <td class="fw-bold nsm-text-primary"><?php echo $estimate->estimate_number; ?></td>
+                            <td class="fw-bold nsm-text-primary"><?php echo $estimate->estimate_number; ?></td>                            
                             <td>
                                 <?php if ($estimate->customer_id > 0) { ?>
                                 <a class="nsm-link"
                                     href="<?php echo base_url('customer/preview_/'.$estimate->customer_id); ?>">
-                                    <?php echo $estimate->customer_name; ?>
+                                    <?php echo $estimate->customer_name != '' ? $estimate->customer_name : '---'; ?>
                                 </a>
                                 <?php } elseif ($estimate->lead_id > 0) { ?>
                                 <a class="nsm-link"
                                     href="<?php echo base_url('customer/add_lead/'.$estimate->lead_id); ?>">
-                                    <?php echo $estimate->lead_name; ?>
+                                    <?php echo $estimate->lead_name != '' ? $estimate->lead_name : '---'; ?>
                                 </a>
                                 <?php } ?>
-                                <br />
-                                Estimate Date : <?php echo date('m/d/Y', strtotime($estimate->estimate_date)); ?>
                             </td>
-                            <td><?php echo $estimate->estimate_type; ?></td>
+                            <td class="nsm-text-primary"><?php echo date('m/d/Y', strtotime($estimate->estimate_date)); ?></td>
+                            <!-- <td><?php echo $estimate->estimate_type; ?></td> -->
                             <td><span class="nsm-badge <?php echo $badge; ?>"><?php echo $estimate->status; ?></span></td>
                             <td style="width:10%;text-align:right;">
                                 <?php
@@ -315,13 +347,14 @@
                                                 href="<?php echo base_url('estimate/view_pdf/'.$estimate->id); ?>"
                                                 target="_new">View PDF</a>
                                         </li>
-
+                                        <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
                                         <li>
                                             <a class="dropdown-item send-item" href="javascript:void(0);"
                                                 acs-id="<?php echo $estimate->customer_id; ?>"
                                                 est-id="<?php echo $estimate->id; ?>">Send to Customer</a>
                                         </li>
-
+                                        <?php } ?>
+                                        <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
                                         <li>
                                             <a class="dropdown-item clone-item" href="javascript:void(0);"
                                                 data-bs-toggle="modal" data-bs-target="#clone_estimate_modal"
@@ -329,26 +362,25 @@
                                                 data-wo_num="<?php echo $estimate->estimate_number; ?>"
                                                 data-name="WO-00433">Clone Estimate</a>
                                         </li>
-
-                                        <?php if ($estimate->status === 'Accepted') { ?>
-                                        <li>
-                                            <a class="dropdown-item"
-                                                href="<?php echo base_url('job/estimate_job/'.$estimate->id); ?>">Convert to
-                                                Job</a>
-                                        </li>
                                         <?php } ?>
 
-                                        <!-- <li>
-                                            <a class="dropdown-item"
-                                                href="<?php echo base_url('invoice/estimateConversion/'.$estimate->id); ?>">Convert
-                                                to Invoice</a>
-                                        </li> -->
-
+                                        <?php if ($estimate->status === 'Accepted') { ?>
+                                            <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                    href="<?php echo base_url('job/estimate_job/'.$estimate->id); ?>">Convert to
+                                                    Job</a>
+                                            </li>
+                                            <?php } ?>
+                                        <?php } ?>
+                                        
+                                        <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
                                         <li>
                                             <a class="dropdown-item"
                                                 href="<?php echo base_url('workorder/estimateConversionWorkorder/'.$estimate->id); ?>">Convert
                                                 to Workorder</a>
                                         </li>
+                                        <?php } ?>
 
                                         <li>
                                             <a class="dropdown-item"
@@ -357,28 +389,31 @@
                                         </li>
 
                                         <?php if ($estimate->status !== 'Accepted') { ?>
-                                        <?php if ($estimate->estimate_type == 'Standard') { ?>
-                                        <li>
-                                            <a class="dropdown-item"
-                                                href="<?php echo base_url('estimate/edit/'.$estimate->id); ?>">Edit</a>
-                                        </li>
-                                        <?php } elseif ($estimate->estimate_type == 'Option') { ?>
-                                        <li>
-                                            <a class="dropdown-item"
-                                                href="<?php echo base_url('estimate/editOption/'.$estimate->id); ?>">Edit</a>
-                                        </li>
-                                        <?php } else { ?>
-                                        <li>
-                                            <a class="dropdown-item"
-                                                href="<?php echo base_url('estimate/editBundle/'.$estimate->id); ?>">Edit</a>
-                                        </li>
+                                            <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
+                                                <?php if ($estimate->estimate_type == 'Standard') { ?>
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="<?php echo base_url('estimate/edit/'.$estimate->id); ?>">Edit</a>
+                                                </li>
+                                                <?php } elseif ($estimate->estimate_type == 'Option') { ?>
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="<?php echo base_url('estimate/editOption/'.$estimate->id); ?>">Edit</a>
+                                                </li>
+                                                <?php } else { ?>
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="<?php echo base_url('estimate/editBundle/'.$estimate->id); ?>">Edit</a>
+                                                    </li>
+                                                <?php } ?>
+                                            <?php } ?>
                                         <?php } ?>
-                                        <?php } ?>
-
+                                        <?php if(checkRoleCanAccessModule('estimates', 'delete')){ ?>
                                         <li>
                                             <a class="dropdown-item delete-item" href="javascript:void(0);"
                                                 est-id="<?php echo $estimate->id; ?>">Delete</a>
                                         </li>
+                                        <?php } ?>
                                     </ul>
                                 </div>
                             </td>
