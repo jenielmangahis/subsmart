@@ -1140,8 +1140,8 @@ $route['customer/_convert_lead_to_customer'] = 'Customer/ajax_convert_lead_to_cu
 
 
 // workstatus
-$route['workstatus/_create_workorder_type'] = 'Workstatus/ajax_save_workorder_type';
-$route['workstatus/_update_workorder_type'] = 'Workstatus/ajax_update_workorder_type';
+$route['workstatus/_create_workorder_status'] = 'Workstatus/ajax_save_workorder_status';
+$route['workstatus/_update_workorder_status'] = 'Workstatus/ajax_update_workorder_status';
 $route['workstatus/_delete_workorder_status'] = 'Workstatus/ajax_delete_workorder_status';
 
 // Addon Upgrades
@@ -1501,6 +1501,8 @@ $route['cron/company_recurring_nsmart_subscription'] = 'Cron_Payment/company_rec
 $route['cron/company_recurring_nsmart_subscription_with_payment_errors'] = 'Cron_Payment/company_recurring_nsmart_subscription_with_payment_errors';
 $route['cron/customer_recurring_subscriptions'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionV2';
 $route['cron/process_accounting_recurring_transaction_payment'] = 'Cron_Payment/process_accounting_recurring_transaction_payment';
+
+$route['cron/customer_recurring_subscriptions_test'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionV2test';
 
 // Admin Users
 $route['admin/_update_employee'] = 'Admin/ajaxUpdateEmployee';

@@ -6224,7 +6224,7 @@ class Job extends MY_Controller
 
     public function ajax_restore_archived()
     {
-        if(!checkRoleCanAccessModule('customers', 'write')){
+        if(!checkRoleCanAccessModule('jobs', 'write')){
 			show403Error();
 			return false;
 		}

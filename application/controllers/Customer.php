@@ -2957,19 +2957,63 @@ class Customer extends MY_Controller
     {
         $this->load->model('Jobs_model');
         $this->load->model('AcsProfile_model');
+        $this->load->model('Users_model');
 
         $company_id = logged('company_id');
         $jobs     = $this->Jobs_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
         $customer = $this->AcsProfile_model->getByProfId($cid);
 
+        $employees = $this->Users_model->getCompanyUsers($company_id);
+        $employees = array_map(function ($employee) {
+            $employee->avatar = userProfileImage((int) $employee->id);
+            return $employee;
+        }, $employees);
+        
         $this->page_data['page']->title = 'Customer Job List';
         $this->page_data['page']->parent = 'Customers';
-        $this->page_data['cust_active_tab'] = 'invoices';
         $this->page_data['cus_id'] = $cid;
+        $this->page_data['employees'] = $employees;
         $this->page_data['jobs'] = $jobs;
         $this->page_data['customer'] = $customer;
 
         $this->load->view('v2/pages/customer/dashboard/job_list', $this->page_data);
+    }
+
+    public function service_ticket_list($cid)
+    {
+        $this->load->model('Tickets_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Users_model');
+
+        $company_id  = logged('company_id');
+        $filters[]   = ['field' => 'tickets.is_archived', 'value' => 0];
+        $filters[]   = ['field' => 'tickets.customer_id', 'value' => $cid];
+        $tickets     = $this->Tickets_model->getAllByCompanyId($company_id, $filters);
+        $customer    = $this->AcsProfile_model->getByProfId($cid);
+
+        foreach($tickets as $t){            
+            $tech = unserialize($t->technicians);
+            $assigned_tech = [];
+            if( $tech ){
+                foreach($tech as $eid){
+                    $user = $this->Users_model->getUserByID($eid);
+                    if( $user ){
+                        $assigned_tech[] = ['id' => $user->id, 'first_name' => $user->FName, 'last_name' => $user->LName, 'image' => $user->profile_img];
+                    }
+                }
+            }      
+            $t->assigned_tech = $assigned_tech;
+        }
+
+        $openTickets = $this->Tickets_model->getCompanyOpenServiceTickets($cid,[],$filters);
+        $ticketTotalAmount = $this->Tickets_model->getCompanyTotalAmountServiceTickets($cid,[],$filters);
+        
+        $this->page_data['page']->title = 'Customer Service Ticket List';
+        $this->page_data['page']->parent = 'Customers';
+        $this->page_data['cus_id'] = $cid;
+        $this->page_data['tickets'] = $tickets;
+        $this->page_data['customer'] = $customer;
+        $this->load->view('v2/pages/customer/dashboard/service_ticket_list', $this->page_data);
     }
 
     public function messages_list($cid)
@@ -4494,7 +4538,7 @@ class Customer extends MY_Controller
         // billing data
         switch ($input['bill_freq']) {
             case 'One Time Only':
-                $billing_frequency = 1;
+                $billing_frequency = 0;
                 break;
             case 'Every 1 Month':
                 $billing_frequency = 1;
@@ -4509,7 +4553,7 @@ class Customer extends MY_Controller
                 $billing_frequency = 12;
                 break;
             default:
-                $billing_frequency = 0;
+                $billing_frequency = 1;
                 break;
         }
 
