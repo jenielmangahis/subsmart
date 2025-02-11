@@ -4552,7 +4552,7 @@ class Customer extends MY_Controller
         // billing data
         switch ($input['bill_freq']) {
             case 'One Time Only':
-                $billing_frequency = 1;
+                $billing_frequency = 0;
                 break;
             case 'Every 1 Month':
                 $billing_frequency = 1;
@@ -4567,7 +4567,7 @@ class Customer extends MY_Controller
                 $billing_frequency = 12;
                 break;
             default:
-                $billing_frequency = 0;
+                $billing_frequency = 1;
                 break;
         }
 
