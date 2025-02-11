@@ -19,11 +19,33 @@ class PriorityList_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByCompanyId($cid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
     public function getById($id)
     {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('id', $id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getByTitleAndCompanyId($title, $cid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('title', $title);
+        $this->db->where('company_id', $cid);
 
         $query = $this->db->get()->row();
         return $query;
