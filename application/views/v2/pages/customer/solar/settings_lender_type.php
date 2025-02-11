@@ -68,12 +68,16 @@
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                                                 <li>
                                                     <a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $type->id; ?>"  data-name="<?= $type->name; ?>">Edit</a>
                                                 </li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
                                                 <li>
                                                     <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $type->id; ?>" data-name="<?= $type->name; ?>">Delete</a>
                                                 </li>                                                
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </td>
@@ -164,6 +168,7 @@
             tableSearch($(this));        
         }, 1000));
 
+        <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
         $(document).on("click", ".edit-item", function(){
             let id = $(this).attr("data-id");
             let name = $(this).attr("data-name");
@@ -255,7 +260,9 @@
                 }
             });
         });
+        <?php } ?>
         
+        <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
         $(document).on("click", ".delete-item", function() {
             let id = $(this).attr("data-id");
             let name = $(this).attr('data-name');
@@ -302,6 +309,7 @@
                 }
             });
         });
+        <?php } ?>
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

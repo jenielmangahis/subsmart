@@ -27,57 +27,65 @@
                     <div class="row">
                         <?php foreach( $formFields as $group_key => $fields ){ ?>
                             <?php 
-                                $group = strtolower(str_replace("-"," ", $group_key)); 
-                                $group = ucwords($group);
+                                $is_hidden = false;
+                                if( ($group_key == 'alarm-information' || $group_key == 'solar-information') && ( !in_array(logged('company_id'), adi_company_ids()) ) ){ 
+                                    $is_hidden = true;
+                                }
                             ?>
-                            <?php 
-                                $is_group_disabled = false;
-                                if( $formGroups ){
-                                    if( ($companyFormSetting && $companyFormSetting[$group_key] && $formGroups[$group_key]['total_disabled']) ){
-                                        if( count($companyFormSetting[$group_key]) == $formGroups[$group_key]['total_disabled'] ){
-                                            $is_group_disabled = true;
-                                        }
-                                    } 
-                                }    
-                            ?>
-                            <div class="col-md-6 mb-2">
-                                <div class="nsm-card primary">
-                                    <div class="nsm-card-header">
-                                        <div class="nsm-card-title">
-                                            <span><i class='bx bx-fw bxs-edit'></i> <?= $group; ?></span>                                            
-                                            <div class="form-check pull-right">
-                                                <input class="form-check-input chk-field-group" name="hideGroup[<?= $group_key; ?>]" data-group="<?= $group_key; ?>" type="checkbox" value="yes" <?= $is_group_disabled ? 'checked="checked"' : ''; ?> id="group-chk-<?= $group_key; ?>">
-                                                <label class="form-check-label" for="group-chk-<?= $group_key; ?>">
-                                                Do not show field group
-                                                </label>
+                            <?php if( !$is_hidden ){ ?>
+                                <?php 
+                                    $group = strtolower(str_replace("-"," ", $group_key)); 
+                                    $group = ucwords($group);
+                                ?>
+                                <?php 
+                                    $is_group_disabled = false;
+                                    if( $formGroups ){
+                                        if( ($companyFormSetting && $companyFormSetting[$group_key] && $formGroups[$group_key]['total_disabled']) ){
+                                            if( count($companyFormSetting[$group_key]) == $formGroups[$group_key]['total_disabled'] ){
+                                                $is_group_disabled = true;
+                                            }
+                                        } 
+                                    }    
+                                ?>
+                                <div class="col-md-6 mb-2">
+                                    <div class="nsm-card primary">
+                                        <div class="nsm-card-header">
+                                            <div class="nsm-card-title">
+                                                <span><i class='bx bx-fw bxs-edit'></i> <?= $group; ?></span>                                            
+                                                <div class="form-check pull-right">
+                                                    <input class="form-check-input chk-field-group" name="hideGroup[<?= $group_key; ?>]" data-group="<?= $group_key; ?>" type="checkbox" value="yes" <?= $is_group_disabled ? 'checked="checked"' : ''; ?> id="group-chk-<?= $group_key; ?>">
+                                                    <label class="form-check-label" for="group-chk-<?= $group_key; ?>">
+                                                    Do not show this section
+                                                    </label>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>                            
-                                    <div class="nsm-card-content" id="field-group-<?= $group_key; ?>">
-                                        <div class="row">
-                                            <?php foreach($fields as $key => $value){ ?>                                    
-                                                <label for="field-<?= $key; ?>" class="col-sm-3 col-form-label mb-2">
-                                                    <?php 
-                                                        $field_value = $value['field_name'];
-                                                        $field_disabled = $is_group_disabled ? true : false;
-                                                        if( $companyFormSetting ){
-                                                            if( $companyFormSetting[$group_key][$key] ){
-                                                                $field_value    = $companyFormSetting[$group_key][$key]['value'];
-                                                                $field_disabled = $companyFormSetting[$group_key][$key]['is_enabled'] == 1 ? false : true; 
-                                                            } 
-                                                        }
-                                                    ?>
-                                                    <input class="form-check-input chk-row-field" name="isHiddenField[<?= $group_key; ?>][<?= $key; ?>]" value="yes" data-key="<?= $key; ?>" type="checkbox" id="chk-<?= $key; ?>" <?= $field_disabled ? 'checked' : ''; ?>>
-                                                    <?= $value['field_name']; ?>
-                                                </label>
-                                                <div class="col-sm-3 mb-2">
-                                                    <input type="text" name="fieldName[<?= $group_key; ?>][<?= $key; ?>]" class="form-control field-input" id="field-<?= $key; ?>" value="<?= $field_value; ?>" <?= $field_disabled ? 'readonly="readonly"' : ''; ?>>
-                                                </div>                                    
-                                            <?php } ?>
+                                        </div>                            
+                                        <div class="nsm-card-content" id="field-group-<?= $group_key; ?>">
+                                            <div class="row">
+                                                <?php foreach($fields as $key => $value){ ?>                                    
+                                                    <label for="field-<?= $key; ?>" class="col-sm-3 col-form-label mb-2">
+                                                        <?php 
+                                                            $field_value = $value['field_name'];
+                                                            $field_disabled = $is_group_disabled ? true : false;
+                                                            if( $companyFormSetting ){
+                                                                if( $companyFormSetting[$group_key][$key] ){
+                                                                    $field_value    = $companyFormSetting[$group_key][$key]['value'];
+                                                                    $field_disabled = $companyFormSetting[$group_key][$key]['is_enabled'] == 1 ? false : true; 
+                                                                } 
+                                                            }
+                                                        ?>
+                                                        <input class="form-check-input chk-row-field" name="isHiddenField[<?= $group_key; ?>][<?= $key; ?>]" value="yes" data-key="<?= $key; ?>" type="checkbox" id="chk-<?= $key; ?>" <?= $field_disabled ? 'checked' : ''; ?>>
+                                                        <?= $value['field_name']; ?>
+                                                    </label>
+                                                    <div class="col-sm-3 mb-2">
+                                                        <input type="text" name="fieldName[<?= $group_key; ?>][<?= $key; ?>]" class="form-control field-input" id="field-<?= $key; ?>" value="<?= $field_value; ?>" <?= $field_disabled ? 'readonly="readonly"' : ''; ?>>
+                                                    </div>                                    
+                                                <?php } ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            <?php } ?>
                         <?php } ?>
                     </div>
                     <div class="row">
@@ -116,7 +124,7 @@
             html: true,
             trigger: "hover focus",
             content: function() {
-                return 'This will hide form section in customer add form';
+                return 'This will hide form section in customer add form. <br /><br /><b>Note: Removing this section will reset customer data related to this section.</b>';
             }
         });
 

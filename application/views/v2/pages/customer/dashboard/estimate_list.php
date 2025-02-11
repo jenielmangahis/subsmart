@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('v2/includes/header'); ?>
+<?php include viewPath('v2/includes/estimate/estimate_modals'); ?>
 <style>
 .dataTables_filter, .dataTables_length{
     display: none;
@@ -20,6 +21,30 @@
     min-width: var(--size);
 }
 </style>
+<div class="nsm-fab-container">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
+        <i class="bx bx-plus"></i>
+    </div>
+    <ul class="nsm-fab-options">
+        <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
+        <li data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-chart"></i>
+            </div>
+            <span class="nsm-fab-label">New Estimate</span>
+        </li>
+        <?php } ?>
+        <?php if (isset($estimates) && count($estimates) > 0) { ?>
+        <li onclick="location.href='<?php echo base_url('estimate/print'); ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-printer"></i>
+            </div>
+            <span class="nsm-fab-label">Print</span>
+        </li>
+        <?php } ?>
+    </ul>
+</div>
+
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/customer_module_tabs'); ?>
@@ -43,101 +68,161 @@
                     </div>
                     <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tickets/addTicketCust/'.$cus_id); ?>'">
-                                <i class='bx bx-fw bx-briefcase'></i> New Service Ticket
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
+                                <i class='bx bx-fw bx-chart'></i> New Estimate
                             </button>
                         </div>
                     </div>
                 </div>
 
                 <div class="tab-content mt-4">
-                    <table class="nsm-table" id="ticket-list-table">
+                    
+                    <table class="nsm-table">
                         <thead>
                             <tr>
                                 <td class="table-icon"></td>
-                                <td data-name="Work Order Number">Service Ticket No.</td>
-                                <td data-name="AssignedTech">Assigned Tech</td>                    
-                                <td data-name="Date Issued">Date</td>                                
-                                <td data-name="Time From">Time</td>                            
-                                <td data-name="Status">Status</td>
-                                <td data-name="Amount" style="width:8%; !important;text-align:right;">Amount</td>
-                                <td data-name="Manage" style="width:3%;"></td>
+                                <td data-name="EstimateNumber">Estimate Number</td>       
+                                <td data-name="Date" style="width:10%;">Date</td>
+                                <td data-name="Status" style="width:8%;">Status</td>
+                                <td data-name="Amount" style="text-align:right;">Amount</td>
+                                <td data-name="Manage"></td>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($tickets as $ticket){ ?>
-                            <tr>
-                                <td><div class="table-row-icon"><i class='bx bx-briefcase'></i></div></td>
-                                <td style="width:30%;"><b><?php echo $ticket->ticket_no; ?></b></td>
-                                <td style="width:20%;">
-                                    <?php if( $ticket->assigned_tech ){ ?>
-                                        <div class="techs">   
-                                        <?php foreach($ticket->assigned_tech as $user){ ?>
-                                            <?php 
-                                                $name     = $user['first_name'] . ' ' . $user['last_name']; 
-                                                $initials = $user['first_name'][0] . '' . $user['last_name'][0];
-                                            ?>
-                                            <?php if( $user['image'] != 'default.png' && $user['image'] != '' ){ ?>
-                                                <div title="<?= $name; ?>" class="nsm-profile" style="background-image: url('<?= userProfileImage($user['id']); ?>');"></div>
-                                            <?php }else{ ?>
-                                                <div title="<?= $name; ?>" class="nsm-profile"><span><?= $initials; ?></span></div>
-                                            <?php } ?>
-                                        <?php } ?>
-                                        </div>
-                                    <?php } ?>
-                                </td>                         
-                                <td>
-                                    <?php 
-                                        $date = '---';
-                                        if( strtotime($ticket->ticket_date) > 0 ){
-                                            $date =  date("m/d/Y", strtotime($ticket->ticket_date)); 
-                                        }
-                                        echo $date;
-                                    ?>
-                                </td>                                
-                                <td>
-                                    <?php 
-                                        $ticket_time = '---';
-                                        if( $ticket->scheduled_time != '' && $ticket->scheduled_time_to != '' ){
-                                            $time_from =  date("G:i A", strtotime($ticket->scheduled_time)); 
-                                            $time_to =  date("G:i A", strtotime($ticket->scheduled_time_to)); 
-                                            $ticket_time = $time_from . ' to ' . $time_to;
+                            <?php if (!empty($estimates)) { ?>
+                                <?php
+                                    foreach ($estimates as $estimate) {
+                                        switch ($estimate->status) {
+                                            case 'Draft':
+                                                $badge = '';
+                                                break;
+                                            case 'Submitted':
+                                                $badge = 'success';
+                                                break;
+                                            case 'Accepted':
+                                                $badge = 'success';
+                                                break;
+                                            case 'Invoiced':
+                                                $badge = 'primary';
+                                                break;
+                                            case 'Lost':
+                                                $badge = 'secondary';
+                                                break;
+                                            case 'Declined By Customer':
+                                                $badge = 'error';
+                                                break;
                                         }
 
-                                        echo $ticket_time;
-                                    ?>
-                                </td>                            
-                                <td><?php echo $ticket->ticket_status; ?></td>
-                                <td style="width:15%; !important;text-align:right;">$<?php echo number_format($ticket->grandtotal,2); ?></td>
-                                <td>
-                                    <div class="dropdown table-management">
-                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                            <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li><a class="dropdown-item row-view-ticket" href="javascript:void(0);" data-id="<?= $ticket->id; ?>">View</a></li>                                            
-                                            <li><a class="dropdown-item" tabindex="-1" href="<?php echo base_url('tickets/editDetails/' . $ticket->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>                                            
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
+                                        $row_class = '';
+                                        if( $estimate->next_remind_date == date("Y-m-d") ){
+                                            $row_class = 'with-reminder';
+                                        }
+                                ?>
+                                <tr class="<?= $row_class; ?>">
+                                    <td>
+                                        <div class="table-row-icon">
+                                            <?php if( $row_class == '' ){ ?>
+                                                <i class='bx bx-chart'></i>
+                                            <?php }else{ ?>
+                                                <i class='bx bx-alarm-exclamation'></i>
+                                            <?php } ?>
+                                        </div>
+                                    </td>
+                                    <td class="fw-bold nsm-text-primary"><?php echo $estimate->estimate_number; ?></td>     
+                                    <td class="nsm-text-primary"><?php echo date('m/d/Y', strtotime($estimate->estimate_date)); ?></td>
+                                    <td><span class="nsm-badge <?php echo $badge; ?>"><?php echo $estimate->status; ?></span></td>
+                                    <td style="width:10%;text-align:right;">
+                                        <?php
+                                                        $total1 = ((float) $estimate->option1_total) + ((float) $estimate->option2_total);
+                                            $total2 = ((float) $estimate->bundle1_total) + ((float) $estimate->bundle2_total);
+                                            echo '$ '.number_format(floatval($estimate->grand_total), 2);
+
+                                            ?>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown table-management">
+                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="<?php echo base_url('estimate/view/'.$estimate->id); ?>">View
+                                                        Estimate</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="<?php echo base_url('estimate/view_pdf/'.$estimate->id); ?>"
+                                                        target="_new">View PDF</a>
+                                                </li>
+                                                <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
+                                                <li>
+                                                    <a class="dropdown-item send-item" href="javascript:void(0);"
+                                                        acs-id="<?php echo $estimate->customer_id; ?>"
+                                                        est-id="<?php echo $estimate->id; ?>">Send to Customer</a>
+                                                </li>
+                                                <?php } ?>
+
+                                                <?php if ($estimate->status === 'Accepted') { ?>
+                                                    <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="<?php echo base_url('job/estimate_job/'.$estimate->id); ?>">Convert to
+                                                            Job</a>
+                                                    </li>
+                                                    <?php } ?>
+                                                <?php } ?>
+                                                
+                                                <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="<?php echo base_url('workorder/estimateConversionWorkorder/'.$estimate->id); ?>">Convert
+                                                        to Workorder</a>
+                                                </li>
+                                                <?php } ?>
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="<?php echo base_url('estimate/print/'.$estimate->id); ?>"
+                                                        target="_new">Print</a>
+                                                </li>
+
+                                                <?php if ($estimate->status !== 'Accepted') { ?>
+                                                    <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
+                                                        <?php if ($estimate->estimate_type == 'Standard') { ?>
+                                                        <li>
+                                                            <a class="dropdown-item"
+                                                                href="<?php echo base_url('estimate/edit/'.$estimate->id); ?>">Edit</a>
+                                                        </li>
+                                                        <?php } elseif ($estimate->estimate_type == 'Option') { ?>
+                                                        <li>
+                                                            <a class="dropdown-item"
+                                                                href="<?php echo base_url('estimate/editOption/'.$estimate->id); ?>">Edit</a>
+                                                        </li>
+                                                        <?php } else { ?>
+                                                            <li>
+                                                                <a class="dropdown-item"
+                                                                    href="<?php echo base_url('estimate/editBundle/'.$estimate->id); ?>">Edit</a>
+                                                            </li>
+                                                        <?php } ?>
+                                                    <?php } ?>
+                                                <?php } ?>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php } ?>
+                            <?php } else { ?>
+                                <tr>
+                                    <td colspan="8">
+                                        <div class="nsm-empty">
+                                            <span>No results found.</span>
+                                        </div>
+                                    </td>
+                                </tr>
                             <?php } ?>
                         </tbody>
                     </table>
-                </div>
 
-                <div class="modal fade nsm-modal fade" id="modal-view-ticket" tabindex="-1" aria-labelledby="modal-view-ticket_label" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <span class="modal-title content-title">View Service Ticket</span>
-                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                            </div>
-                            <div class="modal-body" style="max-height:700px;overflow:auto;">
-                                <div class="row g-3" id="view_ticket_container"></div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
             </div>
