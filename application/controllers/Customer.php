@@ -3004,9 +3004,6 @@ class Customer extends MY_Controller
             }      
             $t->assigned_tech = $assigned_tech;
         }
-
-        $openTickets = $this->Tickets_model->getCompanyOpenServiceTickets($cid,[],$filters);
-        $ticketTotalAmount = $this->Tickets_model->getCompanyTotalAmountServiceTickets($cid,[],$filters);
         
         $this->page_data['page']->title = 'Customer Service Ticket List';
         $this->page_data['page']->parent = 'Customers';
@@ -3014,6 +3011,23 @@ class Customer extends MY_Controller
         $this->page_data['tickets'] = $tickets;
         $this->page_data['customer'] = $customer;
         $this->load->view('v2/pages/customer/dashboard/service_ticket_list', $this->page_data);
+    }
+
+    public function estimate_list($cid)
+    {
+        $this->load->model('Estimate_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Users_model');
+
+        $company_id = logged('company_id');
+        $estimates  = $this->Estimate_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+
+        $this->page_data['page']->title  = 'Customer Estimate List';
+        $this->page_data['page']->parent = 'Customers';
+        $this->page_data['cus_id']      = $cid;
+        $this->page_data['estimates']   = $estimates;
+        $this->page_data['customer']    = $customer;
+        $this->load->view('v2/pages/customer/dashboard/estimate_list', $this->page_data);
     }
 
     public function messages_list($cid)
