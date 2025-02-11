@@ -219,10 +219,10 @@
                                                     </div>                                                            
                                                 </div>
                                                 <div class="row g-3">
-                                                    <div class="col-8">
+                                                    <div class="col-7">
                                                         <select class="nsm-field form-select select2" name="customer_id" id="sel-customer" style="width:50%;"></select>
                                                     </div>
-                                                    <div class="col-3">
+                                                    <div class="col-5">
                                                         <button type="button" id="" data-bs-toggle="modal" data-bs-target="#new_customer" class="nsm-button small text-end" ><strong>Add New Customer</strong></button>                                                    
                                                     </div>
                                                 </div>

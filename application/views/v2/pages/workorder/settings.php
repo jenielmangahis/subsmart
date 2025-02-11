@@ -15,6 +15,12 @@
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/workorder_subtabs'); ?>
     </div>
+    <?php
+        $input_disabled = "disabled='disabled'"; 
+        if(checkRoleCanAccessModule('work-order-settings', 'write')){
+            $input_disabled = '';
+        }
+    ?>
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -38,10 +44,10 @@
                                             <div class="nsm-card-content">
                                                 <div class="row g-2">
                                                     <div class="col-12 col-md-3">
-                                                        <input type="text" placeholder="Prefix" name="next_custom_number_prefix" id="number-prefix" class="nsm-field form-control" value="<?php echo $prefix ?>" autocomplete="off" />
+                                                        <input type="text" placeholder="Prefix" name="next_custom_number_prefix" id="number-prefix" class="nsm-field form-control" value="<?php echo $prefix ?>" autocomplete="off" <?= $input_disabled; ?> />
                                                     </div>
                                                     <div class="col-12 col-md-9">
-                                                        <input type="text" placeholder="Next Number" name="next_custom_number_base" id="number-base" class="nsm-field form-control" value="<?php echo $order_num_next; ?>" autocomplete="off" />
+                                                        <input type="text" placeholder="Next Number" name="next_custom_number_base" id="number-base" class="nsm-field form-control" value="<?php echo $order_num_next; ?>" autocomplete="off" <?= $input_disabled; ?> />
                                                     </div>
                                                 </div>
                                             </div>
@@ -60,7 +66,7 @@
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value="1" id="hide_from_email" name="hide_from_email" <?= $capture_signature > 0 ? 'checked="checked"' : ''; ?>>
+                                                            <input class="form-check-input" type="checkbox" value="1" id="hide_from_email" name="hide_from_email" <?= $capture_signature > 0 ? 'checked="checked"' : ''; ?> <?= $input_disabled; ?>>
                                                             <label class="form-check-label" for="hide_from_email">
                                                                 Hide business email
                                                             </label>
@@ -72,10 +78,12 @@
                                     </div>
                                 </div>
                             </div>
+                            <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
                             <div class="col-12 text-end">
                                 <button type="button" class="nsm-button work-order-notification">Manage work order notifications</button>
                                 <button type="button" class="nsm-button primary btn-update-workorder-settings">Save Changes</button>
                             </div>
+                            <?php } ?>
                             <?php echo form_close(); ?>
                         </div>
                         <div class="row g-3 mt-1">
@@ -86,7 +94,9 @@
                                             <span>Work Order Custom Fields</span>
                                         </div>
                                         <label class="nsm-subtitle">Set custom fields for your workorders.</label>
-                                        <a href="javascript:void(0);" class="btn-add-custom-field nsm-button small primary" style="float:right;">Add New</a>
+                                        <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
+                                            <a href="javascript:void(0);" class="btn-add-custom-field nsm-button small primary" style="float:right;">Add New</a>
+                                        <?php } ?>
                                     </div>                                
                                     <table class="nsm-table nsm-table-custom-field">
                                         <thead>
@@ -103,12 +113,16 @@
                                                         <td class="fw-bold nsm-text-primary"><?php echo $cf->name; ?></td>
                                                         <td><?php echo date("m/d/Y g:i A", strtotime($cf->date_created)); ?></td>                                                        
                                                         <td class="text-end">
+                                                            <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
                                                             <button class="nsm-button btn-sm m-0 me-2 edit-custom-field" data-id="<?php echo $cf->id; ?>" data-name="<?php echo $cf->name; ?>">
                                                                 Edit
                                                             </button>
+                                                            <?php } ?>
+                                                            <?php if(checkRoleCanAccessModule('work-order-settings', 'delete')){ ?>
                                                             <button class="nsm-button btn-sm m-0 me-2 delete-custom-field" data-id="<?php echo $cf->id; ?>" data-name="<?php echo $cf->name; ?>">
                                                                 Delete
                                                             </button>
+                                                            <?php } ?>
                                                         </td>
                                                     </tr>
                                                 <?php endforeach; ?>
@@ -131,7 +145,7 @@
                         <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'frm-update-header', 'autocomplete' => 'off']); ?>
                         <div class="row g-3">
                             <div class="col-12">
-                                <div class="nsm-card">
+                                <div class="nsm-card primary">
                                     <div class="nsm-card-header d-block">
                                         <div class="nsm-card-title">
                                             <span>Work Order Header</span>
@@ -146,9 +160,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
                             <div class="col-12 text-end">
-                                <button type="submit" class="nsm-button primary">Add Header</button>
+                                <button type="submit" class="nsm-button primary">Update Header</button>
                             </div>
+                            <?php } ?>
                         </div>
                         <?php echo form_close(); ?>
                     <br><br>
@@ -156,7 +172,7 @@
                         <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'frm-update-terms-condition', 'autocomplete' => 'off']); ?>
                         <div class="row g-3">
                             <div class="col-12">
-                                <div class="nsm-card">
+                                <div class="nsm-card primary">
                                     <div class="nsm-card-header d-block">
                                         <div class="nsm-card-title">
                                             <span>Work Order Terms and Conditions</span>
@@ -174,9 +190,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
                             <div class="col-12 text-end">
                                 <button type="submit" class="nsm-button primary">Update Terms and Conditions</button>
                             </div>
+                            <?php } ?>
                         </div>
                         <?php echo form_close(); ?>
                     </div>
@@ -189,7 +207,6 @@
         </div>
     </div>
 </div>
-
 
 <script type="text/javascript" src="<?php echo $url->assets ?>ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
@@ -215,6 +232,7 @@
             $('#custom_field_name_update').val(cf_name)
         });
 
+        <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
         $('#frm-save-custom-field').on('submit', function(e){
             e.preventDefault();
 
@@ -366,7 +384,9 @@
                 },
             });
         });
+        <?php } ?>
 
+        <?php if(checkRoleCanAccessModule('work-order-settings', 'delete')){ ?>
         $('.delete-custom-field').on('click', function(){
             let cfeid = $(this).attr('data-id');
             let cfname = $(this).attr('data-name');
@@ -420,7 +440,9 @@
                 }
             });
         });
+        <?php } ?>
 
+        <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
         $(".btn-update-workorder-settings").on("click", function(e) {
             let _this = $(this);
             let url = "<?php echo base_url(); ?>/workorder/_update_workorder_settings";
@@ -485,6 +507,7 @@
             $('#custom_id').val(id);
             $('#custom_name_update').val(name);
         });
+        <?php } ?>
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

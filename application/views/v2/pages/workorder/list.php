@@ -21,6 +21,11 @@ function workordermodule__formatWorkOrderNumber($number) {
 }
 
 ?>
+<style>
+.dataTables_filter, .dataTables_length{
+    display: none;
+}
+</style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
@@ -65,13 +70,40 @@ function workordermodule__formatWorkOrderNumber($number) {
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 col-md-4">
-                        <form action="<?php echo base_url('workorder') ?>" method="GET">
-                            <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" value="<?php echo (!empty($search)) ? $search : '' ?>" placeholder="Search Work Order">
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter primary h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-calendar'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id=""><?= count($scheduledWorkorders); ?></h2>
+                                    <span>Total Scheduled Workorders</span>
+                                </div>
                             </div>
-                        </form>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter secondary h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-calendar-exclamation'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id=""><?= count($newWorkorders); ?></h2>
+                                    <span>Total New Workorders</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row  mt-5">
+                    <div class="col-12 col-md-4">
+                        <div class="nsm-field-group search form-group">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_SEARCHBAR" placeholder="Search Workorder">
+                        </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
@@ -113,12 +145,17 @@ function workordermodule__formatWorkOrderNumber($number) {
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
+                            <?php if(checkRoleCanAccessModule('work-orders', 'write')){ ?>
                             <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('workorder/work_order_templates') ?>'">
                                 <i class='bx bx-fw bx-window-alt'></i> Industry Templates
                             </button>
                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_workorder_modal">
                                 <i class='bx bx-fw bx-task'></i> New Work Order
+                            </button>                            
+                            <button type="button" class="nsm-button primary" id="archived-workorder-list">
+                                <i class='bx bx-fw bx-trash'></i> Manage Archived
                             </button>
+                            <?php } ?>
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('workorder/settings') ?>'">
                                 <i class='bx bx-fw bx-cog'></i>
                             </button>
@@ -235,6 +272,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('workorder/view/' . $workorder->id) ?>">View</a>
                                                 </li>
+                                                <?php if(checkRoleCanAccessModule('work-orders', 'write')){ ?>
                                                 <li>
                                                     <?php if($workorder->work_order_type_id == '2'){ ?>
                                                         <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
@@ -246,19 +284,24 @@ function workordermodule__formatWorkOrderNumber($number) {
                                                     <?php } else{ ?>
                                                         <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                     <?php } ?>
-                                                </li>
+                                                </li>                                                
                                                 <li>
                                                     <a class="dropdown-item clone-item" href="javascript:void(0);" data-id="<?php echo $workorder->id ?>" data-wo_num="<?php echo $workorder->work_order_number ?>" data-bs-toggle="modal" data-bs-target="#clone_workorder_modal">Clone Work Order</a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('invoice') ?>">Create Invoice</a>
                                                 </li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('work-orders', 'delete')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-work-id="<?php echo $workorder->id; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-work-id="<?php echo $workorder->id; ?>" data-wo_num="<?php echo $workorder->work_order_number ?>">Delete</a>
                                                 </li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('work-orders', 'write')){ ?>
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('job/work_order_job/' . $workorder->id) ?>">Convert To Jobs</a>
                                                 </li>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </td>
@@ -288,7 +331,18 @@ function workordermodule__formatWorkOrderNumber($number) {
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#workorder-list").nsmPagination({itemsPerPage:10});
+        var LIST_TABLE = $("#workorder-list").DataTable({
+            "ordering": false,
+            language: {
+                processing: '<span>Fetching data...</span>'
+            },
+        });
+
+        $("#CUSTOM_SEARCHBAR").keyup(function() {
+            LIST_TABLE.search($(this).val()).draw()
+        });
+
+        //$("#workorder-list").nsmPagination({itemsPerPage:10});
 
         $("#select-all").on("change", function() {
             let isChecked = $(this).is(":checked");
@@ -299,6 +353,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                 $(".nsm-table").find(".select-one").prop("checked", false);
         });
 
+        <?php if(checkRoleCanAccessModule('work-orders', 'write')){ ?>
         $(document).on("click", ".clone-item", function() {
             let num = $(this).attr('data-wo_num');
             let id = $(this).attr('data-id');
@@ -332,13 +387,70 @@ function workordermodule__formatWorkOrderNumber($number) {
             });
         });
 
+        $('#archived-workorder-list').on('click', function(){
+            $('#modal-archived-workorder').modal('show');
+            $.ajax({
+                type: "POST",
+                url: base_url + "workorder/_archived_list",  
+                success: function(html) {    
+                    $('#workorder-archived-list-container').html(html);                          
+                },
+                beforeSend: function() {
+                    $('#workorder-archived-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $(document).on('click', '.btn-restore-workorder', function(){
+            var workorder_id = $(this).attr('data-id');
+            var workorder_number = $(this).attr('data-worknumber');
+
+            Swal.fire({
+                title: 'Restore Workorder Data',
+                html: `Proceed with restoring workoder data <b>${workorder_number}</b>?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {                    
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "workorder/_restore_archived",
+                        data: {workorder_id:workorder_id},
+                        dataType:'json',
+                        success: function(result) {                            
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-workorder').modal('hide');
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Restore Workorder',
+                                text: 'Workorder data was successfully restored.',
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+        <?php } ?>
+
+        <?php if(checkRoleCanAccessModule('work-orders', 'delete')){ ?>
         $(document).on("click", ".delete-item", function() {
             let id = $(this).attr('data-work-id');
-            console.log(id);
+            let wonum = $(this).attr('data-wo_num');
 
             Swal.fire({
                 title: 'Delete Work Order',
-                text: "Are you sure you want to delete this Work Order?",
+                html: `Are you sure you want to delete work order number <b>${wonum}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -348,26 +460,35 @@ function workordermodule__formatWorkOrderNumber($number) {
                     $.ajax({
                         type: 'POST',
                         url: "<?php echo base_url(); ?>workorder/delete_workorder",
-                        data: {
-                            id: id
-                        },
+                        data: {id: id},
+                        dataType:'json',
                         success: function(result) {
-                            Swal.fire({
-                                title: 'Good job!',
-                                text: "Data Deleted Successfully!",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            }).then((result) => {
-                                if (result.value) {
-                                    location.reload();
-                                }
-                            });
+                            if( result.is_success == 1 ){
+                                Swal.fire({
+                                    title: 'Delete Work Order',
+                                    text: 'Workorder deleted successfully!',
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        location.reload();
+                                    }
+                                });
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                   text: 'Cannot find data',
+                                });
+                            }
+                            
                         },
                     });
                 }
             });
         });
+        <?php } ?>
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

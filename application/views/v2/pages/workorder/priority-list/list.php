@@ -23,18 +23,24 @@
                             <button><i class='bx bx-x'></i></button>
                             Priority scheduling is a method of scheduling processes based on priority. In this method, the scheduler chooses the tasks to work as per the list of priority. Priority scheduling involves priority assignment to every process in events or jobs.
                         </div>
-                        <div class="nsm-callout primary">Here is where you will create how you want to name the events or jobs on the calendar. This priority list is where you assigned the most important thing you have to do or deal with, or must be done or dealt with before everything else you have to do. It can be based on the most important to least important base on funding or state of need.</div>
                     </div>
-                </div>
+                </div>                
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-12 col-md-4 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div>
+                    </div>
+                    <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
+                    <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary btn-create-workorder-priority">
                                 <i class='bx bx-fw bx-plus'></i> New Priority
                             </button>
                         </div>
                     </div>
-                </div>
+                    <?php } ?>
+                </div>                
                 <table class="nsm-table">
                     <thead>
                         <tr>
@@ -59,12 +65,16 @@
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
                                                 <li>
                                                     <a class="dropdown-item btn-edit-workorder-priority" href="javascript:void(0);" data-id="<?= $priority->id; ?>" data-name="<?= $priority->title;  ?>">Edit</a>
                                                 </li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('work-order-settings', 'delete')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item" href="javascript:void(0);" data-id="<?php echo $priority->id; ?>" data-name="<?php echo $priority->title;  ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $priority->id; ?>" data-name="<?php echo $priority->title;  ?>">Delete</a>
                                                 </li>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </td>
@@ -89,6 +99,9 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
+        $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));        
+        }, 1000));
     });
 
     $(document).on('click', '.btn-create-workorder-priority', function(){
@@ -117,8 +130,8 @@
                 if( o.is_success == 1 ){   
                     $("#create_priority_modal").modal("hide");         
                     Swal.fire({
-                        title: 'Save Successful!',
-                        text: "Priority name was successfully saved.",
+                        title: 'Workorder Priority',
+                        text: "Workorder priority has been added successfully.",
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
@@ -173,8 +186,8 @@
                 if( o.is_success == 1 ){   
                     $("#edit_priority_modal").modal("hide");         
                     Swal.fire({
-                        title: 'Update Successful!',
-                        text: "Priority name was updated saved.",
+                        title: 'Workorder Priority',
+                        text: "Workorder priority has been updated successfully.",
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
@@ -195,6 +208,50 @@
              }
           });
         }, 800);
+    });
+
+    $(document).on("click", ".delete-item", function() {
+        let id = $(this).attr('data-id');
+        let name = $(this).attr('data-name');
+
+        Swal.fire({
+            title: 'Delete Workorder Priority',
+            html: `Are you sure you want to delete this workorder priority <b>${name}</b>?`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "workorder/_delete_workorder_priority",
+                    data: {id: id},
+                    dataType:"json",
+                    success: function(result) {
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Workorder Priority',
+                                text: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: result.msg
+                            });
+                        }
+                    },
+                });
+            }
+        });
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
