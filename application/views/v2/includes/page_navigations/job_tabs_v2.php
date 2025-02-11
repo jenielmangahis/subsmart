@@ -2,7 +2,7 @@
     <ul>
         <li class="active">
             <a class="nsm-page-link" href="<?= base_url('job') ?>">
-                <i class='bx bx-fw bx-message-square-error'></i>
+                <i class='bx bx-fw bx-briefcase'></i>
                 <span>Jobs</span>
             </a>
         </li>    

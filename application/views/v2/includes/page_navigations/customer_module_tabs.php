@@ -12,20 +12,20 @@
                 <span>Inventory</span>
             </a>
         </li>
-        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="javascript:void(0);" onclick="window.open('<?= base_url('job/new_job1?cus_id='.$cus_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">
+        <li class="<?php if($page->title == 'Customer Job List'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?= base_url('customer/jobs_list/'.$cus_id) ?>">            
                 <i class='bx bx-fw bx-message-square-error'></i>
                 <span>Jobs</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Services'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="javascript:void(0);" onclick="window.open('<?= base_url('tickets/addTicketCust/'.$cus_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">
+        <li class="<?php if($page->title == 'Customer Service Ticket List'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?= base_url('customer/service_ticket_list/'.$cus_id) ?>">
                 <i class='bx bx-fw bx-wrench'></i>
                 <span>Services</span>
             </a>
         </li>
-        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#NEW_ESTIMATE_MODAL">
+        <li class="<?php if($page->title == 'Customer Estimate List'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?= base_url('customer/estimate_list/'.$cus_id) ?>">
                 <i class='bx bx-fw bx-chart'></i>
                 <span>Estimates</span>
             </a>
