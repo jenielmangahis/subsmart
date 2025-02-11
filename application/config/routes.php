@@ -1502,6 +1502,8 @@ $route['cron/company_recurring_nsmart_subscription_with_payment_errors'] = 'Cron
 $route['cron/customer_recurring_subscriptions'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionV2';
 $route['cron/process_accounting_recurring_transaction_payment'] = 'Cron_Payment/process_accounting_recurring_transaction_payment';
 
+$route['cron/customer_recurring_subscriptions_test'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionV2test';
+
 // Admin Users
 $route['admin/_update_employee'] = 'Admin/ajaxUpdateEmployee';
 $route['admin/_update_employee_password'] = 'Admin/ajaxUpdateEmployeePassword';
