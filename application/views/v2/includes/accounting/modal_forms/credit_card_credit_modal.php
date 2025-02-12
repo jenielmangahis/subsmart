@@ -235,10 +235,15 @@
                                                                 </td>
                                                                 <td>
                                                                     <select name="category[]" class="nsm-field form-control">
-                                                                        <option disabled selected>&nbsp;</option>
-                                                                        <option value="fixed" <?=$category->category === 'fixed' ? 'selected' : ''?>>Fixed Cost</option>
+                                                                        
+                                                                        <?php if(isset($category->category) && $category->category != null) { ?>
+                                                                                <option value="<?php echo $category->category ?>" selected><?php echo getItemCategoryName($category_list, $category->category); ?></option>
+                                                                        <?php }else{ ?>
+                                                                                <option disabled selected>&nbsp;</option>
+                                                                        <?php } ?>
+                                                                        <!-- <option value="fixed" <?=$category->category === 'fixed' ? 'selected' : ''?>>Fixed Cost</option>
                                                                         <option value="variable" <?=$category->category === 'variable' ? 'selected' : ''?>>Variable Cost</option>
-                                                                        <option value="periodic" <?=$category->category === 'periodic' ? 'selected' : ''?>>Periodic Cost</option>
+                                                                        <option value="periodic" <?=$category->category === 'periodic' ? 'selected' : ''?>>Periodic Cost</option> -->
                                                                     </select>
                                                                 </td>
                                                                 <td><input type="text" name="description[]" class="nsm-field form-control" value="<?=$category->description?>"></td>
