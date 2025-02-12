@@ -14168,12 +14168,15 @@ class Accounting_modals extends MY_Controller
             return strtotime($b->created_at) > strtotime($a->created_at);
         });
 
+        $category_list = $this->items_model->getItemCategories();
+
         $this->page_data['linkableTransactions'] = $linkableTransactions;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Check', $checkId);
         $this->page_data['check'] = $check;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
         $this->page_data['balance'] = $selectedBalance;
+        $this->page_data['category_list'] = $category_list;
 
         $this->load->view("v2/includes/accounting/modal_forms/check_modal", $this->page_data);
     }
@@ -14297,6 +14300,8 @@ class Accounting_modals extends MY_Controller
             $selectedBalance = '$'.number_format(floatval(str_replace(',', '', $selectedBalance)), 2, '.', ',');
         }
 
+        $category_list = $this->items_model->getItemCategories();
+
         $categories = $this->expenses_model->get_transaction_categories($ccCreditId, 'Credit Card Credit');
         $items = $this->expenses_model->get_transaction_items($ccCreditId, 'Credit Card Credit');
 
@@ -14305,6 +14310,8 @@ class Accounting_modals extends MY_Controller
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
         $this->page_data['balance'] = $selectedBalance;
+
+        $this->page_data['category_list'] = $category_list;
 
         $this->load->view("v2/includes/accounting/modal_forms/credit_card_credit_modal", $this->page_data);
     }
