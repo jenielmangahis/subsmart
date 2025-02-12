@@ -79,6 +79,19 @@ class Checklist_model extends MY_Model
         return $query;
     }
 
+    public function getByNameAndCompanyId($checklist_name, $company_id)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('checklist_name', $checklist_name);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function getAttachType()
     {
         $types = [
