@@ -3112,10 +3112,9 @@ $(document).ready(function(){
   }
   
   function createDocusignTemplate(file, options = {}) {
-      //const prefixURL = "http://127.0.0.1/ci/nsmart_v2";
-      const prefixURL = "";
-  
-      const { id, name, created_at, is_shared } = file;
+      //const prefixURL = "";
+      const prefixURL = "http://127.0.0.1/ci/nsmart_v2";
+      const { id, name, created_at, is_user_shared, is_shared } = file;
       const { onClick = null, onDoubleClick = null } = options;
       const createdString = moment(created_at).format("MMMM DD, YYYY");
       const templateUrl = `${prefixURL}/eSign_v2/templatePrepare?id=${id}`;
@@ -3155,12 +3154,14 @@ $(document).ready(function(){
   
                         <div class="dropdown-menu dropdown-menu-right">
                           <a class="dropdown-item" href="#" data-action="use">Use</a>
-                          <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="edit">Edit</a>
+                          <a class="dropdown-item ${is_user_shared ? 'd-none' : ''}" href="#" data-action="edit">Edit</a>
                           <a class="dropdown-item" href="javascript:void(0);" data-action="copy">Duplicate</a>
-                          <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="makedefault">Set as default</a>
-                          <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="delete">Delete</a>
-                          <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="share">Share with users</a>
-                          <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="uploadThumbnail">Change thumbnail</a>
+                          <a class="dropdown-item ${is_user_shared ? 'd-none' : ''}" href="#" data-action="makedefault">Set as default</a>
+                          <a class="dropdown-item ${is_user_shared ? 'd-none' : ''}" href="#" data-action="delete">Delete</a>
+                          <a class="dropdown-item ${is_user_shared ? 'd-none' : ''}" href="#" data-action="share">Share with users</a>
+                          <a class="dropdown-item ${is_shared == 1 ? 'd-none' : ''}" href="#" data-action="shareToAll">Share to all</a>
+                          <a class="dropdown-item ${is_shared == 0 ? 'd-none' : ''}" href="#" data-action="unShareToAll">Unshare to all</a>
+                          <a class="dropdown-item ${is_user_shared ? 'd-none' : ''}" href="#" data-action="uploadThumbnail">Change thumbnail</a>
                         </div>
                       </div>
                     </td>
@@ -3180,7 +3181,7 @@ $(document).ready(function(){
         $prevDefault.removeClass("vault__docusignTemplate--isDefault");
         $element.addClass("vault__docusignTemplate--isDefault");
       }
-  
+      
       const actions = {
         use: () => {
           const urlParams = new URLSearchParams(window.location.search);
@@ -3211,7 +3212,7 @@ $(document).ready(function(){
         },
         copy: async function () {
           Swal.fire({            
-              html: "Proceed with duplicating selected template?",
+              html: `Proceed with duplicating template <b>${name}</b>?`,
               icon: 'question',
               confirmButtonText: 'Proceed',
               showCancelButton: true,
@@ -3228,6 +3229,68 @@ $(document).ready(function(){
                 });
               }
           });          
+        },
+        shareToAll: function(){
+          Swal.fire({     
+              title: 'Share Template',       
+              html: `Proceed with sharing template <b>${name}</b> to all company users?`,
+              icon: 'question',
+              confirmButtonText: 'Proceed',
+              showCancelButton: true,
+              cancelButtonText: "Cancel"
+          }).then((result) => {
+              if (result.value) { 
+                $.ajax({
+                  url: `${prefixURL}/DocuSign/shareToAll/${id}`,
+                  type: "POST",
+                  dataType:'json',
+                  success: function (response) {
+                    Swal.fire({
+                        title: 'Share Template',
+                        text: "Template was successfully shared to all company users.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.reload();
+                        //}
+                    });
+                  },
+                });
+              }
+          });      
+        },
+        unShareToAll: function(){
+          Swal.fire({     
+              title: 'Unshare Template',       
+              html: `Proceed with removing from shared template <b>${name}</b> to all company users?`,
+              icon: 'question',
+              confirmButtonText: 'Proceed',
+              showCancelButton: true,
+              cancelButtonText: "Cancel"
+          }).then((result) => {
+              if (result.value) { 
+                $.ajax({
+                  url: `${prefixURL}/DocuSign/unShareToAll/${id}`,
+                  type: "POST",
+                  dataType:'json',
+                  success: function (response) {
+                    Swal.fire({
+                        title: 'Unshare Template',
+                        text: "Template was successfully removed from shared templates to all company users.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.reload();
+                        //}
+                    });
+                  },
+                });
+              }
+          });      
         },
         share: function () {
           showUsersModal(id);
@@ -3634,8 +3697,8 @@ $(document).ready(function(){
   
   
   function showDeleteTemplateModal(templateId) {
-    //const urlPrefix = "http://127.0.0.1/ci/nsmart_v2";
-    const urlPrefix = "";
+    const urlPrefix = "http://127.0.0.1/ci/nsmart_v2";
+    //const urlPrefix = "";
   
     const $modal = $("#deleteTemplateModal");
     const $submit = $modal.find(".nsm-button.primary");
