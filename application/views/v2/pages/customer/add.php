@@ -71,7 +71,7 @@
                 </div>
                 <form id="customer_form">
                     <div class="row g-3 align-items-start" id="customer-add-advance">
-                        <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
+                        <?php if( in_array(logged('company_id'), adi_company_ids()) || logged('company_id') == 1 ){ ?>
                             <div class="col-12 col-md-12">
                                 <div class="row">
                                     <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_papers'); ?>

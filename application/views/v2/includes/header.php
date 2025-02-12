@@ -160,6 +160,7 @@ if ($this->session->userdata('usertimezone') == null) {
                     $fields = ['id', 'business_name'];
 $cid = logged('company_id');
 $user_type = logged('user_type');
+$role = logged('role');
 $hdrCompanyData = getCompanyData($cid, $fields);
 ?>
                 <?php if ($hdrCompanyData) { ?>
@@ -246,7 +247,8 @@ $hdrCompanyData = getCompanyData($cid, $fields);
                         <li>
                             <div class="dropdown d-flex">
                                 <?php
-                                    if ($user_type == 7 && $cid == 1) {
+                                    // Only nSmarTrac Company with Admin Role User Account
+                                    if ($cid == 1 && $role == 7) {
                                         echo "<a id='helpSupportButton' href='#' data-bs-toggle='offcanvas' data-bs-target='#admin_supportSidebarID' aria-controls='admin_supportSidebarID'><i class='bx bx-support' style='margin-top: 0px !important;'></i></a>";
                                     } else {
                                         echo "<a id='helpSupportButton' href='#' data-bs-toggle='offcanvas' data-bs-target='#client_supportSidebarID' aria-controls='client_supportSidebarID'><i class='bx bx-support' style='margin-top: 0px !important;'></i></a>";
@@ -621,7 +623,8 @@ if (is_null($image)) {
                 <div class="nsm-content">
                     <!-- Tech Support Sidebar -->
                     <?php
-                        if ($user_type == 7 && $cid == 1) {
+                        // Only nSmarTrac Company with Admin Role User Account
+                        if ($cid == 1 && $role == 7) {
                             include viewPath('v2/includes/techsupport/admin_techsupport_sidebar');
                         } else {
                             include viewPath('v2/includes/techsupport/client_techsupport_sidebar');

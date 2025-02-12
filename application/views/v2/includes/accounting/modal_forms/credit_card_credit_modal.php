@@ -12,7 +12,7 @@
 <?php if(!isset($ccCredit)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
 <?php else : ?>
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/credit-card-credit/<?=$ccCredit->id?>">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="<?php echo base_url(); ?>accounting/update-transaction/credit-card-credit/<?=$ccCredit->id?>">
 <?php endif; ?>
     <div id="creditCardCreditModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
         <div class="modal-dialog">
@@ -175,8 +175,8 @@
                                                                 <td data-name="Category" style="width:15%;">CATEGORY</td>
                                                                 <td data-name="Description">DESCRIPTION</td>
                                                                 <td data-name="Amount" style="width:8%;">AMOUNT</td>
-                                                                <td data-name="Billable" style="width:5%;">BILLABLE</td>
-                                                                <td data-name="Markup %" style="width:8%;">MARKUP %</td>
+                                                                <td data-name="Billable" style="width:8%; text-align: center;">BILLABLE</td>
+                                                                <td data-name="Markup %" style="width:6%;">MARKUP %</td>
                                                                 <td data-name="Tax" style="width:3%;">TAX</td>                                                                
                                                                 <td data-name="Manage" style="width:3%;"></td>
                                                             </tr>
@@ -221,6 +221,14 @@
                                                             <tr>
                                                                 <td><?=$count?></td>
                                                                 <td>
+                                                                    <select name="category_customer[]" class="nsm-field form-control">
+                                                                        <option value="<?=$category->customer_id?>">
+                                                                            <?php $customer = $this->accounting_customers_model->get_by_id($category->customer_id); ?>
+                                                                            <?=$customer->first_name . ' ' . $customer->last_name?>
+                                                                        </option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
                                                                     <select name="expense_account[]" class="nsm-field form-control" required>
                                                                         <option value="<?=$category->expense_account_id?>"><?=$this->chart_of_accounts_model->getName($category->expense_account_id)?></option>
                                                                     </select>
@@ -245,14 +253,6 @@
                                                                     <div class="table-row-icon table-checkbox">
                                                                         <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1" <?=$category->tax === "1" ? 'checked' : ''?>>
                                                                     </div>
-                                                                </td>
-                                                                <td>
-                                                                    <select name="category_customer[]" class="nsm-field form-control">
-                                                                        <option value="<?=$category->customer_id?>">
-                                                                            <?php $customer = $this->accounting_customers_model->get_by_id($category->customer_id); ?>
-                                                                            <?=$customer->first_name . ' ' . $customer->last_name?>
-                                                                        </option>
-                                                                    </select>
                                                                 </td>
                                                                 <td>
                                                                     <button type="button" class="nsm-button delete-row">

@@ -637,7 +637,7 @@ class DocuSign extends MYF_Controller
         $autoPopulateData['invoices'] = $filtered_invoice;
 
         #emergency primary contact
-        $this->db->select('id, first_name AS emergency_primary_contact_fname, last_name AS emergency_primary_contact_lname, phone AS emergency_primary_contact_phone, relation AS emergency_primary_contact_relation');
+        $this->db->select('first_name AS emergency_primary_contact_fname, last_name AS emergency_primary_contact_lname, phone AS emergency_primary_contact_phone, relation AS emergency_primary_contact_relation');
         $this->db->where('customer_id', $customer_id);
         $this->db->order_by('id', 'ASC');
         $emergencyPrimaryContact = $this->db->get('contacts')->row();
@@ -700,42 +700,6 @@ class DocuSign extends MYF_Controller
             ];
         }
         $autoPopulateData['secondary_emergency_contacts'] = $filteredContacts;
-
-        #emergency third contact
-        $this->db->select('id, first_name AS emergency_third_contact_fname, last_name AS emergency_third_contact_lname, phone AS emergency_third_contact_phone, relation AS emergency_third_contact_relation');
-        $this->db->where('customer_id', $customer_id);  
-        if( $emergencyPrimaryContact ){
-            $this->db->where('id !=', $emergencyPrimaryContact->id);        
-        } 
-        
-        if( $emergencySecondaryContact ){
-            $this->db->where('id !=', $emergencySecondaryContact->id);        
-        } 
-        
-        $this->db->order_by('id', 'DESC');
-        $emergencyThirdContact = $this->db->get('contacts')->row();
-        
-        if( $emergencyThirdContact ){
-            $contacts_accessKeys = [
-                'emergency_third_contact_fname',
-                'emergency_third_contact_lname',
-                'emergency_third_contact_phone',
-                'emergency_third_contact_relation'
-            ];
-            
-            $filteredContacts = array_filter( (array)$emergencyThirdContact , function($v) use ($contacts_accessKeys) {
-                return in_array($v, $contacts_accessKeys);
-            }, ARRAY_FILTER_USE_KEY);
-        }else{
-            $filteredContacts = [
-                'emergency_third_contact_fname' => '',
-                'emergency_third_contact_lname' => '',
-                'emergency_third_contact_phone' => '',     
-                'emergency_third_contact_relation' => ''           
-            ];
-        }
-        
-        $autoPopulateData['third_emergency_contacts'] = $filteredContacts;
 
         #password
         $this->db->where('fk_prof_id', $customer_id);
@@ -1857,16 +1821,26 @@ class DocuSign extends MYF_Controller
 
     public function apiTemplates()
     {
+        $rid = logged('role');
+
         $sharedOnly = filter_var($this->input->get('shared'), FILTER_VALIDATE_BOOLEAN);
         $sharedAndOwned = filter_var($this->input->get('all'), FILTER_VALIDATE_BOOLEAN);
         $user_docfile_template_id = $this->input->get('select_template') ? $this->input->get('select_template') : '0';
 
-        $getOwned = function () {
-            $this->db->where('company_id', logged('company_id'));
-            //$this->db->where('user_id', logged('id'));
-            $this->db->order_by('created_at', 'DESC');
-            return $this->db->get('user_docfile_templates')->result();
-        };
+        if( $rid == 7 ){
+            $getOwned = function () {
+                $this->db->where('company_id', logged('company_id'));
+                //$this->db->where('user_id', logged('id'));
+                $this->db->order_by('created_at', 'DESC');
+                return $this->db->get('user_docfile_templates')->result();
+            };
+        }else{
+            $getOwned = function () {                
+                $this->db->where('user_id', logged('id'));
+                $this->db->order_by('created_at', 'DESC');
+                return $this->db->get('user_docfile_templates')->result();
+            };
+        }
 
         $getShared = function () {
             $this->db->where('user_id', logged('id'));
@@ -1892,7 +1866,7 @@ class DocuSign extends MYF_Controller
                 }
 
                 $result->user = $usersMap[$result->user_id];
-                $result->is_shared = true;
+                $result->is_user_shared = true;
             }
 
             return $results;
@@ -4309,6 +4283,42 @@ SQL;
         }, $results);
 
         exit(json_encode(['data' => $results]));
+    }
+
+    public function shareToAll($templateId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $this->db->where('id', $templateId);
+        $template = $this->db->get('user_docfile_templates')->row();
+        if( $template ){
+            $this->db->where('id', $template->id);
+            $this->db->update('user_docfile_templates', ['is_shared' => 1]);
+        }
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $newTemplate]);
+    }
+
+    public function unShareToAll($templateId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $this->db->where('id', $templateId);
+        $template = $this->db->get('user_docfile_templates')->row();
+        if( $template ){
+            $this->db->where('id', $template->id);
+            $this->db->update('user_docfile_templates', ['is_shared' => 0]);
+        }
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $newTemplate]);
     }
 }
 

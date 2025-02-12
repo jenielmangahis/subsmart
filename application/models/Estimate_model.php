@@ -1073,6 +1073,22 @@ class Estimate_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function getAllByCustomerIdAndCompanyId($customer_id, $company_id)   
+    {
+        $this->db->select('estimates.*, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name,CONCAT(ac_leads.firstname, " ", ac_leads.lastname) AS lead_name, users.FName AS user_firstname, users.LName AS user_lastname');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'estimates.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('ac_leads', 'estimates.lead_id = ac_leads.leads_id', 'left');
+        $this->db->join('users', 'estimates.user_id = users.id', 'left');
+        $this->db->where('estimates.company_id', $company_id);
+        $this->db->where('estimates.customer_id', $customer_id);
+        $this->db->where('estimates.view_flag', 0);
+
+        $this->db->order_by('estimates.id', 'DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file Estimate_model.php */
