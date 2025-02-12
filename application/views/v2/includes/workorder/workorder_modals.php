@@ -8,7 +8,7 @@
 }
 </style>
 <div class="modal fade nsm-modal fade" id="new_workorder_modal" tabindex="-1" aria-labelledby="new_workorder_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="new_workorder_modal_label">New Work Order</span>
@@ -108,7 +108,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="clone_workorder_modal" tabindex="-1" aria-labelledby="clone_workorder_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="clone_workorder_modal_label">Clone Work Order</span>
@@ -133,7 +133,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="update_custom_field_modal" tabindex="-1" aria-labelledby="update_custom_field_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'frm-update-custom-field', 'autocomplete' => 'off']); ?>
         <div class="modal-content">
             <div class="modal-header">
@@ -159,7 +159,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="new_custom_field_modal" tabindex="-1" aria-labelledby="new_custom_field_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'frm-save-custom-field', 'autocomplete' => 'off']); ?>
         <div class="modal-content">
             <div class="modal-header">
@@ -783,5 +783,19 @@
                 <button type="button" class="nsm-button primary" id="btn_save_sah_signature">Save</button>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-archived-workorder" aria-labelledby="modal-archived-workorder-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form method="post" id="quick-add-event-form">   
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Archived Jobs</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="workorder-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+            </div>
+        </form>
     </div>
 </div>
