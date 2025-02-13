@@ -14087,12 +14087,15 @@ class Accounting_modals extends MY_Controller
             return strtotime($b->created_at) > strtotime($a->created_at);
         });
 
+        $category_list = $this->items_model->getItemCategories();
+
         $this->page_data['linkableTransactions'] = $linkableTransactions;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Expense', $expenseId);
         $this->page_data['expense'] = $expense;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
         $this->page_data['balance'] = $selectedBalance;
+        $this->page_data['category_list'] = $category_list;
 
         $this->load->view("v2/includes/accounting/modal_forms/expense_modal", $this->page_data);
     }
@@ -16725,152 +16728,298 @@ class Accounting_modals extends MY_Controller
 
     private function update_credit_card_credit($ccCreditId, $data)
     {
-        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId, logged('company_id'));
-        $payee = explode('-', $data['payee']);
+        $this->form_validation->set_rules('bank_credit_account', 'Bank/Credit account', 'required');
 
-        $creditData = [
-            'payee_type' => $payee[0],
-            'payee_id' => $payee[1],
-            'bank_credit_account_id' => $data['bank_credit_account'],
-            'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
-            'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
-            'memo' => $data['memo'],
-            'total_amount' => floatval(str_replace(',', '', $data['total_amount']))
-        ];
+        if (isset($data['expense_account'])) {
+            $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
+            $this->form_validation->set_rules('category_amount[]', 'Category amount', 'required');
+        }
 
-        $update = $this->vendors_model->update_credit_card_credit($ccCreditId, $creditData);
+        if (isset($data['item'])) {
+            $this->form_validation->set_rules('item[]', 'Item', 'required');
+            $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+            $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+        }
 
-        if ($update) {
-            $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $ccCredit->id);
-            $tags = $this->tags_model->get_transaction_tags('CC Credit', $ccCredit->id);
+        if(isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
 
-            if(count($tags) > 0) {
-                foreach($tags as $key => $tag) {
-                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
-                        $this->tags_model->unlink_tag(['transaction_type' => 'CC Credit', 'tag_id' => $tag->id, 'transaction_id' => $ccCredit->id]);
-                    }
-                }
-            }
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
 
-            if(isset($data['tags']) && is_array($data['tags'])) {
-                $order = 1;
-                foreach($data['tags'] as $key => $tagId) {
-                    $linkTagData = [
-                        'transaction_type' => 'CC Credit',
-                        'transaction_id' => $ccCredit->id,
-                        'tag_id' => $tagId,
-                        'order_no' => $order
-                    ];
-
-                    if($tags[$key] === null) {
-                        $linkTagId = $this->tags_model->link_tag($linkTagData);
-                    } else {
-                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
                     }
 
-                    $order++;
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
                 }
             }
+        } else {
+            $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
+        }
 
-            if(count($attachments) > 0) {
-                foreach($attachments as $attachment) {
-                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
-                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'CC Credit', 'attachment_id' => $attachment->id, 'linked_id' => $ccCredit->id]);
-                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+        $return = [];
+        if ($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = validation_errors();
+        } elseif (!isset($data['expense_account']) && !isset($data['item'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } else {
+
+            $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId, logged('company_id'));
+            $payee = explode('-', $data['payee']);
+    
+            $creditData = [
+                'payee_type' => $payee[0],
+                'payee_id' => $payee[1],
+                'bank_credit_account_id' => $data['bank_credit_account'],
+                'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
+                'memo' => $data['memo'],
+                'total_amount' => floatval(str_replace(',', '', $data['total_amount']))
+            ];
+    
+            $update = $this->vendors_model->update_credit_card_credit($ccCreditId, $creditData);
+    
+            if ($update) {
+
+                /**
+                 * Update recurring data - start
+                 */
+                if($data['recurring_type'] !== 'unscheduled') {
+                    $currentDate = date("m/d/Y");
+                    $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
+                    $every = $data['recurr_every'];
+
+                    switch($data['recurring_interval']) {
+                        case 'daily' :
+                            $next = $startDate;
+                        break;
+                        case 'weekly' :
+                            $days = [
+                                'sunday',
+                                'monday',
+                                'tuesday',
+                                'wednesday',
+                                'thursday',
+                                'friday',
+                                'saturday'
+                            ];
+
+                            $day = $data['recurring_day'];
+                            $dayNum = array_search($day, $days);
+                            $next = $startDate;
+
+                            if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                do {
+                                    $next = date("m/d/Y", strtotime("$next +1 day"));
+                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                            }
+                        break;
+                        case 'monthly' :
+                            if($data['recurring_week'] === 'day') {
+                                $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                $next = date("m/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                }
+                            } else {
+                                $week = $data['recurring_week'];
+                                $day = $data['recurring_day'];
+                                $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                }
+                            }
+                        break;
+                        case 'yearly' :
+                            $month = $data['recurring_month'];
+                            $day = $data['recurring_day'];
+                            $previous = date("$month/$day/Y", strtotime($startDate));
+                            $next = date("$month/$day/Y", strtotime($startDate));
+
+                            if(strtotime($currentDate) > strtotime($next)) {
+                                $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                            }
+                        break;
+                    }
+                }            
+
+                $recurringData = [
+                    'company_id' => logged('company_id'),
+                    'template_name' => $data['template_name'],
+                    'recurring_type' => $data['recurring_type'],
+                    'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                    'txn_type' => 'credit card credit',
+                    'recurring_interval' => $data['recurring_interval'],
+                    'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                    'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                    'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                    'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
+                    'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
+                    'end_type' => $data['end_type'],
+                    'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                    'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                    'current_occurrence' => 0,
+                    'next_date' => date("Y-m-d", strtotime($next)),
+                    'status' => 1
+                ];       
+                $recurringUpdate = $this->accounting_recurring_transactions_model->updateRecurringTransactionByTxnId($ccCreditId, $recurringData);
+                /**
+                 * Update recurring data - end
+                 */   
+
+                $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $ccCredit->id);
+                $tags = $this->tags_model->get_transaction_tags('CC Credit', $ccCredit->id);
+    
+                if(count($tags) > 0) {
+                    foreach($tags as $key => $tag) {
+                        if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                            $this->tags_model->unlink_tag(['transaction_type' => 'CC Credit', 'tag_id' => $tag->id, 'transaction_id' => $ccCredit->id]);
+                        }
                     }
                 }
-            }
-
-            if (isset($data['attachments']) && is_array($data['attachments'])) {
-                $order = 1;
-                foreach ($data['attachments'] as $attachmentId) {
-                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
-                        return $v->id === $attachmentId;
-                    }, ARRAY_FILTER_USE_BOTH);
-
-                    if(count($link) > 0) {
-                        $attachmentData = [
-                            'type' => 'CC Credit',
-                            'attachment_id' => $attachmentId,
-                            'linked_id' => $ccCreditId,
-                            'order_no' => $order
-                        ];
-
-                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
-                    } else {
-                        $linkAttachmentData = [
-                            'type' => 'CC Credit',
-                            'attachment_id' => $attachmentId,
-                            'linked_id' => $ccCreditId,
+    
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $key => $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'CC Credit',
+                            'transaction_id' => $ccCredit->id,
+                            'tag_id' => $tagId,
                             'order_no' => $order
                         ];
     
-                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                        if($tags[$key] === null) {
+                            $linkTagId = $this->tags_model->link_tag($linkTagData);
+                        } else {
+                            $updateOrder = $this->tags_model->update_link($linkTagData);
+                        }
+    
+                        $order++;
                     }
-
-                    $order++;
                 }
-            }
-
-            $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('CC Credit', $ccCreditId);
-
-            foreach($accountTransacs as $transac)
-            {
-                $account = $this->chart_of_accounts_model->getById($transac->account_id);
-                $accountType = $this->account_model->getById($account->account_id);
-
-                if($accountType->account_name === 'Credit Card') {
-                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
-                } else {
-                    $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+    
+                if(count($attachments) > 0) {
+                    foreach($attachments as $attachment) {
+                        if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                            $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'CC Credit', 'attachment_id' => $attachment->id, 'linked_id' => $ccCredit->id]);
+                            $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                        }
+                    }
                 }
-
+    
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    $order = 1;
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                            return $v->id === $attachmentId;
+                        }, ARRAY_FILTER_USE_BOTH);
+    
+                        if(count($link) > 0) {
+                            $attachmentData = [
+                                'type' => 'CC Credit',
+                                'attachment_id' => $attachmentId,
+                                'linked_id' => $ccCreditId,
+                                'order_no' => $order
+                            ];
+    
+                            $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                        } else {
+                            $linkAttachmentData = [
+                                'type' => 'CC Credit',
+                                'attachment_id' => $attachmentId,
+                                'linked_id' => $ccCreditId,
+                                'order_no' => $order
+                            ];
+        
+                            $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                        }
+    
+                        $order++;
+                    }
+                }
+    
+                $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('CC Credit', $ccCreditId);
+    
+                foreach($accountTransacs as $transac)
+                {
+                    $account = $this->chart_of_accounts_model->getById($transac->account_id);
+                    $accountType = $this->account_model->getById($account->account_id);
+    
+                    if($accountType->account_name === 'Credit Card') {
+                        $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount));
+                    } else {
+                        $newBalance = $transac->type === 'increase' ? floatval(str_replace(',', '', $account->balance)) - floatval(str_replace(',', '', $transac->amount)) : floatval(str_replace(',', '', $account->balance)) + floatval(str_replace(',', '', $transac->amount));
+                    }
+    
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                    $accData = [
+                        'id' => $account->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => floatval(str_replace(',', '', $newBalance))
+                    ];
+        
+                    $this->chart_of_accounts_model->updateBalance($accData);
+                }
+    
+                $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('CC Credit', $ccCreditId);
+    
+                $creditAcc = $this->chart_of_accounts_model->getById($data['bank_credit_account']);
+    
+                $newBalance = floatval(str_replace(',', '', $creditAcc->balance)) - floatval(str_replace(',', '', $data['total_amount']));
                 $newBalance = number_format($newBalance, 2, '.', ',');
-
-                $accData = [
-                    'id' => $account->id,
+    
+                $creditAccData = [
+                    'id' => $creditAcc->id,
                     'company_id' => logged('company_id'),
                     'balance' => floatval(str_replace(',', '', $newBalance))
                 ];
     
-                $this->chart_of_accounts_model->updateBalance($accData);
+                $this->chart_of_accounts_model->updateBalance($creditAccData);
+    
+                $accTransacData = [
+                    'account_id' => $creditAcc->id,
+                    'transaction_type' => 'CC Credit',
+                    'transaction_id' => $creditId,
+                    'amount' => floatval(str_replace(',', '', $data['total_amount'])),
+                    'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                    'type' => 'increase'
+                ];
+    
+                $this->accounting_account_transactions_model->create($accTransacData);
+    
+                $this->update_categories('Credit Card Credit', $ccCreditId, $data);
+                $this->update_items('Credit Card Credit', $ccCreditId, $data);
             }
 
-            $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('CC Credit', $ccCreditId);
+            $return['data']    = $ccCreditId;
+            $return['success'] = $update ? true : false;
+            $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';      
 
-            $creditAcc = $this->chart_of_accounts_model->getById($data['bank_credit_account']);
-
-            $newBalance = floatval(str_replace(',', '', $creditAcc->balance)) - floatval(str_replace(',', '', $data['total_amount']));
-            $newBalance = number_format($newBalance, 2, '.', ',');
-
-            $creditAccData = [
-                'id' => $creditAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => floatval(str_replace(',', '', $newBalance))
-            ];
-
-            $this->chart_of_accounts_model->updateBalance($creditAccData);
-
-            $accTransacData = [
-                'account_id' => $creditAcc->id,
-                'transaction_type' => 'CC Credit',
-                'transaction_id' => $creditId,
-                'amount' => floatval(str_replace(',', '', $data['total_amount'])),
-                'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
-                'type' => 'increase'
-            ];
-
-            $this->accounting_account_transactions_model->create($accTransacData);
-
-            $this->update_categories('Credit Card Credit', $ccCreditId, $data);
-            $this->update_items('Credit Card Credit', $ccCreditId, $data);
         }
 
-        return [
-            'data' => $ccCreditId,
-            'success' => $update ? true : false,
-            'message' => $update ? 'Update Successful!' : 'An unexpected error occured'
-        ];
+        return $return;
     }
 
     private function revert_bill_payment($billPaymentId)

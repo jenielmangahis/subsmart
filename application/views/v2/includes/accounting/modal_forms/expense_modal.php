@@ -239,6 +239,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <td data-name="Num">#</td>
+                                                                <td data-name="Customer">CUSTOMER</td>
                                                                 <td data-name="Expense Name">EXPENSE NAME</td>
                                                                 <td data-name="Category">CATEGORY</td>
                                                                 <td data-name="Description">DESCRIPTION</td>
@@ -246,7 +247,6 @@
                                                                 <td data-name="Billable">BILLABLE</td>
                                                                 <td data-name="Markup %">MARKUP %</td>
                                                                 <td data-name="Tax">TAX</td>
-                                                                <td data-name="Customer">CUSTOMER</td>
                                                                 <?php if(isset($expense) && !is_null($expense->linked_transacs)) : ?>
                                                                 <td data-name="Linked"></td>
                                                                 <?php endif; ?>
@@ -295,13 +295,25 @@
                                                             <tr>
                                                                 <td><?=$count?></td>
                                                                 <td>
+                                                                    <select name="category_customer[]" class="nsm-field form-control">
+                                                                        <option value="<?=$category->customer_id?>">
+                                                                            <?php $customer = $this->accounting_customers_model->get_by_id($category->customer_id); ?>
+                                                                            <?=$customer->first_name . ' ' . $customer->last_name?>
+                                                                        </option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
                                                                     <select name="expense_account[]" class="nsm-field form-control" required>
                                                                         <option value="<?=$category->expense_account_id?>"><?=$this->chart_of_accounts_model->getName($category->expense_account_id)?></option>
                                                                     </select>
                                                                 </td>
                                                                 <td>
                                                                     <select name="category[]" class="nsm-field form-control">
-                                                                        <option disabled selected>&nbsp;</option>
+                                                                        <?php if(isset($category->category) && $category->category != null) { ?>
+                                                                                <option value="<?php echo $category->category ?>" selected><?php echo getItemCategoryName($category_list, $category->category); ?></option>
+                                                                        <?php }else{ ?>
+                                                                                <option disabled selected>&nbsp;</option>
+                                                                        <?php } ?>                                                                        
                                                                         <option value="fixed" <?=$category->category === 'fixed' ? 'selected' : ''?>>Fixed Cost</option>
                                                                         <option value="variable" <?=$category->category === 'variable' ? 'selected' : ''?>>Variable Cost</option>
                                                                         <option value="periodic" <?=$category->category === 'periodic' ? 'selected' : ''?>>Periodic Cost</option>
@@ -319,14 +331,6 @@
                                                                     <div class="table-row-icon table-checkbox">
                                                                         <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1" <?=$category->tax === "1" ? 'checked' : ''?>>
                                                                     </div>
-                                                                </td>
-                                                                <td>
-                                                                    <select name="category_customer[]" class="nsm-field form-control">
-                                                                        <option value="<?=$category->customer_id?>">
-                                                                            <?php $customer = $this->accounting_customers_model->get_by_id($category->customer_id); ?>
-                                                                            <?=$customer->first_name . ' ' . $customer->last_name?>
-                                                                        </option>
-                                                                    </select>
                                                                 </td>
                                                                 <?php if(isset($expense) && !is_null($expense->linked_transacs)) : ?>
                                                                 <td>
