@@ -62,6 +62,7 @@ $route['customer/add_data_sheet'] = 'customer/add_data_sheet';
 
 $route['customer/jobs_list/(:num)'] = 'Customer/job_list/$1';
 $route['customer/estimates_list/(:num)'] = 'Customer/estimates_list/$1';
+$route['customer/esign_list/(:num)'] = 'Customer/esign_list/$1';
 $route['customer/workorders_list/(:num)'] = 'Customer/workorders_list/$1';
 $route['customer/internal_notes/(:num)'] = 'Customer/internal_notes/$1';
 $route['customer/_create_internal_notes'] = 'Customer/ajax_create_internal_notes';
@@ -1100,6 +1101,7 @@ $route['calendar/_delete_tcoff'] = 'Workcalender/ajax_delete_tcoff';
 $route['calendar/_update_technician_off_schedule'] = 'Workcalender/ajax_update_technician_off_schedule';
 
 // workorder
+$route['workorder/new'] = 'Workorder/NewworkOrder';
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';
 $route['workorder/checklists'] = 'Workorder/checklists';
 $route['workorder/add_checklist'] = 'Workorder/add_checklist';
