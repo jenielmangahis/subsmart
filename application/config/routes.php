@@ -1260,6 +1260,7 @@ $route['estimate/_update_next_reminder_date'] = 'Estimate/ajax_update_next_remin
 $route['estimate/_update_estimate_status'] = 'Estimate/ajax_update_estimate_status';
 $route['estimate/_get_package_items'] = 'Estimate/ajax_get_package_items';
 $route['estimate/_delete_selected_estimates'] = 'Estimate/ajax_delete_selected_estimates';
+$route['estimates/_archived_list'] = 'Estimate/ajax_archived_list';
 
 // Credit Notes
 $route['credit_notes'] = 'Credit_Notes/index';
