@@ -63,7 +63,7 @@
                 <div class="row">
                     <div class="col-6 grid-mb">
                         <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="custom-ticket-searchbar" name="search" placeholder="Search" value="">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="custom-estimate-searchbar" name="search" placeholder="Search" value="">
                         </div>
                     </div>
                     <div class="col-6 grid-mb text-end">
@@ -77,7 +77,7 @@
 
                 <div class="tab-content mt-4">
                     
-                    <table class="nsm-table">
+                    <table class="nsm-table" id="estimate-list-table">
                         <thead>
                             <tr>
                                 <td class="table-icon"></td>
@@ -233,35 +233,15 @@
 <?php include viewPath('v2/includes/footer'); ?>
 <script>
 $(document).ready(function() {
-    var ticketListTable = $("#ticket-list-table").DataTable({
+    var estimateListTable = $("#estimate-list-table").DataTable({
         "ordering": false,
         language: {
             processing: '<span>Fetching data...</span>'
         }     
     });
 
-    $("#custom-ticket-searchbar").keyup(function() {
-        ticketListTable.search($(this).val()).draw()
-    });
-
-    $(document).on('click', '.row-view-ticket', function(){
-        var appointment_id = $(this).attr('data-id');
-        var url = base_url + 'ticket/_quick_view_details';
-
-        $('#view-ticket-id').val(appointment_id);
-        $('#modal-view-ticket').modal('show');
-
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: {appointment_id: appointment_id},
-            success: function(result) {
-                $("#view_ticket_container").html(result);
-            },
-            beforeSend: function() {
-                $('#view_ticket_container').html('<span class="bx bx-loader bx-spin"></span>');
-            }
-        });
+    $("#custom-estimate-searchbar").keyup(function() {
+        estimateListTable.search($(this).val()).draw()
     });
 });
 </script>
