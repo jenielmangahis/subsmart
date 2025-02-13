@@ -31,12 +31,12 @@ function workordermodule__formatWorkOrderNumber($number) {
         <i class="bx bx-plus"></i>
     </div>
     <ul class="nsm-fab-options">
-        <li onclick="location.href='<?php echo base_url('workorder/work_order_templates') ?>'">
+        <!-- <li onclick="location.href='<?php echo base_url('workorder/work_order_templates') ?>'">
             <div class="nsm-fab-icon">
                 <i class="bx bx-window-alt"></i>
             </div>
             <span class="nsm-fab-label">Industry Templates</span>
-        </li>
+        </li> -->
         <li data-bs-toggle="modal" data-bs-target="#new_workorder_modal">
             <div class="nsm-fab-icon">
                 <i class="bx bx-task"></i>
@@ -146,12 +146,18 @@ function workordermodule__formatWorkOrderNumber($number) {
                         </div>
                         <div class="nsm-page-buttons page-button-container">
                             <?php if(checkRoleCanAccessModule('work-orders', 'write')){ ?>
-                            <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('workorder/work_order_templates') ?>'">
+                            <!-- <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('workorder/work_order_templates') ?>'">
                                 <i class='bx bx-fw bx-window-alt'></i> Industry Templates
-                            </button>
+                            </button> -->
+                            <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_workorder_modal">
                                 <i class='bx bx-fw bx-task'></i> New Work Order
                             </button>                            
+                            <?php }else{ ?>
+                            <button type="button" class="nsm-button" id="btn-add-new-workorder">
+                                <i class='bx bx-fw bx-task'></i> New Work Order
+                            </button>  
+                            <?php } ?>
                             <button type="button" class="nsm-button primary" id="archived-workorder-list">
                                 <i class='bx bx-fw bx-trash'></i> Manage Archived
                             </button>
@@ -340,6 +346,10 @@ function workordermodule__formatWorkOrderNumber($number) {
 
         $("#CUSTOM_SEARCHBAR").keyup(function() {
             LIST_TABLE.search($(this).val()).draw()
+        });
+
+        $('#btn-add-new-workorder').on('click', function(){
+            location.href = base_url + 'workorder/new';
         });
 
         //$("#workorder-list").nsmPagination({itemsPerPage:10});

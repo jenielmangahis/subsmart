@@ -2740,7 +2740,7 @@ class Customer extends MY_Controller
     }
 
     public function module($id = null)
-    {
+    {        
         $this->load->helper('sms_helper');
         $this->load->model('Clients_model');
         $this->load->model('taskhub_model');
@@ -2899,7 +2899,7 @@ class Customer extends MY_Controller
         $this->load->view('customer/jobs_list', $this->page_data);
     }
 
-    public function estimates_list($cid)
+    public function estimates_list_old($cid)
     {
         $this->load->model('Estimate_model');
         $this->load->model('AcsProfile_model');
@@ -3021,6 +3021,7 @@ class Customer extends MY_Controller
 
         $company_id = logged('company_id');
         $estimates  = $this->Estimate_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+        $customer   = $this->AcsProfile_model->getByProfId($cid);
 
         $this->page_data['page']->title  = 'Customer Estimate List';
         $this->page_data['page']->parent = 'Customers';
@@ -3028,6 +3029,23 @@ class Customer extends MY_Controller
         $this->page_data['estimates']   = $estimates;
         $this->page_data['customer']    = $customer;
         $this->load->view('v2/pages/customer/dashboard/estimate_list', $this->page_data);
+    }
+
+    public function esign_list($cid)
+    {        
+        $this->load->model('UserDocfile_model');
+        $this->load->model('AcsProfile_model');
+
+        $company_id = logged('company_id');
+        $docfiles   = $this->UserDocfile_model->getByCustomerIdAndCompanyId($cid, $company_id);
+        $customer   = $this->AcsProfile_model->getByProfId($cid);
+
+        $this->page_data['page']->title  = 'Customer eSign List';
+        $this->page_data['page']->parent = 'Customers';
+        $this->page_data['cus_id']      = $cid;
+        $this->page_data['docfiles']    = $docfiles;
+        $this->page_data['customer']    = $customer;
+        $this->load->view('v2/pages/customer/dashboard/esign_list', $this->page_data);
     }
 
     public function messages_list($cid)
@@ -3757,8 +3775,8 @@ class Customer extends MY_Controller
         $this->page_data['industryTypes'] = $this->IndustryType_model->getAll();
         $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
         $this->page_data['LEAD_SOURCE_OPTION'] = $this->customer_ad_model->getAllSettingsLeadSourceByCompanyId(logged('company_id'));
-        //$this->load->view('v2/pages/customer/add', $this->page_data);
-        $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
+        $this->load->view('v2/pages/customer/add', $this->page_data);
+        //$this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
 
     public function leads()

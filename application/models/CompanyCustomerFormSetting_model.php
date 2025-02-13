@@ -78,6 +78,7 @@ class CompanyCustomerFormSetting_model extends MY_Model
                 'commision_scheme' => ['field_name' => 'Commision Scheme Override', 'required' => 'yes', 'is_visible' => 'yes'],               
                 'rep_comm' => ['field_name' => 'Rep Commission', 'required' => 'yes', 'is_visible' => 'yes'],               
                 'rep_upfront_pay' => ['field_name' => 'Rep Upfront Pay', 'required' => 'yes', 'is_visible' => 'yes'],               
+                'rep_holdfund_bonus' => ['field_name' => 'Rep Tiered Hold Fund Bonus', 'required' => 'yes', 'is_visible' => 'yes'],               
                 'rep_tiered_bonus' => ['field_name' => 'Rep Tiered Upront Bonus', 'required' => 'yes', 'is_visible' => 'yes'],               
                 'rep_deduction' => ['field_name' => 'Rep Deduction Total', 'required' => 'yes', 'is_visible' => 'yes'],               
                 'tech_comm' => ['field_name' => 'Tech Commission', 'required' => 'yes', 'is_visible' => 'yes'],               

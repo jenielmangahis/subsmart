@@ -1,7 +1,7 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Debug extends MYF_Controller {
+class Debug extends MY_Controller {
     public function __construct()
     {
 
@@ -2954,8 +2954,6 @@ class Debug extends MYF_Controller {
 
     public function ringcentralSmsV2()
     {
-        
-
         $this->load->helper('sms_helper');
         $this->load->model('RingCentralAccounts_model');
 
@@ -2965,6 +2963,48 @@ class Debug extends MYF_Controller {
         $to  = '8506199845';
         $sms_message = 'This is a test sms';
         $sms = smsRingCentral($ringCentralAccount, $to, $sms_message);
+    }
+
+    public function testBatchInsert()
+    {
+        $this->load->model('CustomerStatus_model');
+
+        $comp_id = logged('company_id');
+        //Create default customer status
+		$data[] = [
+			'company_id' => $comp_id,
+			'name' => 'Active',
+			'date_created' => date("Y-m-d H:i:d")
+		];
+		$data[] = [
+			'company_id' => $comp_id,
+			'name' => 'Inactive',
+			'date_created' => date("Y-m-d H:i:d")
+		];
+		$data[] = [
+			'company_id' => $comp_id,
+			'name' => 'Collection',
+			'date_created' => date("Y-m-d H:i:d")
+		];
+
+		$this->CustomerStatus_model->batchInsert($data);
+    }
+
+    public function alarmApi()
+    {
+        $this->load->helper(array('alarm_api_helper'));
+
+        $alarmApi = new AlarmApi();
+        $token    = $alarmApi->generateToken();
+        //$data = $alarmApi->getCustomers($token['token']);
+        //$customer_id = '4231200';
+        //$data  = $alarmApi->getCustomerEquipmentList($customer_id, $token['token']);
+        //$data    = $alarmApi->getReps($token['token']);
+        $dealer_id = 13537;
+        $data    = $alarmApi->getDealerInformation($dealer_id, $token['token']);
+        echo "<pre>";
+        print_r($data);
+        
     }
 }
 /* End of file Debug.php */

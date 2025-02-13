@@ -3026,15 +3026,17 @@ class Users extends MY_Controller
 					
 				}
 
-				foreach( $post['roleWidgets'] as $widget_id ){
-					$data = [
-						'role_id' => $post['role'],
-						'widget_id' => $widget_id,
-						'date_created' => date("Y-m-d H:i:s"),
-					];
-
-					$this->CompanyRoleAccessWidget_model->create($data);
-				}
+				if( $post['roleWidgets'] ){
+					foreach( $post['roleWidgets'] as $widget_id ){
+						$data = [
+							'role_id' => $post['role'],
+							'widget_id' => $widget_id,
+							'date_created' => date("Y-m-d H:i:s"),
+						];
+	
+						$this->CompanyRoleAccessWidget_model->create($data);
+					}
+				}				
 
 				$is_success = 1;
 				$msg = '';

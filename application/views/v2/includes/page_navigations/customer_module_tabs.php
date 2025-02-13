@@ -30,12 +30,12 @@
                 <span>Estimates</span>
             </a>
         </li>
-        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
+        <!-- <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <i class='bx bx-fw bx-tag-alt'></i>
                 <span>Tag Pending Report</span>
             </a>
-        </li>
+        </li> -->
         <li class="<?php if($page->title == 'Credit Industry'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('customer/credit_industry/'.$cus_id) ?>">
                 <i class='bx bx-fw bx-credit-card'></i>
@@ -60,8 +60,8 @@
                 <span>Activity</span>
             </a>
         </li> -->
-        <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" id="esignlink" onclick="window.open('<?= base_url('vault/mylibrary?customer_id=' . $cus_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');" data-customer-id="<?=$cus_id?>">
+        <li class="<?php if($page->title == 'Customer eSign List'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" id="esignlink" href="<?= base_url('customer/esign_list/'.$cus_id) ?>">
                 <i class='bx bx-fw bx-palette'></i>
                 <span>eSign</span>
             </a>

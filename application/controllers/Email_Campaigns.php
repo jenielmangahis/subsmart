@@ -17,13 +17,13 @@ class Email_Campaigns extends MY_Controller {
         $this->load->model('CustomerGroup_model');
         $this->load->model('EmailBlastSendTo_model');
 
-		$this->page_data['page']->title = 'Email Campaigns';
+		$this->page_data['page']->title = 'Email Blast';
 
 		$this->page_data['page']->menu = '';	
 
 	}
 
-	public function index(){	
+	public function index(){	        
         $this->page_data['page']->title = 'Email Blast';
         $this->page_data['page']->parent = 'Marketing';
 
@@ -38,7 +38,7 @@ class Email_Campaigns extends MY_Controller {
 	public function add_email_blast(){
 
         $this->session->unset_userdata('emailBlastId');
-        $this->load->view('email_campaigns/add_email_blast', $this->page_data);
+        $this->load->view('v2/pages/email_campaigns/add_email_blast', $this->page_data);
     }
 
     public function create_draft_campaign(){       
@@ -119,7 +119,7 @@ class Email_Campaigns extends MY_Controller {
         $this->page_data['emailSendTo'] = $emailSendTo;
         $this->page_data['customers'] = $customers;
         $this->page_data['customerGroups'] = $customerGroups;
-        $this->load->view('email_campaigns/add_campaign_send_to', $this->page_data);
+        $this->load->view('v2/pages/email_campaigns/add_campaign_send_to', $this->page_data);
     }
 
     public function create_campaign_send_to()
@@ -223,7 +223,7 @@ class Email_Campaigns extends MY_Controller {
 
         $this->page_data['company'] = $company;
         $this->page_data['emailCampaign'] = $emailCampaign;
-        $this->load->view('email_campaigns/build_email', $this->page_data);
+        $this->load->view('v2/pages/email_campaigns/build_email', $this->page_data);
     }
 
     public function generate_preview(){

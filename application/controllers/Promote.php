@@ -6,7 +6,7 @@ class Promote extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->checkLogin();
-		$this->page_data['page']->title = 'Create Deal';
+		$this->page_data['page']->title = 'Deals & Steals';
 		$this->page_data['page']->menu = false;
 
 		$this->load->model('DealsSteals_model');
@@ -37,7 +37,7 @@ class Promote extends MY_Controller {
         ));
 
         $this->session->unset_userdata('dealsStealsId');
-		$this->load->view('promote/add_deals', $this->page_data);
+		$this->load->view('v2/pages/promote/add_deals', $this->page_data);
 	}
 
 	public function ajax_save_deals_steals(){
@@ -130,7 +130,7 @@ class Promote extends MY_Controller {
         $this->page_data['emailSendTo'] = $emailSendTo;
         $this->page_data['customers'] = $customers;
         $this->page_data['customerGroups'] = $customerGroups;
-        $this->load->view('promote/add_send_to', $this->page_data);
+        $this->load->view('v2/pages/promote/add_send_to', $this->page_data);
 	}
 
 	public function create_send_to()
@@ -193,7 +193,7 @@ class Promote extends MY_Controller {
 
         $this->page_data['company'] = $company;
         $this->page_data['dealsSteals'] = $dealsSteals;
-        $this->load->view('promote/build_email', $this->page_data);
+        $this->load->view('v2/pages/promote/build_email', $this->page_data);
     }
 
     public function create_email_message()
@@ -233,7 +233,7 @@ class Promote extends MY_Controller {
         
         $this->page_data['dealsSteals'] = $dealsSteals;
         $this->page_data['deals_price'] = $this->DealsSteals_model->dealStealPrice();
-        $this->load->view('promote/preview_email_message', $this->page_data);
+        $this->load->view('v2/pages/promote/preview_email_message', $this->page_data);
     }
 
     public function generate_preview(){
@@ -287,7 +287,7 @@ class Promote extends MY_Controller {
         $this->page_data['creditCards'] = $creditCards;
         $this->page_data['dealsSteals'] = $dealsSteals;
         $this->page_data['deals_price'] = $this->DealsSteals_model->dealStealPrice();
-        $this->load->view('promote/payment', $this->page_data);
+        $this->load->view('v2/pages/promote/payment', $this->page_data);
     }
 
     public function ajax_activate_deals(){
@@ -426,7 +426,7 @@ class Promote extends MY_Controller {
 
                 $this->session->set_userdata('dealsStealsId', $dealSteals->id);
                 $this->page_data['dealSteals'] = $dealSteals;
-                $this->load->view('promote/edit_deals', $this->page_data);
+                $this->load->view('v2/pages/promote/edit_deals', $this->page_data);
             }else{
                 $this->session->set_flashdata('message', 'Record not found.');
                 $this->session->set_flashdata('alert_class', 'alert-danger');
@@ -623,7 +623,8 @@ class Promote extends MY_Controller {
         $this->page_data['dealsSteals']   = $dealsSteals;
         $this->page_data['orderPayments'] = $orderPayments;
         $this->page_data['company'] = $company;
-        $this->load->view('promote/view_deals', $this->page_data);    
+        $this->page_data['page']->tab = 'Preview Deals';
+        $this->load->view('v2/pages/promote/view_deals', $this->page_data);    
     }
 
     public function view_booking($booking_id){
@@ -642,7 +643,8 @@ class Promote extends MY_Controller {
 
         $this->page_data['dealsSteals'] = $dealsSteals;
         $this->page_data['bookings'] = $bookings;
-        $this->load->view('promote/bookings', $this->page_data); 
+        $this->page_data['page']->tab = 'Bookings';
+        $this->load->view('v2/pages/promote/bookings', $this->page_data); 
     }
 
     public function view_deals_payment($id){

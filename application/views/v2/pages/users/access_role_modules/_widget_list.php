@@ -1,5 +1,8 @@
 <div class="row container-modules mt-4">
-    <div class="col-md-12">
+    <div class="col-md-6">
+        <input type="text" id="search-widget" placeholder="Search Widget" class="form-control" />
+    </div>
+    <div class="col-md-6">
         <div class="container-header" style="background-color:#ffffff !important;">
             <h3>&nbsp;</h3>
             <div class="form-check text-end chk-row-allow-all-widgets">
@@ -9,7 +12,7 @@
         </div>
     </div>
     <?php foreach( $widgets as $widget ){ ?>
-    <div class="col-md-6">
+    <div class="col-md-6 widget-container">
         <div class="container-header">
             <h3><?= $widget->w_name; ?></h3>
             <div class="form-check text-end chk-row-allow-all">

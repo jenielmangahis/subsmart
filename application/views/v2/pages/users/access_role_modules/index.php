@@ -408,7 +408,36 @@ $(function(){
             beforeSend: function() {
                 $('#btn-update-role-access-modules').html('<span class="bx bx-loader bx-spin"></span>');
             }
-        });  
+        });         
+    });
+
+    jQuery.expr[':'].Contains = function(a, i, m) {
+        return jQuery(a).text().toUpperCase()
+            .indexOf(m[3].toUpperCase()) >= 0;
+    };
+    jQuery.expr[':'].contains = function(a, i, m) {
+        return jQuery(a).text().toUpperCase()
+            .indexOf(m[3].toUpperCase()) >= 0;
+    };
+
+    $('#search-module').keyup(function(){
+        var sSearch = this.value;
+        sSearch = sSearch.split(" ");
+
+        $('.module-container').hide();
+        $.each(sSearch, function(i){
+            $('.module-container:contains("' + sSearch[i] + '")').show();
+        });
+    });
+
+    $('#search-widget').keyup(function(){
+        var sSearch = this.value;
+        sSearch = sSearch.split(" ");
+
+        $('.widget-container').hide();
+        $.each(sSearch, function(i){
+            $('.widget-container:contains("' + sSearch[i] + '")').show();
+        });
     });
 });
 </script>
