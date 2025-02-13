@@ -396,6 +396,12 @@
                                                     Online Transaction Fees: as set by PayPal.
                                                 </label>
                                             </div>
+                                            <div class="col-12 col-md-12 mb-4">
+                                                <div class="form-check form-switch nsm-switch m-auto">
+                                                    <input class="form-check-input switch-default-payment-api" data-type="paypal" type="checkbox" name="switch_paypal" id="switch_paypal">
+                                                    <label class="form-check-label" for="switch_paypal">Use Default Payment Tool</label>
+                                                </div>
+                                            </div>
                                             <div class="col-12 text-center">
                                                 <button type="button" class="nsm-button primary" id="btn_setup_paypal">Setup</button>
                                             </div>
@@ -417,6 +423,12 @@
                                                 <label class="nsm-subtitle d-block">
                                                     Online Transaction Fees: as set by Square, Instant Deposit is available.
                                                 </label>
+                                            </div>
+                                            <div class="col-12 col-md-12 mb-4">
+                                                <div class="form-check form-switch nsm-switch m-auto">
+                                                    <input class="form-check-input switch-default-payment-api" data-type="square" type="checkbox" name="switch_square" id="switch_square">
+                                                    <label class="form-check-label" for="switch_square">Use Default Payment Tool</label>
+                                                </div>
                                             </div>
                                             <div class="col-12 text-center">
                                                 <div class="row align-items-center mb-3">                                                    
@@ -442,7 +454,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-3">
+                            <div class="col-12 col-md-3" style="display:none;">
                                 <div class="nsm-card primary p-5" role="button">
                                     <div class="nsm-card-content h-100">
                                         <div class="row h-100 align-content-between">
@@ -485,6 +497,12 @@
                                                     Payments infrastructure for the internet with Stripe.com.
                                                 </label>
                                             </div>
+                                            <div class="col-12 col-md-12 mb-4">
+                                                <div class="form-check form-switch nsm-switch m-auto">
+                                                    <input class="form-check-input switch-default-payment-api" data-type="stripe" type="checkbox" name="switch_stripe" id="switch_stripe">
+                                                    <label class="form-check-label" for="switch_stripe">Use Default Payment Tool</label>
+                                                </div>
+                                            </div>
                                             <div class="col-12 text-center">
                                                 <button type="button" class="nsm-button primary" id="btn_setup_stripe">Setup</button>
                                             </div>
@@ -507,6 +525,12 @@
                                                     Payments infrastructure for the internet with NMI.
                                                 </label>
                                             </div>
+                                            <div class="col-12 col-md-12 mb-4">
+                                                <div class="form-check form-switch nsm-switch m-auto">
+                                                    <input class="form-check-input switch-default-payment-api" data-type="nmi" type="checkbox" name="switch_nmi" id="switch_nmi">
+                                                    <label class="form-check-label" for="switch_nmi">Use Default Payment Tool</label>
+                                                </div>
+                                            </div>
                                             <div class="col-12 text-center">
                                                 <button type="button" class="nsm-button primary" id="btn_setup_nmi">Setup</button>
                                             </div>
@@ -528,6 +552,12 @@
                                                 <label class="nsm-subtitle d-block">
                                                     Accept payments in any way your business requires with Converge.
                                                 </label>
+                                            </div>
+                                            <div class="col-12 col-md-12 mb-4">
+                                                <div class="form-check form-switch nsm-switch m-auto">
+                                                    <input class="form-check-input switch-default-payment-api" data-type="converge" type="checkbox" name="switch_converge" id="switch_converge">
+                                                    <label class="form-check-label" for="switch_converge">Use Default Payment Tool</label>
+                                                </div>
                                             </div>
                                             <div class="col-12 text-center">
                                                 <?php if ($onlinePaymentAccount->converge_merchant_id != '') : ?>
@@ -569,6 +599,12 @@
                                                 <label class="nsm-subtitle d-block">
                                                     Use Braintree that makes it easy to accept payments
                                                 </label>
+                                            </div>
+                                            <div class="col-12 col-md-12 mb-4">
+                                                <div class="form-check form-switch nsm-switch m-auto">
+                                                    <input class="form-check-input switch-default-payment-api" data-type="braintree" type="checkbox" name="switch_braintree" id="switch_braintree">
+                                                    <label class="form-check-label" for="switch_braintree">Use Default Payment Tool</label>
+                                                </div>
                                             </div>
                                             <div class="col-12 text-center">
                                                 <button type="button" class="nsm-button primary" id="btn_setup_braintree">Setup</button>
@@ -613,7 +649,7 @@
                                     </div>
                                     <div class="col-12 text-center">
                                         <div class="row align-items-center mb-3">
-                                            <div class="col-12 col-md-6">
+                                            <div class="col-12 col-md-12">
                                                 <div class="form-check form-switch nsm-switch m-auto">
                                                     <input class="form-check-input" type="checkbox" name="switch_ring_central" id="switch_ring_central" <?= $default_sms_api == 'ring_central' ? 'checked' : ''; ?>>
                                                     <label class="form-check-label" for="switch_ring_central">Use Default SMS Tool</label>
@@ -1584,6 +1620,42 @@
                     _this.find("button[type=submit]").prop("disabled", false);
                 },
             });
+        });
+    });
+    
+    $('.switch-default-payment-api').on('change', function(){        
+        if ($(this).is(':checked')) {
+            var api = $(this).attr('data-type');
+        }else{
+            var api = '';
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: base_url + 'tools/_update_company_default_payment_api',
+            dataType: "json",
+            data: {api:api},
+            success: function(result) {
+                if (result.is_success) {
+                    $('.switch-default-payment-api').not(`#switch_${api}`).prop("checked", false);                      
+                    Swal.fire({
+                        title: 'API Tools',
+                        text: "Default payment method was successfully updated.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: result.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
+                    $('.switch-default-payment-api').not(this).prop("checked", false);  
+                }
+            },
         });
     });
 
