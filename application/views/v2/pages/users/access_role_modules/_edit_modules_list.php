@@ -1,5 +1,8 @@
 <div class="row edit-container-modules mt-4" style="<?= array_key_exists('access-all', $groupRoleAccessModules) ? 'display:none;' : ''; ?>">
-    <div class="col-md-12">
+    <div class="col-md-6">
+        <input type="text" id="edit-search-module" placeholder="Search Module" class="form-control" />
+    </div>
+    <div class="col-md-6">
         <div class="container-header" style="background-color:#ffffff !important;">
             <h3>&nbsp;</h3>
             <div class="form-check text-end chk-row-allow-all-modules">
@@ -9,7 +12,7 @@
         </div>
     </div>
     <?php foreach( $modules as $key => $module ){ ?>
-    <div class="col-md-6">
+    <div class="col-md-6 edit-module-container">
         <div class="container-header">
             <h3><?= $module; ?></h3>
             <div class="form-check text-end chk-row-allow-all">
@@ -62,3 +65,16 @@
     </div>
     <?php } ?>
 </div>
+<script>
+$(function(){
+    $('#edit-search-module').keyup(function(){
+        var sSearch = this.value;
+        sSearch = sSearch.split(" ");
+
+        $('.edit-module-container').hide();
+        $.each(sSearch, function(i){
+            $('.edit-module-container:contains("' + sSearch[i] + '")').show();
+        });
+    });
+});
+</script>
