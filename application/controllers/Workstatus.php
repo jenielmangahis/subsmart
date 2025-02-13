@@ -223,6 +223,10 @@ class Workstatus extends MY_Controller {
 
 			$is_success = 1;
 			$msg = '';
+
+			//Activity Logs
+			$activity_name = 'Workorder Status: Deleted workorder status ' . $workorderStatus->title; 
+			createActivityLog($activity_name);
 		}
 
 		$json_data  = ['is_success' => $is_success];

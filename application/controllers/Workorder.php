@@ -40,8 +40,8 @@ class Workorder extends MY_Controller
         // JS to add only Customer module
         add_footer_js(array(
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-            'assets/frontend/js/workorder/main.js'
+            //'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+            //'assets/frontend/js/workorder/main.js'
         ));
     }
 
@@ -636,6 +636,11 @@ class Workorder extends MY_Controller
     {   
         $this->load->model('Invoice_model');
         $this->load->model('Invoice_items_model');
+
+        if(!checkRoleCanAccessModule('work-orders', 'read')){
+			show403Error();
+			return false;
+		}
 
         $company_id = logged('company_id');
 
@@ -3395,6 +3400,11 @@ class Workorder extends MY_Controller
 
     public function priority()
     {
+        if(!checkRoleCanAccessModule('work-order-settings', 'read')){
+			show403Error();
+			return false;
+		}
+        
         $this->page_data['page']->title = 'Priority';
         $this->page_data['page']->parent = 'Calendar';
         new Priority($this);
@@ -3579,9 +3589,12 @@ class Workorder extends MY_Controller
         echo json_encode($json_data);
     }
 
-    public function checklists(){        
-		$this->page_data['page']->title = 'Workorder Checklist';
-		$this->page_data['page']->parent = 'Sales';
+    public function checklists()
+    {   
+        if(!checkRoleCanAccessModule('work-order-settings', 'read')){
+            show403Error();
+            return false;
+        }
 
         $this->hasAccessModule(29); 
         $this->load->helper(array('hashids_helper'));
@@ -3590,20 +3603,26 @@ class Workorder extends MY_Controller
         $company_id = logged('company_id');
         $checklists = $this->Checklist_model->getAllByCompanyId($company_id);
 
-        $this->page_data['checklists'] = $checklists;
+        $this->page_data['page']->title = 'Workorder Checklist';
+		$this->page_data['page']->parent = 'Sales';
+        $this->page_data['checklists'] = $checklists;        
         $this->load->view('v2/pages/workorder/checklist/list', $this->page_data);
     }
 
-    public function add_checklist(){
+    public function add_checklist()
+    {
         $this->load->model('Checklist_model');
 
-        $this->page_data['page']->title = 'Workorder Checklist';
-		$this->page_data['page']->parent = 'Sales';
+        if(!checkRoleCanAccessModule('work-order-settings', 'write')){
+            show403Error();
+            return false;
+        }
 
         $checklistAttachType = $this->Checklist_model->getAttachType();
 
-        $this->page_data['checklistAttachType'] = $checklistAttachType;
-        //$this->load->view('workorder/checklist/add_checklist', $this->page_data);
+        $this->page_data['page']->title = 'Workorder Checklist';
+		$this->page_data['page']->parent = 'Sales';
+        $this->page_data['checklistAttachType'] = $checklistAttachType;        
         $this->load->view('v2/pages/workorder/checklist/add_checklist', $this->page_data);
     }
 
@@ -3637,25 +3656,32 @@ class Workorder extends MY_Controller
         redirect('workorder/edit_checklist/' . $cid);
     }
 
-    public function edit_checklist($id){
+    public function edit_checklist($id)
+    {
         $this->load->model('Checklist_model');
         $this->load->model('ChecklistItem_model');
 
+        if(!checkRoleCanAccessModule('work-order-settings', 'write')){
+            show403Error();
+            return false;
+        }
+
+        $company_id = logged('company_id');
         $checklistAttachType = $this->Checklist_model->getAttachType();
 
         $checklist = $this->Checklist_model->getById($id);
         $checklistItems = $this->ChecklistItem_model->getAllByChecklistId($checklist->id);
 
-        if( $checklist ){
+        if( $checklist && $checklist->company_id == $company_id ){
+
+            $this->page_data['page']->title = 'Workorder Checklist';
+		    $this->page_data['page']->parent = 'Sales';
             $this->page_data['checkListItems'] = $checklistItems;
             $this->page_data['checklist'] = $checklist;
             $this->page_data['checklistAttachType'] = $checklistAttachType;
             $this->load->view('v2/pages/workorder/checklist/edit_checklist', $this->page_data);
 
-        }else{
-            $this->session->set_flashdata('message', 'Cannot find data');
-            $this->session->set_flashdata('alert_class', 'alert-danger');
-
+        }else{            
             redirect('workorder/checklists');
         }
     }
@@ -3705,7 +3731,8 @@ class Workorder extends MY_Controller
         exit;
     }
 
-    public function ajax_update_checklist_item(){
+    public function ajax_update_checklist_item()
+    {
         $this->load->helper(array('hashids_helper'));
         $this->load->model('ChecklistItem_model');
 
@@ -3723,7 +3750,8 @@ class Workorder extends MY_Controller
         exit;
     }
 
-    public function update_checklist(){
+    public function update_checklist()
+    {
         $this->load->helper(array('hashids_helper'));
         $this->load->model('Checklist_model');
 
@@ -3752,6 +3780,14 @@ class Workorder extends MY_Controller
 
     public function NewworkOrder()
     {
+        if(!checkRoleCanAccessModule('work-orders', 'write')){
+			show403Error();
+			return false;
+		}
+
+        $this->load->model('AcsProfile_model');
+        $this->load->library('session');
+
 		add_footer_js([
 			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
 			'assets/js/jquery.signaturepad.js'
@@ -3759,8 +3795,7 @@ class Workorder extends MY_Controller
 
         $this->page_data['page']->title = 'New Workorder';
 		$this->page_data['page']->parent = 'Sales';
-
-        $this->load->model('AcsProfile_model');
+        
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
 
@@ -3777,40 +3812,15 @@ class Workorder extends MY_Controller
         }
 
         $user_id = logged('id');
-
-        $company_id = logged('company_id');
-
-        $this->load->library('session');
-
-        $users_data = $this->session->all_userdata();
-        // foreach($users_data as $usersD){
-        //     $userID = $usersD->id;
-            
-        // }
-
-        // print_r($user_id);
-        // $users = $this->users_model->getUserByID($user_id);
-        // print_r($users);
-        // echo $company_id;
-
-        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        $company_id = logged('company_id');        
 
         $type = $this->input->get('type');
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         $this->page_data['type'] = $type;
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
-        // $this->page_data['number'] = $this->estimate_model->getlastInsert();
         $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
-
-        // $termsCondi = $this->workorder_model->getTerms($company_id);
-        // if($termsCondi){
-        //     // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
-        //     $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
-        // }else{
-        //     // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
-        //     $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
-        // }
 
         $termsCondi = $this->workorder_model->getWOTerms($company_id);
         if($termsCondi){
@@ -3819,18 +3829,13 @@ class Workorder extends MY_Controller
             $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
         }
 
-        // $this->workorder_model->getWOtermsByID();
-
         $termsUse = $this->workorder_model->getTermsUse($company_id);
         if($termsUse){
-            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
             $this->page_data['terms_uses'] = $this->workorder_model->getTermsUsebyID();
         }else{
-            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
             $this->page_data['terms_uses'] = $this->workorder_model->getTermsUseDefault();
         }
 
-        //$checkListsHeader = $this->workorder_model->getchecklistHeaderByUser($user_id);
         $checkListsHeader = $this->workorder_model->getchecklistHeaderByCompanyId($company_id);
 
         $checklists = array();
@@ -3839,6 +3844,7 @@ class Workorder extends MY_Controller
             $checklists[$h->id]['header'] = ['name' => $h->checklist_name, 'id' => $h->id];
             $checklists[$h->id]['items']  = $checklistItems;            
         }
+
         //Settings
         $this->load->model('WorkorderSettings_model');
         $workorderSettings = $this->WorkorderSettings_model->getByCompanyId($company_id);
@@ -3857,32 +3863,20 @@ class Workorder extends MY_Controller
 
         $this->page_data['prefix'] = $prefix;
         $this->page_data['next_num'] = $next_num;
-
-        // print_r($this->page_data['terms_conditions']);
         $this->page_data['fieldsName'] = $this->workorder_model->getCustomByID();
-        // dd($this->workorder_model->getclientsById());
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
-        //$this->page_data['checklists'] = $this->workorder_model->getchecklistByUser($user_id);
         $this->page_data['checklists'] = $checklists;
         $this->page_data['job_types'] = $this->workorder_model->getjob_types();
-
         $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
-        
         $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
-
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
-
         $this->page_data['itemPackages'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
         $this->page_data['getSettings'] = $this->workorder_model->getSettings($company_id);
-        
-
         $this->page_data['page_title'] = "Work Order";
-        // print_r($this->page_data['lead_source']);
-
         // $this->load->view('workorder/addNewworkOrder', $this->page_data);
         $this->load->view('v2/pages/workorder/addNewworkOrder', $this->page_data);
     }
@@ -11955,36 +11949,44 @@ class Workorder extends MY_Controller
         $this->load->model('ChecklistItem_model');
 
         $is_success = 0;
+        $msg = 'Cannot save data.';
 
         $user = $this->session->userdata('logged');
         $post = $this->input->post();
         $user_id = logged('id');
         $company_id = logged('company_id'); 
 
-        $data = [
-            'company_id' => $company_id,
-            'user_id' => $user_id,
-            'checklist_name' => $post['checklist_name'],
-            'attach_to_work_order' => $post['attach_to_work_order'],
-            'date_created' => date("m-d-Y H:i:s"),
-            'date_modified' => date("m-d-Y H:i:s")
-        ];
-
-        $cid = $this->Checklist_model->create($data);
-
-        if( isset($post['checklistItems']) ){
-            foreach( $post['checklistItems'] as $key => $item ){
-                $data = [
-                    'checklist_id' => $cid,
-                    'item_name' => $item
-                ];
-
-                $this->ChecklistItem_model->create($data);
-            }    
+        $isExists = $this->Checklist_model->getByNameAndCompanyId($post['checklist_name'], $company_id);
+        if( $isExists ){
+            $msg = 'Checklist name already exists.';
+        }else{
+            $data = [
+                'company_id' => $company_id,
+                'user_id' => $user_id,
+                'checklist_name' => $post['checklist_name'],
+                'attach_to_work_order' => $post['attach_to_work_order'],
+                'date_created' => date("m-d-Y H:i:s"),
+                'date_modified' => date("m-d-Y H:i:s")
+            ];
+    
+            $cid = $this->Checklist_model->create($data);
+    
+            if( isset($post['checklistItems']) ){
+                foreach( $post['checklistItems'] as $key => $item ){
+                    $data = [
+                        'checklist_id' => $cid,
+                        'item_name' => $item
+                    ];
+    
+                    $this->ChecklistItem_model->create($data);
+                }    
+            }
+    
+            $is_success = 1;
+            $msg = '';
         }
-
-        $is_success = 1;
-        $json_data  = ['is_success' => $is_success];
+        
+        $json_data  = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);
     }
@@ -12081,13 +12083,19 @@ class Workorder extends MY_Controller
         $msg = '';
 
         $post = $this->input->post();
+        $company_id = logged('company_id');
+
         $checklist = $this->Checklist_model->getById($post['cid']);
-        if( $checklist ){
+        if( $checklist && $checklist->company_id == $company_id ){
             $this->ChecklistItem_model->deleteAllByChecklistId($checklist->id);
             $this->Checklist_model->deleteById($checklist->id);
 
-            $is_success = 1;
+            //Activity Logs
+            $activity_name = 'Workorder Checklist : Deleted checklist ' . $checklist->checklist_name; 
+            createActivityLog($activity_name);
+
         }else{
+            $is_success = 0;
             $msg = 'Cannot find data';
         }
 
@@ -12106,19 +12114,29 @@ class Workorder extends MY_Controller
         $company_id  = logged('company_id');
         $user_id     = logged('id');
 
-        if( $post['priority_name'] != '' ){
-            $data = [
-                'user_id' => $user_id,
-                'company_id' => $company_id,
-                'title' => $post['priority_name'],
-                'status' => 1,
-                'created_at' => date("Y-m-d H:i:s")
-            ];
+        $isExists = $this->PriorityList_model->getByTitleAndCompanyId($post['priority_name'], $company_id);
+        if( !$isExists ){
+            if( $post['priority_name'] != '' ){
+                $data = [
+                    'user_id' => $user_id,
+                    'company_id' => $company_id,
+                    'title' => $post['priority_name'],
+                    'status' => 1,
+                    'created_at' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->PriorityList_model->create($data);
 
-            $this->PriorityList_model->create($data);
-
-            $is_success = 1;    
-        }        
+                //Activity Logs
+                $activity_name = 'Workorder Priority : Created workorder priority ' . $post['priority_name']; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;    
+                $msg = '';
+            }    
+        }else{
+            $msg = 'Priority name already exists.';
+        }
         
         $json_data  = ['is_success' => $is_success, 'msg' => $msg];
 
@@ -12135,26 +12153,63 @@ class Workorder extends MY_Controller
         $post        = $this->input->post();
         $company_id  = logged('company_id');
         $user_id     = logged('id');
+        
+        $isExists = $this->PriorityList_model->getByTitleAndCompanyId($post['priority_name'], $company_id);
+        if( $isExists && ( $isExists->id != $post['pid'] ) ){
+            $msg = 'Priority name already exists.';
+        }else{
+            if( $post['priority_name'] != '' ){
 
-        if( $post['priority_name'] != '' ){
+                $priority = $this->PriorityList_model->getById($post['pid']);
+                if( $priority ){
+                    $data = [
+                        'title' => $post['priority_name']
+                    ];
+    
+                    $this->PriorityList_model->update($priority->id, $data);
+                    
+                    //Activity Logs
+                    $activity_name = 'Workorder Priority : Updated workorder priority ' . $priority->title; 
+                    createActivityLog($activity_name);
 
-            $priority = $this->PriorityList_model->getById($post['pid']);
-            if( $priority ){
-                $data = [
-                    'title' => $post['priority_name']
-                ];
+                    $is_success = 1;    
+                    $msg = '';
 
-                $this->PriorityList_model->update($priority->id, $data);
-
-                $is_success = 1;    
-            }else{
-                $msg = 'Cannot find data';
-            }            
-        }        
+                }else{
+                    $msg = 'Cannot find data';
+                }            
+            }  
+        }              
         
         $json_data  = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);
+    }
+
+    public function ajax_delete_workorder_priority()
+    {
+        $this->load->model('PriorityList_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $priority = $this->PriorityList_model->getById($post['id']);
+        if( $priority && $priority->company_id == $company_id ){
+            $this->PriorityList_model->delete($priority->id);
+
+            //Activity Logs
+            $activity_name = 'Workorder Priority : Deleted ' . $priority->title; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+        
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 
     public function estimateConversionWorkorder($id)

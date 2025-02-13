@@ -83,7 +83,7 @@ class Job extends MY_Controller
     }
 
     public function new_job1($id = null)
-    {
+    {        
         $this->load->model('AcsProfile_model');
         $this->load->model('CalendarSettings_model');
         $this->load->model('Tickets_model');

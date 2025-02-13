@@ -12,7 +12,8 @@ class AccountingPayroll extends MY_Controller
         ON `a`.`id` = `c`.`expense_account_id`
         WHERE `c`.`id` IS NOT NULL
         AND `c`.`tax` = 1
-SQL;
+        SQL;
+        
         $results = $this->db->query($query)->result();
 
         foreach ($results as $result) {
