@@ -331,17 +331,17 @@
                             <div class="row">
                                 <div class="col-12 col-md-6">
                                     <div class="row">
-                                        <div class="col-6 col-md-6">
+                                        <div class="col-6 col-md-4">
                                             <label for="message_credit_memo">Message displayed on credit memo</label>
-                                            <textarea name="message_credit_memo" rows="5" id="message_credit_memo" class="form-control nsm-field mb-2"><?=isset($creditMemo) ? str_replace("<br />", "", $creditMemo->message_credit_memo) : ''?></textarea>
+                                            <textarea name="message_credit_memo" id="message_credit_memo" class="form-control nsm-field mb-2"><?=isset($creditMemo) ? str_replace("<br />", "", $creditMemo->message_credit_memo) : ''?></textarea>
                                         </div>
-                                        <div class="col-6 col-md-6">
+                                        <div class="col-6 col-md-4">
                                             <label for="message_on_statement">Message displayed on statement</label>
-                                            <textarea name="message_on_statement" rows="5" id="message_on_statement" class="form-control nsm-field mb-2"><?=isset($creditMemo) ? str_replace("<br />", "", $creditMemo->message_on_statement) : ''?></textarea>
+                                            <textarea name="message_on_statement" id="message_on_statement" class="form-control nsm-field mb-2"><?=isset($creditMemo) ? str_replace("<br />", "", $creditMemo->message_on_statement) : ''?></textarea>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-12 col-md-12">
+                                        <div class="col-12 col-md-8">
                                             <div class="attachments">
                                                 <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
                                                 <span>Maximum size: 20MB</span>

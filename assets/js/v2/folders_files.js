@@ -3112,8 +3112,8 @@ $(document).ready(function(){
   }
   
   function createDocusignTemplate(file, options = {}) {
-      //const prefixURL = "";
-      const prefixURL = "http://127.0.0.1/ci/nsmart_v2";
+      const prefixURL = "";
+      //const prefixURL = "http://127.0.0.1/ci/nsmart_v2";
       const { id, name, created_at, is_user_shared, is_shared } = file;
       const { onClick = null, onDoubleClick = null } = options;
       const createdString = moment(created_at).format("MMMM DD, YYYY");
@@ -3697,8 +3697,8 @@ $(document).ready(function(){
   
   
   function showDeleteTemplateModal(templateId) {
-    const urlPrefix = "http://127.0.0.1/ci/nsmart_v2";
-    //const urlPrefix = "";
+    //const urlPrefix = "http://127.0.0.1/ci/nsmart_v2";
+    const urlPrefix = "";
   
     const $modal = $("#deleteTemplateModal");
     const $submit = $modal.find(".nsm-button.primary");

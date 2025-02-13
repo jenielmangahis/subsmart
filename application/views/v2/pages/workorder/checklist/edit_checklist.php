@@ -91,9 +91,8 @@
                                           <ul class="checklist-container">
                                             <?php foreach( $checkListItems as $item ){ ?>
                                               <li>
-                                                <input type="hidden" name="checklistItems[]" value="<?php echo $item->item_name; ?>" />
-                                                <?php echo $item->item_name; ?>
-                                                <a class="btn-remove-checklist-item nsm-button primary small" href="javascript:void(0);"><i class="bx bx-trash"></i></a>
+                                                <input type="hidden" name="checklistItems[]" class="checklist_item" value="<?php echo $item->item_name; ?>" />
+                                                <?php echo trim($item->item_name); ?><a class="btn-remove-checklist-item nsm-button primary small" href="javascript:void(0);"><i class="bx bx-trash"></i></a>
                                               </li>
                                             <?php } ?>
                                           </ul>
@@ -109,47 +108,41 @@
             <div class="row">
                 <div class="col-12 mt-3 text-end">                  
                     <button type="submit" class="nsm-button" onclick="location.href='<?php echo base_url('workorder/checklists'); ?>'">Cancel</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
+                    <button type="submit" class="nsm-button primary" id="btn-update-checklist">Save</button>
                 </div>
             </div>
         <?php echo form_close(); ?>
 
-        <div class="modal fade nsm-modal fade" id="modalAddChecklistItem" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content modal-md">
-              <div class="modal-header">
-                <span class="modal-title content-title" id="account-modal-label">Add New Item</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-              </div>
-              <?php echo form_open_multipart('', [ 'class' => 'form-validate', 'id' => 'frm-add-checklist-item', 'autocomplete' => 'off' ]); ?>
-              <div class="modal-body">
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label>Item Name</label>
-                      <input type="text" name="item_name" id="item_name" value="" class="form-control" autocomplete="off" required="">
+        <div class="modal fade" id="modalAddChecklistItem" data-bs-backdrop="static" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title" style="font-size: 17px;">Add Checklist Item</span>
+                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
                     </div>
-                  </div>          
+                    <div class="modal-body">
+                        <?php echo form_open_multipart('', [ 'class' => 'form-validate', 'id' => 'frm-add-checklist-item', 'autocomplete' => 'off' ]); ?>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label class="mb-2">Name</label>
+                                    <div class="input-group mb-3">
+                                      <input type="text" name="item_name" id="item_name" value="" class="form-control" autocomplete="off" required="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">                        
+                                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="nsm-button primary btn-add-checklist">Save</button>
+                            </div>
+                        <?php echo form_close(); ?>
+                    </div>
                 </div>
-              </div>
-              <div class="modal-footer modal-footer-detail">
-                  <div class="button-modal-list">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="nsm-button primary btn-add-checklist">Add</button>
-                  </div>
-              </div>
-              <?php echo form_close(); ?>
             </div>
-          </div>
         </div>
-
-        </div>
+      </div>
     </div>
 </div>
-<!-- Modal -->
-<?php include viewPath('v2/includes/plans/add_modal') ?>
 <?php include viewPath('v2/includes/footer'); ?>
-<script src="<?php echo $url->assets ?>js/custom.js"></script>
 
 <script>
 $(function(){
@@ -159,19 +152,34 @@ $(function(){
 
     $("#frm-add-checklist-item").submit(function(e){
         e.preventDefault();
-        var item_name = $("#item_name").val();
-        var add_row = '<li><input type="hidden" name="checklistItems[]" value="'+item_name+'" />'+item_name+'<a class="btn-remove-checklist-item nsm-button primary small" href="javascript:void(0);"><i class="bx bx-trash"></i></a></li>';
 
-        $(".checklist-container").append(add_row).children(':last').hide().fadeIn(300);
+        //Check if item exists
+        var sSearch = $('#item_name').val();
+        var is_exists = 0;
+        var results = $('.checklist-container').find('.checklist_item').filter(function () {
+            if ($(this).val() === sSearch) {
+              is_exists = 1;
+            }
+        });
 
-        $("#item_name").val("");
-        $("#modalAddChecklistItem").modal("hide");
+        if (is_exists == 1) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Checklist item name already in the list',
+          });
+        }else{
+          var item_name = $("#item_name").val();
+          var add_row = '<li><input type="hidden" name="checklistItems[]" class="checklist_item" value="'+item_name+'" />'+item_name+'<a class="btn-remove-checklist-item nsm-button primary small" href="javascript:void(0);"><i class="bx bx-trash"></i></a></li>';
 
+          $(".checklist-container").append(add_row).children(':last').hide().fadeIn(300);
+
+          $("#item_name").val("");
+          $("#modalAddChecklistItem").modal("hide");
+        }
     });
 
     $(document).on('click', '.btn-remove-checklist-item', function(){
-        console.log($(this).parent('ul').find('li'));
-        console.log($(this).closest('li'));
         $(this).closest('li').fadeOut(300, function(){
             $(this).remove();
         });
@@ -180,7 +188,7 @@ $(function(){
     $("#frm-update-checklist").submit(function(e){
         e.preventDefault();
         var url = base_url + 'workorder/_update_checklist';
-        $(".btn-update-checklist").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
+        $("#btn-update-checklist").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
         setTimeout(function () {
             $.ajax({
                  type: "POST",
@@ -191,7 +199,7 @@ $(function(){
                  {
                     if( o.is_success == 1 ){
                         Swal.fire({
-                            title: 'Success',
+                          title: 'Workorder Checklist',
                             text: 'Workorder checklist was successfully updated.',
                             icon: 'success',
                             showCancelButton: false,
@@ -209,7 +217,7 @@ $(function(){
                         });
                     }
 
-                    $(".btn-update-checklist").html('Save');
+                    $("#btn-update-checklist").html('Save');
                  }
             });
         }, 300);        

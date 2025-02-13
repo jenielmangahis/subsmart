@@ -48,19 +48,6 @@ class TaxRates_model extends MY_Model
         return $query;
     }
 
-    public function getByIdAndCompanyId($id, $cid)
-    {
-        $user_id = logged('id');
-
-        $this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('id', $id);
-        $this->db->where('company_id', $cid);
-
-        $query = $this->db->get()->row();
-        return $query;
-    }
-
     public function getDefaultTaxRateByCompanyId($company_id)
     {
         $this->db->select('*');

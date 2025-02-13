@@ -819,9 +819,3 @@ echo 'active';
     <ul>
     </ul>
 </li>
-
-<li>
-    <a href="<?php echo base_url('timely'); ?>">
-        <i class='bx bx-fw bx-time-five'></i> Timely
-    </a>
-</li>

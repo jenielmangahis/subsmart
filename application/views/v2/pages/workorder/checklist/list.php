@@ -26,21 +26,21 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-12 col-md-6">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" value="" placeholder="Search Checklist">
+                        </div>
+                    </div>
+                    <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
+                    <div class="col-12 col-md-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('/workorder/add_checklist') ?>'">
-                                <i class='bx bx-fw bx-list-check'></i> Add Checklist
+                                <i class='bx bx-fw bx-plus'></i> Add Checklist
                             </button>
                         </div>
                     </div>
-                </div>
-                <div class="col-12 col-md-4">
-                        <form action="<?php echo base_url('workorder') ?>" method="GET">
-                            <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" value="" placeholder="Search Checklist">
-                            </div>
-                        </form>
-                    </div>
+                    <?php } ?>
+                </div>                
                 <table class="nsm-table">
                     <thead>
                         <tr>
@@ -69,12 +69,16 @@
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
                                                 <li>
                                                     <a class="dropdown-item edit-item" href="<?php echo base_url('/workorder/edit_checklist/' . $checklist->id); ?>">Edit</a>
                                                 </li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('work-order-settings', 'delete')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" data-id="<?= $checklist->id; ?>" href="javascript:void(0);">Delete</a>
+                                                    <a class="dropdown-item delete-item" data-id="<?= $checklist->id; ?>" data-name="<?= $checklist->checklist_name; ?>" href="javascript:void(0);">Delete</a>
                                                 </li>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </td>
@@ -113,11 +117,12 @@
 
     $(document).on("click", ".delete-item", function(event) {
         var ID = $(this).attr("data-id");
+        var name = $(this).attr("data-name");
 
         Swal.fire({
-            title: 'Continue to REMOVE this checklist?',
-            text: "",
-            icon: 'warning',
+            title: 'Delete Checklist',
+            html: `Are you sure you want to delete selected checklist <b>${name}</b>?`,
+            icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes',
             cancelButtonText: 'No',
@@ -125,21 +130,21 @@
             if (result.value) {
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url('workorder/_delete_checklist') ?>",
+                    url: base_url + "workorder/_delete_checklist",
                     dataType: "json",
                     data: {cid: ID},
                     success: function(data) {
                         if (data.is_success === 1) {
                             Swal.fire({
-                                //title: 'Great!',
-                                text: "Checklist was successfully deleted!",
+                                title: 'Workorder Checklist',
+                                text: "Data deleted successfully!",
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
                             }).then((result) => {
-                                if (result.value) {
+                                //if (result.value) {
                                     location.reload();
-                                }
+                                //}
                             });
                         } else {
                             Swal.fire({
