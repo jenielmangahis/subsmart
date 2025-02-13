@@ -11,9 +11,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            To create new lead go to Lead TAB and Select new. Enter all the Lead information as shown below.
-                            Enter Address information. Enter Additional Information and Description
-                            and Finally click Save Button. All required fields must have information.
+                            Create a potential customers who has shown interest to your products or services.
                         </div>
                     </div>
                 </div>
@@ -37,8 +35,7 @@
                                 <div class="nsm-card-body">
                                     <div class="row">
                                         <div class="col-md-5 mb-3">
-                                     
-                                          <div>  <span>Lead Type</span><a href='<?php echo base_url('customer/settings_lead_types') ?>' data-toggle='tooltip' style='color:#6a4a86;' data-placement='right' title='Click to add lead type'><i class='bx bx-plus'></i></a></div>
+                                            <label>Lead Type</label>
                                             <select class="form-select" id="fk_lead_type_id" name="fk_lead_type_id" required>
                                                 <?php
                                                 echo "<option value hidden>Select Type</option>";
@@ -55,7 +52,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-7 mb-3">
-                                            <span>Sales Representative</span>
+                                            <label>Sales Representative</label>
                                             <select class="form-select" id="fk_sr_id" name="fk_sr_id">
                                                 <?php
                                                 foreach ($users as $user) {
@@ -69,8 +66,7 @@
                                             </select>
                                         </div>
                                         <div class="col-md-5 mb-3">
-                                    
-                                            <div>  <span>Sales Area</span><a href='<?php echo base_url('customer/settings_sales_area') ?>' data-toggle='tooltip' style='color:#6a4a86;' data-placement='right' title='Click to add sales area'><i class='bx bx-plus'></i></a></div>
+                                            <label>Sales Area</label>
                                             <select class="form-select" id="fk_sa_id" name="fk_sa_id">
                                                 <?php
                                                 foreach ($sales_area as $sales_areas) {
@@ -250,8 +246,9 @@
 <?php include viewPath('v2/includes/footer'); ?>
 <script>
     $(document).ready(function(){
-  $('[data-toggle="tooltip"]').tooltip();
-});
+        $('[data-toggle="tooltip"]').tooltip();
+        $('#fk_sr_id').select2({});
+    });
     $('#btn-cancel').on('click', function() {
         location.href = base_url + 'customer/leads';
     });
