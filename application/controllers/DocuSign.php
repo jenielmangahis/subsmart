@@ -257,11 +257,15 @@ class DocuSign extends MYF_Controller
             $is_finished = 0;
         }      
 
-        $this->db->select('job_id');
-        $this->db->where_in('user_docfile_recipient_id', $recipientIds);
-        $jobId = $this->db->get('user_docfile_job_recipients')->row();
-        //$jobId = is_null($jobId) ? null : $jobId->job_id;
-        $jobId = $document->job_id;
+        if( $recipientIds ){
+            $this->db->select('job_id');
+            $this->db->where_in('user_docfile_recipient_id', $recipientIds);
+            $jobId = $this->db->get('user_docfile_job_recipients')->row();
+            //$jobId = is_null($jobId) ? null : $jobId->job_id;
+            $jobId = $document->job_id;
+        }else{
+            $jobId = 0;
+        }      
 
         $this->db->where('docfile_id', $documentId);
         $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();

@@ -15,8 +15,8 @@
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
             </div>
             <form id="frm-quick-add-customer">
-                <input type="hidden" id="target-id-dropdown" />
-                <input type="hidden" id="origin-modal-id" />
+                <input type="hidden" id="target-id-dropdown" value="" />
+                <input type="hidden" id="origin-modal-id" value="" />
                 <div class="modal-body">                     
                     <div class="row">  
                         <div class="col-md-12">
@@ -129,7 +129,7 @@ $(function(){
         $('.add-basic-information-container').html('');
         $('.add-billing-information-container').html('');
         $('.add-emergency-contacts-information-container').html('');
-        $('.add-basic-information-container').html('Save');
+        $('#btn-quick-add-customer').html('Save');
     });
 
     $('#quick-add-customer').on('shown.bs.modal', function (e) {

@@ -1409,6 +1409,7 @@ $route['tools/_disconnect_active_campaign_account'] = 'Tools/ajax_disconnect_act
 $route['tools/square/oauth_redirect'] = 'Tools/squareOauthRedirect';
 $route['tools/_disconnect_square_account'] = 'Tools/ajax_disconnect_square_account';
 $route['tools/square_payment_logs'] = 'Tools/square_payment_logs';
+$route['tools/_update_company_default_payment_api'] = 'Tools/ajax_update_company_default_payment_api';
 
 // Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';

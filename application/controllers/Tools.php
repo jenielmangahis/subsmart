@@ -2724,4 +2724,99 @@ class Tools extends MY_Controller {
         $this->page_data['squarePaymentLogs'] = $squarePaymentLogs;
         $this->load->view('v2/pages/tools/square_payment_logs', $this->page_data);
     }
+
+    public function ajax_update_company_default_payment_api(){
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $is_success = false;
+        $msg = 'Cannot update settings';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');  
+        $companyOnlinePaymentAcccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
+        if( $companyOnlinePaymentAcccount ){
+            switch ($post['api']) {
+                case 'paypal':       
+                    if( $companyOnlinePaymentAcccount->paypal_client_id != '' && $companyOnlinePaymentAcccount->paypal_client_secret != '' ){
+                        $data = ['default_payment_api' => 'Paypal'];
+                        $this->CompanyOnlinePaymentAccount_model->update($companyOnlinePaymentAcccount->id, $data);
+
+                        $is_success = true;
+                        $msg = '';
+                    }else{
+                        $msg = 'You do not have valid Paypal account. Cannot set Paypal as default payment tool.';
+                    }          
+                break;
+                case 'square':   
+                    if( $companyOnlinePaymentAcccount->square_application_id != '' && $companyOnlinePaymentAcccount->square_access_token != '' ){
+                        $data = ['default_payment_api' => 'Square'];
+                        $this->CompanyOnlinePaymentAccount_model->update($companyOnlinePaymentAcccount->id, $data);
+    
+                        $is_success = true;
+                        $msg = '';
+                    }else{
+                        $msg = 'You do not have valid Square account. Cannot set Square as default payment tool.';
+                    }                 
+                break;
+                case 'stripe':   
+                    if( $companyOnlinePaymentAcccount->stripe_publish_key != '' && $companyOnlinePaymentAcccount->stripe_secret_key != '' ){
+                        $data = ['default_payment_api' => 'Stripe'];
+                        $this->CompanyOnlinePaymentAccount_model->update($companyOnlinePaymentAcccount->id, $data);
+    
+                        $is_success = true;
+                        $msg = '';
+                    }else{
+                        $msg = 'You do not have valid Stripe account. Cannot set Stripe as default payment tool.';
+                    }                     
+                break;
+                case 'nmi':
+                    if( $companyOnlinePaymentAcccount->nmi_terminal_id != '' && $companyOnlinePaymentAcccount->nmi_transaction_key != '' ){
+                        $data = ['default_payment_api' => 'NMI'];
+                        $this->CompanyOnlinePaymentAccount_model->update($companyOnlinePaymentAcccount->id, $data);
+    
+                        $is_success = true;
+                        $msg = '';
+                    }else{
+                        $msg = 'You do not have valid NMI account. Cannot set NMI as default payment tool.';
+                    }                  
+                break;
+                case 'converge':    
+                    if( $companyOnlinePaymentAcccount->converge_merchant_id != '' && $companyOnlinePaymentAcccount->converge_merchant_user_id != '' ){
+                        $data = ['default_payment_api' => 'Converge'];
+                        $this->CompanyOnlinePaymentAccount_model->update($companyOnlinePaymentAcccount->id, $data);
+    
+                        $is_success = true;
+                        $msg = '';
+                    }else{
+                        $msg = 'You do not have valid Converge account. Cannot set Converge as default payment tool.';
+                    }                   
+                break;
+                case 'braintree':  
+                    if( $companyOnlinePaymentAcccount->braintree_merchant_id != '' && $companyOnlinePaymentAcccount->braintree_public_key != '' ){
+                        $data = ['default_payment_api' => 'Braintree'];
+                        $this->CompanyOnlinePaymentAccount_model->update($companyOnlinePaymentAcccount->id, $data);
+    
+                        $is_success = true;
+                        $msg = '';
+                    }else{
+                        $msg = 'You do not have valid Braintree account. Cannot set Braintree as default payment tool.';
+                    }                        
+                break;
+                default:    
+                    $data = ['default_payment_api' => ''];
+                    $this->CompanyOnlinePaymentAccount_model->update($companyOnlinePaymentAcccount->id, $data);
+
+                    $is_success = true;
+                    $msg = '';                
+                break;
+            }
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
 }
