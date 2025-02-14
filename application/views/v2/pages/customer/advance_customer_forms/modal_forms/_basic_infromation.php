@@ -44,7 +44,7 @@
 	<div class="col-md-4 mb-3">
 		<div class="form-group">
 			<label>Status</label>
-			<select name="status" class="form-control searchable-dropdown">
+			<select name="status" class="form-control" id="quick-add-customer-status-dropdown">
 				<?php foreach($customerStatus as $status){ ?>
 					<option value="<?= $status->name; ?>"><?= $status->name; ?></option>
 				<?php } ?>
@@ -119,7 +119,7 @@ $(function(){
         return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
     });
 
-    $('.searchable-dropdown').select2({
+    $('#quick-add-customer-status-dropdown').select2({
         dropdownParent: $('.basic-information')
     });
 });
