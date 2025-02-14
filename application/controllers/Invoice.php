@@ -41,6 +41,7 @@ class Invoice extends MY_Controller
 
     public function index($tab = '')
     {   
+        $this->load->model('Customer_advance_model', 'customer_ad_model');
         add_css(array(
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
             "assets/css/accounting/customers.css",
@@ -176,11 +177,53 @@ class Invoice extends MY_Controller
                         break;
                 }
                 $this->page_data['search'] = get('search');
-                $this->page_data['invoices'] = $this->invoice_model->filterBy(array('order' => get('order')), $comp_id, $type);
+                $this->page_data['invoices'] = $invoices_data = $this->invoice_model->filterBy(array('order' => get('order')), $comp_id, $type);
             } else {                
                 //$this->page_data['invoices'] = $this->invoice_model->getAllData();
-                $this->page_data['invoices'] = $this->invoice_model->getAllActiveByCompanyId($comp_id, $type);
+                $this->page_data['invoices'] = $invoices_data = $this->invoice_model->getAllActiveByCompanyId($comp_id, $type);
             }
+        }
+
+        foreach($invoices_data as $inv_data) {
+            $current_date    = date('Y-m-d');
+            $new_invoice_grand_total = 0;
+            $late_fee        = 0;
+            $invdata         = [];
+
+            $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($inv_data->customer_id);	
+
+            //Invoice is due, need to add late fee
+            $late_fee_activated_date = $inv_data->due_date;
+            if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
+                $date1 = new DateTime($current_date);
+                $date2 = new DateTime($late_fee_activated_date);
+                $total_days = $date2->diff($date1)->format("%a");
+
+                $late_fee_percentage = $customer_billing_info->payment_fee != null ? $customer_billing_info->payment_fee : 0; 
+                $late_fee += ($late_fee_percentage / 100) * $inv_data->invoice_totals;
+
+                if($total_days > 0) {
+                    $default_late_fee = $customer_billing_info->late_fee != null ? $customer_billing_info->late_fee : 0;
+                    if($total_days >= 10) {
+                        $late_fee += $default_late_fee * $total_days;                        
+                    } else {
+                        $late_fee += $default_late_fee * $total_days;
+                    }   
+                }
+            }       
+            
+            $new_invoice_grand_total = $inv_data->invoice_totals + $late_fee;
+
+            //Update invoice new grand total & late fee
+            $invdata = [
+                'id' => $inv_data->id,
+                'balance' => $new_invoice_grand_total,
+                'grand_total' => $new_invoice_grand_total,
+                'total_due' => $new_invoice_grand_total,
+                'late_fee' => $late_fee
+            ];
+
+            $this->customer_ad_model->update_data($invdata, 'invoices', 'id');	
         }
 
         $invoiceSettings = $this->invoice_settings_model->getByCompanyId($comp_id);
@@ -2367,13 +2410,15 @@ class Invoice extends MY_Controller
         $this->load->model('Customer_advance_model', 'customer_ad_model');
 
         $post = $this->input->post();
+
         $invoice = get_invoice_by_id($post['invoice_id']);
         $payments = $this->payment_records_model->getAllByInvoiceId($invoice->id);
 
         $current_date    = date('Y-m-d');
         $late_fee        = 0;
         $payment_fee     = 0;
-        if($invoice) {
+        
+        /*if($invoice) {
             $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($invoice->customer_id);	
 
             //Invoice is due, need to add late fee
@@ -2395,17 +2440,16 @@ class Invoice extends MY_Controller
                     }   
                 }
             }           
-
-        }
+        }*/
         
-        $balance = $invoice->grand_total + $late_fee;
+        $balance = $invoice->grand_total;
         foreach($payments as $p){
             $balance = $balance - $p->invoice_amount;
         }
         
         $this->page_data['invoice']  = $invoice;
         $this->page_data['balance']  = $balance;
-        $this->page_data['late_fee'] = $late_fee;
+        $this->page_data['late_fee'] = $invoice->late_fee;
         $this->load->view('v2/pages/invoice/record_payment_form', $this->page_data);
     }
 
