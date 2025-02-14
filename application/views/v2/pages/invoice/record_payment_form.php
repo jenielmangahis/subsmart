@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-6">
                 <label class="row-label">Due : </label>
-                <span class="row-value">$<?php echo number_format($invoice->grand_total + $late_fee, 2, '.', ',') ?></label>
+                <span class="row-value">$<?php echo number_format($invoice->grand_total, 2, '.', ',') ?></label>
             </div>
             <div class="col-6">
                 <label class="row-label">Balance : </label>
