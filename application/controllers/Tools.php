@@ -2810,6 +2810,15 @@ class Tools extends MY_Controller {
                     $msg = '';                
                 break;
             }
+
+            //Activity Logs
+            if( $post['api'] != '' ){
+                $activity_name = 'API Connector : Updated company default payment tool to ' . $post['api']; 
+            }else{
+                $activity_name = 'API Connector : Set company default payment tool to none'; 
+            }
+            
+            createActivityLog($activity_name);
         }
 
         $json_data = [

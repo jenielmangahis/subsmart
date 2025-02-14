@@ -54,8 +54,14 @@ class Events extends MY_Controller
         $this->load->view('v2/pages/events/list', $this->page_data);
     }
 
-    public function event_types() {        
-        $get_job_types = array(
+    public function event_types() 
+    {        
+        if(!checkRoleCanAccessModule('events-settings', 'read')){
+            show403Error();
+            return false;
+        }
+
+        $get_event_types = array(
             'where' => array(
                 'company_id' => logged('company_id'),
             ),
@@ -66,14 +72,20 @@ class Events extends MY_Controller
                 'ordering' => 'DESC',
             ),
         );        
-        $this->page_data['page']->title = 'Event Types';
+        $this->page_data['page']->title  = 'Event Types';
         $this->page_data['page']->parent = 'Sales';
-        $this->page_data['page']->tab = 'Event Types';
-        $test =  $this->page_data['event_types'] = $this->general->get_data_with_param($get_job_types);
+        $this->page_data['page']->tab    = 'Event Types';
+        $this->page_data['event_types'] = $this->general->get_data_with_param($get_event_types);
         $this->load->view('v2/pages/events/event_types', $this->page_data);
     }
 
-    public function event_types_add () {
+    public function event_types_add () 
+    {
+        if(!checkRoleCanAccessModule('events-settings', 'write')){
+            show403Error();
+            return false;
+        }
+
         $this->load->model('Icons_model');
         add_css(array('assets/css/hover.css'));
         $icons = $this->Icons_model->getAll();
@@ -807,7 +819,13 @@ class Events extends MY_Controller
         echo json_encode($this->general->get_data_with_param($get_esign_template),TRUE);
     }
 
-    public function event_tags() {
+    public function event_tags() 
+    {
+        if(!checkRoleCanAccessModule('events-settings', 'read')){
+            show403Error();
+            return false;
+        }
+
         $get_job_settings = array(
             'where' => array(
                 'company_id' => logged('company_id')

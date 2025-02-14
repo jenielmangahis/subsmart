@@ -201,15 +201,28 @@ class Event_Types extends MY_Controller {
         }
     }
 
-	public function delete_event_type(){
-		$id = $this->EventType_model->deleteById(post('eid'));
+	public function delete_event_type()
+    {
+        $is_success = 0;
+        $msg = 'Record not found';
 
-		$this->session->set_flashdata('message', 'Event Type has been Deleted Successfully');
-		$this->session->set_flashdata('alert_class', 'alert-success');
+        $company_id = logged('company_id');
+        $post = $this->input->post();
 
-        $json_data['is_success'] = 1;
-        echo json_encode($json_data);
-		//redirect('events/event_types');
+        $eventType = $this->EventType_model->getById($post['eid']);
+        if( $eventType && $eventType->company_id == $company_id ){
+            $this->EventType_model->delete($eventType->id);
+
+            //Activity Logs
+            $activity_name = 'Event Type : Deleted event type ' . $eventType->title; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+        
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
 	}
 
     public function moveUploadedFile() {
