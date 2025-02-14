@@ -321,12 +321,12 @@ $payment_link = base_url('/invoice/customer_view/' . $invoice->id);
                     </td>
                     <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->taxes, 2, '.', ','); ?></td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <td colspan="2" style="padding: 8px; border: 1px solid;">
                         <b>LATE FEE</b>
                     </td>
                     <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->late_fee , 2, '.', ','); ?></td>
-                </tr>
+                </tr> -->
                 <tr>
                     <td colspan="2" style="padding: 8px; border: 1px solid;">
                         <b>PAYMENT FEE</b>
