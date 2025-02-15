@@ -33,6 +33,17 @@ class Payment_records_model extends MY_Model
         return $query->row();
     }
 
+    public function getAllByCustomerIdAndCompanyId($customer_id, $company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('customer_id', $customer_id);
+        $this->db->where('company_id', $company_id);
+        
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getTotalInvoiceAmountByCompanyIdAndDateRange($company_id, $date_range)
     {
         $this->db->select('SUM(invoice_amount)AS total_amount_paid');
