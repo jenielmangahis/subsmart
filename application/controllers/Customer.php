@@ -2979,6 +2979,24 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/dashboard/job_list', $this->page_data);
     }
 
+    public function payment_list($cid)
+    {
+        $this->load->model('Payment_records_model');
+        $this->load->model('AcsProfile_model');
+
+        $company_id = logged('company_id');
+        $payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+        $customer   = $this->AcsProfile_model->getByProfId($cid);
+        
+        $this->page_data['page']->title = 'Customer Payment List';
+        $this->page_data['page']->parent = 'Customers';
+        $this->page_data['cus_id']    = $cid;
+        $this->page_data['payments']  = $payments;
+        $this->page_data['customer']  = $customer;
+
+        $this->load->view('v2/pages/customer/dashboard/payment_list', $this->page_data);
+    }
+
     public function service_ticket_list($cid)
     {
         $this->load->model('Tickets_model');
@@ -3135,7 +3153,7 @@ class Customer extends MY_Controller
         $this->page_data['inventory'] = $inventory;
         $this->page_data['customer'] = $customer;
 
-        $this->load->view('v2/pages/customer/inventory_list', $this->page_data);
+        $this->load->view('v2/pages/customer/dashboard/inventory_list', $this->page_data);
     }
 
     public function workorders_list($cid)
@@ -3206,7 +3224,7 @@ class Customer extends MY_Controller
         $this->page_data['page']->title = 'Credit Industry';
         $this->page_data['page']->parent = 'Customers';
 
-        $this->load->view('v2/pages/customer/credit_industry', $this->page_data);
+        $this->load->view('v2/pages/customer/dashboard/credit_industry', $this->page_data);
     }
 
     public function add_new_dispute_item($cid)

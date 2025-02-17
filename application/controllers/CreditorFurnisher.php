@@ -24,8 +24,8 @@ class CreditorFurnisher extends MY_Controller
 
         $this->page_data['page']->title = 'Credit Industry';
         $this->page_data['page']->parent = 'Customers';
-
         $this->page_data['creditorFurnishers'] = $creditorFurnishers;
+        
         $this->load->view('v2/pages/furnishers/list', $this->page_data);
     }
 

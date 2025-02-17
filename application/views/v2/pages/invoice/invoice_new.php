@@ -167,6 +167,35 @@
                         ?>
                             <?php
                             foreach ($invoices as $invoice) :
+
+                                $late_fee_amount = $invoice->late_fee;
+                                $current_date    = date('Y-m-d');
+                                
+                                /*$payment_fee     = 0; 
+
+                                $CIcam =& get_instance();
+                                $CIcam->load->model('Customer_advance_model', 'customer_ad_model');                               
+
+                                $customer_billing_info = $CIcam->customer_ad_model->getActiveSubscriptionsByCustomerId($invoice->customer_id);	
+                                $late_fee_activated_date = $invoice->due_date;
+                                if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
+                                    $date1 = new DateTime($current_date);
+                                    $date2 = new DateTime($late_fee_activated_date);
+                                    $total_days = $date2->diff($date1)->format("%a");
+                    
+                                    $late_fee_percentage = $customer_billing_info->payment_fee != null ? $customer_billing_info->payment_fee : 0; 
+                                    $late_fee_amount += ($late_fee_percentage / 100) * $invoice->grand_total;
+                    
+                                    if($total_days > 0) {
+                                        $default_late_fee = $customer_billing_info->late_fee != null ? $customer_billing_info->late_fee : 0;
+                                        if($total_days >= 10) {
+                                            $late_fee_amount += $default_late_fee * $total_days;                        
+                                        } else {
+                                            $late_fee_amount += $default_late_fee * $total_days;
+                                        }   
+                                    }
+                                }*/                                
+
                                 switch ($invoice->status):
                                     case "Partially Paid":
                                         $badge = "secondary";
@@ -252,7 +281,7 @@
                                                     <a class="dropdown-item" href="<?php echo base_url('invoice/send/' . $invoice->id) ?>">Send Invoice</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" id="resend-invoice-late-fee" href="javascript:void(0);" data-number="<?= $invoice->invoice_number; ?>" data-id="<?= $invoice->id; ?>">Resend Invoice with Late Fee</a>
+                                                    <a class="dropdown-item" id="resend-invoice-late-fee" href="javascript:void(0);" data-number="<?= $invoice->invoice_number; ?>" data-id="<?= $invoice->id; ?>" date-latefee="<?php echo number_format($late_fee_amount,2); ?>">Resend Invoice with Late Fee</a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>">Edit</a>
@@ -396,7 +425,8 @@
         $(document).on('click touchstart', '#resend-invoice-late-fee', function(){
             var invoice_id = $(this).attr('data-id');   
             var invoice_number  = $(this).attr('data-number');
-            var late_fee_amount = "<?= $invoiceSettings ? $invoiceSettings->late_fee_amount_per_day : 0; ?>"
+            var late_fee_amount = $(this).attr('date-latefee');
+            //var late_fee_amount = "<?= $invoiceSettings ? $invoiceSettings->late_fee_amount_per_day : 0; ?>"
             Swal.fire({
                 title: 'Resend Invoice',
                 html: `Are you sure you want to resend invoice number <b>${invoice_number}</b>? This will add late fee amount of $${late_fee_amount} per day.`,
