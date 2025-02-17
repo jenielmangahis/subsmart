@@ -71,16 +71,18 @@ table.dataTable.no-footer {
                 <div class="row">
                     <div class="col-6 grid-mb">
                         <div class="nsm-field-group search form-group">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_TYPE_SEARCHBAR" placeholder="Search Event Type...">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_TYPE_SEARCHBAR" placeholder="Search">
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('events-settings', 'write')){ ?>
                     <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('events/event_types_add'); ?>'">
-                            <i class='bx bx-fw bx-book'></i> New Event Type
+                            <i class='bx bx-fw bx-plus'></i> Add Event Type
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
                 <table id="EVENT_TYPE_TABLE" class="nsm-table">
                     <thead>
@@ -115,8 +117,12 @@ table.dataTable.no-footer {
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="<?php echo base_url('events/event_types_edit/' . $type->id); ?>">Edit</a></li>
-                                        <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $type->id; ?>">Delete</a></li>
+                                        <?php if(checkRoleCanAccessModule('events-settings', 'write')){ ?>
+                                            <li><a class="dropdown-item" href="<?php echo base_url('events/event_types_edit/' . $type->id); ?>">Edit</a></li>
+                                        <?php } ?>
+                                        <?php if(checkRoleCanAccessModule('events-settings', 'delete')){ ?>
+                                            <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-name="<?= $type->title; ?>" data-id="<?php echo $type->id; ?>">Delete</a></li>
+                                        <?php } ?>
                                     </ul>
                                 </div>
                             </td>
@@ -150,37 +156,48 @@ EVENT_TYPE_TABLE_SETTINGS = EVENT_TYPE_TABLE.settings();
 
 $(document).ready(function () {
     var base_url = "<?php echo base_url(); ?>";
-
-    // $(".nsm-table").nsmPagination();
+    
+    <?php if(checkRoleCanAccessModule('events-settings', 'delete')){ ?>
     $(document).on('click', '.delete-item', function () {
-        var eid = $(this).data("id");
+        var eid  = $(this).data("id");
+        var name = $(this).data("name");
+
         Swal.fire({
-            title: 'Warning',
-            text: "Do you want to delete selected event type?",
-            icon: 'warning',
+            title: 'Delete Event Type',
+            html: `Proceed with deleting event type  <b>${name}</b>?`,
+            icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes',
             cancelButtonText: 'No',
         }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Event Type was deleted successfully!',
-                }).then((result) => {
-                    window.location.href = base_url + "/events/event_types";
-                });
+            if (result.isConfirmed) {                
                 $.ajax({
                     type: "POST",
                     url: base_url + "/event_types/delete",
-                    data: {
-                        eid: eid
-                    }, // serializes the form's elements.
-                    success: function (data) { }
+                    data: {eid: eid},
+                    dataType:"json",
+                    success: function (result) { 
+                        if( result.is_success == 1 ) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Event Type',
+                                text: 'Data deleted successfully!',
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }                        
+                    }
                 });
             }
         });
     });
+    <?php } ?>
 });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
