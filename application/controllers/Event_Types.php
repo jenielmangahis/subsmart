@@ -255,49 +255,54 @@ class Event_Types extends MY_Controller {
         $post       = $this->input->post();
 
         if( $post['title'] != ''){
-            if( isset($post['is_default_icon']) ){
-                $icon = $this->Icons_model->getById($post['default_icon_id']);
-                $marker_icon = $icon->image;
-                $data_event_type = [
-                    'company_id' => $company_id,
-                    'user_id' => $user_id,
-                    'title' => $post['title'],
-                    'icon_marker' => $marker_icon,
-                    'is_marker_icon_default_list' => 1,
-                    'created' => date("Y-m-d H:i:s"),
-                    'modified' => date("Y-m-d H:i:s")
-                ];
-
-                $event_type_id = $this->EventType_model->create($data_event_type);
-                if( $event_type_id > 0 ){
-                    $is_success = 1;
-                    $msg = '';
-                }
-            }else{
-                if( !empty($_FILES['image']['name']) ){
-
-                    $marker_icon = $this->moveUploadedFile();
+            $isExists = $this->EventType_model->getByTitleAndCompanyId($post['title'], $company_id);
+            if( !$isExists ){
+                if( isset($post['is_default_icon']) ){
+                    $icon = $this->Icons_model->getById($post['default_icon_id']);
+                    $marker_icon = $icon->image;
                     $data_event_type = [
                         'company_id' => $company_id,
                         'user_id' => $user_id,
                         'title' => $post['title'],
                         'icon_marker' => $marker_icon,
-                        'is_marker_icon_default_list' => 0,
+                        'is_marker_icon_default_list' => 1,
                         'created' => date("Y-m-d H:i:s"),
                         'modified' => date("Y-m-d H:i:s")
                     ];
-
+    
                     $event_type_id = $this->EventType_model->create($data_event_type);
                     if( $event_type_id > 0 ){
                         $is_success = 1;
                         $msg = '';
                     }
+                }else{
+                    if( !empty($_FILES['image']['name']) ){
+    
+                        $marker_icon = $this->moveUploadedFile();
+                        $data_event_type = [
+                            'company_id' => $company_id,
+                            'user_id' => $user_id,
+                            'title' => $post['title'],
+                            'icon_marker' => $marker_icon,
+                            'is_marker_icon_default_list' => 0,
+                            'created' => date("Y-m-d H:i:s"),
+                            'modified' => date("Y-m-d H:i:s")
+                        ];
+    
+                        $event_type_id = $this->EventType_model->create($data_event_type);
+                        if( $event_type_id > 0 ){
+                            $is_success = 1;
+                            $msg = '';
+                        }
+                    }
                 }
-            }
-
-            //Activity Logs
-            $activity_name = 'Event Types : Created event type ' . $post['title']; 
-            createActivityLog($activity_name);
+    
+                //Activity Logs
+                $activity_name = 'Event Types : Created event type ' . $post['title']; 
+                createActivityLog($activity_name);
+            }else{
+                $msg = 'Event type name already exists.';
+            }            
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
@@ -316,42 +321,47 @@ class Event_Types extends MY_Controller {
 
         if( $post['title'] != ''){
             $eventType = $this->EventType_model->getById($post['eid']);
-            if( $eventType ){
-                $marker_icon = $eventType->icon_marker;
-                $is_marker_icon_default_list = $eventType->is_marker_icon_default_list;
-                if( isset($post['is_default_icon']) ){
-                    if( $post['default_icon_id'] > 0 ){
-                        $icon = $this->Icons_model->getById($post['default_icon_id']);
-                        $marker_icon = $icon->image;
-                        $is_marker_icon_default_list = 1;
-                    }
-                }else{
-                    if( $_FILES['image']['size'] > 0 ){
+            $isExists  = $this->EventType_model->getByTitleAndCompanyId($post['title'], $company_id);
+            if( !$isExists ){
+                if( $eventType ){
+                    $marker_icon = $eventType->icon_marker;
+                    $is_marker_icon_default_list = $eventType->is_marker_icon_default_list;
+                    if( isset($post['is_default_icon']) ){
+                        if( $post['default_icon_id'] > 0 ){
+                            $icon = $this->Icons_model->getById($post['default_icon_id']);
+                            $marker_icon = $icon->image;
+                            $is_marker_icon_default_list = 1;
+                        }
+                    }else{
                         if( $_FILES['image']['size'] > 0 ){
-                            $marker_icon = $this->moveUploadedFile();
-                            $is_marker_icon_default_list = 0;
+                            if( $_FILES['image']['size'] > 0 ){
+                                $marker_icon = $this->moveUploadedFile();
+                                $is_marker_icon_default_list = 0;
+                            }
                         }
                     }
+    
+                    $data_event_type = [
+                        'title' => $post['title'],
+                        'icon_marker' => $marker_icon,
+                        'is_marker_icon_default_list' => 1,
+                        'is_marker_icon_default_list' => $is_marker_icon_default_list,
+                        'modified' => date("Y-m-d H:i:s")
+                    ];
+    
+                    $this->EventType_model->updateEventTypeById($post['eid'], $data_event_type);
+    
+                    $is_success = 1;
+                    $msg = '';
+    
+                    //Activity Logs
+                    $activity_name = 'Event Types : Updated event type ' . $eventType->title; 
+                    createActivityLog($activity_name);
+    
                 }
-
-                $data_event_type = [
-                    'title' => $post['title'],
-                    'icon_marker' => $marker_icon,
-                    'is_marker_icon_default_list' => 1,
-                    'is_marker_icon_default_list' => $is_marker_icon_default_list,
-                    'modified' => date("Y-m-d H:i:s")
-                ];
-
-                $this->EventType_model->updateEventTypeById($post['eid'], $data_event_type);
-
-                $is_success = 1;
-                $msg = '';
-
-                //Activity Logs
-                $activity_name = 'Event Types : Updated event type ' . $eventType->title; 
-                createActivityLog($activity_name);
-
-            }
+            }else{
+                $msg = 'Event type name already exists.';
+            }  
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
