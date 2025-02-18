@@ -1,5 +1,4 @@
 <?php include viewPath('v2/includes/header'); ?>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <style>
 .list-icon{
   list-style: none;
@@ -131,15 +130,22 @@ $("#EVENT_TYPE_ADD_FORM").submit(function (event) {
             cache: false,
             async: false,
             success: function(data){
-                Swal.fire({
-                    icon: 'success',
-                    //title: 'Success',
-                    text: 'Event Type was created successfully!',
-                }).then((result) => {
-                    // if (result.isConfirmed) {
-                    location.href = base_url + "events/event_types";                    
-                    // }
-                });
+                if( data.is_success == 1 ){
+                    Swal.fire({
+                        icon: 'success',
+                        text: 'Event type was created successfully!',
+                    }).then((result) => {
+                        // if (result.isConfirmed) {
+                        location.href = base_url + "events/event_types";                    
+                        // }
+                    });
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.msg,
+                    });
+                }
             }
         });
     }

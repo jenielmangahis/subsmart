@@ -54,8 +54,14 @@ class Events extends MY_Controller
         $this->load->view('v2/pages/events/list', $this->page_data);
     }
 
-    public function event_types() {        
-        $get_job_types = array(
+    public function event_types() 
+    {        
+        if(!checkRoleCanAccessModule('events-settings', 'read')){
+            show403Error();
+            return false;
+        }
+
+        $get_event_types = array(
             'where' => array(
                 'company_id' => logged('company_id'),
             ),
@@ -66,14 +72,20 @@ class Events extends MY_Controller
                 'ordering' => 'DESC',
             ),
         );        
-        $this->page_data['page']->title = 'Event Types';
+        $this->page_data['page']->title  = 'Event Types';
         $this->page_data['page']->parent = 'Sales';
-        $this->page_data['page']->tab = 'Event Types';
-        $test =  $this->page_data['event_types'] = $this->general->get_data_with_param($get_job_types);
+        $this->page_data['page']->tab    = 'Event Types';
+        $this->page_data['event_types'] = $this->general->get_data_with_param($get_event_types);
         $this->load->view('v2/pages/events/event_types', $this->page_data);
     }
 
-    public function event_types_add () {
+    public function event_types_add () 
+    {
+        if(!checkRoleCanAccessModule('events-settings', 'write')){
+            show403Error();
+            return false;
+        }
+
         $this->load->model('Icons_model');
         add_css(array('assets/css/hover.css'));
         $icons = $this->Icons_model->getAll();
@@ -85,7 +97,13 @@ class Events extends MY_Controller
         $this->load->view('v2/pages/events/action/event_types_add', $this->page_data);
     }
 
-    public function event_types_edit ($event_type_id) {
+    public function event_types_edit ($event_type_id) 
+    {
+        if(!checkRoleCanAccessModule('events-settings', 'write')){
+            show403Error();
+            return false;
+        }
+        
         $this->load->model('Icons_model');
         add_css(array('assets/css/hover.css'));
         $eventType = $this->event_type_model->getById($event_type_id);
@@ -99,8 +117,15 @@ class Events extends MY_Controller
         $this->load->view('v2/pages/events/action/event_types_edit', $this->page_data);
     }
 
-     public function event_tags_add () {
+     public function event_tags_add() 
+     {
         $this->load->model('Icons_model');
+
+        if(!checkRoleCanAccessModule('events-settings', 'write')){
+            show403Error();
+            return false;
+        }
+        
         add_css(array('assets/css/hover.css'));
         $icons = $this->Icons_model->getAll();
         $this->page_data['page']->title = 'Event Tags';
@@ -109,9 +134,16 @@ class Events extends MY_Controller
         $this->load->view('v2/pages/events/action/event_tags_add', $this->page_data);
     }
 
-    public function event_tags_edit ($id) {
+    public function event_tags_edit ($id) 
+    {
         $this->load->model('Icons_model');
         $this->load->model('EventTags_model');
+
+        if(!checkRoleCanAccessModule('events-settings', 'write')){
+            show403Error();
+            return false;
+        }
+
         add_css(array('assets/css/hover.css'));
         $eventTag = $this->EventTags_model->getById($id);
         $icons    = $this->Icons_model->getAll();
@@ -807,7 +839,13 @@ class Events extends MY_Controller
         echo json_encode($this->general->get_data_with_param($get_esign_template),TRUE);
     }
 
-    public function event_tags() {
+    public function event_tags() 
+    {
+        if(!checkRoleCanAccessModule('events-settings', 'read')){
+            show403Error();
+            return false;
+        }
+
         $get_job_settings = array(
             'where' => array(
                 'company_id' => logged('company_id')
@@ -972,6 +1010,11 @@ class Events extends MY_Controller
 
     public function settings() 
     {
+        if(!checkRoleCanAccessModule('events-settings', 'read')){
+            show403Error();
+            return false;
+        }
+        
         $cid = logged('company_id');
 
         $eventSettings = $this->EventSettings_model->getByCompanyId($cid);
@@ -1540,40 +1583,46 @@ class Events extends MY_Controller
         $post = $this->input->post();
         $company_id = logged('company_id');
 
-        if( isset($post['is_default_icon']) ){
-            $icon = $this->Icons_model->getById($post['default_icon_id']);
-            $marker_icon = $icon->image;
-            $data = [
-                'name' => $post['event_tag_name'],
-                'company_id' => $company_id,
-                'marker_icon' => $marker_icon,
-                'is_marker_icon_default_list' => 1
-            ];
-
-            $this->EventTags_model->create($data);
-        }else{
-            $marker_icon = $this->moveUploadedFile();
-            if( $marker_icon != '' ){
+        $isExists = $this->EventTags_model->getByNameAndCompanyId($post['event_tag_name'], $company_id);
+        if( !$isExists ){
+            if( isset($post['is_default_icon']) ){
+                $icon = $this->Icons_model->getById($post['default_icon_id']);
+                $marker_icon = $icon->image;
                 $data = [
                     'name' => $post['event_tag_name'],
                     'company_id' => $company_id,
                     'marker_icon' => $marker_icon,
-                    'is_marker_icon_default_list' => 0
+                    'is_marker_icon_default_list' => 1
                 ];
-
+    
                 $this->EventTags_model->create($data);
+            }else{
+                $marker_icon = $this->moveUploadedFile();
+                if( $marker_icon != '' ){
+                    $data = [
+                        'name' => $post['event_tag_name'],
+                        'company_id' => $company_id,
+                        'marker_icon' => $marker_icon,
+                        'is_marker_icon_default_list' => 0
+                    ];
+    
+                    $this->EventTags_model->create($data);
+                }
             }
+    
+            $is_success = 1;
+            $msg = '';
+    
+            //Activity Logs
+            $activity_name = 'Event Tags : Created event tags ' . $post['event_tag_name']; 
+            createActivityLog($activity_name);
+
+        }else{
+            $msg = 'Event tag name already exists.';
         }
-
-        $is_success = 1;
-        $msg = '';
-
-        //Activity Logs
-        $activity_name = 'Event Tags : Created event tags ' . $post['event_tag_name']; 
-        createActivityLog($activity_name);
+        
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
- 
         echo json_encode($return);
     }
 

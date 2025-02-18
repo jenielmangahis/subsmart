@@ -1,7 +1,4 @@
 <?php include viewPath('v2/includes/header'); ?>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
-<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-
 <style>
     .nsm-table {
         /*display: none;*/
@@ -68,7 +65,7 @@ table.dataTable.no-footer {
                     <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('events/event_tags_add'); ?>'">
-                                <i class='bx bx-fw bx-tag'></i> New Event Tag
+                                <i class='bx bx-fw bx-plus'></i> New Event Tag
                             </button>
                         </div>
                     </div>
@@ -113,7 +110,7 @@ table.dataTable.no-footer {
                                                     <a class="dropdown-item" href="<?php echo base_url("events/event_tags_edit/" . $tag->id); ?>">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $tag->id; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-name="<?= $tag->name; ?>" data-id="<?php echo $tag->id; ?>">Delete</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -149,9 +146,11 @@ table.dataTable.no-footer {
         
         $(document).on( "click", ".delete-item", function( event ) {
             var tag_id = $(this).data("id");
+            var tag_name = $(this).data("name");
+
             Swal.fire({
-                title: 'Delete',
-                text: "Do you want to delete selected event tag?",
+                title: 'Delete Event Tag',
+                html: `Proceed with deleting event tag  <b>${tag_name}</b>?`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',

@@ -53,6 +53,17 @@ class EventType_model extends MY_Model
         return $query;
     }
 
+    public function getByTitleAndCompanyId($title, $company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('title', $title);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function updateEventTypeById($id, $data)
     {
         $this->db->from($this->table);

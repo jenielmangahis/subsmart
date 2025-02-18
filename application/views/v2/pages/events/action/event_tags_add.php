@@ -111,40 +111,6 @@
 </div>
 
 <script type="text/javascript">
-$("#EVENT_TAG_ADD_FORM").submit(function (event) {
-    event.preventDefault();
-    if (!$('#input-upload-image').val() && !$('#iconList').is(':checked')) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Please specify event tag icon/marker image!',
-        });
-    } else {        
-        $.ajax({
-            url: base_url + 'events/_save_event_tag',
-            type: "post",
-            data: new FormData(this),
-            dataType:'json',
-            processData: false,
-            contentType: false,
-            cache: false,
-            async: false,
-            success: function(data){
-                Swal.fire({
-                    icon: 'success',
-                    //title: 'Success',
-                    text: 'Event Tag was created successfully!',
-                }).then((result) => {
-                    // if (result.isConfirmed) {
-                    location.href = base_url + "events/event_tags";                    
-                    // }
-                });
-            }
-        });
-    }
-});
-
-
 $(function () {
     $("#icon-pick-name").hide();
     $(".a-icon").click(function () {
@@ -165,6 +131,47 @@ $(function () {
             $("#input-upload-image").show();
             $("#icon-pick-name").hide();
             $("#default-icon-id").val("");
+        }
+    });
+
+    $("#EVENT_TAG_ADD_FORM").submit(function (event) {
+        event.preventDefault();
+        if (!$('#input-upload-image').val() && !$('#iconList').is(':checked')) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please specify event tag icon/marker image!',
+            });
+        } else {        
+            $.ajax({
+                url: base_url + 'events/_save_event_tag',
+                type: "post",
+                data: new FormData(this),
+                dataType:'json',
+                processData: false,
+                contentType: false,
+                cache: false,
+                async: false,
+                success: function(data){
+                    if( data.is_success == 1 ){
+                        Swal.fire({
+                            icon: 'success',
+                            //title: 'Success',
+                            text: 'Event Tag was created successfully!',
+                        }).then((result) => {
+                            // if (result.isConfirmed) {
+                            location.href = base_url + "events/event_tags";                    
+                            // }
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.msg,
+                        });
+                    }
+                }
+            });
         }
     });
 });
