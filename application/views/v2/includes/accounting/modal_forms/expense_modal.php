@@ -238,24 +238,27 @@
                                                     <table class="nsm-table" id="category-details-table">
                                                         <thead>
                                                             <tr>
-                                                                <td data-name="Num">#</td>
-                                                                <td data-name="Customer">CUSTOMER</td>
+                                                                <td data-name="Num" style="width:3%;text-align:center;">#</td>
+                                                                <td data-name="Customer" style="width:15%;">CUSTOMER</td>
                                                                 <td data-name="Expense Name">EXPENSE NAME</td>
-                                                                <td data-name="Category">CATEGORY</td>
+                                                                <td data-name="Category" style="width:15%;">CATEGORY</td>
                                                                 <td data-name="Description">DESCRIPTION</td>
-                                                                <td data-name="Amount">AMOUNT</td>
-                                                                <td data-name="Billable">BILLABLE</td>
-                                                                <td data-name="Markup %">MARKUP %</td>
-                                                                <td data-name="Tax">TAX</td>
+                                                                <td data-name="Amount" style="width:10%;">AMOUNT</td>
+                                                                <td data-name="Billable" style="width:8%;text-align:center;">BILLABLE</td>
+                                                                <td data-name="Markup %" style="width:8%;">MARKUP %</td>
+                                                                <td data-name="Tax" style="width:5%;text-align:center;">TAX</td>                                                                
                                                                 <?php if(isset($expense) && !is_null($expense->linked_transacs)) : ?>
                                                                 <td data-name="Linked"></td>
                                                                 <?php endif; ?>
-                                                                <td data-name="Manage"></td>
-                                                            </tr>
+                                                                <td data-name="Manage" style="width:3%;"></td>
+                                                            </tr>                                                            
                                                         </thead>
                                                         <tbody>
                                                             <tr>
                                                                 <td>1</td>
+                                                                <td>
+                                                                    <select name="category_customer[]" class="nsm-field form-control"></select>
+                                                                </td>
                                                                 <td>
                                                                     <select name="expense_account[]" class="nsm-field form-control" required></select>
                                                                 </td>
@@ -270,18 +273,15 @@
                                                                 <td><input type="text" name="description[]" class="nsm-field form-control"></td>
                                                                 <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01"></td>
                                                                 <td>
-                                                                    <div class="table-row-icon table-checkbox">
+                                                                    <div class="table-row-icon table-checkbox" style="margin: auto;">
                                                                         <input class="form-check-input table-select" name="category_billable[]" type="checkbox" value="1">
                                                                     </div>
                                                                 </td>
                                                                 <td><input type="number" name="category_markup[]" class="nsm-field form-control" onchange="convertToDecimal(this)"></td>
                                                                 <td>
-                                                                    <div class="table-row-icon table-checkbox">
+                                                                    <div class="table-row-icon table-checkbox" style="margin: auto;">
                                                                         <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1">
                                                                     </div>
-                                                                </td>
-                                                                <td>
-                                                                    <select name="category_customer[]" class="nsm-field form-control"></select>
                                                                 </td>
                                                                 <td>
                                                                     <button type="button" class="nsm-button delete-row">
@@ -322,13 +322,13 @@
                                                                 <td><input type="text" name="description[]" class="nsm-field form-control" value="<?=$category->description?>"></td>
                                                                 <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="<?=str_replace(',', '', number_format(floatval($category->amount), 2, '.', ','))?>"></td>
                                                                 <td>
-                                                                    <div class="table-row-icon table-checkbox">
+                                                                    <div class="table-row-icon table-checkbox" style="margin: auto;">
                                                                         <input class="form-check-input table-select" name="category_billable[]" type="checkbox" value="1" <?=$category->billable === "1" ? 'checked' : ''?>>
                                                                     </div>
                                                                 </td>
                                                                 <td><input type="number" name="category_markup[]" class="nsm-field form-control" onchange="convertToDecimal(this)" value="<?=number_format(floatval($category->markup_percentage), 2, '.', ',')?>"></td>
                                                                 <td>
-                                                                    <div class="table-row-icon table-checkbox">
+                                                                    <div class="table-row-icon table-checkbox" style="margin: auto;">
                                                                         <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1" <?=$category->tax === "1" ? 'checked' : ''?>>
                                                                     </div>
                                                                 </td>

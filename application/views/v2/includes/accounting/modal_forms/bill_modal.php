@@ -135,6 +135,9 @@
                                     <div class="row">
                                         <div class="col-12 col-md-3">
                                             <label for="vendor">Vendor</label>
+                                            <div id="open-vendor-info-window-container" style='float:right;'>
+                                                <a href="javascript:void(0)" class="nsm-button btn-small" style="margin-bottom:3px;display:inline-block;" id="open-vendor-info-window">View Vendor Info</a>
+                                            </div>                                                  
                                             <select name="vendor" id="vendor" class="form-control nsm-field" required>
                                                 <?php if(isset($bill) || isset($purchaseOrder)) : ?>
                                                     <?php if(isset($purchaseOrder) && !isset($bill)) : ?>
@@ -374,7 +377,11 @@
                                                                 </td>
                                                                 <td>
                                                                     <select name="category[]" class="nsm-field form-control">
-                                                                        <option disabled selected>&nbsp;</option>
+                                                                        <?php if(isset($category->category) && $category->category != null) { ?>
+                                                                                <option value="<?php echo $category->category ?>" selected><?php echo getItemCategoryName($category_list, $category->category); ?></option>
+                                                                        <?php }else{ ?>
+                                                                                <option disabled selected>&nbsp;</option>
+                                                                        <?php } ?>                                                                        
                                                                         <option value="fixed" <?=$category->category === 'fixed' ? 'selected' : ''?>>Fixed Cost</option>
                                                                         <option value="variable" <?=$category->category === 'variable' ? 'selected' : ''?>>Variable Cost</option>
                                                                         <option value="periodic" <?=$category->category === 'periodic' ? 'selected' : ''?>>Periodic Cost</option>
