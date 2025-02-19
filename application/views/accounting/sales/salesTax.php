@@ -425,43 +425,25 @@ include viewPath('v2/includes/header');
 
                         <br>
 
-                        <div class="dropdownWithSearchContainer" id="dueDateInputs">
-                            <!-- <div>
-                                <label>Due Date Start</label>
-                                <div data-type="due_start" class="dropdownWithSearch">
-                                    <input type="text" class="form-control dropdownWithSearch__input">
-                                    <button class="dropdownWithSearch__btn">
-                                        <i class="fa fa-chevron-down"></i>
-                                    </button>
-                                </div>
-                            </div> -->
-                            <div>
+                        <div class="row" id="dueDateInputs">
+                            <div class="col-md-3">
                                 <label for="due-date-start">Due Date Start</label>
                                 <div class="dropdownWithSearch">
-                                    <input type="date" id="due-date-start" class="form-control dropdownWithSearch__input nsm-field date" data-type="due_start">
+                                    <input type="date" id="due-date-start" class="form-control nsm-field date" data-type="due_start">
                                 </div>
                             </div>
-                            <!-- <div>
-                                <label>Due Date End</label>
-                                <div data-type="due_end" class="dropdownWithSearch">
-                                    <input type="text" class="form-control dropdownWithSearch__input">
-                                    <button class="dropdownWithSearch__btn">
-                                        <i class="fa fa-chevron-down"></i>
-                                    </button>
-                                </div>
-                            </div> -->
-                            <div>
+                            <div class="col-md-3">
                                 <label for="due-date-end">Due Date End</label>
                                 <div class="dropdownWithSearch">
-                                    <input type="date" id="due-date-end" class="form-control dropdownWithSearch__input nsm-field date" data-type="due_end">
+                                    <input type="date" id="due-date-end" class="form-control nsm-field date" data-type="due_end">
                                 </div>
                             </div>
-
-                            <!-- <button class="btn btn-primary" id="refreshList" disabled>Refresh</button> -->
-                            <button class="nsm-button primary" id="refreshList" style="height: 35px; margin-top: 20px;" disabled>Refresh</button>
-                            <span class="dropdownWithSearchContainer__error d-none">
-                                Invalid date range, end date must be after start date.
-                            </span>
+                            <div class="col-md-3">
+                                <button class="nsm-button primary" id="refreshList" style="margin-top: 20px;">Filter</button>
+                                <span class="dropdownWithSearchContainer__error d-none">
+                                    Invalid date range, end date must be after start date.
+                                </span>
+                            </div>
                         </div>
 
                         <br>
@@ -508,11 +490,7 @@ include viewPath('v2/includes/header');
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="shortcuts shortcuts__header mt-4">
-                                        Shortcuts
-                                    </div>
-
-                                    <div class="shortcuts">
+                                    <div class="shortcuts mt-4">
                                         <ul class=" shortcuts__list">
                                             <li class="shortcuts__item">
                                                 <a href="<?= url('/accounting/taxEditSettings'); ?>" class="shortcuts__itemMain">
@@ -579,6 +557,20 @@ include viewPath('v2/includes/header');
                                                         <div class="shortcuts__title">Look at past returns</div>
                                                         <div class="shortcuts__body">
                                                             Quickly see all the sales tax payments you've made so far.
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+
+                                            <li class="shortcuts__item">
+                                                <a href="<?= base_url('accounting/download_sales_tax_returns') ?>" class="shortcuts__itemMain">
+                                                    <div class="shortcuts__logo">
+                                                        <img src="<?php echo $url->assets ?>img/taxlogo/l5.png">
+                                                    </div>
+                                                    <div class="shortcuts__text">
+                                                        <div class="shortcuts__title">Sales and Tax Returns</div>
+                                                        <div class="shortcuts__body">
+                                                            Download your sales and tax returns.
                                                         </div>
                                                     </div>
                                                 </a>
