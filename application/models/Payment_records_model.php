@@ -103,11 +103,11 @@ class Payment_records_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('id', $invoice_settings_id);
+        $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
         return $query->row();
     }
-
 
     public function filterBy($filters = array(), $company_id = 0)
     {
