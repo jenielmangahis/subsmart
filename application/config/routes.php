@@ -2056,3 +2056,8 @@ $route['debug/ringcentralSmsV2'] = 'Debug/ringcentralSmsV2';
 //Settings : Customer Advance Form
 $route['customer/form_settings'] = 'Customer/customer_advance_form_settings';
 $route['customer/_save_customer_form_settings'] = 'Customer/ajax_save_customer_form_settings';
+
+//Alarm API
+$route['alarm_api/customers'] = 'AlarmApiPortal/customers';
+$route['alarm_api/_view_customer']['post'] = 'AlarmApiPortal/ajax_view_customer_information';
+$route['alarm_api/_customer_system_check']['post'] = 'AlarmApiPortal/ajax_customer_system_check';
