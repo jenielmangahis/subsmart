@@ -130,7 +130,7 @@
                                                     <a class="dropdown-item btn-mark-as-paid" href="javascript:void(0);" href="javascript:void(0);" data-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>">Mark as Paid</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item recordPaymentBtn" href="javascript:void(0);" data-id="<?php echo $invoice->id ?>">Record Payment</a>
+                                                    <a class="dropdown-item recordPaymentBtn" href="javascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">Record Payment</a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('invoice/send/' . $invoice->id) ?>">Send Invoice</a>
@@ -188,22 +188,35 @@
 
         $(document).on('click touchstart', '.recordPaymentBtn', function(){
             var invoice_id = $(this).attr('data-id');
+            var invoice_status = $(this).attr('data-status');
 
-            $('#modalRecordPaymentForm').modal('show');
-            $("#modalRecordPaymentForm .modal-body").html('<div class="alert alert-info alert-purple" role="alert">Loading...</div>');
+            if( invoice_status == 'Paid' ){
+                Swal.fire({
+                    text: 'Invoice already paid. Cannot make any more payment.',
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: '#6a4a86',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    //location.reload();
+                });   
+            }else{
+                $('#modalRecordPaymentForm').modal('show');
+                showLoader($("#modalRecordPaymentForm .modal-body")); 
+                $('#record_payment_invoice_id').val(invoice_id);
 
-            $('#record_payment_invoice_id').val(invoice_id);
-
-            $.ajax({
-            url: base_url + "invoice/_load_record_payment_form",
-            type: "POST",
-            data: {
-                invoice_id: invoice_id
-            },
-            success: function (response) {
-                $("#modalRecordPaymentForm .modal-body").html(response);
-            },
-            });
+                $.ajax({
+                    url: base_url + "invoice/_load_record_payment_form",
+                    type: "POST",
+                    data: {
+                        invoice_id: invoice_id
+                    },
+                    success: function (response) {
+                        $("#modalRecordPaymentForm .modal-body").html(response);
+                    },
+                });
+            }
         });
 
         $(document).on('click', '.btn-mark-as-paid', function(){
