@@ -233,14 +233,15 @@ class AccountingSales extends MY_Controller
         $payload = json_decode(file_get_contents('php://input'), true);
         if (empty($payload)) {
             $payload['due_start'] = date('Y-m-01');
-            $payload['due_end'] = $payload['due_start'];
+            $payload['due_end']   = date('Y-m-t');
         }
 
         $dueStart = strtotime($payload['due_start']);
         $dueStart = date('Y-m-d', $dueStart);
 
         $dueEnd = strtotime($payload['due_end']);
-        $dueEnd = date('Y-m-t', $dueEnd);
+        //$dueEnd = date('Y-m-t', $dueEnd);
+        $dueEnd = date('Y-m-d', $dueEnd);
 
         $query = <<<SQL
         SELECT `i`.*, `a`.`agency_id` FROM `invoices` AS `i`

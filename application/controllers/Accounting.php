@@ -17605,6 +17605,16 @@ class Accounting extends MY_Controller
 
         exit;
     }
+
+    public function download_sales_tax_returns()
+    {
+        $this->load->library('pdf');
+
+        $filename = 'sales_and_return_tax';
+        $this->page_data['company'] = [];     
+        $this->load->view('accounting/sales/pdf/sales_and_use_tax_return', $this->page_data);   
+        //$this->pdf->load_view('accounting/sales/pdf/sales_and_use_tax_return', $this->page_data, $filename, "L");
+    }
 }
 
 // date_plan: date_plan, merchant_name:merchant_name, plan_amount:plan_amount, plan_type:plan_type, plan_repeat:plan_repeat
