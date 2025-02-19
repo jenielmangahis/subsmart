@@ -18,7 +18,12 @@
                 <span class="row-value">$<?php echo number_format($balance, 2, '.', ',') ?></label>
             </div>
             <div class="col-6" style="color: red;">
-                <label class="row-label" style="font-size: 15px !important;">Late Fee : </label>
+                <?php if($total_late_fee_days > 0) { ?>
+                    <label class="row-label" style="font-size: 15px !important;">Late Fee (<?php echo $total_late_fee_days?> Days): </label>
+                <?php } else { ?>
+                    <label class="row-label" style="font-size: 15px !important;">Late Fee: </label>
+                <?php } ?>
+                
                 <span class="row-value" style="font-size: 15px !important;">$<?php echo number_format($late_fee, 2, '.', ',') ?></label>
             </div>
             <div class="col-6">
