@@ -1261,6 +1261,7 @@ class Invoice extends MY_Controller
             'phone'                     => $this->input->post('phone'),
             //'payment_schedule'          => $this->input->post('payment_schedule'),
             'subtotal'                  => $this->input->post('subtotal'),
+            'no_tax'                    => isset($post['is_tax_exempted']) ? 1 : 0,
             'taxes'                     => $this->input->post('taxes'),
             'adjustment_name'           => $this->input->post('adjustment_name'),
             'adjustment_value'          => $this->input->post('adjustment_value'),
