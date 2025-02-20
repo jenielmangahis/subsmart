@@ -631,6 +631,9 @@ if (is_null($image)) {
                         }
                     ?>
 
+                    <!-- Voice Command Feature -->
+                    <?php include viewPath('v2/includes/tools/voice_command'); ?>
+
                     <!-- Customize menu -->
                     <div class="modal fade nsm-modal fade" id="modal-customize-menu" tabindex="-1" aria-labelledby="modal-customize-menuLabel" aria-hidden="true">
                         <div class="modal-dialog modal-md">
