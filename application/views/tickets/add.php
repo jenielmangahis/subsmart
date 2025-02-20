@@ -531,7 +531,14 @@ a.btn-primary.btn-md {
                                                 <td colspan="2" align="right"><span id="span_sub_total_invoice">0.00</span> <input type="hidden" name="subtotal" id="item_total" value="0.00"></td>
                                             </tr>
                                             <tr>
-                                                <td>Taxes</td>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="is_tax_exempted" value="1" id="chk-tax-exempted">
+                                                        <label class="form-check-label" for="chk-tax-exempted">
+                                                            Taxes (check if no tax)
+                                                        </label>
+                                                    </div>
+                                                </td>
                                                 <!-- <td></td> -->
                                                 <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input" value="0.00"></td>
                                             </tr>
@@ -1664,6 +1671,16 @@ $(document).ready(function(){
             }
         });
     }
+
+    $('#chk-tax-exempted').on('change', function(){
+        var counter = $("#count").val();
+        calculation(counter);
+    });
+
+    $('#adjustment_ic, #otps, #adjustment_mm').on('change', function(){
+        var counter = $("#count").val();
+        calculation(counter);
+    });
 });
 </script>
 
