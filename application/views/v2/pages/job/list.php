@@ -320,7 +320,7 @@ foreach ($jobs as $job) {
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
                                             <!-- <a class="dropdown-item" href="<?php echo base_url('job/job_preview/') . $job->id; ?>">Preview</a> -->
-                                            <a class="dropdown-item view-job-row" href="javascript:void(0);" data-id="<?= $job->id; ?>">Preview</a>
+                                            <a class="dropdown-item view-job-row" href="javascript:void(0);" data-id="<?= $job->id; ?>">View</a>
                                         </li>
                                         
                                         <?php if(checkRoleCanAccessModule('jobs', 'write')){ ?>
@@ -509,7 +509,7 @@ $(document).ready(function() {
                             $('#modal-archived-jobs').modal('hide');
                             Swal.fire({
                             icon: 'success',
-                            title: 'Success',
+                            title: 'Restore Job Data',
                             text: 'Job data was successfully restored.',
                             }).then((result) => {
                                 location.reload();
