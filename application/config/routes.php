@@ -2057,6 +2057,15 @@ $route['debug/ringcentralSmsV2'] = 'Debug/ringcentralSmsV2';
 $route['customer/form_settings'] = 'Customer/customer_advance_form_settings';
 $route['customer/_save_customer_form_settings'] = 'Customer/ajax_save_customer_form_settings';
 
+//Customer Dashboard Navs
+$route['customer/estimate_list/(:any)'] = 'Customer/estimate_list/$1';
+$route['customer/jobs_list/(:any)']     = 'Customer/jobs_list/$1';
+$route['customer/payment_list/(:any)']  = 'Customer/payment_list/$1';
+$route['customer/service_ticket_list/(:any)'] = 'Customer/service_ticket_list/$1';
+$route['customer/invoice_list/(:any)']  = 'Customer/invoice_list/$1';
+$route['customer/ledger/(:any)']  = 'Customer/ledger/$1';
+
+
 //Alarm API
 $route['alarm_api/customers'] = 'AlarmApiPortal/customers';
 $route['alarm_api/_view_customer']['post'] = 'AlarmApiPortal/ajax_view_customer_information';
