@@ -2600,10 +2600,12 @@ function calculation(counter) {
     $("#supergrandtotal_input").val(super_grand.toFixed(2));
   }
 
+  var fixedTaxes = calculateTaxes();
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   if( $('#chk-tax-exempted').length > 0 ){    
     if( $('#chk-tax-exempted').is(":checked") ){
       sls = 0;  
+      fixedTaxes = 0;
     }
   }
   
@@ -2617,8 +2619,7 @@ function calculation(counter) {
   $("#item_total").val(fixedSubtotal);
   $("#item_total_text").html(fixedSubtotal);
   $("#span_sub_total_invoice").text(fixedSubtotal);
-
-  const fixedTaxes = calculateTaxes();
+  
   $("#total_tax_").text(fixedTaxes);
   $("#total_tax_input").val(fixedTaxes);
 }
