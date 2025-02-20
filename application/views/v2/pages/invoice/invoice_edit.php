@@ -348,7 +348,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <input type="hidden" name="subtotal" id="item_total" value="<?php echo $invoice->sub_total; ?>"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="bold">Taxes</td>
+                                                    <td class="bold">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="is_tax_exempted" value="1" <?= $invoice->no_tax == 1 ?  'checked="checked"' : ''; ?> id="chk-tax-exempted">
+                                                            <label class="form-check-label" for="chk-tax-exempted">
+                                                                Taxes (check if no tax)
+                                                            </label>
+                                                        </div>
+                                                    </td>
                                                     <td colspan="2" align="right">
                                                         <div style="display:none;">
                                                         $ <span id="total_tax_"><?php echo number_format(intval($invoice->taxes), 2); ?></span>
@@ -365,13 +372,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <tr>
                                                     <td class="bold">One time (Program and Setup)</td>                                                    
                                                     <td colspan="2" align="right">
-                                                        <input type="number" step="any" min="0" class="form-control" id="program_setup" name="program_setup" value="<?= $invoice->program_setup > 0 ? number_format($invoice->program_setup, 2, ".","") : '0.00'; ?>" required="" style="width:50%;text-align:right;" />
+                                                        <input type="number" step="any" min="0" class="form-control" id="otps" name="program_setup" value="<?= $invoice->program_setup > 0 ? number_format($invoice->program_setup, 2, ".","") : '0.00'; ?>" required="" style="width:50%;text-align:right;" />
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="bold">Monthly Monitoring</td>                                                    
                                                     <td colspan="2" align="right">
-                                                        <input type="number" step="any" min="0" class="form-control" id="monthly_monitoring" name="monthly_monitoring" value="<?= $invoice->monthly_monitoring > 0 ? number_format($invoice->monthly_monitoring, 2, ".","") : '0.00'; ?>" required="" style="width:50%;text-align:right;" />
+                                                        <input type="number" step="any" min="0" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="<?= $invoice->monthly_monitoring > 0 ? number_format($invoice->monthly_monitoring, 2, ".","") : '0.00'; ?>" required="" style="width:50%;text-align:right;" />
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -698,6 +705,16 @@ $(document).ready(function(){
         content: function() {
             return `Mention your company's T&C that will appear on the invoice.`;
         }
+    });
+
+    $('#chk-tax-exempted').on('change', function(){
+        var counter = $("#count").val();
+        calculation(counter);
+    });
+
+    $('#adjustment_ic, #otps, #adjustment_mm').on('change', function(){
+        var counter = $("#count").val();
+        calculation(counter);
     });
 
     $('#invoice_form').on('submit', function(e){
