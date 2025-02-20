@@ -215,15 +215,15 @@ class Invoice extends MY_Controller
             $new_invoice_grand_total = $inv_data->invoice_totals + $late_fee;
 
             //Update invoice new grand total & late fee
-            $invdata = [
-                'id' => $inv_data->id,
-                'balance' => $new_invoice_grand_total,
-                'grand_total' => $new_invoice_grand_total,
-                'total_due' => $new_invoice_grand_total,
-                'late_fee' => $late_fee
-            ];
+            // $invdata = [
+            //     'id' => $inv_data->id,
+            //     'balance' => $new_invoice_grand_total,
+            //     'grand_total' => $new_invoice_grand_total,
+            //     'total_due' => $new_invoice_grand_total,
+            //     'late_fee' => $late_fee
+            // ];
 
-            $this->customer_ad_model->update_data($invdata, 'invoices', 'id');	
+            // $this->customer_ad_model->update_data($invdata, 'invoices', 'id');	
         }
 
         $invoiceSettings = $this->invoice_settings_model->getByCompanyId($comp_id);
@@ -2893,7 +2893,7 @@ class Invoice extends MY_Controller
                 'sub_total'                 => $post['subtotal'],
                 'balance'                   => $balance,
                 'taxes'                     => $post['taxes'],
-                'no_tax'                    => $post['is_tax_exempted'],
+                'no_tax'                    => isset($post['is_tax_exempted']) ? 1 : 0,
                 'adjustment_name'           => $post['adjustment_name'],
                 'adjustment_value'          => $post['adjustment_value'] > 0 ? $post['adjustment_value'] : 0,
                 'grand_total'               => $post['grand_total'],
@@ -2975,8 +2975,8 @@ class Invoice extends MY_Controller
             }
 
             //Invoice Products
-            if( $post['productIds'] && count($post['productIds']) > 0 ){
-                foreach( $post['productIds'] as $key => $pid ){
+            if( $post['item_id'] && count($post['item_id']) > 0 ){
+                foreach( $post['item_id'] as $key => $pid ){
                     $item = $this->Items_model->getByID($pid);
                     $storage_id = $post['storageLocIds'][$key];
                     $invoice_item_data = [
@@ -2986,11 +2986,11 @@ class Invoice extends MY_Controller
                         'item_type' => 'Product',
                         'item_name' => $item->title,
                         'items_id' => $pid,
-                        'qty' => $post['productQty'][$key],
-                        'cost' => $post['productPrice'][$key],
-                        'tax' => $post['productTax'][$key],
-                        'discount' => $post['productDiscount'][$key],
-                        'total' => $post['productTotal'][$key]
+                        'qty' => $post['quantity'][$key],
+                        'cost' => $post['price'][$key],
+                        'tax' => $post['tax'][$key],
+                        'discount' => $post['discount'][$key],
+                        'total' => $post['total'][$key]
                     ];
     
                     $this->invoice_model->add_invoice_details($invoice_item_data);                    
