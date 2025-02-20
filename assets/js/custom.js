@@ -180,27 +180,26 @@ $(document).on("focusout", ".markup_input", function () {
   calculation(counter);
 });
 
-$(document).on("focusout", ".adjustment_input", function () {
-  // alert($(this).val());
-  var counter = $(this).data("counter");
-  // calculation(counter);
-  var subtotal = $("#item_total").val();
-  var taxes = $("#total_tax_input").val();
-  var adjustment = $(this).val();
-  if (adjustment <= 0) {
-    adjustment = 0;
-  }
-  var grand = parseFloat(subtotal) + parseFloat(taxes);
-  var new_grand = parseFloat(grand) + parseFloat(adjustment);
-  if( isNaN(new_grand) ){
-    new_grand = 0;
-  }
+$(document).on("change", ".adjustment_input", function () {
+  var counter = $("#count").val();
+  calculation(counter);
+  // var subtotal = $("#item_total").val();
+  // var taxes = $("#total_tax_input").val();
+  // var adjustment = $(this).val();
+  // if (adjustment <= 0) {
+  //   adjustment = 0;
+  // }
+  // var grand = parseFloat(subtotal) + parseFloat(taxes);
+  // var new_grand = parseFloat(grand) + parseFloat(adjustment);
+  // if( isNaN(new_grand) ){
+  //   new_grand = 0;
+  // }
 
-  // alert(adjustment);
-  $("#grand_total").text(new_grand.toFixed(2));
-  $("#grand_total_input").val(new_grand.toFixed(2)).trigger("change");
-  $("#adjustmentText").text(adjustment);
-  $("#payment_amount").val(new_grand.toFixed(2));
+  // // alert(adjustment);
+  // $("#grand_total").text(new_grand.toFixed(2));
+  // $("#grand_total_input").val(new_grand.toFixed(2)).trigger("change");
+  // $("#adjustmentText").text(adjustment);
+  // $("#payment_amount").val(new_grand.toFixed(2));
 });
 
 $(document).on("focusout", ".setmarkup", function () {
@@ -2543,7 +2542,7 @@ function calculation(counter) {
   // $("#item_total").val(subtotal.toFixed(2));
   var s_total = subtotal.toFixed(2);
   var adjustment = $("#adjustment_input").val();  
-  var grand_total = s_total + parseFloat(adjustment);
+  var grand_total = parseFloat(s_total) + parseFloat(adjustment);
   var markup = $("#markup_input_form").val();
   var grand_total_w = grand_total + parseFloat(markup);
   if ($("#offer_cost_input").length) {
