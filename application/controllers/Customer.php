@@ -2997,6 +2997,51 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/dashboard/payment_list', $this->page_data);
     }
 
+    public function ledger($cid)
+    {
+        $this->load->model('Payment_records_model');
+        $this->load->model('Invoice_model');
+        $this->load->model('AcsProfile_model');
+
+        $company_id = logged('company_id');
+        $payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+        $invoices   = $this->Invoice_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+
+        $ledger = [];
+        foreach( $invoices as $invoice ){
+            $date = date("m/d/Y", strtotime($invoice->date_issued));
+            $ledger[$date][] = [
+                'id' => $invoice->id,
+                'type' => 'income',                
+                'date' => $date,
+                'description' => 'Issued invoice number ' . $invoice->invoice_number,
+                'amount' => $invoice->grand_total
+            ];
+
+            $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            
+            foreach( $payments as $p ){
+                $date = date("m/d/Y", strtotime($p->payment_date));
+                $ledger[$date][] = [
+                    'id' => $p->id,
+                    'type' => 'payment',          
+                    'date' => $date,      
+                    'description' => 'Payment for invoice number ' . $invoice->invoice_number,
+                    'amount' => $p->invoice_amount
+                ];
+            }
+        }
+        
+        $customer   = $this->AcsProfile_model->getByProfId($cid);
+        
+        $this->page_data['page']->title = 'Customer Ledger';
+        $this->page_data['page']->parent = 'Customers';
+        $this->page_data['cus_id']    = $cid;
+        $this->page_data['ledger']    = $ledger;
+        $this->page_data['customer']  = $customer;
+
+        $this->load->view('v2/pages/customer/dashboard/ledger', $this->page_data);
+    }
+
     public function service_ticket_list($cid)
     {
         $this->load->model('Tickets_model');
