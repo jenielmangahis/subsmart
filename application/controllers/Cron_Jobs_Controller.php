@@ -3148,6 +3148,7 @@ class Cron_Jobs_Controller extends CI_Controller
         //$activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsBetweenDates($date_from, $date_to);
         $activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsWithSub14Days($current_date);	  
 
+        $deduct_days_computation = 1;
 		foreach( $activeSubscriptions as $as ) {
             $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);    
 
@@ -3171,22 +3172,25 @@ class Cron_Jobs_Controller extends CI_Controller
                         $date2 = new DateTime($late_fee_activated_date);
                         $total_days = $date2->diff($date1)->format("%a");
 
-                        $late_fee_percentage = $as->payment_fee != null ? $as->payment_fee : 0; 
-                        $late_fee += ($late_fee_percentage / 100) * $as->mmr;
-
-                        if($total_days > 0) {
-                            $default_late_fee = $as->late_fee != null ? $as->late_fee : 0;
-                            if($total_days >= 10) {
-                                $late_fee += $default_late_fee * $total_days;
-
-                                //Note: for clarification on 'default_late_fee_minus_30_percent' computation
-                                /*$total_default_late_fee            = $default_late_fee * $total_days;
-                                $default_late_fee_minus_30_percent = $total_default_late_fee - ($total_default_late_fee * 0.30);
-                                $late_fee += $default_late_fee_minus_30_percent;*/
-                                
-                            } else {
-                                $late_fee += $default_late_fee * $total_days;
-                            }   
+                        $days_activate_late_fee = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
+                        if($total_days > $days_activate_late_fee) {
+                            $late_fee_percentage = $as->payment_fee != null ? $as->payment_fee : 0; 
+                            $late_fee += ($late_fee_percentage / 100) * $as->mmr;
+    
+                            if($total_days > 0) {
+                                $default_late_fee = $as->late_fee != null ? $as->late_fee : 0;
+                                if($total_days >= 10) {
+                                    $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);
+    
+                                    //Note: for clarification on 'default_late_fee_minus_30_percent' computation
+                                    /*$total_default_late_fee            = $default_late_fee * $total_days;
+                                    $default_late_fee_minus_30_percent = $total_default_late_fee - ($total_default_late_fee * 0.30);
+                                    $late_fee += $default_late_fee_minus_30_percent;*/
+                                    
+                                } else {
+                                    $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);
+                                }   
+                            }
                         }
                     }
 
