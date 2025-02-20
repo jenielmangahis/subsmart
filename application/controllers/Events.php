@@ -1973,6 +1973,10 @@ class Events extends MY_Controller
             $this->EventSettings_model->create($event_settings_data);
         }
 
+        //Activity Logs
+        $activity_name = 'Events Settings : Updated settings'; 
+        createActivityLog($activity_name);
+
         $is_success = 1;
         $msg = '';
 

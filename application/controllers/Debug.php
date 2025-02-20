@@ -2995,13 +2995,13 @@ class Debug extends MY_Controller {
         $this->load->helper(array('alarm_api_helper'));
 
         $alarmApi = new AlarmApi();
-        $token    = $alarmApi->generateToken();
-        //$data = $alarmApi->getCustomers($token['token']);
-        //$customer_id = '4231200';
-        //$data  = $alarmApi->getCustomerEquipmentList($customer_id, $token['token']);
+        $token    = $alarmApi->generateToken();        
+        $customer_id = '4231200';
+        //$customer_id = '4760438';
+        $data  = $alarmApi->customerSystemCheck($customer_id, $token['token']);
         //$data    = $alarmApi->getReps($token['token']);
-        $dealer_id = 13537;
-        $data    = $alarmApi->getDealerInformation($dealer_id, $token['token']);
+        //$dealer_id = 13537;
+        //$data    = $alarmApi->getDealerPackages($dealer_id, $token['token']);
         echo "<pre>";
         print_r($data);
         

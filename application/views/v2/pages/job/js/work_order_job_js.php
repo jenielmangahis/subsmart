@@ -112,7 +112,7 @@ $("#attachment-file").change(function() {
                 $.ajax({
                     type: "POST",
                     url: base_url + "workorder/convert_to_job",
-                    data: formData, // serializes the form's elements.
+                    data: formData, 
                     dataType:'json',
                     cache: false,
                     contentType: false,

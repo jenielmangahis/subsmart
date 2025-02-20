@@ -143,6 +143,7 @@ const selectors = {
 
 async function fetchCustomRates() {
   const prefixURL = "";
+  //const prefixURL = "http://127.0.0.1/ci/nsmart_v2";
   const response = await fetch(`${prefixURL}/AccountingSales/apiGetRates`);
   return response.json();
 }

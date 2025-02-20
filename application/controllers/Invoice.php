@@ -47,7 +47,7 @@ class Invoice extends MY_Controller
             "assets/css/accounting/customers.css",
         ));
         add_footer_js(array(
-            "assets/js/accounting/sales/customers.js",
+            //"assets/js/accounting/sales/customers.js",
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js'
         ));
 

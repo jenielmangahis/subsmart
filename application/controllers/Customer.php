@@ -3793,8 +3793,8 @@ class Customer extends MY_Controller
         $this->page_data['industryTypes'] = $this->IndustryType_model->getAll();
         $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
         $this->page_data['LEAD_SOURCE_OPTION'] = $this->customer_ad_model->getAllSettingsLeadSourceByCompanyId(logged('company_id'));
-        $this->load->view('v2/pages/customer/add', $this->page_data);
-        //$this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
+        //$this->load->view('v2/pages/customer/add', $this->page_data);
+        $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
 
     public function leads()
@@ -11512,7 +11512,7 @@ class Customer extends MY_Controller
         $this->page_data['formFields'] = $formFields;
         $this->page_data['companyFormSetting'] = $companyFormSetting;
         $this->page_data['formGroups'] = $formGroups;
-        $this->page_data['page']->title = 'Sales Area';
+        $this->page_data['page']->title = 'Form Settings';
         $this->page_data['page']->parent = 'Form Settings';
         $this->load->view('v2/pages/customer/customer_advance_form_settings', $this->page_data);
     }

@@ -465,8 +465,8 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
   displayTaxedInvoices(taxedInvoice);
 
   // setup dropdown with search
-  const $dueStart = $("#dueDateInputs [data-type=due_start]");
-  const $dueEnd = $("#dueDateInputs [data-type=due_end]");
+  const $dueStart = $("#due-date-start");
+  const $dueEnd = $("#due-date-end");
   const $dueButton = $("#dueDateInputs .btn-primary");
   const $refreshListBtn = $("#refreshList");
 
@@ -480,7 +480,7 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
   // that the last element is for the current month.
   const currentMonth = dueDates[dueDates.length - 1];
 
-  $refreshListBtn.prop("disabled", false);
+  //$refreshListBtn.prop("disabled", false);
   [$dueStart, $dueEnd].forEach(($element) => {
     const element = $element.get(0);
 
@@ -489,8 +489,8 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
 
     const dropdown = new Accounting__DropdownWithSearch(element, dueDates);
     dropdown.onChange = function () {
-      const dueEnd = new Date($dueEndInput.val()).getTime();
-      const dueStart = new Date($dueStartInput.val()).getTime();
+      const dueEnd = new Date($dueEnd.val()).getTime();
+      const dueStart = new Date($dueStart.val()).getTime();
 
       if (isNaN(dueStart) || dueStart > dueEnd) {
         $dueButton.attr("disabled", true);
@@ -501,16 +501,16 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
       }
     };
   });
-
+  
   $refreshListBtn.on("click", async function () {
-    const dueStart = $dueStartInput.val();
-    const dueEnd = $dueEndInput.val();
+    const dueStart = $dueStart.val();
+    const dueEnd = $dueEnd.val();
 
-    if (isEmptyString(dueStart) || isEmptyString(dueEnd)) return;
-    if (!dueDates.some((d) => d === dueStart)) return;
-    if (!dueDates.some((d) => d === dueEnd)) return;
+    // if (isEmptyString(dueStart) || isEmptyString(dueEnd)) return;
+    // if (!dueDates.some((d) => d === dueStart)) return;
+    // if (!dueDates.some((d) => d === dueEnd)) return;
 
-    $refreshListBtn.prop("disabled", true);
+    //$refreshListBtn.prop("disabled", true);
     const { data: taxedInvoice } = await fetchGetTaxedInvoices({
       due_start: dueStart,
       due_end: dueEnd,
@@ -1103,6 +1103,7 @@ function sleep(ms) {
 }
 
 const prefixURL = "";
+//const prefixURL = "http://127.0.0.1/ci/nsmart_v2";
 
 async function fetchGetTaxedInvoices(payload = {}) {
   const endpoint = `${prefixURL}/AccountingSales/apiGetTaxedInvoices`;

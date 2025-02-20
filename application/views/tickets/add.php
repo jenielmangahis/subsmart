@@ -783,7 +783,7 @@ a.btn-primary.btn-md {
 
 <?php echo form_close(); ?>
         <div class="modal fade" id="quick-add-item" tabindex="-1"  aria-labelledby="quickAddServiceTicketLabel" aria-hidden="true">
-            <div class="modal-dialog modal-md" style="margin-top:5%;margin-left:31%;">
+            <div class="modal-dialog modal-md modal-dialog-centered">
                 <div class="modal-content" style="width:700px !important;">
                     <div class="modal-header">
                         <span class="modal-title content-title" style="font-size: 17px;">Items List</span>
@@ -799,7 +799,7 @@ a.btn-primary.btn-md {
                             </div>
                             <div class="row">                        
                                 <div class="col-sm-12">
-                                    <table id="quick-add-items-list" class="nsm-table" style="width: 100%;">
+                                    <table id="quick-add-items-list" class="nsm-table">
                                         <thead>
                                         <tr>
                                             <td data-name="Add" style="width: 5% !important;"></td>
@@ -815,9 +815,9 @@ a.btn-primary.btn-md {
                                             <?php //if ($item_qty[0]->total_qty > 0) { ?>
                                                 <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
                                                     <td class="nsm-text-primary">
-                                                        <button type="button"  data-dismiss="modal" class='nsm nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
+                                                        <button type="button" data-bs-dismiss="modal" class='nsm nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
                                                     </td>
-                                                    <td class="nsm-text-primary"><?php echo $item->title; ?></td>
+                                                    <td class="show fw-bold nsm-text-primary"><?php echo $item->title; ?></td>
                                                     <td class="nsm-text-primary"><?php echo $item->type; ?></td>
                                                     <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : "0"; ?></td>
                                                     <td style="text-align:right;"><?php echo $item->price; ?></td>                                            

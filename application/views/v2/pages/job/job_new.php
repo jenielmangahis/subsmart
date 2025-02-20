@@ -880,8 +880,8 @@
                                                         <div class="mb-3">
                                                             <div class="d-flex justify-content-between">
                                                                 <h6>Job Type</h6>
-                                                                <a class="nsm-link d-flex align-items-center btn-quick-add-job-type" href="javascript:void(0);">
-                                                                    <span class="bx bx-plus"></span>Create Job Type
+                                                                <a class="nsm-button btn-small d-flex align-items-center btn-quick-add-job-type" href="javascript:void(0);">
+                                                                    <span class="bx bx-plus"></span>Add New Job Type
                                                                 </a>
                                                             </div>
                                                             <select id="job_type" name="job_type" class="form-control">
@@ -896,8 +896,8 @@
                                                         <div class="mb-3">
                                                             <div class="d-flex justify-content-between">
                                                                 <h6>Job Tag</h6>
-                                                                <a class="nsm-link d-flex align-items-center btn-quick-add-job-tag" href="javascript:void(0);">
-                                                                    <span class="bx bx-plus"></span>Create Job Tag
+                                                                <a class="nsm-button btn-small d-flex align-items-center btn-quick-add-job-tag" href="javascript:void(0);">
+                                                                    <span class="bx bx-plus"></span>Add New Job Tag
                                                                 </a>
                                                             </div>  
                                                             <select id="job_tag" name="job_tag" class="form-control">
@@ -1022,11 +1022,11 @@
                                                         <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
                                                         </div>
                                                     </div>
-                                                    <div class="row">
+                                                    <div class="row mt-2">
                                                         <div class="col-sm-6">
                                                             <div class="d-flex justify-content-between">
                                                                 <h6>Tax Rate</h6>
-                                                                <a class="nsm-link d-flex align-items-center btn-quick-add-tax-rate" ref="javscript:void(0);">
+                                                                <a class="nsm-button btn-small d-flex align-items-center btn-quick-add-tax-rate" href="javscript:void(0);">
                                                                     <span class="bx bx-plus"></span>Add New Tax Rate
                                                                 </a>
                                                             </div>
@@ -1543,7 +1543,7 @@
                                         <td style="width: 0% !important;">
                                             <button type="button" data-bs-dismiss="modal" class='nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-retail="<?= $item->retail; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
                                         </td>
-                                        <td class="nsm-text-primary"><?php echo $item->title; ?></td>
+                                        <td class="show nsm-text-primary"><?php echo $item->title; ?></td>
                                         <td class="nsm-text-primary"><?php echo $item->type; ?></td>
                                         <td>
                                             <?php 
