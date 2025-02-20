@@ -290,24 +290,30 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                             <input type="number" step="any" min="0" class="form-control" id="total_tax_input" name="taxes" value="0.00" required="" style="width:50%;text-align:right;" />
                                                         </td>
                                                     </tr>
+                                                    <?php if(checkIndustryAllowedSpecificField('installation_cost')){ ?>
                                                     <tr>
                                                         <td class="bold">Installation Cost</td>
                                                         <td colspan="2" align="right">
                                                             <input type="number" step="any" min="0" class="form-control" id="adjustment_ic" name="installation_cost" value="0.00" required="" style="width:50%;text-align:right;" />
                                                         </td>
                                                     </tr>
+                                                    <?php } ?>
+                                                    <?php if(checkIndustryAllowedSpecificField('one_time_program_setup')){ ?>
                                                     <tr>
                                                         <td class="bold">One time (Program and Setup)</td>
                                                         <td colspan="2" align="right">
                                                             <input type="number" step="any" min="0" class="form-control" id="program_setup" name="program_setup" value="0.00" required="" style="width:50%;text-align:right;" />
                                                         </td>
                                                     </tr>
+                                                    <?php } ?>
+                                                    <?php if(checkIndustryAllowedSpecificField('monitoring_rate')){ ?>
                                                     <tr>
                                                         <td class="bold">Monthly Monitoring</td>
                                                         <td colspan="2" align="right">
                                                             <input type="number" step="any" min="0" class="form-control" id="monthly_monitoring" name="monthly_monitoring" value="0.00" required="" style="width:50%;text-align:right;" />
                                                         </td>
                                                     </tr>
+                                                    <?php } ?>
                                                     <tr>
                                                         <td class="bold">Is Tax Exempted</td>
                                                         <td colspan="2" align="right">
@@ -532,8 +538,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     <!-- Modal -->
     <div class="modal fade" id="item_list" tabindex="-1" aria-labelledby="item_listLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md" style="margin-top:5%;margin-left:31%;">
-            <div class="modal-content" style="width:700px !important;">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title" style="font-size: 17px;">Items List</span>
                     <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
@@ -565,9 +571,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         ?>
                                         <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
                                             <td class="nsm-text-primary">
-                                                <button type="button" data-dismiss="modal" class='nsm nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="1" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
+                                                <button type="button" data-bs-dismiss="modal" class='nsm nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="1" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
                                             </td>
-                                            <td class="nsm-text-primary"><?php echo $item->title; ?></td>
+                                            <td class="nsm-text-primary show"><?php echo $item->title; ?></td>
                                             <td class="nsm-text-primary"><?php echo $item->type; ?></td>
                                             <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : "0"; ?></td>
                                             <td style="text-align:right;"><?php echo $item->price; ?></td>
