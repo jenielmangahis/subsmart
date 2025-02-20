@@ -176,8 +176,8 @@
                                             <?php foreach($payments as $p){ ?>
                                                 <tr>
                                                     <td><?= date("m/d/Y", strtotime($p->payment_date)); ?></td>
-                                                    <td>$<?= number_format($p->invoice_amount,2,'','.'); ?></td>
-                                                    <td>$<?= number_format($p->balance,2,'','.'); ?></td>
+                                                    <td>$<?= number_format($p->invoice_amount,2); ?></td>
+                                                    <td>$<?= number_format($p->balance,2); ?></td>
                                                     <td><?= $p->payment_method; ?></td>
                                                     <td><?= $p->notes; ?></td>
                                                 </tr>
