@@ -2070,3 +2070,7 @@ $route['customer/ledger/(:any)']  = 'Customer/ledger/$1';
 $route['alarm_api/customers'] = 'AlarmApiPortal/customers';
 $route['alarm_api/_view_customer']['post'] = 'AlarmApiPortal/ajax_view_customer_information';
 $route['alarm_api/_customer_system_check']['post'] = 'AlarmApiPortal/ajax_customer_system_check';
+$route['alarm_api/_import_customers'] = 'AlarmApiPortal/ajax_import_customers';
+$route['alarm_api/_import_selected_customers'] = 'AlarmApiPortal/ajax_import_selected_customers';
+$route['alarm_api/_validate_import_customer'] = 'AlarmApiPortal/ajax_validate_import_customer';
+
