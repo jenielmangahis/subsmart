@@ -1865,7 +1865,7 @@ class Invoice_model extends MY_Model
 
         $this->db->where('invoices.view_flag', 0);
 
-        $this->db->where_in('invoices.id', [434]); //for testing only    
+        //$this->db->where_in('invoices.id', [434]); //for testing only    
 
         if (!empty($filter)) {
             if (isset($filter['q'])) {
