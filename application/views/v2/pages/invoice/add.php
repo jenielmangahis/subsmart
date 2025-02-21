@@ -282,7 +282,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="bold">Taxes</td>
+                                                        <td class="bold">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="is_tax_exempted" value="1" id="chk-tax-exempted">
+                                                                <label class="form-check-label" for="chk-tax-exempted">
+                                                                    Taxes (check if no tax)
+                                                                </label>
+                                                            </div>
+                                                        </td>
                                                         <td colspan="2" align="right">
                                                             <div style="display:none;">
                                                                 $ <span id="total_tax_">0.00</span>
@@ -302,7 +309,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <tr>
                                                         <td class="bold">One time (Program and Setup)</td>
                                                         <td colspan="2" align="right">
-                                                            <input type="number" step="any" min="0" class="form-control" id="program_setup" name="program_setup" value="0.00" required="" style="width:50%;text-align:right;" />
+                                                            <input type="number" step="any" min="0" class="form-control" id="otps" name="program_setup" value="0.00" required="" style="width:50%;text-align:right;" />
                                                         </td>
                                                     </tr>
                                                     <?php } ?>
@@ -310,28 +317,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <tr>
                                                         <td class="bold">Monthly Monitoring</td>
                                                         <td colspan="2" align="right">
-                                                            <input type="number" step="any" min="0" class="form-control" id="monthly_monitoring" name="monthly_monitoring" value="0.00" required="" style="width:50%;text-align:right;" />
+                                                            <input type="number" step="any" min="0" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="0.00" required="" style="width:50%;text-align:right;" />
                                                         </td>
                                                     </tr>
                                                     <?php } ?>
-                                                    <tr>
-                                                        <td class="bold">Is Tax Exempted</td>
-                                                        <td colspan="2" align="right">
-                                                            <div class="input-group" style="width:50%;">
-                                                                <select class="form-control" id="tax-exempted" name="is_tax_exempted" style="text-align:center;">
-                                                                    <option value="1">Yes</option>
-                                                                    <option value="0" selected="selected">No</option>
-                                                                </select>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
                                                     <tr>
                                                         <td>
                                                             <input type="text" name="adjustment_name" id="adjustment_name" value="" placeholder="Adjustment Name" class="form-control" style="border:1px dashed #d1d1d1;width:80%;margin-right:4px; display:inline;">
                                                             <span class="bx bx-fw bx-help-circle" id="popover-request-adjustment"></span>
                                                         </td>
                                                         <td colspan="2" align="right">
-                                                            <input type="number" name="adjustment_value" id="adjustment_input" value="0.00" class="form-control adjustment_input" style="width:50%;text-align:right;">
+                                                            <input type="number" step="any" name="adjustment_value" id="adjustment_input" value="0.00" class="form-control adjustment_input" style="width:50%;text-align:right;">
                                                             <span id="adjustmentText" style="display:none;">0.00</span>
                                                         </td>
                                                     </tr>
@@ -645,6 +641,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 content: function() {
                     return `Mention your company's T&C that will appear on the invoice.`;
                 }
+            });
+
+            $('#chk-tax-exempted').on('change', function(){
+                var counter = $("#count").val();
+                calculation(counter);
+            });
+
+            $('#adjustment_ic, #otps, #adjustment_mm').on('change', function(){
+                var counter = $("#count").val();
+                calculation(counter);
             });
 
             $('#invoice_form').on('submit', function(e) {

@@ -17,6 +17,7 @@
                 <label class="row-label">Balance : </label>
                 <span class="row-value">$<?php echo number_format($balance, 2, '.', ',') ?></label>
             </div>
+            <?php if($late_fee > 0) { ?>
             <div class="col-6" style="color: red;">
                 <?php if($total_late_fee_days > 0) { ?>
                     <label class="row-label" style="font-size: 15px !important;">Late Fee (<?php echo $total_late_fee_days?> Days): </label>
@@ -26,6 +27,7 @@
                 
                 <span class="row-value" style="font-size: 15px !important;">$<?php echo number_format($late_fee, 2, '.', ',') ?></label>
             </div>
+            <?php } ?>
             <div class="col-6">
                 <label class="row-label">&nbsp;</label>
                 <span class="row-value">&nbsp;</label>
@@ -62,10 +64,7 @@
             <div class="col-sm-6">
                 <label>Payment Date</label>
                 <div class="input-group mb-3">
-                    <input type="text" name="date_payment" id="date_payment" class="form-control" value="<?= date("Y-m-d"); ?>">
-                    <div class="input-group-append" data-for="date_payment">
-                        <span class="input-group-text" style="height:33px;"><span class="fa fa-calendar"></span></span>
-                    </div>
+                    <input type="date" name="date_payment" id="date_payment" class="form-control" value="<?= date("Y-m-d"); ?>">
                 </div>
             </div>
             <div class="col-sm-6">

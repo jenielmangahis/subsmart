@@ -1506,6 +1506,7 @@ $route['cron/company_recurring_nsmart_subscription'] = 'Cron_Payment/company_rec
 $route['cron/company_recurring_nsmart_subscription_with_payment_errors'] = 'Cron_Payment/company_recurring_nsmart_subscription_with_payment_errors';
 $route['cron/customer_recurring_subscriptions'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionV2';
 $route['cron/process_accounting_recurring_transaction_payment'] = 'Cron_Payment/process_accounting_recurring_transaction_payment';
+$route['cron/update_invoice'] = 'Cron_Jobs_Controller/cronUpdateInvoice';
 
 $route['cron/customer_recurring_subscriptions_test'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionV2test';
 
@@ -2056,6 +2057,15 @@ $route['debug/ringcentralSmsV2'] = 'Debug/ringcentralSmsV2';
 //Settings : Customer Advance Form
 $route['customer/form_settings'] = 'Customer/customer_advance_form_settings';
 $route['customer/_save_customer_form_settings'] = 'Customer/ajax_save_customer_form_settings';
+
+//Customer Dashboard Navs
+$route['customer/estimate_list/(:any)'] = 'Customer/estimate_list/$1';
+$route['customer/jobs_list/(:any)']     = 'Customer/jobs_list/$1';
+$route['customer/payment_list/(:any)']  = 'Customer/payment_list/$1';
+$route['customer/service_ticket_list/(:any)'] = 'Customer/service_ticket_list/$1';
+$route['customer/invoice_list/(:any)']  = 'Customer/invoice_list/$1';
+$route['customer/ledger/(:any)']  = 'Customer/ledger/$1';
+
 
 //Alarm API
 $route['alarm_api/customers'] = 'AlarmApiPortal/customers';

@@ -51,7 +51,7 @@ class Invoice extends MY_Controller
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js'
         ));
 
-        $company_id = getLoggedCompanyID();
+        $company_id = logged('company_id');
         $start_date = date('Y-m-d', strtotime(date("Y-m-d") . ' - 365 days'));
         $end_date = date('Y-m-d');
         $invoices = $this->accounting_invoices_model->get_ranged_invoices_by_company_id($company_id, $start_date, $end_date);
@@ -143,7 +143,7 @@ class Invoice extends MY_Controller
         $type = 0;
         $comp_id = logged('company_id');
         $sort_by = 'Newest First';
-        if (!empty($tab)) {            
+        if (!empty($tab)) {      
             $this->page_data['tab'] = $tab;
             $this->page_data['invoices'] = $this->invoice_model->filterBy(array('status' => $tab), $comp_id, $type);
         } else {
@@ -178,16 +178,21 @@ class Invoice extends MY_Controller
                 }
                 $this->page_data['search'] = get('search');
                 $this->page_data['invoices'] = $invoices_data = $this->invoice_model->filterBy(array('order' => get('order')), $comp_id, $type);
-            } else {                
+            } else {            
                 //$this->page_data['invoices'] = $this->invoice_model->getAllData();
                 $this->page_data['invoices'] = $invoices_data = $this->invoice_model->getAllActiveByCompanyId($comp_id, $type);
             }
         }
 
+        $invoiceSettings = $this->invoice_settings_model->getByCompanyId($comp_id);
+
+        /*
+        $deduct_days_computation = 1;
         foreach($invoices_data as $inv_data) {
             $current_date    = date('Y-m-d');
             $new_invoice_grand_total = 0;
             $late_fee        = 0;
+            $days_activate_late_fee = 0;
             $invdata         = [];
 
             $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($inv_data->customer_id);	
@@ -199,34 +204,37 @@ class Invoice extends MY_Controller
                 $date2 = new DateTime($late_fee_activated_date);
                 $total_days = $date2->diff($date1)->format("%a");
 
-                $late_fee_percentage = $customer_billing_info->payment_fee != null ? $customer_billing_info->payment_fee : 0; 
-                $late_fee += ($late_fee_percentage / 100) * $inv_data->invoice_totals;
-
-                if($total_days > 0) {
-                    $default_late_fee = $customer_billing_info->late_fee != null ? $customer_billing_info->late_fee : 0;
-                    if($total_days >= 10) {
-                        $late_fee += $default_late_fee * $total_days;                        
-                    } else {
-                        $late_fee += $default_late_fee * $total_days;
-                    }   
+                $days_activate_late_fee = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
+                if($total_days > $days_activate_late_fee) {
+                    $late_fee_percentage = $customer_billing_info->payment_fee != null ? $customer_billing_info->payment_fee : 0; 
+                    $late_fee += ($late_fee_percentage / 100) * $inv_data->invoice_totals;
+    
+                    if($total_days > 0) {
+                        $default_late_fee = $customer_billing_info->late_fee != null ? $customer_billing_info->late_fee : 0;
+                        if($total_days >= 10) {
+                            $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);                        
+                        } else {
+                            $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);      
+                        }   
+                    }
                 }
             }       
             
             $new_invoice_grand_total = $inv_data->invoice_totals + $late_fee;
 
             //Update invoice new grand total & late fee
-            $invdata = [
-                'id' => $inv_data->id,
-                'balance' => $new_invoice_grand_total,
-                'grand_total' => $new_invoice_grand_total,
-                'total_due' => $new_invoice_grand_total,
-                'late_fee' => $late_fee
-            ];
-
-            $this->customer_ad_model->update_data($invdata, 'invoices', 'id');	
+            if($late_fee > 0) {
+                $invdata = [
+                    'id' => $inv_data->id,
+                    'balance' => $new_invoice_grand_total,
+                    'grand_total' => $new_invoice_grand_total,
+                    'total_due' => $new_invoice_grand_total,
+                    'late_fee' => $late_fee
+                ];           
+                $this->customer_ad_model->update_data($invdata, 'invoices', 'id');	
+            }
         }
-
-        $invoiceSettings = $this->invoice_settings_model->getByCompanyId($comp_id);
+        */
 
         $this->page_data['invoiceSettings'] = $invoiceSettings;
         $this->page_data['unpaid_last_365'] = $receivable_payment - $total_amount_received;
@@ -1261,6 +1269,7 @@ class Invoice extends MY_Controller
             'phone'                     => $this->input->post('phone'),
             //'payment_schedule'          => $this->input->post('payment_schedule'),
             'subtotal'                  => $this->input->post('subtotal'),
+            'no_tax'                    => isset($post['is_tax_exempted']) ? 1 : 0,
             'taxes'                     => $this->input->post('taxes'),
             'adjustment_name'           => $this->input->post('adjustment_name'),
             'adjustment_value'          => $this->input->post('adjustment_value'),
@@ -1478,6 +1487,7 @@ class Invoice extends MY_Controller
         $invoice = get_invoice_by_id($id);
 
         $total_late_days = 0;
+        $deduct_days = 1;
         if (!empty($invoice)) {
             foreach ($invoice as $key => $value) {
                 if (is_serialized($value)) {
@@ -1497,7 +1507,7 @@ class Invoice extends MY_Controller
             }            
 
             $this->page_data['invoice'] = $invoice;
-            $this->page_data['total_late_days'] = $total_late_days;
+            $this->page_data['total_late_days'] = $total_late_days - $deduct_days;
         }
 
         $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
@@ -2448,6 +2458,7 @@ class Invoice extends MY_Controller
         $late_fee        = 0;
         $payment_fee     = 0;
         $total_late_fee_days = 0;
+        $deduct_days     = 1;
         
         if($invoice) {
             $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($invoice->customer_id);	
@@ -2467,7 +2478,7 @@ class Invoice extends MY_Controller
             $balance = $balance - $p->invoice_amount;
         }
         
-        $this->page_data['total_late_fee_days']  = $total_late_fee_days;
+        $this->page_data['total_late_fee_days']  = $total_late_fee_days - $deduct_days;
         $this->page_data['invoice']  = $invoice;
         $this->page_data['balance']  = $balance;
         $this->page_data['late_fee'] = $invoice->late_fee;
@@ -2893,7 +2904,7 @@ class Invoice extends MY_Controller
                 'sub_total'                 => $post['subtotal'],
                 'balance'                   => $balance,
                 'taxes'                     => $post['taxes'],
-                'no_tax'                    => $post['is_tax_exempted'],
+                'no_tax'                    => isset($post['is_tax_exempted']) ? 1 : 0,
                 'adjustment_name'           => $post['adjustment_name'],
                 'adjustment_value'          => $post['adjustment_value'] > 0 ? $post['adjustment_value'] : 0,
                 'grand_total'               => $post['grand_total'],
@@ -2975,8 +2986,8 @@ class Invoice extends MY_Controller
             }
 
             //Invoice Products
-            if( $post['productIds'] && count($post['productIds']) > 0 ){
-                foreach( $post['productIds'] as $key => $pid ){
+            if( $post['item_id'] && count($post['item_id']) > 0 ){
+                foreach( $post['item_id'] as $key => $pid ){
                     $item = $this->Items_model->getByID($pid);
                     $storage_id = $post['storageLocIds'][$key];
                     $invoice_item_data = [
@@ -2986,11 +2997,11 @@ class Invoice extends MY_Controller
                         'item_type' => 'Product',
                         'item_name' => $item->title,
                         'items_id' => $pid,
-                        'qty' => $post['productQty'][$key],
-                        'cost' => $post['productPrice'][$key],
-                        'tax' => $post['productTax'][$key],
-                        'discount' => $post['productDiscount'][$key],
-                        'total' => $post['productTotal'][$key]
+                        'qty' => $post['quantity'][$key],
+                        'cost' => $post['price'][$key],
+                        'tax' => $post['tax'][$key],
+                        'discount' => $post['discount'][$key],
+                        'total' => $post['total'][$key]
                     ];
     
                     $this->invoice_model->add_invoice_details($invoice_item_data);                    
