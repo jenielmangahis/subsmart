@@ -1506,6 +1506,7 @@ $route['cron/company_recurring_nsmart_subscription'] = 'Cron_Payment/company_rec
 $route['cron/company_recurring_nsmart_subscription_with_payment_errors'] = 'Cron_Payment/company_recurring_nsmart_subscription_with_payment_errors';
 $route['cron/customer_recurring_subscriptions'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionV2';
 $route['cron/process_accounting_recurring_transaction_payment'] = 'Cron_Payment/process_accounting_recurring_transaction_payment';
+$route['cron/update_invoice'] = 'Cron_Jobs_Controller/cronUpdateInvoice';
 
 $route['cron/customer_recurring_subscriptions_test'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionV2test';
 
