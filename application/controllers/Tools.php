@@ -13,8 +13,14 @@ class Tools extends MY_Controller {
         $this->load->config('api_credentials');        
     }
 
-    public function api_connectors() {
+    public function api_connectors() 
+    {
         $this->load->helper('square_helper');
+
+        if(!checkRoleCanAccessModule('api-connectors', 'read')){
+            show403Error();
+            return false;
+        }
         
         $this->page_data['page']->title = 'API Connectors';
         $this->page_data['page']->parent = 'Tools';
@@ -179,6 +185,11 @@ class Tools extends MY_Controller {
         $this->load->model('CompanyApiConnector_model');
         $this->load->model('AcsProfile_model');
 
+        if(!checkRoleCanAccessModule('api-connectors', 'read')){
+            show403Error();
+            return false;
+        }
+
         $company_id = logged('company_id');
         $companyGoogleContactsApi = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'google_contacts');
         $customers = $this->AcsProfile_model->getCustomerBasicInfoByCompanyId($company_id);
@@ -194,9 +205,15 @@ class Tools extends MY_Controller {
     }
     
 
-    public function quickbooks() {
+    public function quickbooks() 
+    {
         $this->load->library('QuickbooksApi');
         $this->load->model('CompanyApiConnector_model');
+
+        if(!checkRoleCanAccessModule('api-connectors', 'read')){
+            show403Error();
+            return false;
+        }
 
         $company_id = logged('company_id');
         $companyQuickBooksPayroll = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id,'quickbooks_payroll');        
@@ -1711,14 +1728,20 @@ class Tools extends MY_Controller {
         echo json_encode($return);
     }
 
-    public function google_contacts_logs(){
+    public function google_contacts_logs()
+    {
         $this->load->model('GoogleContactLogs_model');
 
+        if(!checkRoleCanAccessModule('api-connectors', 'read')){
+            show403Error();
+            return false;
+        }
+
         $company_id = logged('company_id');
-        $filter     = 'all';
-        if( get('filter') ){
+        $filter     = 'All';
+        if( get('filter')  && get('filter') != 'All' ){
             $filter = get('filter');
-            if( get('filter') == 'exported' ){
+            if( get('filter') == 'Exported' ){
                 $search['search'][] = ['field' => 'is_with_error', 'value' => 0];
             }else{
                 $search['search'][] = ['field' => 'is_with_error', 'value' => 1];
@@ -1990,6 +2013,11 @@ class Tools extends MY_Controller {
     public function quickbooks_payroll_employee_logs()
     {
         $this->load->model('QbImportEmployeeLogs_model');
+
+        if(!checkRoleCanAccessModule('api-connectors', 'read')){
+            show403Error();
+            return false;
+        }
 
         $company_id = logged('company_id');    
         $filter     = 'all';
@@ -2605,6 +2633,11 @@ class Tools extends MY_Controller {
         $this->load->helper('square_helper');
         $this->load->model('CompanyOnlinePaymentAccount_model');
 
+        if(!checkRoleCanAccessModule('api-connectors', 'read')){
+            show403Error();
+            return false;
+        }
+
         $company_id = logged('company_id');
         $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);     
         
@@ -2701,18 +2734,22 @@ class Tools extends MY_Controller {
     {
         $this->load->model('CompanySquarePaymentLogs_model');
 
+        if(!checkRoleCanAccessModule('api-connectors', 'read')){
+            show403Error();
+            return false;
+        }
+
         $company_id = logged('company_id');
-        $filter     = 'all';
-        if( get('filter') ){
+        $filter     = 'All';
+        if( get('filter') && get('filter') != 'All' ){
             $filter = get('filter');
-            if( $filter == 'GooglePay' ){
+            if( $filter == 'Google Pay' ){
                 $type = 'GOOGLE PAY';
-            }elseif( $filter == 'ApplePay' ){
+            }elseif( $filter == 'Apple Pay' ){
                 $type = 'APPLE PAY';
             }else{
                 $type = 'CARD';
             }
-            
             $squarePaymentLogs = $this->CompanySquarePaymentLogs_model->getAllByCompanyIdAndSourceType($company_id, $type);
         }else{
             $squarePaymentLogs = $this->CompanySquarePaymentLogs_model->getAllByCompanyId($company_id);
@@ -2810,6 +2847,15 @@ class Tools extends MY_Controller {
                     $msg = '';                
                 break;
             }
+
+            //Activity Logs
+            if( $post['api'] != '' ){
+                $activity_name = 'API Connector : Updated company default payment tool to ' . $post['api']; 
+            }else{
+                $activity_name = 'API Connector : Set company default payment tool to none'; 
+            }
+            
+            createActivityLog($activity_name);
         }
 
         $json_data = [

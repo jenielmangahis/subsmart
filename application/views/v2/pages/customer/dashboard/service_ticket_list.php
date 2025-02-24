@@ -68,7 +68,7 @@
                             <?php foreach($tickets as $ticket){ ?>
                             <tr>
                                 <td><div class="table-row-icon"><i class='bx bx-briefcase'></i></div></td>
-                                <td style="width:30%;"><b><?php echo $ticket->ticket_no; ?></b></td>
+                                <td class="fw-bold nsm-text-primary" style="width:30%;"><?php echo $ticket->ticket_no; ?></td>
                                 <td style="width:20%;">
                                     <?php if( $ticket->assigned_tech ){ ?>
                                         <div class="techs">   
@@ -107,7 +107,7 @@
                                         echo $ticket_time;
                                     ?>
                                 </td>                            
-                                <td><?php echo $ticket->ticket_status; ?></td>
+                                <td class="nsm-text-primary"><?php echo $ticket->ticket_status; ?></td>
                                 <td style="width:15%; !important;text-align:right;">$<?php echo number_format($ticket->grandtotal,2); ?></td>
                                 <td>
                                     <div class="dropdown table-management">
@@ -116,7 +116,7 @@
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li><a class="dropdown-item row-view-ticket" href="javascript:void(0);" data-id="<?= $ticket->id; ?>">View</a></li>                                            
-                                            <li><a class="dropdown-item" tabindex="-1" href="<?php echo base_url('tickets/editDetails/' . $ticket->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>                                            
+                                            <li><a class="dropdown-item" tabindex="-1" href="<?php echo base_url('tickets/editDetails/' . $ticket->id) ?>">Edit</a></li>                                            
                                         </ul>
                                     </div>
                                 </td>

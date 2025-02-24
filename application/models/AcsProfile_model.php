@@ -842,6 +842,34 @@ class AcsProfile_model extends MY_Model
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
     }
+
+    public function batchInsert($data)
+    {
+        return $this->db->insert_batch($this->table, $data);
+    }
+
+    public function getByAlarmIdAndCompanyId($alarm_id, $company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('alarm_id', $alarm_id);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getByFirstNameAndLastNameAndCompanyId($first_name, $last_name, $company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('first_name', $first_name);
+        $this->db->where('last_name', $last_name);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
 
 /* End of file AcsProfile_model.php */

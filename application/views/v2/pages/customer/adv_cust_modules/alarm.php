@@ -10,33 +10,20 @@
                 <div class="col-12 col-md-6">
                     <div class="row g-2">
                         <div class="col-12 col-md-6">
-                            <label class="content-title">Monitoring Co</label>
+                            <label class="content-title">Monitoring Company</label>
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
+                                <?= $alarm_customer_info && $alarm_customer_info['dealer']['data'] ? $alarm_customer_info['dealer']['data']->dealerName : '---'; ?>                                
                                 <?php 
-                                    if ($alarm_info->monitor_comp) {
-                                        echo $alarm_info->monitor_comp; 
-                                    } else {
-                                        echo "&mdash;";
-                                    }
+                                    // if ($alarm_info->monitor_comp) {
+                                    //     echo $alarm_info->monitor_comp; 
+                                    // } else {
+                                    //     echo "&mdash;";
+                                    // }
                                 ?>
                             </span>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <label class="content-title">Install Date</label>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
-                                <?php 
-                                    if ($office_info->install_date) {
-                                        echo $office_info->install_date; 
-                                    } else {
-                                        echo "&mdash;";
-                                    }
-                                ?>
-                            </span>
-                        </div>
+                        </div>                        
                         <div class="col-12 col-md-6">
                             <label class="content-title">Account Type</label>
                         </div>
@@ -145,12 +132,13 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <span class="content-subtitle">
+                                <?= $alarm_customer_info && $alarm_customer_info['customer'] ? $alarm_customer_info['customer']->customerId : '---'; ?>
                                 <?php 
-                                    if ($alarm_info->monitor_id) {
-                                        echo $alarm_info->monitor_id; 
-                                    } else {
-                                        echo "&mdash;";
-                                    }
+                                    // if ($alarm_info->monitor_id) {
+                                    //     echo $alarm_info->monitor_id; 
+                                    // } else {
+                                    //     echo "&mdash;";
+                                    // }
                                 ?>
                             </span>
                         </div>
@@ -282,6 +270,23 @@
                         </div>
                     </div>
                 </div>
+            </div>            
+            <?php if( $alarm_customer_info['equipments']['data'] ){ ?>
+                <div class="row g-3">
+                <div class="col-12 col-md-12"><hr /></div>
+                    <?php foreach($alarm_customer_info['equipments']['data'] as $eq){ ?>
+                        <div class="col-12 col-md-6">
+                            <div class="row">
+                                <div class="col-12 col-md-6"><label class="content-title">Device Name</label></div>
+                                <div class="col-12 col-md-6"><span class="content-subtitle"><?= $eq->webSiteDeviceName; ?></div>                                
+                                <div class="col-12 col-md-6"><label class="content-title">Install Date</label></div>
+                                <div class="col-12 col-md-6"><span class="content-subtitle"><?= date("m/d/Y H:i:s", strtotime($eq->installDate)); ?></span></div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+            <?php } ?>            
+            <div class="row g-3 mt-2">
                 <div class="col-12 col-md-4">
                     <button role="button" class="nsm-button w-100 ms-0 mt-3">
                         <i class='bx bx-fw bx-user-pin'></i> Account On Test
@@ -297,7 +302,7 @@
                         <i class='bx bx-fw bx-spreadsheet'></i> Record Sheet
                     </button>
                 </div>
-            </div>
+            </div>            
         </div>
     </div>
 </div>

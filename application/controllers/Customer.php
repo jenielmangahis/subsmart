@@ -2741,7 +2741,7 @@ class Customer extends MY_Controller
 
     public function module($id = null)
     {        
-        $this->load->helper('sms_helper');
+        $this->load->helper(array('sms_helper', 'alarm_api_helper'));        
         $this->load->model('Clients_model');
         $this->load->model('taskhub_model');
         $this->load->library('wizardlib');
@@ -2861,6 +2861,21 @@ class Customer extends MY_Controller
             $this->load->model('RingCentralAccounts_model');
             $this->load->model('TwilioAccounts_model');
 
+            //Alarm
+            $alarm_customer_info = [];
+            if( $customer->alarm_id > 0 ){
+                $alarmApi  = new AlarmApi();
+                $token     = $alarmApi->generateToken();    
+                if( $token['token'] ){
+                    $customerAlarm = $alarmApi->getCustomerInformation($customer->alarm_id, [], $token['token']);
+                    if( $customerAlarm['customer'] ){                        
+                        $alarm_customer_info['dealer']     = $alarmApi->getDealerInformation($customerAlarm['customer']->dealerId, $token['token']);                    
+                        $alarm_customer_info['customer']   = $customerAlarm['customer'];
+                        $alarm_customer_info['equipments'] = $alarmApi->getCustomerEquipmentList($customer->alarm_id, $token['token']);
+                    }                    
+                }                
+            }
+
             $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
             $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($cid);
             $this->page_data['twilioAccount'] = $twilioAccount;
@@ -2877,6 +2892,7 @@ class Customer extends MY_Controller
             $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6, 0], 1);
             $this->page_data['ringCentralAccount'] = $ringCentralAccount;
             $this->page_data['twilioAccount'] = $twilioAccount;
+            $this->page_data['alarm_customer_info'] = $alarm_customer_info;
             $this->load->view('v2/pages/customer/module', $this->page_data);
         }else{
             redirect('customer');
