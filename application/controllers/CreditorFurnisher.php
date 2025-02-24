@@ -43,24 +43,74 @@ class CreditorFurnisher extends MY_Controller
         $cid  = logged('company_id');
         $post = $this->input->post();
 
-        $data = [
-            'company_id' => $cid,
-            'name' => $post['f_company_name'],
-            'address' => $post['f_address'],
-            'city' => $post['f_city'],
-            'state' => $post['f_state'],
-            'zip_code' => $post['f_zipcode'],
-            'phone' => $post['f_phone'],
-            'ext' => $post['f_ext'],
-            'account_type' => $post['f_account_type'],
-            'note' => $post['f_note'],
-            'date_created' => date("Y-m-d H:i:s"),
-            'date_modified' => date("Y-m-d H:i:s"),
-        ];
+        $isExists = $this->Furnisher_model->getByNameAndCompanyId($post['f_company_name'], $cid);
+        if( !$isExists ){
+            $data = [
+                'company_id' => $cid,
+                'name' => $post['f_company_name'],
+                'address' => $post['f_address'],
+                'city' => $post['f_city'],
+                'state' => $post['f_state'],
+                'zip_code' => $post['f_zipcode'],
+                'phone' => $post['f_phone'],
+                'ext' => $post['f_ext'],
+                'account_type' => $post['f_account_type'],
+                'note' => $post['f_note'],
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s"),
+            ];
+    
+            $this->Furnisher_model->create($data);   
+    
+            $is_success = 1;
+    
+            //Activity Logs
+            $activity_name = 'Credit Industry : Created new credit industry ' . $post['f_company_name']; 
+            createActivityLog($activity_name);
+        }else{
+            $msg = 'Company name already exists.';
+        }        
 
-        $this->Furnisher_model->create($data);   
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
 
-        $is_success = 1;
+    public function ajax_update_furnisher()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $creditFurnisher = $this->Furnisher_model->getByIdAndCompanyId($post['fid'], $cid);
+        if( $creditFurnisher ){
+            $isExists = $this->Furnisher_model->getByNameAndCompanyId($post['f_company_name'], $cid);
+            if( $isExists && $isExists->id != $post['fid'] ){
+                $msg = 'Company name already exists.';
+            }else{
+                $data = [
+                    'name' => trim($post['f_company_name']),
+                    'address' => $post['f_address'],
+                    'city' => $post['f_city'],
+                    'state' => $post['f_state'],
+                    'zip_code' => $post['f_zipcode'],
+                    'phone' => $post['f_phone'],
+                    'ext' => $post['f_ext'],
+                    'account_type' => $post['f_account_type'],
+                    'note' => $post['f_note'],
+                    'date_modified' => date("Y-m-d H:i:s"),
+                ];
+        
+                $this->Furnisher_model->update($creditFurnisher->id, $data);   
+        
+                $is_success = 1;
+        
+                //Activity Logs
+                $activity_name = 'Credit Industry : Updated credit industry ' . $creditFurnisher->name; 
+                createActivityLog($activity_name);
+            }
+        } 
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
@@ -76,7 +126,11 @@ class CreditorFurnisher extends MY_Controller
 
         $furnisher = $this->Furnisher_model->getByIdAndCompanyId($post['fid'], $cid);
         if( $furnisher ){
-            $this->Furnisher_model->deleteById($post['qid']);
+            $this->Furnisher_model->delete($post['fid']);
+
+            //Activity Logs
+            $activity_name = 'Credit Industry : Deleted credit industry ' . $furnisher->name; 
+            createActivityLog($activity_name);
 
             $is_success = 1;
 
@@ -171,5 +225,16 @@ class CreditorFurnisher extends MY_Controller
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
+    }
+
+    public function ajax_edit_furnisher()
+    {
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        
+        $creditorFurnisher = $this->Furnisher_model->getByIdAndCompanyId($post['fid'],$cid);
+
+        $this->page_data['creditorFurnisher'] = $creditorFurnisher;
+        $this->load->view('v2/pages/furnishers/ajax_edit_furnisher', $this->page_data);
     }
 }
