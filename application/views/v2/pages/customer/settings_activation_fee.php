@@ -144,7 +144,7 @@
 
                         Swal.fire({
                             title: 'Rate Plans',
-                            text: "Rate plan has been updated successfully.",
+                            text: "Rate plan has been created successfully.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'

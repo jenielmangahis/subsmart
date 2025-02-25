@@ -287,12 +287,22 @@
                 </div>
             <?php } ?>            
             <div class="row g-3 mt-2">
-                <div class="col-12 col-md-4">
-                    <button role="button" class="nsm-button w-100 ms-0 mt-3">
+                <?php if( $alarm_customer_info ){ ?>
+                <div class="col-12 col-md-6">
+                    <!-- <button role="button" class="nsm-button w-100 ms-0 mt-3">
                         <i class='bx bx-fw bx-user-pin'></i> Account On Test
-                    </button>
+                    </button> -->                    
+                    <button role="button" class="nsm-button w-100 ms-0 mt-3 btn-alarm-api-view-customer" data-id="<?= $alarm_customer_info['customer']->customerId; ?>">
+                        <i class='bx bx-fw bx-user-pin'></i> View Alarm Customer Information
+                    </button>                    
                 </div>
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-6">
+                    <button role="button" class="nsm-button w-100 ms-0 mt-3 btn-alarm-api-system-check" data-id="<?= $alarm_customer_info['customer']->customerId; ?>">
+                        <i class='bx bx-fw bx-cog'></i> System Check
+                    </button>                    
+                </div>
+                <?php } ?>
+                <!-- <div class="col-12 col-md-4">
                         <button role="button" class="nsm-button w-100 ms-0 mt-3" onclick="openNewWindow()">
                             <i class='bx bx-fw bx-link-external'></i> Website Url
                         </button>
@@ -301,13 +311,76 @@
                     <button role="button" class="nsm-button primary w-100 ms-0 mt-3">
                         <i class='bx bx-fw bx-spreadsheet'></i> Record Sheet
                     </button>
-                </div>
+                </div> -->
             </div>            
         </div>
     </div>
 </div>
+<div class="modal fade nsm-modal fade" id="modal-view-alarm-customer-info" data-source="" tabindex="-1" aria-labelledby="modal-quick-view-upcoming-schedule-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">View Customer</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body" id="alarm-customer-info-container"></div>                                    
+        </div>        
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-view-alarm-customer-system-check" data-source="" tabindex="-1" aria-labelledby="modal-quick-view-upcoming-schedule-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">System Check</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body" id="alarm-customer-system-check-container"></div>                                    
+        </div>        
+    </div>
+</div>
 
 <script>
+$(function(){
+    $('.btn-alarm-api-view-customer').on('click', function(){
+        var customer_id = $(this).attr('data-id');
+        
+        $('#modal-view-alarm-customer-info').modal('show');
+        showLoader($("#alarm-customer-info-container")); 
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: base_url + 'alarm_api/_view_customer',
+             data: {customer_id:customer_id},
+             success: function(o)
+             {          
+                $("#alarm-customer-info-container").html(o);
+             }
+          });
+        }, 500);
+    });
+
+    $('.btn-alarm-api-system-check').on('click', function(){
+        var customer_id = $(this).attr('data-id');
+        
+        $('#modal-view-alarm-customer-system-check').modal('show');
+        showLoader($("#alarm-customer-system-check-container")); 
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: base_url + 'alarm_api/_customer_system_check',
+             data: {customer_id:customer_id},
+             success: function(o)
+             {          
+                $("#alarm-customer-system-check-container").html(o);
+             }
+          });
+        }, 500);
+    });
+});
+
 function openNewWindow() {
   window.open("https://nsmartrac.com/", "_blank", "location=yes,height=1080,width=1500,scrollbars=yes,status=yes");
 }
