@@ -1508,6 +1508,7 @@ $route['cron/customer_recurring_subscriptions'] = 'Cron_Jobs_Controller/cronCust
 $route['cron/process_accounting_recurring_transaction_payment'] = 'Cron_Payment/process_accounting_recurring_transaction_payment';
 $route['cron/update_invoice'] = 'Cron_Jobs_Controller/cronUpdateInvoice';
 
+$route['cron/customer_recurring_subscriptionsv3'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionV3';
 $route['cron/customer_recurring_subscriptions_test'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionV2test';
 
 // Admin Users

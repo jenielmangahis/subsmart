@@ -67,6 +67,99 @@
                     <td style="border:rgb(255,109,106) 1px solid"></td>
                     <td style="border:rgb(255,109,106) 1px solid"></td>
                 </tr>
+                <tr>
+                    <td>C. Commercial Rentals</td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                </tr>
+                <tr>
+                    <td>D. Transient Rentals</td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                </tr>
+                <tr>
+                    <td>E. Food & Beverages Vending</td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td style=""></td>
+                    <td style="">Reporting Period</td>
+                    <td style="">5. Total Amount of Tax Due</td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td style="">Surtax Rate</td>
+                    <td style=""></td>
+                    <td style="">6. Less Lawful Deductions</td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                </tr>
+                <tr>
+                    <td rowspan="4" style="border-right:rgb(255,109,106) 1px solid; color:rgb(255,109,106);text-align:right;">
+                        <p>Name<br />Address<br />City/St<br />Zip</p>
+                    </td>
+                    <td style=""></td>
+                    <td style=""></td>
+                    <td style="">7. Net tax due</td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                </tr>
+                <tr>
+                    <!-- <td>&nbsp;</td> -->
+                    <td style=""></td>
+                    <td style=""></td>
+                    <td style="">8. Less Est Tax Pd / DOR Cr Memo</td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                </tr>
+                <tr>
+                    <!-- <td>&nbsp;</td> -->
+                    <td style=""></td>
+                    <td style=""></td>
+                    <td style="">9. Plus Est Tax Due Current Month</td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                </tr>
+                <tr>
+                    <!-- <td>&nbsp;</td> -->
+                    <td style=""></td>
+                    <td style=""></td>
+                    <td style="">9. Amount Due</td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td style=""></td>
+                    <td style=""></td>
+                    <td style="">11. Less Collection Allowance</td>
+                    <td style="border:rgb(255,109,106) 1px solid; background-color: rgb(166, 166, 166); text-align:center;"><strong>E-file/E-pay Only</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td style=""></td>
+                    <td style=""></td>
+                    <td style="">12. Plus Penalty</td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td style=""></td>
+                    <td style=""></td>
+                    <td style="">13. Plus Interest</td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td style=""></td>
+                    <td style=""></td>
+                    <td style="">14. Amount Due With Return</td>
+                    <td style="border:rgb(255,109,106) 1px solid"></td>
+                </tr>
             </tbody>
         </tr>
     </tbody>
