@@ -5215,7 +5215,7 @@ class Customer extends MY_Controller
             if ($input['leads_id'] != null) {
                 if ($this->customer_ad_model->update_data($input, 'ac_leads', 'leads_id')) {
                     //Activity Logs
-                    $activity_name = 'Updated Lead ' . $input['firstname'] . ' ' . $input['lastname']; 
+                    $activity_name = 'Leads : Updated lead ' . $input['firstname'] . ' ' . $input['lastname']; 
                     createActivityLog($activity_name);
 
                     // SMS Notification
@@ -5229,7 +5229,7 @@ class Customer extends MY_Controller
                 $input['company_id'] = logged('company_id');
                 if ($lastid = $this->customer_ad_model->add($input, 'ac_leads')) {
                     //Activity Logs
-                    $activity_name = 'Created New Lead ' . $input['firstname'] . ' ' . $input['lastname']; 
+                    $activity_name = 'Leads : Created new lead ' . $input['firstname'] . ' ' . $input['lastname']; 
                     createActivityLog($activity_name);
 
                     // SMS Notification

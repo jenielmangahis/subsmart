@@ -142,6 +142,7 @@
         <button id="info-button" data-bs-toggle="modal" data-bs-target="#infoModal"><i class="fas fa-info-circle"></i></button>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/pluralize@8.0.0/pluralize.min.js"></script>
 <script>
     $(document).ready(function() {
         var BASE_URL = window.origin;
@@ -153,7 +154,65 @@
         const API_KEY = '5aeaacff142e4add9ed06d5d7c2b8b42';
         const API_URL = 'https://api.assemblyai.com/v2/transcript';
         const gotoCommandDictionary = {
-            "customers list": "/customer",
+            // Dashboard and Notifications
+            "dashboard": "/dashboard",
+            "inbox": "/inbox",
+
+            // Communication
+            "sms": "/messages",
+            "calls and logs": "/calls",
+            "scheduled calls": "/calls/scheduled_calls",
+            "smart zoom": "/SmartZoom",
+
+            // Calendar and Appointments
+            "work calender": "/workcalender",
+            "work calender settings": "/settings/schedule",
+            "appointment types": "/appointment_types/index",
+            "online booking": "/more/addon/booking",
+
+            // Events
+            "events": "/events",
+            "event settings": "/events/settings",
+            "event types settings": "/events/event_types",
+            "event tags settings": "/events/event_tags",
+            "add event": "/events/event_add",
+            "add event type": "/events/event_types_add",
+            "add event tag": "/events/event_tags_add",
+
+            // Tasks and Jobs
+            "task hub": "/taskhub",
+            "add task": "/taskhub/create",
+            "jobs": "/job",
+            "job settings": "/job/settings",
+            "job type settings": "/job/job_types",
+            "job tag settings": "/job/job_tags",
+            "job checklist settings": "/job_checklists/list",
+            "add job": "/job/new",
+            "add job checlist": "/job_checklists/add_new",
+            "bird's eye view": "/job/bird_eye_view",
+
+            // Estimates and Work Orders
+            "estimates": "/estimate",
+            "estimate settings": "/estimate/settings",
+            "estimate plan settings": "/plans",
+            "add estimate plan": "/plans/add",
+            "work orders": "/workorder",
+            "work order settings": "/workorder/settings",
+            "work order checklist settings": "/workorder/checklists",
+            "work order priority settings": "/estimate/priority",
+            "work order status settings": "/workorder/status",
+            "add work order checklist": "/workorder/add_checklist",
+
+            // Tickets and Support
+            "tickets": "/customer/ticketslist",
+            "ticket settings": "/tickets/settings",
+            "ticket panel types settings": "/tickets/settings_panel_types",
+            "ticket plan types settings": "/tickets/settings_plan_types",
+            "add ticket": "/ticket/add",
+
+            // Customers and Leads
+            "customers": "/customer",
+            "accounting customers": "/accounting/customers",
             "add customer": "/customer/add_advance",
             "residential customers": "/customer/residential",
             "commercial customers": "/customer/commercial",
@@ -163,7 +222,7 @@
             "lead source settings": "/customer/settings_lead_source",
             "lead types settings": "/customer/settings_lead_types",
             "customer status settings": "/customer/status",
-            "rate plans settings": "/customer/settings_rate_plans",
+            "rate plan settings": "/customer/settings_rate_plans",
             "activation fee settings": "/customer/settings_activation_fee",
             "system package type settings": "/customer/settings_system_package",
             "financing payment categories settings": "/customer/settings_financing_categories",
@@ -174,8 +233,89 @@
             "customer table header settings": "/customer/settings_headers",
             "customer import settings": "/customer/settings_import",
             "customer export settings": "/customer/settings_export",
-            "customer form fields settings": "/customer/form_settings"
+            "customer form fields settings": "/customer/form_settings",
+
+            // Accounting and Finance
+            "banking": "/accounting/banking",
+            "link bank": "/accounting/link_bank",
+            "cash flow": "/accounting/cashflowplanner",
+            "expenses": "/accounting/expenses",
+            "sales overview": "/accounting/sales-overview",
+            "payroll overview": "/accounting/payroll-overview",
+            "reports": "/accounting/reports",
+            "taxes": "/accounting/salesTax",
+            "chart of accounts": "/accounting/chart-of-accounts",
+            "invoices": "/invoice",
+            "add invoice": "/invoice/add",
+            "products and services": "/accounting/products-and-services",
+            "employees": "/accounting/employees",
+            "contractors": "/accounting/contractors",
+
+            // Inventory and Vendors
+            "inventory": "/inventory",
+            "services": "/inventory/services",
+            "fees": "/inventory/fees",
+            "vendors": "/inventory/vendors",
+            "item categories settings": "/inventory/item_groups",
+            "add item": "/inventory/add",
+
+            // Business Tools and Automation
+            "business tools": "/tools/api_connectors",
+            "eSign": "/esignmain",
+            "my business overview": "/users/businessview",
+            "account summary": "/mycrm/account_summary",
+            "automation": "/automation"
         };
+
+        function processToSingular(text) {
+            return text.toLowerCase()
+                       .replace(/[^a-z0-9\s]/g, '')
+                       .split(/\s+/)
+                       .map(word => pluralize.singular(word))
+                       .join(' ')
+                       .trim();
+        }
+
+        const processGotoCommandDictionary = {};
+        for (const key in gotoCommandDictionary) {
+            const processCommandKey = processToSingular(key);
+            processGotoCommandDictionary[processCommandKey] = gotoCommandDictionary[key];
+        }
+
+        function handleVoiceCommand(commandText) {
+            let processedCommand = commandText.replace(/^(go to|goto|open|show)\s+/i, '');
+            const processCommand = processToSingular(processedCommand);
+            Swal.close();
+
+            if (processGotoCommandDictionary[processCommand]) {
+
+                const navigation = Object.keys(gotoCommandDictionary).find(
+                    key => processToSingular(key) === processCommand
+                );
+
+                iziToast.success({
+                    message: `Redirecting to ${navigation}.`,
+                    displayMode: 1,
+                    timeout: 2000,
+                    position: 'topCenter',
+                    close: true,
+                    onClosed: function(instance, toast, closedBy) {
+                        window.location.href = `${BASE_URL}/${processGotoCommandDictionary[processCommand]}`;
+                    }
+                });
+
+                return;
+
+            } else {
+                iziToast.error({
+                    message: 'Command not recognized. Please try again.',
+                    displayMode: 1,
+                    timeout: 3000,
+                    position: 'topCenter',
+                    close: true
+                });
+            }
+        }
 
         function populateVoiceCommandTable() {
             const tableBody = $("#infoModal tbody");
@@ -191,37 +331,6 @@
                 tableBody.append(row);
             });
         } populateVoiceCommandTable();
-
-        function handleVoiceCommand(commandText) {
-            let normalizedCommand = commandText.toLowerCase().trim();
-            Swal.close();
-            if (/^(go to|goto|open|show) /.test(normalizedCommand)) {
-                normalizedCommand = normalizedCommand.replace(/^(go to|goto|open|show) /, "");
-                normalizedCommand = normalizedCommand.replace(/[^a-zA-Z0-9\s]/g, "");
-
-                if (gotoCommandDictionary[normalizedCommand]) {
-                    iziToast.success({
-                        message: `Redirecting to ${normalizedCommand}.`,
-                        displayMode: 1,
-                        timeout: 2000,
-                        position: 'topCenter',
-                        close: true
-                    });
-                    setTimeout(() => {
-                        window.location.href = `${BASE_URL}/${gotoCommandDictionary[normalizedCommand]}` ;
-                    }, 2000);
-                    return;
-                }
-            }
-
-            iziToast.error({
-                message: 'Command not recognized. Please try again.',
-                displayMode: 1,
-                timeout: 3000,
-                position: 'topCenter',
-                close: true
-            });
-        }
 
         function initDB() {
             const request = indexedDB.open("VoiceCommandDB", 1);
