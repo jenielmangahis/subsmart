@@ -758,10 +758,16 @@ class Tools extends MY_Controller {
         // echo $request;
     }
 
-    public function mailchimp() {
+    public function mailchimp()
+    {
         $this->load->library('MailChimpApi');
         $this->load->model('MailChimpExportCustomerLogs_model');
         $this->load->model('CompanyApiConnector_model');
+
+        if(!checkRoleCanAccessModule('api-connectors', 'read')){
+            show403Error();
+            return false;
+        }
 
         $company_id    = logged('company_id');
         $mailchimpList = array();
@@ -801,7 +807,8 @@ class Tools extends MY_Controller {
         $this->load->view('v2/pages/tools/mailchimp', $this->page_data);
     }
 
-    public function nicejob() {
+    public function nicejob() 
+    {
         $this->page_data['page']->title = 'Nice Job';
         $this->page_data['page']->parent = 'Tools';
 
@@ -809,8 +816,14 @@ class Tools extends MY_Controller {
         $this->load->view('v2/pages/tools/nicejob', $this->page_data);
     }
 
-    public function zapier() {
+    public function zapier() 
+    {
         $this->load->model('CompanyApiConnector_model');
+
+        if(!checkRoleCanAccessModule('api-connectors', 'read')){
+            show403Error();
+            return false;
+        }
 
         $company_id   = logged('company_id');
         $apiConnector = $this->CompanyApiConnector_model->getByCompanyIdAndApiName($company_id, 'zapier');
@@ -2296,11 +2309,16 @@ class Tools extends MY_Controller {
     {
         $this->load->model('MailChimpExportCustomerLogs_model');
 
+        if(!checkRoleCanAccessModule('api-connectors', 'read')){
+            show403Error();
+            return false;
+        }
+
         $company_id = logged('company_id');
-        $filter     = 'all';
-        if( get('filter') ){
+        $filter     = 'All';
+        if( get('filter') && get('filter') != 'All' ){
             $filter = get('filter');
-            if( get('filter') == 'errors' ){                
+            if( get('filter') == 'Errors' ){                
                 $search['search'][] = ['field' => 'is_with_error', 'value' => 1];
             }else{
                 $search['search'][] = ['field' => 'is_with_error', 'value' => 0];
