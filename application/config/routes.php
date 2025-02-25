@@ -129,6 +129,8 @@ $route['creditor_furnisher/_delete_creditor_furnisher'] = 'CreditorFurnisher/aja
 $route['creditor_furnisher/edit/(:num)'] = 'CreditorFurnisher/edit/$1';
 $route['creditor_furnisher/_update_creditor_furnisher'] = 'CreditorFurnisher/ajax_update_creditor_furnisher';
 $route['creditor_furnisher/_quick_save'] = 'CreditorFurnisher/ajax_quick_save';
+$route['creditor_furnisher/_edit_furnisher'] = 'CreditorFurnisher/ajax_edit_furnisher';
+$route['creditor_furnisher/_update_furnisher'] = 'CreditorFurnisher/ajax_update_furnisher';
 
 // Quick Notes
 $route['quick_notes/list'] = 'Quick_Notes/index';
