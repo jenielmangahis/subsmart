@@ -18,6 +18,12 @@
                             <div class="col-6 col-md-6">            
                         </div>                       
                         <form id="frm-update-event-settings">
+                            <?php 
+                                $disabled = '';
+                                if(!checkRoleCanAccessModule('events-settings', 'write')){
+                                    $disabled = 'disabled="disabled"';
+                                }
+                            ?>
                             <div class="col-12">
                                 <div class="nsm-card primary">
                                     <div class="row g-3">
@@ -31,10 +37,10 @@
                                             <div class="nsm-card-content">
                                                 <div class="row g-2">
                                                     <div class="col-12 col-md-3">
-                                                        <input type="text" placeholder="Prefix" name="event_settings_prefix" id="number-prefix" class="nsm-field form-control" value="<?= $eventSettings ? $eventSettings->event_prefix : 'EVENT-'; ?>" required="" autocomplete="off" />
+                                                        <input type="text" placeholder="Prefix" name="event_settings_prefix" id="number-prefix" class="nsm-field form-control" value="<?= $eventSettings ? $eventSettings->event_prefix : 'EVENT-'; ?>" required="" autocomplete="off" <?= $disabled; ?> />
                                                     </div>
                                                     <div class="col-12 col-md-9">
-                                                        <input type="number" step="1" placeholder="Next Number" name="event_settings_next_number" id="number-base" class="nsm-field form-control" value="<?= $eventSettings ? $eventSettings->event_next_num : $default_next_num; ?>" required="" autocomplete="off" />
+                                                        <input type="number" step="1" placeholder="Next Number" name="event_settings_next_number" id="number-base" class="nsm-field form-control" value="<?= $eventSettings ? $eventSettings->event_next_num : $default_next_num; ?>" required="" autocomplete="off" <?= $disabled; ?> />
                                                     </div>
                                                 </div>
                                             </div>
@@ -50,10 +56,10 @@
                                             <div class="nsm-card-content">
                                                 <div class="row g-2">
                                                     <div class="col-12 col-md-12">
-                                                        <select required id="" name="event_settings_timezone" class="form-control v2-dropdown">
+                                                        <select required id="" name="event_settings_timezone" class="form-control v2-dropdown" <?= $disabled; ?>>
                                                             <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
                                                             <option value="<?php echo $key ?>" <?= $eventSettings && $eventSettings->timezone == $key ? 'selected="selected"' : ''; ?>>
-                                                                <?php echo $zone ?>
+                                                                <?php echo $key ?>
                                                             </option>
                                                             <?php } ?>
                                                         </select>
@@ -72,7 +78,7 @@
                                             <div class="nsm-card-content">
                                                 <div class="row g-2">
                                                     <div class="col-12 col-md-12">
-                                                        <select required id="" name="event_settings_customer_reminder_notification" class="form-control v2-dropdown">
+                                                        <select required id="" name="event_settings_customer_reminder_notification" class="form-control v2-dropdown" <?= $disabled; ?>>
                                                             <?php foreach($optionsCustomerNotifications as $key => $value){ ?>
                                                                 <option <?= $eventSettings && $eventSettings->customer_reminder_notification == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
                                                             <?php } ?>
@@ -82,10 +88,12 @@
                                             </div>
                                         </div>
                                         <div class="col-5"></div>
+                                        <?php if(checkRoleCanAccessModule('events-settings', 'write')){ ?>
                                         <div class="col-7 text-end">
                                             <hr>
                                             <button type="submit" class="nsm-button primary">Save Changes</button>
-                                        </div>                                        
+                                        </div>   
+                                        <?php } ?>                                     
                                     </div>
                                 </div>
                             </div>
@@ -101,6 +109,7 @@
 $(function(){
     $('.v2-dropdown').select2();
 
+    <?php if(checkRoleCanAccessModule('events-settings', 'write')){ ?>
     $("#frm-update-event-settings").submit(function(e) {
         e.preventDefault();
         var form = $(this);                
@@ -133,5 +142,6 @@ $(function(){
             }
         });   
     });
+    <?php } ?>
 });
 </script>
