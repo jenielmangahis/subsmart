@@ -24,6 +24,10 @@ label>input {
 .dataTables_filter, .dataTables_length{
     display: none;
 }
+#plan-item-list thead td, #estimate-items-table thead td {
+    background-color: #6a4a86;
+    color: #ffffff;
+}
 </style>
 <?php include viewPath('v2/includes/header'); ?>
 <!-- page wrapper start -->
@@ -42,7 +46,7 @@ label>input {
                         <div class="col-12">
                             <div class="nsm-callout primary">
                                 <button><i class='bx bx-x'></i></button>
-                                Edit Plan Details.
+                                Edit Estimate Plan.
                             </div>
                         </div>
                     </div>
@@ -55,7 +59,8 @@ label>input {
             <div class="nsm-card">
                 <div class="nsm-card-content">
                     <div class="col-sm-12">
-                    <?php echo form_open('plans/update/'.$plan->id, [ 'class' => 'form-validate' ]); ?>
+                    <?php echo form_open(null, ['class' => 'form-validate', 'id' => 'frm-update-plan']); ?>
+                        <input type="hidden" name="pid" value="<?= $plan->id; ?>" />
                         <div class="row" style="margin-bottom: 10px">
                             <div class="col-sm-8">
                                 <div class="form-group">
@@ -66,21 +71,16 @@ label>input {
                             
                             <div class="col-sm-2">
                                 <div class="form-group">
-                                    <label for="discount_fixed">Status</label>
+                                    <label for="discount_fixed">Is Enabled</label>
                                     <select name="status" class="groups-select form-control">
-                                        <option value="1" <?php if($plan->status==1) echo 'slected'; ?>>Actived</option>
-                                        <option value="0" <?php if($plan->status==0) echo 'slected'; ?>>Deactived</option>
+                                        <option value="1" <?php if($plan->status==1) echo 'slected'; ?>>Yes</option>
+                                        <option value="0" <?php if($plan->status==0) echo 'slected'; ?>>No</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                         <div class="row" style="margin-top: 20px;">
                             <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <h5>Assign Items</h5>
-                                    </div>
-                                </div>			
                                 <?php 
                                     $i=0;
                                     $plan_items  = unserialize($plan->items);
@@ -90,17 +90,17 @@ label>input {
                                     }
                                 ?>		
                                 <input type="hidden" name="count" value="<?php echo $count_items; ?>" id="count">				
-                                <table class="table table-hover">
-                                    <thead style="background-color:#E9E8EA;">
+                                <table class="nsm-table" id="plan-item-list">
+                                    <thead>
                                         <tr>
-                                            <th width="35%">Description</th>
-                                            <th width="20%">Type</th>
-                                            <th width="10%">Quantity</th>
-                                            <th width="10%">Cost</th>
-                                            <th width="10%">Discount</th>
-                                            <th width="20%">Tax(7.5%)</th>
-                                            <th width="15%" style="text-align: center;">Total</th>
-                                            <th></th>
+                                            <td data-name="Description">Description</td>
+                                            <td data-name="Type">Type</td>
+                                            <td data-name="Quantity">Quantity</td>
+                                            <td data-name="Cost">Cost</td>
+                                            <td data-name="Discount">Discount</td>
+                                            <td data-name="Tax">Tax</td>
+                                            <td data-name="Description" style="text-align: right;">Total</td>
+                                            <td data-name="Manage"></td>
                                         </tr>
                                     </thead>
                                     <tbody id="jobs_items_table_body">
@@ -110,63 +110,49 @@ label>input {
                                                 $total = $row['tax'] + $row['price'];
                                                 ?>
                                                 <tr>
-                                                    <td>
+                                                    <td width="30%">
                                                         <input type="hidden" class="form-control" name="item_id[]" value="<?php echo $row['item_id']; ?>">
                                                         <input type="text" autocomplete="off" class="form-control getItems" onKeyup="getItems(this)" name="items[]" value="<?php echo $row['item']; ?>">
                                                     </td>
-                                                    <td><select name="item_type[]" class="form-control">
+                                                    <td width="20%"><select name="item_type[]" class="form-control">
                                                         <option value="product" <?php if($row['item_type']=='product') echo 'selected'; ?>>Product</option>
                                                         <option value="material" <?php if($row['item_type']=='material') echo 'selected'; ?>>Material</option>
                                                         <option value="service" <?php if($row['item_type']=='service') echo 'selected'; ?>>Service</option>
                                                         </select></td>
-                                                    <td><input type="text" class="form-control quantity" name="quantity[]" value="<?php echo $row['quantity'] ?>" data-counter="<?=$i?>" id="quantity_<?=$i?>"></td>
+                                                    <td width="10%"><input type="text" class="form-control quantity" name="quantity[]" value="<?php echo $row['quantity'] ?>" data-counter="<?=$i?>" id="quantity_<?=$i?>"></td>
                                                     <!-- <td><input type="text" class="form-control" name="location[]" value="<?php echo $row['location'] ?>"></td> -->
-                                                    <td><input readonly type="number" class="form-control price" name="price[]" data-counter="<?=$i?>" id="price_<?=$i?>" min="0" value="<?php echo $row['price'] ?>"></td>
+                                                    <td width="10%"><input readonly type="number" step="any" class="form-control price" name="price[]" data-counter="<?=$i?>" id="price_<?=$i?>" min="0" value="<?php echo number_format($row['price'],2,".",""); ?>"></td>
                                                     <td><input type="number" class="form-control discount" name="discount[]" data-counter="<?=$i?>" id="discount_<?=$i?>" min="0" value="<?php echo $row['discount'] ?>"></td>
-                                                    <td>
+                                                    <td width="10%">
                                                         <input type="text" data-itemid="<?=$i?>" class="form-control tax_change valid" name="tax[]" data-counter="<?=$i?>" id="tax1_<?=$i?>" readonly="" min="0" value="<?php echo $row['tax']; ?>" aria-invalid="false">
                                                     </td>
-                                                    <td>
+                                                    <td width="10%" style="text-align: right;">
                                                         <?php 
                                                             $total = $row['price'] * $row['quantity'];
                                                             $total = $total + $row['tax'];
                                                             $total = $total - $row['discount'];
                                                         ?>
-                                                        <span id="span_total_<?=$i?>"><?= number_format($total, 2); ?></span>
+                                                        <span id="span_total_<?=$i?>"><?= number_format($total, 2,".",""); ?></span>
                                                     </td>
                                                     <td>
                                                         <a href="javascript:void(0);" class="remove nsm-button danger remove" id="<?= $row['item_id']; ?>"><i class='bx bx-trash'></i></a>
                                                     </td>
                                                 </tr>	
                                             <?php $i++; } ?>										
-                                        <?php }else{ ?>
-                                        <!-- <tr>
-                                            <td><input type="text" autocomplete="off" class="form-control getItems" onKeyup="getItems(this)" name="item[]"><ul class="suggestions"></ul></td>
-                                            <td><select name="item_type[]" class="form-control">
-                                                <option value="product">Product</option>
-                                                <option value="material">Material</option>
-                                                <option value="service">Service</option>
-                                                </select></td>
-                                            <td><input type="text" class="form-control quantity" name="quantity[]" data-counter="0" id="quantity_0" value="1"></td>
-                                            <td><input type="text" class="form-control" name="location[]"></td>
-                                            <td><input readonly type="number" class="form-control price" name="price[]" data-counter="0" id="price_0" min="0" value="0"></td>
-                                            <td><input type="number" class="form-control discount" name="discount[]" data-counter="0" id="discount_0" min="0" value="0" readonly></td>
-                                            <td><span id="span_tax_0">0.00 (7.5%)</span></td>
-                                            <td><span id="span_total_0">0.00</span></td>
-                                        </tr> -->
-                                        <?php 
-                                        } ?>
+                                        <?php } ?>
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                        <div class="row mt-4">
                             <div class="col-12">
-                                <a href="#" class="nsm-button primary small" id="add_another_old" data-bs-toggle="modal" data-bs-target="#item_list"><i class='bx bxs-plus-square'></i> Add Items</a>
+                                <a href="javascript:void(0);" class="nsm-button" id="btn-add-items">Add Items</a>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-sm-12 mt-3 text-end">									
-                                <button type="button" class="nsm-button back">Back To Plan Lists</button>
+                                <button type="button" class="nsm-button back">Cancel</button>
                                 <button type="submit" class="nsm-button primary">Save</button>
                             </div>
                         </div>
@@ -183,38 +169,63 @@ label>input {
 <?php include viewPath('v2/includes/footer'); ?>
 <script src="<?php echo $url->assets ?>js/custom.js"></script>
 <script>
-   $(document).ready(function() {   
-    var ITEMS_TABLE = $('#items_table').DataTable({
-        "ordering": false,
+   $(document).ready(function() {        
+    $('.check-select-all-p').on('change', function() {
+        $('.check-select-p').attr('checked', $(this).is(':checked'));
     });
 
-    $("#ITEM_CUSTOM_SEARCH").keyup(function() {
-        ITEMS_TABLE.search($(this).val()).draw()
+    $('.select2').select2();
+
+    $('#estimate-items-table').nsmPagination({itemsPerPage:8});
+    $("#items_search_field").on("input", debounce(function() {
+        tableSearch($(this));
+    }, 1000));
+
+    $('#btn-add-items').on('click', function(){
+        $('#estimate-items-table').nsmPagination({itemsPerPage:8});
+        $('#item_list').modal('show');
     });
 
-	<?php  for($cc=0;$cc<=count(unserialize($plan->items));$cc++){ ?>
-		//calculation(<?php echo $cc; ?>);
-	<?php } ?>
-     //$('.form-validate').validate();
-     $('.check-select-all-p').on('change', function() {
-       $('.check-select-p').attr('checked', $(this).is(':checked'));
-     });
+    $('#frm-update-plan').on('submit', function(e){
+      e.preventDefault();
 
-    //  $('#modal_items_table_estimate').DataTable({
-    //    "autoWidth" : false,
-    //    "columnDefs": [
-    //     { width: 540, targets: 0 },
-    //     { width: 100, targets: 0 },
-    //     { width: 100, targets: 0 }
-    //   ],
-    //    "ordering": false,
-    //  });
-   
-    //  $('.table-DT').DataTable({   
-    //    "ordering": false,   
-    //  });
+      let _this = $(this);
 
-     $('.select2').select2();
+      var url = base_url + "plans/_update_estimate_plan";
+      _this.find("button[type=submit]").html("Saving");
+      _this.find("button[type=submit]").prop("disabled", true);
+
+      $.ajax({
+          type: 'POST',
+          url: url,
+          data: _this.serialize(),
+          dataType:"json",
+          success: function(result) {
+              if (result.is_success) {
+                  Swal.fire({
+                      title: 'Estimate Plan',
+                      text: "Plan was has been updated successfully.",
+                      icon: 'success',
+                      showCancelButton: false,
+                      confirmButtonText: 'Okay'
+                  }).then((result) => {
+                      //if (result.value) {
+                          location.href= base_url + "plans";
+                      //}
+                  });
+              } else {
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      html: result.msg
+                  });
+              }                    
+
+              _this.find("button[type=submit]").html("Save");
+              _this.find("button[type=submit]").prop("disabled", false);
+          },
+      });
+    });
 
      $(document).on('click', '.select_item2a', function(){     
       // taxRate();
@@ -273,16 +284,16 @@ label>input {
               var item_type_dropdown = '<select name="item_type[]" class="form-control"><option selected="selected" value="product">Product</option><option  value="service">Service</option><option value="fee">Fee</option></select>';
           }
           markup = '<tr id="row'+ idd +'">' +
-              "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"></div><input type=\"hidden\" name=\"itemid[]\" id=\"itemid\" class=\"itemid\" value='"+idd+"'><input type=\"hidden\" name=\"packageID[]\" value=\"0\"></td>\n" +
+              "<td width=\"30%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"></div><input type=\"hidden\" name=\"itemid[]\" id=\"itemid\" class=\"itemid\" value='"+idd+"'><input type=\"hidden\" name=\"packageID[]\" value=\"0\"></td>\n" +
               "<td width=\"20%\"><div class=\"dropdown-wrapper\">"+item_type_dropdown+"</div></td>\n" +
               "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+count+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter='"+count+"'  min=\"0\" class=\"form-control quantity mobile_qty \"></td>\n" +
               // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-              "<td width=\"10%\"><input data-itemid='"+idd+"' id='price_"+count+"' value='"+price+"'  type=\"number\" name=\"price[]\" data-counter='"+count+"' class=\"form-control price hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+count+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
+              "<td width=\"10%\"><input data-itemid='"+idd+"' id='price_"+count+"' value='"+price.toFixed(2)+"'  type=\"number\" step=\"any\" name=\"price[]\" data-counter='"+count+"' class=\"form-control price hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+count+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price.toFixed(2)+"</span></div></td>\n" +
               // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
               // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
               "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" value=\"0\" class=\"form-control discount\" data-counter='"+count+"' id='discount_"+count+"'></td>\n" +
               // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-              "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change\" name=\"tax[]\" data-counter='"+count+"' id='tax1_"+count+"' readonly min=\"0\" value='"+taxes_t+"'></td>\n" +
+              "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change\" name=\"tax[]\" data-counter='"+count+"' id='tax1_"+count+"' readonly min=\"0\" value='"+taxes_t+"'></td>\n" +
               "<td style=\"text-align: right\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+count+"' class=\"total_per_item\">"+total+
               // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
               "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+count+"' value='"+total+"'></td>" +
@@ -300,34 +311,35 @@ label>input {
      
    });
    var is_Confirm = 0;
-   $(document).on("click", ".remove", function (e) {
+    $(document).on("click", ".remove", function (e) {
         is_Confirm = 1;
-     })
-     $(document).on("click", ".back", function (e) {
+    })
+    $(document).on("click", ".back", function (e) {
         if(is_Confirm == 1){
             confirm();
         }else{
             location.href= '<?= base_url('plans'); ?>';
         }
-     })
-     function confirm(){
-            Swal.fire({
-                title: 'Unsaved Changes',
-                text: 'Your changes have not been saved. Are you sure you want to go back?',
-                icon: 'warning',
-                showCancelButton: true,
-                showDenyButton: true,
-                showConfirmButton: false,
-                confirmButtonColor: '#32243d',
-                denyButtonColor: '#6a4a86',
-                confirmButtonText: 'Save',
-                denyButtonText: 'Go back without saving'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    console.log('sure');
-                } else if (result.isDenied) {
-                    location.href= '<?= base_url('plans'); ?>';
-                }
-            });
-        }
+    })
+    
+    function confirm(){
+        Swal.fire({
+            title: 'Unsaved Changes',
+            text: 'Your changes have not been saved. Are you sure you want to go back?',
+            icon: 'warning',
+            showCancelButton: true,
+            showDenyButton: true,
+            showConfirmButton: false,
+            confirmButtonColor: '#32243d',
+            denyButtonColor: '#6a4a86',
+            confirmButtonText: 'Save',
+            denyButtonText: 'Go back without saving'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log('sure');
+            } else if (result.isDenied) {
+                location.href= '<?= base_url('plans'); ?>';
+            }
+        });
+    }
 </script>
