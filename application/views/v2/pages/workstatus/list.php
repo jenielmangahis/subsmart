@@ -25,13 +25,20 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-6 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div>
+                    </div>
+                    <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
+                    <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary btn-add-workstatus">
-                                <i class='bx bx-fw bx-checkbox-square'></i> New Workorder Status
+                                <i class='bx bx-fw bx-plus'></i> New Workorder Status
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
                 <table class="nsm-table">
                     <thead>
@@ -63,8 +70,12 @@
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
                                                 <li><a class="dropdown-item btn-edit-workstatus" data-name="<?= $ws->title; ?>" data-color="<?= $ws->color; ?>" data-id="<?= $ws->id; ?>" href="javascript:void(0);">Edit</a></li>
-                                                <li><a class="dropdown-item btn-delete-workstatus" data-id="<?= $ws->id; ?>" href="javascript:void(0);">Delete</a></li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('work-order-settings', 'delete')){ ?>
+                                                <li><a class="dropdown-item btn-delete-workstatus" data-name="<?= $ws->title; ?>" data-id="<?= $ws->id; ?>" href="javascript:void(0);">Delete</a></li>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </td>
@@ -91,37 +102,37 @@
         </div>
     </div>
     <div class="modal fade nsm-modal fade" id="modal-add-new-work-status" tabindex="-1" aria-labelledby="modal-add-new-work-status_label" aria-hidden="true">
-        <div class="modal-dialog">
-            <form id="frm-create-workorder-status">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <span class="modal-title content-title" id="new_tax_rate_modal_label">Add Workorder Status</span>
-                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Status Name</label> <span class="form-required">*</span>
-                            <input type="text" class="form-control" name="title" id="title" required placeholder="Name" autofocus />
-                        </div>
-                        <div class="form-group mt-3">
-                            <label>Color</label> <span class="form-required">*</span>
-                            <input type="text" name="color" class="form-control cpicker" data-swatches="#ef9a9a|#90caf9|#a5d6a7|#fff59d|#ffcc80|#bcaaa4|#eeeeee|#f44336|#2196f3|#4caf50|#ffeb3b|#ff9800|#795548|#9e9e9e" value="#ff6161">
-                        </div>    
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="nsm-button primary btn-save-workorder-type">Save</button>
-                    </div>
+        <div class="modal-dialog modal-dialog-centered modal-md">            
+            <div class="modal-content">
+                <form id="frm-create-workorder-status">
+                <div class="modal-header">
+                    <span class="modal-title content-title" id="new_tax_rate_modal_label">Add Workorder Status</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
-            </form>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Status Name</label> <span class="form-required">*</span>
+                        <input type="text" class="form-control" name="title" id="title" required placeholder="Name" autofocus />
+                    </div>
+                    <div class="form-group mt-3">
+                        <label>Color</label> <span class="form-required">*</span>
+                        <input type="text" name="color" class="form-control cpicker" data-swatches="#ef9a9a|#90caf9|#a5d6a7|#fff59d|#ffcc80|#bcaaa4|#eeeeee|#f44336|#2196f3|#4caf50|#ffeb3b|#ff9800|#795548|#9e9e9e" value="#ff6161">
+                    </div>    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary btn-save-workorder-type">Save</button>
+                </div>
+                </form>
+            </div>            
         </div>
     </div>
 
     <div class="modal fade nsm-modal fade" id="modal-edit-work-status" tabindex="-1" aria-labelledby="modal-edit-work-status_label" aria-hidden="true">
-        <div class="modal-dialog">
-            <form id="frm-update-workorder-status">
+        <div class="modal-dialog modal-dialog-centered modal-md">                            
+            <div class="modal-content">
+                <form id="frm-update-workorder-status">
                 <input type="hidden" name="wtid" id="wtid" />
-                <div class="modal-content">
                     <div class="modal-header">
                         <span class="modal-title content-title" id="new_tax_rate_modal_label">Edit Workorder Status</span>
                         <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
@@ -140,8 +151,8 @@
                         <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="nsm-button primary btn-save-workorder-type">Save</button>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>            
         </div>
     </div>
 
@@ -149,12 +160,16 @@
 <script type="text/javascript">
 $(function(){
     $(".nsm-table").nsmPagination();
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));        
+    }, 1000));
         
     $('.cpicker').minicolors({
         swatches: $(this).attr('data-swatches') ? $(this).attr('data-swatches').split('|') : [],
         theme: 'bootstrap'
     });
 
+    <?php if(checkRoleCanAccessModule('work-order-settings', 'write')){ ?>
     $('.btn-edit-workstatus').on('click', function(){
         var wtid    = $(this).attr('data-id');
         var wcolor  = $(this).attr('data-color');
@@ -173,7 +188,7 @@ $(function(){
 
     $("#frm-create-workorder-status").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'workstatus/_create_workorder_type';
+        var url = base_url + 'workstatus/_create_workorder_status';
         $(".btn-save-workorder-type").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
         setTimeout(function () {
             $.ajax({
@@ -186,7 +201,7 @@ $(function(){
                     if( o.is_success == 1 ){
                         $('#modal-add-new-work-status').modal('hide');
                         Swal.fire({
-                            //title: 'Success',
+                            title: 'Workorder Status',
                             text: 'Workorder status was successfully created.',
                             icon: 'success',
                             showCancelButton: false,
@@ -213,7 +228,7 @@ $(function(){
 
     $("#frm-update-workorder-status").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'workstatus/_update_workorder_type';
+        var url = base_url + 'workstatus/_update_workorder_status';
         $(".btn-update-workorder-type").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
         setTimeout(function () {
             $.ajax({
@@ -225,9 +240,8 @@ $(function(){
                  {
                     if( o.is_success == 1 ){
                         $('#modal-edit-work-status').modal('hide');
-
                         Swal.fire({
-                            //title: 'Success',
+                            title: 'Workorder Status',
                             text: 'Workorder status was successfully updated.',
                             icon: 'success',
                             showCancelButton: false,
@@ -250,12 +264,16 @@ $(function(){
             });
         }, 300);        
     });
+    <?php } ?>
 
+    <?php if(checkRoleCanAccessModule('work-order-settings', 'delete')){ ?>
     $('.btn-delete-workstatus').on('click',function(){
         var wtid = $(this).attr('data-id');
+        var name = $(this).attr('data-name');
+
         Swal.fire({
-            title: 'Delete seleted Workorder Status?',
-            text: "",
+            title: 'Delete Workorder Status',
+            html: `Are you sure you want to delete workorder status <b>${name}</b>?`,            
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes',
@@ -287,7 +305,8 @@ $(function(){
                 });
             }
         });
-    });    
+    });
+    <?php } ?>    
 });    
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
