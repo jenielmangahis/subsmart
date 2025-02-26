@@ -59,8 +59,8 @@
                                         <td><?= $row; ?></td>
                                         <td class="fw-bold nsm-text-primary"><?= $key ?></td>
                                         <td class="nsm-text-primary" style="width:70% !important;"><?= $ld['description']; ?></td>
-                                        <td style="text-align:right;" style="width:10% !important;">$<?= number_format($income, 2, '.', ','); ?></td>
-                                        <td style="text-align:right;" style="width:10% !important;">$<?= number_format($payment, 2, '.', ','); ?></td>
+                                        <td style="text-align:right;">$<?= number_format($income, 2, '.', ','); ?></td>
+                                        <td style="text-align:right;">$<?= number_format($payment, 2, '.', ','); ?></td>
                                     </tr>
                                 <?php $row++; ?>
                                 <?php } ?>                            

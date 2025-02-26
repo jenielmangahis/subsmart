@@ -57,9 +57,7 @@ $route['translate_uri_dashes'] = false;
 $route['customer/tickets/(:any)?'] = 'customer/ticket/$1';
 $route['customer/_load_billing_credit_card_details'] = 'customer/ajax_load_company_billing_credit_card_details';
 $route['customer/_update_billing_credit_card_details'] = 'customer/ajax_update_billing_credit_card_details';
-
 $route['customer/add_data_sheet'] = 'customer/add_data_sheet';
-
 $route['customer/jobs_list/(:num)'] = 'Customer/job_list/$1';
 $route['customer/estimates_list/(:num)'] = 'Customer/estimates_list/$1';
 $route['customer/esign_list/(:num)'] = 'Customer/esign_list/$1';
@@ -91,7 +89,6 @@ $route['customer/_send_login_details'] = 'Customer/ajax_send_login_details';
 $route['customer/_load_customer_address'] = 'Customer/ajax_load_customer_address';
 $route['customer/_update_address_mobile'] = 'Customer/ajax_update_address_mobile';
 $route['customer/_delete_customer'] = 'Customer/ajax_delete_customer';
-
 $route['customer/_delete_esign_documents'] = 'Customer/ajax_delete_esign_documents';
 $route['customer/_send_email'] = 'Customer/ajax_send_email';
 $route['customer/_get_customer_lists'] = 'Customer/ajax_customer_lists';
@@ -112,6 +109,7 @@ $route['customer/export_commercial_list'] = 'Customer/export_commercial_list';
 $route['customer/_archived_list'] = 'Customer/ajax_archived_list';
 $route['customer/_create_customer_group'] = 'Customer/ajax_create_customer_group';
 $route['customer/_import_preview'] = 'Customer/ajax_import_preview';
+$route['customer/_ledger'] = 'Customer/ajax_customer_ledger';
 
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -129,6 +127,8 @@ $route['creditor_furnisher/_delete_creditor_furnisher'] = 'CreditorFurnisher/aja
 $route['creditor_furnisher/edit/(:num)'] = 'CreditorFurnisher/edit/$1';
 $route['creditor_furnisher/_update_creditor_furnisher'] = 'CreditorFurnisher/ajax_update_creditor_furnisher';
 $route['creditor_furnisher/_quick_save'] = 'CreditorFurnisher/ajax_quick_save';
+$route['creditor_furnisher/_edit_furnisher'] = 'CreditorFurnisher/ajax_edit_furnisher';
+$route['creditor_furnisher/_update_furnisher'] = 'CreditorFurnisher/ajax_update_furnisher';
 
 // Quick Notes
 $route['quick_notes/list'] = 'Quick_Notes/index';

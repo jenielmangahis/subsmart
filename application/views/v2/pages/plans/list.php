@@ -38,21 +38,23 @@
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Plan">
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('estimate-settings', 'write')){ ?>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('plans/add') ?>'">
-                                <i class='bx bx-fw bx-calendar-alt'></i> New Plan
+                                <i class='bx bx-fw bx-plus'></i> New Plan
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
                 <table class="nsm-table">
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
-                            <td data-name="Name" style="width:80%;">Name</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="Manage"></td>
+                            <td data-name="Name" style="width:90%;">Name</td>
+                            <td data-name="Status">Is Enabled</td>
+                            <td data-name="Manage" style="width:3%;"></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -63,10 +65,10 @@
                             foreach ($plans as $plan) :
                                 if( $plan->status == 1 ){
                                     $cell   = 'success';
-                                    $status = 'Activated';
+                                    $status = 'Yes';
                                 }else{
                                     $cell   = 'secondary';
-                                    $status = 'Deactivated';
+                                    $status = 'No';
                                 } 
                             ?>
                                 <tr>
@@ -76,22 +78,23 @@
                                         </div>
                                     </td>
                                     <td class="fw-bold nsm-text-primary"><?php echo $plan->plan_name ?></td>
-                                    <td><span class="nsm-badge <?= $cell ?>"><?= $status; ?></span></td>
+                                    <td><span class="nsm-badge badge <?= $cell ?>" style="display:block;width:100%;"><?= $status; ?></span></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('estimate-settings', 'write')){ ?>
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo url('plans/edit/'.$plan->id) ?>">Edit</a>
                                                 </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo url('plans/view/'.$plan->id) ?>">View</a>
-                                                </li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('estimate-settings', 'delete')){ ?>
                                                 <li>
                                                     <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $plan->id; ?>" data-name="<?= $plan->plan_name; ?>">Delete</a>
                                                 </li>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </td>
@@ -129,9 +132,11 @@
 
         $(document).on("click", ".delete-item", function() {
             let plan_id = $(this).attr("data-id");
+            let plan_name = $(this).attr('data-name');
 
             Swal.fire({
-                text: "Are you sure you want to delete selected plan?",
+                title: "Delete Plan",
+                html: `Are you sure you want to delete plan <b>${plan_name}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,

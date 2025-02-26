@@ -131,7 +131,8 @@ class CompanyRoleAccessModule_model extends MY_Model
             'invoice-settings' => 'Invoice Settings',
             'accounting-banking' => 'Accounting Banking',
             'accounting-link-bank' => 'Accounting Link Bank',
-            'api-connectors' => 'API Connectors'
+            'api-connectors' => 'API Connectors',
+            'esign' => 'eSign'
         ];  
 
         return $modules;

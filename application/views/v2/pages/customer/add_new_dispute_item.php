@@ -82,7 +82,7 @@
     margin: 0px;
 }
 .cb-list li{
-    display: block;
+    display: inline-block;
     width: 200px;
     margin: 13px;
 }
@@ -105,223 +105,219 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Add dispute item
+                            Add dispute item for customer <b><?= $customer->first_name .' '. $customer->last_name; ?></b>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                     <?php echo form_open_multipart('', ['class' => 'form-validate require-validation', 'id' => 'frm-create-dispute-item', 'autocomplete' => 'off']); ?>
-            <input type="hidden" name="cus_id" id="cid" value="<?= $cid; ?>">
-            <div class="row custom__border">
-                <div class="col-xl-12">
-                        <div>
-                            <div class="row align-items-center">
-                              <div class="col-sm-6">
-                                <h2 class="page-title" style="display:inline-block;">Add Item </h2>
-                                <span style="display:inline-block;color:#4a4a4a;font-size: 28px;margin-left: 9px;">(<i><?= $customer->first_name . ' ' . $customer->last_name; ?></i>)</span>
-                              </div>
-                              <div class="col-sm-6">
-                                  <div class="float-right d-none d-md-block">
-                                      <div class="dropdown">                                          
-                                          <a href="<?php echo base_url('customer/credit_industry/'.$cid) ?>" class="btn btn-primary"
-                                             aria-expanded="false">
-                                              <i class="mdi mdi-settings mr-2"></i> Go Back to Credit Industry List
-                                          </a>                                          
-                                      </div>
-                                  </div>
-                              </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 form-group">
-                                    <label for="job_name">Select Credited Bureaus</label>
-                                    <ul class="cb-list">
-                                    <?php foreach($creditBureaus as $cb){ ?>
-                                        <li>
-                                            <div class="form-check">
-                                              <input class="form-check-input cb-check" data-name="<?= $cb->name; ?>" data-id="<?= $cb->id; ?>" data-logo="<?= $cb->logo; ?>" type="checkbox" value="<?= $cb->id; ?>" name="creditedBureau[]" id="cb-<?= $cb->id; ?>" />
-                                              <label class="form-check-label" for="cb-<?= $cb->id; ?>">
-                                                <img style="width:97px;" src="<?= base_url('uploads/credit_bureaus/'.$cb->logo); ?>" alt="<?= $cb->name; ?>" />
-                                              </label>
-                                            </div>
-                                        </li>
-                                    <?php } ?>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label for="estimate_date">Creditor / Furnisher</label>
-                                    <select class="company-furnishers form-control" name="furnisher_id"></select>                                    
-                                    <a class="btn btn-sm btn-primary btn-add-creditor-furnisher" href="javascript:void(0);" style="margin-top:5px;">Add Creditor/Furnisher</a>
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="estimate_date">Account Numbers (opt)</label>
-                                    <select class="form-control" name="account_number_opt" id="account-number-type">
-                                        <option value="acc_num_same">Same for all bureaus</option>
-                                        <option value="acc_num_diff">Different for each bureau</option>
-                                    </select>
-
-                                    <div class="cb-account-number-all">
-                                        <input type="text" class="form-control" name="account_number_all" placeholder="Account Number">
-                                    </div>
-                                    <div class="cb-account-number-diff" style="display:none;">
-                                        <ul class="list-cb-account-numbers">
-                                            <?php foreach($creditBureaus as $cb){ ?>
-                                                <li class="cb-account-<?= $cb->id; ?>" style="display: none;">
-                                                    <label><?= $cb->name; ?></label><br />
-                                                    <input type="text" class="form-control" name="cb_account_number[<?= $cb->id; ?>]" placeholder="Account Number" />
-                                                </li>
-                                            <?php } ?>
+                    <?php echo form_open_multipart('', ['class' => 'form-validate require-validation', 'id' => 'frm-create-dispute-item', 'autocomplete' => 'off']); ?>
+                    <input type="hidden" name="cus_id" id="cid" value="<?= $cid; ?>">
+                    <div class="row custom__border">
+                        <div class="col-xl-12">
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label for="job_name">Select Credited Bureaus</label>
+                                        <ul class="cb-list">
+                                        <?php foreach($creditBureaus as $cb){ ?>
+                                            <li>
+                                                <div class="form-check">
+                                                    <input class="form-check-input cb-check" data-name="<?= $cb->name; ?>" data-id="<?= $cb->id; ?>" data-logo="<?= $cb->logo; ?>" type="checkbox" value="<?= $cb->id; ?>" name="creditedBureau[]" id="cb-<?= $cb->id; ?>" />
+                                                    <label class="form-check-label" for="cb-<?= $cb->id; ?>">
+                                                    <img style="width:97px;" src="<?= base_url('uploads/credit_bureaus/'.$cb->logo); ?>" alt="<?= $cb->name; ?>" />
+                                                    </label>
+                                                </div>
+                                            </li>
+                                        <?php } ?>
                                         </ul>
                                     </div>
-                                    <!-- <div class="cb-acccount-numbers-container">
-                                        <input type="text" class="form-control" name="account_number_all" placeholder="Account Number">
-                                    </div> -->
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="estimate_date">Reason</label>
-                                    <select class="company-reasons form-control" name="dispute_reason"></select>
-                                    <span style="font-size:13px;margin-top: 4px; margin-bottom: 4px;display: block;">(if you can't find an appropriate reason. choose "other information i would like to changed")</span><br />
-                                    <a href="javascript:void(0);" class="btn btn-sm btn-primary btn-manage-reasons">Manage Reasons</a>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 form-group grp-option-instructions">
-                                    <label for="estimate_date">Instructions</label>
-                                    <select class="company-instructions form-control" name="list_instruction"></select>
-                                    <a href="javascript:void(0);" class="btn btn-sm btn-primary btn-add-new-instruction">Add New Instructions</a>
-                                </div>
-                                <div class="col-md-4 form-group grp-add-instructions" style="display: none;">
-                                    <label for="estimate_date">Instructions</label>
-                                    <input type="text" class="form-control" name="new_instruction" id="new-instruction" style="margin-bottom: 10px;" />
-                                    <a href="javascript:void(0);" class="btn btn-sm btn-primary btn-list-instructions">Choose from list</a><br /><br />
-                                    <small style="display: block;margin-bottom: 5px;">(i.e: "This is not my account. Please remove")</small>
-                                    <div class="form-check">
-                                      <input class="form-check-input" type="checkbox" id="save-new-instruction" name="create_instruction" value="1">
-                                      <label class="form-check-label" for="save-new-instruction">
-                                        Save "explaination" for future use
-                                      </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">                                
-                                <div style="display: block; width: 100%;background-color: #32243d; color: #ffffff; ">
-                                    <h3 style="font-size: 15px; padding: 10px; display:inline-block; width: 30%;">OTHER FIELDS</h3>
-                                    <select class="opt-other-fields form-control" name="other_fields_type" style="width: 16%;float: right;margin-top: 6px !important; margin-right:10px !important;">
-                                        <option value="same">Same for all bureaus</option>
-                                        <option value="diff">Different for each bureau</option>
-                                    </select>
                                 </div>
 
-                                <div class="other-fields-group" style="width: 100%;">
-                                    <?php include_once('dispute_other_fields/group.php'); ?>
-                                </div>
-                                <div class="other-fields-individual" style="display: none; width: 100%;">
-                                    <?php include_once('dispute_other_fields/individual.php'); ?>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 form-group" style="margin-top: 20px !important;">
-                                    <button type="submit" class="btn btn-flat btn-primary btn-create-dispute-item">Save</button>
-                                    <a href="<?php echo url('customer/credit_industry/'.$cid) ?>" class="btn btn-primary">Cancel</a>
-                                </div>
-                            </div>
-                        </div>
-                </div>
-            </div>
-            <?php echo form_close(); ?>
-
-            <!-- Modal Create Creditor / Furnisher -->
-            <div class="modal fade bd-example-modal-md" id="modal-create-creditor-furnisher" tabindex="-1" role="dialog" aria-labelledby="modalDeleteWorkorderTypeTitle" aria-hidden="true">
-              <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-plus"></i> Add Creditor/Furnisher</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>     
-                    <?php echo form_open_multipart('', ['class' => 'form-validate require-validation', 'id' => 'frm-quick-add-furnisher', 'autocomplete' => 'off']); ?>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12 form-group" style="margin-bottom:8px !important;">
-                                <label for="">Creditor/Furnisher Name *</label>
-                                <input type="text" class="form-control" name="f_creditor_name" required="" />                                          
-                            </div>
-                            <div class="furnisher-other-info" style="display: none; padding:0px 18px;">
-                                <div class="row">
-                                    <div class="col-md-6 form-group">
-                                        <label for="f-address">Address</label>
-                                        <input type="text" class="form-control" name="f_address" id="f-address" placeholder=""/>
+                                <div class="row mt-4">
+                                    <div class="col-md-3 form-group">
+                                        <div class="d-flex justify-content-between">
+                                            <label for="estimate_date">Creditor / Furnisher</label>
+                                            <a class="nsm-button btn-small d-flex align-items-center btn-add-creditor-furnisher" href="javascript:void(0);">
+                                                <span class="bx bx-plus"></span>Add New Creditor/Furnisher
+                                            </a>
+                                        </div>
+                                        <select class="company-furnishers form-control" name="furnisher_id"></select>   
                                     </div>
+
+                                    
                                     <div class="col-md-4 form-group">
-                                        <label for="fa-city">City</label>
-                                        <input type="text" class="form-control" name="f_city" id="fa-city" placeholder=""/>
+                                        <div class="d-flex justify-content-between">
+                                            <label for="estimate_date">Reason</label>
+                                            <a class="nsm-button btn-small d-flex align-items-center btn-manage-reasons" href="javascript:void(0);">
+                                                <span class="bx bx-plus"></span>Manage Reasons
+                                            </a>
+
+                                        </div>
+                                        <select class="company-reasons form-control" name="dispute_reason"></select>
+                                        <span style="font-size:13px;margin-top: 4px; margin-bottom: 4px;display: block;">(if you can't find an appropriate reason. choose "other information i would like to changed")</span>
+                                    </div>
+
+                                    <div class="col-md-4 form-group grp-option-instructions">
+                                        <div class="d-flex justify-content-between">
+                                            <label for="estimate_date">Instructions</label>
+                                            <a class="nsm-button btn-small d-flex align-items-center btn-add-new-instruction" href="javascript:void(0);">
+                                                <span class="bx bx-plus"></span>Add New Instructions
+                                            </a>
+                                        </div>
+                                        <select class="company-instructions form-control" name="list_instruction"></select>
+
+                                        <div class="grp-add-instructions mt-4" style="display: none;">
+                                            <label for="estimate_date">Instructions</label>
+                                            <input type="text" class="form-control" name="new_instruction" id="new-instruction" style="margin-bottom: 10px;" />
+                                            <a href="javascript:void(0);" class="btn btn-sm btn-primary btn-list-instructions">Choose from list</a><br /><br />
+                                            <small style="display: block;margin-bottom: 5px;">(i.e: "This is not my account. Please remove")</small>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="save-new-instruction" name="create_instruction" value="1">
+                                                <label class="form-check-label" for="save-new-instruction">
+                                                Save "explaination" for future use
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="estimate_date">Account Numbers (opt)</label>
+                                        <select class="form-control" name="account_number_opt" id="account-number-type">
+                                            <option value="acc_num_same">Same for all bureaus</option>
+                                            <option value="acc_num_diff">Different for each bureau</option>
+                                        </select>
+
+                                        <div class="cb-account-number-all mt-2">
+                                            <input type="text" class="form-control" name="account_number_all" placeholder="Account Number">
+                                        </div>
+                                        <div class="cb-account-number-diff" style="display:none;">
+                                            <ul class="list-cb-account-numbers">
+                                                <?php foreach($creditBureaus as $cb){ ?>
+                                                    <li class="cb-account-<?= $cb->id; ?>" style="display: none;">
+                                                        <label><?= $cb->name; ?></label><br />
+                                                        <input type="text" class="form-control" name="cb_account_number[<?= $cb->id; ?>]" placeholder="Account Number" />
+                                                    </li>
+                                                <?php } ?>
+                                            </ul>
+                                        </div>
+                                    </div>                                                                      
+                                </div>
+                                <div class="row mt-5">                                
+                                    <div style="display: block; width: 100%;background-color: #32243d; color: #ffffff; ">
+                                        <h3 style="font-size: 15px; padding: 10px; display:inline-block; width: 30%;">OTHER FIELDS</h3>
+                                        <select class="opt-other-fields form-control" name="other_fields_type" style="width: 16%;float: right;margin-top: 6px !important; margin-right:10px !important;">
+                                            <option value="same">Same for all bureaus</option>
+                                            <option value="diff">Different for each bureau</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="other-fields-group" style="width: 100%;">
+                                        <?php include_once('dispute_other_fields/group.php'); ?>
+                                    </div>
+                                    <div class="other-fields-individual" style="display: none; width: 100%;">
+                                        <?php include_once('dispute_other_fields/individual.php'); ?>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-3 form-group">
-                                        <label for="f-state">State</label>
-                                        <input type="text" class="form-control" name="f_state" id="f-state" placeholder=""/>
-                                    </div>
-                                    <div class="col-md-3 form-group">
-                                        <label for="f-zip">Zip Code</label>
-                                        <input type="text" class="form-control" name="f_zipcode" id="f-zip" placeholder=""/>
-                                    </div>
-                                    <div class="col-md-6 form-group">
-                                        <label for="f-phone">Phone</label><br />
-                                        <input type="text" class="form-control" name="f_phone" id="f-phone" placeholder="" style="display:inline-block;width: 40%;" />
-                                        <input type="text" class="form-control" name="f_ext" id="" placeholder="Ext" style="display:inline-block; width: 25%;"/>
+                                    <div class="col-md-4 form-group" style="margin-top: 20px !important;">
+                                        <button type="submit" class="btn btn-flat btn-primary btn-create-dispute-item">Save</button>
+                                        <a href="<?php echo url('customer/credit_industry/'.$cid) ?>" class="btn btn-primary">Cancel</a>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 form-group">
-                                        <label for="f-note">Note</label>
-                                        <textarea class="form-control" name="f_note" id="f-note" style="height:100px;"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <a class="btn btn-primary btn-sm btn-add-furnisher-more-detail more" href="javascript:void(0);" style="margin-top:5px;margin-bottom: 10px;margin-left: 15px;">+ More detail (Optional)</a>
-                        </div>
-                    </div>
-                      <div class="modal-footer" style="margin-top:-2.5rem;">
-                          <button type="button" style="" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                          <button type="submit" class="btn btn-primary btn-quick-add-creditor-furnisher" name="action" value="create_appointment">Save</button>
                         </div>
                     </div>
                     <?php echo form_close(); ?>
-              </div>
-            </div>
 
-            <!-- Modal Manage Reasons -->
-            <div class="modal fade bd-example-modal-md" id="modal-manage-reasons" tabindex="-1" role="dialog" aria-labelledby="modalDeleteWorkorderTypeTitle" aria-hidden="true">
-              <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-list"></i> Manage Reason</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>                          
-                  <div class="modal-body">
-                    <a class="btn btn-md btn-primary btn-add-reason" href="javascript:void(0);" style="float: right;margin-bottom: 21px;"><i class="fa fa-plus"></i> Add New Reason</a>
-                    <table class="table table-striped" style="height: 300px; overflow-y: scroll;display: block;">
-                        <tr class="row-add-reason" style="display: none;">
-                            <td>
-                                <input type="text" class="form-control" name="new_reason" id="input-new-reason">
-                            </td>
-                            <td style="width:22%; text-align: right;">
-                                <a class="btn btn-sm btn-primary btn-create-reason" href="javascript:void(0);" style="display:inline-block;">Save</a>
-                                <a class="btn btn-sm btn-primary btn-delete-reaon" href="javascript:void(0);" style="display:inline-block;">Delete</a>
-                            </td>
-                        </tr>
-                        <tbody class="company-reasons-container"></tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
+                    <!-- Modal Create Creditor / Furnisher -->
+                    <div class="modal fade bd-example-modal-md" id="modal-create-creditor-furnisher" tabindex="-1" role="dialog" aria-labelledby="modalDeleteWorkorderTypeTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-plus"></i> Add Creditor/Furnisher</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>     
+                                <?php echo form_open_multipart('', ['class' => 'form-validate require-validation', 'id' => 'frm-quick-add-furnisher', 'autocomplete' => 'off']); ?>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12 form-group" style="margin-bottom:8px !important;">
+                                            <label for="">Creditor/Furnisher Name *</label>
+                                            <input type="text" class="form-control" name="f_creditor_name" required="" />                                          
+                                        </div>
+                                        <div class="furnisher-other-info" style="display: none; padding:0px 18px;">
+                                            <div class="row">
+                                                <div class="col-md-6 form-group">
+                                                    <label for="f-address">Address</label>
+                                                    <input type="text" class="form-control" name="f_address" id="f-address" placeholder=""/>
+                                                </div>
+                                                <div class="col-md-4 form-group">
+                                                    <label for="fa-city">City</label>
+                                                    <input type="text" class="form-control" name="f_city" id="fa-city" placeholder=""/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3 form-group">
+                                                    <label for="f-state">State</label>
+                                                    <input type="text" class="form-control" name="f_state" id="f-state" placeholder=""/>
+                                                </div>
+                                                <div class="col-md-3 form-group">
+                                                    <label for="f-zip">Zip Code</label>
+                                                    <input type="text" class="form-control" name="f_zipcode" id="f-zip" placeholder=""/>
+                                                </div>
+                                                <div class="col-md-6 form-group">
+                                                    <label for="f-phone">Phone</label><br />
+                                                    <input type="text" class="form-control" name="f_phone" id="f-phone" placeholder="" style="display:inline-block;width: 40%;" />
+                                                    <input type="text" class="form-control" name="f_ext" id="" placeholder="Ext" style="display:inline-block; width: 25%;"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 form-group">
+                                                    <label for="f-note">Note</label>
+                                                    <textarea class="form-control" name="f_note" id="f-note" style="height:100px;"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a class="btn btn-primary btn-sm btn-add-furnisher-more-detail more" href="javascript:void(0);" style="margin-top:5px;margin-bottom: 10px;margin-left: 15px;">+ More detail (Optional)</a>
+                                    </div>
+                                </div>
+                                <div class="modal-footer" style="margin-top:-2.5rem;">
+                                    <button type="button" style="" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary btn-quick-add-creditor-furnisher" name="action" value="create_appointment">Save</button>
+                                    </div>
+                                </div>
+                                <?php echo form_close(); ?>
+                        </div>
+                    </div>
+
+                    <!-- Modal Manage Reasons -->
+                    <div class="modal fade bd-example-modal-md" id="modal-manage-reasons" tabindex="-1" role="dialog" aria-labelledby="modalDeleteWorkorderTypeTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-list"></i> Manage Reason</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>                          
+                            <div class="modal-body">
+                                <a class="btn btn-md btn-primary btn-add-reason" href="javascript:void(0);" style="float: right;margin-bottom: 21px;"><i class="fa fa-plus"></i> Add New Reason</a>
+                                <table class="table table-striped" style="height: 300px; overflow-y: scroll;display: block;">
+                                    <tr class="row-add-reason" style="display: none;">
+                                        <td>
+                                            <input type="text" class="form-control" name="new_reason" id="input-new-reason">
+                                        </td>
+                                        <td style="width:22%; text-align: right;">
+                                            <a class="btn btn-sm btn-primary btn-create-reason" href="javascript:void(0);" style="display:inline-block;">Save</a>
+                                            <a class="btn btn-sm btn-primary btn-delete-reaon" href="javascript:void(0);" style="display:inline-block;">Delete</a>
+                                        </td>
+                                    </tr>
+                                    <tbody class="company-reasons-container"></tbody>
+                                </table>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -12110,4 +12110,44 @@ class Customer extends MY_Controller
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
+
+    public function ajax_customer_ledger()
+    {
+        $this->load->model('Payment_records_model');
+        $this->load->model('Invoice_model');
+        $this->load->model('AcsProfile_model');
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+        $cid        = $post['customer_id'];
+        $payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+        $invoices   = $this->Invoice_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+
+        $ledger = [];
+        foreach( $invoices as $invoice ){
+            $date = date("m/d/Y", strtotime($invoice->date_issued));
+            $ledger[$date][] = [
+                'id' => $invoice->id,
+                'type' => 'income',                
+                'date' => $date,
+                'description' => 'Issued invoice number ' . $invoice->invoice_number,
+                'amount' => $invoice->grand_total
+            ];
+
+            $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            
+            foreach( $payments as $p ){
+                $date = date("m/d/Y", strtotime($p->payment_date));
+                $ledger[$date][] = [
+                    'id' => $p->id,
+                    'type' => 'payment',          
+                    'date' => $date,      
+                    'description' => 'Payment for invoice number ' . $invoice->invoice_number,
+                    'amount' => $p->invoice_amount
+                ];
+            }
+        }
+
+        $this->page_data['ledger']    = $ledger;
+        $this->load->view('v2/pages/customer/dashboard/ajax_customer_ledger', $this->page_data);
+    }
 }

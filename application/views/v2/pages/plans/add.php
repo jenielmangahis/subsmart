@@ -137,6 +137,10 @@ label>input {
     width:38px;
     float:right;
 }
+#plan-item-list thead td, #estimate-items-table thead td {
+    background-color: #6a4a86;
+    color: #ffffff;
+}
 </style>
 
 <div class="row page-content g-0">
@@ -154,7 +158,7 @@ label>input {
                         <div class="col-12">
                             <div class="nsm-callout primary">
                                 <button><i class='bx bx-x'></i></button>
-                                Add New Company Plan.
+                                Add New Estimate Plan.
                             </div>
                         </div>
                     </div>
@@ -164,7 +168,7 @@ label>input {
     </div>
     <div class="row">
         <div class="col-12">
-          <?php echo form_open('plans/save', [ 'class' => 'form-validate' ]); ?>
+          <?php echo form_open('plans/save', ['class' => 'form-validate', 'id' => 'frm-create-plan']); ?>
                 <div class="nsm-card">
                     <div class="nsm-card-content">
                         <div class="col-md-12">
@@ -178,39 +182,38 @@ label>input {
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="form-group">
-                                            <label for="discount_fixed">Status</label><br />
+                                            <label for="discount_fixed">Is Enabled</label><br />
                                             <select name="status" class="groups-select form-control" >
-                                                <option value="1">Actived</option>
-                                                <option value="0">Deactived</option>
+                                                <option value="1">Yes</option>
+                                                <option value="0">No</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row" style="margin-top: 20px;">
-                                    <div class="col-sm-6">
-                                        <h5>Assign Items</h5>
-                                    </div>                                    
+                                <div class="row mt-3">                
                                     <div class="col-sm-12">
-                                        <table class="table table-hover">
+                                        <table class="nsm-table" id="plan-item-list">
                                             <input type="hidden" name="count" value="0" id="count">
-                                            <thead style="background-color:#E9E8EA;">
+                                            <thead>
                                               <tr>
-                                                  <th>Description</th>
-                                                  <th>Type</th>                                                  
-                                                  <th width="150px">Quantity</th>                                                  
-                                                  <th width="150px">Cost</th>
-                                                  <th class="hidden_mobile_view" width="150px">Discount</th>
-                                                  <th class="hidden_mobile_view" width="150px">Tax(7.5%)</th>
-                                                  <th class="hidden_mobile_view">Total</th>
-                                                  <th class="hidden_mobile_view"></th>
+                                                  <td data-name="Description">Description</td>
+                                                  <td data-name="Type">Type</td>                                                  
+                                                  <td data-name="Quantity">Quantity</td>                                                  
+                                                  <td data-name="Cost">Cost</td>
+                                                  <td data-name="Discount" class="hidden_mobile_view">Discount</td>
+                                                  <td data-name="Tax" class="hidden_mobile_view">Tax</td>
+                                                  <td data-name="Total" class="hidden_mobile_view" style="text-align:right;">Total</td>
+                                                  <td data-name="Manage" class="hidden_mobile_view"></td>
                                               </tr>
                                             </thead>                                            
                                             <tbody id="jobs_items_table_body"></tbody>
                                         </table>
-                                    </div>
-                                    <div class="col-12">
-                                        <a href="#" class="nsm-button primary small" id="add_another_old" data-bs-toggle="modal" data-bs-target="#item_list"><i class='bx bxs-plus-square'></i> Add Items</a>
-                                    </div>
+                                    </div>                                    
+                                </div>
+                                <div class="row mt-4">
+                                  <div class="col-12">
+                                      <a href="javascript:void(0);" class="nsm-button" id="btn-add-items">Add Items</a>
+                                  </div>
                                 </div>
                                 
                         </div>
@@ -234,13 +237,15 @@ label>input {
 
 <script>
   $(document).ready(function() {
-      var ITEMS_TABLE = $('#items_table').DataTable({
-          "ordering": false,
-      });
+    $('#estimate-items-table').nsmPagination({itemsPerPage:8});
+    $("#items_search_field").on("input", debounce(function() {
+        tableSearch($(this));
+    }, 1000));
 
-      $("#ITEM_CUSTOM_SEARCH").keyup(function() {
-          ITEMS_TABLE.search($(this).val()).draw()
-      });
+    $('#btn-add-items').on('click', function(){
+      $('#estimate-items-table').nsmPagination({itemsPerPage:8});
+      $('#item_list').modal('show');
+    });
 
      $('.select2').select2();
      //$('.form-validate').validate();
@@ -248,18 +253,6 @@ label>input {
        $('.check-select-p').attr('checked', $(this).is(':checked'));
      });
 
-     $('.table-DT').DataTable({
-       "ordering": false,
-     });
-     $('#modal_items_table_estimate').DataTable({
-       "autoWidth" : false,
-       "columnDefs": [
-        { width: 540, targets: 0 },
-        { width: 100, targets: 0 },
-        { width: 100, targets: 0 }
-      ],
-       "ordering": false,
-     });
 
     $(document).on('click', '.select_item2a', function(){     
       // taxRate();
@@ -318,16 +311,16 @@ label>input {
               var item_type_dropdown = '<select name="item_type[]" class="form-control"><option selected="selected" value="product">Product</option><option  value="service">Service</option><option value="fee">Fee</option></select>';
           }
           markup = '<tr id="row'+ idd +'">' +
-              "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"></div><input type=\"hidden\" name=\"itemid[]\" id=\"itemid\" class=\"itemid\" value='"+idd+"'><input type=\"hidden\" name=\"packageID[]\" value=\"0\"></td>\n" +
+              "<td width=\"30%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"></div><input type=\"hidden\" name=\"itemid[]\" id=\"itemid\" class=\"itemid\" value='"+idd+"'><input type=\"hidden\" name=\"packageID[]\" value=\"0\"></td>\n" +
               "<td width=\"20%\"><div class=\"dropdown-wrapper\">"+item_type_dropdown+"</div></td>\n" +
               "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+count+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter='"+count+"'  min=\"0\" class=\"form-control quantity mobile_qty \"></td>\n" +
               // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-              "<td width=\"10%\"><input data-itemid='"+idd+"' id='price_"+count+"' value='"+price+"'  type=\"number\" name=\"price[]\" data-counter='"+count+"' class=\"form-control price hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+count+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
+              "<td width=\"10%\"><input data-itemid='"+idd+"' id='price_"+count+"' value='"+price.toFixed(2)+"'  type=\"number\" step=\"any\" name=\"price[]\" data-counter='"+count+"' class=\"form-control price hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+count+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price.toFixed(2)+"</span></div></td>\n" +
               // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
               // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
               "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" value=\"0\" class=\"form-control discount\" data-counter='"+count+"' id='discount_"+count+"'></td>\n" +
               // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-              "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change\" name=\"tax[]\" data-counter='"+count+"' id='tax1_"+count+"' readonly min=\"0\" value='"+taxes_t+"'></td>\n" +
+              "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change\" name=\"tax[]\" data-counter='"+count+"' id='tax1_"+count+"' readonly min=\"0\" value='"+taxes_t+"'></td>\n" +
               "<td style=\"text-align: right\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+count+"' class=\"total_per_item\">"+total+
               // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
               "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+count+"' value='"+total+"'></td>" +
@@ -338,6 +331,47 @@ label>input {
           ;
         tableBody = $("#jobs_items_table_body");          
         tableBody.append(markup);
+    });
+
+    $('#frm-create-plan').on('submit', function(e){
+      e.preventDefault();
+
+      let _this = $(this);
+
+      var url = base_url + "plans/_create_estimate_plan";
+      _this.find("button[type=submit]").html("Saving");
+      _this.find("button[type=submit]").prop("disabled", true);
+
+      $.ajax({
+          type: 'POST',
+          url: url,
+          data: _this.serialize(),
+          dataType:"json",
+          success: function(result) {
+              if (result.is_success) {
+                  Swal.fire({
+                      title: 'Estimate Plan',
+                      text: "Plan was has been added successfully.",
+                      icon: 'success',
+                      showCancelButton: false,
+                      confirmButtonText: 'Okay'
+                  }).then((result) => {
+                      //if (result.value) {
+                          location.href= base_url + "plans";
+                      //}
+                  });
+              } else {
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      html: result.msg
+                  });
+              }                    
+
+              _this.find("button[type=submit]").html("Save");
+              _this.find("button[type=submit]").prop("disabled", false);
+          },
+      });
     });
   });
 </script>
