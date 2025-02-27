@@ -12138,7 +12138,8 @@ class Customer extends MY_Controller
                 'type' => 'income',                
                 'date' => $date,
                 'description' => 'Issued invoice number ' . $invoice->invoice_number,
-                'amount' => $invoice->grand_total
+                'amount' => $invoice->grand_total,
+                'late_fee' => $invoice->late_fee
             ];
 
             $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            

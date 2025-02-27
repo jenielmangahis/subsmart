@@ -22,11 +22,21 @@
                     <?php   
                         $income  = 0;
                         $payment = 0;
+                        $late_fee_income  = 0;
+                        $late_fee_payment = 0;
                         if( $ld['type'] == 'income' ){
                             $income = $ld['amount'];
+                            if($ld['late_fee']) {
+                                $income = $ld['amount'] - $ld['late_fee'];
+                            }
+                            $late_fee_income = $ld['late_fee'];
                             $total_income += $ld['amount'];
                         }else{
                             $payment = $ld['amount'];
+                            if($ld['late_fee']) {
+                                $payment = $ld['amount'] - $ld['late_fee'];
+                            }
+                            $late_fee_payment = $ld['late_fee'];
                             $total_payment += $ld['amount'];
                         }
                     ?>
@@ -37,6 +47,15 @@
                         <td style="text-align:right;">$<?= number_format($income, 2, '.', ','); ?></td>
                         <td style="text-align:right;">$<?= number_format($payment, 2, '.', ','); ?></td>
                     </tr>
+                    <?php if($ld['late_fee'] > 0) { ?>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td class="fw-bold nsm-text-primary">&nbsp;</td>
+                            <td class="nsm-text-primary" style="text-align:right;"><strong>Late Fee:</strong></td>
+                            <td style="text-align:right;">$<?= number_format($late_fee_income, 2, '.', ','); ?></td>
+                            <td style="text-align:right;">$<?= number_format($late_fee_payment, 2, '.', ','); ?></td>
+                        </tr>
+                    <?php } ?>
                 <?php $row++; ?>
                 <?php } ?>                            
             <?php } ?>
