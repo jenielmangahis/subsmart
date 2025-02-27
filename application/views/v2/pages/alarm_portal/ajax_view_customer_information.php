@@ -39,11 +39,11 @@
             <div class="col-sm-9"><p class="text-muted mb-0"><?= number_format($customer_info->servicePlanInfo->totalServicePrice,2,".",","); ?></p></div>
         </div>        
     </div>
-    <div class="nsm-card-header mt-2">
+    <!-- <div class="nsm-card-header mt-2">
         <div class="nsm-card-title">
             <span><i class="bx bx-fw bx-user"></i>Addon Information</span>            
         </div>
-    </div>
+    </div> -->
     <!-- <div class="nsm-card-content">
         <div class="row">
             <div class="col-sm-3"><p class="mb-0">Package</p></div>
@@ -54,7 +54,7 @@
 <div class="nsm-card primary">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span><i class="bx bx-fw bx-user"></i>Equipments</span>            
+            <span><i class='bx bx-fw bx-list-check'></i>Equipments</span>            
         </div>
     </div>
     <div class="nsm-card-content">
