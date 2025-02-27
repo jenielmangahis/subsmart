@@ -40,7 +40,7 @@ class AlarmApiPortal extends MY_Controller {
         $this->page_data['page']->title = 'Alarm API : Customers';
         $this->page_data['title']       = 'Alarm API : Customers';
 		$this->page_data['alarmCustomers'] = $alarmCustomers;
-		$this->load->view('v2/pages/alarm_api/customers', $this->page_data);
+		$this->load->view('v2/pages/alarm_portal/customers', $this->page_data);
 	}
 
     public function ajax_view_customer_information()
@@ -57,7 +57,7 @@ class AlarmApiPortal extends MY_Controller {
         $this->page_data['customer_info'] = $customer_info['customer'];
         $this->page_data['customer_equipments'] = $customer_equipments['data'];
         $this->page_data['customer_package'] = $customer_package['data'];
-        $this->load->view('v2/pages/alarm_api/ajax_view_customer_information', $this->page_data);
+        $this->load->view('v2/pages/alarm_portal/ajax_view_customer_information', $this->page_data);
     }
 
     public function ajax_customer_system_check()
@@ -72,7 +72,7 @@ class AlarmApiPortal extends MY_Controller {
         $system_check  = $alarmApi->customerSystemCheck($post['customer_id'], $token['token']);
         $this->page_data['customer_info'] = $customer_info['customer'];
         $this->page_data['system_check']  = $system_check['data'];
-        $this->load->view('v2/pages/alarm_api/ajax_customer_system_check', $this->page_data);
+        $this->load->view('v2/pages/alarm_portal/ajax_customer_system_check', $this->page_data);
     }
 
     public function ajax_import_customers()
