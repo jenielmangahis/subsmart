@@ -15,7 +15,7 @@
 <?php if(!isset($credit)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
 <?php else : ?>
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/delayed-credit/<?=$credit->id?>">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="<?php echo base_url(); ?>accounting/update-transaction/delayed-credit/<?=$credit->id?>">
 <?php endif; ?>
     <div id="delayedCreditModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
         <div class="modal-dialog">
