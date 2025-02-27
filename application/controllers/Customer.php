@@ -3333,7 +3333,9 @@ class Customer extends MY_Controller
         $this->load->model('CompanyReason_model');
 
         $is_success = false;
-        $msg = '';
+        $msg = 'Cannot save data';
+        $rid = 0;
+        $reason = '';
 
         $company_id = logged('company_id');
         $post = $this->input->post();
@@ -3346,14 +3348,19 @@ class Customer extends MY_Controller
                 'date_modified' => date('Y-m-d H:i:s'),
             ];
 
-            $this->CompanyReason_model->create($data);
+            $rid = $this->CompanyReason_model->createReason($data);
+            $reason = $post['company_reason'];
+
+            //Activity Logs
+            $activity_name = 'Company Reason : Created company reason ' . $post['company_reason']; 
+            createActivityLog($activity_name);
 
             $is_success = true;
-        } else {
-            $msg = 'Cannot save data';
+            $msg = '';
+
         }
 
-        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        $json_data = ['is_success' => $is_success, 'msg' => $msg, 'rid' => $rid, 'reason' => $reason];
         echo json_encode($json_data);
     }
 
@@ -12149,5 +12156,31 @@ class Customer extends MY_Controller
 
         $this->page_data['ledger']    = $ledger;
         $this->load->view('v2/pages/customer/dashboard/ajax_customer_ledger', $this->page_data);
+    }
+
+    public function ajax_delete_company_reason()
+    {
+        $this->load->model('CompanyReason_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $companyReason = $this->CompanyReason_model->getById($post['rid']);
+        if ($companyReason && $companyReason->company_id == $cid && $companyReason->company_id > 0 ) {
+            $this->CompanyReason_model->delete($companyReason->id);
+
+            //Activity Logs
+            $activity_name = 'Company Reason : Deleted company reason ' . $companyReason->reason; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 }

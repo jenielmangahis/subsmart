@@ -345,7 +345,7 @@
                                                                         <input class="form-check-input table-select" name="category_billable[]" type="checkbox" value="1">
                                                                     </div>
                                                                 </td>
-                                                                <td><input type="number" name="category_markup[]" class="nsm-field form-control" onchange="convertToDecimal(this)"></td>
+                                                                <td><input type="number" name="category_markup[]" class="nsm-field form-control text-end" onchange="convertToDecimal(this)"></td>
                                                                 <td>
                                                                     <div class="table-row-icon table-checkbox">
                                                                         <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1">

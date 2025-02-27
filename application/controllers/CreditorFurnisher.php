@@ -203,27 +203,41 @@ class CreditorFurnisher extends MY_Controller
 
         $cid  = logged('company_id');
         $post = $this->input->post();
+        $fid  = 0;
+        $name = '';
         
-        $data = [
-            'company_id' => $cid,
-            'name' => $post['f_creditor_name'],
-            'address' => $post['f_address'] != '' ? $post['f_address'] : '',
-            'city' => $post['f_city'] != '' ? $post['f_city'] : '',
-            'state' => $post['f_state'] != '' ? $post['f_state'] : '',
-            'zip_code' => $post['f_zipcode'] != '' ? $post['f_zipcode'] : '',
-            'phone' => $post['f_phone'] != '' ? $post['f_phone'] : '',
-            'ext' => $post['f_ext'] != '' ? $post['f_ext'] : '',
-            'account_type' => $post['f_account_type'] != '' ? $post['f_account_type'] : '',
-            'note' => $post['f_note'] != '' ? $post['note'] : '',
-            'date_created' => date("Y-m-d H:i:s"),
-            'date_modified' => date("Y-m-d H:i:s"),
-        ];
+        $isExists = $this->Furnisher_model->getByNameAndCompanyId($post['f_creditor_name'], $cid);
+        if( !$isExists ){
+            $data = [
+                'company_id' => $cid,
+                'name' => $post['f_creditor_name'],
+                'address' => $post['f_address'] != '' ? $post['f_address'] : '',
+                'city' => $post['f_city'] != '' ? $post['f_city'] : '',
+                'state' => $post['f_state'] != '' ? $post['f_state'] : '',
+                'zip_code' => $post['f_zipcode'] != '' ? $post['f_zipcode'] : '',
+                'phone' => $post['f_phone'] != '' ? $post['f_phone'] : '',
+                'ext' => $post['f_ext'] != '' ? $post['f_ext'] : '',
+                'account_type' => $post['f_account_type'] != '' ? $post['f_account_type'] : '',
+                'note' => $post['f_note'] != '' ? $post['note'] : '',
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s"),
+            ];
+    
+            $fid = $this->Furnisher_model->createFurnisher($data);   
+            $name = $post['f_creditor_name'];
+    
+            $is_success = 1;
+            $msg = '';
 
-        $this->Furnisher_model->create($data);   
+            //Activity Logs
+            $activity_name = 'Credit Industry : Created new credit industry ' . $post['f_creditor_name']; 
+            createActivityLog($activity_name);
 
-        $is_success = 1;
+        }else{
+            $msg = 'Creditor / Furnisher name already exists.';
+        }
 
-        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        $json_data = ['is_success' => $is_success, 'msg' => $msg, 'name' => $name, 'fid' => $fid];
         echo json_encode($json_data);
     }
 
