@@ -286,7 +286,7 @@
         function load_default_bill_method(){
             var prof_id = $('#prof_id').val();            
             if( prof_id > 0 ){
-                var c_type  = $('#default_bill_method').val();
+                var c_type  = $('#bill_method').val();
                 if (c_type === 'CC' || c_type === 'DC' || c_type === 'OCCP') {
                     hide_all();
                     card_show();

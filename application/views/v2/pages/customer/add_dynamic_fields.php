@@ -117,7 +117,7 @@
                             <div class="text-end mt-4">
                                 <button type="button" class="nsm-button primary btn-cancel">Cancel</button>
                                 <?php if(isset($profile_info)): ?>
-                                    <input type="hidden" name="customer_id" value="<?= $profile_info->prof_id; ?>"/>
+                                    <input type="hidden" name="customer_id" id="prof_id" value="<?= $profile_info->prof_id; ?>"/>
                                 <?php endif; ?>
                                 <button type="submit" class="nsm-button primary">
                                     <?= isset($profile_info) ? 'Save Changes' : 'Save'; ?>
