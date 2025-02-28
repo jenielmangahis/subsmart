@@ -1477,7 +1477,7 @@ class Customer_advance_model extends MY_Model
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id =', $company_id);  
         $this->db->where('CURDATE() >= DATE_SUB(acs_billing.next_billing_date, INTERVAL 14 DAY)');
-        $this->db->where('CURDATE() <= acs_billing.next_billing_date');   
+        $this->db->where('CURDATE() <= acs_billing.next_billing_date');    
 
         $query = $this->db->get();
 
