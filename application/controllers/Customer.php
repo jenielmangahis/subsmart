@@ -12184,4 +12184,15 @@ class Customer extends MY_Controller
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
+
+    public function download_statement_of_claims()
+    {
+        $this->load->library('pdf');
+
+        $post = $this->input->post();        
+        $filename = 'statement_of_claims';
+        $this->page_data['post'] = $post;     
+        //$this->load->view('v2/pages/customer/pdf/statement_of_claims', $this->page_data);   
+        $this->pdf->load_view('v2/pages/customer/pdf/statement_of_claims', $this->page_data, $filename, "P");
+    }
 }
