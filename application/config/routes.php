@@ -2027,6 +2027,7 @@ $route['customers/_delete_proposed_module'] = 'Customer/ajax_delete_proposed_mod
 $route['customers/_create_proposed_inverter'] = 'Customer/ajax_create_proposed_inverter';
 $route['customers/_update_proposed_inverter'] = 'Customer/ajax_update_proposed_inverter';
 $route['customers/_delete_proposed_inverter'] = 'Customer/ajax_delete_proposed_inverter';
+$route['customers/download_statement_of_claims'] = 'Customer/download_statement_of_claims';
 
 //Benchmark for Testing
 $route['benchmark/cron_customer_subscription'] = 'Benchmark/cron_customer_subscription';
