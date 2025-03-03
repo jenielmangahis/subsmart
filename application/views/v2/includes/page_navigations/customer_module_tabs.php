@@ -42,10 +42,10 @@
                 <span>Credit Industry</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Customer Ledger'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?= base_url('customer/ledger/'.$cus_id) ?>">
+        <li class="<?php if($page->title == 'Customer Payment List'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?= base_url('customer/payment_list/'.$cus_id) ?>">
                 <i class='bx bx-fw bx-dollar-circle'></i>
-                <span>Ledger</span>
+                <span>Payments</span>
             </a>
         </li>
         <li class="<?php if($page->title == 'Customer Invoice List'): echo 'active'; endif; ?>">
