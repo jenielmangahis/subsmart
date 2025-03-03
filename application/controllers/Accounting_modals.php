@@ -9192,7 +9192,7 @@ class Accounting_modals extends MY_Controller
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Please fill up form entries';
+            $return['message'] = validation_errors();
         } elseif( $data['total_amount'] <= 0 ){
             $return['data'] = null;
             $return['success'] = false;
@@ -21052,102 +21052,254 @@ class Accounting_modals extends MY_Controller
 
     private function update_delayed_credit($delayedCreditId, $data)
     {
-        $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($delayedCreditId);
+        $this->form_validation->set_rules('item[]', 'Item', 'required');
+        $this->form_validation->set_rules('customer', 'Customer', 'required');
 
-        $delayedCreditData = [
-            'customer_id' => $data['customer'],
-            'delayed_credit_date' => date("Y-m-d", strtotime($data['delayed_credit_date'])),
-            'memo' => $data['memo'],
-            'adjustment_name' => $data['adjustment_name'],
-            'adjustment_value' => $data['adjustment_value'],
-            'total_amount' => floatval(str_replace(',', '', $data['total_amount'])),
-            'subtotal' => floatval(str_replace(',', '', $data['subtotal'])),
-            'tax_total' => floatval(str_replace(',', '', $data['tax_total'])),
-            'discount_total' => floatval(str_replace(',', '', $data['discount_total'])),
-        ];
+        if(isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
 
-        $update = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $delayedCreditData);
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
 
-        if($update) {
-            $attachments = $this->accounting_attachments_model->get_attachments('Delayed Credit', $delayedCredit->id);
-            $tags = $this->tags_model->get_transaction_tags('Delayed Credit', $delayedCredit->id);
-
-            // OLD
-            if(count($attachments) > 0) {
-                foreach($attachments as $attachment) {
-                    if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
-                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Delayed Credit', 'attachment_id' => $attachment->id, 'linked_id' => $delayedCredit->id]);
-                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
                     }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
                 }
             }
+        } else {
+            $this->form_validation->set_rules('delayed_credit_date', 'Delayed credit date', 'required');
+        }
 
-            if(count($tags) > 0) {
-                foreach($tags as $key => $tag) {
-                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
-                        $this->tags_model->unlink_tag(['transaction_type' => 'Delayed Credit', 'tag_id' => $tag->id, 'transaction_id' => $delayedCredit->id]);
+        $return = [];
+        if ($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = validation_errors();
+        } elseif( $data['total_amount'] <= 0 ){
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Cannot save having 0 total amount.';
+        } elseif (!isset($data['item'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } elseif( $data['adjustment_value'] > 0 && $data['adjustment_name'] == ''){
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please specify adjustment name.';
+        } elseif( !isset($data['customer'])){
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please select customer.';
+        }else {
+
+            $delayedCredit = $this->accounting_delayed_credit_model->getDelayedCreditDetails($delayedCreditId);
+
+            $delayedCreditData = [
+                'customer_id' => $data['customer'],
+                'delayed_credit_date' => date("Y-m-d", strtotime($data['delayed_credit_date'])),
+                'memo' => $data['memo'],
+                'adjustment_name' => $data['adjustment_name'],
+                'adjustment_value' => $data['adjustment_value'],
+                'total_amount' => floatval(str_replace(',', '', $data['total_amount'])),
+                'subtotal' => floatval(str_replace(',', '', $data['subtotal'])),
+                'tax_total' => floatval(str_replace(',', '', $data['tax_total'])),
+                'discount_total' => floatval(str_replace(',', '', $data['discount_total'])),
+            ];
+    
+            $update = $this->accounting_delayed_credit_model->updateDelayedCredit($delayedCredit->id, $delayedCreditData);
+    
+            if($update) {
+
+
+                /**
+                 * Update recurring data - start
+                 */
+                
+                 if($data['recurring_type'] !== 'unscheduled') {
+                    $currentDate = date("m/d/Y");
+                    $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
+                    $every = $data['recurr_every'];
+    
+                    switch($data['recurring_interval']) {
+                        case 'daily' :
+                            $next = $startDate;
+                        break;
+                        case 'weekly' :
+                            $days = [
+                                'sunday',
+                                'monday',
+                                'tuesday',
+                                'wednesday',
+                                'thursday',
+                                'friday',
+                                'saturday'
+                            ];
+    
+                            $day = $data['recurring_day'];
+                            $dayNum = array_search($day, $days);
+                            $next = $startDate;
+    
+                            if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                do {
+                                    $next = date("m/d/Y", strtotime("$next +1 day"));
+                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                            }
+                        break;
+                        case 'monthly' :
+                            if($data['recurring_week'] === 'day') {
+                                $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                $next = date("m/$day/Y", strtotime($startDate));
+    
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                }
+                            } else {
+                                $week = $data['recurring_week'];
+                                $day = $data['recurring_day'];
+                                $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+    
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                }
+                            }
+                        break;
+                        case 'yearly' :
+                            $month = $data['recurring_month'];
+                            $day = $data['recurring_day'];
+                            $previous = date("$month/$day/Y", strtotime($startDate));
+                            $next = date("$month/$day/Y", strtotime($startDate));
+    
+                            if(strtotime($currentDate) > strtotime($next)) {
+                                $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                            }
+                        break;
+                    }
+                }            
+    
+                $recurringData = [
+                    'company_id' => logged('company_id'),
+                    'template_name' => $data['template_name'],
+                    'recurring_type' => $data['recurring_type'],
+                    'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                    'txn_type' => 'npcredit',
+                    'recurring_interval' => $data['recurring_interval'],
+                    'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                    'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                    'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                    'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
+                    'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
+                    'end_type' => $data['end_type'],
+                    'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                    'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                    'current_occurrence' => 0,
+                    'next_date' => date("Y-m-d", strtotime($next)),
+                    'status' => 1
+                ];       
+                $recurringUpdate = $this->accounting_recurring_transactions_model->updateRecurringTransactionByTxnId($delayedCreditId, $recurringData);
+                
+                /**
+                 * Update recurring data - end
+                 */                  
+
+
+                $attachments = $this->accounting_attachments_model->get_attachments('Delayed Credit', $delayedCredit->id);
+                $tags = $this->tags_model->get_transaction_tags('Delayed Credit', $delayedCredit->id);
+    
+                // OLD
+                if(count($attachments) > 0) {
+                    foreach($attachments as $attachment) {
+                        if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                            $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Delayed Credit', 'attachment_id' => $attachment->id, 'linked_id' => $delayedCredit->id]);
+                            $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                        }
                     }
                 }
-            }
-
-            // NEW
-            if (isset($data['attachments']) && is_array($data['attachments'])) {
-                $order = 1;
-                foreach ($data['attachments'] as $attachmentId) {
-                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
-                        return $v->id === $attachmentId;
-                    }, ARRAY_FILTER_USE_BOTH);
-
-                    if(count($link) > 0) {
-                        $attachmentData = [
-                            'type' => 'Delayed Credit',
-                            'attachment_id' => $attachmentId,
-                            'linked_id' => $delayedCredit->id,
-                            'order_no' => $order
-                        ];
-
-                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
-                    } else {
-                        $linkAttachmentData = [
-                            'type' => 'Delayed Credit',
-                            'attachment_id' => $attachmentId,
-                            'linked_id' => $delayedCredit->id,
+    
+                if(count($tags) > 0) {
+                    foreach($tags as $key => $tag) {
+                        if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                            $this->tags_model->unlink_tag(['transaction_type' => 'Delayed Credit', 'tag_id' => $tag->id, 'transaction_id' => $delayedCredit->id]);
+                        }
+                    }
+                }
+    
+                // NEW
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    $order = 1;
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                            return $v->id === $attachmentId;
+                        }, ARRAY_FILTER_USE_BOTH);
+    
+                        if(count($link) > 0) {
+                            $attachmentData = [
+                                'type' => 'Delayed Credit',
+                                'attachment_id' => $attachmentId,
+                                'linked_id' => $delayedCredit->id,
+                                'order_no' => $order
+                            ];
+    
+                            $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                        } else {
+                            $linkAttachmentData = [
+                                'type' => 'Delayed Credit',
+                                'attachment_id' => $attachmentId,
+                                'linked_id' => $delayedCredit->id,
+                                'order_no' => $order
+                            ];
+        
+                            $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                        }
+    
+                        $order++;
+                    }
+                }
+    
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $key => $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Delayed Credit',
+                            'transaction_id' => $delayedCredit->id,
+                            'tag_id' => $tagId,
                             'order_no' => $order
                         ];
     
-                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                        if($tags[$key] === null) {
+                            $linkTagId = $this->tags_model->link_tag($linkTagData);
+                        } else {
+                            $updateOrder = $this->tags_model->update_link($linkTagData);
+                        }
+    
+                        $order++;
                     }
-
-                    $order++;
                 }
+    
+                $this->update_customer_transaction_items('Delayed Credit', $delayedCredit->id, $data);
             }
-
-            if(isset($data['tags']) && is_array($data['tags'])) {
-                $order = 1;
-                foreach($data['tags'] as $key => $tagId) {
-                    $linkTagData = [
-                        'transaction_type' => 'Delayed Credit',
-                        'transaction_id' => $delayedCredit->id,
-                        'tag_id' => $tagId,
-                        'order_no' => $order
-                    ];
-
-                    if($tags[$key] === null) {
-                        $linkTagId = $this->tags_model->link_tag($linkTagData);
-                    } else {
-                        $updateOrder = $this->tags_model->update_link($linkTagData);
-                    }
-
-                    $order++;
-                }
-            }
-
-            $this->update_customer_transaction_items('Delayed Credit', $delayedCredit->id, $data);
+    
+            $return['data'] = $delayedCreditId;
+            $return['success'] = $update ? true : false;
+            $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';            
+            
         }
-
-        $return['data'] = $delayedCreditId;
-        $return['success'] = $update ? true : false;
-        $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
 
         return $return;
     }
