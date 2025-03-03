@@ -12138,7 +12138,8 @@ class Customer extends MY_Controller
                 'type' => 'income',                
                 'date' => $date,
                 'description' => 'Issued invoice number ' . $invoice->invoice_number,
-                'amount' => $invoice->grand_total
+                'amount' => $invoice->grand_total,
+                'late_fee' => $invoice->late_fee
             ];
 
             $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            
@@ -12182,5 +12183,16 @@ class Customer extends MY_Controller
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
+    }
+
+    public function download_statement_of_claims()
+    {
+        $this->load->library('pdf');
+
+        $post = $this->input->post();        
+        $filename = 'statement_of_claims';
+        $this->page_data['post'] = $post;     
+        //$this->load->view('v2/pages/customer/pdf/statement_of_claims', $this->page_data);   
+        $this->pdf->load_view('v2/pages/customer/pdf/statement_of_claims', $this->page_data, $filename, "P");
     }
 }

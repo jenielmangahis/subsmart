@@ -62,6 +62,14 @@
                 <span>Leads</span>
             </a>
         </li>
+        <?php if( in_array(logged('company_id'), adi_company_ids()) ) { ?>
+        <li class="<?php if($page->title == 'Alarm API : Customers'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('alarm_api/customers') ?>">
+            <i class='bx bx-list-ul'></i>
+                <span>Alarm API</span>
+            </a>
+        </li>
+        <?php } ?>
         <li class="<?php if($page->title == 'Sales Area' || $page->title == 'Lead Source' || $page->title == 'Lead Types' || $page->title == 'Rate Plans' || $page->title == 'Activation Fee' || $page->title == 'System Package Type' || $page->title == 'Headers' || $page->title == 'Financing Categories' || $page->title == 'Customer Status' || $page->title == 'Import Settings' || $page->title == 'Export Settings' || $page->title == 'Solar Lender Types' || $page->title == 'Solar System Size' || $page->title == 'Solar Proposed Modules' || $page->title == 'Form Settings'): echo 'active'; endif; ?>">
             <div class="dropdown" id="test_dropdown">
                 <a class="nsm-page-link dropdown-toggle" role="button" href="javascript:void(0);">
