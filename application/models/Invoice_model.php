@@ -973,10 +973,16 @@ class Invoice_model extends MY_Model
 
     public function getAllByCustomerIdAndCompanyId($customer_id, $company_id, $filter = [])
     {
-        $where = array(
-            'invoices.customer_id'      => $customer_id,
-            'invoices.view_flag'                => '0',
-        );
+        if($customer_id != 0) {
+            $where = array(
+                'invoices.customer_id' => $customer_id,
+                'invoices.view_flag'   => '0',
+            );
+        } else {
+            $where = array(
+                'invoices.view_flag' => '0',
+            );
+        }
 
         $this->db->select('invoices.*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');
         $this->db->from('invoices');

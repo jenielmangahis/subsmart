@@ -126,6 +126,7 @@ class Dashboard extends Widgets
         $this->load->model('widgets_model');
         $user_id = logged('id');
         $this->page_data['widgets'] = $this->widgets_model->getWidgetsList();
+
         $this->load->view('v2/widgets/add_widgets_details', $this->page_data);
     }
 
@@ -170,9 +171,9 @@ class Dashboard extends Widgets
             'assets/js/quick_launch.js',
         ]);
 
-        $user_id = logged('id');
+        $user_id   = logged('id');
         $companyId = logged('company_id');
-        $type = 0;
+        $type      = 0;
 
         $user_type = logged('user_type');
         $this->page_data['user_type'] = $user_type;
@@ -336,13 +337,10 @@ class Dashboard extends Widgets
         // $mmr = $this->AcsProfile_model->getCustomerMMR(logged('company_id'));
         // $this->page_data['acct_banks']=$this->accounting_bank_accounts->getAllBanks();
 
-    
         $this->page_data['widgets'] = $this->widgets_model->getWidgetsByCompanyId($companyId);
         $this->page_data['main_widgets'] = array_filter($this->page_data['widgets'], function ($widget) {
             return $widget->wu_is_main == true;
         });
-
-      
 
         $this->page_data['status_arr'] = $status_arr;
 
@@ -440,6 +438,46 @@ class Dashboard extends Widgets
 
         $this->page_data['open_invoices'] = $openInvoices;
         $this->page_data['currentOverdueInvoices'] = $this->widgets_model->getCurrentCompanyOverdueInvoices2();
+
+        /**
+         * Customer Ledger - Start
+         */
+        /*$this->load->model('Payment_records_model');
+        $cid        = 0;
+        $ledger_payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $companyId);
+        $ledger_invoices   = $this->invoice_model->getAllByCustomerIdAndCompanyId($cid, $companyId);
+
+        $customer_ledger = [];
+        foreach( $ledger_invoices as $ledger_invoice ){
+            $date = date("m/d/Y", strtotime($ledger_invoice->date_issued));
+            $customer_ledger[$date][] = [
+                'id' => $ledger_invoice->id,
+                'type' => 'income',                
+                'date' => $date,
+                'description' => 'Month rent ' . date('M Y', strtotime($ledger_invoice->due_date)),
+                'amount' => $ledger_invoice->grand_total,
+                'late_fee' => $ledger_invoice->late_fee
+            ];
+
+            $ledger_payments = $this->Payment_records_model->getAllByInvoiceId($ledger_invoice->id);            
+            foreach( $ledger_payments as $p ){
+                $date = date("m/d/Y", strtotime($p->payment_date));
+                $customer_ledger[$date][] = [
+                    'id' => $p->id,
+                    'type' => 'payment',          
+                    'date' => $date,      
+                    'description' => 'Month rent ' . date('M Y', strtotime($ledger_invoice->due_date)),
+                    'amount' => $p->invoice_amount
+                ];
+            }
+        }
+
+        $this->page_data['customerLedgers'] = $customer_ledger;  
+        */    
+        /**
+         * Customer Ledger - End
+         */  
+
         $company_id = logged('company_id');
         // Plaid
         $this->load->model('PlaidAccount_model');
@@ -2014,6 +2052,44 @@ class Dashboard extends Widgets
         $this->page_data['data'] = $post;
         return $this->load->view('v2/pages/dashboard/send_download_link_app_template', $this->page_data, true);
     }
+
+    public function ajax_customer_ledgers($customer_id)
+    {
+        $this->load->model('Payment_records_model');
+        $cid               = $customer_id;
+        $ledger_payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $companyId);
+        $ledger_invoices   = $this->invoice_model->getAllByCustomerIdAndCompanyId($cid, $companyId);
+
+        $customer_ledger = [];
+        foreach( $ledger_invoices as $ledger_invoice ){
+            $date = date("m/d/Y", strtotime($ledger_invoice->date_issued));
+            $customer_ledger[$date][] = [
+                'id' => $ledger_invoice->id,
+                'type' => 'income',                
+                'date' => $date,
+                'description' => 'Month rent ' . date('M Y', strtotime($ledger_invoice->due_date)),
+                'amount' => $ledger_invoice->grand_total,
+                'late_fee' => $ledger_invoice->late_fee
+            ];
+
+            $ledger_payments = $this->Payment_records_model->getAllByInvoiceId($ledger_invoice->id);            
+            foreach( $ledger_payments as $p ){
+                $date = date("m/d/Y", strtotime($p->payment_date));
+                $customer_ledger[$date][] = [
+                    'id' => $p->id,
+                    'type' => 'payment',          
+                    'date' => $date,      
+                    'description' => 'Month rent ' . date('M Y', strtotime($ledger_invoice->due_date)),
+                    'amount' => $p->invoice_amount
+                ];
+            }
+        }
+
+        $this->page_data['customerLedgers'] = $customer_ledger;         
+
+        $this->load->view('v2/widgets/accounting/ajax_ledger_table_list', $this->page_data);
+    }
+
 }
 
 /* End of file Dashboard.php */
