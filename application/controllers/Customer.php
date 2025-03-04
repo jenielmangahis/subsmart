@@ -12137,7 +12137,8 @@ class Customer extends MY_Controller
                 'id' => $invoice->id,
                 'type' => 'income',                
                 'date' => $date,
-                'description' => 'Issued invoice number ' . $invoice->invoice_number,
+                //'description' => 'Issued invoice number ' . $invoice->invoice_number,
+                'description' => 'Month rent ' . date('M Y', strtotime($invoice->due_date)),
                 'amount' => $invoice->grand_total,
                 'late_fee' => $invoice->late_fee
             ];
@@ -12149,7 +12150,8 @@ class Customer extends MY_Controller
                     'id' => $p->id,
                     'type' => 'payment',          
                     'date' => $date,      
-                    'description' => 'Payment for invoice number ' . $invoice->invoice_number,
+                    //'description' => 'Payment for invoice number ' . $invoice->invoice_number,
+                    'description' => 'Month rent ' . date('M Y', strtotime($invoice->due_date)),
                     'amount' => $p->invoice_amount
                 ];
             }

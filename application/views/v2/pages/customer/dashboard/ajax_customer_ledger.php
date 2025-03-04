@@ -51,7 +51,7 @@
                         <tr>
                             <td>&nbsp;</td>
                             <td class="fw-bold nsm-text-primary">&nbsp;</td>
-                            <td class="nsm-text-primary" style="text-align:right;"><strong>Late Fee:</strong></td>
+                            <td class="nsm-text-primary" style="text-align:right;"><strong>Interest Penalty:</strong></td>
                             <td style="text-align:right;">$<?= number_format($late_fee_income, 2, '.', ','); ?></td>
                             <td style="text-align:right;">$<?= number_format($late_fee_payment, 2, '.', ','); ?></td>
                         </tr>
@@ -60,7 +60,7 @@
                 <?php } ?>                            
             <?php } ?>
         <?php } ?>
-        <tr>
+            <tr>
                 <td colspan="3">TOTAL</td>
                 <td style="text-align:right;">$<?= number_format($total_income, 2, '.', ','); ?></td>
                 <td style="text-align:right;">$<?= number_format($total_payment, 2, '.', ','); ?></td>
@@ -75,6 +75,6 @@
 </div>
 <script>
     $(document).ready(function() {
-        $(".nsm-table").nsmPagination();
+        $(".nsm-table").nsmPagination({itemsPerPage:15});
     });
 </script>

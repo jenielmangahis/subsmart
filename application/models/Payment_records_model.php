@@ -37,7 +37,9 @@ class Payment_records_model extends MY_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('customer_id', $customer_id);
+        if($customer_id != 0) {
+            $this->db->where('customer_id', $customer_id);
+        }
         $this->db->where('company_id', $company_id);
         
         $query = $this->db->get();
