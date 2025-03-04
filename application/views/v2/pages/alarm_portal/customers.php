@@ -81,11 +81,11 @@
                         <?php if( !empty($alarmCustomers) ){ ?>
                             <?php foreach($alarmCustomers as $customer){ ?>
                                 <tr>
-                                    <td>
+                                    <td class="nsm-text-primary">
                                         <input class="form-check-input chk-row-select table-select" name="alarmCustomer[]" type="checkbox" value="<?= $customer->customerId; ?>">
                                     </td>
-                                    <td><div class="table-row-icon"><i class='bx bx-briefcase'></i></div></td>
-                                    <td><?= $customer->firstName . ' ' . $customer->lastName ?></td>
+                                    <td class="nsm-text-primary show"><div class="table-row-icon"><i class='bx bx-briefcase'></i></div></td>
+                                    <td class="nsm-text-primary show"><?= $customer->firstName . ' ' . $customer->lastName ?></td>
                                     <td><?= $customer->email; ?></td>
                                     <td><?= $customer->phoneNumber; ?></td>
                                     <td>
@@ -145,7 +145,7 @@
 
 <script type="text/javascript">
 $(function(){
-    $('.row-view').on('click', function(){
+    $(document).on('click', '.row-view', function(){
         var customer_id = $(this).attr('data-id');
         
         $('#modal-view-alarm-customer-info').modal('show');
@@ -287,7 +287,7 @@ $(function(){
         }
     });
 
-    $('.row-system-check').on('click', function(){
+    $(document).on('click', '.row-system-check', function(){
         var customer_id = $(this).attr('data-id');
         
         $('#modal-view-alarm-customer-system-check').modal('show');
