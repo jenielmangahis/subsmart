@@ -23,9 +23,7 @@ class JobTags_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
-
     
-
     public function getAllByCompanyId($company_id)
     {
 

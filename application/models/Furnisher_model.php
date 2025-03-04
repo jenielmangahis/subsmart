@@ -26,7 +26,7 @@ class Furnisher_model extends MY_Model
         if ( !empty($filters) ) {
             if ( $filters['search'] != '' ) {
                 $this->db->group_start();
-                $this->db->like('reason', $filters['search'], 'both');                
+                $this->db->like('name', $filters['search'], 'both');                
                 $this->db->group_end();
             }
         }
@@ -69,6 +69,13 @@ class Furnisher_model extends MY_Model
 
     public function deleteById($id){
         $this->db->delete($this->table, array('id' => $id));
+    }
+
+    public function createFurnisher($data)
+    {
+        $this->db->insert($this->table, $data);
+        $last_id = $this->db->insert_id();
+        return $last_id;
     }
 }
 
