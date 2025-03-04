@@ -1,5 +1,5 @@
 <div class="row">
-<div class="col-md-12 form-group mt-2" id="service-ticket-esign-template">                            
+<div class="col-md-12 form-group mt-2" id="quick-send-esign-template">                            
         <label for="esign-template-list"><b>Select Template</b></label>
         <select class="form-control nsm-field form-select" name="esign_template" id="customer-send-esign-template">
             <?php foreach($esignTemplates as $e){ ?>
@@ -17,7 +17,7 @@
 <script>
 $(function(){
     $('#customer-send-esign-template').select2({
-        dropdownParent: $("#modal-send-esign"),
+        dropdownParent: $("#quick-send-esign-template"),
     });
 });
 </script>
