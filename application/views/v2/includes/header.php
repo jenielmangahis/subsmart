@@ -658,7 +658,7 @@ if (is_null($image)) {
 
                     <!-- Customer Search -->
                     <div class="modal fade nsm-modal fade" id="modal-quick-customer-search" tabindex="-1" aria-labelledby="modal-customize-menuLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-md">
+                        <div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <span class="modal-title content-title" id=""><i class='bx bx-search'></i> Search Customer</span>
@@ -672,6 +672,24 @@ if (is_null($image)) {
                                     </div>
                                     </form>
                                     <div id="quick-customer-search-result-container"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick send esign to customer -->
+                    <div class="modal fade nsm-modal fade" id="modal-quick-send-esign" tabindex="-1" aria-labelledby="modal-quick-send-esign_label" aria-hidden="true">
+                        <div class="modal-dialog modal-md modal-dialog-centered">
+                            <input type="hidden" id="quick-customer-esign" value="" />
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="modal-title content-title" id="edit_cc_label">Send eSign : <span class="bold" id="modal-quick-send-esign-customer-name"></span></span>
+                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                </div>
+                                <div class="modal-body" id="modal-quick-send-esign-container"></div>
+                                <div class="modal-footer">
+                                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="nsm-button primary" id="btn-quick-customer-send-esign-template">Send</button>
                                 </div>
                             </div>
                         </div>
@@ -790,6 +808,47 @@ if (is_null($image)) {
 
                             $(document).on('click', '#left-nav-customer-search', function() {
                                 $('#modal-quick-customer-search').modal('show');
+                            });
+
+                            $(document).on('click', '#btn-quick-customer-send-esign-template', function(){
+                                var prof_id = $('#quick-customer-esign').val();
+                                var esign_template_id = $('#modal-quick-send-esign #customer-send-esign-template').val();
+                                var url = base_url + `eSign_v2/templatePrepare?id=${esign_template_id}&job_id=0&customer_id=${prof_id}`;
+
+                                window.open(
+                                    url,
+                                    '_blank'
+                                );
+
+                                $('#modal-send-esign').modal('hide');
+                            });
+
+                            $(document).on('click', '.btn-quick-customer-send-esign', function(){
+                                var prof_id = $(this).attr('data-id');
+                                var name = $(this).attr('data-name');
+
+                                $('#quick-customer-esign').val(prof_id);
+                                $('#modal-quick-send-esign-customer-name').text(name);
+                                $('#modal-quick-customer-search').modal('hide');
+                                $('#modal-quick-send-esign').modal('show');
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: base_url + "customer/_send_esign_form",
+                                    data: {prof_id:prof_id},
+                                    beforeSend: function(data) {
+                                        $("#modal-quick-send-esign-container").html('<span class="bx bx-loader bx-spin"></span>');
+                                    },
+                                    success: function(html) {
+                                        $("#modal-quick-send-esign-container").html(html);
+                                    },
+                                    complete: function() {
+
+                                    },
+                                    error: function(e) {
+                                        console.log(e);
+                                    }
+                                });
                             });
 
                             $(document).on('click', '#left-getting-started', function() {
