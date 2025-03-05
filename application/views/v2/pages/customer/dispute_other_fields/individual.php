@@ -1,11 +1,10 @@
 <?php foreach($creditBureaus as $cb){ ?>
-<div class="other-field-group-cb-container-<?= $cb->id; ?>">
-  <div class="cb-logo" style="display: block; padding:10px; background-color: #8c8c8c;width: 100%;margin-bottom: 25px;">
-      <img style="width:97px;" class="" src="<?= base_url('uploads/credit_bureaus/'.$cb->logo); ?>" alt="<?= $cb->name; ?>" />    
-  </div>
-  <div class="row" style="width:100%; margin-top: 20px;">
-    <div class="col-12">
-        
+<div class="other-field-group-cb-container-<?= $cb->id; ?> col-md-6 mt-4" style="display:none;">  
+  <div class="row" style="width:100%;">
+    <div class="col-md-12">
+        <div class="cb-logo" style="display: block; padding:10px; background-color: #dad1e0;width: 100%;margin-bottom: 25px;">
+            <img style="width:97px;" class="" src="<?= base_url('uploads/credit_bureaus/'.$cb->logo); ?>" alt="<?= $cb->name; ?>" />    
+        </div>
     </div>
     <div class="col-md-4 form-group">
         <label for="estimate_date">Status</label>
@@ -17,7 +16,7 @@
     </div>
     <div class="col-md-4 form-group">
         <label for="estimate_date">Date Filed</label>
-        <input type="text" class="form-control f-other-info-date" name="otherInfo[individual][<?= $cb->id; ?>][date_file]" value="<?= date("m/d/Y"); ?>"> 
+        <input type="date" class="form-control f-other-info-date" name="otherInfo[individual][<?= $cb->id; ?>][date_file]" value="<?= date("m/d/Y"); ?>"> 
     </div>
     <div class="col-md-4 form-group">
         <label for="estimate_date">High Balance</label>
@@ -43,7 +42,7 @@
   <div class="row" style="width:100%; margin-top: 20px;">
     <div class="col-md-4 form-group">
         <label for="estimate_date">Date Reported</label>
-        <input type="text" class="form-control f-other-info-date" name="otherInfo[individual][<?= $cb->id; ?>][date_reported]" value="<?= date("m/d/Y"); ?>"> 
+        <input type="date" class="form-control f-other-info-date" name="otherInfo[individual][<?= $cb->id; ?>][date_reported]" value="<?= date("m/d/Y"); ?>"> 
     </div>
     <div class="col-md-4 form-group">
         <label for="estimate_date">Account Status</label>

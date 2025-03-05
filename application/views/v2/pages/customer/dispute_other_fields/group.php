@@ -10,12 +10,6 @@
   margin: 10px;
 }
 </style>
-<ul class="other-fields-group-furnishers">
-<?php foreach($creditBureaus as $cb){ ?>
-    <li><img style="width:97px;display: none;" class="other-field-cb-logo-<?= $cb->id; ?>" src="<?= base_url('uploads/credit_bureaus/'.$cb->logo); ?>" alt="<?= $cb->name; ?>" /></li>
-<?php } ?>
-</ul>
-<br />
 <div class="row" style="width:100%; margin-top: 20px;">
   <div class="col-md-4 form-group">
       <label for="estimate_date">Status</label>
@@ -27,7 +21,7 @@
   </div>
   <div class="col-md-4 form-group">
       <label for="estimate_date">Date Filed</label>
-      <input type="text" class="form-control f-other-info-date" name="otherInfo[group][date_file]" value="<?= date("m/d/Y"); ?>"> 
+      <input type="date" class="form-control f-other-info-date" name="otherInfo[group][date_file]" value="<?= date("m/d/Y"); ?>"> 
   </div>
   <div class="col-md-4 form-group">
       <label for="estimate_date">High Balance</label>
@@ -53,7 +47,7 @@
 <div class="row" style="width:100%; margin-top: 20px;">
   <div class="col-md-4 form-group">
       <label for="estimate_date">Date Reported</label>
-      <input type="text" class="form-control f-other-info-date" name="otherInfo[group][date_reported]" value="<?= date("m/d/Y"); ?>"> 
+      <input type="date" class="form-control f-other-info-date" name="otherInfo[group][date_reported]" value="<?= date("m/d/Y"); ?>"> 
   </div>
   <div class="col-md-4 form-group">
       <label for="estimate_date">Account Status</label>

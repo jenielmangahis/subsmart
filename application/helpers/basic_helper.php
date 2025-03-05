@@ -504,13 +504,10 @@ if (!function_exists('is_logged')) {
  */
 
 if (!function_exists('logged')) {
-
-
     function logged($key = false)
-
     {
-
         $CI = &get_instance();
+        $CI->load->model('Clients_model');
 
         if (!is_logged())
 
@@ -518,14 +515,15 @@ if (!function_exists('logged')) {
 
 
         $logged = !empty($CI->session->userdata('login')) ? $CI->users_model->getById($CI->session->userdata('logged')['id']) : false;
-
-
+        
         if (!$logged) {
-
             $logged = $CI->users_model->getById(json_decode(get_cookie('logged'))->id);
         }
 
-        //print_r($logged);die;
+        if( $key == 'industry_type' && $logged ){
+            $industry = $CI->Clients_model->getById($logged->company_id);
+            $logged->industry_type = $industry ? $industry->industry_template_name : '';
+        }
 
         return (!$key) ? $logged : $logged->{$key};
     }

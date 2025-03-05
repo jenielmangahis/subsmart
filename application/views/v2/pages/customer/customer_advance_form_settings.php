@@ -28,8 +28,12 @@
                         <?php foreach( $formFields as $group_key => $fields ){ ?>
                             <?php 
                                 $is_hidden = false;
-                                if( ($group_key == 'alarm-information' || $group_key == 'solar-information') && ( !in_array(logged('company_id'), adi_company_ids()) ) ){ 
+                                if( ($group_key == 'solar-information') && ( !in_array(logged('company_id'), adi_company_ids()) ) ){ 
                                     $is_hidden = true;
+                                }
+
+                                if( ($group_key == 'alarm-information' && logged('industry_type') != 'Alarm Industry') ){                                     
+                                    $is_hidden = true;                                                
                                 }
                             ?>
                             <?php if( !$is_hidden ){ ?>

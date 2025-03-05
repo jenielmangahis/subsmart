@@ -3639,6 +3639,7 @@ class Customer extends MY_Controller
         $this->load->model('AcsSolarInfoProposedModule_model');
         $this->load->model('AcsSolarInfoSystemSize_model');
         $this->load->model('AcsSolarInfoLenderType_model');
+        $this->load->model('Clients_model');
 
         $this->hasAccessModule(9);
 
@@ -3849,6 +3850,8 @@ class Customer extends MY_Controller
         ]);
 
         $customerProperty = $this->AcsProperties_model->getByCustomerId($id);
+        $client           = $this->Clients_model->getById($company_id);
+        $company_industry = $client->industry_template_name;
         
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
@@ -3861,6 +3864,7 @@ class Customer extends MY_Controller
         $this->page_data['industryTypes'] = $this->IndustryType_model->getAll();
         $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
         $this->page_data['LEAD_SOURCE_OPTION'] = $this->customer_ad_model->getAllSettingsLeadSourceByCompanyId(logged('company_id'));
+        $this->page_data['company_industry']   = $company_industry;
         //$this->load->view('v2/pages/customer/add', $this->page_data);
         $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
@@ -12137,7 +12141,8 @@ class Customer extends MY_Controller
                 'id' => $invoice->id,
                 'type' => 'income',                
                 'date' => $date,
-                'description' => 'Issued invoice number ' . $invoice->invoice_number,
+                //'description' => 'Issued invoice number ' . $invoice->invoice_number,
+                'description' => 'Month rent ' . date('M Y', strtotime($invoice->due_date)),
                 'amount' => $invoice->grand_total,
                 'late_fee' => $invoice->late_fee
             ];
@@ -12149,7 +12154,8 @@ class Customer extends MY_Controller
                     'id' => $p->id,
                     'type' => 'payment',          
                     'date' => $date,      
-                    'description' => 'Payment for invoice number ' . $invoice->invoice_number,
+                    //'description' => 'Payment for invoice number ' . $invoice->invoice_number,
+                    'description' => 'Month rent ' . date('M Y', strtotime($invoice->due_date)),
                     'amount' => $p->invoice_amount
                 ];
             }

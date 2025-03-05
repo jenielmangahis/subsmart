@@ -97,7 +97,7 @@
                         </div>
                         <div class="col-md-4 customer-inputs">     
                             <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
-                                <?php if( isset($formGroups['alarm-information']['total_enabled']) ){ ?>             
+                                <?php if( isset($formGroups['alarm-information']['total_enabled']) && logged('industry_type') == 'Alarm Industry' ){ ?>             
                                     <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_alarm_info'); ?>
                                 <?php } ?>
                             <?php } ?>

@@ -17612,8 +17612,8 @@ class Accounting extends MY_Controller
 
         $filename = 'sales_and_return_tax';
         $this->page_data['company'] = [];     
-        $this->load->view('accounting/sales/pdf/sales_and_use_tax_return', $this->page_data);   
-        //$this->pdf->load_view('accounting/sales/pdf/sales_and_use_tax_return', $this->page_data, $filename, "L");
+        //$this->load->view('accounting/sales/pdf/sales_and_use_tax_return', $this->page_data);   
+        $this->pdf->load_view('accounting/sales/pdf/sales_and_use_tax_return', $this->page_data, $filename, "L");
     }
 }
 

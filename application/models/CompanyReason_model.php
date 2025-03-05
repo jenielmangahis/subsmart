@@ -51,6 +51,13 @@ class CompanyReason_model extends MY_Model
     public function deleteById($id){
         $this->db->delete($this->table, array('id' => $id));
     }
+
+    public function createReason($data)
+    {
+        $this->db->insert($this->table, $data);
+        $last_id = $this->db->insert_id();
+        return $last_id;
+    }
 }
 
 /* End of file CompanyReason_model.php */

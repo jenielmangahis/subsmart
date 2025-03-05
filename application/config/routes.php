@@ -1852,6 +1852,8 @@ $route['dashboard/_coupon_codes/(:any)?'] = 'Dashboard/ajax_coupon_codes/$1';
 
 $route['Dashboard/past_due_invoices'] = 'Dashboard/past_due_invoices';
 
+$route['dashboard/_customer_ledgers/(:any)?'] = 'Dashboard/ajax_customer_ledgers/$1';
+
 // Esign
 $route['esign_v2/_tags_sections'] = 'Esign_v2/ajax_company_tags_sections';
 $route['esign_v2/_create_tags'] = 'Esign_v2/ajax_create_tags';

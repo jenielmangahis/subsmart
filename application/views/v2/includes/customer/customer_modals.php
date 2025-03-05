@@ -700,7 +700,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="modal-send-esign" tabindex="-1" aria-labelledby="modal-send-esign_label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-md modal-dialog-centered">
         <input type="hidden" id="customer-esign" value="" />
         <div class="modal-content">
             <div class="modal-header">

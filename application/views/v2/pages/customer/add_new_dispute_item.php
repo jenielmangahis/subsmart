@@ -2,7 +2,9 @@
 <?php include viewPath('v2/includes/customer/customer_modals'); ?>
 <style>
 .list-cb-account-numbers{
-    margin-top: 10px;
+    margin:8px 0px;
+    list-style:none;
+    padding:0px;
 }
 .list-cb-account-numbers li{
     margin: 5px;
@@ -85,6 +87,15 @@
     display: inline-block;
     width: 200px;
     margin: 13px;
+    margin-left:0px;
+}
+.cb-list li .form-check{
+    background-color: #dad1e0;
+    padding: 10px;    
+}
+.cb-list li .form-check .cb-check{
+    margin-left: 0px;
+    margin-right: 7px;
 }
 </style>
 
@@ -116,7 +127,7 @@
                         <div class="col-xl-12">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
-                                        <label for="job_name">Select Credited Bureaus</label>
+                                        <label for="">Select Credited Bureaus</label>
                                         <ul class="cb-list">
                                         <?php foreach($creditBureaus as $cb){ ?>
                                             <li>
@@ -135,49 +146,49 @@
                                 <div class="row mt-4">
                                     <div class="col-md-3 form-group">
                                         <div class="d-flex justify-content-between">
-                                            <label for="estimate_date">Creditor / Furnisher</label>
+                                            <label for="select-company-furnishers">Creditor / Furnisher</label>
                                             <a class="nsm-button btn-small d-flex align-items-center btn-add-creditor-furnisher" href="javascript:void(0);">
                                                 <span class="bx bx-plus"></span>Add New Creditor/Furnisher
                                             </a>
                                         </div>
-                                        <select class="company-furnishers form-control" name="furnisher_id"></select>   
+                                        <select class="company-furnishers form-control" id="select-company-furnishers" name="furnisher_id" required=""></select>   
                                     </div>
 
                                     
                                     <div class="col-md-4 form-group">
                                         <div class="d-flex justify-content-between">
-                                            <label for="estimate_date">Reason</label>
+                                            <label for="company-reasons">Reason</label>
                                             <a class="nsm-button btn-small d-flex align-items-center btn-manage-reasons" href="javascript:void(0);">
                                                 <span class="bx bx-plus"></span>Manage Reasons
                                             </a>
 
                                         </div>
-                                        <select class="company-reasons form-control" name="dispute_reason"></select>
+                                        <select class="company-reasons form-control" id="company-reasons" name="dispute_reason" required=""></select>
                                         <span style="font-size:13px;margin-top: 4px; margin-bottom: 4px;display: block;">(if you can't find an appropriate reason. choose "other information i would like to changed")</span>
                                     </div>
 
                                     <div class="col-md-4 form-group grp-option-instructions">
                                         <div class="d-flex justify-content-between">
-                                            <label for="estimate_date">Instructions</label>
+                                            <label for="list-instructions">Instructions</label>
                                             <a class="nsm-button btn-small d-flex align-items-center btn-add-new-instruction" href="javascript:void(0);">
                                                 <span class="bx bx-plus"></span>Add New Instructions
                                             </a>
                                         </div>
-                                        <select class="company-instructions form-control" name="list_instruction"></select>
-
-                                        <div class="grp-add-instructions mt-4" style="display: none;">
-                                            <label for="estimate_date">Instructions</label>
-                                            <input type="text" class="form-control" name="new_instruction" id="new-instruction" style="margin-bottom: 10px;" />
-                                            <a href="javascript:void(0);" class="btn btn-sm btn-primary btn-list-instructions">Choose from list</a><br /><br />
-                                            <small style="display: block;margin-bottom: 5px;">(i.e: "This is not my account. Please remove")</small>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="save-new-instruction" name="create_instruction" value="1">
-                                                <label class="form-check-label" for="save-new-instruction">
-                                                Save "explaination" for future use
-                                                </label>
-                                            </div>
-                                        </div>
+                                        <select class="company-instructions form-control" id="list-instructions" name="list_instruction"></select>
                                     </div>  
+
+                                    <div class="col-md-4 form-group grp-add-instructions" style="display: none;">
+                                        <label for="save-new-instruction">Instructions</label>
+                                        <input type="text" class="form-control" name="new_instruction" id="new-instruction" style="margin-bottom: 10px;" />
+                                        <a href="javascript:void(0);" class="nsm-button btn-small btn-list-instructions">Choose from list</a><br /><br />
+                                        <small style="display: block;margin-bottom: 5px;">(i.e: "This is not my account. Please remove")</small>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="save-new-instruction" name="create_instruction" value="1">
+                                            <label class="form-check-label" for="save-new-instruction">
+                                            Save "explaination" for future use
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
@@ -200,28 +211,28 @@
                                                 <?php } ?>
                                             </ul>
                                         </div>
-                                    </div>                                                                      
+                                    </div> 
+                                    <div class="col-md-12 mt-4"><hr /></div>                                                                     
                                 </div>
-                                <div class="row mt-5">                                
-                                    <div style="display: block; width: 100%;background-color: #32243d; color: #ffffff; ">
-                                        <h3 style="font-size: 15px; padding: 10px; display:inline-block; width: 30%;">OTHER FIELDS</h3>
-                                        <select class="opt-other-fields form-control" name="other_fields_type" style="width: 16%;float: right;margin-top: 6px !important; margin-right:10px !important;">
+                                <div class="mt-5"> 
+                                    <div class="mb-4" style="display:block;margin-bottom:10px;">  
+                                        <select class="opt-other-fields form-control" name="other_fields_type" style="width:20%;float:right;">
                                             <option value="same">Same for all bureaus</option>
                                             <option value="diff">Different for each bureau</option>
                                         </select>
                                     </div>
-
+                                    <div style="clear:both;"></div>
                                     <div class="other-fields-group" style="width: 100%;">
                                         <?php include_once('dispute_other_fields/group.php'); ?>
                                     </div>
-                                    <div class="other-fields-individual" style="display: none; width: 100%;">
+                                    <div class="other-fields-individual row" style="display: none; width: 100%;">
                                         <?php include_once('dispute_other_fields/individual.php'); ?>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4 form-group" style="margin-top: 20px !important;">
-                                        <button type="submit" class="btn btn-flat btn-primary btn-create-dispute-item">Save</button>
-                                        <a href="<?php echo url('customer/credit_industry/'.$cid) ?>" class="btn btn-primary">Cancel</a>
+                                    <div class="col-md-4" style="margin-top: 20px !important;">
+                                        <button type="submit" class="nsm-button primary btn-create-dispute-item" style="margin-left:0px;">Save</button>
+                                        <a href="<?php echo url('customer/credit_industry/'.$cid) ?>" class="nsm-button primary">Cancel</a>
                                     </div>
                                 </div>
                         </div>
@@ -229,92 +240,85 @@
                     <?php echo form_close(); ?>
 
                     <!-- Modal Create Creditor / Furnisher -->
-                    <div class="modal fade bd-example-modal-md" id="modal-create-creditor-furnisher" tabindex="-1" role="dialog" aria-labelledby="modalDeleteWorkorderTypeTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal fade nsm-modal fade" id="modal-create-creditor-furnisher" data-bs-backdrop="static" tabindex="-1" aria-labelledby="modal-create-creditor-furnisher_modal_label" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">        
                             <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-plus"></i> Add Creditor/Furnisher</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>     
                                 <?php echo form_open_multipart('', ['class' => 'form-validate require-validation', 'id' => 'frm-quick-add-furnisher', 'autocomplete' => 'off']); ?>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12 form-group" style="margin-bottom:8px !important;">
-                                            <label for="">Creditor/Furnisher Name *</label>
-                                            <input type="text" class="form-control" name="f_creditor_name" required="" />                                          
-                                        </div>
-                                        <div class="furnisher-other-info" style="display: none; padding:0px 18px;">
-                                            <div class="row">
-                                                <div class="col-md-6 form-group">
-                                                    <label for="f-address">Address</label>
-                                                    <input type="text" class="form-control" name="f_address" id="f-address" placeholder=""/>
-                                                </div>
-                                                <div class="col-md-4 form-group">
-                                                    <label for="fa-city">City</label>
-                                                    <input type="text" class="form-control" name="f_city" id="fa-city" placeholder=""/>
-                                                </div>
+                                    <div class="modal-header">
+                                        <span class="modal-title content-title">Add Creditor/Furnisher</span>
+                                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                    </div>
+                                    <div class="modal-body">                    
+                                        <div class="row">
+                                            <div class="col-md-7 form-group">
+                                                <label for="">Creditor/Furnisher Name *</label>
+                                                <input type="text" class="form-control" name="f_creditor_name" required="" />                                          
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-3 form-group">
-                                                    <label for="f-state">State</label>
-                                                    <input type="text" class="form-control" name="f_state" id="f-state" placeholder=""/>
-                                                </div>
-                                                <div class="col-md-3 form-group">
-                                                    <label for="f-zip">Zip Code</label>
-                                                    <input type="text" class="form-control" name="f_zipcode" id="f-zip" placeholder=""/>
-                                                </div>
-                                                <div class="col-md-6 form-group">
-                                                    <label for="f-phone">Phone</label><br />
-                                                    <input type="text" class="form-control" name="f_phone" id="f-phone" placeholder="" style="display:inline-block;width: 40%;" />
-                                                    <input type="text" class="form-control" name="f_ext" id="" placeholder="Ext" style="display:inline-block; width: 25%;"/>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6 form-group">
-                                                    <label for="f-note">Note</label>
-                                                    <textarea class="form-control" name="f_note" id="f-note" style="height:100px;"></textarea>
-                                                </div>
+                                            <div class="col-md-5 form-group">
+                                                <label for="f-phone">Phone</label><br />
+                                                <input type="text" class="form-control phone_number" name="f_phone" id="f-phone" placeholder="" style="display:inline-block;width: 73%;" />
+                                                <input type="text" class="form-control" name="f_ext" id="" placeholder="Ext" style="display:inline-block; width: 25%;"/>                                        
                                             </div>
                                         </div>
-                                        <a class="btn btn-primary btn-sm btn-add-furnisher-more-detail more" href="javascript:void(0);" style="margin-top:5px;margin-bottom: 10px;margin-left: 15px;">+ More detail (Optional)</a>
+                                        <div class="row mt-2">
+                                            <div class="col-md-7 form-group">
+                                                <label for="f-address">Address</label>
+                                                <input type="text" class="form-control" name="f_address" id="f-address" placeholder=""/>
+                                            </div>
+                                            <div class="col-md-5 form-group">
+                                                <label for="fa-city">City</label>
+                                                <input type="text" class="form-control" name="f_city" id="fa-city" placeholder=""/>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-md-3 form-group">
+                                                <label for="f-state">State</label>
+                                                <input type="text" class="form-control" name="f_state" id="f-state" placeholder=""/>
+                                            </div>
+                                            <div class="col-md-3 form-group">
+                                                <label for="f-zip">Zip Code</label>
+                                                <input type="text" class="form-control" name="f_zipcode" id="f-zip" placeholder=""/>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-md-12 form-group">
+                                                <label for="f-note">Note</label>
+                                                <textarea class="form-control" name="f_note" id="f-note" style="height:100px;"></textarea>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="modal-footer" style="margin-top:-2.5rem;">
-                                    <button type="button" style="" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <button type="submit" class="btn btn-primary btn-quick-add-creditor-furnisher" name="action" value="create_appointment">Save</button>
+                                    <div class="modal-footer">
+                                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="nsm-button primary btn-quick-add-creditor-furnisher">Save</button>
                                     </div>
-                                </div>
                                 <?php echo form_close(); ?>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Modal Manage Reasons -->
-                    <div class="modal fade bd-example-modal-md" id="modal-manage-reasons" tabindex="-1" role="dialog" aria-labelledby="modalDeleteWorkorderTypeTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal fade nsm-modal fade" id="modal-manage-reasons" data-bs-backdrop="static" tabindex="-1" aria-labelledby="modal-manage-reasons_modal_label" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">        
                             <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-list"></i> Manage Reason</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>                          
-                            <div class="modal-body">
-                                <a class="btn btn-md btn-primary btn-add-reason" href="javascript:void(0);" style="float: right;margin-bottom: 21px;"><i class="fa fa-plus"></i> Add New Reason</a>
-                                <table class="table table-striped" style="height: 300px; overflow-y: scroll;display: block;">
-                                    <tr class="row-add-reason" style="display: none;">
-                                        <td>
-                                            <input type="text" class="form-control" name="new_reason" id="input-new-reason">
-                                        </td>
-                                        <td style="width:22%; text-align: right;">
-                                            <a class="btn btn-sm btn-primary btn-create-reason" href="javascript:void(0);" style="display:inline-block;">Save</a>
-                                            <a class="btn btn-sm btn-primary btn-delete-reaon" href="javascript:void(0);" style="display:inline-block;">Delete</a>
-                                        </td>
-                                    </tr>
-                                    <tbody class="company-reasons-container"></tbody>
-                                </table>
-                            </div>
+                                <div class="modal-header">
+                                    <span class="modal-title content-title">Manage Reasons</span>
+                                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                                </div>
+                                <div class="modal-body">                    
+                                    <a class="nsm-button primary btn-add-reason" href="javascript:void(0);" style="float: right;margin-bottom: 21px;"><i class="fa fa-plus"></i> Add New Reason</a>
+                                    <table class="table table-striped" style="height: 300px; overflow-y: scroll;display: block;">
+                                        <tr class="row-add-reason" style="display: none;">
+                                            <td>
+                                                <input type="text" class="form-control" name="new_reason" id="input-new-reason">
+                                            </td>
+                                            <td style="width:22%;">
+                                                <a class="nsm-button btn-small btn-create-reason" href="javascript:void(0);" style="display:inline-block;width:60px;text-align:center;">Save</a>
+                                                <a class="nsm-button btn-small btn-delete-reaon" href="javascript:void(0);" style="display:inline-block;width:60px;text-align:center;margin-top:3px;">Cancel</a>
+                                            </td>
+                                        </tr>
+                                        <tbody class="company-reasons-container"></tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -336,6 +340,20 @@
 <script>
   $(function () {    
 
+    $('.phone_number').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });
+
     $(document).on('click', '.btn-add-reason', function(){
         $('.row-add-reason').show();
     });
@@ -344,14 +362,25 @@
         $('.row-add-reason').hide();
     });
 
-    $(document).on('click', '#account-number-type', function(){
+    $(document).on('change', '#account-number-type', function(){
         var selected = $(this).val();
+        var bureaus = $('.cb-check:checked');
         if( selected == 'acc_num_same' ){
             $('.cb-account-number-all').show();
             $('.cb-account-number-diff').hide();
         }else{
-            $('.cb-account-number-all').hide();
-            $('.cb-account-number-diff').show();
+            if( bureaus.length > 0 ){
+                $('.cb-account-number-all').hide();
+                $('.cb-account-number-diff').show();
+            }else{
+                $(this).val('acc_num_same').trigger('change');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    confirmButtonColor: '#32243d',
+                    html: 'Please select bureau(s)'
+                });
+            }            
         }
     });
 
@@ -387,14 +416,26 @@
         $('#modal-create-creditor-furnisher').modal('show');
     });
 
-    $(document).on('click', '.opt-other-fields', function(){
-        var type = $(this).val();
+    $(document).on('change', '.opt-other-fields', function(){
+        var type   = $(this).val();
+        var bureaus = $('.cb-check:checked');
         if( type == 'same' ){
             $('.other-fields-group').show();
             $('.other-fields-individual').hide();
         }else{
-            $('.other-fields-group').hide();
-            $('.other-fields-individual').show();
+            if( bureaus.length > 0 ){
+                $('.other-fields-group').hide();
+                $('.other-fields-individual').show();
+            }else{
+                $(this).val('same').trigger('change');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    confirmButtonColor: '#32243d',
+                    html: 'Please select bureau(s)'
+                });
+            }
+            
         }
     });
 
@@ -470,7 +511,7 @@
           //templateSelection: formatRepoTagSelection
     });
 
-    $('.company-furnishers').select2({
+    $('#select-company-furnishers').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_furnishers',
             dataType: 'json',
@@ -514,7 +555,7 @@
       }
 
       var $container = $(
-        '<div><b>'+repo.text+'</b></div><div class="autocomplete-right"><small>'+repo.address+'</small></div>'
+        '<div>'+repo.text+'</div>'
       );
 
       return $container;
@@ -536,19 +577,15 @@
                  success: function(o)
                  {      
                     if( o.is_success == 1 ){
-                      Swal.fire({
-                          title: 'Great!',
-                          text: 'Company reason was successfully created.',
-                          icon: 'success',
-                          showCancelButton: false,
-                          confirmButtonColor: '#32243d',
-                          cancelButtonColor: '#d33',
-                          confirmButtonText: 'Ok'
-                      }).then((result) => {
-                          load_reason_list();
-                          $('#input-new-reason').val('');
-                          $('.row-add-reason').hide();
-                      });
+                        $('#modal-manage-reasons').modal('hide');
+                        $('#input-new-reason').val('');
+                        $('.row-add-reason').hide();
+
+                        $('#company-reasons').append($('<option>', {
+                            value: o.rid,
+                            text: o.reason
+                        }));
+                        $('#company-reasons').val(o.rid).trigger("change");
                     }else{
                         Swal.fire({
                             icon: 'error',
@@ -579,15 +616,21 @@
     });
 
     $(document).on('change', '.cb-check', function(){
-        var cb_id = $(this).attr('data-id');
+        var cb_id   = $(this).attr('data-id');
+        var bureaus = $('.cb-check:checked');
         if($(this).is(':checked')) {
             $('.cb-account-'+cb_id).show();
             $('.other-field-cb-logo-'+cb_id).show();
             $('.other-field-group-cb-container-'+cb_id).show();
         }else{
-            $('.cb-account-'+cb_id).hide();
-            $('.other-field-cb-logo-'+cb_id).hide();
-            $('.other-field-group-cb-container-'+cb_id).hide();
+            if( bureaus.length > 0 ){
+                $('.cb-account-'+cb_id).hide();
+                $('.other-field-cb-logo-'+cb_id).hide();
+                $('.other-field-group-cb-container-'+cb_id).hide();
+            }else{
+                $('.opt-other-fields').val('same').trigger('change');
+                $('#account-number-type').val('acc_num_same').trigger('change');
+            }
         }
     });
 
@@ -651,58 +694,93 @@
       }, 800);
     });
 
+    $(document).on('click', '.row-reason-delete', function(){
+        var rid = $(this).attr('data-id');
+        var url = base_url + 'customer/_delete_reason';
+        Swal.fire({
+            title: 'Delete Company Reason',
+            html: `Are you sure you want to delete selected company reason?`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    dataType: 'json',
+                    data: {rid:rid},
+                    success: function(o)
+                    {         
+                        if( o.is_success == 1 ){
+                            $(`#row-reason-${rid}`).remove();
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: o.msg,
+                            });
+                        } 
+                    },
+                    beforeSend: function(){
+                        
+                    }
+                });
+            }
+        });
+    });
+
     $('#frm-quick-add-furnisher').submit(function(e){
         e.preventDefault();
         var url = base_url + 'creditor_furnisher/_quick_save';
-        $(".btn-quick-add-creditor-furnisher").html('<span class="spinner-border spinner-border-sm m-0"></span>');
 
-        
-        var formData = new FormData($("#frm-quick-add-furnisher")[0]);   
-
-        setTimeout(function () {
-          $.ajax({
-             type: "POST",
-             url: url,
-             dataType: 'json',
-             contentType: false,
-             cache: false,
-             processData:false,
-             data: formData,
-             success: function(o)
-             {         
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: $("#frm-quick-add-furnisher").serialize(),
+            success: function(o)
+            {         
                 if( o.is_success == 1 ){
-                  $('#modal-create-creditor-furnisher').modal('hide');
-                  $('#frm-quick-add-furnisher')[0].reset();
-                  Swal.fire({
-                      title: 'Great!',
-                      text: 'Creditor / Furnisher was successfully created.',
-                      icon: 'success',
-                      showCancelButton: false,
-                      confirmButtonColor: '#32243d',
-                      cancelButtonColor: '#d33',
-                      confirmButtonText: 'Ok'
-                  }).then((result) => {
-                      
-                  });
+                    $('#modal-create-creditor-furnisher').modal('hide');
+                    $('#frm-quick-add-furnisher')[0].reset();
+
+                    $('#select-company-furnishers').append($('<option>', {
+                        value: o.fid,
+                        text: o.name
+                    }));                    
+                    $('#select-company-furnishers').val(o.fid).trigger("change");
+
+                    Swal.fire({
+                        title: 'Add Creditor / Furnisher',
+                        text: 'Data was successfully created.',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
                 }else{
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    confirmButtonColor: '#32243d',
-                    html: o.msg
-                  });
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: o.msg,
+                    });
                 } 
 
                 $(".btn-quick-add-creditor-furnisher").html('Save');
-             }
-          });
-        }, 800);
+            },
+            beforeSend: function(){
+                $(".btn-quick-add-creditor-furnisher").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+            }
+        });
     });
 
-    $('.f-other-info-date').datepicker({
-        format: 'mm/dd/yyyy',      
-        autoclose: true,
-    });
+    // $('.f-other-info-date').datepicker({
+    //     format: 'mm/dd/yyyy',      
+    //     autoclose: true,
+    // });
 
   });
 </script>

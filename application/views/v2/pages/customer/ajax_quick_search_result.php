@@ -22,8 +22,9 @@
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="javascript:void(0);" onclick="window.open('<?php echo base_url('customer/module/'.$customer->prof_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">Dashboard</a></li>   
-                                <li><a class="dropdown-item" href="javascript:void(0);" onclick="window.open('<?php echo base_url('customer/add_advance/'.$customer->prof_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">Edit</a></li>   
-                                <li><a class="dropdown-item" href="javascript:void(0);" onclick="window.open('<?php echo base_url('customer/preview/'.$customer->prof_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">Preview</a></li>   
+                                <li><a class="dropdown-item" href="javascript:void(0);" onclick="window.open('<?php echo base_url('customer/add_advance/'.$customer->prof_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">Edit</a></li>
+                                <li><a class="dropdown-item btn-quick-customer-send-esign" href="javascript:void(0);" data-name="<?= $customer->first_name . ' ' . $customer->last_name; ?>" data-id="<?= $customer->prof_id; ?>">Send eSign</a></li>      
+                                <!-- <li><a class="dropdown-item" href="javascript:void(0);" onclick="window.open('<?php echo base_url('customer/preview/'.$customer->prof_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">Preview</a></li>    -->
                             </ul>
                         </div>
                     </td>

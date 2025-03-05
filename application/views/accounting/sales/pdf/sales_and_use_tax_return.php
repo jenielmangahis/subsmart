@@ -1,6 +1,10 @@
 <style>
-
+html {
+    margin: 15px;
+}
 </style>
+<html>
+<body>
 <div style="font-family:arial;">
     <table style="width: 100%; margin-bottom: 10px;">
         <tbody>
@@ -574,6 +578,6 @@ tax.</p>
         
     </tbody>
 </table>
-
-
 </div>
+</body>
+</html>

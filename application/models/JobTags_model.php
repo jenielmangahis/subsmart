@@ -7,8 +7,6 @@ class JobTags_model extends MY_Model
 
     public function getAll($filters=array())
     {
-        $id = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
 
@@ -23,7 +21,7 @@ class JobTags_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
-
+    
     public function getAllByCompanyId($company_id)
     {
 
