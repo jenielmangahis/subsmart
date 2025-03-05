@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= base_url('assets/css/esign/docusign/docusign.css'); ?>">
     <script src="https://use.fontawesome.com/f61f458313.js"></script>
+    <!-- Sweet Alert -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/v2/sweetalert2.min.css'); ?>">
 
     <style>
         .signing input, .signing select{    
@@ -21,7 +23,13 @@
         }
 
         .signing__signaturePad {
-            position: relative;
+            /* position: relative; */
+            display:block;
+        }
+
+        .signing__signaturePad .button-container{
+            text-align:right;
+            margin-right: 15px;
         }
 
         .signing__signaturePad canvas {
@@ -188,8 +196,12 @@
                             <div class="signing__signaturePad">
                                 <canvas width="700" height="200"></canvas>
                                 <span class="canvas-placeholder">sign here</span>
-
-                                <a href="#" class="canvas-clear">Clear</a>
+                                <div class="button-container">
+                                    <a href="#" class="canvas-clear">Clear</a>
+                                    <?php if( $company_id > 0 && $debugging == 1 ){ ?>
+                                        <a href="javascript:void(0);" class="import-signature">Import</a>
+                                    <?php } ?>
+                                </div>
                             </div>
                         </div>
                         <div class="tab-pane" data-signature-type="type" id="type" role="tabpanel" aria-labelledby="type-tab">
@@ -231,6 +243,41 @@
         </div>
     </div>
 
+    <div class="modal" tabindex="-1" role="dialog" id="importSignatureModal">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Import Signature</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Entity</label>
+                                <select id="signature-entity" data-cid="<?= $company_id; ?>" class="form-control">
+                                    <option value="">- Select -</option>
+                                    <option value="user">User</option>
+                                    <option value="customer">Customer</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12" id="modal-quick-send-esign-container"></div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex">
+                        <button type="button" class="btn btn-primary d-flex align-items-center" id="signatureImportButton">Import</button>
+                        <button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="progressindicator" id="statusindicator">Saving...</div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -245,6 +292,8 @@
     <script src="<?= base_url('assets/js/esign/libs/pdf.js'); ?>"></script>
     <script src="<?= base_url('assets/js/esign/libs/pdf.worker.js'); ?>"></script>
     <script src="<?= base_url('assets/js/esign/docusign/input.autoresize.js'); ?>"></script>
+    <!-- Sweetalert JS -->
+    <script src="<?php echo base_url('assets/js/v2/sweetalert2.min.js'); ?>"></script>
 
     <script src="<?= base_url('assets/js/esign/docusign/o9n.js'); ?>"></script>
     <?php if( $load_mobile_signing_js == 1 ){ ?>
@@ -257,6 +306,7 @@
     <script type="text/javascript" src=" https://cdnjs.cloudflare.com/ajax/libs/FitText.js/1.2.0/jquery.fittext.min.js"></script>
     <script>
         var is_with_action = 0;
+        var base_url = '<?php echo base_url(); ?>';
         // $(window).bind('beforeunload', function(){
         //   if( is_with_action == 0 ){
         //     return 'Are you sure you want to leave?';
@@ -266,6 +316,48 @@
         $(document).on('click', '.btn', function(){
             is_with_action = 1;
         });
+
+        <?php if( $company_id > 0 ){ ?>
+            $(document).on('click', '.import-signature', function(){
+                $('#signatureModal').modal('hide');
+                $('#importSignatureModal').modal('show');
+            });
+
+            $('#signature-entity').on('change', function(){
+                var entity = $(this).val();
+                var cid    = $(this).attr('data-cid');
+                if( entity != '' ){
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "esign/_import_signature",
+                        data: {entity:entity,cid:cid},
+                        beforeSend: function(data) {
+                            $("#modal-quick-send-esign-container").html(`<div class="spinner-border" role="status"></div>`);
+                        },
+                        success: function(html) {
+                            $("#modal-quick-send-esign-container").html(html);
+                        },
+                        complete: function() {
+
+                        },
+                        error: function(e) {
+                            console.log(e);
+                        }
+                    });
+                }else{
+                    $("#modal-quick-send-esign-container").html('');
+                }
+            });
+
+            $(document).on('change', '#select-import-signature', function(){
+                var type = $(this).attr('data-type');
+                var signature = $(this).val();
+                var field_id = $('#importSignatureModal').attr('data-field-id');
+                if( field_id != '' ){
+
+                }
+            });
+        <?php } ?>
 
         window.addEventListener("DOMContentLoaded", () => {
             $("#signatureModal").on("shown.bs.modal", () => {                

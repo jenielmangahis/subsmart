@@ -15,11 +15,13 @@ function Signing(hash) {
   const $documentContainer = $(".signing__documentContainer");
 
   const $signatureModal = $("#signatureModal");
+  const $importSignatureModal = $("#importSignatureModal");
 
   const $signaturePad = $(".signing__signaturePad");
   const $signaturePadCanvas = $signaturePad.find("canvas");
   const $signaturePadClear = $signaturePad.find("a");
   const $signatureApplyButton = $("#signatureApplyButton");
+  const $signatureImportButton = $("#signatureImportButton");
 
   const $fontSelect = $("#fontSelect");
   const $signatureTextInput = $(".signing__signatureInput");
@@ -1211,6 +1213,8 @@ function Signing(hash) {
         $(".signing__signatureInput").val("");
 
         $signatureModal.attr("data-field-id", fieldId);
+        $importSignatureModal.attr("data-field-id", fieldId);
+        
         const fid = 0;
 
         $signatureModal.modal("show");
@@ -2291,6 +2295,66 @@ function Signing(hash) {
 
       $(this).attr("disabled", false);
       $(this).find(".spinner-border").addClass("d-none");
+    });
+
+    $signatureImportButton.on("click", async function () {
+      let fieldId = $importSignatureModal.attr("data-field-id");
+      let importSignatureDataUrl = document.getElementById("select-import-signature").value;
+      if( importSignatureDataUrl != '' ){
+        $(this).attr("disabled", true);
+        $(this).find(".spinner-border").removeClass("d-none");
+
+        const { data } = await storeFieldValue({
+          id: fieldId,
+          value: importSignatureDataUrl,
+        });
+      
+        let dateTime = moment();
+        const field = window.__esigndata.fields.find((f) => f.id === fieldId);
+      
+        if( data.created_at != '' ){
+          let { created_at } = data.created_at;
+          if (created_at) {
+            dateTime = moment(created_at);          
+          }
+        }else{
+          if (field && field.value) {
+            let { created_at } = field.value;
+            if (created_at) {
+              dateTime = moment(created_at);          
+            }
+          }
+        }
+              
+        const dateTimeFormatted = dateTime.format("MMMM Do YYYY, hh:mm A");
+      
+        const html = `
+          <div class="fillAndSign__signatureContainer">
+            <img class="fillAndSign__signatureDraw" src="${importSignatureDataUrl}"/>
+            ${
+              dateTimeFormatted
+                ? `<span class="fillAndSign__signatureTime">${dateTimeFormatted}</span>`
+                : ""
+            }
+          </div>
+        `;
+      
+        $element = createElementFromHTML(html);
+        $("[data-field-type=signature]:not(.not-owned)").html($element);
+      
+        $importSignatureModal.modal("hide");
+      
+        $(this).attr("disabled", false);
+        $(this).find(".spinner-border").addClass("d-none");
+      }else{
+        Swal.fire({
+          title: 'Error',
+          text: 'Please select signature',
+          icon: 'error',
+          showCancelButton: false,
+          confirmButtonText: 'Okay'
+        });
+      }
     });
 
     $signatureModal.on("hidden.bs.modal", function () {
