@@ -524,6 +524,11 @@ if (!function_exists('logged')) {
             }
         }
 
+        if( $key == 'industry_type' && $logged ){
+            $industry = $CI->Clients_model->getById($logged->company_id);
+            $logged->industry_type = $industry ? $industry->industry_template_name : '';
+        }
+
         return (!$key) ? $logged : $logged->{$key};
     }
 }
