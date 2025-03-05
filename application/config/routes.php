@@ -2080,3 +2080,5 @@ $route['alarm_api/_import_customers'] = 'AlarmApiPortal/ajax_import_customers';
 $route['alarm_api/_import_selected_customers'] = 'AlarmApiPortal/ajax_import_selected_customers';
 $route['alarm_api/_validate_import_customer'] = 'AlarmApiPortal/ajax_validate_import_customer';
 
+//Front eSign 
+$route['esign/_import_signature'] = 'DocuSign/ajax_import_signature';

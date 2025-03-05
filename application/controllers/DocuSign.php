@@ -24,6 +24,25 @@ class DocuSign extends MYF_Controller
         if($genPDF == "geratedpdf") {
             $this->load->view('esign/docusign/geratedpdf', $this->page_data);
         } else {
+            $decrypted = decrypt($this->input->get('hash', true), $this->password);
+            $decrypted = json_decode($decrypted, true);        
+            ['document_id' => $documentId] = $decrypted;
+
+            $this->db->where('id', $documentId);
+            $document = $this->db->get('user_docfile')->row();
+
+            $company_id = 0;
+            if( $document ){
+                $company_id = $document->company_id;
+            }
+
+            $debugging = 0;
+            if( $this->input->get('debug') ){
+                $debugging = 1;
+            }
+            
+            $this->page_data['debugging']  = $debugging;
+            $this->page_data['company_id'] = $company_id;
             $this->load->view('esign/docusign/signing', $this->page_data);
         }
     }
@@ -257,15 +276,15 @@ class DocuSign extends MYF_Controller
             $is_finished = 0;
         }      
 
-        if( $recipientIds ){
+        //if( $recipientIds ){
             $this->db->select('job_id');
             $this->db->where_in('user_docfile_recipient_id', $recipientIds);
             $jobId = $this->db->get('user_docfile_job_recipients')->row();
             //$jobId = is_null($jobId) ? null : $jobId->job_id;
             $jobId = $document->job_id;
-        }else{
-            $jobId = 0;
-        }      
+        //}else{
+            //$jobId = 0;
+        //}      
 
         $this->db->where('docfile_id', $documentId);
         $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
@@ -4313,6 +4332,23 @@ SQL;
         }, $results);
 
         exit(json_encode(['data' => $results]));
+    }
+
+    public function ajax_import_signature()
+    {
+        $this->load->model('CustomerSignature_model');
+        $this->load->model('UserSignature_model');
+
+        $post = $this->input->post();   
+        $post['cid'] = 31;
+        
+        $customerSignatures = $this->CustomerSignature_model->getAllByCompanyId($post['cid']);
+        $userSignatures     = $this->UserSignature_model->getAllByCompanyId($post['cid']);
+
+        $this->page_data['customerSignatures'] = $customerSignatures;        
+        $this->page_data['userSignatures']     = $userSignatures;    
+        $this->page_data['entity'] = $post['entity'];
+        $this->load->view('esign/docusign/ajax_import_signature', $this->page_data);
     }
 }
 
