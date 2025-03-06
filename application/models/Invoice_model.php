@@ -1885,6 +1885,36 @@ class Invoice_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getActiveInvoiceByInvoiceNumber($filter = array(), $invoice_number = "")
+    {
+        $this->db->select('invoices.*, jobs.job_number AS jobnumber, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');        
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id', 'LEFT');        
+        $this->db->join('jobs', 'invoices.job_id = jobs.id', 'LEFT'); 
+
+        $this->db->where('invoices.status !=', "Paid");
+        $this->db->where('invoices.status !=', "Draft");
+        $this->db->where('invoices.status !=', "");
+
+        $this->db->where('invoices.view_flag', 0);
+
+        if($invoice_number) {
+            $this->db->where('invoices.invoice_number =', $invoice_number); //for testing only    
+        }
+        
+        if (!empty($filter)) {
+            if (isset($filter['q'])) {
+                $this->db->like('acs_profile.first_name', $filter['q'], 'both');
+                $this->db->like('acs_profile.last_name', $filter['q'], 'both');
+            }
+        }
+
+        $this->db->order_by('invoices.id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file Invoice_model.php */

@@ -23,6 +23,8 @@ class DocuSign extends MYF_Controller
         $genPDF = $this->input->get('file');
         if($genPDF == "geratedpdf") {
             $this->load->view('esign/docusign/geratedpdf', $this->page_data);
+        } elseif( $this->input->get('is_finished') ){
+            $this->load->view('esign/docusign/signing', $this->page_data);
         } else {
             $decrypted = decrypt($this->input->get('hash', true), $this->password);
             $decrypted = json_decode($decrypted, true);        
@@ -36,7 +38,7 @@ class DocuSign extends MYF_Controller
                 $company_id = $document->company_id;
             }
 
-            $debugging = 0;
+            $debugging = 1;
             if( $this->input->get('debug') ){
                 $debugging = 1;
             }
@@ -4340,7 +4342,7 @@ SQL;
         $this->load->model('UserSignature_model');
 
         $post = $this->input->post();   
-        $post['cid'] = 31;
+        //$post['cid'] = 31;
         
         $customerSignatures = $this->CustomerSignature_model->getAllByCompanyId($post['cid']);
         $userSignatures     = $this->UserSignature_model->getAllByCompanyId($post['cid']);

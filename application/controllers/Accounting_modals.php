@@ -17325,7 +17325,7 @@ class Accounting_modals extends MY_Controller
                 $accTransacData = [
                     'account_id' => $creditAcc->id,
                     'transaction_type' => 'CC Credit',
-                    'transaction_id' => $creditId,
+                    'transaction_id' => $ccCreditId,
                     'amount' => floatval(str_replace(',', '', $data['total_amount'])),
                     'transaction_date' => date("Y-m-d", strtotime($data['payment_date'])),
                     'type' => 'increase'
