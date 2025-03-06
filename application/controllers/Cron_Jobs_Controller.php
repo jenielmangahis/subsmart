@@ -3149,7 +3149,7 @@ class Cron_Jobs_Controller extends CI_Controller
         //$activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsBetweenDates($date_from, $date_to);
         $activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsWithSub14Days($current_date);	  
 
-        $deduct_days_computation = 1;
+        $deduct_days_computation = 0;
 		foreach( $activeSubscriptions as $as ) {
             $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);    
 
@@ -3416,7 +3416,7 @@ class Cron_Jobs_Controller extends CI_Controller
 
         $activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsWithSub14Days($current_date);	  
 
-        $deduct_days_computation = 1;
+        $deduct_days_computation = 0;
 		foreach( $activeSubscriptions as $as ) {
             $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);  
             
@@ -4339,7 +4339,7 @@ class Cron_Jobs_Controller extends CI_Controller
          */
         $invoices_data = $this->invoice_model->getAllActiveInvoice();
 
-        $deduct_days_computation = 1;
+        $deduct_days_computation = 0;
         $total_records = 0;
         foreach($invoices_data as $inv_data) {
 
@@ -4415,7 +4415,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $is_force_update = $_GET['is_force_update'];
         $invoices_data = $this->invoice_model->getActiveInvoiceByInvoiceNumber([], $invoice_number);
 
-        $deduct_days_computation = 1;
+        $deduct_days_computation = 0;
         $total_records = 0;
         foreach($invoices_data as $inv_data) {
 
