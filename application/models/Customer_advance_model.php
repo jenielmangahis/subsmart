@@ -1495,4 +1495,15 @@ class Customer_advance_model extends MY_Model
         //return $query->result();        
         return $query->row();
     }    
+
+    public function getActiveSubscriptionsByProfId($prof_id) {
+
+        $this->db->select('acs_profile.*,acs_billing.*');
+        $this->db->from('acs_billing');
+        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_billing.fk_prof_id =', $prof_id);    
+
+        $query = $this->db->get();
+        return $query->result();   
+    }    
 }

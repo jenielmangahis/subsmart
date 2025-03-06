@@ -1487,7 +1487,7 @@ class Invoice extends MY_Controller
         $invoice = get_invoice_by_id($id);
 
         $total_late_days = 0;
-        $deduct_days = 1;
+        $deduct_days = 0;
         if (!empty($invoice)) {
             foreach ($invoice as $key => $value) {
                 if (is_serialized($value)) {
@@ -2458,7 +2458,7 @@ class Invoice extends MY_Controller
         $late_fee        = 0;
         $payment_fee     = 0;
         $total_late_fee_days = 0;
-        $deduct_days     = 1;
+        $deduct_days     = 0;
         
         if($invoice) {
             $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($invoice->customer_id);	
