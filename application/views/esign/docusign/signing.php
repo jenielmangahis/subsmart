@@ -169,8 +169,8 @@
         </div>
     </div>
 
-    <div class="modal" tabindex="-1" role="dialog" id="signatureModal">
-        <div class="modal-dialog modal-lg" role="document">
+    <div class="modal fade" tabindex="-1" role="dialog" id="signatureModal">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Create Signature</h5>
@@ -243,8 +243,8 @@
         </div>
     </div>
 
-    <div class="modal" tabindex="-1" role="dialog" id="importSignatureModal">
-        <div class="modal-dialog modal-md" role="document">
+    <div class="modal fade" tabindex="-1" role="dialog" id="importSignatureModal">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Import Signature</h5>
