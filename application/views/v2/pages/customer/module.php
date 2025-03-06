@@ -27,12 +27,17 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-4 grid-mb">
+                        <button type="button" id="btn-statement-of-claims" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#statement_claim_modal">
+                            <i class='bx bx-fw bx-spreadsheet'></i> Statement of Claim
+                        </button>
+                    </div>
+                    <div class="col-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container" style="width:450px;">
                             <select class="" id="search-customer"></select>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#manage_modules_modal">
+                            <button type="button" id="btn-manage-modules" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#manage_modules_modal">
                                 <i class='bx bx-fw bx-cog'></i>
                             </button>
                         </div>                        
@@ -177,6 +182,10 @@
 
             $('#modal-send-esign').modal('hide');
         });
+
+        // $('#frm-statement-claim').on('submit', function(e){
+        //     e.preventDefault();
+        // });
     });
 
     $(document).on('click', '.sent-messages', function(){
