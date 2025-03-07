@@ -19,11 +19,16 @@
             $status         = $aDisputeItems[$cb->id]->status;
         }
     ?>
-    <div class="other-field-group-cb-container-<?= $cb->id; ?>">
-        <div class="cb-logo" style="display: block; padding:10px; background-color: #8c8c8c;width: 100%;margin-bottom: 25px;height: 45px;">
+    <div class="other-field-group-cb-container-<?= $cb->id; ?> mb-2">
+        <div class="cb-logo" style="display: block; padding:10px; background-color: #dad1e0;width: 100%;margin-bottom: 25px;height: 45px;">
             <img style="width:97px;float: left;" class="" src="<?= base_url('uploads/credit_bureaus/'.$cb->logo); ?>" alt="<?= $cb->name; ?>" />
             <div class="form-check" style="float:right;">
-              <input class="form-check-input chk-cb-other-fields" data-id="<?= $cb->id; ?>" name="creditedBureau[]" type="checkbox" <?= $is_checked; ?> value="<?= $cb->id; ?>" id="cb-chk-<?= $cb->id; ?>">
+                <div class="form-check">
+                    <input class="form-check-input chk-cb-other-fields" data-id="<?= $cb->id; ?>" name="creditedBureau[]" type="checkbox" <?= $is_checked; ?> value="<?= $cb->id; ?>" id="cb-chk-<?= $cb->id; ?>">
+                    <label class="form-check-label" for="cb-chk-<?= $cb->id; ?>">Enable</label>
+                </div>
+              <label>
+              
             </div>
         </div>      
         <div class="cb-other-fields-<?= $cb->id; ?>" style="<?= $css_hidden; ?>">
@@ -38,7 +43,7 @@
                 </div>
                 <div class="col-md-4 form-group">
                     <label for="">Date Filed</label>
-                    <input type="text" class="form-control f-other-info-date" name="otherInfo[individual][<?= $cb->id; ?>][date_file]" value="<?= isset($other_fields['date_file']) ? date("m/d/Y", strtotime($other_fields['date_file']['value'])) : date("m/d/Y") ?>"> 
+                    <input type="date" class="form-control" name="otherInfo[individual][<?= $cb->id; ?>][date_file]" value="<?= isset($other_fields['date_file']) ? date("m/d/Y", strtotime($other_fields['date_file']['value'])) : date("m/d/Y") ?>"> 
                 </div>
                 <div class="col-md-4 form-group">
                     <label for="">High Balance</label>
@@ -68,7 +73,7 @@
                 </div>
                 <div class="col-md-4 form-group">
                     <label for="">Date Reported</label>
-                    <input type="text" class="form-control f-other-info-date" name="otherInfo[individual][<?= $cb->id; ?>][date_reported]" value="<?= isset($other_fields['date_reported']) ? date("m/d/Y", strtotime($other_fields['date_reported']['value'])) : date("m/d/Y") ?>"> 
+                    <input type="date" class="form-control" name="otherInfo[individual][<?= $cb->id; ?>][date_reported]" value="<?= isset($other_fields['date_reported']) ? date("m/d/Y", strtotime($other_fields['date_reported']['value'])) : date("m/d/Y") ?>"> 
                 </div>
                 <div class="col-md-4 form-group">
                     <label for="">Account Status</label>

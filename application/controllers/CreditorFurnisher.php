@@ -22,7 +22,7 @@ class CreditorFurnisher extends MY_Controller
 
         $creditorFurnishers = $this->Furnisher_model->getAllByCompanyId($cid);
 
-        $this->page_data['page']->title = 'Credit Industry';
+        $this->page_data['page']->title = 'Creditors / Furnishers';
         $this->page_data['page']->parent = 'Customers';
         $this->page_data['creditorFurnishers'] = $creditorFurnishers;
         

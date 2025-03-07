@@ -44,9 +44,9 @@
                     <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('customer/add_dispute_item/'.$cus_id) ?>'">
-                                <i class='bx bx-fw bx-briefcase'></i> Add New Item
+                                <i class='bx bx-plus'></i> Add New
                             </button>
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('creditor_furnisher/list') ?>'">
+                            <button type="button" class="nsm-button primary" id="btn-manage-creditors-furnishers">
                                 <i class='bx bx-fw bx-briefcase'></i> Manage Creditors / Furnishers
                             </button>
                         </div>
@@ -110,6 +110,23 @@
                     </table>
                 </div>
 
+                <div class="modal fade nsm-modal fade" id="modal-edit-dispute" tabindex="-1" aria-labelledby="modal-edit-dispute_label" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <form method="POST" id="frm-update-dispute" class="modal-content">
+                            <input type="hidden" name="did" id="editdid" />
+                            <div class="modal-header">
+                                <span class="modal-title content-title">Edit Dispute Item</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <div class="modal-body"></div>
+                            <div class="modal-footer">
+                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="nsm-button primary" id="btn-update-dispute">Save</button>
+                            </div>  
+                        </form>       
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -123,11 +140,54 @@
             tableSearch($(this));        
         }, 1000));
 
-        $(document).on('click', '.delete-dispute', function(){
-            var did = $(this).attr('data-id');            
+        $('#btn-manage-creditors-furnishers').on('click', function(){
+            var url = base_url + 'creditor_furnisher/list';
+            window.open(url, '_blank').focus();
+        });
 
-            $("#did").val(did);
-            $("#modal-delete-dispute").modal('show');
+        $(document).on('click', '.delete-dispute', function(){
+            var did  = $(this).attr('data-id');   
+            var cdid = "<?= $cid; ?>";         
+
+            Swal.fire({
+                title: 'Delete',
+                html: `Proceed with deleting selected item?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + 'customer/_delete_customer_dispute',
+                        dataType: 'json',
+                        data: {did:did,cdid:cdid},
+                        success: function(o){  
+                            if( o.is_success == 1 ){
+                                Swal.fire({
+                                    title: 'Delete',
+                                    text: 'Dispute was successfully deleted.',
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#32243d',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Ok'
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            }else{                      
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    confirmButtonColor: '#32243d',
+                                    html: o.msg
+                                });
+                            } 
+                        }
+                    });
+                }
+            });
         });
 
         $(document).on('click', '.edit-dispute', function(){
@@ -135,11 +195,8 @@
             var url = base_url + 'customer/_edit_dispute_item';
 
             $('#editdid').val(did);
-
             $('#modal-edit-dispute').modal('show');
-            $("#modal-edit-dispute .modal-body").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-
-            setTimeout(function () {
+            
             $.ajax({
                 type: "POST",
                 url: url,   
@@ -147,9 +204,12 @@
                 success: function(o)
                 {  
                     $("#modal-edit-dispute .modal-body").html(o);
+                },
+                beforeSend: function()
+                {
+                    $("#modal-edit-dispute .modal-body").html('<span class="spinner-border spinner-border-sm m-0"></span>');
                 }
             });
-            }, 800);
 
         });
 
@@ -202,11 +262,8 @@
         $("#frm-update-dispute").submit(function(e){
             e.preventDefault();
             var url = base_url + 'customer/_update_customer_dispute';
-            $(".btn-update-dispute").html('<span class="spinner-border spinner-border-sm m-0"></span>');
 
             var formData = new FormData($("#frm-update-dispute")[0]);   
-
-            setTimeout(function () {
             $.ajax({
                 type: "POST",
                 url: url,
@@ -221,7 +278,7 @@
 
                     if( o.is_success == 1 ){
                     Swal.fire({
-                        title: 'Great!',
+                        title: 'Edit Dispute Item',
                         text: 'Dispute was successfully updated.',
                         icon: 'success',
                         showCancelButton: false,
@@ -240,9 +297,11 @@
                     });
                     } 
                     $(".btn-update-dispute").html('Save');
+                },
+                beforeSend: function(){
+                    $(".btn-update-dispute").html('<span class="spinner-border spinner-border-sm m-0"></span>');
                 }
             });
-            }, 800);
         });
     });
 </script>

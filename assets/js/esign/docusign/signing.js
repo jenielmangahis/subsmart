@@ -2697,21 +2697,40 @@ function Signing(hash) {
         return;
       }
 
+      $(this).attr("disabled", false);
+      $(this).find(".spinner-border").addClass("d-none");
+      $(".loader-finishing").addClass("d-none");
+
       if (data.has_user) {
-        if (window.__esigndata.job_id) {
+        if (window.__esigndata.job_id && window.__esigndata.job_id > 0) {
           // redirect to job and auto-open payment modal
           //window.location = `${prefixURL}/job/new_job1/${window.__esigndata.job_id}?modal=approved`;
           window.location = `${prefixURL}/invoice/customer_view/${window.__esigndata.inv_id}`;
           return;
+        }else{
+          
+          let msg = 'An email was sent to the next recipient.';
+          if( window.__esigndata.is_finished == 1 ){
+            msg = 'eSign is now completed.'
+          }
+
+          Swal.fire({
+              title: 'eSign',
+              text: msg,
+              icon: 'success',
+              showCancelButton: false,
+              confirmButtonText: 'Okay'
+          }).then((result) => {
+              //if (result.value) {
+                window.location = `${prefixURL}/eSign_v2/manage?view=sent`;
+                //location.reload(); 
+              //}
+          });
         }
-
-        window.location = `${prefixURL}/eSign_v2/manage?view=sent`;
+      }else{
+        location.reload(); 
       }
-
-      $(this).attr("disabled", false);
-      $(this).find(".spinner-border").addClass("d-none");
-      $(".loader-finishing").addClass("d-none");
-      location.reload();
+      
       //markAsFinished();
     });
   }

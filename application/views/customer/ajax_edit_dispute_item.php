@@ -1,10 +1,10 @@
-<div class="row">
+<div class="row" id="modal-edit-dispute-item-container">
     <div class="col-md-6 form-group">
         <label for="dispute-date">Date</label>
         <?= $dispute->date_dispute; ?>
-        <input type="text" class="form-control default-datepicker" name="dispute_date" id="dispute-date" value="<?= date("Y-m-d",strtotime($dispute->date_dispute)); ?>">     
+        <input type="date" class="form-control default-datepicker" style="width:50%;" name="dispute_date" id="dispute-date" value="<?= date("Y-m-d",strtotime($dispute->date_dispute)); ?>">     
     </div>
-    <div class="col-md-6 form-group">
+    <div class="col-md-6 mt-2 form-group">
         <label for="cf-id">Creditor / Furnisher</label>
         <select class="company-furnishers form-control" id="cf-id" name="furnisher_id">
             <option selected="selected" value="<?= $dispute->furnisher_id; ?>"><?= $dispute->furnisher_name; ?></option>
@@ -18,7 +18,7 @@
             <option value="<?= $dispute->company_reason_id; ?>"><?= $dispute->reason; ?></option>
         </select>
     </div>
-    <div class="col-md-6 form-group">
+    <div class="col-md-6 mt-2 form-group">
         <label for="dispute-instruction">Instruction</label>
         <textarea class="form-control" name="dispute_instruction" id="dispute-instruction" style="height:150px;"><?= $dispute->instruction; ?></textarea>
     </div>
@@ -29,16 +29,6 @@
 </div>
 <script>
 $(function(){
-    $('.default-datepicker').datepicker({
-          format: 'yyyy-mm-dd',      
-          autoclose: true,
-    });
-
-    $('.f-other-info-date').datepicker({
-        format: 'mm/dd/yyyy',      
-        autoclose: true,
-    });
-
     $('.company-furnishers').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_furnishers',
@@ -72,6 +62,7 @@ $(function(){
           placeholder: 'Select Furnishers',
           minimumInputLength: 0,
           templateResult: formatFurnisher,
+          dropdownParent: $("#modal-edit-dispute-item-container"),
           //templateSelection: formatRepoTagSelection
     });
 
@@ -81,7 +72,7 @@ $(function(){
       }
 
       var $container = $(
-        '<div><b>'+repo.text+'</b></div><div class="autocomplete-right"><small>'+repo.address+'</small></div>'
+        '<div>'+repo.text+'</div></div>'
       );
 
       return $container;
@@ -117,6 +108,7 @@ $(function(){
             },*/
             cache: true
           },
+          dropdownParent: $("#modal-edit-dispute-item-container"),
           placeholder: 'Select Reason',
           minimumInputLength: 0,
           //templateResult: formatRepoTag,

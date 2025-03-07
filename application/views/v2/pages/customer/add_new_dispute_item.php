@@ -670,7 +670,7 @@
              {          
                 if( o.is_success == 1 ){
                   Swal.fire({
-                      title: 'Great!',
+                      title: 'Create Dispute Item',
                       text: 'Dispute item was successfully created.',
                       icon: 'success',
                       showCancelButton: false,

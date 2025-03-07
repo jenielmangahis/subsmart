@@ -2906,13 +2906,16 @@ class Customer extends MY_Controller
 
         $jobs = $this->Jobs_model->getAllJobsByCustomerId($cid);
         $customer = $this->AcsProfile_model->getByProfId($cid);
+        if( $customer && $customer->company_id == $company_id ){
+            $this->page_data['cust_active_tab'] = 'jobs';
+            $this->page_data['cus_id'] = $cid;
+            $this->page_data['jobs'] = $jobs;
+            $this->page_data['customer'] = $customer;
 
-        $this->page_data['cust_active_tab'] = 'jobs';
-        $this->page_data['cus_id'] = $cid;
-        $this->page_data['jobs'] = $jobs;
-        $this->page_data['customer'] = $customer;
-
-        $this->load->view('customer/jobs_list', $this->page_data);
+            $this->load->view('customer/jobs_list', $this->page_data);
+        }else{
+            redirect('customer');
+        }
     }
 
     public function estimates_list_old($cid)
@@ -2958,15 +2961,18 @@ class Customer extends MY_Controller
         $company_id = logged('company_id');
         $invoices = $this->Invoice_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
         $customer = $this->AcsProfile_model->getByProfId($cid);
+        if( $customer && $customer->company_id == $company_id ){
+            $this->page_data['page']->title = 'Customer Invoice List';
+            $this->page_data['page']->parent = 'Customers';
+            $this->page_data['cust_active_tab'] = 'invoices';
+            $this->page_data['cus_id'] = $cid;
+            $this->page_data['invoices'] = $invoices;
+            $this->page_data['customer'] = $customer;
 
-        $this->page_data['page']->title = 'Customer Invoice List';
-        $this->page_data['page']->parent = 'Customers';
-        $this->page_data['cust_active_tab'] = 'invoices';
-        $this->page_data['cus_id'] = $cid;
-        $this->page_data['invoices'] = $invoices;
-        $this->page_data['customer'] = $customer;
-
-        $this->load->view('v2/pages/customer/dashboard/invoice_list', $this->page_data);
+            $this->load->view('v2/pages/customer/dashboard/invoice_list', $this->page_data);
+        }else{
+            redirect('customer');
+        }
     }
 
     public function job_list($cid)
@@ -3063,33 +3069,37 @@ class Customer extends MY_Controller
         $this->load->model('Tickets_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('Users_model');
-
+        
         $company_id  = logged('company_id');
         $filters[]   = ['field' => 'tickets.is_archived', 'value' => 0];
         $filters[]   = ['field' => 'tickets.customer_id', 'value' => $cid];
         $tickets     = $this->Tickets_model->getAllByCompanyId($company_id, $filters);
         $customer    = $this->AcsProfile_model->getByProfId($cid);
-
-        foreach($tickets as $t){            
-            $tech = unserialize($t->technicians);
-            $assigned_tech = [];
-            if( $tech ){
-                foreach($tech as $eid){
-                    $user = $this->Users_model->getUserByID($eid);
-                    if( $user ){
-                        $assigned_tech[] = ['id' => $user->id, 'first_name' => $user->FName, 'last_name' => $user->LName, 'image' => $user->profile_img];
-                    }
-                }
-            }      
-            $t->assigned_tech = $assigned_tech;
-        }
         
-        $this->page_data['page']->title = 'Customer Service Ticket List';
-        $this->page_data['page']->parent = 'Customers';
-        $this->page_data['cus_id'] = $cid;
-        $this->page_data['tickets'] = $tickets;
-        $this->page_data['customer'] = $customer;
-        $this->load->view('v2/pages/customer/dashboard/service_ticket_list', $this->page_data);
+        if( $customer && $customer->company_id == $company_id ){
+            foreach($tickets as $t){            
+                $tech = unserialize($t->technicians);
+                $assigned_tech = [];
+                if( $tech ){
+                    foreach($tech as $eid){
+                        $user = $this->Users_model->getUserByID($eid);
+                        if( $user ){
+                            $assigned_tech[] = ['id' => $user->id, 'first_name' => $user->FName, 'last_name' => $user->LName, 'image' => $user->profile_img];
+                        }
+                    }
+                }      
+                $t->assigned_tech = $assigned_tech;
+            }
+            
+            $this->page_data['page']->title = 'Customer Service Ticket List';
+            $this->page_data['page']->parent = 'Customers';
+            $this->page_data['cus_id'] = $cid;
+            $this->page_data['tickets'] = $tickets;
+            $this->page_data['customer'] = $customer;
+            $this->load->view('v2/pages/customer/dashboard/service_ticket_list', $this->page_data);
+        }else{
+            redirect('customer');
+        }
     }
 
     public function estimate_list($cid)
@@ -3097,17 +3107,20 @@ class Customer extends MY_Controller
         $this->load->model('Estimate_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('Users_model');
-
+        
         $company_id = logged('company_id');
         $estimates  = $this->Estimate_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
         $customer   = $this->AcsProfile_model->getByProfId($cid);
-
-        $this->page_data['page']->title  = 'Customer Estimate List';
-        $this->page_data['page']->parent = 'Customers';
-        $this->page_data['cus_id']      = $cid;
-        $this->page_data['estimates']   = $estimates;
-        $this->page_data['customer']    = $customer;
-        $this->load->view('v2/pages/customer/dashboard/estimate_list', $this->page_data);
+        if( $customer && $customer->company_id == $company_id ){
+            $this->page_data['page']->title  = 'Customer Estimate List';
+            $this->page_data['page']->parent = 'Customers';
+            $this->page_data['cus_id']      = $cid;
+            $this->page_data['estimates']   = $estimates;
+            $this->page_data['customer']    = $customer;
+            $this->load->view('v2/pages/customer/dashboard/estimate_list', $this->page_data);
+        }else{
+            redirect('customer');
+        }
     }
 
     public function esign_list($cid)
@@ -3157,10 +3170,37 @@ class Customer extends MY_Controller
         $this->load->model('AcsProfile_model');
         $this->load->model('Tickets_model');
 
-        $filter = 'all';
-        if ($this->input->get('filter')) {
-            $filter = $this->input->get('filter');
-            if ($filter == 'jobs') {
+        $company_id = logged('company_id');
+        $customer   = $this->AcsProfile_model->getByProfId($cid);
+        if( $customer && $customer->company_id == $company_id ){
+            $filter = 'all';
+            if ($this->input->get('filter')) {
+                $filter = $this->input->get('filter');
+                if ($filter == 'jobs') {
+                    $jobs = $this->Jobs_model->getAllJobsByCustomerId($cid);
+                    $inventory = [];
+                    foreach ($jobs as $j) {
+                        $jobItems = $this->Jobs_model->get_specific_job_items($j->id);
+                        $inventory[$j->id]['job'] = $j;
+                        $inventory[$j->id]['type'] = 'job';
+                        if ($jobItems) {
+                            $inventory[$j->id]['items'] = $jobItems;
+                        }
+                    }
+                } elseif ($filter == 'services') {
+                    $tickets = $this->Tickets_model->get_tickets_by_customer_id($cid);
+                    foreach ($tickets as $t) {
+                        $ticketItems = $this->Tickets_model->get_ticket_items_by_ticket_id($t->id);
+                        $inventory[$t->id]['ticket'] = $t;
+                        $inventory[$t->id]['type'] = 'ticket';
+                        if ($ticketItems) {
+                            $inventory[$t->id]['items'] = $ticketItems;
+                        }
+                    }
+                } else {
+                    $inventory = [];
+                }
+            } else {
                 $jobs = $this->Jobs_model->getAllJobsByCustomerId($cid);
                 $inventory = [];
                 foreach ($jobs as $j) {
@@ -3171,7 +3211,7 @@ class Customer extends MY_Controller
                         $inventory[$j->id]['items'] = $jobItems;
                     }
                 }
-            } elseif ($filter == 'services') {
+
                 $tickets = $this->Tickets_model->get_tickets_by_customer_id($cid);
                 foreach ($tickets as $t) {
                     $ticketItems = $this->Tickets_model->get_ticket_items_by_ticket_id($t->id);
@@ -3181,40 +3221,18 @@ class Customer extends MY_Controller
                         $inventory[$t->id]['items'] = $ticketItems;
                     }
                 }
-            } else {
-                $inventory = [];
-            }
-        } else {
-            $jobs = $this->Jobs_model->getAllJobsByCustomerId($cid);
-            $inventory = [];
-            foreach ($jobs as $j) {
-                $jobItems = $this->Jobs_model->get_specific_job_items($j->id);
-                $inventory[$j->id]['job'] = $j;
-                $inventory[$j->id]['type'] = 'job';
-                if ($jobItems) {
-                    $inventory[$j->id]['items'] = $jobItems;
-                }
             }
 
-            $tickets = $this->Tickets_model->get_tickets_by_customer_id($cid);
-            foreach ($tickets as $t) {
-                $ticketItems = $this->Tickets_model->get_ticket_items_by_ticket_id($t->id);
-                $inventory[$t->id]['ticket'] = $t;
-                $inventory[$t->id]['type'] = 'ticket';
-                if ($ticketItems) {
-                    $inventory[$t->id]['items'] = $ticketItems;
-                }
-            }
+            $this->page_data['cust_active_tab'] = 'inventory';
+            $this->page_data['cus_id'] = $cid;
+            $this->page_data['filter'] = $filter;
+            $this->page_data['inventory'] = $inventory;
+            $this->page_data['customer'] = $customer;
+
+            $this->load->view('v2/pages/customer/dashboard/inventory_list', $this->page_data);
+        }else{
+            redirect('customer');
         }
-
-        $customer = $this->AcsProfile_model->getByProfId($cid);
-        $this->page_data['cust_active_tab'] = 'inventory';
-        $this->page_data['cus_id'] = $cid;
-        $this->page_data['filter'] = $filter;
-        $this->page_data['inventory'] = $inventory;
-        $this->page_data['customer'] = $customer;
-
-        $this->load->view('v2/pages/customer/dashboard/inventory_list', $this->page_data);
     }
 
     public function workorders_list($cid)
@@ -3313,6 +3331,7 @@ class Customer extends MY_Controller
 
         $this->page_data['page']->title = 'Credit Industry';
         $this->page_data['page']->parent = 'Customers';
+        $this->page_data['cus_id'] = $cid;
 
         $this->load->view('v2/pages/customer/add_new_dispute_item', $this->page_data);
     }
@@ -3457,6 +3476,11 @@ class Customer extends MY_Controller
                     }
 
                     $is_success = true;
+
+                    //Activity Logs
+                    $activity_name = 'Dispute Item : Created dispute item.'; 
+                    createActivityLog($activity_name);
+
                 } else {
                     $msg = 'Cannot save dispute data';
                 }
@@ -3513,6 +3537,11 @@ class Customer extends MY_Controller
             $this->CustomerDispute_model->deleteById($customerDispute->id);
 
             $is_success = 1;
+
+            //Activity Logs
+            $activity_name = 'Dispute Item : Deleted dispute item.'; 
+            createActivityLog($activity_name);
+
         } else {
             $msg = 'Cannot find data';
         }

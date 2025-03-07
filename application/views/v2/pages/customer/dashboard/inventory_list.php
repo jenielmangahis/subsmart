@@ -113,26 +113,28 @@
                                     </tr>
                                 <?php }else{ ?>
                                     <?php $total_amount = 0; ?>
-                                    <?php foreach ($i['items'] as $item) { ?>
-                                        <?php
-                                            $total_row_price = $item->cost * $item->qty;
-                                            $total_amount += $total_row_price;
-                                        ?>
-                                        <tr>                                        
+                                    <?php if( $i['items'] ){ ?>
+                                        <?php foreach ($i['items'] as $item) { ?>
+                                            <?php
+                                                $total_row_price = $item->cost * $item->qty;
+                                                $total_amount += $total_row_price;
+                                            ?>
+                                            <tr>                                        
+                                                <td class="nsm-text-primary" colspan="2">
+                                                    <label class="nsm-link default d-block fw-bold"><?= $item->item_name; ?></label>
+                                                </td>
+                                                <td style="width:10%;"><?= $item->qty; ?></td>
+                                                <td style="width:10%;text-align: right;"><?= number_format($item->cost, 2); ?></td>
+                                                <td style="text-align:right;width:10%;"><?= number_format($total_row_price, 2); ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                        <tr>                                    
                                             <td class="nsm-text-primary" colspan="2">
-                                                <label class="nsm-link default d-block fw-bold"><?= $item->item_name; ?></label>
+                                                <label class="nsm-link default d-block fw-bold">Total</label>
                                             </td>
-                                            <td style="width:10%;"><?= $item->qty; ?></td>
-                                            <td style="width:10%;text-align: right;"><?= number_format($item->cost, 2); ?></td>
-                                            <td style="text-align:right;width:10%;"><?= number_format($total_row_price, 2); ?></td>
+                                            <td colspan="3" style="text-align:right;"><b><?= number_format($total_amount,2); ?></b></td>
                                         </tr>
                                     <?php } ?>
-                                    <tr>                                    
-                                        <td class="nsm-text-primary" colspan="2">
-                                            <label class="nsm-link default d-block fw-bold">Total</label>
-                                        </td>
-                                        <td colspan="3" style="text-align:right;"><b><?= number_format($total_amount,2); ?></b></td>
-                                    </tr>
                                 <?php } ?>
                             <?php
                             endforeach;
