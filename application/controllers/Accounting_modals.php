@@ -7776,7 +7776,7 @@ class Accounting_modals extends MY_Controller
                     }
 
                     $recurringData = [
-                        'company_id' => getLoggedCompanyID(),
+                        'company_id' => logged('company_id'),
                         'template_name' => $data['template_name'],
                         'recurring_type' => $data['recurring_type'],
                         'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
@@ -7790,7 +7790,7 @@ class Accounting_modals extends MY_Controller
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
                         'current_occurrence' => 0,
                         'next_date' => date("Y-m-d", strtotime($next)),
                         'status' => 1
@@ -20273,7 +20273,7 @@ class Accounting_modals extends MY_Controller
                     'next_date' => date("Y-m-d", strtotime($next)),
                     'status' => 1
                 ];       
-                $recurringUpdate = $this->accounting_recurring_transactions_model->updateRecurringTransactionByTxnId($creditMemo->id, $recurringData);
+                $recurringUpdate = $this->accounting_recurring_transactions_model->updateRecurringTransactionByTxnId($creditMemoId, $recurringData);
                 /**
                  * Update recurring data - end
                  */                 
