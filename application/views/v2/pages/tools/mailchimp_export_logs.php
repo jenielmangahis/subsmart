@@ -32,19 +32,31 @@
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row">
-                    <div class="col-5">
-                        <h1>Mailchimp Export Logs</h1>                        
-                    </div>                    
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class="bx bx-x"></i></button>
+                            Mailchimp Export Logs
+                        </div>
+                    </div>
                 </div>
                 <div class="row mt-5">
-                    <div class="col-12 grid-mb text-end">                        
+                    <div class="col-12 col-md-4 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
-                                <label>Filter</label>
-                                <select id="filter-logs" class="dropdown-toggle nsm-button">
-                                    <option selected value="all" <?= $filter == 'all' ? 'selected="selected"' : ''; ?>>All</option>                                    
-                                    <option value="exported" <?= $filter == 'exported' ? 'selected="selected"' : ''; ?>>Exported</option>
-                                    <option value="errors" <?= $filter == 'errors' ? 'selected="selected"' : ''; ?>>Errors</option>
-                                </select>
+                            <div class="dropdown d-inline-block">
+                                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                    Filter : <?= $filter; ?>  <i class='bx bx-fw bx-chevron-down'></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                    <li><a class="dropdown-item filter-logs" data-value="All" href="javascript:void(0);">All</a></li>                          
+                                    <li><a class="dropdown-item filter-logs" data-value="Exported" href="javascript:void(0);">Exported</a></li>                          
+                                    <li><a class="dropdown-item filter-logs" data-value="Errors" href="javascript:void(0);">Errors</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -54,8 +66,8 @@
                             <thead>
                                 <tr>
                                     <td class="table-icon" style="width:50%;">List Name</td>
-                                    <td data-name="Resource" style="width:20%;">Email</td>                                                                        
-                                    <td data-name="Resource" style="width:10%;">Status</td>  
+                                    <td data-name="Resource" style="width:30%;">Email</td>                                                                        
+                                    <td data-name="Resource" style="width:8%;">Status</td>  
                                     <td data-name="OnDate">Created</td>      
                                 </tr>
                             </thead>
@@ -73,7 +85,7 @@
                                                 <span class="badge badge-danger">With Error</span>
                                             <?php } ?>
                                         </td>
-                                        <Td><?= date("F j, Y g:i A", strtotime($log->date_created)); ?></Td>                                        
+                                        <td><?= date("m/d/Y g:i A", strtotime($log->date_created)); ?></td>                                        
                                     </tr>
                                 <?php } ?>
                             </tbody>
@@ -87,15 +99,17 @@
 <script type="text/javascript">
 $(function(){
     $(".nsm-table").nsmPagination();
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));        
+    }, 1000));
 
-    $('#filter-logs').on('change', function(){
-        var filter = $(this).val();
-        if( filter == 'all' ){
+    $('.filter-logs').on('click', function(){
+        var filter = $(this).attr('data-value');
+        if( filter == 'All' ){
             location.href = base_url + 'tools/mailchimp_logs';
         }else{
             location.href = base_url + 'tools/mailchimp_logs?filter=' + filter;    
         }
-        
     });
 });
 </script>

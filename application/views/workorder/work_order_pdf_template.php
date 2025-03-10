@@ -28,8 +28,8 @@ table {
             Job Tags: <?php echo $tags; ?> <br>
             Date Issued: <?php echo $wDate = $date_issued; ?> <br>
             Priority: <?php echo $priority; ?> <br>
-            Password: <?php echo $password; ?> <br>
-            Security Number: <?php echo $security_number; ?> <br>
+            Password: <?php echo strMask($password); ?> <br>
+            Security Number: <?php echo strMask($security_number); ?> <br>
             Agent: <?php echo $first->FName.' '.$first->LName; ?> <br>
             <!-- Contacts: <br> -->
 				
@@ -56,8 +56,9 @@ table {
                         <b>TO:</b><br>
                         <!-- <hr style="width: 50% !important; align:left !important;"> -->
                         <?php echo $acs_name; ?><br>
-                        <?php if(!empty($job_location)){ echo $job_location.'<br>'; } ?>
-                        <?php if(!empty($job_location2)){ echo $job_location2.'<br>'; } ?>
+                        <?php //if(!empty($job_location)){ echo $job_location.'<br>'; } ?>
+                        <?php //if(!empty($job_location2)){ echo $job_location2.'<br>'; } ?>
+                        <?= $job_location2 != '' ? $job_location2 : '---'; ?><br />
                         Email: <?php echo $email; ?><br>
                         Phone: <?php echo $phone; ?><br>
                         Mobile: <?php echo $mobile; ?><br><br>
@@ -100,7 +101,12 @@ table {
                         <td><?php echo $job_name; ?></td>
                         <td style="width:50px;">&nbsp;</td>
                         <td style="width:100px;">Job Location :</td>
-                        <td><?php echo $job_location . ' ' . $job_location2; ?></td>                        
+                        <td>
+                            <?php 
+                                //echo $job_location . ' ' . $job_location2; 
+                                echo $job_location2; 
+                            ?>
+                        </td>                        
                     </tr>
                     <tr>
                         <td style="width:150px;">Job Description :</td>

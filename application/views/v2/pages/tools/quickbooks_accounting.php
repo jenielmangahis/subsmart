@@ -6,16 +6,11 @@
 ?>
 
 <!-- CSS and JS Imports -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.bootstrap5.min.css" integrity="sha512-Ars0BmSwpsUJnWMw+KoUKGKunT7+T8NGK0ORRKj+HT8naZzLSIQoOSIIM3oyaJljgLxFi0xImI5oZkAWEFARSA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js" integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- Internal CSS Styling -->
@@ -67,11 +62,14 @@
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row">
-                    <div class="col-md-12 position-relative mb-4">
-                        <h1>QuickBooks Accounting</h1>
-                        <label for="">Import accounting data from QuickBooks to nsmart.</label>
-                        <img class="nsm-card-img-lg float-end logo" src="<?= base_url() ?>/assets/img/api-tools/thumb_quickbooks_payroll.png">
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class="bx bx-x"></i></button>
+                            Import accounting data from QuickBooks to nSmarTrac.
+                        </div>
                     </div>
+                </div>
+                <div class="row mt-4">
                     <div class="col-lg-12 position-relative mb-3">
                         <div>
                             <?php if ($loginStatus == 1): ?>
@@ -82,11 +80,11 @@
                                 <p class="fw-normal-custom mt-1">Connect to QuickBooks to import your accounting data.</p>
                             <?php endif; ?>
                         </div>
-                        <div class="connectDisconnectButton">
+                        <div class="connectDisconnectButton mt-4">
                             <?php if ($loginStatus == 1): ?>
-                                <button class="nsm-button small disconnectButton <?php echo ($loginStatus == 1) ? "" : "d-none-custom" ; ?>">Disconnect</button>
+                                <button style="margin-left:0px;" class="nsm-button small disconnectButton <?php echo ($loginStatus == 1) ? "" : "d-none-custom" ; ?>">Disconnect</button>
                             <?php else: ?>
-                                <button class="nsm-button small primary connectButton <?php echo ($loginStatus == 0) ?  "" : "d-none-custom" ; ?>">Connect</button>
+                                <button style="margin-left:0px;" class="nsm-button small primary connectButton <?php echo ($loginStatus == 0) ?  "" : "d-none-custom" ; ?>">Connect to Quickbooks</button>
                             <?php endif; ?>
                         </div>
                     </div>

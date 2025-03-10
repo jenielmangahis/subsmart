@@ -26,28 +26,19 @@
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
-                <?php if( $apiConnector && $apiConnector->zapier_api_key != '' ){ ?>
-                    <div class="row" style="margin-bottom:30px;">
-                        <div class="col-5">
-                            <h1>Zapier</h1>
-                            <p style="margin-top: 21px;">Get notified when a Work Order is completed or an Invoice is paid. Pull customers list to send marketing emails. In order for you to get the Zapier integration working you need an API Key.</p>
-                        </div>
-                        <div class="col-7" style="text-align:right;">
-                            <img class="nsm-card-img-lg" src="<?= base_url() ?>/assets/img/api-tools/thumb_zapier.png">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class="bx bx-x"></i></button>
+                            Get notified when a Work Order is completed or an Invoice is paid. Pull customers list to send marketing emails. In order for you to get the Zapier integration working you need an API Key.
                         </div>
                     </div>
-                    <!-- <div class="row" style="margin-bottom:30px;">
-                        <div class="col-5">
-                            <h4>Zapier URL</h4>
-                            <p style="margin-top: 21px;">To use and see the Markate Zapier App please follow this link: 
-                            </p>
-                        </div>
-                    </div> -->
+                </div>
 
-                    <div class="row" style="margin-bottom:30px;">
+                <?php if( $apiConnector && $apiConnector->zapier_api_key != '' ){ ?>
+                    <div class="row mt-2 mb-5">
                         <div class="col-10">
-                            <h4>API Key</h4>
-                            <p style="margin-top: 7px;">Copy/Paste the API Key when you setup your zap and use Markate App.</p>
+                            <label>Your API key when you setup your zap</label>                            
                             <div class="form-inline">
                                 <input type="text" class="nsm-field form-control" readonly="" disabled="" value="<?= $apiConnector->zapier_api_key; ?>">
                                 <a class="nsm-button primary btn-regenerate" href="javascript:void(0);">Regenerate</a>
@@ -58,16 +49,7 @@
                     </div>
                     
                 <?php }else{ ?>
-                    <div class="row" style="margin-bottom:30px;">
-                        <div class="col-5">
-                            <h1>Zapier</h1>
-                            <p style="margin-top: 21px;">Get notified when a Work Order is completed or an Invoice is paid. Pull customers list to send marketing emails. In order for you to get the Zapier integration working you need an API Key.</p>
-                        </div>
-                        <div class="col-7" style="text-align:right;">
-                            <img class="nsm-card-img-lg" src="<?= base_url() ?>/assets/img/api-tools/thumb_zapier.png">
-                        </div>
-                    </div>
-                    <div class="row" style="margin-bottom:30px;">
+                    <div class="row mt-2 mb-5">
                         <div class="col-5">
                             <h4>API not enabled</h4>
                             <p style="margin-top: 21px;">Please enable Zapier in <a href="<?= base_url('tools/api_connectors'); ?>">API Connectors Zapier</a>

@@ -31,6 +31,10 @@ class Onboarding extends MY_Controller {
 		$profiledata = $this->business_model->getByCompanyId($cid);
 		$client      = $this->Clients_model->getById($cid);
 
+		if( $client->is_startup == 0 ){
+			redirect('dashboard');
+		}
+
 		$business_name    = $client->business_name;
 		$business_address = $client->business_address;
 		$zip_code         = $client->zip_code;

@@ -10,6 +10,9 @@
 .f-green{
     color: #2ab363;
 }
+#btn-disconnect-google-account{
+    margin-left:0px;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -22,42 +25,39 @@
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row">
-                    <div class="col-5">
-                        <h1>Google Contacts</h1>
-                        <p style="margin-top: 21px;">Export your <span class="fw-bold">nSmarTrac Customers</span> to <span class="fw-bold">Google Contacts</span> so you can identify the customers on your phone Caller ID or on sending emails from Gmail.</p>
-                    </div>
-                    <div class="col-7" style="text-align:right;">
-                        <img class="nsm-card-img-lg" src="<?= base_url() ?>/assets/img/api-tools/thumb_google_contacts.png">
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class="bx bx-x"></i></button>
+                            <p>Export your <span class="fw-bold">nSmarTrac Customers</span> to your <span class="fw-bold">Google Contacts</span> so you can identify the customers on your phone Caller ID or on sending emails from Gmail.</p>                  
+                        </div>
                     </div>
                 </div>
                 <?php if($companyGoogleContactsApi && $companyGoogleContactsApi->status == 1){ ?>
                     <div class="row mt-4">
                         <div class="col-2">
                             <span class="api-label">Google Contacts Status</span>
-                            <span class="api-label f-green">You are connected</span>
+                            <span class="">You are connected</span>
                         </div>
-                        <div class="col-4">
-                            <a href="javascript:void(0);" class="nsm-button primary btn-disconnect-google-account">Disconnect</a>
-                        </div>
+                        <?php if($companyGoogleContactsApi->google_last_sync != NULL){ ?>
+                            <div class="col-10 text-end">
+                                <span class="api-label">Last Sync : <?= date("F j, Y g:i A", strtotime($companyGoogleContactsApi->google_last_sync)); ?></span>
+                            </div>
+                        <?php } ?>
                     </div>
                     <div class="row mt-4">
                         <span class="api-label">Google Account</span>
-                        <span class="api-label f-green"><?= $companyGoogleContactsApi->google_email; ?></span>
+                        <span class=""><?= $companyGoogleContactsApi->google_email; ?></span>
                     </div>                    
-                    <div class="row mt-5">
-                        <?php if($companyGoogleContactsApi->google_last_sync != NULL){ ?>
-                        <div class="col-12" style="text-align:right;">
-                            <span class="api-label">Last Sync : <?= date("F j, Y g:i A", strtotime($companyGoogleContactsApi->google_last_sync)); ?></span>
-                        </div>
-                        <?php } ?>                    
+                    <div class="row mt-5">    
                         <div class="col-12">
+                            <a href="javascript:void(0);" class="nsm-button primary btn-disconnect-google-account">Disconnect</a>
                             <a class="nsm-button primary btn-export-to-google-contacts" href="javascript:void(0);">
                                 <i class='bx bxl-google'></i> Export to Google Contacts
                             </a>
                         </div>
                     </div>
                     <div class="row mb-5">
-                        <div class="col-12">
+                        <div class="col-12">                            
                             <table class="nsm-table mt-5">                        
                                 <thead>
                                     <tr>

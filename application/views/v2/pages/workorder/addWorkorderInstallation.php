@@ -1,7 +1,19 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/workorder/workorder_modals'); ?>
 <?php include viewPath('includes/workorder/sign-modal'); ?>
+<?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
 <style>
+.signature-container{
+    height:300px;
+}
+.add-signature-button{
+    background-color:#6a4a86;
+    color:#ffffff;
+    border: 1px solid #ced4da; 
+    border-radius: 0.25rem; 
+    min-height: 20px; 
+    padding: 1rem;
+}
 @media only screen and (max-width: 480px) {
     /* horizontal scrollbar for tables if mobile screen */
     /* .tablemobile {
@@ -1433,16 +1445,11 @@ tr {
                                     <div class="nsm-card-content">
                                         <div class="row g-3">
                                             <div class="col-12">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Customer</label>
-                                                
-                                                <a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;float:right;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
-                                                <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
-                                                    <!-- <option selected value hidden>- Select Customer -</option> -->
-                                                    <option value="" selected> Select Customer</option>
-                                                    <?php foreach( $customers as $customer ){ ?>
-                                                        <option value="<?= $customer->prof_id; ?>"><?= $customer->first_name.' '.$customer->last_name; ?></option>
-                                                    <?php } ?>                                        
-                                                </select>
+                                                <label class="content-subtitle fw-bold d-block mb-2" style="float:left;">Customer</label>
+                                                <a class="nsm-button btn-small" style="float:right;" id="btn-add-new-customer" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#quick-add-customer">
+                                                    <strong>Add New Customer</strong>
+                                                </a>
+                                                <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required></select>
                                             </div>
 
                                             <div class="col-12 col-md-6">
@@ -1908,11 +1915,11 @@ tr {
                                                     <?php } ?>
                                                 </select>
                                                 
-                                                <div id="companyrep"></div>
+                                                <div id="companyrep" class="signature-container"></div>
                                                 <div id="company_representative_div"></div>
                                                 <input type="hidden" id="saveCompanySignatureDB1a" name="company_representative_approval_signature1a">
-                                                <div class="d-flex mt-2" id="cra_sign_container" role="button" style="border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 20px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#company-representative-approval-signature">
-                                                    <span class="m-auto" style="color: #c7c7c7;">Click to add signature</span>
+                                                <div class="d-flex mt-2 add-signature-button" id="cra_sign_container" role="button" data-bs-toggle="modal" data-bs-target="#company-representative-approval-signature">
+                                                    <span class="m-auto">Click to add signature</span>
                                                     <!-- <img src="" id="companyrep" class="m-auto d-none"> -->
                                                     <!-- <div id="companyrep"></div> -->
                                                 </div>
@@ -1921,11 +1928,11 @@ tr {
                                                 <label class="content-subtitle fw-bold d-block mb-2">Primary Account Holder</label>
                                                 <input type="text" name="primary_account_holder_name" id="primary_account_holder_name" class="nsm-field form-control" placeholder="Printed Name" />
                                                 
-                                                <div id="primaryrep"></div>
+                                                <div id="primaryrep" class="signature-container"></div>
                                                 <div id="primary_representative_div"></div>
                                                 <input type="hidden" id="savePrimaryAccountSignatureDB2a" name="primary_account_holder_signature2a">
-                                                <div class="d-flex mt-2" id="pah_sign_container" role="button" style="border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 20px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#primary-account-holder-signature">
-                                                    <span class="m-auto" style="color: #c7c7c7;">Click to add signature</span>
+                                                <div class="d-flex mt-2 add-signature-button" id="pah_sign_container" role="button" data-bs-toggle="modal" data-bs-target="#primary-account-holder-signature">
+                                                    <span class="m-auto">Click to add signature</span>
                                                     <!-- <img src="" id="primaryrep" class="m-auto d-none"> -->
                                                 </div>
                                             </div>
@@ -1933,11 +1940,11 @@ tr {
                                                 <label class="content-subtitle fw-bold d-block mb-2">Secondary Account Holder</label>
                                                 <input type="text" name="secondery_account_holder_name" class="nsm-field form-control" placeholder="Printed Name" />
 
-                                                <div id="secondaryrep"></div>
+                                                <div id="secondaryrep" class="signature-container"></div>
                                                 <div id="secondary_representative_div"></div>
                                                 <input type="hidden" id="saveSecondaryAccountSignatureDB3a" name="secondary_account_holder_signature3a">
-                                                <div class="d-flex mt-2" id="sah_sign_container" role="button" style="border: 1px solid #ced4da; border-radius: 0.25rem; min-height: 20px; padding: 1rem;" data-bs-toggle="modal" data-bs-target="#secondary-account-holder-signature">
-                                                    <span class="m-auto" style="color: #c7c7c7;">Click to add signature</span>
+                                                <div class="d-flex mt-2 add-signature-button" id="sah_sign_container" role="button" data-bs-toggle="modal" data-bs-target="#secondary-account-holder-signature">
+                                                    <span class="m-auto">Click to add signature</span>
                                                     <!-- <img src="" id="secondaryrep" class="m-auto d-none"> -->
                                                 </div>
                                             </div>
@@ -2031,25 +2038,58 @@ $(".nsm-subtitle").html(function() {
             getTotalPrice();
         });
 
+        $('#btn-add-new-customer').on('click', function(){
+            $('#target-id-dropdown').val('customer_id');
+        });
+
+        $('#customer_id').select2({
+            ajax: {
+                url: '<?= base_url('autocomplete/_company_customer') ?>',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                  return {
+                    q: params.term, // search term
+                    page: params.page
+                  };
+                },
+                processResults: function (data, params) {
+                  params.page = params.page || 1;
+
+                  return {
+                    results: data
+                  };
+                },
+                cache: true
+              },
+              placeholder: 'Select Customer',
+              minimumInputLength: 0,
+              templateResult: formatRepoCustomer,
+              templateSelection: formatRepoCustomerSelection
+        });
+
+        function formatRepoCustomerSelection(repo) {
+            if( repo.first_name != null ){
+                return repo.first_name + ' ' + repo.last_name;      
+            }else{
+                return repo.text;
+            }
+        }
+
+        function formatRepoCustomer(repo) {
+            if (repo.loading) {
+                return repo.text;
+            }
+            var $container = $(
+                '<div class="contact-info"><i class="bx bx-user-pin"></i> '+repo.first_name + ' ' + repo.last_name+'<br><small><i class="bx bx-mobile"></i> '+repo.phone_m+' / <i class="bx bx-envelope"></i> '+repo.email+'</div>'
+            );
+            return $container;
+        }
+
         $(document).on('keyup', '.number', function() {
         var a = $(this).val();
         $(this).val(numeral(a).format('0,0[.]00'));
         });
-
-        // $(".total-price-click").on("click", function() {
-        //     $(this).val('');
-        // });
-
-        // $(".total-price-click").on("blur", function() {
-        //     var a = $(this).val();
-        //     if (empty(a))
-        //     {
-        //         $(this).val('0');
-        //     }else
-        //     {
-        //         $(this).val(a);
-        //     }
-        // });
 
         $(".all-price-field").on("keyup", function() {
             getTotalPrice();
@@ -2398,37 +2438,6 @@ $(".nsm-subtitle").html(function() {
 </script>
 <script>
     window.addEventListener('DOMContentLoaded', (event) => {
-        $('#customer_id').select2({
-            ajax: {
-                url: '<?= base_url('autocomplete/_company_customer') ?>',
-                dataType: 'json',
-                delay: 250,
-                cache: true,
-                data: function (params) {
-                    return { q: params.term, page: params.page };
-                },
-                processResults: function (data, params) {
-                    params.page = params.page || 1;
-                    return { results: data };
-                }
-            },
-            minimumInputLength: 0,
-            templateResult: formatRepoCustomer,
-            templateSelection: (repo) => {
-                return "first_name" in repo ? `${repo.first_name} ${repo.last_name}` : repo.text
-            }
-        });
-
-        function formatRepoCustomer(repo) {
-            if (repo.loading) {
-                return repo.text;
-            }
-
-            return $(
-                '<div>'+repo.first_name + ' ' + repo.last_name +'<br><small>'+repo.phone_m+' / '+repo.email+'</small></div>'
-            );
-        }
-
         $("#customer_id").on( 'change', function () {
             if(this.value !== ""){
                 autoFillCustomer(this.value);
@@ -2511,63 +2520,54 @@ $(document).on('click', '.saveCustomerEst', function() {
         $('[name="contact_email"]').css('border-color', '#ced4da');
     }
     else{
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url(); ?>estimate/addNewCustomer",
+            data: {
+                first_name: first_name,
+                middle_name: middle_name,
+                last_name: last_name,
+                contact_email: contact_email,
+                contact_mobile: contact_mobile,
+                contact_phone: contact_phone,
+                customer_type: customer_type,
+                street_address: street_address,
+                suite_unit: suite_unit,
+                city: city,
+                postcode: postcode,
+                state: state,
+                suffix_name: suffix_name,
+                date_of_birth: date_of_birth,
+                social_security_number: social_security_number,
+                status: status
+            },
+            dataType: 'json',
+            success: function(response) {
+                // alert('success');
+                location.reload();
+            },
+            error: function(response) {
+                location.reload();
 
-    // alert(first_name);
-
-                $.ajax({
-                    type: 'POST',
-                    url: "<?php echo base_url(); ?>estimate/addNewCustomer",
-                    data: {
-                        first_name: first_name,
-                        middle_name: middle_name,
-                        last_name: last_name,
-                        contact_email: contact_email,
-                        contact_mobile: contact_mobile,
-                        contact_phone: contact_phone,
-                        customer_type: customer_type,
-                        street_address: street_address,
-                        suite_unit: suite_unit,
-                        city: city,
-                        postcode: postcode,
-                        state: state,
-                        suffix_name: suffix_name,
-                        date_of_birth: date_of_birth,
-                        social_security_number: social_security_number,
-                        status: status
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        // alert('success');
-                        location.reload();
-                    },
-                    error: function(response) {
-                        location.reload();
-
-                    }
-                });
+            }
+        });
     }
 
 });
 </script>
 
 <script>
-// jQuery(document).ready(function () {
-//     $(document).on('click','#customer_type',function(){
-//         var values = $(this).val();
-//         alert(values);
-//     });
-    $(document).on('click','.customer_type',function(){
+$(document).on('click','.customer_type',function(){
+    // alert('test');
+    if ($('input[name=customer_type]:checked').val() == "Commercial") {
         // alert('test');
-        if ($('input[name=customer_type]:checked').val() == "Commercial") {
-            // alert('test');
-            $('#business_name_area').show();
+        $('#business_name_area').show();
 
-        } else {
-            $('#business_name_area').hide();
+    } else {
+        $('#business_name_area').hide();
 
-        }
-    });
-// });
+    }
+});
 </script>   
 <script>
 $(document).ready(function() {
