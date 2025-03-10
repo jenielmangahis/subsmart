@@ -402,6 +402,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input" value="0"></td>
                                                 </tr>
                                                 <tr>
+                                                    <td class="bold">Late Fee</td>                                                    
+                                                    <td colspan="2" align="right">
+                                                        $ <span id="late_fee"><?php echo number_format(intval($invoice->late_fee), 2); ?></span>
+                                                        <!-- <input type="number" step="any" min="0" class="form-control" id="late_fee" name="late_fee" value="<?= $invoice->late_fee > 0 ? number_format($invoice->late_fee, 2, ".","") : '0.00'; ?>" required="" style="width:50%;text-align:right;" />-->
+                                                    </td>
+                                                </tr>
+                                                <tr>
                                                     <td colspan="2" class="bold">Grand Total ($)</td>                                                    
                                                     <td class="text-end">
                                                         <b>$ <span id="grand_total"><?php echo number_format(intval($invoice->grand_total), 2); ?></span></b>
