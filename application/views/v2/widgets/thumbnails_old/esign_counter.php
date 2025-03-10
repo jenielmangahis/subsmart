@@ -1,76 +1,8 @@
 <?php
-// if (!is_null($dynamic_load) && $dynamic_load == true) {
-//     // Your dynamic load code here if any
-// }
-$category = "esign";
-$thumbanailName = "eSign";
-$description = "eSign manages digital document approvals. This card displays the count of completed signatures and those waiting for others.";
-$icon = '<i class="fas fa-signature"></i>';
+if (!is_null($dynamic_load) && $dynamic_load == true) {
+    // Your dynamic load code here if any
+}
 ?>
-<style> .display_none { display: none; }</style>
-<div class="card shadow">
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-12">
-                <h5 class="mt-0 fw-bold">
-                    <a role="button" class="text-decoration-none" href="#" style="color:#6a4a86 !important">
-                        <?php echo $icon; ?>&nbsp;&nbsp;<?php echo $thumbanailName; ?>
-                    </a>
-                    <div class="dropdown float-end">
-                        <a href="#" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown">
-                            <i class="fas fa-ellipsis-h text-muted"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove Thumbnail</a></li>
-                        </ul>
-                    </div>
-                </h5>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-md-12">
-                <span><?php echo $description; ?></span>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-md-12">
-                <select class="form-select w-100" onChange="filterThumbnail(this.value, '<?php echo $id; ?>', '<?php echo $category; ?>')">
-                    <option value="all">All time</option>
-                    <option value="week">Last 7 days</option>
-                    <option value="two-week">Last 14 days</option>
-                    <option value="month">Last 30 days</option>
-                    <option value="two-month">Last 60 days</option>
-                </select>
-            </div>
-        </div>
-        <div class="row esignContent">
-            <?php
-                $output = "";
-                foreach ($esign as $data) {
-                    $output .= "<div class='col'>";
-                    $output .=   "<div class='text-center p-2'>";
-                    $output .=       "<strong class='text-muted text-uppercase'>".htmlspecialchars($data->status)."</strong>";
-                    $output .=       "<h2 class='mb-0'>".htmlspecialchars($data->status_count)."</h2>";
-                    $output .=   "</div>";
-                    $output .= "</div>";
-                }
-                echo $output;
-            ?>
-        </div>
-        <strong class="dragHandle">⣿⣿⣿⣿</strong>
-        <span class="widthResizeHandle"></span>
-        <span class="heightResizeHandle"></span>
-    </div>
-</div>
-
-
-
-
-
-
-
-<!-- 
-
 
 <div class="<?php echo htmlspecialchars($class); ?>" data-id="<?php echo htmlspecialchars($id); ?>"
     id="thumbnail_<?php echo htmlspecialchars($id); ?>" draggable="true">
@@ -134,10 +66,10 @@ $icon = '<i class="fas fa-signature"></i>';
             </div>
         </div>
     </div>
-</div> -->
+</div>
 
 <?php
-// if (!is_null($dynamic_load) && $dynamic_load == true) {
-//     // Your dynamic load code here if any
-// }
+if (!is_null($dynamic_load) && $dynamic_load == true) {
+    // Your dynamic load code here if any
+}
 ?>

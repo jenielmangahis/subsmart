@@ -373,6 +373,62 @@
             <i class='bx bx-fw bx-news'></i> Add Newsletter
         </button>
         <?php } ?>
+
+
+        <button id="toggleLayout" class="nsm-button" type="button"><i class='bx bxs-edit' ></i> Customize Layout</button>
+        <style>
+            #sortable .card {
+                min-height: 200px;
+            }
+
+            #sortable>.col {
+                min-width: 500px;
+            }
+
+            .cardContainers {
+                display: none;
+            }
+
+            .cardEditState {
+                outline: dashed 2px #198754 !important;
+            }
+
+            .dragHandle {
+                cursor: grab;
+                display: none;
+                letter-spacing: -.2em;
+                position: absolute;
+                bottom: 7px;
+                right: 10px;
+                color: gray;
+            }
+
+            .widthResizeHandle {
+                right: -10px;
+                top: 50%;
+                transform: translateY(-50%);
+                position: absolute;
+                padding: 15px 5px;
+                background: green;
+                cursor: ew-resize;
+                display: none;
+            }
+
+            .heightResizeHandle {
+                bottom: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                position: absolute;
+                padding: 5px 15px;
+                background: green;
+                cursor: ns-resize;
+                display: none;
+            }
+
+            .divThumbnailCard {
+                display: none;
+            }
+        </style>
         <button name="button" type="button" class="nsm-button primary" data-bs-toggle="modal"
             data-bs-target="#manage_widgets_modal">
 
@@ -381,51 +437,180 @@
     </div>
 </div>
 
+
 <div class="row page-content g-0">
     <div class="col-12">
-        <div class="row  g-3 grid-row-mb nsm-draggable-container2" id="nsm_widgets2">
-            <div class="main-widget-row" id="nsm_thumbnail">
+        <div class="row row-cols-md-3 sortable cardContainers1" id="nsm_widgets2">
                 <?php
-                    usort($widgets, function ($a, $b) {
-                        if ($a->w_sort == 1 && $b->w_sort != 1) {
-                            return -1;
+                    foreach ($widgets as $wids) {
+                        if ($wids->w_main && checkRoleCanAccessWidget($wids->w_id)) {
+                            echo "
+                            <div class='col mt-3 cardLoader'>
+                                <div class='card shadow'>
+                                    <div class='card-body'>
+                                        <div class='row'>
+                                            <div class='col-md-12'>
+                                                <p class='card-text placeholder-glow'>
+                                                    <span class='placeholder col-3' style='color:#6a4a86'></span>
+                                                    <span class='placeholder col-11 mt-3'></span>
+                                                    <span class='placeholder col-12'></span>
+                                                    <span class='placeholder col-4'></span>
+                                                    <span class='placeholder placeholder-lg col-12 mt-3 mb-3'></span>
+                                                    <span class='placeholder col-12'></span>
+                                                    <span class='placeholder col-12'></span>
+                                                    <span class='placeholder col-12'></span>
+                                                    <span class='placeholder col-2 mt-3 float-end'></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            ";
                         }
-                        if ($a->w_sort != 1 && $b->w_sort == 1) {
-                            return 1;
-                        }
-                        return strcmp($a->w_name, $b->w_name);
-                    });
+                    }
+                ?>    
+                <?php
+                    // usort($widgets, function ($a, $b) {
+                    //     if ($a->w_sort == 1 && $b->w_sort != 1) {
+                    //         return -1;
+                    //     }
+                    //     if ($a->w_sort != 1 && $b->w_sort == 1) {
+                    //         return 1;
+                    //     }
+                    //     return strcmp($a->w_name, $b->w_name);
+                    // });
                     
                     foreach ($widgets as $wids) {
                         if ($wids->w_main && checkRoleCanAccessWidget($wids->w_id)) {
-                            $data['class'] = 'nsm-card nsm-grid2 main-widget-container';
+                            echo "
+                            ";
+                            echo "<div class='col mt-3 divThumbnailCard' data-id='$wids->w_id' id='thumbnail_$wids->w_id'>";
+                            // echo "<style>
+                            //         div[data-id='$wids->w_id'] {
+                            //             min-width: 398.297px;
+                            //         }
+
+                            //         div[data-id='$wids->w_id'] > .card {
+                            //             min-height: 216.094px;
+                            //         }
+                            //      </style>"; FOR LATER DEVELOPMENT
+                            
+                            $data['class'] = 'card';
                             $data['isMain'] = false;
                             $data['id'] = $wids->w_id;
                             $data['isListView'] = $wids->w_list_view;
                             $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
-                            
+
                             if ($wids->w_name === 'Expense') {
                                 $data = set_expense_graph_data($data);
                             } elseif ($wids->w_name === 'Bank') {
                                 $data = set_bank_widget_data($data);
                             }
                 
-
                             if ($wids->wu_company_id == 1) {
-                            
                                 $this->load->view('v2/' . $wids->w_view_link, $data);
                             } else {
                                 if ($wids->w_name !== 'nSmart Sales' || $wids->w_name !== 'Demo Schedules' || $wids->w_name !== 'Coupon Codes' || $wids->w_name !== 'nSmart Companies' ) {
                                     $this->load->view('v2/' . $wids->w_view_link, $data);
                                 }
                             }
+
+                            echo "</div>";
                         }
                     }
                 ?> 
-            </div>
         </div>
 
-        <div class="row  g-3 grid-row-mb nsm-draggable-container-sortable-main" id="nsm_widgets">
+
+        <script>
+        $(document).ready(function() {
+            setTimeout(() => {
+                $('.cardLoader').remove();
+                $('.divThumbnailCard').fadeIn();
+            }, 1000);
+            let sortableList = $(".sortable");
+            let sortableInstance = null;
+            let isEditing = false;
+            let savedLayout = localStorage.getItem("cardLayout1");
+
+            if (savedLayout) {
+                let layout = JSON.parse(savedLayout);
+                layout.forEach(item => {
+                    let card = sortableList.children(`[data-id='${item.id}']`);
+                    sortableList.append(card);
+                    card.find('div.col').css({
+                        width: item.colWidth
+                    });
+                    card.css({
+                        width: item.colWidth
+                    });
+                    card.find('.card').css({
+                        height: item.height
+                    });
+                });
+            }
+
+            $("#toggleLayout").click(function() {
+                if (!isEditing) {
+                    $('.dragHandle, .widthResizeHandle, .heightResizeHandle').show();
+                    $(this).text("Save Layout").removeClass('nsm-button').addClass('nsm-button primary');
+                    $(".sortable > div > .card").addClass("cardEditState").removeClass('shadow');
+                    sortableInstance = new Sortable(sortableList[0], {
+                        animation: 150,
+                        ghostClass: 'sortable-ghost',
+                        handle: '.dragHandle',
+                    });
+                } else {
+                    $('.dragHandle, .widthResizeHandle, .heightResizeHandle').hide();
+                    $(this).text("Customize Layout").removeClass('nsm-button primary').addClass('nsm-button');
+                    $(".sortable > div > .card").removeClass("cardEditState").addClass('shadow');
+                    if (sortableInstance) sortableInstance.destroy();
+
+                    let newLayout = sortableList.children().map(function() {
+                        return {
+                            id: $(this).data("id"),
+                            width: $(this).find('.card').css("width"),
+                            colWidth: $(this).css("width"),
+                            height: $(this).find('.card').css("height")
+                        };
+                    }).get();
+                    localStorage.setItem("cardLayout1", JSON.stringify(newLayout));
+                }
+                isEditing = !isEditing;
+            });
+
+            // Resize functionality
+            $('.widthResizeHandle').on('mousedown', function(e) {
+                e.preventDefault();
+                let col = $(this).closest('div.col');
+                let startX = e.pageX;
+                let startWidth = col.outerWidth();
+                $('.cardEditState').css('height', 'unset');
+                $(document).on('mousemove', function(e) {
+                    let newWidth = startWidth + Math.round((e.pageX - startX) / 10) * 10;
+                    col.css('width', newWidth + 'px');
+                }).on('mouseup', function() {
+                    $(this).off('mousemove mouseup');
+                });
+            });
+
+            $('.heightResizeHandle').on('mousedown', function(e) {
+                e.preventDefault();
+                let card = $(this).closest('.card');
+                let startY = e.pageY;
+                let startHeight = card.outerHeight();
+                $(document).on('mousemove', function(e) {
+                    let newHeight = startHeight + Math.round((e.pageY - startY) / 10) * 10;
+                    card.css('height', newHeight + 'px');
+                }).on('mouseup', function() {
+                    $(this).off('mousemove mouseup');
+                });
+            });
+        });
+    </script>
+
+        <div class="row g-3 grid-row-mb nsm-draggable-container-sortable-main mt-3" id="nsm_widgets">
             <?php
                 if (count($main_widgets) > 0) {
                     foreach ($main_widgets as $wids) {
@@ -487,7 +672,7 @@
     </div>
 </div>
 
-<div class="row nsm-tickertape mb-3 page-content g-0">
+<div class="row nsm-tickertape mb-3 page-content g-0 mt-3">
     <div class="col-12">
         <div class="nsm-card pb-1 pt-2">
             <div class="tradingview-widget-container">
@@ -1077,81 +1262,81 @@ function collectionGraphThumbnail() {
         })
 }
 
-subscriptionThumbnail();
-function subscriptionThumbnail(){
+
+function subscriptionThumbnail() {
     fetch('<?php echo base_url('Dashboard/income_subscription'); ?>', {}).then(response => response.json()).then(
-    response => {
-        var currentDate    = new Date();
-        var month_index    = currentDate.getMonth() + 1;
-        var monthlyAmounts = new Array(month_index).fill(0);
-        var {
-            success,
-            mmr
-        } = response;
+        response => {
+            var currentDate = new Date();
+            var month_index = currentDate.getMonth() + 1;
+            var monthlyAmounts = new Array(month_index).fill(0);
+            var {
+                success,
+                mmr
+            } = response;
 
-        let status = [];
+            let status = [];
 
-        if (mmr) {
-            for (var x = 0; x < mmr.length; x++) {
-                if( mmr[x].bill_end_date == '0000-00-00' || mmr[x].bill_end_date == '1970-01-01' ){
-                    var installDate = '2024-01-01';
-                }else{
-                    //var installDate = mmr[x].bill_end_date;
-
-                    var insA          = new Date(mmr[x].bill_end_date);
-            
-                    if( insA.getFullYear() < currentDate.getFullYear() ){    
+            if (mmr) {
+                for (var x = 0; x < mmr.length; x++) {
+                    if (mmr[x].bill_end_date == '0000-00-00' || mmr[x].bill_end_date == '1970-01-01') {
                         var installDate = '2024-01-01';
-                    }else if( insA > currentDate ){        
-                        var installDate = moment(currentDate).format('YYYY-MM-DD');
-                    }else{
-                        var installDate = mmr[x].bill_end_date;
+                    } else {
+                        //var installDate = mmr[x].bill_end_date;
+
+                        var insA = new Date(mmr[x].bill_end_date);
+
+                        if (insA.getFullYear() < currentDate.getFullYear()) {
+                            var installDate = '2024-01-01';
+                        } else if (insA > currentDate) {
+                            var installDate = moment(currentDate).format('YYYY-MM-DD');
+                        } else {
+                            var installDate = mmr[x].bill_end_date;
+                        }
+
+                        // var currentYear  = new Date().getFullYear();
+                        // var insA     = new Date(mmr[x].bill_end_date);
+                        // var insAYear = insA.getFullYear();
+
+                        // if( insAYear < currentYear ){                        
+                        //     var installDate = '2024-01-01';
+                        // }else if( insAYear > currentYear ){
+                        //     var today = new Date();                                     
+                        //     var installDate = moment(today).format('YYYY-MM-DD');
+                        // }else{
+                        //     var installDate = mmr[x].bill_end_date;
+                        // }
                     }
 
-                    // var currentYear  = new Date().getFullYear();
-                    // var insA     = new Date(mmr[x].bill_end_date);
-                    // var insAYear = insA.getFullYear();
-
-                    // if( insAYear < currentYear ){                        
-                    //     var installDate = '2024-01-01';
-                    // }else if( insAYear > currentYear ){
-                    //     var today = new Date();                                     
-                    //     var installDate = moment(today).format('YYYY-MM-DD');
-                    // }else{
-                    //     var installDate = mmr[x].bill_end_date;
-                    // }
+                    if (installDate) {
+                        var ins = new Date(installDate);
+                        var month = ins.getMonth();
+                        if (!status.includes(mmr[x].status)) {
+                            status.push(mmr[x].status);
+                        }
+                        if (isNaN(parseFloat(mmr[x].mmr))) {
+                            monthlyAmounts[month] += 0;
+                        } else {
+                            monthlyAmounts[month] += parseFloat(mmr[x].mmr);
+                        }
+                    }
                 }
-                
-                if (installDate) {
-                    var ins = new Date(installDate);
-                    var month = ins.getMonth();             
-                    if (!status.includes(mmr[x].status)) {
-                        status.push(mmr[x].status);
+
+                var start = 0;
+                var prev_amount = 0;
+                for (i = 0; i < monthlyAmounts.length; ++i) {
+                    if (start == 0) {
+                        var amount = monthlyAmounts[i];
+                    } else {
+                        var amount = monthlyAmounts[i] + prev_amount;
                     }
-                    if( isNaN(parseFloat(mmr[x].mmr)) ){
-                        monthlyAmounts[month] += 0;
-                    }else{
-                        monthlyAmounts[month] += parseFloat(mmr[x].mmr);
-                    }
+
+                    prev_amount = amount;
+                    monthlyAmounts[i] = amount;
+                    start++;
                 }
             }
 
-            var start = 0;
-            var prev_amount = 0;
-            for (i = 0; i < monthlyAmounts.length; ++i) {
-                if( start == 0 ){
-                    var amount = monthlyAmounts[i];
-                }else{
-                    var amount = monthlyAmounts[i] + prev_amount;
-                }
-
-                prev_amount = amount;
-                monthlyAmounts[i] = amount;                
-                start++;
-            }
-        }
-
-        let output = '';
+            let output = '';
             if (status.length > 0) {
                 output = '<select class="nsm-field form-select filterSubscriptionStatus" style="width: 90%;border: none;" onChange="filterSubscription()">';
                 output += `<option value="">All Status</option>`;
@@ -1161,62 +1346,63 @@ function subscriptionThumbnail(){
                 output += '</select>';
             }
 
-        // $('#filter-subscription-status').html(output);
-        
+            // $('#filter-subscription-status').html(output);
 
-        var sales_data = {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            datasets: [{
-                label: 'Subscription',
-                backgroundColor: 'rgb(220, 53, 69 ,0.79)',
-                borderColor: 'rgb(220, 53, 69 ,0.79)',
-                data: monthlyAmounts.map(amount => parseFloat(amount.toFixed(2)))
-            }]
-        };
 
-        
-        $('#IncomeSubscriptioneGraphLoader').hide()
+            var sales_data = {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Subscription',
+                    backgroundColor: 'rgb(220, 53, 69 ,0.79)',
+                    borderColor: 'rgb(220, 53, 69 ,0.79)',
+                    data: monthlyAmounts.map(amount => parseFloat(amount.toFixed(2)))
+                }]
+            };
 
-    
-        const subscriptionChart = new Chart($('#income_subscription'), {
-            type: 'line',
-            data: sales_data,
-            options: {
-                responsive: true,
-                plugins: {                
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                const amount = tooltipItem.raw; 
-                                return `$ ${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+            $('#IncomeSubscriptioneGraphLoader').hide()
+
+
+            const subscriptionChart = new Chart($('#income_subscription'), {
+                type: 'line',
+                data: sales_data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    const amount = tooltipItem.raw;
+                                    return `$ ${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                                }
                             }
-                        }
+                        },
+                        legend: {
+                            position: 'bottom',
+                        },
                     },
-                    legend: {
-                        position: 'bottom',                    
-                    },
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        suggestedMax: 10,
-                        ticks: {
-                            callback: function(value) {
-                                return `$ ${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 10,
+                            ticks: {
+                                callback: function(value) {
+                                    return `$ ${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                                }
                             }
-                        }
+                        },
                     },
-                },
-                aspectRatio: 1.5,
-            }
-        });
+                    aspectRatio: 1.5,
+                }
+            });
 
 
-        window.subscriptionChart = subscriptionChart;
-    }).catch((error) => {
-    console.log(error);
-})
+            window.subscriptionChart = subscriptionChart;
+        }).catch((error) => {
+        console.log(error);
+    })
 }
+subscriptionThumbnail();
 
 openInvoicesGraphThumbnail();
 
@@ -1344,7 +1530,7 @@ function accountingExpenseGraphThumbnail() {
             }
             let output = '';
             if (expenseCategory.length > 0) {
-                output = '<select class="nsm-field form-select" style="width: 90%;border: none;" onChange="filterAccountingExpenseCategory(this.value)">';
+                output = '<select class="form-select" onChange="filterAccountingExpenseCategory(this.value)">';
                 output += `<option value="">All Categories</option>`;
                 for (var i = 0; i < expenseCategory.length; i++) {
                     output += `<option value="${expenseCategory[i]}">${expenseCategory[i]}</option>`;
@@ -1352,7 +1538,7 @@ function accountingExpenseGraphThumbnail() {
                 output += '</select>';
             }
 
-            $('#filter-customer-counter').html(output);
+            $('.accountingExpenseFilter').append(output);
 
 
             var new_leads_data = {
