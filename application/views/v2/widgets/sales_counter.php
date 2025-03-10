@@ -1,91 +1,74 @@
 <?php
-if (!is_null($dynamic_load) && $dynamic_load == true) {
-}
+// if (!is_null($dynamic_load) && $dynamic_load == true) {
+// }
+$category = "sales";
+$thumbanailName = "Sales";
+$description = "Sales track revenue from completed transactions. This card displays the total sales amount recorded.";
+$icon = '<i class="fas fa-chart-bar"></i>';
 ?>
-<style>
-.sales-count {
-    font-size: 33px !important;
-}
-</style>
-
-
-
-<div class="<?php echo $class; ?>" data-id="<?php echo $id; ?>" id="thumbnail_<?php echo $id; ?>" draggable="true">
-    <div class="nsm-card-header">
-        <div class="nsm-card-title">
-            <div class="nsm-card-header">
-                <div class="nsm-card-title summary-report-header">
-                    <div class="summary-report-header-sub ">
-                        <div class="icon-summary-sales">
-                        <i class="bx bx-fw bx-receipt"></i>
-                        </div>
-                        <a role="button" class=" btn-sm m-0 me-2" href="accounting/allsales"
-                            style="color:#6a4a86 !important ">
-                            Sales
+<style> .display_none { display: none; }</style>
+<div class="card shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <h5 class="mt-0 fw-bold">
+                    <a role="button" class="text-decoration-none" href="#" style="color:#6a4a86 !important">
+                        <?php echo $icon; ?>&nbsp;&nbsp;<?php echo $thumbanailName; ?>
+                    </a>
+                    <div class="dropdown float-end">
+                        <a href="#" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-h text-muted"></i>
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove Thumbnail</a>
+                            </li>
+                            <li>
+                                <div class="form-check form-switch" style="display: flex; align-items: center;gap: 5px; padding-left: 10px;">
+                                    <input class="form-check-input ms-0" type="checkbox" onclick="manipulateShowGraph(this,'<?php echo $id; ?>')" <?php echo $isListView ? 'checked' : ''; ?> data-addon-delete-modal="open" data-id="WiZ" data-name="WiZ" style="margin: 0" />
+                                    <span class="content-title d-block mb-1">Show Graph</span>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-
+                </h5>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <span><?php echo $description; ?></span>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <select class="form-select w-100" onChange="filterThumbnail(this.value, '<?php echo $id; ?>', '<?php echo $category; ?>')">
+                    <option value="all">All time</option>
+                    <option value="week">Last 7 days</option>
+                    <option value="two-week">Last 14 days</option>
+                    <option value="month">Last 30 days</option>
+                    <option value="two-month">Last 60 days</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col textData_<?php echo $id; ?> <?php echo $isListView == 1 ? 'display_none' : ''; ?>">
+                <div class="text-center p-2">
+                    <strong class="text-muted text-uppercase">TOTAL AMOUNT</strong>
+                    <h2 id="first_content_<?php echo $id; ?>">$<?php echo get_invoice_amount('total'); ?></h2>
                 </div>
-
             </div>
-        </div>
-        <div class="nsm-card-controls">
-
-            <div class="dropdown">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove
-                            Thumbnail</a></li>
-                    <li>
-
-                        <div class="form-check form-switch"
-                            style="display: flex; align-items: center;gap: 5px;padding-left: 10px;">
-                            <input class="form-check-input ms-0" type="checkbox"
-                                onclick="manipulateShowGraph(this,'<?php echo $id; ?>')"
-                                <?php echo $isListView ? 'checked' : ''; ?> data-addon-delete-modal="open" data-id="WiZ"
-                                data-name="WiZ" style="margin: 0" />
-                            <span class="content-title d-block mb-1">Show Graph </span>
-
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="mb-2">
-        <select class="nsm-field form-select" style='width: 55%;
-    border: none;' onChange="filterThumbnail(this.value, '<?php echo $id; ?>', 'sales')">
-            <option value="all">All time</option>
-            <option value="week">Last 7 days </option>
-            <option value="two-week">last 14 days</option>
-            <option value="month">last 30 days </option>
-            <option value="two-month">last 60 days </option>
-        </select>
-    </div>
-    <div class="nsm-card-content"
-        style="  height: calc(100% - 120px); display: <?php echo $isListView ? 'block' : 'none'; ?>"
-        id="thumbnail_content_graph_<?php echo $id; ?>">
-        <h1 id='SalesGraphLoader'> <span class="bx bx-loader bx-spin"></span></h1>
-        <canvas id="SalesWidgetsGraph" style="max-height:100%;"  class="nsm-chart" data-chart-type="widgets/sales_counter" data-chart-id="<?php echo $id; ?>"></canvas>
-    </div>
-    <div class="nsm-card-content"
-        style="  height: calc(100% - 120px);  display: <?php echo $isListView ? 'none' : 'block'; ?>"
-        id="thumbnail_content_list<?php echo $id; ?>">
-        <div class="row ">
-            <div class="col-12 col-lg-12 leads-container">
-                <div class="text-start summary-report-body">
-                    <label for="">Total Sales</label>
-                    <h1 id="first_content_<?php echo $id; ?>">$<?php echo get_invoice_amount('total'); ?></h1>
+            <div class="col graphData_<?php echo $id; ?> <?php echo $isListView == 0 ? 'display_none' : ''; ?>">
+                <div class="text-center p-2">
+                    <canvas id="SalesWidgetsGraph" class="nsm-chart" data-chart-type="widgets/sales_counter" data-chart-id="<?php echo $id; ?>" style="max-height: 120px;"></canvas>
                 </div>
             </div>
         </div>
+        <strong class="dragHandle">⣿⣿⣿⣿</strong>
+        <span class="widthResizeHandle"></span>
+        <span class="heightResizeHandle"></span>
     </div>
-
 </div>
-
 <?php
-if (!is_null($dynamic_load) && $dynamic_load == true) {
-}
+// if (!is_null($dynamic_load) && $dynamic_load == true) {
+// }
 ?>

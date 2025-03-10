@@ -1,11 +1,9 @@
 <?php
-// if (!is_null($dynamic_load) && $dynamic_load == true) {
-// }
-$category = "company_meter";
-$thumbanailName = "$companyName->business_name Meter";
-$description = "Company Meter tracks overall business activity. This card displays key company metrics to measure performance.";
-$icon = '<i class="fas fa-tachometer-alt"></i>';
+if (!is_null($dynamic_load) && $dynamic_load == true) {
+}
 ?>
+
+
 <div class="<?php echo $class; ?>" data-id="<?php echo $id; ?>" id="thumbnail_<?php echo $id; ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
@@ -55,8 +53,10 @@ $icon = '<i class="fas fa-tachometer-alt"></i>';
             </div>
         </div>
     </div>
+  
 </div>
+
 <?php
-// if (!is_null($dynamic_load) && $dynamic_load == true) {
-// }
+if (!is_null($dynamic_load) && $dynamic_load == true) {
+}
 ?>

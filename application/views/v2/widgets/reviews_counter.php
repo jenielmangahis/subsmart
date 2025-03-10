@@ -1,53 +1,52 @@
 <?php
-if (!is_null($dynamic_load) && $dynamic_load == true) {
-}
+// if (!is_null($dynamic_load) && $dynamic_load == true) {
+// }
+$category = "reviews";
+$thumbanailName = "Reviews";
+$description = "Boost your business with Google Reviews. From being found online to earning trust, reviews are a proven source of new business.";
+$icon = '<i class="fas fa-star"></i>';
 ?>
-
-
-<div class="<?php echo $class; ?>" data-id="<?php echo $id; ?>" id="thumbnail_<?php echo $id; ?>" draggable="true">
-    <div class="nsm-card-header">
-        <div class="nsm-card-title">
-            <div class="nsm-card-header">
-                <div class="nsm-card-title summary-report-header">
-                    <div class="icon-summary-customer">
-                        <i class="bx bx-star"></i>
+<style> .display_none { display: none; }</style>
+<div class="card shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <h5 class="mt-0 fw-bold">
+                    <a role="button" class="text-decoration-none" href="#" style="color:#6a4a86 !important">
+                        <?php echo $icon; ?>&nbsp;&nbsp;<?php echo $thumbanailName; ?>
+                    </a>
+                    <div class="dropdown float-end">
+                        <a href="#" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-h text-muted"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove Thumbnail</a>
+                            </li>
+                        </ul>
                     </div>
-                    <span style="color:#6ba77ced ">Reviews</span>
+                </h5>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <span><?php echo $description; ?></span>
+            </div>
+        </div>
+        <!-- <div class="row">
+            <div class="col textData_<?php echo $id; ?> <?php echo $isListView == 1 ? 'display_none' : ''; ?>">
+                <div class="text-center p-2">
+                    <strong class="text-muted text-uppercase">DATA</strong>
+                    <h2 id="first_content_<?php echo $id; ?>"></h2>
                 </div>
             </div>
-        </div>
-        <div class="nsm-card-controls">
-
-            <div class="dropdown">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                
-                    <li><a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove Thumbnail</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="nsm-card-content" style="  height: calc(100% - 120px);">
-        <div class="row ">
-            <div class="col-12 col-lg-12 leads-container">
-                <div class="text-start summary-report-body">
-                    <h5>Boost your business with Google Reviews</h5>
-                    <label for="">From being found online to earning trust, reviews are a proven source of new business.</label>
-
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class='nsm-card-footer'>
-        <a role="button" class=" btn-sm m-0 me-2" href="customer/leads">
-            <i class='bx bx-right-arrow-alt' style="color: #6ba77ced"></i>
-        </a>
+        </div> -->
+        <strong class="dragHandle">⣿⣿⣿⣿</strong>
+        <span class="widthResizeHandle"></span>
+        <span class="heightResizeHandle"></span>
     </div>
 </div>
-
 <?php
-if (!is_null($dynamic_load) && $dynamic_load == true) {
-}
+// if (!is_null($dynamic_load) && $dynamic_load == true) {
+// }
 ?>

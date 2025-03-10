@@ -1,103 +1,76 @@
 <?php
-if (!is_null($dynamic_load) && $dynamic_load == true) {
-}
+// if (!is_null($dynamic_load) && $dynamic_load == true) {
+// }
+$category = "accounting_expense";
+$thumbanailName = "Accounting Expense";
+$description = "Accounting Expense monitors business spending. This card displays the total expenses recorded in the system.";
+$icon = '<i class="fas fa-file-invoice-dollar"></i>';
 ?>
-
-
-<div class="<?php echo $class; ?> position-relative" data-id="<?php echo $id; ?>" id="thumbnail_<?php echo $id; ?>"
-    draggable="true">
-
-
-    <div class="nsm-card-header">
-
-        <div class="nsm-card-title">
-            <div class="nsm-card-header">
-
-                <div class="nsm-card-title summary-report-header">
-                    <div class="summary-report-header-sub ">
-                        <div class="icon-summary-customer">
-                            <i class="bx bx-fw bx-notepad"></i>
-                        </div>
-                        <a role="button" class=" btn-sm m-0 me-2" href="accounting/expenses"
-                            style="color:#6ba77ced !important; font-size: 17px !important;">
-                            Accounting Expense
+<style> .display_none { display: none; }</style>
+<div class="card shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <h5 class="mt-0 fw-bold">
+                    <a role="button" class="text-decoration-none" href="#" style="color:#6a4a86 !important">
+                        <?php echo $icon; ?>&nbsp;&nbsp;<?php echo $thumbanailName; ?>
+                    </a>
+                    <div class="dropdown float-end">
+                        <a href="#" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-h text-muted"></i>
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove Thumbnail</a>
+                            </li>
+                            <li>
+                                <div class="form-check form-switch" style="display: flex; align-items: center;gap: 5px; padding-left: 10px;">
+                                    <input class="form-check-input ms-0" type="checkbox" onclick="manipulateShowGraph(this,'<?php echo $id; ?>')" <?php echo $isListView ? 'checked' : ''; ?> data-addon-delete-modal="open" data-id="WiZ" data-name="WiZ" style="margin: 0" />
+                                    <span class="content-title d-block mb-1">Show Graph</span>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-                </div>
-
+                </h5>
             </div>
         </div>
-        <div class="nsm-card-controls">
-
-            <div class="dropdown">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-
-                    <li><a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove
-                            Thumbnail</a></li>
-                    <li>
-
-                        <div class="form-check form-switch"
-                            style="display: flex; align-items: center;gap: 5px;padding-left: 10px;">
-                            <input class="form-check-input ms-0" type="checkbox"
-                                onclick="manipulateShowGraph(this,'<?php echo $id; ?>')"
-                                <?php echo $isListView ? 'checked' : ''; ?> data-addon-delete-modal="open" data-id="WiZ"
-                                data-name="WiZ" style="margin: 0" />
-                            <span class="content-title d-block mb-1">Show Graph </span>
-
-                        </div>
-                    </li>
-                </ul>
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <span><?php echo $description; ?></span>
             </div>
         </div>
-    </div>
-    <div class="mb-2" >
-        <select class="nsm-field form-select" style='width: 55%;
-    border: none; margin-bottom: 5px' onChange="filterThumbnail(this.value, '<?php echo $id; ?>', 'accounting_expense')">
-            <option value="all">All time</option>
-            <option value="week">Last 7 days </option>
-            <option value="two-week">last 14 days</option>
-            <option value="month">last 30 days </option>
-            <option value="two-month">last 60 days </option>
-        </select>
-        <div  id="filter-customer-counter">
-
-        </div>
-        
-    </div>
-    <div class="nsm-card-content"
-        style="  height: calc(100% - 120px); display: <?php echo $isListView ? 'block' : 'none'; ?>"
-        id="thumbnail_content_graph_<?php echo $id; ?>">
-        <h3 style="font-size: 14px; text-align: center;font-weight: bolder;">WHERE YOUR MONEY WENT</h3>
-        <p style="margin: 0;font-size: 12px;text-align: center">You spent <span style="font-weight: bold;"
-                id="total_expense_graph"></span> over the past year.</p>
-        <div style="position:relative;">
-            <p class="top-spending">Your top spending categories:</p>
-        </div>
-        <h1 id='AccountingExpenseGraphLoader'> <span class="bx bx-loader bx-spin"></span></h1>
-        <canvas id="AccountingExpenseGraph" style="max-height:78%; margin-top: 10px; padding-bottom: 5px;" class="nsm-chart"
-            data-chart-type="widgets/accounting_expense_counter" data-chart-id="<?php echo $id; ?>"></canvas>
-    </div>
-    <div class="nsm-card-content"
-        style="  height: calc(100% - 120px);  display: <?php echo $isListView ? 'none' : 'block'; ?>"
-        id="thumbnail_content_list<?php echo $id; ?>">
-        <div class="row ">
-            <div class="col-12 col-lg-12 leads-container">
-                <div class="text-start summary-report-body">
-                    <label for="">Total Spent</label>
-                    <h1 class="total_expense_graph_total" id="first_content_<?php echo $id; ?>">
-                    </h1>
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <div class="input-group mb-3 accountingExpenseFilter">
+                    <select class="form-select" onChange="filterThumbnail(this.value, '<?php echo $id; ?>', '<?php echo $category; ?>')">
+                        <option value="all">All time</option>
+                        <option value="week">Last 7 days</option>
+                        <option value="two-week">Last 14 days</option>
+                        <option value="month">Last 30 days</option>
+                        <option value="two-month">Last 60 days</option>
+                    </select>
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col textData_<?php echo $id; ?> <?php echo $isListView == 1 ? 'display_none' : ''; ?>">
+                <div class="text-center p-2">
+                    <strong class="text-muted text-uppercase">TOTAL SPENT</strong>
+                    <h2  id="first_content_<?php echo $id; ?>" class="total_expense_graph_total"></h2>
+                </div>
+            </div>
+            <div class="col graphData_<?php echo $id; ?> <?php echo $isListView == 0 ? 'display_none' : ''; ?>">
+                <div class="text-center p-2">
+                    <canvas id="AccountingExpenseGraph" class="nsm-chart" data-chart-type="widgets/accounting_expense_counter" data-chart-id="<?php echo $id; ?>" style="max-height: 120px;"><canvas>
+                </div>
+            </div>
+        </div>
+        <strong class="dragHandle">⣿⣿⣿⣿</strong>
+        <span class="widthResizeHandle"></span>
+        <span class="heightResizeHandle"></span>
     </div>
-
 </div>
-
-
 <?php
-if (!is_null($dynamic_load) && $dynamic_load == true) {
-}
+// if (!is_null($dynamic_load) && $dynamic_load == true) {
+// }
 ?>

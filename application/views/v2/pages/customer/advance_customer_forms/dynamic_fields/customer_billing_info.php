@@ -199,6 +199,16 @@
                 </select>
             </div>
         </div>   
+        <?php if( $billing_info && $billing_info->next_billing_date != '' ){ ?>
+        <div class="row form_line">
+            <div class="col-md-6">
+                Next Billing Date
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" value="<?= date("m/d/Y", strtotime($billing_info->next_billing_date)); ?>" disabled="" />
+            </div>
+        </div> 
+        <?php } ?>
         <div class="row form_line">
             <div class="col-md-6">
                 Late Fee
