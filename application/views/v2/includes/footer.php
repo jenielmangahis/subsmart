@@ -556,13 +556,13 @@ function manipulateWidget(dis, id) {
 
 function manipulateShowGraph(dis, id) {
     if ($(dis).is(":checked")) {
-        $(`#thumbnail_content_graph_${id}`).show();
-        $(`#thumbnail_content_list${id}`).hide();
-        updateListView(id, 1)
+        $(`#thumbnail_content_graph_${id}, .graphData_${id}`).show();
+        $(`#thumbnail_content_list${id}, .textData_${id}`).hide();
+        updateListView(id, 1);
     } else {
-        $(`#thumbnail_content_graph_${id}`).hide();
-        $(`#thumbnail_content_list${id}`).show();
-        updateListView(id, 0)
+        $(`#thumbnail_content_graph_${id}, .graphData_${id}`).hide();
+        $(`#thumbnail_content_list${id}, .textData_${id}`).show();
+        updateListView(id, 0);
     }
 }
 
@@ -687,10 +687,8 @@ function filterSubscription(){
     let selectedDateRange = $('.filterSubscriptionDate').val();
     let selectedDataId = $('.filterSubscriptionDate').attr('data-id');
     let selectedStatus = $('.filterSubscriptionStatus').val();
-
     filterThumbnail(selectedDateRange, selectedDataId, 'acs_billing',selectedStatus)
 };
-
 
 
 function filterSubscriptionStatus(status) {
@@ -1061,25 +1059,25 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
 
 function filterEsignThumbnailGraph(esign) {
     //console.log('goes here')
-    var $output = '';
+    var output = '';
     if (esign.length > 0) {
         $.each(esign, function(index, data) {
-            $output += '<div class="row js-row-dash mb-2">';
-            $output += '<div class="col-9 marg-top">';
-            $output += '<div class="jname">' + htmlspecialchars(data.status) + '</div>';
-            $output += '</div>';
-            $output += '<div class="col-3 col-center">';
-            $output += '<div class="row">';
-            $output += '<div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">' +
-                htmlspecialchars(data.status_count) + '</span></div>';
-            $output += '</div>';
-            $output += '</div>';
-            $output += '</div>';
+            output += "<div class='col'>";
+            output +=   "<div class='text-center p-2'>";
+            output +=       "<strong class='text-muted text-uppercase'>"+htmlspecialchars(data.status)+"</strong>";
+            output +=       "<h2 class='mb-0'>"+htmlspecialchars(data.status_count)+"</h2>";
+            output +=   "</div>";
+            output += "</div>";
         });
     } else {
-        $output += '<div class="nsm-empty"><i class="bx bx-meh-blank"></i><span>Empty</span></div>'
+        output = '';
+        output += "<div class='col'>";
+        output +=   "<div class='text-center p-2'>";
+        output +=       "<strong class='text-muted text-uppercase'>NO AVAILABLE DATA</strong>";
+        output +=   "</div>";
+        output += "</div>";
     }
-    $('#esign-content').html($output);
+    $('.esignContent').html(output);
 }
 
 function htmlspecialchars(str) {
@@ -1697,9 +1695,29 @@ function fetchJobs() {
 function addThumbnail(id, link) {
     var isGlobal = $('#widgetGlobal_' + id).is(":checked") ? '1' : 0;
     var isMain = $('#widgetMain_' + id).is(":checked") ? '1' : 0;
-    $("#nsm_thumbnail").append(
-        '<div class="nsm-card nsm-grid main-widget-container position-relative" id="widget_loader"><span class="loader position-absolute top-50 start-50 translate-middle"></span></div>'
-    );
+    var divContainer = `
+        <div class="col mt-3" data-id="${id}" id="thumbnail_${id}">
+            <div class="card shadow">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p class="card-text placeholder-glow">
+                                    <span class="placeholder col-3" style="color:#6a4a86"></span>
+                                    <span class="placeholder col-11 mt-3"></span>
+                                    <span class="placeholder col-12"></span>
+                                    <span class="placeholder col-4"></span>
+                                    <span class="placeholder placeholder-lg col-12 mt-3 mb-3"></span>
+                                    <span class="placeholder col-12"></span>
+                                    <span class="placeholder col-12"></span>
+                                    <span class="placeholder col-12"></span>
+                                    <span class="placeholder col-2 mt-3 float-end"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>`;
+    $(".cardContainers1").append(divContainer);
     $.ajax({
         url: '<?php echo base_url(); ?>widgets/addV2Thumbnail',
         method: 'POST',
@@ -1719,7 +1737,7 @@ function addThumbnail(id, link) {
                     $("#widget_loader").remove();
 
                     // Append the response
-                    $("#nsm_thumbnail").append(response);
+                    $(`#thumbnail_${id}`).html(response);
                 }, 1000);
             }
             fetchJobs();
