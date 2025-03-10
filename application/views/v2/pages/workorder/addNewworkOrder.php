@@ -223,7 +223,7 @@
                                                         <select class="nsm-field form-select select2" name="customer_id" id="sel-customer" style="width:50%;"></select>
                                                     </div>
                                                     <div class="col-5">
-                                                        <button type="button" id="" data-bs-toggle="modal" data-bs-target="#new_customer" class="nsm-button small text-end" ><strong>Add New Customer</strong></button>                                                    
+                                                        <button type="button" id="" data-bs-toggle="modal" data-bs-target="#quick-add-customer" class="nsm-button small text-end" ><strong>Add New Customer</strong></button>                                                    
                                                     </div>
                                                 </div>
                                             </div>
@@ -436,8 +436,8 @@
                                                     <div class="col-12 col-md-2">
                                                         <div class="d-flex justify-content-between">
                                                             <h6>Job Type</h6>
-                                                            <a class="nsm-link d-flex align-items-center btn-quick-add-job-type" href="javascript:void(0);">
-                                                                <span class="bx bx-plus"></span>Create Job Type
+                                                            <a class="nsm-button btn-small btn-quick-add-job-type" href="javascript:void(0);">
+                                                                <span class="fa fa-plus"></span> Add New Job Type
                                                             </a>
                                                         </div>
                                                         <select name="job_type" id="job_type" class="nsm-field form-select">
@@ -449,8 +449,8 @@
                                                     <div class="col-12 col-md-2">
                                                         <div class="d-flex justify-content-between">
                                                             <h6>Job Tag</h6>
-                                                            <a class="nsm-link d-flex align-items-center btn-quick-add-job-tag" href="javascript:void(0);">
-                                                                <span class="bx bx-plus"></span>Create Job Tag
+                                                            <a class="nsm-button btn-small btn-quick-add-job-tag" href="javascript:void(0);">
+                                                                <span class="fa fa-plus"></span> Add New Job Tag
                                                             </a>
                                                         </div>   
                                                         <select name="job_tag" id="job_tag" class="nsm-field form-select">
@@ -497,8 +497,8 @@
                                                     <div class="col-12 col-md-2">
                                                         <div class="d-flex justify-content-between">
                                                             <h6>Lead Source</h6>
-                                                            <a class="nsm-link d-flex align-items-center btn-quick-add-lead-source" href="javascript:void(0);">
-                                                                <span class="bx bx-plus"></span>Create Lead Source
+                                                            <a class="nsm-button btn-small btn-quick-add-lead-source" href="javascript:void(0);">
+                                                                <span class="bx bx-plus"></span> Create Lead Source
                                                             </a>
                                                         </div>
                                                         <select name="lead_source" class="nsm-field form-select" id="lead_source">
@@ -1035,7 +1035,7 @@
         </div>
     </div>
 </div>
-<?php include viewPath('v2/pages/job/modals/new_customer'); ?>
+<?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
 <?php include viewPath('v2/includes/job/quick_add'); ?>
 <?php //include viewPath('includes/footer'); ?>
 
@@ -1162,8 +1162,7 @@ $(document).on('click', '.delete-row-checklist', function(){
     }
     $(this).closest('li').fadeOut(300, function(){
         $(this).remove();
-    });
-    console.log(selected_checklists);
+    });    
 });
 
 $(document).on('submit', '#form_new_workorder', function(e){
@@ -1541,8 +1540,6 @@ var package_price_set =  $("#package_price_set").val();
         // console.log(result);
         var Randnumber = 1 + Math.floor(Math.random() * 99999);
 
-        console.log(response['pName']);
-
                     // var inputs1 = "";
                         $.each(response['pName'], function (a, b) {
                             // inputs1 += b.name;
@@ -1645,8 +1642,6 @@ $(".addNewPackageToList").click(function () {
 
         // console.log(result);
         var Randnumber = 1 + Math.floor(Math.random() * 99999);
-
-        console.log(response['pName']);
 
                     // var inputs1 = "";
                         $.each(response['pName'], function (a, b) {
@@ -1794,7 +1789,7 @@ $("#btnSaveSign").click(function(e){
         url : "<?php echo base_url(); ?>accounting/testSave",
         data : {dataURL: dataURL},
         success: function(result){
-            console.log(dataURL)    
+
         },
     });			
 });
@@ -1824,10 +1819,10 @@ function submit() {
     data : {dataURL: dataURL, dataURL2: dataURL2, dataURL3: dataURL3},
     success: function(result){
         // $('#res').html('Signature Uploaded successfully');
-        alert('Signature Uploaded successfully');
-        console.log(dataURL);
-        console.log(dataURL2);
-        console.log(dataURL3);
+        //alert('Signature Uploaded successfully');
+        // console.log(dataURL);
+        // console.log(dataURL2);
+        // console.log(dataURL3);
 
         // var image = new Image();
         // image.src = '"' + dataURL + '"';
@@ -2309,7 +2304,7 @@ $(document).on('click','.save_terms_and_conditions',function(){
             success: function(dataResult){
                 // $('#table').html(dataResult); 
                 // alert('success')
-                console.log(dataResult);
+                //console.log(dataResult);
                 $("#terms_conditions_modal").modal('hide')
                 $('#thisdiv2').load(window.location.href +  ' #thisdiv2');
             },
@@ -2337,7 +2332,7 @@ $(document).on('click','.save_terms_of_use',function(){
             success: function(dataResult){
                 // $('#table').html(dataResult); 
                 // alert('success')
-                console.log(dataResult);
+                //console.log(dataResult);
                 $("#terms_use_modal").modal('hide')
                 $('#thisdiv3').load(window.location.href +  ' #thisdiv3');
             },
@@ -2412,7 +2407,7 @@ $(document).on('click','.save_terms_of_use',function(){
                 return repo.text;
             }
             var $container = $(
-                '<div class="contact-acro">'+repo.acro+'</div><div class="contact-info"><i class="bx bx-user-pin"></i> '+repo.first_name + ' ' + repo.last_name+'<br><small><i class="bx bx-mobile"></i> '+repo.phone_m+' / <i class="bx bx-envelope"></i> '+repo.email+'</div>'
+                '<div class="contact-info"><i class="bx bx-user-pin"></i> '+repo.first_name + ' ' + repo.last_name+'<br><small><i class="bx bx-mobile"></i> '+repo.phone_m+' / <i class="bx bx-envelope"></i> '+repo.email+'</div>'
             );
             return $container;
         }
@@ -3090,8 +3085,8 @@ document.getElementById("payment_method").onchange = function() {
 <script>
 $(".select_package").click(function () {
   var idd = this.id;
-  console.log(idd);
-  console.log($(this).data('itemname'));
+  //console.log(idd);
+  //console.log($(this).data('itemname'));
   var title = $(this).data('itemname');
   var price = $(this).data('price');
 
@@ -3111,7 +3106,7 @@ $.ajax({
     dataType: 'json',
     success: function(response){
         // alert('Successfully Change');
-        console.log(response['items']);
+        //console.log(response['items']);
 
         // var objJSON = JSON.parse(response['items'][0].title);
                 var inputs = "";

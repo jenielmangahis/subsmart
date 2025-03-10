@@ -36,12 +36,11 @@
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row">
-                    <div class="col-5">
-                        <h1>MailChimp</h1>
-                        <p style="margin-top: 21px;">Get the Tools You Need to Grow Your Business and Automate Your Marketing. Mailchimp Makes It Easy to Find New Audiences and Reach People When It Matters Most.</p>
-                    </div>
-                    <div class="col-7" style="text-align:right;">
-                        <img class="nsm-card-img-lg" src="<?= base_url() ?>/assets/img/api-tools/thumb_mailchimp.png">
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class="bx bx-x"></i></button>
+                            <p>Get the Tools You Need to Grow Your Business and Automate Your Marketing. Mailchimp Makes It Easy to Find New Audiences and Reach People When It Matters Most.</p>                  
+                        </div>
                     </div>
                 </div>
 
@@ -52,25 +51,24 @@
                         </div>
                     </div>
                 <?php } ?>
+
                 <?php if($companyMailChimp && $companyMailChimp->status == 1 && $companyMailChimp->mailchimp_account_info != ''){ ?>
                     <?php $account_info = unserialize($companyMailChimp->mailchimp_account_info); ?>
                     <div class="row mt-4">
                         <div class="col-2">
                             <span class="api-label">MailChimp Status</span>
-                            <span class="api-label f-green">You are connected</span>
-                        </div>
-                        <div class="col-4">
-                            <a href="javascript:void(0);" class="nsm-button primary" id="btn-disconnect-mailchimp">Disconnect</a>
+                            <span>You are connected</span>
                         </div>
                     </div>
                     <div class="row mt-4">
                         <span class="api-label">MailChimp Account</span>
-                        <span class="api-label f-green"><?= $account_info['accountname']; ?></span>
-                        <span class="api-label f-green"><?= $account_info['email']; ?></span>
+                        <span><?= $account_info['accountname']; ?></span>
+                        <span><?= $account_info['email']; ?></span>
                     </div>
 
                     <div class="row mt-5">                                     
                         <div class="col-12">
+                            <a href="javascript:void(0);" class="nsm-button primary" id="btn-disconnect-mailchimp">Disconnect</a>
                             <a class="nsm-button primary" id="btn-mailchimp-export-customer" href="javascript:void(0);">
                                 <i class='bx bx-export'></i> Add Customer Email to MailChimp List
                             </a>

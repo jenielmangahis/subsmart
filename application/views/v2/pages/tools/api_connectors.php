@@ -1,6 +1,5 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/tools/api_connectors_modals'); ?>
-
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/tools_tabs'); ?>
@@ -41,7 +40,9 @@
                                                 <label class="nsm-subtitle text-success">Free</label>
                                             </div> -->
                                         </div>
-                                        <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/google_contacts'); ?>'">Manage</button>
+                                        <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
+                                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/google_contacts'); ?>'">Manage</button>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
@@ -68,7 +69,9 @@
                                                 <label class="nsm-subtitle text-success">Free</label>
                                             </div> -->
                                         </div>
-                                        <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/quickbooks'); ?>'">Manage</button>
+                                        <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
+                                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/quickbooks'); ?>'">Manage</button>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
@@ -95,7 +98,9 @@
                                                 <label class="nsm-subtitle text-success">Free</label>
                                             </div> -->
                                         </div>
-                                        <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/quickbooks_accounting'); ?>'">Manage</button>
+                                        <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
+                                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/quickbooks_accounting'); ?>'">Manage</button>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
@@ -175,8 +180,10 @@
                                                 <label class="nsm-subtitle text-success">$5.00/Month</label>
                                             </div> -->
                                         </div>
-                                        <?php if( $is_enabled == 1 ){ ?>
-                                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/zapier'); ?>'">Manage</button>
+                                        <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
+                                            <?php if( $is_enabled == 1 ){ ?>
+                                                <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('tools/zapier'); ?>'">Manage</button>
+                                            <?php } ?>
                                         <?php } ?>
                                     </div>
                                 </div>
@@ -204,7 +211,9 @@
                                                 <label class="nsm-subtitle text-success">Free</label>
                                             </div>
                                         </div> -->
-                                        <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/mailchimp'); ?>'">Manage</button>
+                                        <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
+                                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/mailchimp'); ?>'">Manage</button>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
@@ -232,7 +241,9 @@
                                                 <label class="nsm-subtitle text-success">Free</label>
                                             </div> -->
                                         </div>
-                                        <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/active_campaign'); ?>'">Manage</button>
+                                        <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
+                                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tools/active_campaign'); ?>'">Manage</button>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
@@ -396,14 +407,18 @@
                                                     Online Transaction Fees: as set by PayPal.
                                                 </label>
                                             </div>
+                                            <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
                                             <div class="col-12 col-md-12 mb-4">
                                                 <div class="form-check form-switch nsm-switch m-auto">
                                                     <input class="form-check-input switch-default-payment-api" data-type="paypal" type="checkbox" name="switch_paypal" id="switch_paypal">
                                                     <label class="form-check-label" for="switch_paypal">Use Default Payment Tool</label>
                                                 </div>
                                             </div>
+                                            <?php } ?>
                                             <div class="col-12 text-center">
-                                                <button type="button" class="nsm-button primary" id="btn_setup_paypal">Setup</button>
+                                                <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>   
+                                                    <button type="button" class="nsm-button primary" id="btn_setup_paypal">Setup</button>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     </div>
@@ -424,12 +439,14 @@
                                                     Online Transaction Fees: as set by Square, Instant Deposit is available.
                                                 </label>
                                             </div>
+                                            <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
                                             <div class="col-12 col-md-12 mb-4">
                                                 <div class="form-check form-switch nsm-switch m-auto">
                                                     <input class="form-check-input switch-default-payment-api" data-type="square" type="checkbox" name="switch_square" id="switch_square">
                                                     <label class="form-check-label" for="switch_square">Use Default Payment Tool</label>
                                                 </div>
                                             </div>
+                                            <?php } ?>
                                             <div class="col-12 text-center">
                                                 <div class="row align-items-center mb-3">                                                    
                                                     <?php if($onlinePaymentAccount){ ?>
@@ -448,7 +465,9 @@
                                                         </div>                                                        
                                                     <?php } ?>                                                    
                                                 </div>
-                                                <button type="button" class="nsm-button primary" id="btn_setup_square">Setup</button>
+                                                <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
+                                                    <button type="button" class="nsm-button primary" id="btn_setup_square">Setup</button>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     </div>
@@ -476,7 +495,9 @@
                                                         <span class="nsm-badge warning">Not Active</span>
                                                     </div>
                                                 </div>
-                                                <button type="button" class="nsm-button primary" id="btn_setup_wepay">Setup</button>
+                                                <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
+                                                    <button type="button" class="nsm-button primary" id="btn_setup_wepay">Setup</button>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     </div>
@@ -497,14 +518,18 @@
                                                     Payments infrastructure for the internet with Stripe.com.
                                                 </label>
                                             </div>
+                                            <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
                                             <div class="col-12 col-md-12 mb-4">
                                                 <div class="form-check form-switch nsm-switch m-auto">
                                                     <input class="form-check-input switch-default-payment-api" data-type="stripe" type="checkbox" name="switch_stripe" id="switch_stripe">
                                                     <label class="form-check-label" for="switch_stripe">Use Default Payment Tool</label>
                                                 </div>
                                             </div>
+                                            <?php } ?>
                                             <div class="col-12 text-center">
-                                                <button type="button" class="nsm-button primary" id="btn_setup_stripe">Setup</button>
+                                                <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
+                                                    <button type="button" class="nsm-button primary" id="btn_setup_stripe">Setup</button>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     </div>
@@ -525,14 +550,18 @@
                                                     Payments infrastructure for the internet with NMI.
                                                 </label>
                                             </div>
+                                            <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
                                             <div class="col-12 col-md-12 mb-4">
                                                 <div class="form-check form-switch nsm-switch m-auto">
                                                     <input class="form-check-input switch-default-payment-api" data-type="nmi" type="checkbox" name="switch_nmi" id="switch_nmi">
                                                     <label class="form-check-label" for="switch_nmi">Use Default Payment Tool</label>
                                                 </div>
                                             </div>
+                                            <?php } ?>
                                             <div class="col-12 text-center">
-                                                <button type="button" class="nsm-button primary" id="btn_setup_nmi">Setup</button>
+                                                <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
+                                                    <button type="button" class="nsm-button primary" id="btn_setup_nmi">Setup</button>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     </div>
@@ -553,12 +582,14 @@
                                                     Accept payments in any way your business requires with Converge.
                                                 </label>
                                             </div>
+                                            <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
                                             <div class="col-12 col-md-12 mb-4">
                                                 <div class="form-check form-switch nsm-switch m-auto">
                                                     <input class="form-check-input switch-default-payment-api" data-type="converge" type="checkbox" name="switch_converge" id="switch_converge">
                                                     <label class="form-check-label" for="switch_converge">Use Default Payment Tool</label>
                                                 </div>
                                             </div>
+                                            <?php } ?>
                                             <div class="col-12 text-center">
                                                 <?php if ($onlinePaymentAccount->converge_merchant_id != '') : ?>
                                                     <div class="row align-items-center mb-3">
@@ -567,18 +598,19 @@
                                                         </div>
                                                     </div>
                                                 <?php endif; ?>
-
-                                                <?php if ($onlinePaymentAccount) : ?>
-                                                    <?php if ($onlinePaymentAccount->converge_merchant_id == '') : ?>
-                                                        <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('customer/merchant'); ?>'">Apply Now</button>
+                                                <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
+                                                    <?php if ($onlinePaymentAccount) : ?>
+                                                        <?php if ($onlinePaymentAccount->converge_merchant_id == '') : ?>
+                                                            <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('customer/merchant'); ?>'">Apply Now</button>
+                                                        <?php endif; ?>
+                                                        <button type="button" class="nsm-button primary btn-setup-converge">
+                                                            <?= $onlinePaymentAccount->converge_merchant_id != ''  ? 'Connected' : 'Setup'; ?>
+                                                        </button>
+                                                    <?php else : ?>
+                                                        <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('customer/merchant'); ?>'">Apply Now</button>
+                                                        <button type="button" class="nsm-button primary btn-setup-converge">Setup</button>
                                                     <?php endif; ?>
-                                                    <button type="button" class="nsm-button primary btn-setup-converge">
-                                                        <?= $onlinePaymentAccount->converge_merchant_id != ''  ? 'Connected' : 'Setup'; ?>
-                                                    </button>
-                                                <?php else : ?>
-                                                    <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('customer/merchant'); ?>'">Apply Now</button>
-                                                    <button type="button" class="nsm-button primary btn-setup-converge">Setup</button>
-                                                <?php endif; ?>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     </div>
@@ -600,14 +632,18 @@
                                                     Use Braintree that makes it easy to accept payments
                                                 </label>
                                             </div>
+                                            <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
                                             <div class="col-12 col-md-12 mb-4">
                                                 <div class="form-check form-switch nsm-switch m-auto">
                                                     <input class="form-check-input switch-default-payment-api" data-type="braintree" type="checkbox" name="switch_braintree" id="switch_braintree">
                                                     <label class="form-check-label" for="switch_braintree">Use Default Payment Tool</label>
                                                 </div>
                                             </div>
+                                            <?php } ?>
                                             <div class="col-12 text-center">
-                                                <button type="button" class="nsm-button primary" id="btn_setup_braintree">Setup</button>
+                                                <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
+                                                    <button type="button" class="nsm-button primary" id="btn_setup_braintree">Setup</button>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     </div>
@@ -647,6 +683,7 @@
                                             Send SMS and make phone call via Ring Central API.
                                         </label>
                                     </div>
+                                    <?php if(checkRoleCanAccessModule('api-connectors', 'write')){ ?>
                                     <div class="col-12 text-center">
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-md-12">
@@ -658,6 +695,7 @@
                                         </div>
                                         <button type="button" class="nsm-button primary" id="btn-setup-ring-central">Manage</button>
                                     </div>
+                                    <?php } ?>
                                 </div>
                             </div>
                         </div>

@@ -154,7 +154,7 @@ error_reporting(0);
                </div>
             </div>
             <div class="card">
-               <h4>Contact Details</h4>
+               <h4>Other Information</h4>
                <div class="row">
                   <div class="col-md-6">
                      <div class="form-group">
@@ -238,7 +238,7 @@ error_reporting(0);
                         <span class="validation-error-field" data-formerrors-for-name="email" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-3">
                      <div class="form-group">
                         <label>Business Website</label> <span class="help">(optional)</span>
                         <input type="text" name="website" value="<?php echo ($profiledata) ? $profiledata->website : '' ?>"  class="form-control" autocomplete="off" placeholder="Enter your business website, if any">
@@ -269,6 +269,52 @@ error_reporting(0);
                            <div class="checkbox checkbox-sec">
                               <input type="radio" name="is_emergency_support" value="0" <?= $without_emergency_support; ?> id="is_emergency_support_2">
                               <label for="is_emergency_support_2"><span>No</span></label>
+                           </div>
+                        </div>
+                        <br />
+                        <label>Does your customer have subscription?</label> <span class="form-required">*</span>
+                        <div>
+                            <?php 
+                              $with_customer_subscription    = '';
+                              $without_customer_subscription = '';
+                              if( $profiledata ){
+                                if( $profiledata->is_with_customer_subscription ==1 ){
+                                  $with_customer_subscription = 'checked="checked"';
+                                }else{
+                                  $without_customer_subscription = 'checked="checked"';
+                                }
+                              }
+                            ?>
+                           <div class="checkbox checkbox-sec margin-right">
+                              <input type="radio" name="is_with_customer_subscription" value="1" <?= $with_customer_subscription; ?> id="is_customer_with_subscription_1">
+                              <label for="is_customer_with_subscription_1"><span>Yes</span></label>
+                           </div>
+                           <div class="checkbox checkbox-sec">
+                              <input type="radio" name="is_with_customer_subscription" value="0" <?= $without_customer_subscription; ?> id="is_customer_with_subscription_2">
+                              <label for="is_customer_with_subscription_2"><span>No</span></label>
+                           </div>
+                        </div>
+                        <br />
+                        <label>Do you have property rental?</label> <span class="form-required">*</span>
+                        <div>
+                            <?php 
+                              $with_property_rental    = '';
+                              $without_property_rental = '';
+                              if( $profiledata ){
+                                if( $profiledata->is_with_property_rental ==1 ){
+                                  $with_property_rental = 'checked="checked"';
+                                }else{
+                                  $without_property_rental = 'checked="checked"';
+                                }
+                              }
+                            ?>
+                           <div class="checkbox checkbox-sec margin-right">
+                              <input type="radio" name="is_with_property_rental" value="1" <?= $with_property_rental; ?> id="is_with_property_rental_1">
+                              <label for="is_with_property_rental_1"><span>Yes</span></label>
+                           </div>
+                           <div class="checkbox checkbox-sec">
+                              <input type="radio" name="is_with_property_rental" value="0" <?= $without_property_rental; ?> id="is_with_property_rental_2">
+                              <label for="is_with_property_rental_2"><span>No</span></label>
                            </div>
                         </div>
                      </div>

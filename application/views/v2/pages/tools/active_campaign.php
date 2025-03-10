@@ -36,15 +36,13 @@
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row">
-                    <div class="col-5">
-                        <h1>Active Campaign</h1>
-                        <p style="margin-top: 21px;">Export customer to your <b>Active Campaign</b> lists.</p>
-                    </div>
-                    <div class="col-7" style="text-align:right;">
-                        <img class="nsm-card-img-lg" src="<?= base_url() ?>/assets/img/api-tools/thumb_active_campaign.png">
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class="bx bx-x"></i></button>
+                            Export customer to your <b>Active Campaign</b> lists.
+                        </div>
                     </div>
                 </div>
-
                 <?php if( $is_with_error == 1 ){ ?>
                     <div class="row">
                         <div class="col-4">

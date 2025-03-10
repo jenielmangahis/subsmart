@@ -1,80 +1,28 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('v2/includes/header'); ?>
-<?php include viewPath('v2/includes/customer/customer_modals'); ?>
-
 <style>
-    .page-title, .box-title {
-      font-family: Sarabun, sans-serif !important;
-      font-size: 1.75rem !important;
-      font-weight: 600 !important;
-      padding-top: 5px;
-    }
     label>input {
       visibility: initial !important;
       position: initial !important; 
     }
-    .pr-b10 {
-      position: relative;
-      bottom: 10px;
+    .cb-account-numbers{
+        list-style: none;
+        padding: 0px;
+        margin: 0px;
     }
-    .left {
-      float: left;
+    .cb-account-numbers li{
+        display: block;
+        width: 100%;
+        margin: 5px;
     }
-    .p-40 {
-      padding-left: 15px !important;
-      padding-top: 10px !important;
-    }
-    .card.p-20 {
-        padding-top: 18px !important;
-    }
-    .fr-right {
-      float: right;
-      justify-content: flex-end;
-    }
-    .p-20 {
-      padding-top: 25px !important;
-      padding-bottom: 25px !important;
-      padding-right: 20px !important;
-      padding-left: 20px !important;
-    }
-    .float-right.d-md-block {
-      position: relative;
-      bottom: 5px;
-    }
-    .pd-17 {
-      position: relative;
-      left: 17px;
-    }
-    @media only screen and (max-width: 1300px) {
-      .card-deck-upgrades div a {
-          min-height: 440px;
-      }
-    }
-    @media only screen and (max-width: 1250px) {
-      .card-deck-upgrades div a {
-          min-height: 480px;
-      }
-      .card-deck-upgrades div {
-        padding: 10px !important;
-      }
-    }
-    @media only screen and (max-width: 600px) {
-      .p-40 {
-        padding-top: 0px !important;
-      }
-      .pr-b10 {
-        position: relative;
-        bottom: 0px;
-      }
-    }
-    svg#svg-sprite-menu-close {
-      position: relative;
-      bottom: 62px !important;
+    .cb-status-icon{
+        font-size: 28px;
+        margin-bottom: 8px;
     }
 </style>
-
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/customer_module_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/customer_tabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
@@ -82,160 +30,335 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            <button><i class='bx bx-x'></i></button>
-                            Manage your creditors / furnishers
+                            <button name="button"><i class='bx bx-x'></i></button>
+                            Manage your creditors / furnishers.
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
-                            <div class="float-right d-none d-md-block">
-                                <div class="dropdown">
-                                    <?php ////if (hasPermissions('add_plan')): ?>
-                                    <a href="<?php echo url('creditor_furnisher/add_new') ?>" class="btn btn-primary" style="position: relative;bottom: 2px;"><i
-                                                class="fa fa-plus"></i> Add New</a>
-
-                                </div>
-                            </div>
-                        </div>
-                        <section class="content">
-                    <!-- Default box -->
-                    <div class="box">
-                        <div class="box-body">
-                            <?php include viewPath('flash'); ?>
-                            <table id="furnisherList" class="table table-bordered table-striped">
-                                <thead>
-                                <tr>
-                                    <th style="width:30%;">Nane</th>
-                                    <th style="width:40%;">Address</th>
-                                    <th style="width:10%;">Phone</th>
-                                    <th style="width:10%;">Account Type</th>
-                                    <th style="width:10%;"></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach($creditorFurnishers as $f){ ?>
-                                        <tr>
-                                            <td><?= $f->name; ?></td>
-                                            <td><span><?= $f->address; ?></span></td>
-                                            <td>(<?= $f->ext; ?>) <?= $f->phone; ?></td>
-                                            <td><?= $f->account_type; ?></td>
-                                            <td class="text-right" style="vertical-align:top;">
-                                                <div class="dropdown dropdown-btn">
-                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                        <li role="presentation">
-                                                            <a role="menuitem" tabindex="-1" href="<?php echo base_url('creditor_furnisher/edit/' . $f->id) ?>">
-                                                                <span class="fa fa-pencil-square-o icon"></span> Edit
-                                                            </a>
-                                                        </li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" class="delete-furnisher" href="javascript:void(0);" data-name="<?= $f->name; ?>" data-id="<?= $f->id; ?>">
-                                                                <span class="fa fa-trash-o icon"></span> Delete
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.box-body -->
-
-                        <!-- Modal Delete Quick Note -->
-                        <div class="modal fade bd-example-modal-md" id="modal-delete-furnisher" tabindex="-1" role="dialog" aria-labelledby="modalDeleteWorkorderTypeTitle" aria-hidden="true">
-                          <div class="modal-dialog modal-md" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'frm-delete-furnisher', 'autocomplete' => 'off' ]); ?>
-                              <?php echo form_input(array('name' => 'fid', 'type' => 'hidden', 'value' => '', 'id' => 'fid'));?>
-                              <div class="modal-body">
-                                  <p>Are you sure you want to delete creditor / furnisher <span class="furnisher-name"></span>?</p>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                <button type="submit" class="btn btn-danger btn-delete-furnisher">Yes</button>
-                              </div>
-                              <?php echo form_close(); ?>
-                            </div>
-                          </div>
+                    <div class="col-6 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
                         </div>
                     </div>
-                    <!-- /.box -->
-                </section>
+                    <div class="col-6 grid-mb text-end">
+                        <div class="nsm-page-buttons page-button-container">
+                            <a type="button" class="nsm-button primary" href="javascript:void(0);" id="btn-add-new-credit-industry">
+                                <i class='bx bx-fw bx-plus'></i> Add New Credit Industry
+                            </a>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="tab-content mt-4">
+                    <table class="nsm-table" id="credit-industry-list-table">
+                        <thead>
+                        <tr>
+                            <td class="table-icon"></td>
+                            <td data-name="Name">Name</td>
+                            <td data-name="Address">Address</td>                    
+                            <td data-name="Contact Number">Contact Number</td>                                
+                            <td data-name="Account Type">Account Type</td>  
+                            <td data-name="Manage" style="width:3%;"></td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                          <?php foreach($creditorFurnishers as $f){ ?>
+                              <tr>
+                                <td><div class="table-row-icon"><i class='bx bx-briefcase'></i></div></td>
+                                <td class="fw-bold nsm-text-primary"><?= $f->name; ?></td>
+                                <td class="nsm-text-primary"><span><?= $f->address != '' ? $f->address : '---'; ?></span></td>
+                                <td class="nsm-text-primary">
+                                  <?php 
+                                    $contact_number = '---';
+                                    if( $f->ext != '' && $f->phone != '' ){
+                                      $contact_number = '('. $f->ext .') ' . formatPhoneNumber($f->phone);
+                                    }
+                                    echo $contact_number;
+                                  ?>                                  
+                                </td>
+                                <td class="nsm-text-primary"><?= $f->account_type != '' ? $f->account_type : '---'; ?></td>
+                                <td>
+                                  <div class="dropdown table-management">
+                                      <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                          <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                      </a>
+                                      <ul class="dropdown-menu dropdown-menu-end">                                          
+                                          <li><a class="dropdown-item row-edit-item" href="javascript:void(0);" data-id="<?= $f->id; ?>">Edit</a></li>                                            
+                                          <li><a class="dropdown-item row-delete-item" href="javascript:void(0);" data-name="<?= $f->name; ?>" data-id="<?= $f->id; ?>">Delete</a></li>                                            
+                                      </ul>
+                                  </div>
+                                </td>
+                              </tr>
+                          <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Add New Modal -->
+                <div class="modal fade nsm-modal" id="modal-add-new-credit-industry" role="dialog" data-bs-backdrop="static" aria-labelledby="modal-add-new-credit-industryLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header mb-0">
+                                <span id="newcustomerLabel" class="modal-title content-title"><i class='bx bx-fw bx-plus'></i> Add New Credit Industry</span>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
+                            </div>
+                            <form id="frm-create-credit-industry">
+                                <div class="modal-body">                     
+                                    <div class="row">  
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="f-name">Company name</label>
+                                                <input type="text" class="form-control" placeholder="Company Name" name="f_company_name" id="f-name" placeholder="" required/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="f-account-type">Account Type</label>
+                                                <input type="text" class="form-control" placeholder="Account Type" name="f_account_type" id="f-account-type" placeholder="" required/>
+                                            </div>
+                                        </div>    
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="f-account-type">Phone Number</label><br />
+                                                <input type="text" class="form-control phone_number" placeholder="Phone Number" style="display:inline-block;width:50%;" name="f_phone" id="f-phone" placeholder="" required />
+                                                <input type="text" class="form-control" name="f_ext" id="" placeholder="Ext" required style="display:inline-block;width: 25%;"/>
+                                            </div>
+                                        </div>    
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="f-address">Address</label>
+                                                <input type="text" class="form-control" placeholder="Address" name="f_address" id="f-address" placeholder="" required/>
+                                            </div>
+                                        </div>  
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group">
+                                                <label for="estimate_date">City</label>
+                                                <input type="text" class="form-control" placeholder="City" name="f_city" id="" placeholder="" required/>
+                                            </div>
+                                        </div>   
+                                        <div class="col-md-4 mb-3">
+                                            <div class="form-group">
+                                                <label for="f-state">State</label>
+                                                <input type="text" class="form-control" placeholder="State" name="f_state" id="f-state" placeholder="" required/>
+                                            </div>
+                                        </div> 
+                                        <div class="col-md-2 mb-3">
+                                            <div class="form-group">
+                                                <label for="estimate_date">Zip</label>
+                                                <input type="text" class="form-control" placeholder="Zip" name="f_zipcode" id="" placeholder="" required/>
+                                            </div>
+                                        </div>      
+                                        <div class="col-md-12 mb-3">
+                                            <div class="form-group">
+                                                <label for="f-note">Note</label>
+                                                <textarea class="form-control" name="f_note" id="f-note" style="height:100px;"></textarea>
+                                            </div>
+                                        </div>                      
+                                    </div>  
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="nsm-button primary" id="btn-save-credit-industry">Save</button>
+                                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                </div>   
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Modal -->
+                <div class="modal fade nsm-modal" id="modal-edit-credit-industry" role="dialog" data-bs-backdrop="static" aria-labelledby="modal-edit-credit-industryLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header mb-0">
+                                <span id="newcustomerLabel" class="modal-title content-title"><i class='bx bx-fw bx-edit'></i> Edit Credit Industry</span>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
+                            </div>
+                            <form id="frm-update-credit-industry">
+                                <input type="hidden" name="fid" id="fid" value="" />
+                                <div class="modal-body" id="edit-credit-industry-container"></div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="nsm-button primary" id="btn-update-credit-industry">Save</button>
+                                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                </div>   
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
+
+<?php include viewPath('v2/includes/footer'); ?>
 <script>
-    $(function(){
-        $('#furnisherList').DataTable();
+    $(document).ready(function() {
+        $(".nsm-table").nsmPagination();
+        $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));        
+        }, 1000));
 
-        $(".delete-furnisher").click(function(){
-            var fid = $(this).attr('data-id');      
-            var fname = $(this).attr('data-name');      
-
-            $("#fid").val(fid);
-            $(".furnisher-name").html("<b>"+fname+"</b>");
-            $("#modal-delete-furnisher").modal('show');
+        $('#btn-add-new-credit-industry').on('click', function(){
+            $('#modal-add-new-credit-industry').modal('show');
         });
 
-        $("#frm-delete-furnisher").submit(function(e){
-          e.preventDefault();
-          var url = base_url + 'creditor_furnisher/_delete_creditor_furnisher';
-          $(".btn-delete-furnisher").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        $('.row-edit-item').on('click', function(){
+            var fid = $(this).attr('data-id');
+            
+            $('#fid').val(fid);
+            $('#modal-edit-credit-industry').modal('show');
+            
+            $.ajax({
+                type: "POST",
+                url: base_url + "creditor_furnisher/_edit_furnisher",
+                data: {fid:fid},
+                success: function(result)
+                {
+                    $('#edit-credit-industry-container').html(result);
+                },
+                beforeSend: function() {
+                    $('#edit-credit-industry-container').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
 
-          var formData = new FormData($("#frm-delete-furnisher")[0]);   
+        $('.phone_number').keydown(function(e) {
+            var key = e.charCode || e.keyCode || 0;
+            $text = $(this);
+            if (key !== 8 && key !== 9) {
+                if ($text.val().length === 3) {
+                    $text.val($text.val() + '-');
+                }
+                if ($text.val().length === 7) {
+                    $text.val($text.val() + '-');
+                }
+            }
+            return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+        });
 
-          setTimeout(function () {
-              $.ajax({
-                 type: "POST",
-                 url: url,
-                 dataType: 'json',
-                 contentType: false,
-                 cache: false,
-                 processData:false,
-                 data: formData,
-                 success: function(o)
-                 {  
-                    $("#modal-delete-furnisher").modal('hide');
+        $(document).on("click", ".row-delete-item", function() {
+            let fid  = $(this).attr("data-id");
+            let name = $(this).attr('data-name');
 
-                    if( o.is_success == 1 ){
-                      Swal.fire({
-                          title: 'Great!',
-                          text: 'Creditor / Furnisher was successfully deleted.',
-                          icon: 'success',
-                          showCancelButton: false,
-                          confirmButtonColor: '#32243d',
-                          cancelButtonColor: '#d33',
-                          confirmButtonText: 'Ok'
-                      }).then((result) => {
-                          location.reload();
-                      });
-                    }else{                      
-                      Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        confirmButtonColor: '#32243d',
-                        html: o.msg
-                      });
-                    } 
-                    $(".btn-delete-furnisher").html('Delete');
-                 }
-              });
-          }, 800);
-        });        
-    });    
+            Swal.fire({
+                title: 'Delete Credit Industry',
+                html: `Are you sure you want to delete credit industry <b>${name}</b>?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + "creditor_furnisher/_delete_creditor_furnisher",
+                        data: {fid: fid},
+                        dataType:"json",
+                        success: function(result) {
+                            if (result.is_success) {
+                                Swal.fire({
+                                    title: 'Credit Industry',
+                                    text: "Data Deleted Successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    html: result.msg
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+        });
+
+        $('#frm-create-credit-industry').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + "creditor_furnisher/_create_furnisher",
+                data: $(this).serialize(),
+                dataType:"json",
+                success: function(result)
+                {
+                    if(result.is_success){
+                        $('#modal-add-new-credit-industry').modal('hide');
+
+                        Swal.fire({
+                            title: 'Credit Industry',
+                            text: "Credit industry has been created successfully.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });
+                    }else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.msg,
+                        });
+                    }
+
+                    $('#btn-save-credit-industry').html('Save');
+                },
+                beforeSend: function() {
+                    $('#btn-save-credit-industry').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#frm-update-credit-industry').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + "creditor_furnisher/_update_furnisher",
+                data: $(this).serialize(),
+                dataType:"json",
+                success: function(result)
+                {
+                    if(result.is_success){
+                        $('#modal-edit-credit-industry').modal('hide');
+
+                        Swal.fire({
+                            title: 'Credit Industry',
+                            text: "Credit industry has been updated successfully.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });
+                    }else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.msg,
+                        });
+                    }
+
+                    $('#btn-update-credit-industry').html('Save');
+                },
+                beforeSend: function() {
+                    $('#btn-update-credit-industry').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+    });
 </script>
-<?php include viewPath('v2/includes/footer'); ?>
-    
