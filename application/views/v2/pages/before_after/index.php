@@ -37,26 +37,36 @@ include viewPath('includes/v2/notifications');
     <div class="nsm-page-nav mb-3">
         <?php include viewPath('v2/includes/page_navigations/files_vault_tab'); ?>
     </div>
-    <div>
-        <div class="nsm-callout primary">
-            <button><i class="bx bx-x"></i></button>
-            One of the best way for prospect to process information is with visual data.  Before and after photos serve as proof that the product (or service) works.  Start sharing your success photos to others to grow your business.
+    <div class="nsm-page-content">
+        <div class="row">
+            <div class="col-12">
+                <div class="nsm-callout primary">
+                    <button><i class='bx bx-x'></i></button>
+                    One of the best way for prospect to process information is with visual data.  Before and after photos serve as proof that the product (or service) works.  Start sharing your success photos to others to grow your business.
+                </div>
+            </div>
         </div>
+        <div class="row mt-2">
+            <div class="col-6 grid-mb">
+                <div class="nsm-field-group search">
+                    <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="">
+                </div>
+            </div>               
 
-        <div class="d-flex justify-content-end">
-            <a class="nsm-button primary m-0" id="newJobBtn" href="<?php echo url('before_after_photos/add_photos') ?>">
-                <span class="fa fa-plus"></span> Add Photos
-            </a>
+            <div class="col-6 grid-mb text-end">
+                <?php if(checkRoleCanAccessModule('before-after-photos', 'write')){ ?>
+                    <div class="nsm-page-buttons page-button-container">
+                    <a class="nsm-button primary" id="newJobBtn" href="<?php echo url('before_after_photos/add_photos') ?>">
+                        <i class='bx bx-fw bx-plus'></i> Add Photos
+                    </a>
+                    </div>
+                <?php } ?>
+            </div>
         </div>
 
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
                 <?php if (!empty($photos)) {?>
-                
-                <div class="mb-2 mt-2 filter-customer">
-                    <select id="sel-customer" name="customer_id" class="form-control searchable-dropdown" style="width:40% !important;"></select>                    
-                </div>
-
                 <table id="before-after-photos" class="nsm-table mb-3">
                     <thead>
                         <tr>                            
@@ -71,60 +81,62 @@ include viewPath('includes/v2/notifications');
                     <tbody>
                     <?php $group = array();?>
                         <?php foreach ($photos as $photo): ?>
-                        <?php array_push($group, $photo->group_number);?>
-                        <tr>                   
-                            <td>
-                                <?php 
-                                    $n = ucwords($photo->first_name[0]).ucwords($photo->last_name[0]);
-                                    echo "<div class='nsm-profile'><span>".$n.'</span></div>';
-                                ?>
-                            </td>
-                            <td>
-                                <?php 
-                                    $customer_email = 'Email Not Specified';
-                                    if( $photo->email != '' ){
-                                        $customer_email = $photo->email;
-                                    }
-                                    $customer_name = $photo->first_name . ' ' . $photo->last_name;  
-                                ?>
-                                <label class="nsm-link default d-block fw-bold"><?= $customer_name; ?></label>
-                                <label class="nsm-link default content-subtitle fst-italic d-block"><i class="bx bx-envelope"></i> <?= $customer_email; ?></label>
-                            </td>
-                            <td>
-                                <a data-caption="<?= $photo->note ?>" data-fancybox data-src="<?= base_url("uploads/beforeandafter/" . $cid . "/" . $photo->before_image); ?>" href="javascript:void(0);">
-                                <div class="d-flex" style="gap: 1rem;">
-                                    <div class="image-data">
-                                        <img src="<?= base_url("uploads/beforeandafter/" . $cid . "/" . $photo->before_image); ?>">                                        
+                        <?php 
+                            array_push($group, $photo->group_number);
+                            $customer_email = 'Email Not Specified';
+                            if( $photo->email != '' ){
+                                $customer_email = $photo->email;
+                            }
+                            $customer_name = $photo->first_name . ' ' . $photo->last_name;  
+                        ?>
+                        <?php if( trim($customer_name) != '' ){ ?>
+                            <tr>                   
+                                <td class="fw-bold nsm-text-primary">
+                                    <?php 
+                                        $n = ucwords($photo->first_name[0]).ucwords($photo->last_name[0]);
+                                        echo "<div class='nsm-profile'><span>".$n.'</span></div>';
+                                    ?>
+                                </td>
+                                <td class="nsm-text-primary show">                                
+                                    <label class="nsm-link default d-block fw-bold"><?= $customer_name; ?></label>
+                                    <label class="nsm-link default content-subtitle fst-italic d-block"><i class="bx bx-envelope"></i> <?= $customer_email; ?></label>
+                                </td>
+                                <td>
+                                    <a data-caption="<?= $photo->note ?>" data-fancybox data-src="<?= base_url("uploads/beforeandafter/" . $cid . "/" . $photo->before_image); ?>" href="javascript:void(0);">
+                                    <div class="d-flex" style="gap: 1rem;">
+                                        <div class="image-data">
+                                            <img src="<?= base_url("uploads/beforeandafter/" . $cid . "/" . $photo->before_image); ?>">                                        
+                                        </div>
                                     </div>
-                                </div>
-                                </a>
-                            </td>
-                            <td>
-                                <a data-caption="<?= $photo->note ?>" data-fancybox data-src="<?= base_url("uploads/beforeandafter/" . $cid . "/" . $photo->after_image);?>" href="javascript:void(0);">
-                                <div class="d-flex" style="gap: 1rem;">
-                                    <div class="image-data">
-                                        <img src="<?= base_url("uploads/beforeandafter/" . $cid . "/" . $photo->after_image);?>">
-                                    </div>
-                                </div>
-                                </a>
-                            </td>         
-                            <td><?php echo date_format(date_create($photo->created_at), "m/d/Y H:i:s"); ?></td>
-                            <td>
-                                <div class="dropdown table-management">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                        <i class="bx bx-fw bx-dots-vertical-rounded"></i>
                                     </a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <a class="dropdown-item"  href="<?=base_url('before_after_photos/edit/' . $photo->id);?>">Edit</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item btn-delete-photo" data-id="<?=$photo->id;?>" href="javascript:void(0);">Delete</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                                <td>
+                                    <a data-caption="<?= $photo->note ?>" data-fancybox data-src="<?= base_url("uploads/beforeandafter/" . $cid . "/" . $photo->after_image);?>" href="javascript:void(0);">
+                                    <div class="d-flex" style="gap: 1rem;">
+                                        <div class="image-data">
+                                            <img src="<?= base_url("uploads/beforeandafter/" . $cid . "/" . $photo->after_image);?>">
+                                        </div>
+                                    </div>
+                                    </a>
+                                </td>         
+                                <td><?php echo date_format(date_create($photo->created_at), "m/d/Y H:i:s"); ?></td>
+                                <td>
+                                    <div class="dropdown table-management">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <?php if(checkRoleCanAccessModule('before-after-photos', 'write')){ ?>
+                                                <li><a class="dropdown-item"  href="<?=base_url('before_after_photos/edit/' . $photo->id);?>">Edit</a></li>
+                                            <?php } ?>
+                                            <?php if(checkRoleCanAccessModule('before-after-photos', 'delete')){ ?>
+                                                <li><a class="dropdown-item btn-delete-photo" data-id="<?=$photo->id;?>" href="javascript:void(0);">Delete</a></li>
+                                            <?php } ?>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php } ?>
                     <?php endforeach;?>
                     </tbody>
                 </table>
@@ -166,6 +178,9 @@ include viewPath('includes/v2/notifications');
 <script>
 $(function(){
     $("#before-after-photos").nsmPagination({itemsPerPage:5});
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));        
+    }, 1000));
 
     $('#sel-customer').select2({
         width: 'resolve',
@@ -239,7 +254,7 @@ $(function(){
                         if(data.is_success == 1) {
                             Swal.fire({
                             icon: 'success',
-                            title: 'Success',
+                            title: 'Delete Photos',
                             text: 'Photos deleted successfully!',
                             }).then((result) => {
                                 window.location.reload();

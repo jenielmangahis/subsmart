@@ -3,7 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 echo put_header_assets();
 include viewPath('v2/includes/header');
 ?>
-
 <style>
     .select2-container,
     .set__box__icon,
@@ -65,41 +64,15 @@ include viewPath('v2/includes/header');
     .txt-notes{
         height : 150px;
     }
+    .set__box .nsm-button:hover{
+        border-top:1px solid #d3d3d3 !important;
+    }
 </style>
 
 <div class="row page-content g-0">
     <div class="nsm-page-nav mb-3">
-        <ul>
-            <li>
-                <a class="nsm-page-link" href="<?php echo base_url('vault_v2/mylibrary') ?>">
-                    <span>My Library</span>
-                </a>
-            </li>
-            <li>
-                <a class="nsm-page-link" href="<?php echo base_url('vault_v2/vault') ?>">
-
-                    <span>Shared Library</span>
-                </a>
-            </li>
-            <li>
-                <a class="nsm-page-link" href="<?php echo base_url('vault_v2/businessformtemplates') ?>">
-
-                    <span>Business Form Templates</span>
-                </a>
-            </li>
-            <li  class="active">
-                <a class="nsm-page-link" href="<?php echo base_url('vault_v2/beforeafter') ?>">
-
-                    <span>Photos Gallery</span>
-                </a>
-            </li>
-
-            <!-- Do not remove the last li -->
-            <li><label></label></li>
-        </ul>
+        <?php include viewPath('v2/includes/page_navigations/files_vault_tab'); ?>
     </div>
-
-    <?php include viewPath('includes/v2/notifications');?>
     <div>
         <div class="nsm-callout primary">
             <button><i class="bx bx-x"></i></button>
@@ -113,8 +86,8 @@ include viewPath('v2/includes/header');
             <div class="col-md-3">
                 <div class="d-flex justify-content-between">
                     <h6>Customer <span style="margin-left:2px;" class="bx bxs-help-circle" id="help-popover-customer"></span></h6>
-                    <a class="nsm-link d-flex align-items-center" id="add_another_invoice" data-bs-toggle="modal" data-bs-target="#new_customer" href="javascript:void(0);">
-                        <span class="bx bx-plus"></span>Create Customer
+                    <a class="nsm-button btn-small d-flex align-items-center" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" href="javascript:void(0);">
+                        <span class="bx bx-plus"></span>Add New Customer
                     </a>
                 </div>
                 <select id="sel-customer" name="customer_id" class="form-control searchable-dropdown" required="">
@@ -157,14 +130,20 @@ include viewPath('v2/includes/header');
         </div>
         <div class="mt-4">
             <a class="nsm-button" href="<?= base_url('before_after_photos'); ?>">Cancel</a>
-            <button type="submit" class="nsm-button primary mb-0" id="" style="border:0; height:34px;">Save images</button>
+            <button type="submit" class="nsm-button primary mb-0" id="" style="border:0; height:34px;">Save</button>
         </div>
     <?php echo form_close(); ?>
 </div>
-<?php include viewPath('v2/pages/job/modals/new_customer'); ?>
+<?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
 <?php include viewPath('v2/includes/footer');?>
 <script>
 $(function(){
+
+    $('#btn-add-new-customer').on('click', function(){
+        $('#target-id-dropdown').val('sel-customer');
+        $('#origin-modal-id').val('');
+    });
+
     $('#sel-customer').select2({
         ajax: {
             url: '<?= base_url('autocomplete/_company_customer') ?>',
@@ -244,8 +223,8 @@ $(function(){
             success: function(result) {
                 if( result.is_success == 1 ){
                     Swal.fire({
-                        title: 'Save Successful!',
-                        text: "Photos was successfully saved.",
+                        title: 'Edit Photos',
+                        text: "Photos was successfully updated.",
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
