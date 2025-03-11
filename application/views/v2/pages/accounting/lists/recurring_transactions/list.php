@@ -186,9 +186,9 @@
                                         <li>
                                             <a class="dropdown-item pause-recurring" href="#">Pause</a>
                                         </li>
-                                        <li>
+                                        <!-- <li>
                                             <a class="dropdown-item skip-next-date" href="#">Skip next date</a>
-                                        </li>
+                                        </li> -->
                                         <?php endif; ?>
                                         <li>
                                             <a class="dropdown-item delete-transaction" href="#">Delete</a>
