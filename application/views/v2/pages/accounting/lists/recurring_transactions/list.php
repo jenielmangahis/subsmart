@@ -178,7 +178,7 @@
                                         <li>
                                             <a class="dropdown-item duplicate-transaction" href="#">Duplicate</a>
                                         </li>
-                                        <?php if($transaction['status'] === "2") : ?>
+                                        <?php if($transaction['status'] === "Paused") : ?>
                                         <li>
                                             <a class="dropdown-item resume-recurring" href="#">Resume</a>
                                         </li>
