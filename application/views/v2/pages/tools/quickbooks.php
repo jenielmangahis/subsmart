@@ -28,17 +28,15 @@
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row">
-                    <div class="col-5">
-                        <h1>Quickbooks Payroll</h1>
-                        <p style="margin-top: 21px;">Export timesheet entries to <b>Quickbooks</b></p>
-                    </div>
-                    <div class="col-7" style="text-align:right;">
-                        <img class="nsm-card-img-lg" src="<?= base_url() ?>/assets/img/api-tools/thumb_quickbooks_payroll.png">
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class="bx bx-x"></i></button>
+                            <p>Export timesheet entries to <b>Quickbooks</b></p>
+                        </div>
                     </div>
                 </div>
-
                 <?php if( $is_with_error == 1 ){ ?>
-                    <div class="row">
+                    <div class="row mt-4">
                         <div class="col-4">
                             <div class="alert alert-danger">Cannot connect to <b>Quickbooks</b>.</div>
                         </div>
@@ -127,12 +125,12 @@
                     </div>
                     <a href="<?= base_url('tools/quickbooks_payroll_employee_logs') ?>" class="nsm-button default">View Logs</a>
                 <?php }else{ ?>
-                    <div class="row">
+                    <div class="row mt-4">
                         <div class="col-8">
                             <label class="d-block mb-5">
                                 Connect to <b>QuickBooks</b> to link your employees and export timesheet entries.
                             </label>
-                            <button class="nsm-button primary btn-connect-quickbooks" onclick="location.href='<?= $qbAuth_url; ?>'">Connect to Quickbooks</button>                            
+                            <button class="nsm-button primary btn-connect-quickbooks" style="margin-left:0px;" onclick="location.href='<?= $qbAuth_url; ?>'">Connect to Quickbooks</button>                            
                         </div>
                     </div>
                 <?php } ?>                

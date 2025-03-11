@@ -17,14 +17,19 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-4 grid-mb">
+                    <div class="col-12 col-md-6 grid-mb">
                         <form action="<?php echo base_url('accounting/recurring-transactions') ?>" method="get">
-                            <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" name="search" id="search_field" placeholder="Find by Name" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                            <div class="nsm-field-group search" style="max-width: 100% !important;">
+                             
+                                <select class="nsm-field form-select" name="search_type" id="search-type" style="width: 175px; float:left; margin-right: 3px;">
+                                    <option value="customer_vendor" <?=empty($search_type) || $search_type === 'customer_vendor' ? 'selected' : ''?>>Customer/Vendor</option>
+                                    <option value="template_name" <?=empty($search_type) || $search_type === 'template_name' ? 'selected' : ''?>>Template Name</option>
+                                </select>                  
+                                <input style="width: 300px;" type="text" class="nsm-field nsm-search form-control mb-2" name="search" id="search_field" placeholder="" value="<?php echo (!empty($search)) ? $search : '' ?>">
                             </div>
                         </form>
                     </div>
-                    <div class="col-12 col-md-8 grid-mb text-end">
+                    <div class="col-12 col-md-6 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>

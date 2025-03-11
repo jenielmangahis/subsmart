@@ -2744,8 +2744,9 @@ class Customer extends MY_Controller
         $this->load->helper(array('sms_helper', 'alarm_api_helper'));        
         $this->load->model('Clients_model');
         $this->load->model('taskhub_model');
-        $this->load->library('wizardlib');
+        $this->load->model('CustomerStatementClaim_model');
         $this->load->model('Invoice_model', 'invoice_model');
+        $this->load->library('wizardlib');        
         error_reporting(0);       
        
         $cid = logged('company_id');
@@ -2878,6 +2879,8 @@ class Customer extends MY_Controller
 
             $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
             $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($cid);
+            $statementClaim = $this->CustomerStatementClaim_model->getByCustomerId($id);
+
             $this->page_data['twilioAccount'] = $twilioAccount;
             $this->page_data['ringCentralAccount'] = $ringCentralAccount;
             $this->page_data['enable_twilio_call'] = $enable_twilio_call;
@@ -2893,6 +2896,7 @@ class Customer extends MY_Controller
             $this->page_data['ringCentralAccount'] = $ringCentralAccount;
             $this->page_data['twilioAccount'] = $twilioAccount;
             $this->page_data['alarm_customer_info'] = $alarm_customer_info;
+            $this->page_data['statementClaim'] = $statementClaim;
             $this->load->view('v2/pages/customer/module', $this->page_data);
         }else{
             redirect('customer');
@@ -3825,6 +3829,14 @@ class Customer extends MY_Controller
             foreach( $fieldSettings as $setting ){
                 $companyFormSetting[$setting->field_group][$setting->field_name] = ['value' => $setting->field_value, 'is_enabled' => $setting->is_enabled];
                 
+                if( !$formGroups[$setting->field_group]['total_enabled'] ){
+                    $formGroups[$setting->field_group]['total_enabled'] = 0;
+                }
+
+                if( !$formGroups[$setting->field_group]['total_disabled'] ){
+                    $formGroups[$setting->field_group]['total_disabled'] = 0;
+                }
+
                 if( $setting->is_enabled == 1 ){
                     if( $formGroups[$setting->field_group]['total_enabled'] ){
                         $formGroups[$setting->field_group]['total_enabled'] += 1;   
@@ -3839,7 +3851,7 @@ class Customer extends MY_Controller
                     }
                 }         
             }
-        }   
+        }  
 
         $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
         $this->page_data['rate_plans'] = $this->general->get_data_with_param($rate_plan_query);
@@ -3894,6 +3906,8 @@ class Customer extends MY_Controller
         $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
         $this->page_data['LEAD_SOURCE_OPTION'] = $this->customer_ad_model->getAllSettingsLeadSourceByCompanyId(logged('company_id'));
         $this->page_data['company_industry']   = $company_industry;
+        $this->page_data['is_with_customer_subscription'] = $client->is_with_customer_subscription;        
+        $this->page_data['is_with_property_rental']       = $client->is_with_property_rental;
         //$this->load->view('v2/pages/customer/add', $this->page_data);
         $this->load->view('v2/pages/customer/add_dynamic_fields', $this->page_data);
     }
@@ -12222,12 +12236,65 @@ class Customer extends MY_Controller
 
     public function download_statement_of_claims()
     {
+        $this->load->model('CustomerStatementClaim_model');
+        $this->load->model('AcsProfile_model');
+
         $this->load->library('pdf');
 
-        $post = $this->input->post();        
-        $filename = 'statement_of_claims';
-        $this->page_data['post'] = $post;     
-        //$this->load->view('v2/pages/customer/pdf/statement_of_claims', $this->page_data);   
-        $this->pdf->load_view('v2/pages/customer/pdf/statement_of_claims', $this->page_data, $filename, "P");
+        $company_id = logged('company_id');
+        $post = $this->input->post();   
+        
+        $customer = $this->AcsProfile_model->getByProfId($post['cid']);          
+        if( $customer && $customer->company_id == $company_id ){
+            $statementClaim = $this->CustomerStatementClaim_model->getByCustomerId($post['cid']);      
+            if( $statementClaim ){
+                $data = [
+                    'plaintiff_name' => $post['plaintiff_name'],
+                    'plaintiff_address' => $post['plaintiff_adress'],
+                    'plaintiff_city_state_zip' => $post['plaintiff_city_state_zip'],
+                    'plaintiff_phone' => $post['plaintiff_phone'],
+                    'defendant_name' => $post['defendant_name'],
+                    'defendant_street_address' => $post['defendant_adress'],
+                    'defendant_city_state_zip' => $post['defendant_city_state_zip'],
+                    'case_number' => $post['soc_case_number'],
+                    'division' => $post['soc_division'],
+                    'damage_amount' => $post['soc_damage_amount'],
+                    'court_costs' => $post['soc_court_costs'],
+                    'sheriff_fee' => $post['soc_sheriff_fees'],
+                    'plaintiff_agent' => $post['soc_plaintiff_agent'],
+                    'deputy_clerk' => $post['soc_deputy_clerk'],
+                    'commission_expires' => $post['commission_expires'],
+                    'date_updated' =>  date("Y-m-d H:i:s"),
+                ];
+                $this->CustomerStatementClaim_model->update($statementClaim->id, $data);
+            }else{
+                $data = [
+                    'customer_id' => $post['cid'],
+                    'plaintiff_name' => $post['plaintiff_name'],
+                    'plaintiff_address' => $post['plaintiff_adress'],
+                    'plaintiff_city_state_zip' => $post['plaintiff_city_state_zip'],
+                    'plaintiff_phone' => $post['plaintiff_phone'],
+                    'defendant_name' => $post['defendant_name'],
+                    'defendant_street_address' => $post['defendant_adress'],
+                    'defendant_city_state_zip' => $post['defendant_city_state_zip'],
+                    'case_number' => $post['soc_case_number'],
+                    'division' => $post['soc_division'],
+                    'damage_amount' => $post['soc_damage_amount'],
+                    'court_costs' => $post['soc_court_costs'],
+                    'sheriff_fee' => $post['soc_sheriff_fees'],
+                    'plaintiff_agent' => $post['soc_plaintiff_agent'],
+                    'deputy_clerk' => $post['soc_deputy_clerk'],
+                    'commission_expires' => $post['commission_expires'],
+                    'date_created' =>  date("Y-m-d H:i:s"),
+                    'date_updated' =>  date("Y-m-d H:i:s"),
+                ];
+                $this->CustomerStatementClaim_model->create($data);
+            }
+    
+            $filename = 'statement_of_claims';
+            $this->page_data['post'] = $post;     
+            //$this->load->view('v2/pages/customer/pdf/statement_of_claims', $this->page_data);   
+            $this->pdf->load_view('v2/pages/customer/pdf/statement_of_claims', $this->page_data, $filename, "P");
+        }
     }
 }

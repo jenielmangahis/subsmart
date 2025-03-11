@@ -357,13 +357,22 @@ class Recurring_transactions extends MY_Controller {
 
         if(!empty(get('search'))) {
             $search = get('search');
-            $data = array_filter($data, function($transaction, $key) use ($search) {
-                return (stripos($transaction['template_name'], $search) !== false);
-            }, ARRAY_FILTER_USE_BOTH);
+            $searh_type = get('search_type');
+
+            if($searh_type == 'template_name') {
+                $data = array_filter($data, function($transaction, $key) use ($search) {
+                    return (stripos($transaction['template_name'], $search) !== false);
+                }, ARRAY_FILTER_USE_BOTH);
+            } else {
+                $data = array_filter($data, function($transaction, $key) use ($search) {
+                    return (stripos($transaction['customer_vendor'], $search) !== false);
+                }, ARRAY_FILTER_USE_BOTH);
+            }
 
             $this->page_data['search'] = $search;
-        }
-
+            $this->page_data['search_type'] = $search_type;
+        }      
+        
         $this->page_data['page_title'] = "Recurring Transactions";
         $this->page_data['transactions'] = $data;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));

@@ -71,49 +71,117 @@
                 </div>
                 <form id="customer_form">
                     <div class="row g-3 align-items-start" id="customer-add-advance">
-                        <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
-                            <?php if( isset($formGroups['customer-papers']['total_enabled']) ){ ?>      
-                                <div class="col-12 col-md-12">
-                                    <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_papers'); ?>        
-                                </div>
-                            <?php } ?>
-                        <?php } ?>
+                        <?php 
+                            if( in_array(logged('company_id'), adi_company_ids()) ){
+                                if( $formGroups ){
+                                    if( $formGroups['customer-papers']['total_enabled'] > 0 ){
+                                        include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_papers');
+                                    }
+                                }else{
+                                    include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_papers');
+                                }
+                            }
+                        ?>
                         <div class="col-md-4 customer-inputs">                                                       
                             <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_profile'); ?>                            
                             <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_billing_info'); ?>
                             <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_payment_details'); ?>
                             <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_financing_payment_schedule'); ?>
                         </div>
-                        <div class="col-md-4 customer-inputs">       
-                            <?php if( isset($formGroups['office-use-information']['total_enabled']) ){ ?>                     
-                                <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_office_info'); ?>
-                            <?php } ?>
-                            <?php if( isset($formGroups['funding-information']['total_enabled']) ){ ?>               
-                                <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_funding_info'); ?>
-                            <?php } ?>
-                            <?php if( isset($formGroups['customer-property']['total_enabled']) ){ ?>      
-                                <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_property'); ?>
-                            <?php } ?>
-                        </div>
+                        <?php 
+                            $is_section_enabled = 0;
+                            if( $formGroups ){
+                                if( $formGroups['office-use-information'] && $formGroups['office-use-information']['total_enabled'] > 0 ){
+                                    $is_section_enabled = 1;
+                                }
+                                if( $formGroups['funding-information'] && $formGroups['funding-information']['total_enabled'] > 0 ){
+                                    $is_section_enabled = 1;
+                                }
+                                if( $formGroups['customer-property'] && $formGroups['customer-property']['total_enabled'] > 0 ){
+                                    $is_section_enabled = 1;
+                                }
+                            }else{
+                                if( $is_with_customer_subscription == 1 || $is_with_property_rental == 1 ){
+                                    $is_section_enabled = 1;
+                                }
+                            }
+                        ?>
+                        <?php if( $is_section_enabled == 1 ){ ?>
+                            <div class="col-md-4 customer-inputs">   
+                                <?php 
+                                    if( $formGroups ){
+                                        if( $formGroups['office-use-information']['total_enabled'] > 0 ){
+                                            include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_office_info');
+                                        }
+
+                                        if( $formGroups['funding-information']['total_enabled'] > 0 ){
+                                            include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_funding_info');
+                                        }
+
+                                        if( $formGroups['customer-property']['total_enabled'] > 0 ){
+                                            include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_property');
+                                        }
+                                    }else{
+                                        if( $is_with_customer_subscription == 1 ){
+                                            include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_office_info');
+                                            include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_funding_info');
+                                        }
+
+                                        if( $is_with_property_rental == 1 ){
+                                            include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_property');
+                                        }
+                                    }
+                                ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php 
+                            $is_section_enabled = 1; //Default 1 custom fields and emergency contacts always show
+                            //Enable condition below if custom fields and emergency contacts is in customer form settings
+                            /*if( $formGroups ){
+                                if( $formGroups['alarm-information'] && $formGroups['alarm-information']['total_enabled'] > 0 && logged('industry_type') == 'Alarm Industry' ){
+                                    $is_section_enabled = 1;
+                                }
+
+                                if( $formGroups['solar-information'] && $formGroups['solar-information']['total_enabled'] > 0 && logged('company_id') == 58 ){
+                                    $is_section_enabled = 1;
+                                }
+
+                                if( $formGroups['portal-access'] && $formGroups['portal-access']['total_enabled'] > 0 ){
+                                    $is_section_enabled = 1;
+                                }
+                                
+                            }else{
+                                if( logged('industry_type') == 'Alarm Industry' ){
+                                    $is_section_enabled = 1;
+                                }
+                            }*/
+                        ?>
+
+                        <?php if( $is_section_enabled == 1 ){ ?>
                         <div class="col-md-4 customer-inputs">     
-                            <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
-                                <?php if( isset($formGroups['alarm-information']['total_enabled']) && logged('industry_type') == 'Alarm Industry' ){ ?>             
-                                    <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_alarm_info'); ?>
-                                <?php } ?>
-                            <?php } ?>
+                            <?php 
+                                if( $formGroups ){
+                                    if( $formGroups['alarm-information'] && $formGroups['alarm-information']['total_enabled'] > 0 && logged('industry_type') == 'Alarm Industry' ){
+                                        include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_alarm_info');
+                                    }
 
-                            <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
-                                <?php if( isset($formGroups['solar-information']['total_enabled']) ){ ?>      
-                                    <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_solar_info'); ?>
-                                <?php } ?>
-                            <?php } ?>
-                            
-                            <?php if( isset($formGroups['portal-access']['total_enabled']) ){ ?>   
-                                <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_access_info'); ?>
-                            <?php } ?>
+                                    if( $formGroups['solar-information'] && $formGroups['solar-information']['total_enabled'] > 0 && logged('company_id') == 58 ){
+                                        include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_solar_info');
+                                    }
 
-                            <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_custom_fields_notes'); ?>
-                            <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_emergency_contacts'); ?>
+                                    if( $formGroups['portal-access'] && $formGroups['portal-access']['total_enabled'] > 0 ){
+                                        include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_access_info');
+                                    }
+                                }else{
+                                    if( logged('company_id') == 58 ){
+                                        include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_solar_info');
+                                    }
+                                }
+
+                                include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_custom_fields_notes');
+                                include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_emergency_contacts');
+                            ?>
                             <div class="text-end mt-4">
                                 <button type="button" class="nsm-button primary btn-cancel">Cancel</button>
                                 <?php if(isset($profile_info)): ?>
@@ -124,6 +192,7 @@
                                 </button>
                             </div>
                         </div>
+                        <?php } ?>
                     </div>
                 </form>
             </div>
