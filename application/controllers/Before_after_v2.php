@@ -14,21 +14,21 @@ class Before_after_v2 extends MY_Controller
         $this->load->model('Before_after_model', 'before_after_model');
 
         add_css(array(
-            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-            'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
+            //'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+            //'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+            //'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+            //'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
             'assets/frontend/css/workorder/main.css',
             'assets/css/beforeafter.css',
         ));
 
         // JS to add only Job module
         add_footer_js(array(
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-            'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
-            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-            'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
+            //'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+            //'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+            //'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
+            //'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+            //'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
             'assets/frontend/js/beforeafter/v2/main.js',
         ));
     }
@@ -36,6 +36,11 @@ class Before_after_v2 extends MY_Controller
     public function index()
     {
         $this->load->model('Before_after_model', 'before_after_model');
+
+        if(!checkRoleCanAccessModule('before-after-photos', 'write')){
+			show403Error();
+			return false;
+		}
 
         $cid = logged('company_id');
         $this->page_data['photos'] = $this->before_after_model->getAllByCompanyId($cid);
@@ -47,7 +52,6 @@ class Before_after_v2 extends MY_Controller
 
         add_css([
             "assets/css/jquery.fancybox.css",
-            'https://nightly.datatables.net/css/jquery.dataTables.css',
         ]);
 
         $this->page_data['cid'] = $cid;
@@ -57,6 +61,11 @@ class Before_after_v2 extends MY_Controller
     public function addPhoto()
     {
         $this->load->model('AcsProfile_model');
+
+        if(!checkRoleCanAccessModule('before-after-photos', 'write')){
+			show403Error();
+			return false;
+		}
 
         $comp_id = logged('company_id');
         $group_num_query = $this->db->order_by("id", "desc")->get_where($this->before_after_model->table, $comp_id)->row();
@@ -214,6 +223,7 @@ class Before_after_v2 extends MY_Controller
 
         $this->page_data['beforeAfter'] = $beforeAfter;
         $this->page_data['group_number'] = $id;
+        $this->page_data['page']->title = 'Edit Photos';
         $this->page_data['photos'] = $this->before_after_model->getByWhere(['company_id' => $comp_id, 'group_number' => $id]);
         $this->load->view('v2/pages/before_after/edit_photo', $this->page_data);
 
@@ -293,7 +303,7 @@ class Before_after_v2 extends MY_Controller
 
                 //Activity Logs
                 $customer = $this->AcsProfile_model->getByProfId($customer_id);
-                $activity_name = 'Created Before and After photos for customer ' . $customer->first_name . ' ' . $customer->last_name; 
+                $activity_name = 'Before and After photos : Added photos for customer ' . $customer->first_name . ' ' . $customer->last_name; 
                 createActivityLog($activity_name);
             }
         }
@@ -329,7 +339,7 @@ class Before_after_v2 extends MY_Controller
             $this->before_after_model->delete($beforeAfterPhoto->id);
 
             //Activity Logs
-            $activity_name = 'Deleted Before and After photos for customer ' . $beforeAfterPhoto->first_name . ' ' . $beforeAfterPhoto->last_name; 
+            $activity_name = 'Before and After photos : Deleted photos for customer ' . $beforeAfterPhoto->first_name . ' ' . $beforeAfterPhoto->last_name; 
             createActivityLog($activity_name);
 
             $is_success = 1;
@@ -348,9 +358,16 @@ class Before_after_v2 extends MY_Controller
     {
         $this->load->model('AcsProfile_model');
 
+        if(!checkRoleCanAccessModule('before-after-photos', 'write')){
+			show403Error();
+			return false;
+		}
+
         $cid = logged('company_id');
         $beforeAfter = $this->before_after_model->getByIdAndCompanyId($id, $cid);
-        if( $beforeAfter ){   
+
+        if( $beforeAfter && $beforeAfter->company_id == $cid ){   
+            $this->page_data['page']->title = 'Edit Photos';
             $this->page_data['beforeAfter'] = $beforeAfter;
             $this->load->view('v2/pages/before_after/edit_photo', $this->page_data);
         }else{
@@ -407,6 +424,10 @@ class Before_after_v2 extends MY_Controller
             );
 
             $this->before_after_model->update($beforeAfterPhoto->id, $data);
+
+            //Activity Logs
+            $activity_name = 'Before and After photos : Updated photos for customer ' . $beforeAfterPhoto->first_name . ' ' . $beforeAfterPhoto->last_name; 
+            createActivityLog($activity_name);
 
             $is_success = 1;
             $msg = '';
