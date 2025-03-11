@@ -132,8 +132,10 @@ class CompanyRoleAccessModule_model extends MY_Model
             'accounting-banking' => 'Accounting Banking',
             'accounting-link-bank' => 'Accounting Link Bank',
             'api-connectors' => 'API Connectors',
-            'esign' => 'eSign'
-        ];  
+            'esign' => 'eSign',
+            'my-library' => 'My Library',
+            'before-after-photos' => 'Before and After Photos',
+            'accounting-sales-payroll-taxes' => 'Accounting Sales and Payroll Taxes'        ];  
 
         return $modules;
     }
