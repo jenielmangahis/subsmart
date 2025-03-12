@@ -5,14 +5,24 @@ class AccountingPayroll extends MY_Controller
 {
     public function apiGetPayrollTaxPayments()
     {
-        $query = <<<SQL
-        SELECT `a`.*
+        $company_id = logged('company_id');
+        $query = 'SELECT a.* 
             FROM `accounting_chart_of_accounts` `a`
             LEFT JOIN `accounting_vendor_transaction_categories` `c`
-        ON `a`.`id` = `c`.`expense_account_id`
-        WHERE `c`.`id` IS NOT NULL
-        AND `c`.`tax` = 1
-        SQL;
+                ON `a`.`id` = `c`.`expense_account_id`
+            WHERE `c`.`id` IS NOT NULL
+            AND `a`.`company_id` = '.$company_id.'
+            AND `c`.`tax` = 1
+        ';
+        // $query = <<<SQL
+        // SELECT `a`.*
+        //     FROM `accounting_chart_of_accounts` `a`
+        //     LEFT JOIN `accounting_vendor_transaction_categories` `c`
+        // ON `a`.`id` = `c`.`expense_account_id`
+        // WHERE `c`.`id` IS NOT NULL
+        //     AND where `a.company_id` = ".$."
+        //     AND `c`.`tax` = 1
+        // SQL;
         
         $results = $this->db->query($query)->result();
 

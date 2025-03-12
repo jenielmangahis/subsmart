@@ -215,18 +215,27 @@ if ($invoice->due_date > date('Y-m-d')) {
                 </tr>
             <?php } ?>
 
+            <?php if( $invoice->payment_fee > 0 ){ ?>
+                <tr>
+                    <td colspan="2" style="padding: 8px; border: 1px solid;">
+                        <b>PAYMENT FEE</b>
+                    </td>
+                    <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->payment_fee, 2, '.', ','); ?></td>
+                </tr>
+            <?php } ?>
+
             <?php if( $invoice->late_fee > 0  ){ ?>
-                    <tr>
-                        <td colspan="2" style="padding: 8px; border: 1px solid;">
-                            <?php if($total_late_days > 0) { ?>
-                                <b>LATE FEE (<?php echo $total_late_days; ?> Days)</b>
-                            <?php }else{ ?>
-                                <b>LATE FEE </b>
-                            <?php } ?>
-                        </td>
-                        <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->late_fee, 2, '.', ','); ?></td>
-                    </tr>
-                <?php } ?>
+                <tr>
+                    <td colspan="2" style="padding: 8px; border: 1px solid;">
+                        <?php if($total_late_days > 0) { ?>
+                            <b>LATE FEE (<?php echo $total_late_days; ?> Days)</b>
+                        <?php }else{ ?>
+                            <b>LATE FEE </b>
+                        <?php } ?>
+                    </td>
+                    <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->late_fee, 2, '.', ','); ?></td>
+                </tr>
+            <?php } ?>
 
             <tr>
                 <td colspan="2" style="padding: 8px; border: 1px solid;">
