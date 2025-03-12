@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="row g-3 mb-3">
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-6">
                         <div class="row">
                                 <div class="col-12 col-md-6">
                                     <div class="nsm-counter primary h-100 mb-2">
@@ -27,7 +27,7 @@
                                                 <i class='bx bx-receipt'></i>
                                             </div>
                                             <div class="col-12 col-md-9 text-center text-md-start d-flex flex-column justify-content-center">
-                                                <h2 id="total_this_year"><?= $subscriptionSummary->total_subscriptions; ?></h2>
+                                                <h2 id="total_this_year"><?= $activeSubscriptions->total_records; ?></h2>
                                                 <span>TOTAL NUMBER</span>
                                             </div>
                                         </div>
@@ -40,7 +40,7 @@
                                                 <i class='bx bx-receipt'></i>
                                             </div>
                                             <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                                <h2 id="total_this_year">$<?= number_format($subscriptionSummary->total_amount_subscriptions,2,'.',''); ?></h2>
+                                                <h2 id="total_this_year">$<?= number_format($activeSubscriptions->total_amount_subscriptions,2,'.',','); ?></h2>
                                                 <span>TOTAL AMOUNT</span>
                                             </div>
                                         </div>
