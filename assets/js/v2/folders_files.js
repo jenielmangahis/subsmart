@@ -140,7 +140,6 @@ $(document).ready(function(){
   // download file
     $('a[control="download"]').click(function(e){
       e.preventDefault();
-  
       window.open(base_url + 'vault/download_file/' + selected);
   
       get_most_download_files();
@@ -2272,8 +2271,8 @@ $(document).ready(function(){
       fpath = base_url + 'uploads/' + fpath;
       const createdAt = moment(div.attr('created_date')).format("MM/DD/YYYY");
   
-      $('#view-image-date-created').text(createdAt);
-      $('#view-image-created-by').text(div.attr('created_by'));
+      $('#date-uploaded').val(createdAt);
+      $('#uploaded-by').val(div.attr('created_by'));
   
       $('#modal-folder-manager-view-image-file').attr('src', fpath);
       $('#modal-folder-manager-view-image-title').text(div.attr('fnm'));
