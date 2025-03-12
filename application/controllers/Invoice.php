@@ -2488,6 +2488,9 @@ class Invoice extends MY_Controller
 
     public function ajax_create_payment()
     {
+        $this->load->model('AcsCustomerSubscriptionBilling_model');
+        $this->load->model('AcsTransactionHistory_model');
+        
         $is_success = 0;
         $msg = 'Cannot find invoice';
 
@@ -2498,17 +2501,17 @@ class Invoice extends MY_Controller
         $invoice = get_invoice_by_id($post['invoice_id']);
         
         if( $invoice ){
-            $payments = $this->payment_records_model->getAllByInvoiceId($invoice->id);
-            $total_payment = 0;
-            if( $payments ){
-                foreach( $payments as $p ){
-                    $total_payment +=  $p->invoice_amount;
-                }   
-            }            
+            // $payments = $this->payment_records_model->getAllByInvoiceId($invoice->id);
+            // $total_payment = 0;
+            // if( $payments ){
+            //     foreach( $payments as $p ){
+            //         $total_payment +=  $p->invoice_amount;
+            //     }   
+            // }            
 
-            $balance = $invoice->grand_total - $total_payment;                   
-            if( round($balance) >= round($post['amount']) ){
-                $new_balance = $balance - $post['amount'];
+            // $balance = $invoice->balance;                   
+            if( round($invoice->balance) >= round($post['amount']) ){
+                $new_balance = $invoice->balance - $post['amount'];
                 $invoice_id = $this->payment_records_model->create([
                     'invoice_id' => $invoice->id,
                     'user_id' => $uid,
@@ -2526,11 +2529,12 @@ class Invoice extends MY_Controller
 
                 //Update invoice status
                 if( $new_balance <= $invoice->grand_total ){                    
-                    //$status = 'Partially Paid';
-                    $status = 'Paid';
-                    customerAuditLog($uid, $invoice->customer_id, $invoice->id, 'Invoice', 'Fully paid invoice number '.$invoice->invoice_number);
+                    $status = 'Unpaid';
+                    //$status = 'Paid';
+                    customerAuditLog($uid, $invoice->customer_id, $invoice->id, 'Invoice', 'Partially paid invoice number '.$invoice->invoice_number);
                 }elseif( $new_balance == 0 ){
                     $status = 'Paid';
+                    customerAuditLog($uid, $invoice->customer_id, $invoice->id, 'Invoice', 'Fully paid invoice number '.$invoice->invoice_number);
                 }
 
                 $invoice_data = [
@@ -2539,8 +2543,41 @@ class Invoice extends MY_Controller
                 ];
 
                 $this->invoice_model->update($invoice->id, $invoice_data);
-        
-                $this->activity_model->add('New Payment Record Invoice ID ' . $invoice_id . ' Created by User:' . logged('name'), logged('id'));
+
+                //Add to transaction history                
+                $transaction_category = 'Invoice';
+                $frequency = '';
+                if( $invoice->job_id > 0 ){
+                    $transaction_category = 'Job';
+                }elseif( $invoice->ticket_id > 0 ){
+                    $transaction_category = 'Service';
+                }else{
+                    $subscription = $this->AcsCustomerSubscriptionBilling_model->getByInvoiceId($invoice->id);
+                    if( $subscription ){
+                        $transaction_category = 'MMR';
+                    }
+                }
+
+                $transaction_history_data = [
+                    'invoice_id' => $invoice->id,
+                    'customer_id' => $invoice->customer_id,
+                    'subtotal' => $post['amount'],
+                    'tax' => 0,
+                    'category' => $transaction_category,
+                    'method' => $post['payment_method'],
+                    'transaction_type' => 'Manual',
+                    'frequency' => $frequency,
+                    'notes' => $post['notes'],
+                    'status' => 'Paid',
+                    'datetime' => date("Y-m-d H:i:s")
+                ];
+
+                $this->AcsTransactionHistory_model->create($transaction_history_data);
+                
+                //Activity Logs
+                $activity_name = 'Invoice Payment : New payment record for invoice number ' . $invoice->invoice_number . ' amounting of $' . number_format($post['amount'],2); 
+                createActivityLog($activity_name);
+
                 customerAuditLog($uid, $invoice->customer_id, $invoice->id, 'Invoice', 'Created payment for invoice number '.$invoice->invoice_number.' amounting of $'.$post['amount']);
 
                 $is_success = 1;
