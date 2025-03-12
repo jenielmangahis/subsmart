@@ -156,7 +156,7 @@
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label>Statement of Claim</label>
-                                                <input type="text" class="form-control" name="statement_claim" value="<?= $statementClaim ? $statementClaim->statement_claim : ''; ?>" placeholder="">
+                                                <textarea class="form-control" name="statement_claim" style="height:102px;"><?= $statementClaim ? $statementClaim->statement_claim : ''; ?></textarea>                                                
                                             </div>
                                         </div>
                                     </div>
