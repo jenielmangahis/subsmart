@@ -320,19 +320,27 @@ $payment_link = base_url('/invoice/customer_view/' . $invoice->id);
                         <b>TAXES</b>
                     </td>
                     <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->taxes, 2, '.', ','); ?></td>
-                </tr>
-                <!-- <tr>
-                    <td colspan="2" style="padding: 8px; border: 1px solid;">
-                        <b>LATE FEE</b>
-                    </td>
-                    <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->late_fee , 2, '.', ','); ?></td>
-                </tr> -->
+                </tr>                
+                <?php if( $invoice->payment_fee > 0 ){ ?>
                 <tr>
                     <td colspan="2" style="padding: 8px; border: 1px solid;">
                         <b>PAYMENT FEE</b>
                     </td>
                     <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->payment_fee , 2, '.', ','); ?></td>
                 </tr>
+                <?php } ?>
+                <?php if( $invoice->late_fee > 0  ){ ?>
+                    <tr>
+                        <td colspan="2" style="padding: 8px; border: 1px solid;">
+                            <?php if($total_late_days > 0) { ?>
+                                <b>LATE FEE (<?php echo $total_late_days; ?> Days)</b>
+                            <?php }else{ ?>
+                                <b>LATE FEE </b>
+                            <?php } ?>
+                        </td>
+                        <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->late_fee, 2, '.', ','); ?></td>
+                    </tr>
+                <?php } ?>
                 <?php if( $invoice->installation_cost > 0 ){ ?>
                 <tr>
                     <td colspan="2" style="padding: 8px; border: 1px solid;">
@@ -374,19 +382,6 @@ $payment_link = base_url('/invoice/customer_view/' . $invoice->id);
                             <b>TAX EXEMPTED</b>
                         </td>
                         <td style="padding: 8px; border: 1px solid;">YES</td>
-                    </tr>
-                <?php } ?>
-
-                <?php if( $invoice->late_fee > 0  ){ ?>
-                    <tr>
-                        <td colspan="2" style="padding: 8px; border: 1px solid;">
-                            <?php if($total_late_days > 0) { ?>
-                                <b>LATE FEE (<?php echo $total_late_days; ?> Days)</b>
-                            <?php }else{ ?>
-                                <b>LATE FEE </b>
-                            <?php } ?>
-                        </td>
-                        <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->late_fee, 2, '.', ','); ?></td>
                     </tr>
                 <?php } ?>
                 <tr>
