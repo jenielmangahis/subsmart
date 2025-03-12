@@ -135,7 +135,8 @@ class CompanyRoleAccessModule_model extends MY_Model
             'esign' => 'eSign',
             'my-library' => 'My Library',
             'before-after-photos' => 'Before and After Photos',
-            'accounting-sales-payroll-taxes' => 'Accounting Sales and Payroll Taxes'        
+            'accounting-sales-payroll-taxes' => 'Accounting Sales and Payroll Taxes',        
+            'accounting-1099-filings' => 'Accounting 1099 Filings'        
         ];  
 
         return $modules;
