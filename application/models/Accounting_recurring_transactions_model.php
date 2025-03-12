@@ -174,4 +174,12 @@ class Accounting_recurring_transactions_model extends MY_Model
         $query = $this->db->get($this->table);
         return $query->row();
     }
+
+    public function get_by_type_transaction_id_status($txnType, $txnId, $status)
+    {
+        $this->db->where('txn_type', $txnType);
+        $this->db->where('txn_id', $txnId);
+        $query = $this->db->get($this->table);
+        return $query->row();
+    }
 }
