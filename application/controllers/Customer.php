@@ -12264,6 +12264,7 @@ class Customer extends MY_Controller
                     'plaintiff_agent' => $post['soc_plaintiff_agent'],
                     'deputy_clerk' => $post['soc_deputy_clerk'],
                     'commission_expires' => $post['commission_expires'],
+                    'statement_claim' => $post['statement_claim'],
                     'date_updated' =>  date("Y-m-d H:i:s"),
                 ];
                 $this->CustomerStatementClaim_model->update($statementClaim->id, $data);
@@ -12285,6 +12286,7 @@ class Customer extends MY_Controller
                     'plaintiff_agent' => $post['soc_plaintiff_agent'],
                     'deputy_clerk' => $post['soc_deputy_clerk'],
                     'commission_expires' => $post['commission_expires'],
+                    'statement_claim' => $post['statement_claim'],
                     'date_created' =>  date("Y-m-d H:i:s"),
                     'date_updated' =>  date("Y-m-d H:i:s"),
                 ];
