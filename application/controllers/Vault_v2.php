@@ -23,14 +23,32 @@ class Vault_v2 extends MY_Controller
 
     public function index()
     {
+        // if(!checkRoleCanAccessModule('my-library', 'write')){
+		// 	show403Error();
+		// 	return false;
+		// }
+
         $this->page_data['ctrlMethod'] = $this->router->fetch_method();
         $this->page_data['folder_manager'] = getFolderManagerView_v2();
         $this->page_data['page']->title = 'Shared Library';
         $this->load->view('v2/pages/vault/view', $this->page_data);
     }
 
+    public function index_v2()
+    {
+        $this->page_data['ctrlMethod'] = $this->router->fetch_method();
+        $this->page_data['folder_manager'] = getFolderManagerView_v2();
+        $this->page_data['page']->title = 'Files Vault';
+        $this->load->view('v2/pages/vault/index_v2', $this->page_data);
+    }
+
     public function mylibrary()
-    {        
+    {   
+        if(!checkRoleCanAccessModule('my-library', 'write')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['ctrlMethod'] = $this->router->fetch_method();
         $this->page_data['folder_manager'] = getFolderManagerView_v2(true, true);
         $this->page_data['page']->title = 'My Library';
@@ -40,10 +58,12 @@ class Vault_v2 extends MY_Controller
     }
 
     public function beforeafter()
-    {
+    {        
         $this->load->model('Before_after_model', 'before_after_model');
-        $comp_id = logged('company_id');
-        $this->page_data['photos'] = $this->before_after_model->getAllByCompanyId($comp_id);
+        $cid = logged('company_id');        
+
+        $this->page_data['cid'] = $cid;
+        $this->page_data['photos'] = $this->before_after_model->getAllByCompanyId($cid);
         $this->page_data['page']->title = 'Before and After Photos';
 
         add_css([
@@ -55,6 +75,11 @@ class Vault_v2 extends MY_Controller
 
     public function businessformtemplates()
     {
+        if(!checkRoleCanAccessModule('my-library', 'write')){
+			show403Error();
+			return false;
+		}
+        
         $this->page_data['ctrlMethod'] = $this->router->fetch_method();
         $this->page_data['folder_manager'] = getFolderManagerView_v2(true, false, true);
         $this->page_data['page']->title = 'Business Form Templates';
@@ -617,5 +642,173 @@ class Vault_v2 extends MY_Controller
     public function filesvault()
     {
         $this->load->view('vault/filesvault', $this->page_data);
+    }
+
+    public function ajax_load_list()
+    {
+        $this->load->model('FileVault_model');
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+        $vaultFiles = $this->FileVault_model->getAllByParentIdAndCompanyId($post['pid'], $cid);
+
+        $folders = [];
+        $files   = [];
+        foreach( $vaultFiles as $f ){
+            if( $f->file_type == 'folder' ){
+                $folders[] = $f;
+            }else{
+                $files[] = $f;
+            }
+        }
+
+        $breadcrumbs = $this->generateFolderPath($post['pid']);
+        sort($breadcrumbs);
+
+        $this->page_data['folders'] = $folders;
+        $this->page_data['files']   = $files;        
+        $this->page_data['breadcrumbs'] = $breadcrumbs;        
+        $this->load->view('v2/pages/vault/ajax_load_vault_list', $this->page_data);
+    }
+
+    public function ajax_create_folder()
+    {
+        $this->load->model('FileVault_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $cid = logged('company_id');
+        $uid = logged('id');
+        $post = $this->input->post();
+
+        if( $post['vault_folder_name'] != '' ){
+            $data = [
+                'parent_id' => $post['pid'],
+                'company_id' => $cid,
+                'name' => $post['vault_folder_name'],
+                'file_path' => '',
+                'file_size' => '0',
+                'file_type' => 'folder',
+                'created_by' => '',
+                'date_created' => date('Y-m-d H:i:s'),
+                'date_modified' => date('Y-m-d H:i:s'),
+                'last_action_performed' => 'Created Folder',
+                'last_action_performed_by' => $uid,
+                'is_folder' => '',
+                'folder_color' => '',                
+                'is_shared' => 0,
+                'is_starred' => 0,
+                'downloads_count' => 0,
+                'previews_count' => 0,
+                'softdelete' => 0,
+                'softdelete_date' => '',
+                'softdelete_by' => 0,
+            ];
+
+            $last_id = $this->FileVault_model->saveData($data);
+
+            $folders = $this->generateFolderPath($last_id);
+            foreach( $folders as $f ){
+                $folder_path[] = $f['name'];
+            }
+
+            sort($folder_path);
+            $path = implode("/", $folder_path);
+            $data = ['file_path' => $path];
+            $this->FileVault_model->update($last_id, $data);
+
+            $is_success = 1;
+            $msg = '';
+
+            //Activity Logs
+            $activity_name = 'File Vault : Created Folder ' . $post['vault_folder_name']; 
+            createActivityLog($activity_name);
+        } 
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function testRecursive()
+    {
+        $id = 5;
+        $folders = $this->generateFolderPath($id);
+        rsort($folders);
+        $path    = implode("/", $folders);
+        echo "<pre>";
+        print_r($folders);
+        echo $path;
+    }
+
+    public function generateFolderPath($parent_id, $folders = [])
+    {
+        $this->load->model('FileVault_model');
+
+        $parent = $this->FileVault_model->getById($parent_id);
+        if( $parent && $parent->file_type == 'folder' ){
+            $folders[] = ['id' => $parent->id, 'name' => $parent->name];
+            if( $parent->parent_id > 0 && $parent->parent_id > 0 ){
+                $folders = $this->generateFolderPath($parent->parent_id, $folders);
+            }else{
+                return $folders;
+            }
+        }
+
+        return $folders;
+    }
+
+    public function ajax_rename_folder()
+    {
+        $this->load->model('FileVault_model');
+
+        $is_success = 1;
+        $msg = 'Please enter folder name';
+        $id   = 0;
+        $folder_name = '';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();        
+
+        if( $post['vault_folder_name'] != '' ){
+            $fileVault = $this->FileVault_model->getById($post['fid']);
+            if( $fileVault && $fileVault->company_id == $cid ){
+                $data = [
+                    'name' => $post['vault_folder_name'],
+                    'file_path' => '',
+                    'date_modified' => date('Y-m-d H:i:s')
+                ];
+    
+                $this->FileVault_model->update($fileVault->id, $data);
+    
+                $folder_path = $this->generateFolderPath($fileVault->id);
+                rsort($folders);
+                $path = implode("/", $folder_path);
+                $data = ['file_path' => $path];
+                $this->FileVault_model->update($fileVault->id, $data);
+    
+                $is_success = 1;
+                $msg = '';
+                $id  = $fileVault->id;
+                $folder_name = $post['vault_folder_name'];
+    
+                //Activity Logs
+                $activity_name = 'File Vault : Renamed folder ' . $fileVault->name . ' to ' . $post['vault_folder_name']; 
+                createActivityLog($activity_name);
+            }            
+        } 
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'fid' => $id,
+            'folder_name' => $folder_name
+        ];
+
+        echo json_encode($return);
     }
 }

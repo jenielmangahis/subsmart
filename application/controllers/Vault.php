@@ -35,6 +35,8 @@ class Vault extends MY_Controller {
 	
 	public function beforeafter()
 	{
+		return redirect('before_after_photos');
+
         $this->load->model('Before_after_model', 'before_after_model');
 		$comp_id = logged('company_id');
 		$this->page_data['photos'] = $this->before_after_model->getAllByCompanyId($comp_id);
@@ -299,8 +301,7 @@ class Vault extends MY_Controller {
 
 	public function download_file($file_id){
 		$file = $this->vault_model->getById($file_id);
-		$path = '/uploads/' . $this->company_folder . $file->file_path;
-		$fc = file_get_contents($path);
+		$path = url('/uploads/' . $this->company_folder . $file->file_path);
 
 		$data = array(
 			'downloads_count' => $file->downloads_count + 1
@@ -308,7 +309,11 @@ class Vault extends MY_Controller {
 
 		$status = $this->vault_model->trans_update($data, array('file_id' => $file_id));
 
-		force_download($file->title, $fc);
+		header("Content-Description: File Transfer"); 
+		header("Content-Type: application/octet-stream"); 
+		header("Content-Disposition: attachment; filename=\"". basename($path) ."\""); 
+
+		readfile ($path);
 	}
 
 	public function update_preview($file_id){
