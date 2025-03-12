@@ -595,11 +595,11 @@ $('#transactions-table .delete-transaction').on('click', function(e) {
         title: 'Are you sure you want to delete this?',
         icon: 'question',
         showCloseButton: false,
-        confirmButtonColor: '#2ca01c',
+        //confirmButtonColor: '#2ca01c',
         confirmButtonText: 'Yes',
         showCancelButton: true,
         cancelButtonText: 'No',
-        cancelButtonColor: '#d33'
+        //cancelButtonColor: '#d33'
     }).then((result) => {
         if(result.isConfirmed) {
             $.ajax({
@@ -621,11 +621,11 @@ $('#transactions-table .resume-recurring').on('click', function(e) {
         title: 'Resume Recurring Transaction',
         html: `Are you sure you want to resume this recurring transaction?`,
         showCloseButton: false,
-        confirmButtonColor: '#2ca01c',
+        //confirmButtonColor: '#2ca01c',
         confirmButtonText: 'Resume',
         showCancelButton: true,
         cancelButtonText: 'Cancel',
-        cancelButtonColor: '#d33'
+        //cancelButtonColor: '#d33'
     }).then((result) => {
         if(result.isConfirmed) {
             $.get(`/accounting/recurring-transactions/resume/${row.data().id}`, function(res) {
@@ -648,11 +648,11 @@ $('#transactions-table .pause-recurring').on('click', function(e) {
         title: 'Pause Recurring Transaction',
         html: `Are you sure you want to pause this recurring transaction?`,
         showCloseButton: false,
-        confirmButtonColor: '#2ca01c',
+        //confirmButtonColor: '#2ca01c',
         confirmButtonText: 'Pause',
         showCancelButton: true,
         cancelButtonText: 'Cancel',
-        cancelButtonColor: '#d33'
+        //cancelButtonColor: '#d33'
     }).then((result) => {
         if(result.isConfirmed) {
             $.get(base_url + `accounting/recurring-transactions/pause/${row.data().id}`, function(res) {

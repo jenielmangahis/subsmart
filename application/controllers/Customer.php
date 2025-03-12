@@ -8336,10 +8336,14 @@ class Customer extends MY_Controller
 
     public function customer_subscriptions()
     {        
+        $this->load->model('Customer_advance_model');
+
+        $company_id = logged('company_id');
+        $activeSubscriptions = $this->Customer_advance_model->getTotalActiveSubscriptionsByCompanyId($company_id);
+
         $this->page_data['page']->title = 'Customer Subscriptions';
         $this->page_data['page']->parent = 'Customers';
-
-        // $this->load->view('customer/subscription_list', $this->page_data);
+        $this->page_data['activeSubscriptions'] = $activeSubscriptions;
         $this->load->view('v2/pages/customer/subscription_list', $this->page_data);
     }
 
@@ -12264,6 +12268,7 @@ class Customer extends MY_Controller
                     'plaintiff_agent' => $post['soc_plaintiff_agent'],
                     'deputy_clerk' => $post['soc_deputy_clerk'],
                     'commission_expires' => $post['commission_expires'],
+                    'statement_claim' => $post['statement_claim'],
                     'date_updated' =>  date("Y-m-d H:i:s"),
                 ];
                 $this->CustomerStatementClaim_model->update($statementClaim->id, $data);
@@ -12285,6 +12290,7 @@ class Customer extends MY_Controller
                     'plaintiff_agent' => $post['soc_plaintiff_agent'],
                     'deputy_clerk' => $post['soc_deputy_clerk'],
                     'commission_expires' => $post['commission_expires'],
+                    'statement_claim' => $post['statement_claim'],
                     'date_created' =>  date("Y-m-d H:i:s"),
                     'date_updated' =>  date("Y-m-d H:i:s"),
                 ];

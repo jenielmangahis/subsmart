@@ -154,6 +154,10 @@
                                                 <label>Commission Expires</label>
                                                 <input type="text" class="form-control" name="commission_expires" value="<?= $statementClaim ? $statementClaim->commission_expires : ''; ?>" placeholder="">
                                             </div>
+                                            <div class="form-group mb-3">
+                                                <label>Statement of Claim</label>
+                                                <textarea class="form-control" name="statement_claim" style="height:102px;"><?= $statementClaim ? $statementClaim->statement_claim : ''; ?></textarea>                                                
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

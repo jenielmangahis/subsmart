@@ -3137,6 +3137,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('Invoice_model');
         $this->load->model('Invoice_settings_model');
 		$this->load->model('Customer_advance_model', 'customer_ad_model');
+        $this->load->model('accounting_recurring_transactions_model');
 
 		$error_count   = 0;
 		$success_count = 0;
@@ -3162,32 +3163,35 @@ class Cron_Jobs_Controller extends CI_Controller
 
                 $current_date    = date('Y-m-d');
 				$late_fee        = 0;
-				$payment_fee     = 0;
+				$payment_fee     = 0;  
 
                 if($unpaidSubscriptionsDetails) {
                     //Invoice is due, need to add late fee
-                    $late_fee_activated_date = $unpaidSubscriptionsDetails->due_date;
-                    if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
-                        $date1 = new DateTime($current_date);
-                        $date2 = new DateTime($late_fee_activated_date);
-                        $total_days = $date2->diff($date1)->format("%a");
-
-                        $days_activate_late_fee = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
-
-                        if($total_days > $days_activate_late_fee) {
-                            $late_fee_percentage = $as->payment_fee != null ? $as->payment_fee : 0; 
-
-                            if($as->mmr != null && $as->mmr > 0) {
-                                $late_fee += ($late_fee_percentage / 100) * $as->mmr;
-                            }
+                    $recurr_transaction = $this->accounting_recurring_transactions_model->get_by_type_transaction_id_status('invoice', $unpaidSubscriptionsDetails->invoice_id, 2); //2 is pause
+                    if(!$recurr_transaction) {
+                        $late_fee_activated_date = $unpaidSubscriptionsDetails->due_date;
+                        if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
+                            $date1 = new DateTime($current_date);
+                            $date2 = new DateTime($late_fee_activated_date);
+                            $total_days = $date2->diff($date1)->format("%a");
     
-                            if($total_days > 0) {
-                                $default_late_fee = $as->late_fee != null ? $as->late_fee : 0;
-                                if($total_days >= 10) {
-                                    $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);                        
-                                } else {
-                                    $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);
-                                }   
+                            $days_activate_late_fee = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
+    
+                            if($total_days > $days_activate_late_fee) {
+                                $late_fee_percentage = $as->payment_fee != null ? $as->payment_fee : 0; 
+    
+                                if($as->mmr != null && $as->mmr > 0) {
+                                    $late_fee += ($late_fee_percentage / 100) * $as->mmr;
+                                }
+        
+                                if($total_days > 0) {
+                                    $default_late_fee = $as->late_fee != null ? $as->late_fee : 0;
+                                    if($total_days >= 10) {
+                                        $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);                        
+                                    } else {
+                                        $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);
+                                    }   
+                                }
                             }
                         }
                     }
@@ -4333,6 +4337,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('Invoice_settings_model', 'invoice_settings_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('Invoice_model', 'invoice_model');
+        $this->load->model('accounting_recurring_transactions_model');
 
         /**
          * Update invoice late info - start
@@ -4340,140 +4345,50 @@ class Cron_Jobs_Controller extends CI_Controller
         $invoices_data = $this->invoice_model->getAllActiveInvoice();
 
         $deduct_days_computation = 0;
-        $total_records = 0;
+        $total_records           = 0;
+        $total_pause             = 0;
         foreach($invoices_data as $inv_data) {
 
-            $invoiceSettings = $this->invoice_settings_model->getByCompanyId($inv_data->company_id);
+            $recurr_transaction = $this->accounting_recurring_transactions_model->get_by_type_transaction_id_status('invoice', $inv_data->id, 2); //2 is pause
+            if(!$recurr_transaction) {
 
-            $current_date    = date('Y-m-d');
-            $new_invoice_grand_total = 0;
-            $late_fee        = 0;
-            $days_activate_late_fee = 0;
-            $invdata         = [];
+                $invoiceSettings = $this->invoice_settings_model->getByCompanyId($inv_data->company_id);
 
-            $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($inv_data->customer_id);	
-            $late_fee_activated_date = $inv_data->due_date;
-            if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
-                $date1 = new DateTime($current_date);
-                $date2 = new DateTime($late_fee_activated_date);
-                $total_days = $date2->diff($date1)->format("%a");
+                $current_date    = date('Y-m-d');
+                $new_invoice_grand_total = 0;
+                $late_fee        = 0;
+                $days_activate_late_fee = 0;
+                $invdata         = [];
 
-                $days_activate_late_fee = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
-                if($total_days > $days_activate_late_fee) {
-                    $late_fee_percentage = $customer_billing_info->payment_fee != null ? $customer_billing_info->payment_fee : 0; 
-                
-                    if($customer_billing_info->mmr != null && $customer_billing_info->mmr > 0) {
-                        $late_fee += ($late_fee_percentage / 100) * $customer_billing_info->mmr;
+                $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($inv_data->customer_id);	
+                $late_fee_activated_date = $inv_data->due_date;
+                if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
+                    $date1 = new DateTime($current_date);
+                    $date2 = new DateTime($late_fee_activated_date);
+                    $total_days = $date2->diff($date1)->format("%a");
+
+                    $days_activate_late_fee = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
+                    if($total_days > $days_activate_late_fee) {
+                        $late_fee_percentage = $customer_billing_info->payment_fee != null ? $customer_billing_info->payment_fee : 0; 
+                    
+                        if($customer_billing_info->mmr != null && $customer_billing_info->mmr > 0) {
+                            $late_fee += ($late_fee_percentage / 100) * $customer_billing_info->mmr;
+                        }
+
+                        if($total_days > 0) {
+                            $default_late_fee = $customer_billing_info->late_fee != null ? $customer_billing_info->late_fee : 0;
+                            if($total_days >= 10) {
+                                $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);                        
+                            } else {
+                                $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);      
+                            }   
+                        }                        
+
                     }
+                }       
 
-                    if($total_days > 0) {
-                        $default_late_fee = $customer_billing_info->late_fee != null ? $customer_billing_info->late_fee : 0;
-                        if($total_days >= 10) {
-                            $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);                        
-                        } else {
-                            $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);      
-                        }   
-                    }                        
+                $new_invoice_grand_total = (int) $customer_billing_info->mmr + $late_fee;
 
-                }
-            }       
-
-            $new_invoice_grand_total = (int) $customer_billing_info->mmr + $late_fee;
-
-            //Update invoice new grand total & late fee
-            if($inv_data->late_fee < $late_fee && $inv_data->grand_total < $new_invoice_grand_total) {
-                $invdata = [
-                    'id' => $inv_data->id,
-                    'invoice_totals' => $new_invoice_grand_total,
-                    'balance' => $new_invoice_grand_total,
-                    'grand_total' => $new_invoice_grand_total,
-                    'total_due' => $new_invoice_grand_total,
-                    'late_fee' => $late_fee
-                ];           
-                $this->customer_ad_model->update_data($invdata, 'invoices', 'id');	
-                $total_records++;
-            }
-        }     
-
-        echo 'total late fee updates: ' . $total_records;
-        
-        /**
-         * Update invoice late info - end
-         */
-    }
-
-    public function cronUpdateLateFeeByInvoice() {
-        $this->load->model('Invoice_settings_model', 'invoice_settings_model');
-        $this->load->model('Customer_advance_model', 'customer_ad_model');
-        $this->load->model('Invoice_model', 'invoice_model');
-
-        /**
-         * Update invoice late info - start
-         */
-
-        $invoice_number = $_GET['invoice_number'];
-        $is_force_update = $_GET['is_force_update'];
-        $invoices_data = $this->invoice_model->getActiveInvoiceByInvoiceNumber([], $invoice_number);
-
-        $deduct_days_computation = 0;
-        $total_records = 0;
-        foreach($invoices_data as $inv_data) {
-
-            $invoiceSettings = $this->invoice_settings_model->getByCompanyId($inv_data->company_id);
-
-            $current_date    = date('Y-m-d');
-            $new_invoice_grand_total = 0;
-            $late_fee        = 0;
-            $days_activate_late_fee = 0;
-            $invdata         = [];
-
-            $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($inv_data->customer_id);	
-            $late_fee_activated_date = $inv_data->due_date;
-            if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
-                $date1 = new DateTime($current_date);
-                $date2 = new DateTime($late_fee_activated_date);
-                $total_days = $date2->diff($date1)->format("%a");
-
-                $days_activate_late_fee = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
-                if($total_days > $days_activate_late_fee) {
-                    $late_fee_percentage = $customer_billing_info->payment_fee != null ? $customer_billing_info->payment_fee : 0; 
-                
-                    if($customer_billing_info->mmr != null && $customer_billing_info->mmr > 0) {
-                        $late_fee += ($late_fee_percentage / 100) * $customer_billing_info->mmr;
-                    }
-
-                    if($total_days > 0) {
-                        $default_late_fee = $customer_billing_info->late_fee != null ? $customer_billing_info->late_fee : 0;
-                        if($total_days >= 10) {
-                            $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);                        
-                        } else {
-                            $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);      
-                        }   
-                    }                        
-
-                }
-            }       
-
-            $new_invoice_grand_total = (int) $customer_billing_info->mmr + $late_fee;
-
-            echo 'due date: ' . $inv_data->due_date;
-            echo " : ";
-            echo 'current date: ' . $current_date;
-            echo '<br />';
-            echo 'mmr: ' . $customer_billing_info->mmr;
-            echo '<br />';
-            echo 'late fee percentage: ' . $late_fee_percentage;
-            echo '<br />';
-            echo 'late amount per day: ' . $default_late_fee;
-            echo '<br />';
-            echo 'total days late: ' . $total_days;
-            echo '<br />';
-            echo 'late fee: ' . $late_fee;
-            echo '<br />';
-            echo 'new grand total: ' . $new_invoice_grand_total;
-            echo '<br />';
-
-            if($is_force_update == 1) {
                 //Update invoice new grand total & late fee
                 if($inv_data->late_fee < $late_fee && $inv_data->grand_total < $new_invoice_grand_total) {
                     $invdata = [
@@ -4483,28 +4398,134 @@ class Cron_Jobs_Controller extends CI_Controller
                         'grand_total' => $new_invoice_grand_total,
                         'total_due' => $new_invoice_grand_total,
                         'late_fee' => $late_fee
-                    ];      
-                                    
+                    ];           
                     $this->customer_ad_model->update_data($invdata, 'invoices', 'id');	
                     $total_records++;
-                }
-            }elseif($is_force_update == 2) {
-                //Update invoice new grand total & late fee
-                //if($inv_data->late_fee < $late_fee && $inv_data->grand_total < $new_invoice_grand_total) {
-                    $invdata = [
-                        'id' => $inv_data->id,
-                        'invoice_totals' => $new_invoice_grand_total,
-                        'balance' => $new_invoice_grand_total,
-                        'grand_total' => $new_invoice_grand_total,
-                        'total_due' => $new_invoice_grand_total,
-                        'late_fee' => $late_fee
-                    ];      
-                                    
-                    $this->customer_ad_model->update_data($invdata, 'invoices', 'id');	
-                    $total_records++;
-                //}
-            }
+                }                
 
+            } else {
+                $total_pause++;    
+            }            
+
+        }     
+
+        echo 'total late fee updates: ' . $total_records;
+        echo '<hr />';
+        echo 'total pause late fee: ' . $total_pause;
+        
+        /**
+         * Update invoice late info - end
+         */
+    }
+
+    //Note: for manual update of invoice
+    public function cronUpdateLateFeeByInvoice() {
+        $this->load->model('Invoice_settings_model', 'invoice_settings_model');
+        $this->load->model('Customer_advance_model', 'customer_ad_model');
+        $this->load->model('Invoice_model', 'invoice_model');
+        $this->load->model('accounting_recurring_transactions_model');
+
+        /**
+         * Update invoice late info - start
+         */
+
+        $invoice_number  = $_GET['invoice_number'];
+        $is_force_update = $_GET['is_force_update'];
+        $invoices_data   = $this->invoice_model->getActiveInvoiceByInvoiceNumber([], $invoice_number);
+
+        $deduct_days_computation = 0;
+        $total_records = 0;
+        foreach($invoices_data as $inv_data) {
+            $recurr_transaction = $this->accounting_recurring_transactions_model->get_by_type_transaction_id_status('invoice', $inv_data->id, 2); //2 is pause
+            if(!$recurr_transaction) {
+
+                $invoiceSettings = $this->invoice_settings_model->getByCompanyId($inv_data->company_id);
+
+                $current_date    = date('Y-m-d');
+                $new_invoice_grand_total = 0;
+                $late_fee        = 0;
+                $days_activate_late_fee = 0;
+                $invdata         = [];
+    
+                $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($inv_data->customer_id);	
+                $late_fee_activated_date = $inv_data->due_date;
+                if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
+                    $date1 = new DateTime($current_date);
+                    $date2 = new DateTime($late_fee_activated_date);
+                    $total_days = $date2->diff($date1)->format("%a");
+    
+                    $days_activate_late_fee = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
+                    if($total_days > $days_activate_late_fee) {
+                        $late_fee_percentage = $customer_billing_info->payment_fee != null ? $customer_billing_info->payment_fee : 0; 
+                    
+                        if($customer_billing_info->mmr != null && $customer_billing_info->mmr > 0) {
+                            $late_fee += ($late_fee_percentage / 100) * $customer_billing_info->mmr;
+                        }
+    
+                        if($total_days > 0) {
+                            $default_late_fee = $customer_billing_info->late_fee != null ? $customer_billing_info->late_fee : 0;
+                            if($total_days >= 10) {
+                                $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);                        
+                            } else {
+                                $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);      
+                            }   
+                        }                        
+    
+                    }
+                }       
+    
+                $new_invoice_grand_total = (int) $customer_billing_info->mmr + $late_fee;
+    
+                echo 'due date: ' . $inv_data->due_date;
+                echo " : ";
+                echo 'current date: ' . $current_date;
+                echo '<br />';
+                echo 'mmr: ' . $customer_billing_info->mmr;
+                echo '<br />';
+                echo 'late fee percentage: ' . $late_fee_percentage;
+                echo '<br />';
+                echo 'late amount per day: ' . $default_late_fee;
+                echo '<br />';
+                echo 'total days late: ' . $total_days;
+                echo '<br />';
+                echo 'late fee: ' . $late_fee;
+                echo '<br />';
+                echo 'new grand total: ' . $new_invoice_grand_total;
+                echo '<br />';
+    
+                if($is_force_update == 1) {
+                    //Update invoice new grand total & late fee
+                    if($inv_data->late_fee < $late_fee && $inv_data->grand_total < $new_invoice_grand_total) {
+                        $invdata = [
+                            'id' => $inv_data->id,
+                            'invoice_totals' => $new_invoice_grand_total,
+                            'balance' => $new_invoice_grand_total,
+                            'grand_total' => $new_invoice_grand_total,
+                            'total_due' => $new_invoice_grand_total,
+                            'late_fee' => $late_fee
+                        ];      
+                                        
+                        $this->customer_ad_model->update_data($invdata, 'invoices', 'id');	
+                        $total_records++;
+                    }
+                }elseif($is_force_update == 2) {
+                    //Update invoice new grand total & late fee
+                    //if($inv_data->late_fee < $late_fee && $inv_data->grand_total < $new_invoice_grand_total) {
+                        $invdata = [
+                            'id' => $inv_data->id,
+                            'invoice_totals' => $new_invoice_grand_total,
+                            'balance' => $new_invoice_grand_total,
+                            'grand_total' => $new_invoice_grand_total,
+                            'total_due' => $new_invoice_grand_total,
+                            'late_fee' => $late_fee
+                        ];      
+                                        
+                        $this->customer_ad_model->update_data($invdata, 'invoices', 'id');	
+                        $total_records++;
+                    //}
+                }                
+                
+            }
         }    
         
         echo '<hr >';
@@ -4515,12 +4536,14 @@ class Cron_Jobs_Controller extends CI_Controller
          */
     }
 
+    //Note: for manual update
     public function cronCustomerSubscriptionByCustomer(){		
 		$this->load->model('AcsCustomerSubscriptionBilling_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('Invoice_model');
         $this->load->model('Invoice_settings_model');
 		$this->load->model('Customer_advance_model', 'customer_ad_model');
+        $this->load->model('accounting_recurring_transactions_model');
 
         $prof_id = $_GET['prof_id'];
 
@@ -4550,29 +4573,32 @@ class Cron_Jobs_Controller extends CI_Controller
                     $payment_fee     = 0;
     
                     if($unpaidSubscriptionsDetails) {
-                        //Invoice is due, need to add late fee
-                        $late_fee_activated_date = $unpaidSubscriptionsDetails->due_date;
-                        if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
-                            $date1 = new DateTime($current_date);
-                            $date2 = new DateTime($late_fee_activated_date);
-                            $total_days = $date2->diff($date1)->format("%a");
-    
-                            $days_activate_late_fee = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
-    
-                            if($total_days > $days_activate_late_fee) {
-                                $late_fee_percentage = $as->payment_fee != null ? $as->payment_fee : 0; 
-    
-                                if($as->mmr != null && $as->mmr > 0) {
-                                    $late_fee += ($late_fee_percentage / 100) * $as->mmr;
-                                }
+                        $recurr_transaction = $this->accounting_recurring_transactions_model->get_by_type_transaction_id_status('invoice', $unpaidSubscriptionsDetails->invoice_id, 2); //2 is pause
+                        if(!$recurr_transaction) {
+                            //Invoice is due, need to add late fee
+                            $late_fee_activated_date = $unpaidSubscriptionsDetails->due_date;
+                            if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
+                                $date1 = new DateTime($current_date);
+                                $date2 = new DateTime($late_fee_activated_date);
+                                $total_days = $date2->diff($date1)->format("%a");
         
-                                if($total_days > 0) {
-                                    $default_late_fee = $as->late_fee != null ? $as->late_fee : 0;
-                                    if($total_days >= 10) {
-                                        $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);                        
-                                    } else {
-                                        $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);
-                                    }   
+                                $days_activate_late_fee = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
+        
+                                if($total_days > $days_activate_late_fee) {
+                                    $late_fee_percentage = $as->payment_fee != null ? $as->payment_fee : 0; 
+        
+                                    if($as->mmr != null && $as->mmr > 0) {
+                                        $late_fee += ($late_fee_percentage / 100) * $as->mmr;
+                                    }
+            
+                                    if($total_days > 0) {
+                                        $default_late_fee = $as->late_fee != null ? $as->late_fee : 0;
+                                        if($total_days >= 10) {
+                                            $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);                        
+                                        } else {
+                                            $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);
+                                        }   
+                                    }
                                 }
                             }
                         }
@@ -4607,6 +4633,7 @@ class Cron_Jobs_Controller extends CI_Controller
                     $filter['company_id']      = $customer->company_id;
     
                     $isCustomerSubscriptionBillingDuplicate = $this->AcsCustomerSubscriptionBilling_model->getCustomerSubscriptionBillingByFilter($filter);	
+
                     if(!$isCustomerSubscriptionBillingDuplicate) {
                         /**
                          *  Note: no records founds, proceed to add invoice

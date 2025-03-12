@@ -57,7 +57,7 @@
                                     <a class="dropdown-item" href="<?= base_url("customer/subscription/" . $as->fk_prof_id); ?>">View</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="<?= base_url("customer/view_payment_history/" . $as->fk_prof_id); ?>">Payment History</a>
+                                    <a class="dropdown-item view-payment-item" href="javascript:void(0);" data-customer-id="<?= $as->fk_prof_id; ?>" data-billing-id="<?= $as->id; ?>">Payment History</a>
                                 </li>
                             </ul>
                         </div>

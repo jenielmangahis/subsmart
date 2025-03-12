@@ -66,7 +66,7 @@ html { margin: 26px 50px;}
         </tbody>
     </table>
     <div style="text-align:center;font-weight:bold;font-size:18px;display:block;margin:21px 0px;">STATEMENT OF CLAIM</div>
-    <div style="text-align:left;font-size:18px;display:block;margin-left:22px;">Plaintiff, sues defendant, and alleges:</div>
+    <div style="text-align:left;font-size:18px;display:block;margin-left:22px;">Plaintiff, sues defendant, and alleges: <?= $post['statement_claim']; ?></div>
     <div style="margin-left:20px;display:block;font-size:14px;">
         <p style="line-height: 1.6;">WHEREOF, plaintiff demands judgement for damages in the amount of $<span style="display:inline-block;width:150px;border-bottom:1px solid;line-height:11px;padding-left:6px;"><?= number_format($post['soc_damage_amount'],2,".",","); ?></span> and <br />$<span style="display:inline-block;width:150px;border-bottom:1px solid;line-height:11px;padding-left:6px;"><?= number_format($post['soc_court_costs'],2,".",""); ?></span> Court costs plus Sheriff's fees of $<span style="display:inline-block;width:150px;border-bottom:1px solid;line-height:11px;padding-left:6px;"><?= number_format($post['soc_sheriff_fees'],2,".",""); ?></span> against defendant.</p>
     </div>
@@ -89,7 +89,7 @@ html { margin: 26px 50px;}
             <td style="width:50%;">
                 <span style="display:block;width:300px;border-bottom:1px solid;"><?= $post['soc_deputy_clerk']; ?></span>
                 Notary Public   -   Deputy Clerk <br /><br />
-                My Commission expires <span style="display:inline-block;width:130px;border-bottom:1px solid;"><?= $post['commission_expires']; ?></span>
+                My Commission expires <span style="display:inline-block;width:130px;border-bottom:1px solid;"><?= $post['commission_expires']; ?></span>><br /><br />
             </td>
         </tr>
     </table>

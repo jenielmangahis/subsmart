@@ -118,28 +118,43 @@
                 <div class="row mt-4">
                     <div class="col-12 col-md-4 grid-mb">
                         <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search List">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
                         </div>
                     </div>  
                 </div>
-                <table class="nsm-table" id="payroll-tax-list">
-                    <template id="taxRowTemplate">
-                        <tr class="payrollTax__row">
-                            <td class="nsm-text-primary">
+                <table class="nsm-table" id="nsm-payroll-tax-list">
+                    <thead>
+                        <tr>
+                            <td class="table-icon"></td>
+                            <td data-name="TaxType" style="width:80%;">Tax type</td>
+                            <td data-name="DueDate">Due Date</td>     
+                            <td data-name="Balance" style="text-align:right;width:10%;">Balance</td>                                                   
+                            <!-- <td data-name="Manage" style="width:5%;"></td> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($payrollTax as $tax){ ?>
+                        <tr>
+                            <td>
+                                <div class="table-row-icon">
+                                    <i class='bx bx-dollar-circle'></i>
+                                </div>
+                            </td>
+                            <td class="fw-bold nsm-text-primary">
                                 <div class="payrollTax__taxType">                         
-                                    <div data-type="type.title" class="payrollTax__text700"></div>
-                                    <div data-type="type.date_range" class="payrollTax__taxTypeDateRange"></div>
+                                    <div data-type="type.title" class="payrollTax__text700"><?= $tax->name; ?></div>
+                                    <!-- <div data-type="type.date_range" class="payrollTax__taxTypeDateRange"><?= $tax->date_range; ?></div> -->
                                 </div>
-                            </td>
+                            </td>                                 
                             <td class="nsm-text-primary">
+                                <div data-type="due_date" class="payrollTax__text700"><?= $tax->time_date; ?></div>
+                            </td>
+                            <td class="nsm-text-primary" style="text-align:right;width:10%;">
                                 <div class="payrollTax__text700">
-                                    $<span data-type="amount"></span>
+                                    $<span data-type="amount"><?= number_format($tax->balance,2,'.',','); ?></span>
                                 </div>
-                            </td>
-                            <td class="nsm-text-primary">
-                                <div data-type="due_date" class="payrollTax__text700"></div>
-                            </td>
-                            <td class="nsm-text-primary">
+                            </td>                                                   
+                            <!-- <td class="nsm-text-primary">
                                 <div class="dropdown table-management payrollTax__actions">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                     <ul class="dropdown-menu dropdown-menu-end">
@@ -147,22 +162,9 @@
                                         <li><a class="dropdown-item btn-row-mark-paid" href="javascript:void(0);">Mark as paid</a></li>
                                      </ul>
                                 </div>
-                            </td>
+                            </td> -->
                         </tr>
-                    </template>
-
-                    <thead>
-                        <tr>
-                            <td data-name="TaxType">Tax type</td>
-                            <td data-name="Balance">Balance</td>
-                            <td scope="DueDate">Due date</td>
-                            <td scope="Manamge" style="width:5%;"></td>
-                        </tr>
-                    </thead>
-                    <tbody id="taxRowContainer">
-                        <tr class="payrollTax__loaderRow">
-                            <td colspan="6">Loading...</td>
-                        </tr>
+                    <?php } ?>
                     </tbody>
                 </table>    
 
@@ -172,51 +174,10 @@
 </div>
 <script>
 $(function(){
-    $("#payroll-tax-list").nsmPagination({itemsPerPage:10});
-
-    function performSearch() {
-        var searchValue = $('#search_field').val().toLowerCase();
-        var hasResults = false;
-
-        $('#taxRowContainer .payrollTax__row').each(function() {
-            var title = $(this).find('[data-type="type.title"]').text().toLowerCase();
-            var typeDateRange = $(this).find('[data-type="type.date_range"]').text().toLowerCase();
-            var amount = $(this).find('[data-type="amount"]').text().toLowerCase();
-            var dueDate = $(this).find('[data-type="due_date"]').text().toLowerCase();
-
-            if (title.indexOf(searchValue) === -1 &&
-                title.indexOf(searchValue) === -1 &&
-                typeDateRange.indexOf(searchValue) === -1 &&
-                amount.indexOf(searchValue) === -1 &&
-                dueDate.indexOf(searchValue) === -1) {
-                $(this).hide();
-            } else {
-                $(this).show();
-                hasResults = true;
-            }
-        });
-
-        $('.no-results').remove();
-
-        if (!hasResults) {
-            var noResultsRow = '<tr class="no-results">' +
-                '<td colspan="4">' +
-                '<div class="nsm-empty">' +
-                '<span>No results found.</span>' +
-                '</div>' +
-                '</td>' +
-                '</tr>';
-            $('#taxRowContainer').append(noResultsRow);
-        }
-    }
-
-    $('#search_field').on('keyup', function() {
-        performSearch();
-    });
-
-    $('.nsm-field-group.search').on('click', function() {
-        performSearch();
-    });    
+    $("#nsm-payroll-tax-list").nsmPagination({itemsPerPage:10});
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));        
+    }, 1000));   
 });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

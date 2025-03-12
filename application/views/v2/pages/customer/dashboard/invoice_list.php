@@ -86,9 +86,6 @@
                                                 <a class="dropdown-item" href="<?php echo base_url('invoice/send/' . $invoice->id) ?>">Send Invoice</a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item" id="resend-invoice-late-fee" href="javascript:void(0);" data-number="<?= $invoice->invoice_number; ?>" data-id="<?= $invoice->id; ?>">Resend Invoice with Late Fee</a>
-                                            </li>
-                                            <li>
                                                 <a class="dropdown-item" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>">Edit</a>
                                             </li>
                                             <li>

@@ -370,12 +370,12 @@ echo 'active';
     </a>
     <ul class="mt-3">
         <li class="<?php echo $page->title === 'Sales Tax' ? 'selected' : ''; ?>">
-            <a href="/accounting/salesTax">
+            <a href="<?= base_url('accounting/salesTax') ?>">
                 Sales Tax
             </a>
         </li>
         <li class="<?php echo $page->title === 'Payroll Tax' ? 'selected' : ''; ?>">
-            <a href="/accounting/payrollTax">
+            <a href="<?= base_url('accounting/payrollTax'); ?>">
                 Payroll Tax
             </a>
         </li>
