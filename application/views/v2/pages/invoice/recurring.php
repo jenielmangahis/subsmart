@@ -298,7 +298,7 @@
 
         $(document).on('submit', '#frm-record-payment', function(e){
             e.preventDefault();
-            var url  = base_url + 'invoice/_update_status/paid';
+            var url  = base_url + 'invoice/_create_payment';
             var form = $(this);
             $.ajax({
                 type: "POST",
