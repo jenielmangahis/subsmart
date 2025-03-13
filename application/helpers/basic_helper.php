@@ -518,6 +518,10 @@ if (!function_exists('logged')) {
         
         if (!$logged) {
             $logged = $CI->users_model->getById(json_decode(get_cookie('logged'))->id);
+            if( $key == 'industry_type' && $logged ){
+                $industry = $CI->Clients_model->getById($logged->company_id);
+                $logged->industry_type = $industry ? $industry->industry_template_name : '';
+            }
         }
 
         if( $key == 'industry_type' && $logged ){
@@ -1032,8 +1036,8 @@ if (!function_exists('getCompany')){
     function getCompany(){
         $CI = &get_instance();
         $company_id = logged('company_id');
-
-        return $CI->db->query('select * from business_profile where id = ' . $company_id);
+        return $CI->business_model->getByCompanyId($company_id);
+        //return $CI->db->query('select * from business_profile where company_id = ' . $company_id);
     }
 }
 
@@ -1056,28 +1060,27 @@ if (!function_exists('getCompanyFolder')){
             mkdir('./uploads/');
         }
 
-        if($company->num_rows() > 0) {
-            $company = $company->row();
-            if(empty($company->folder_name)){
+        if( $company ){
+            if( $company->folder_name != '' ){
+                if(!file_exists('./uploads/' . $company->folder_name . '/')){
+                    mkdir('./uploads/' . $company->folder_name . '/');
+                }
+
+                $company_folder = $company->folder_name;
+            }else{
                 $folder_name = generateRandomString();
                 while(file_exists('./uploads/' . $folder_name . '/')){
                     $folder_name = generateRandomString();
                 }
 
                 $data = array('folder_name' => $folder_name);
-
                 if($CI->business_model->trans_update($data, array('id' => $company->id))){
                     mkdir('./uploads/' . $folder_name . '/');
 
                     $company_folder = $folder_name;
                 }
-            } else {
-                if(!file_exists('./uploads/' . $company->folder_name . '/')){
-                    mkdir('./uploads/' . $company->folder_name . '/');
-                }
-
-                $company_folder = $company->folder_name;
             }
+            
         }
 
         return $company_folder;
@@ -1562,7 +1565,7 @@ function getFolderManagerView_v2($isMain = true, $isMyLibrary = false, $isBusine
     $user_fname = logged('FName');
     $user_lname = logged('LName');
 
-    $company = getCompany()->row();
+    $company = getCompany();
 
     $params = array(
         'isMain' => $isMain,

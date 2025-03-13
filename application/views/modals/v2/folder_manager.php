@@ -408,29 +408,31 @@ foreach ($categories as $category) {
 </div>
 
 <div id="modal-folder-manager-view-image" class="modal fade nsm-modal" role="dialog">
-  <div class="modal-dialog modal-xl">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
 
     <!-- Modal content-->
-    <div class="modal-content" style="height: 90vh">
+    <div class="modal-content">
       <div class="modal-header">
         <h4 id="modal-folder-manager-view-image-title"></h4>
         <button type="button" data-bs-dismiss="modal" aria-label="Close">&times;</button>
       </div>
       <div class="modal-body pt-3">
-        <table class="table table-bordered border border-0">
-          <tbody>
-            <tr class="row ml-0 mr-0">
-              <td class="col-md-2 text-center font-weight-bold">Date Uploaded : </td>
-              <td class="text-center col-md-3" id="view-image-date-created"></td>
-              <td class="col-md-2 text-center font-weight-bold">Uploaded By : </td>
-              <td class="text-center col-md-3" id="view-image-created-by"></td>
-              <td class="col-md-2 border border-0 text-right pt-0">
-                <a href="#" class="btn btn-sm btn-default" control="download" title="Download File" data-toggle="tooltip" id="download_image_or_file"><i class="fa fa-download"></i></a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div style="height: 70vh"><img id="modal-folder-manager-view-image-file" src="#" class="img-thumbnail w-100 h-100"></div>
+        <div class="row mb-3">
+          <div class="col-12 col-md-6">
+            <label for="" class="col-sm-12 col-form-label">Date Uploaded</label>
+            <input type="text" id="date-uploaded" disabled="" class="form-control" />
+          </div>
+          <div class="col-12 col-md-6">
+            <label for="" class="col-sm-12 col-form-label">Uploaded By</label>
+            <input type="text" id="uploaded-by" disabled="" class="form-control" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-12 col-md-6">
+          <a href="#" class="nsm-button primary" control="download" title="Download File" data-toggle="tooltip" id="download_image_or_file"><i class='bx bxs-download'></i> Download</a>
+          </div>
+        </div>
+        <div class="mt-5"><img style="display:block; margin: auto;" id="modal-folder-manager-view-image-file" src="#" class="img-thumbnail"></div>
       </div>
     </div>
 

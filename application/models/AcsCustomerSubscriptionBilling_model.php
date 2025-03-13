@@ -156,6 +156,17 @@ class AcsCustomerSubscriptionBilling_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function getByCustomerIdAndInvoiceId($customer_id, $invoice_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('customer_id', $customer_id);
+        $this->db->where('invoice_id', $invoice_id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
 
 /* End of file AcsCustomerSubscriptionBilling_model.php */
