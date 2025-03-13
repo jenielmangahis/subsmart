@@ -202,6 +202,11 @@ $(document).on("change", ".adjustment_input", function () {
   // $("#payment_amount").val(new_grand.toFixed(2));
 });
 
+$(document).on("change", ".late_fee", function () {
+  var counter = $("#count").val();
+  calculation(counter);  
+});
+
 $(document).on("focusout", ".setmarkup", function () {
   var counter = $(this).data("counter");
   calculation(counter);
@@ -2452,6 +2457,12 @@ function calculation(counter) {
     2
   );
 
+  var late_fee = $("#late_fee").val();
+
+  if(late_fee == '' || isNaN(late_fee)){
+    late_fee = 0;
+  }
+
   if( isNaN(tax1) ){
     tax1 = '0.00';
   }
@@ -2542,6 +2553,11 @@ function calculation(counter) {
   // $("#item_total").val(subtotal.toFixed(2));
   var s_total = subtotal.toFixed(2);
   var adjustment = $("#adjustment_input").val();  
+
+  if( adjustment == '' || isNaN(adjustment) ){
+    adjustment = 0;
+  }
+
   var grand_total = parseFloat(s_total) + parseFloat(adjustment);
   var markup = $("#markup_input_form").val();
   var grand_total_w = grand_total + parseFloat(markup);
@@ -2568,6 +2584,8 @@ function calculation(counter) {
       grand_total_w = grand_total_w - subtotaltax;      
     }
   }
+
+  grand_total_w = grand_total_w + parseFloat(late_fee);
 
   $("#total_tax_").text(subtotaltax.toFixed(2));
   $("#total_tax_input").val(subtotaltax.toFixed(2));
