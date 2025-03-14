@@ -1470,12 +1470,24 @@ class Customer_advance_model extends MY_Model
     public function getAllActiveSubscriptionsWithSub14Days($current_date) {
 
         $this->db->select('acs_profile.*,acs_billing.*');
-        //$this->db->select('acs_billing.next_billing_date, DATE_SUB(acs_billing.next_billing_date, INTERVAL 14 DAY) as next_billing_date_interval, acs_profile.first_name, acs_profile.last_name');
         $this->db->from('acs_billing');
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
 
         $this->db->where('CURDATE() >= DATE_SUB(acs_billing.next_billing_date, INTERVAL 14 DAY)');
         $this->db->where('CURDATE() <= acs_billing.next_billing_date');   
+
+        $query = $this->db->get();
+
+        return $query->result();   
+    }
+
+    public function getAllActiveSubscriptionsByNextBillingDate($next_billing_date) {
+
+        $this->db->select('acs_profile.*,acs_billing.*');
+        $this->db->from('acs_billing');
+        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+
+        $this->db->where('acs_billing.next_billing_date =', $next_billing_date);
 
         $query = $this->db->get();
 
