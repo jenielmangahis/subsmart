@@ -445,7 +445,7 @@
                     foreach ($widgets as $wids) {
                         if ($wids->w_main && checkRoleCanAccessWidget($wids->w_id)) {
                             echo "
-                            <div class='col mt-3 cardLoader'>
+                            <div class='col-lg-4 mt-3 cardLoader'>
                                 <div class='card shadow'>
                                     <div class='card-body'>
                                         <div class='row'>
@@ -485,7 +485,7 @@
                         if ($wids->w_main && checkRoleCanAccessWidget($wids->w_id)) {
                             echo "
                             ";
-                            echo "<div class='col mt-3 divThumbnailCard' data-id='$wids->w_id' id='thumbnail_$wids->w_id'>";
+                            echo "<div class='col-lg-4 mt-3 divThumbnailCard' data-id='$wids->w_id' id='thumbnail_$wids->w_id'>";
                             // echo "<style>
                             //         div[data-id='$wids->w_id'] {
                             //             min-width: 398.297px;
@@ -1262,7 +1262,6 @@ function collectionGraphThumbnail() {
         })
 }
 
-
 function subscriptionThumbnail() {
     fetch('<?php echo base_url('Dashboard/income_subscription'); ?>', {}).then(response => response.json()).then(
         response => {
@@ -1597,22 +1596,19 @@ customerGroupsGraphThumbnail();
 function customerGroupsGraphThumbnail() {
     fetch('<?php echo base_url('Dashboard/get_all_customer_group'); ?>', {}).then(response => response.json()).then(
         response => {
-
-
-            var {
-                success,
-                customer
-            } = response;
+            var { success, customer } = response;
 
             let labelsTemp = [];
             let dataTemp = [];
             let totalCustomer = 0;
+            let totalActiveCustomerGroup = 0;
 
             if (customer) {
                 for (var x = 0; x < customer.length; x++) {
                     labelsTemp.push(customer[x].title + ': ' + customer[x].total_customer)
                     dataTemp.push(customer[x].total_customer)
                     totalCustomer += parseInt(customer[x].total_customer)
+                    totalActiveCustomerGroup++;
                 }
             }
 
@@ -1636,25 +1632,26 @@ function customerGroupsGraphThumbnail() {
                 type: 'pie',
                 data: customer_graph_data,
                 options: {
+                    responsive: true,
                     plugins: {
                         legend: {
                             position: 'right',
                             labels: {
-                                boxWidth: 10,
+                                boxWidth: 15,
                             }
                         },
                     },
                     layout: {
                         padding: {
-                            left: 5,
-                            right: 5,
-                            top: 0,
+                            left: 0,
+                            right: 0,
+                            top: 5,
                         }
                     },
                 },
             });
             $(".recent-customer-container-count").html(totalCustomer);
-            $("#total_customer_graph").html(totalCustomer);
+            $("#total_customer_graph").html(totalActiveCustomerGroup);
 
 
             window.NewCustomerWidgetsGraph = NewCustomerWidgetsGraph;
@@ -2044,7 +2041,7 @@ function estimateGraphThumbnail() {
                             'rgb(240,240,240)'
                         ],
                         borderWidth: 1,
-                        cutout: '80%',
+                        cutout: '70%',
                         circumference: 300,
                         rotation: 210
                     }]
@@ -2060,7 +2057,6 @@ function estimateGraphThumbnail() {
                         }
                     }
                 },
-                plugins: [gaugeChartText],
             });
 
             window.estimateChart = estimateChart;

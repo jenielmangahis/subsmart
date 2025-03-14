@@ -151,7 +151,6 @@ class Customer_advance_model extends MY_Model
     {
         $this->db->select('customer_groups.title, COUNT(acs_profile.prof_id) AS total_customer');
         $this->db->from('customer_groups');
-        $this->db->join('users', 'users.id = customer_groups.user_id', 'left');
         $this->db->join('acs_profile', 'acs_profile.customer_group_id = customer_groups.id');
         $this->db->where('customer_groups.company_id', $company_id);
         $this->db->where_in('acs_profile.status', [

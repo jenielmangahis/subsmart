@@ -1258,7 +1258,25 @@ class DocuSign extends MYF_Controller
     public function apiTrash($documentId)
     {
         $this->db->where('id', $documentId);
-        $this->db->update('user_docfile', ['status' => 'Trashed', 'trashed_at' => date('Y-m-d H:i:s')]);
+        $userDocfile = $this->db->get('user_docfile')->row();
+
+        $this->db->where('id', $documentId);
+        $this->db->update('user_docfile', ['status' => 'Trashed', 'previous_status' => $userDocfile->status, 'trashed_at' => date('Y-m-d H:i:s')]);
+
+        $this->db->where('id', $documentId);
+        $document = $this->db->get('user_docfile')->row();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $document]);
+    }
+
+    public function apiRestore($documentId)
+    {
+        $this->db->where('id', $documentId);
+        $userDocfile = $this->db->get('user_docfile')->row();
+
+        $this->db->where('id', $documentId);
+        $this->db->update('user_docfile', ['status' => $userDocfile->previous_status, 'trashed_at' => NULL]);
 
         $this->db->where('id', $documentId);
         $document = $this->db->get('user_docfile')->row();
@@ -1694,6 +1712,11 @@ class DocuSign extends MYF_Controller
     public function templateCreate()
     {
         $this->checkLogin();
+
+        if(!checkRoleCanAccessModule('esign', 'write')){
+            show403Error();
+            return false;
+        }
 
         add_css([
             'assets/css/esign/esign-builder/esign-builder.css',
@@ -2396,6 +2419,7 @@ SQL;
                 'name' => $recipient['name'],
                 'email' => $recipient['email'],
                 'role' => $recipient['role'],
+                'role_type' => $recipient['role_name'],
                 'color' => $recipient['color'],
             ];
 

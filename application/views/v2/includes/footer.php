@@ -794,8 +794,7 @@ function filterThumbnail(val, id, table,filter) {
             if(table == 'acs_billing' || table == 'collection'|| table == 'nsmart_sales'){
                 var to_date = '0000-00-00 23:59:59';
             }else{
-                var to_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date
-                .getDate()).slice(-2);
+                var to_date = "<?php echo date('Y-m-d'); ?>";
             }
      
 
@@ -945,7 +944,7 @@ function filterThumbnail(val, id, table,filter) {
 
 }
 
-function loadDataFilter(from_date, to_date, table, id,filter) {
+function loadDataFilter(from_date, to_date, table, id, filter) {
     $.ajax({
         url: base_url + 'dashboard/loadFilterData',
         method: 'post',
@@ -958,17 +957,18 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
         },
         success: function(response) {
             var data = JSON.parse(response);
-            $(`#first_content_${id}`).html(data['first']);
-            $(`#second_content_${id}`).html(data['second']);
-
+            $(`#first_content_${id}, #first_estimate_content_${id}`).html(data['first']);
+            $(`#second_content_${id}, #second_estimate_content_${id}`).html(data['second']);
 
             if (table == 'acs_billing') {
                 // window.subscriptionChart.destroy();
                 filterSubsciptionThumbnailGraph(data['mmr'])
             }
+
             if (table == 'estimates') {
                 filterEstimateThumbnailGraph(data['first'], data['second'])
             }
+
             if (table == 'invoices') {
                 $(`#second_content_${id}`).html("$ " + data['second']);
                 filterPastDueThumbnailGraph(data['past_due'])
@@ -978,6 +978,7 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
                 $(`#second_content_${id}`).html("$ " + data['second']);
                 filterNsmartSalesGraph(data['nsmart_sales'])
             }
+
             if (table == 'open_invoices') {
                 filterOpenInvoicesThumbnailGraph(data['open_invoices'])
             }
@@ -990,12 +991,13 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
             if (table == 'ac_leads') {
                 filterLeadsThumbnailGraph(data['total_leads'])
             }
+
             if (table == 'accounting_expense') {
                 filterAccountingExpenseThumbnailGraph(data['accounting_expense'])
             }
 
             if (table == 'acs_profile') {
-                filterCustomerThumbnailGraph(data['customer'])
+                filterCustomerThumbnailGraph(data['customer']);
             }
 
             if (table == 'collection') {
@@ -1005,7 +1007,9 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
                     totalIncome += parseFloat(income[x].grand_total);
                 }
 
-                $(`#first_content_${id}`).html('$ ' + totalIncome.toLocaleString(undefined, {minimumFractionDigits: 2}));
+                $(`#first_content_${id}`).html('$ ' + totalIncome.toLocaleString(undefined, {
+                    minimumFractionDigits: 2
+                }));
 
                 filterCollectionThumbnailGraph(data['collection'])
             }
@@ -1017,6 +1021,7 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
             if (table == 'jobs') {
                 filterJobsThumbnailGraph(data['jobs'])
             }
+
             if (table == 'unpaid_invoices') {
                 var unpaid_invoices = data['unpaid'];
                 var totalUnpaid = 0;
@@ -1033,6 +1038,7 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
 
                 filterUnpaidInvoicesThumbnailGraph(data['unpaid'])
             }
+
             if (table == 'income') {
                 var income = data['income'];
                 var totalIncome = 0;
@@ -1040,7 +1046,9 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
                     totalIncome += parseFloat(income[x].grand_total);
                 }
 
-                $(`#first_content_${id}`).html('$ ' + totalIncome.toLocaleString(undefined, {minimumFractionDigits: 2}));
+                $(`#first_content_${id}`).html('$ ' + totalIncome.toLocaleString(undefined, {
+                    minimumFractionDigits: 2
+                }));
 
                 filterIncomeThumbnailGraph(data['income'])
             }
@@ -1244,29 +1252,22 @@ function filterCollectionThumbnailGraph(collection) {
 
 function filterCustomerThumbnailGraph(customer) {
     let totalCustomer = 0;
-    if (customer.length > 0) {
-        let dataTemp = [];
-        let labelsTemp = [];
+    let dataTemp = [];
+    let labelsTemp = [];
 
-        if (customer) {
-            for (var x = 0; x < customer.length; x++) {
-                labelsTemp.push(customer[x].title)
-                dataTemp.push(customer[x].total_customer)
-                totalCustomer += parseInt(customer[x].total_customer)
-            }
+    if (customer) {
+        for (var x = 0; x < customer.length; x++) {
+            labelsTemp.push(customer[x].title);
+            dataTemp.push(customer[x].total_customer);
+            totalCustomer += parseInt(customer[x].total_customer);
         }
-        $(".recent-customer-container-count").html(totalCustomer);
-        $("#total_customer_graph").html(totalCustomer);
-        NewCustomerWidgetsGraph.data.labels = labelsTemp;
-        NewCustomerWidgetsGraph.data.datasets[0].data = dataTemp;
-        NewCustomerWidgetsGraph.update();
-    } else {
-        $(".recent-customer-container-count").html(totalCustomer);
-        $("#total_customer_graph").html(totalCustomer);
-        NewCustomerWidgetsGraph.data.datasets[0].data = null;
-        NewCustomerWidgetsGraph.update();
     }
 
+    $(".recent-customer-container-count").html(totalCustomer);
+    $("#total_customer_graph").html(labelsTemp.length);
+    NewCustomerWidgetsGraph.data.labels = labelsTemp;
+    NewCustomerWidgetsGraph.data.datasets[0].data = dataTemp;
+    NewCustomerWidgetsGraph.update();
 }
 
 function filterAccountingExpenseThumbnailGraph(accounting_expense) {

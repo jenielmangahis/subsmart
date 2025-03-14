@@ -1039,25 +1039,80 @@ class Dashboard extends Widgets
                 break;
 
             case 'acs_profile':
-                $acs_profile_query = [
-                    'where' => ['customer_groups.company_id' => logged('company_id'),
-                    'DATE(acs_profile.created_at)  >=' => date('Y-m-d', strtotime($date_from)),
-                    'DATE(acs_profile.created_at)  <=' => date('Y-m-d', strtotime($date_to)),
-                     ],
-                    'or_where' => ['customer_groups.company_id' => 0],
-                    'groupBy' => ['customer_groups.title'],
-                    'table' => 'customer_groups',
-                    'join' => [
-                        [
-                            'table' => 'acs_profile',
-                            'statement' => 'acs_profile.customer_group_id = customer_groups.id',
-                        ],
-                    ],
-                    'select' => 'customer_groups.title, COUNT(acs_profile.prof_id) AS total_customer',
-                ];
-                $customer = $this->general->get_data_with_param($acs_profile_query);
+                $company_id = logged('company_id');
+                $dateFrom = date('Y-m-d', strtotime($date_from));
+                $dateTo = date('Y-m-d', strtotime($date_to));
+
+                // $acs_profile_query = [
+                //     'select' => 'customer_groups.title, COUNT(acs_profile.prof_id) AS total_customer',
+                //     'where' => [
+                //         'customer_groups.company_id' => logged('company_id'),
+                //         'DATE(acs_profile.created_at)  >=' => $dateFrom,
+                //         'DATE(acs_profile.created_at)  <=' => $dateTo,
+                //     ],
+                //     'where_in' => [
+                //         'acs_profile.status' => [
+                //             'Active w/RAR',
+                //             'Active w/RMR',
+                //             'Active w/RQR',
+                //             'Active w/RYR',
+                //             'Inactive w/RMM'
+                //         ]
+                //     ],
+                //     // 'or_where' => ['customer_groups.company_id' => 0],
+                //     'groupBy' => ['customer_groups.title'],
+                //     'table' => 'customer_groups',
+                //     'join' => [
+                //         [
+                //             'table' => 'acs_profile',
+                //             'statement' => 'acs_profile.customer_group_id = customer_groups.id',
+                //         ],
+                //     ],
+                // ];
+                // $customer = $this->general->get_data_with_param($acs_profile_query);
+                // $this->output->set_output(json_encode(['first' => null, 'second' => null, 'customer' => $customer]));
+
+                $query = $this->db->query("
+                    SELECT customer_groups.title, COUNT(acs_profile.prof_id) AS total_customer
+                    FROM customer_groups
+                    JOIN acs_profile ON acs_profile.customer_group_id = customer_groups.id
+                    WHERE 
+                        customer_groups.company_id = $company_id
+                        AND acs_profile.status IN (
+                            'Active w/RAR',
+                            'Active w/RMR',
+                            'Active w/RQR',
+                            'Active w/RYR',
+                            'Inactive w/RMM'
+                        )
+                        AND DATE(acs_profile.created_at) >= '$dateFrom'
+                        AND DATE(acs_profile.created_at) <= '$dateTo'
+                    GROUP BY 
+                        customer_groups.title;
+
+                ");
+                $customer = $query->result();
                 $this->output->set_output(json_encode(['first' => null, 'second' => null, 'customer' => $customer]));
 
+                // $data = $query->result();
+
+
+
+                // $this->db->select('customer_groups.title, COUNT(acs_profile.prof_id) AS total_customer');
+                // $this->db->from('customer_groups');
+                // $this->db->join('users', 'users.id = customer_groups.user_id', 'left');
+                // $this->db->join('acs_profile', 'acs_profile.customer_group_id = customer_groups.id');
+                // $this->db->where('customer_groups.company_id', $company_id);
+                // $this->db->where_in('acs_profile.status', [
+                //     'Active w/RAR',
+                //     'Active w/RMR',
+                //     'Active w/RQR',
+                //     'Active w/RYR',
+                //     'Inactive w/RMM'
+                // ]);
+                // $this->db->group_by('customer_groups.id');
+
+                
                 break;
             case 'jobs':
                 $this->load->model('Jobs_model');
