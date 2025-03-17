@@ -32,8 +32,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-2">
-                        <div class="nsm-counter primary h-100 mb-2">
+                    <div class="col-12 col-md-2" style="margin-right: 75px;">
+                        <div class="nsm-counter primary h-100 mb-2" style="width: 310px;">
                             <a class="custom-link" href="<?= base_url('invoice/recurring/paid') ?>">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
@@ -47,8 +47,8 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-12 col-md-2">
-                        <div class="nsm-counter secondary h-100 mb-2">
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter secondary h-100 mb-2" style="width: 310px;">
                             <a class="custom-link" href="<?= base_url('invoice/recurring/unpaid') ?>">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">

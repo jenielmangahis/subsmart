@@ -207,6 +207,12 @@ $(document).on("change", ".late_fee", function () {
   calculation(counter);  
 });
 
+$(document).on("change", ".inv_due_date", function () {
+  //alert('late fee computation here...');
+  var counter = $("#count").val();
+  calculation(counter);  
+});
+
 $(document).on("focusout", ".setmarkup", function () {
   var counter = $(this).data("counter");
   calculation(counter);
