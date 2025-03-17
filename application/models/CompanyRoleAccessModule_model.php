@@ -115,6 +115,7 @@ class CompanyRoleAccessModule_model extends MY_Model
             'company-link-accounts' => 'My Business Link Accounts',
             'calendar-schedule' => 'Calendar Schedule',
             'calendar-settings' => 'Calendar Settings',
+            'taskhub' => 'Taskhub',
             'customer-groups' => 'Customer Groups',
             'customer-settings' => 'Customer Settings',  
             'events' => 'Events',

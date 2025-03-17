@@ -9479,6 +9479,11 @@ class Accounting extends MY_Controller
 
     public function salesTax()
     {
+        if(!checkRoleCanAccessModule('accounting-sales-payroll-taxes', 'write')){
+			show403Error();
+			return false;
+		}
+
         add_css([
             'assets/css/accounting/tax/settings/settings.css',
             'assets/css/accounting/tax/sales/sales.css',
@@ -9495,22 +9500,110 @@ class Accounting extends MY_Controller
             'assets/js/accounting/invoice/accounting.min.js',
         ]);
 
+        $this->page_data['page']->title = 'Sales Tax';
         $this->page_data['page_uri_segment'] = $this->uri->segment(2, 0);
         $this->load->view('accounting/sales/salesTax', $this->page_data);
     }
 
     public function payrollTax()
     {        
+        if(!checkRoleCanAccessModule('accounting-sales-payroll-taxes', 'write')){
+			show403Error();
+			return false;
+		}
+
         add_css('assets/css/accounting/payroll/payroll.css');
         add_footer_js('assets/js/accounting/tax/payroll/payroll.js');
+
+        $company_id = logged('company_id');
+        $query = 'SELECT a.* 
+            FROM `accounting_chart_of_accounts` `a`
+            LEFT JOIN `accounting_vendor_transaction_categories` `c`
+                ON `a`.`id` = `c`.`expense_account_id`
+            WHERE `c`.`id` IS NOT NULL
+            AND `a`.`company_id` = '.$company_id.'
+            AND `c`.`tax` = 1
+        ';
+
+        $payrollTax = $this->db->query($query)->result();
+
+        foreach ($payrollTax as $result) {
+            if( $result->time_date != '' ){
+                $result->time_date = date("m/d/Y", strtotime($result->time_date));
+            }else{
+                $result->time_date = '---';
+            }
+            
+            $result->date_range = $this->getAccountDateRange($result);
+        }
+
+        $this->page_data['page']->title = 'Payroll Tax';
+        $this->page_data['payrollTax']  = $payrollTax;
         $this->page_data['page_uri_segment'] = $this->uri->segment(2, 0);
         $this->load->view('accounting/sales/payrollTax', $this->page_data);
     }
 
+    public function getAccountDateRange($result)
+    {
+        $dateCreated = new DateTime($result->created_at);
+        $dateEnd = new DateTime('last day of december ' . date('Y'));
+        $dateStart = null;
+
+        switch (strtolower($result->time)) {
+            case 'beginning-of-year':
+                $dateStart = new DateTime('first day of january ' . $dateCreated->format('Y'));
+                break;
+
+            case 'beginning-of-month':
+                $createdMonth = $dateCreated->format('M');
+                $dateStart = new DateTime("first day of ${createdMonth} " . $dateCreated->format('Y'));
+                break;
+
+            case 'today':
+                $dateStart = $dateCreated;
+                break;
+
+            case 'other':
+                if ($this->isValidDate($result->time_date)) {
+                    $dateStart = new DateTime($result->time_date);
+                }
+                break;
+
+            default:
+                break;
+        }
+
+        if (is_null($dateStart)) {
+            return null;
+        }
+
+        $dateEndString = $dateEnd->format('m/d/Y');
+        $dateStartString = $dateStart->format('m/d/Y');
+        return $dateStartString . ' — ' . $dateEndString;
+    }
+
+    private function isValidDate($date)
+    {
+        try {
+            new DateTime($date);
+        } catch (Exception $error) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function payrollTaxFillings()
     {
+        if(!checkRoleCanAccessModule('accounting-1099-filings', 'write')){
+			show403Error();
+			return false;
+		}
+
         add_css('assets/css/accounting/payroll/payroll.css');
         add_footer_js('assets/js/accounting/tax/payroll/fillings.js');
+        
+        $this->page_data['page']->title = '1099 Filings';
         $this->page_data['page_uri_segment'] = $this->uri->segment(2, 0);
         $this->load->view('accounting/sales/payrollTaxFillings', $this->page_data);
     }
