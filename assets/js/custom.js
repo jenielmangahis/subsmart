@@ -2643,8 +2643,8 @@ function calculation(counter) {
   $("#item_total_text").html(fixedSubtotal);
   $("#span_sub_total_invoice").text(fixedSubtotal);
   
-  $("#total_tax_").text(fixedTaxes);
-  $("#total_tax_input").val(fixedTaxes);
+  $("#total_tax_").text(fixedTaxes.toFixed(2));
+  $("#total_tax_input").val(fixedTaxes.toFixed(2));
 }
 
 function taxRate() {
