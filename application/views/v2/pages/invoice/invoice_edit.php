@@ -167,7 +167,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                         <div class="col-md-3 form-group">
                                             <label for="due_date" class="bold block-label">Due Date <span style="color:red;">*</span></label>
-                                            <input type="date" class="form-control" id="" name="due_date" value="<?php echo $invoice->due_date; ?>"/>
+                                            <input type="date" class="form-control inv_due_date" id="inv_due_date" name="due_date" value="<?php echo $invoice->due_date; ?>"/>
                                         </div>         
                                         <div class="col-md-3">
                                             <label class="bold block-label">
@@ -344,7 +344,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <tr>
                                                     <td class="bold">Subtotal</td>
                                                     <!-- <td></td> -->
-                                                    <td colspan="2" align="right">$ <span id="span_sub_total_invoice"><?php echo number_format(intval($invoice->sub_total) ,2); ?></span>
+                                                    <td colspan="2" align="right" style="padding-right: 33px;">$ <span id="span_sub_total_invoice"><?php echo number_format(intval($invoice->sub_total) ,2); ?></span>
                                                         <input type="hidden" name="subtotal" id="item_total" value="<?php echo $invoice->sub_total; ?>"></td>
                                                 </tr>
                                                 <tr>
@@ -402,15 +402,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input" value="0"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="bold">Late Fee</td>                                                    
+                                                    <td class="bold">
+                                                        <?php $late_days_text = ""; ?>
+                                                        <?php if($total_late_days > 0) { ?>
+                                                                <?php $late_days_text = "(" . $total_late_days . " Day/s)"; ?>
+                                                        <?php } ?>
+                                                        Late Fee <?php echo $late_days_text ?>
+                                                    </td>                                                    
                                                     <td colspan="2" align="right">
-                                                        $ <span id="late_fee"><?php echo number_format(intval($invoice->late_fee), 2); ?></span>
-                                                        <!-- <input type="number" step="any" min="0" class="form-control" id="late_fee" name="late_fee" value="<?= $invoice->late_fee > 0 ? number_format($invoice->late_fee, 2, ".","") : '0.00'; ?>" required="" style="width:50%;text-align:right;" />-->
+                                                        <!-- $ <span id="late_fee"><?php //echo number_format(intval($invoice->late_fee), 2); ?></span> -->
+                                                        <input type="number" step="any" min="0" class="form-control late_fee" id="late_fee" name="late_fee" value="<?= $invoice->late_fee > 0 ? number_format($invoice->late_fee, 2, ".","") : '0.00'; ?>" required="" style="width:50%;text-align:right;" />
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="2" class="bold">Grand Total ($)</td>                                                    
-                                                    <td class="text-end">
+                                                    <td colspan="2" class="bold">Grand Total</td>                                                    
+                                                    <td class="text-end" style="padding-right: 33px;">
                                                         <b>$ <span id="grand_total"><?php echo number_format(intval($invoice->grand_total), 2); ?></span></b>
                                                         <input type="hidden" name="grand_total" id="grand_total_input" value="<?php echo $invoice->grand_total; ?>">
                                                     </td>

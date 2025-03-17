@@ -65,7 +65,19 @@ $icon = '<i class="fas fa-calculator"></i>';
             </div>
             <div class="col graphData_<?php echo $id; ?> <?php echo $isListView == 0 ? 'display_none' : ''; ?>">
                 <div class="text-center p-2">
+                    <strong class="text-muted text-uppercase">OPEN</strong>
+                    <h2 id="first_estimate_content_<?php echo $id; ?>" class="mb-0"><?php echo count($estimates); ?></h2>
+                </div>
+            </div>
+            <div class="col graphData_<?php echo $id; ?> <?php echo $isListView == 0 ? 'display_none' : ''; ?>">
+                <div class="text-center p-2">
                     <canvas id="estimate_chart" class="nsm-chart"  data-chart-type="widgets/estimate_counter" data-chart-id="<?php echo $id; ?>" style="max-height: 120px;"></canvas>
+                </div>
+            </div>
+            <div class="col graphData_<?php echo $id; ?> <?php echo $isListView == 0 ? 'display_none' : ''; ?>">
+                <div class="text-center p-2">
+                    <strong class="text-muted text-uppercase">EXPIRED</strong>
+                    <h2 id="second_estimate_content_<?php echo $id; ?>" class="mb-0"><?php echo count($expired_estimates); ?></h2>
                 </div>
             </div>
         </div>

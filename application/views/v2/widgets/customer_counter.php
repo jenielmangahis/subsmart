@@ -60,7 +60,7 @@ $icon = '<i class="fas fa-users"></i>';
             <div class="col graphData_<?php echo $id; ?> <?php echo $isListView == 0 ? 'display_none' : ''; ?>">
                 <div class="text-center p-2">
                     <canvas id="NewCustomerWidgetsGraph" class="nsm-chart" data-chart-type="widgets/customer_counter" data-chart-id="<?php echo $id; ?>" style="max-height: 120px;"></canvas>
-                    <h5 style="text-align: right; margin-top: -32px; font-size: 14px; font-weight: bold; margin-right: 15px;">Total : <span style="font-size: 16px; color: #6ba77ced !important; letter-spacing: 1.5px;" id="total_customer_graph"></span></h5>
+                    <strong>Total : <span style="font-size: 16px; color: #6ba77ced !important; letter-spacing: 1.5px;" id="total_customer_graph"></span></strong>
                 </div>
             </div>
         </div>

@@ -1023,6 +1023,9 @@ class Invoice extends MY_Controller
         $this->load->model('Job_tags_model');
         $this->load->model('Tickets_model');
         $this->load->model('AcsProfile_model');
+        
+        $this->load->model('accounting_recurring_transactions_model');
+        $this->load->model('Customer_advance_model', 'customer_ad_model');
 
         $this->load->helper('functions');
         $comp_id = logged('company_id');
@@ -1053,6 +1056,45 @@ class Invoice extends MY_Controller
                 $ticket_number = $ticket ? $ticket->ticket_no : '';
             }
 
+            $recurr_transaction = $this->accounting_recurring_transactions_model->get_by_type_transaction_id_status('invoice', $invoice->id, 2); //2 is pause
+            if(!$recurr_transaction) {
+
+                $invoiceSettings = $this->invoice_settings_model->getByCompanyId($invoice->company_id);
+
+                $current_date    = date('Y-m-d');
+                $days_activate_late_fee = 0;
+                $total_late_days = 0;
+
+                $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($invoice->customer_id);	
+                $late_fee_activated_date = $invoice->due_date;
+                if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
+                    $date1 = new DateTime($current_date);
+                    $date2 = new DateTime($late_fee_activated_date);
+                    $total_days = $date2->diff($date1)->format("%a");
+
+                    $days_activate_late_fee = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
+                    if($total_days > $days_activate_late_fee) {
+                        $total_late_days = $total_days;
+                        //$late_fee_percentage = $customer_billing_info->payment_fee != null ? $customer_billing_info->payment_fee : 0; 
+                        /*if($customer_billing_info->mmr != null && $customer_billing_info->mmr > 0) {
+                            $late_fee += ($late_fee_percentage / 100) * $customer_billing_info->mmr;
+                        }*/
+
+                        /*if($total_days > 0) {
+                            $default_late_fee = $customer_billing_info->late_fee != null ? $customer_billing_info->late_fee : 0;
+                            if($total_days >= 10) {
+                                $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);                        
+                            } else {
+                                $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);      
+                            }   
+                        }*/                       
+
+                    }
+                } 
+                
+            }
+
+            $this->page_data['total_late_days'] = $total_late_days;
             $this->page_data['invoice'] = $invoice;
             $this->page_data['job_number'] = $job_number;
             $this->page_date['ticket_number'] = $ticket_number;
