@@ -84,7 +84,9 @@
                         <label class="d-block">4. Copy/Paste the iframe or javascript code on a page on your website.</label>
                     </div>
                     <div class="col-12 mt-4">
-                        <a role="button" class="nsm-button primary ms-0" href="<?php echo base_url('more/addon/booking/products') ?>">Edit Booking</a>
+                        <?php if( checkRoleCanAccessModule('online-booking', 'write') ){ ?>  
+                            <a role="button" class="nsm-button primary ms-0" href="<?php echo base_url('more/addon/booking/products') ?>">Edit Booking</a>
+                        <?php } ?>
                         <a role="button" class="nsm-button" href="<?php echo base_url('/booking/products/' . $eid); ?>" target="_blank">View Booking Page</a>
                     </div>
                 </div>
