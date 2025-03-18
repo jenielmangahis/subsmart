@@ -1042,8 +1042,7 @@ class Users extends MY_Controller
         
     }    
 
-	public function addNewEmployeeV2(){
-		$this->load->library('upload',$config);
+	public function addNewEmployeeV2(){		
 		$this->load->helper('adt_portal_helper');
     	$this->load->model('IndustryType_model');
     	$this->load->model('Clients_model');
@@ -1055,7 +1054,7 @@ class Users extends MY_Controller
 		$cid  = logged('company_id');
 
 		$profile_image = '';
-		if (!empty($_FILES['userfile']['name'])) {
+		if( isset($_FILES['userfile']) && $_FILES['userfile']['size'] > 0 ){
 			// Upload profile picture
 			$config = array(
 				'upload_path' => './uploads/users/user-profile/',
@@ -1066,10 +1065,11 @@ class Users extends MY_Controller
 				'max_width' => '0',
 				'encrypt_name' => true
 			);
-			$config = $this->uploadlib->initialize($config);
-			if ($this->upload->do_upload("file")){
-				$uploadData = $this->upload->data();
 			
+			$this->load->library('upload',$config);
+			$config = $this->uploadlib->initialize($config);
+			if ($this->upload->do_upload("userfile")){
+				$uploadData = $this->upload->data();			
 				$data = array(
 					'profile_image'=> $uploadData['file_name'],
 					'date_created' => time()
@@ -1138,7 +1138,7 @@ class Users extends MY_Controller
 		            'user_type' => $this->input->post('user_type'),
 		            'status' => $this->input->post('status'),
 		            'company_id' => $cid,
-		            'profile_img' => $profile_img,
+		            'profile_img' => $profile_image,
 		            'address' => $this->input->post('address'),
 		            'mobile' => $this->input->post('mobile'),
 		            'phone' => $this->input->post('phone'),
@@ -1810,6 +1810,7 @@ class Users extends MY_Controller
 		$post 		  = $this->input->post();
 		$upload_photo = $this->profilePhoto();
 		$upload_data  = json_decode($upload_photo);
+		$company_id   = logged('company_id');
 
 		if (!empty($_FILES['user_photo']['name'])) {
 			$user = $this->Users_model->getUserByID($post['user_id_prof']);
@@ -1821,7 +1822,8 @@ class Users extends MY_Controller
 				}
 
 				$tmp_name = $_FILES['user_photo']['tmp_name'];
-				$name = basename($_FILES["user_photo"]["name"]);
+				//$name = basename($_FILES["user_photo"]["name"]);
+				$name = $company_id . time() . '_profile_image'; 				
 				move_uploaded_file($tmp_name, "./uploads/users/user-profile/" . $name);
 				$image_name = $name;
 
