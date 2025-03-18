@@ -515,7 +515,7 @@ if (count($newtasks) > 0) {
     foreach ($newtasks as $task) {
         ?>
                                                 <div class="list-item" onclick="location.href='<?php echo base_url('taskhub/view/'.$task->task_id); ?>'">
-                                                    <span class="content-title"><?php echo $task->subject; ?></span>
+                                                    <span class="content-title"><?php echo $task->title; ?></span>
                                                     <span class="content-subtitle">
                                                         <?php
                         $date_created = date_create($task->date_created);
