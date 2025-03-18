@@ -1182,7 +1182,13 @@ class Taskhub extends MY_Controller {
         echo json_encode($json_data);  
 	}	
 
-	public function view($id){
+	public function view($id)
+	{
+		if(!checkRoleCanAccessModule('taskhub', 'read')){
+			show403Error();
+			return false;
+		}
+
 		$company_id = logged('company_id');
 
 		$this->page_data['taskHub'] = $task = $this->db->query(

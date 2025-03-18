@@ -26,7 +26,13 @@ class Booking extends MY_Controller {
         $this->load->model('BookingWorkOrder_model');
 	}
 
-	public function index() {
+	public function index() 
+	{
+		if(!checkRoleCanAccessModule('online-booking', 'write')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Online Booking';
         $this->page_data['page']->parent = 'More';
         $this->page_data['page']->tab = "Dashboard";
@@ -416,15 +422,16 @@ class Booking extends MY_Controller {
     {
         postAllowed();
 
-        $user = $this->session->userdata('logged');
+        $user_id    = logged('id');
+		$company_id = logged('company_id');
         $post = $this->input->post();
 
         if( !empty($post) ){
         	$this->load->model('BookingCategory_model');
 
         	$data = array(
-        		'user_id' => $user['id'],
-        		'company_id' => logged('company_id'),
+        		'user_id' => $user_id,
+        		'company_id' => $company_id,
         		'name' => post('category_name'),
         		'date_created' => date("Y-m-d H:i:s")
         	);
@@ -435,6 +442,46 @@ class Booking extends MY_Controller {
         }
 
         redirect('more/addon/booking/products');
+    }
+
+	public function ajax_save_category()
+    {
+		$this->load->model('BookingCategory_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $user_id    = logged('id');
+		$company_id = logged('company_id');
+        $post = $this->input->post();
+
+        if( !empty($post) ){
+			$isExists = $this->BookingCategory_model->getByNameAndCompanyId($post['category_name'], $company_id);
+			if( $isExists ){
+				$is_success = 0;
+				$msg = 'Category name ' . $post['category_name'] . ' already exists.';
+			}else{
+				$data = array(
+					'user_id' => $user_id,
+					'company_id' => $company_id,
+					'name' => $post['category_name'],
+					'date_created' => date("Y-m-d H:i:s")
+				);
+				
+				$this->BookingCategory_model->create($data);
+	
+				//Activity Logs
+				$activity_name = 'Online Booking : Created category ' . $post['category_name']; 
+				createActivityLog($activity_name);
+			}
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
     }
 
     public function ajax_edit_category()
