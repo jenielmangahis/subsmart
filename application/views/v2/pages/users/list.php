@@ -315,6 +315,8 @@
             let _this = $(this);
             e.preventDefault();
 
+            var formData = new FormData($("#add_employee_form")[0]);
+
             var url = base_url + "user/_create_employee";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
@@ -322,7 +324,10 @@
             $.ajax({
                 type: 'POST',
                 url: url,
-                data: _this.serialize(),
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
                 dataType: "json",
                 success: function(result) {
                     if (result == 1) {

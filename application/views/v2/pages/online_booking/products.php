@@ -22,11 +22,11 @@
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add_category_modal">
-                                <i class="bx bx-fw bx-category-alt"></i> Add Category
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#add_category_modal">
+                                <i class="bx bx-fw bx-plus"></i> Add New Category
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#add_service_item_modal">
-                                <i class="bx bx-fw bx-radio-circle-marked"></i> Add Service/Item
+                                <i class="bx bx-fw bx-plus"></i> Add New Item / Service
                             </button>
                         </div>
                     </div>
@@ -149,6 +149,60 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+
+        $(document).on("submit", "#frm-booking-create-category", function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: base_url + "booking/_save_booking_category",
+                data: $('#frm-booking-create-category').serialize(),
+                dataType: 'json',
+                success: function(result) {
+                    if( result.is_success === 1 ){
+                        $('#add_category_modal').modal('hide');
+                        Swal.fire({
+                            title: 'Add Category',
+                            text: 'New booking category has been added successfully.',
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                //location.reload();
+                            //}
+                        });
+                    }                    
+                },
+                error: function() {
+                    Swal.fire({
+                        title: 'Error',
+                        text: "Something went wrong, please try again later.",
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            //location.reload();
+                        //}
+                    });
+                },
+
+            });
+        });
+
         $(document).on("click", ".edit-category", function() {
             let _this = $(this);
             let id = _this.attr("data-id");

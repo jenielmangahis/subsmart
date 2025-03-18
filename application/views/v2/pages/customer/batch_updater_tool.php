@@ -1,10 +1,42 @@
+<style>
+    .columnButtonRemover {
+        cursor: pointer;
+        color: #ff000094;
+    }
+
+    .modalExitButton {
+        cursor: pointer;
+        font-size: large;
+        position: absolute; 
+        top: 35px;
+        right: 35px;
+    }
+
+    .modalExitButton:hover {
+        color: red;
+    }
+
+    .hiddenColumnBadges {
+        cursor: pointer;
+    }
+
+    .hiddenColumnBadges:hover {
+        background: red !important;
+    }
+    
+    .hiddenColumnSection {
+        display: none;
+    }
+</style>
+<div class="hiddenColumnStyles"></div>
 <div class="row batchUpdaterContent">
     <div class="col-lg-12">
         <div class="container-fluid mb-3 mt-3">
             <div class="row">
-                <h4 class="fw-bold">Batch Customer Updater</h4>
+                <h4 class="fw-bold">Batch Updater Tool</h4>
                 <p>Search and select specific customers to update.</p>
             </div>
+            <i class="fas fa-times modalExitButton" data-bs-dismiss="modal" aria-label="name-button" name="name-button"></i>
         </div>
     </div>
     <div class="col-lg-12 mb-3">
@@ -199,6 +231,9 @@
                         <button class="btn updateHistory" type="button" tabindex="-1" data-bs-toggle="offcanvas" data-bs-target="#updateHistorySidebar" aria-controls="updateHistorySidebar" style="border: 1px solid lightgray;"><i class="fas fa-history"></i> History</button>
                     </div>
                 </div>
+                <div class="col-xl-12 mb-3 hiddenColumnSection">
+                    <label class="text-muted">Hidden Columns:</label>
+                </div>
                 <div class="col-xl-12 mb-3">
                     <div class="table-responsive tableUpdaterDiv">
                         <table class="table table-hover customerManagementTable">
@@ -207,43 +242,43 @@
                                     <th>Firstname</th>
                                     <th>Lastname</th>
                                     <th>Business Name</th>
-                                    <th>Customer Type</th>
-                                    <th>Sales Area</th>
-                                    <th>Address</th>
-                                    <th>City</th>
-                                    <th>State</th>
-                                    <th>Zip Code</th>
-                                    <th>Social Security No. </th>
-                                    <th>Birthdate</th>
-                                    <th>Email</th>
-                                    <th>Phone (M)</th>
-                                    <th>Status</th>
-                                    <th>Sales Rep</th>
-                                    <th>Technician</th>
-                                    <th>Install Date</th>
-                                    <th>Monitoring Company</th>
-                                    <th>Monitoring ID</th>
-                                    <th>Account Type</th>
-                                    <th>Abort Code/Password</th>
-                                    <th>Panel Type</th>
-                                    <th>System Package Type</th>
-                                    <th>Warranty Type</th>
-                                    <th>Communication Type</th>
-                                    <th>Monthly Monitorinng Rate</th>
-                                    <th>Account Cost</th>
-                                    <th>Pass Thru Cost</th>
-                                    <th>Rate Plan</th>
-                                    <th>Billing Frequency</th>
-                                    <th>Billing Day of Month</th>
-                                    <th>Contract Term</th>
-                                    <th>Billing Start Date</th>
-                                    <th>Billing End Date</th>
-                                    <th>Billing Method</th>
-                                    <th>Check No.</th>
-                                    <th>Routing No.</th>
-                                    <th>Account No.</th>
-                                    <th>Credit Card No.</th>
-                                    <th>Credit Card Expiration</th>
+                                    <th>Customer Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="3"></i></th>
+                                    <th>Sales Area&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="4"></i></th>
+                                    <th>Address&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="5"></i></th>
+                                    <th>City&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="6"></i></th>
+                                    <th>State&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="7"></i></th>
+                                    <th>Zip Code&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="8"></i></th>
+                                    <th>Social Security No.&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="9"></i></th>
+                                    <th>Birthdate&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="10"></i></th>
+                                    <th>Email&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="11"></i></th>
+                                    <th>Phone (M)&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="12"></i></th>
+                                    <th>Status&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="13"></i></th>
+                                    <th>Sales Rep&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="14"></i></th>
+                                    <th>Technician&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="15"></i></th>
+                                    <th>Install Date&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="16"></i></th>
+                                    <th>Monitoring Company&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="17"></i></th>
+                                    <th>Monitoring ID&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="18"></i></th>
+                                    <th>Account Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="19"></i></th>
+                                    <th>Abort Code/Password&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="20"></i></th>
+                                    <th>Panel Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="21"></i></th>
+                                    <th>System Package Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="22"></i></th>
+                                    <th>Warranty Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="23"></i></th>
+                                    <th>Communication Type&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="24"></i></th>
+                                    <th>Monthly Monitoring Rate&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="25"></i></th>
+                                    <th>Account Cost&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="26"></i></th>
+                                    <th>Pass Thru Cost&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="27"></i></th>
+                                    <th>Rate Plan&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="28"></i></th>
+                                    <th>Billing Frequency&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="29"></i></th>
+                                    <th>Billing Day of Month&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="30"></i></th>
+                                    <th>Contract Term&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="31"></i></th>
+                                    <th>Billing Start Date&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="32"></i></th>
+                                    <th>Billing End Date&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="33"></i></th>
+                                    <th>Billing Method&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="34"></i></th>
+                                    <th>Check No.&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="35"></i></th>
+                                    <th>Routing No.&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="36"></i></th>
+                                    <th>Account No.&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="37"></i></th>
+                                    <th>Credit Card No.&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="38"></i></th>
+                                    <th>Credit Card Expiration&emsp;&emsp;<i class="fas fa-times columnButtonRemover" data-column="39"></i></th>
                                     <th>MMR Profit</th>
                                 </tr>
                             </thead>
@@ -265,11 +300,11 @@
 </div>
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="updateHistorySidebar" aria-labelledby="updateHistorySidebarLabel" style="width: 1000px;">
-        <div class="offcanvas-header" style="background: #6a4a86;">
-            <h5 id="updateHistorySidebarLabel" style="font-weight: bold; margin: 0; color: white;">Update History</h5>
-            <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Close" style="color: white !important;float: left;padding: 0;"><span class="float-start"><small>Close</small></span></button>
-        </div>
-        <div class="offcanvas-body">
+    <div class="offcanvas-header" style="background: #6a4a86;">
+        <h5 id="updateHistorySidebarLabel" style="font-weight: bold; margin: 0; color: white;">Update History</h5>
+        <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Close" style="color: white !important;float: left;padding: 0;"><span class="float-start"><small>Close</small></span></button>
+    </div>
+    <div class="offcanvas-body">
             <div class="container">
                 <div class="row">
                     <div class="col-12-md mb-3">
@@ -348,10 +383,8 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
-
-
+</div>
 
 <script>
     var lastOptionInAccType = "";
@@ -1206,8 +1239,8 @@
                             timeout: 3000,
                             position: 'topCenter',
                         });
-                        currentInputElement.find('.textPreview').show();
-                        currentInputElement.find('.inputMode').hide();
+                        // currentInputElement.find('.textPreview').show();
+                        // currentInputElement.find('.inputMode').hide();
                         $('.drag_handle').css('visibility', 'hidden');
                         $('.customerManagementTable > tbody > tr > td').removeClass('cell_dragging');
                         if (updateColumn == "contract_term" || updateColumn == "bill_start_date") {
@@ -1237,4 +1270,97 @@
             }
         });
     }
+
+    function toggleColumn(selector, columnIndex, showOrHide) {
+        const container = document.querySelector('.hiddenColumnStyles');
+        if (!container) return;
+
+        const styleId = `hidden-column-${columnIndex}`;
+        let styleTag = document.getElementById(styleId);
+
+        let hiddenColumns = JSON.parse(localStorage.getItem('batchUpdaterToolHiddenColumns')) || [];
+
+        if (showOrHide) {
+            if (styleTag) styleTag.remove();
+            hiddenColumns = hiddenColumns.filter(col => col !== columnIndex);
+        } else {
+            if (!styleTag) {
+                styleTag = document.createElement('style');
+                styleTag.id = styleId;
+                styleTag.textContent = `
+                    ${selector} tr th:nth-child(${columnIndex + 1}),
+                    ${selector} tr td:nth-child(${columnIndex + 1}) {
+                        display: none;
+                    }
+                `.trim();
+                container.appendChild(styleTag);
+            }
+            if (!hiddenColumns.includes(columnIndex)) {
+                hiddenColumns.push(columnIndex);
+            }
+        }
+
+        localStorage.setItem('batchUpdaterToolHiddenColumns', JSON.stringify(hiddenColumns));
+    }
+
+    function restoreHiddenColumns() {
+        const hiddenColumns = JSON.parse(localStorage.getItem('batchUpdaterToolHiddenColumns')) || [];
+
+        hiddenColumns.forEach(columnIndex => {
+            toggleColumn('.customerManagementTable', parseInt(columnIndex), false);
+            const columnName = $(`.columnButtonRemover[data-column="${columnIndex}"]`).parent().text().trim();
+            $('.hiddenColumnSection').append(`<span class="badge bg-secondary hiddenColumnBadges" data-column="${columnIndex}">${columnName.toUpperCase()}</span>`).show();
+        });
+
+        if (hiddenColumns.length === 0) {
+            $('.hiddenColumnSection').hide();
+        }
+    } restoreHiddenColumns();
+
+    $(document).on('click', '.columnButtonRemover', function () {
+        const columnIndex = $(this).attr('data-column');
+        const columnName = $(this).parent().text().trim();
+        toggleColumn('.customerManagementTable', parseInt(columnIndex), false);
+        $('.hiddenColumnSection').append(`<span class="badge bg-secondary hiddenColumnBadges" data-column="${columnIndex}">${columnName.toUpperCase()}</span>`).show();
+    });
+
+    $(document).on('click', '.hiddenColumnBadges', function () {
+        const columnIndex = $(this).attr('data-column');
+        const hiddenColumnSection = $('.hiddenColumnSection');
+        toggleColumn('.customerManagementTable', parseInt(columnIndex), true);
+        $(this).remove();
+
+        const hiddenColumns = JSON.parse(localStorage.getItem('batchUpdaterToolHiddenColumns')) || [];
+        const updatedHiddenColumns = hiddenColumns.filter(col => col !== columnIndex);
+        localStorage.setItem('batchUpdaterToolHiddenColumns', JSON.stringify(updatedHiddenColumns));
+
+        if (updatedHiddenColumns.length === 0) {
+            hiddenColumnSection.hide();
+        }
+    });
+
+    $(document).on('mouseenter', '.columnButtonRemover', function () {
+        const columnIndex = $(this).closest('th').index() + 1;
+        const table = $(this).closest('table');
+
+        table.find(`tr`).each(function () {
+            $(this).find(`th:nth-child(${columnIndex}), td:nth-child(${columnIndex})`).css({
+                'border-left': '2px solid red',
+                'border-right': '2px solid red'
+            });
+        });
+    });
+
+    $(document).on('mouseleave', '.columnButtonRemover', function () {
+        const columnIndex = $(this).closest('th').index() + 1;
+        const table = $(this).closest('table');
+
+        table.find(`tr`).each(function () {
+            $(this).find(`th:nth-child(${columnIndex}), td:nth-child(${columnIndex})`).css({
+                'border-left': '',
+                'border-right': ''
+            });
+        });
+    });
+
 </script>

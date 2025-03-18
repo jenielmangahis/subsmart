@@ -43,6 +43,16 @@ class Taskhub_model extends MY_Model {
         return $query->row();
     }
 
+    public function getByTitleAndCompanyId($title, $company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('title', $title);
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getAllByCompanyIdOld($company_id)
     {
         $id = $user_id;
@@ -228,17 +238,10 @@ class Taskhub_model extends MY_Model {
         return $query->result();
     }
 
-    public function getCompanyTasksWithFilter($company_id, $keyword, $status_id , $date_range = array())
+    public function getCompanyTasksWithFilter($company_id, $keyword, $date_range = array())
     {
-        $this->db->select('tasks.*, DATE_FORMAT(tasks.estimated_date_complete,\'%b %d, %Y\') as estimated_date_complete_formatted, DATE_FORMAT(tasks.date_created,\'%b %d, %Y\') as date_created_formatted, tasks_status.status_text, tasks_status.status_color');
-        //$this->db->join('tasks_participants','tasks.task_id = tasks_participants.task_id', 'left');
-        //$this->db->join('users','users.id = tasks_participants.user_id', 'left');
-        $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','right');
+        $this->db->select('tasks.*, DATE_FORMAT(tasks.date_created,\'%b %d, %Y\') as date_created_formatted');
         $this->db->where('tasks.company_id', $company_id);
-
-        if( $status_id > 0 ){
-            $this->db->where('tasks.status_id', $status_id);            
-        }
 
         if( !empty($date_range) ){
             $this->db->where('tasks.date_created >=', $date_range['from']);         
@@ -246,7 +249,7 @@ class Taskhub_model extends MY_Model {
         }
 
         if ( $keyword != '' ) {
-            $this->db->like('tasks.subject', $keyword, 'both');
+            $this->db->like('tasks.title', $keyword, 'both');
         }
 
         $this->db->order_by('priority','DESC');

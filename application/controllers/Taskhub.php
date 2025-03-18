@@ -391,7 +391,13 @@ class Taskhub extends MY_Controller {
 		}
 	}
 
-	public function edit($id = 0){
+	public function edit($id = 0)
+	{
+		if(!checkRoleCanAccessModule('taskhub', 'write')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title  = 'Task';
         $this->page_data['page']->parent = 'Calendar';
 		$this->page_data['taskhub_tab_subtitle'] = 'Edit Task';
@@ -481,6 +487,7 @@ class Taskhub extends MY_Controller {
 			$this->page_data['optionPriority'] = $this->taskhub_model->optionPriority();
 			$this->load->view('v2/pages/workcalender/taskhub/edit', $this->page_data);
 		} else {
+			$isTaskExists = $this->taskhub_model->getByTitleAndCompanyId($this->input->post('subject'), $company_id);
 			if($this->input->post('description') == ''){
 				$this->page_data['optionPriority'] = $this->taskhub_model->optionPriority();
 				$this->page_data['error'] = 'Please specify task description';
@@ -493,93 +500,101 @@ class Taskhub extends MY_Controller {
 
 				$process_successful = false;
 
+				$isTaskExists = $this->taskhub_model->getByTitleAndCompanyId($this->input->post('subject'), $company_id);
+
 				if($taskid > 0){
-					$task = $this->page_data['task'];
+					if( $isTaskExists && $isTaskExists->task_id != $taskid ){
+						$this->page_data['optionPriority'] = $this->taskhub_model->optionPriority();
+						$this->page_data['error'] = 'Task subject already exists.';
+						$this->load->view('v2/pages/workcalender/taskhub/edit', $this->page_data);
+					}else{
+						$task = $this->page_data['task'];
 
-					$update_text = '';
-					if(trim($task->subject) != trim($this->input->post('subject'))){
-						$update_text = 'Modified:' . "\n".
-									   '- Subject' . "\n";
-					}
-
-					if(trim($task->description) != trim($this->input->post('description'))){
-						if(!empty($update_text)){
-							$update_text .= '- Description' . "\n";
-						} else {
+						$update_text = '';
+						if(trim($task->subject) != trim($this->input->post('subject'))){
 							$update_text = 'Modified:' . "\n".
-									       '- Description' . "\n";
+										'- Subject' . "\n";
 						}
-					}
 
-					if($task->estimated_date_complete != $this->input->post('estimated_date_complete')){
-						if(!empty($update_text)){
-							$update_text .= '- Estimated Date of Completion' . "\n";
-						} else {
-							$update_text = 'Modified:' . "\n".
-									       '- Estimated Date of Completion' . "\n";
+						if(trim($task->description) != trim($this->input->post('description'))){
+							if(!empty($update_text)){
+								$update_text .= '- Description' . "\n";
+							} else {
+								$update_text = 'Modified:' . "\n".
+											'- Description' . "\n";
+							}
 						}
-					}
 
-					$status = $this->input->post('status');
-					if(empty($status)){
-						$status = 1;
-					}
-
-					if($task->status_id != $status){
-						if(!empty($update_text)){
-							$update_text .= '- Status' . "\n";
-						} else {
-							$update_text = 'Modified:' . "\n".
-									       '- Status' . "\n";
+						if($task->estimated_date_complete != $this->input->post('estimated_date_complete')){
+							if(!empty($update_text)){
+								$update_text .= '- Estimated Date of Completion' . "\n";
+							} else {
+								$update_text = 'Modified:' . "\n".
+											'- Estimated Date of Completion' . "\n";
+							}
 						}
-					}
 
-					$assigned_to_old = $assigned_to;
-					$selected_participants = $this->page_data['selected_participants'];
-					foreach ($selected_participants as $key => $value) {
-						if($value->is_assigned == 1){
-							$assigned_to_old = $value->user_id;
-							break;
+						$status = $this->input->post('status');
+						if(empty($status)){
+							$status = 1;
 						}
-					}
 
-					if($assigned_to != $assigned_to_old){
-						if(!empty($update_text)){
-							$update_text .= '- Assignee' . "\n";
-						} else {
-							$update_text = 'Modified:' . "\n".
-									       '- Assignee' . "\n";
+						if($task->status_id != $status){
+							if(!empty($update_text)){
+								$update_text .= '- Status' . "\n";
+							} else {
+								$update_text = 'Modified:' . "\n".
+											'- Status' . "\n";
+							}
 						}
-					}
-					
-					$prof_id = 0;
-					if( $this->input->post('customer_id') > 0 ){
-						$prof_id = $this->input->post('customer_id');
-					}
-					
-					$data = array(
-						'subject' => $this->input->post('subject'),
-						'description' => $this->input->post('description'),
-						'prof_id' => $prof_id,
-						'estimated_date_complete' => date("Y-m-d",strtotime($this->input->post('estimated_date_complete'))),
-						'date_started' => date("Y-m-d",strtotime($this->input->post('date_started'))),
-						'status_id' => $status,
-						'priority' => $this->input->post('priority')
-					);
 
-					$process_successful = $this->taskhub_model->trans_update($data, array('task_id' => trim($taskid)));
-					if(($process_successful) && (!empty($update_text))){
+						$assigned_to_old = $assigned_to;
+						$selected_participants = $this->page_data['selected_participants'];
+						foreach ($selected_participants as $key => $value) {
+							if($value->is_assigned == 1){
+								$assigned_to_old = $value->user_id;
+								break;
+							}
+						}
+
+						if($assigned_to != $assigned_to_old){
+							if(!empty($update_text)){
+								$update_text .= '- Assignee' . "\n";
+							} else {
+								$update_text = 'Modified:' . "\n".
+											'- Assignee' . "\n";
+							}
+						}
+						
+						$prof_id = 0;
+						if( $this->input->post('customer_id') && $this->input->post('customer_id') > 0 ){
+							$prof_id = $this->input->post('customer_id');
+						}
+						
 						$data = array(
-							'task_id' => trim($taskid),
-							'notes' => $update_text,
-							'date_updated' => date('Y-m-d h:i:s'),
-							'performed_by' => $uid
+							'subject' => $this->input->post('subject'),
+							'description' => $this->input->post('description'),
+							'prof_id' => $prof_id,
+							'estimated_date_complete' => date("Y-m-d",strtotime($this->input->post('estimated_date_complete'))),
+							'date_started' => date("Y-m-d",strtotime($this->input->post('date_started'))),
+							'status_id' => $status,
+							'priority' => $this->input->post('priority')
 						);
 
-						$this->taskhub_updates_model->trans_create($data);
+						$process_successful = $this->taskhub_model->trans_update($data, array('task_id' => trim($taskid)));
+						if(($process_successful) && (!empty($update_text))){
+							$data = array(
+								'task_id' => trim($taskid),
+								'notes' => $update_text,
+								'date_updated' => date('Y-m-d h:i:s'),
+								'performed_by' => $uid
+							);
 
-						customerAuditLog(logged('id'), $this->input->post('customer_id'), $taskid, 'Taskhub', 'Updated task '.$this->input->post('subject'));
-					}
+							$this->taskhub_updates_model->trans_create($data);
+
+							customerAuditLog(logged('id'), $this->input->post('customer_id'), $taskid, 'Taskhub', 'Updated task '.$this->input->post('subject'));
+						}
+					}					
 				} else {
 					$prof_id = 0;
 					if( $this->input->post('customer_id') > 0 ){
@@ -603,6 +618,10 @@ class Taskhub extends MY_Controller {
 					if( $last_id > 0 ){
 						$process_successful = 1;
 						customerAuditLog(logged('id'), $this->input->post('customer_id'), $last_id, 'Taskhub', 'Created task '.$this->input->post('subject'));
+
+						//Activity Logs
+						$activity_name = 'Taskhub : Updated task ' . $this->input->post('subject'); 
+						createActivityLog($activity_name);
 					}
 
 					if($process_successful){
@@ -645,8 +664,9 @@ class Taskhub extends MY_Controller {
 		            $this->taskhub_participants_model->create($data_assigned);
 
 					//Activity Logs
-					$activity_name = 'Created New Task ' . $this->input->post('subject'); 
+					$activity_name = 'Taskhub : Created new task ' . $this->input->post('subject'); 
 					createActivityLog($activity_name);
+
 				} else {
 					$this->page_data['error'] = 'Error creating task';
 					$this->load->view('v2/pages/workcalender/taskhub/edit', $this->page_data);
@@ -1162,32 +1182,30 @@ class Taskhub extends MY_Controller {
         echo json_encode($json_data);  
 	}	
 
-	public function view($id){
+	public function view($id)
+	{
+		if(!checkRoleCanAccessModule('taskhub', 'read')){
+			show403Error();
+			return false;
+		}
+
 		$company_id = logged('company_id');
 
 		$this->page_data['taskHub'] = $task = $this->db->query(
 			'select '.
 			'a.*, '.
-			'CONCAT(cus.first_name, " ", cus.last_name)AS customer_name, '.
-			'b.status_text, '.
-			'b.status_color, '.
 			'concat(c.FName, " ", c.LName) as `created_by_name` '.
 			'from tasks a '.
-			'left join tasks_status b on b.status_id = a.status_id '.
 			'left join users c on c.id = a.created_by '.
-			'left join acs_profile cus on a.prof_id = cus.prof_id '.
 			'where a.task_id = '. $id
 		)->row();
 
 		$this->page_data['participants'] = $this->db->query(
 			'select '.
-
 			'a.*, '.
 			'concat(b.FName, " ", b.LName) as `participant_name` '.
-
 			'from tasks_participants a '.
 			'left join users b on b.id = a.user_id '.
-
 			'where a.task_id = ' . $id
 		)->result();
 
@@ -1198,9 +1216,7 @@ class Taskhub extends MY_Controller {
 			'a.comment as `text`, '.
 			'a.comment_date as `update_date`, '.
 			'concat(b.FName, " ", b.LName) as `user`, '.
-			 
 			'0 as `is_update` '.
-
 			'from comments a '.
 			'left join users b on b.id = a.user_id '.
 			'where a.relation_id = '. $id . ' ' .
@@ -1669,7 +1685,7 @@ class Taskhub extends MY_Controller {
 			$this->Taskhub_model->deleteByTaskId($taskHub->id);
 
 			//Activity Logs
-			$activity_name = 'Taskhub : Deleted Task ' . $taskHub->subject; 
+			$activity_name = 'Taskhub : Deleted task ' . $taskHub->subject; 
 			createActivityLog($activity_name);
 
         	$msg ='';

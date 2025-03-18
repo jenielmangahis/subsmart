@@ -5,23 +5,19 @@
         </div>
     </div>
     <div class="nsm-card-content"><hr>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Card First Name
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'card_fname') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'card_fname'); ?></div>
             <div class="col-md-6">
                 <input type="text" class="form-control" name="card_fname" id="card_fname" value="<?= isset($billing_info) && !empty($billing_info->card_fname) ? $billing_info->card_fname : $profile_info->first_name;  ?>" />
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Card Last Name
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'card_lname') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'card_lname'); ?></div>
             <div class="col-md-6">
                 <input type="text" class="form-control" name="card_lname" id="card_lname" value="<?= isset($billing_info) && !empty($billing_info->card_lname) ? $billing_info->card_lname : $profile_info->last_name ?>"/>
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'card_address') == 0 ? 'style="display:none;"' : ''; ?>>
             <div class="col-md-6">
                 <label for="use_customer_address"><span>Use Customer Address</span>
             </label></div>
@@ -29,43 +25,33 @@
                 <input type="checkbox" name="use_customer_address" class="form-controls" id="use_customer_address">
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Card Address 
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'card_address') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'card_address'); ?></div>
             <div class="col-md-6">
                 <input data-type="billing_address" type="text" class="form-control" name="card_address" id="card_address" value="<?php if(isset($billing_info)){ echo $billing_info->card_address; } ?>"/>
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                City
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'billing_city') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'billing_city'); ?></div>
 
             <div class="col-md-6">
                 <input data-type="billing_address_city" type="text" class="form-control" name="billing_city" id="billing_city" value="<?php if(isset($billing_info)){ echo $billing_info->city != null ? $billing_info->city : $profile_info->city; } ?>" />
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                State
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'billing_state') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'billing_state'); ?></div>
             <div class="col-md-6">
                 <input data-type="billing_address_state" type="text" class="form-control" name="billing_state" id="billing_state" value="<?php if(isset($billing_info)){ echo $billing_info->state != null ? $billing_info->state : $profile_info->state; } ?>"/>
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                ZIP
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'billing_zip') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'billing_zip'); ?></div>
             <div class="col-md-6">
                 <input data-type="billing_address_zip" type="text" class="form-control" name="billing_zip" id="billing_zip" value="<?php if(isset($billing_info)){ echo $billing_info->zip != null ? $billing_info->zip : $profile_info->zip_code; } ?>"/>
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Equipment
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'equipment') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'equipment'); ?></div>
             <div class="col-md-6">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -75,10 +61,8 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Initial Dep
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'initial_dep') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'initial_dep'); ?></div>
             <div class="col-md-6">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -88,14 +72,13 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Rate Plan
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'mmr') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'mmr'); ?></div>
             <div class="col-md-6">
                 <div class="row">
                     <div class="col-md-12">
                         <select data-value="<?=$billing_info->mmr?>" id="mmr" name="mmr" data-type="billing_rate_plan" class="form-control" >
+                            <option value="0">Select Amount</option>
                             <?php if( isset($billing_info) ){ ?>
                                 <option value="<?= $billing_info->mmr; ?>"><?= $billing_info->mmr; ?></option>
                             <?php } ?>
@@ -106,10 +89,8 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Billing Frequency
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'bill_freq') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'bill_freq'); ?></div>
             <div class="col-md-6">
                 <select data-type="billing_frequency" id="bill_freq" name="bill_freq" data-customer-source="dropdown" class="input_select searchable-dropdown">
                     <option <?php if(isset($billing_info)){ if($billing_info->bill_freq == ""){echo "selected";} } ?> value="">- Select -</option>
@@ -122,10 +103,8 @@
             </div>
         </div>
 
-        <div class="row form_line">
-            <div class="col-md-6">
-                Contract Term
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'contract_term') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'contract_term'); ?></div>
             <div class="col-md-6">
                 <select data-type="billing_contract_term" id="contract_term" name="contract_term" data-customer-source="dropdown" class="input_select searchable-dropdown" >
                     <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 0){echo "selected";} } ?> value="0"></option>
@@ -142,10 +121,8 @@
                 </select>
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Billing Start Date
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'bill_start_date') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'bill_start_date'); ?></div>
             <div class="col-md-6">
                 <?php 
                     $bill_start_date = '';
@@ -156,10 +133,8 @@
                 <input data-type="billing_start_date" type="text" class="form-control " name="bill_start_date" id="bill_start_date" value="<?= $bill_start_date; ?>" />
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Billing End Date
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'bill_end_date') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'bill_end_date'); ?></div>
             <div class="col-md-6">
                 <?php 
                     $bill_end_date = '';
@@ -171,10 +146,8 @@
                 <input data-type="billing_end_date" type="text" class="form-control " name="bill_end_date" id="bill_end_date" value="<?= $bill_end_date; ?>"/>
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Billing Day of Month
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'bill_day') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'bill_day'); ?></div>
             <div class="col-md-6">
                 <select data-type="billing_month_day" id="bill_day" name="bill_day" data-customer-source="dropdown" class="input_select searchable-dropdown">
                     <option selected value="0">Select Day</option>
@@ -209,10 +182,8 @@
             </div>
         </div> 
         <?php } ?>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Late Fee
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'late_fee') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'late_fee'); ?></div>
             <div class="col-md-6">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -222,10 +193,8 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-            Payment Fee
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'payment_fee') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'payment_fee'); ?></div>
             <div class="col-md-6">
                 <div class="input-group">
                     <div class="input-group-prepend">

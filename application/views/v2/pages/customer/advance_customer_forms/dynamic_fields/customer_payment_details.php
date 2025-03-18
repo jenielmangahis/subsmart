@@ -4,12 +4,10 @@
             <span><i class="bx bx-fw bx-credit-card"></i>Payment Details</span>
         </div>
     </div>
-    <div class="nsm-card-content">
+    <div class="nsm-card-content" <?= isCustomerFieldEnabled($companyFormSetting, 'billing-information', 'bill_method') == 0 ? 'style="display:none;"' : ''; ?>>
         <hr>     
         <div class="row form_line">
-            <div class="col-md-6">
-                Billing Method
-            </div>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'billing-information', 'bill_method'); ?></div>
             <div class="col-md-6">
                 <select id="bill_method" name="bill_method" data-customer-source="dropdown" class="input_select searchable-dropdown">
                     <option  value="">Select Billing Method</option>
@@ -32,10 +30,8 @@
             </div>
         </div>
 
-        <div class="row form_line invoicing_field">
-            <div class="col-md-6">
-                Term
-            </div>
+        <div class="row form_line invoicing_field" <?= isCustomerFieldEnabled($companyFormSetting, 'payment-details', 'bill_method') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'payment-details', 'bill_method'); ?></div>
             <div class="col-md-6">
                 <select id="invoice_term" name="invoice_term" data-customer-source="dropdown" class="input_select" >
                     <option  value="Due On Receipt">Due On Receipt</option>
