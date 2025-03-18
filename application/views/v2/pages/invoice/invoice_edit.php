@@ -411,14 +411,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     </td>                                                    
                                                     <td colspan="2" align="right">
                                                         <!-- $ <span id="late_fee"><?php //echo number_format(intval($invoice->late_fee), 2); ?></span> -->
-                                                        <input type="number" step="any" min="0" class="form-control late_fee" id="late_fee" name="late_fee" value="<?= $invoice->late_fee > 0 ? number_format($invoice->late_fee, 2, ".","") : '0.00'; ?>" required="" style="width:50%;text-align:right;" />
+                                                        <input type="number" step="any" min="0" class="form-control late_fee" id="late_fee" name="late_fee" value="<?= $invoice->late_fee > 0 ? number_format($invoice->late_fee, 2, ".","") : number_format($dlate_fee,2); ?>" required="" style="width:50%;text-align:right;" />
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="2" class="bold">Grand Total</td>                                                    
                                                     <td class="text-end" style="padding-right: 33px;">
-                                                        <b>$ <span id="grand_total"><?php echo number_format(intval($invoice->grand_total), 2); ?></span></b>
-                                                        <input type="hidden" name="grand_total" id="grand_total_input" value="<?php echo $invoice->grand_total; ?>">
+                                                        <?php if($invoice->late_fee > 0) { ?>
+                                                            <b>$ <span id="grand_total"><?php echo number_format(intval($invoice->grand_total), 2); ?></span></b>
+                                                            <input type="hidden" name="grand_total" id="grand_total_input" value="<?php echo $invoice->grand_total; ?>">
+                                                        <?php } else { ?>
+                                                            <b>$ <span id="grand_total"><?php echo number_format(intval($invoice->grand_total + $dlate_fee), 2); ?></span></b>
+                                                            <input type="hidden" name="grand_total" id="grand_total_input" value="<?php echo $invoice->grand_total + $dlate_fee; ?>">
+                                                        <?php } ?>
+
                                                     </td>
                                                 </tr>
                                             </table>
