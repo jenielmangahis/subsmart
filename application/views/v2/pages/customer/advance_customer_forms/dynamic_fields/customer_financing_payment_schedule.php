@@ -6,10 +6,8 @@
     </div>
     <div class="nsm-card-content">
         <hr>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Finance Amount
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'financing-schedule', 'finance_amount') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'financing-schedule', 'finance_amount'); ?></div>
             <div class="col-md-6">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -19,10 +17,8 @@
                 </div>
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Recurring Start Date
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'financing-schedule', 'recurring_start_date') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'financing-schedule', 'recurring_start_date'); ?></div>
             <div class="col-md-6">
                 <?php 
                     $recurring_start_date = '';
@@ -33,10 +29,8 @@
                 <input data-type="subscription_start_date" type="text" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?= $recurring_start_date; ?>" />
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Recurring End Date
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'financing-schedule', 'recurring_end_date') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'financing-schedule', 'recurring_end_date'); ?></div>
             <div class="col-md-6">
                 <?php 
                     $recurring_end_date = '';
@@ -47,12 +41,10 @@
                 <input data-type="subscription_end_date" type="text" class="form-control datepicker" name="recurring_end_date" id="recurring_end_date" value="<?= $recurring_end_date; ?>" />
             </div>
         </div>
-        <div class="row form_line">
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'financing-schedule', 'transaction_category') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'financing-schedule', 'transaction_category'); ?></div>
             <div class="col-md-6">
-                Category
-            </div>
-            <div class="col-md-6">
-                <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select" required="">
+                <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select">
                     <option  value="">Select Category</option>
                     <?php foreach($financingCategories as $cat){ ?>
                         <option <?= isset($billing_info) && $billing_info->transaction_category ==  $cat->value ? 'selected' : '';?> value="<?= $cat->value; ?>"><?= $cat->name; ?></option>    
@@ -61,10 +53,8 @@
                 <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-financing-category"><span class="fa fa-plus"></span> Add Category</a>
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                Billing Frequency
-            </div>
+        <div class="row form_line" <?= isCustomerFieldEnabled($companyFormSetting, 'financing-schedule', 'frequency') == 0 ? 'style="display:none;"' : ''; ?>>
+            <div class="col-md-6"><?= getCustomerFieldValue($companyFormSetting, 'financing-schedule', 'frequency'); ?></div>
             <div class="col-md-6">
                 <select data-type="subscription_frequency" id="frequency" name="frequency" data-customer-source="dropdown" class="input_select" >
                     <option  value="">Select</option>
