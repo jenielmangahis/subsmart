@@ -72,11 +72,9 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4">
-                        <form action="<?php echo base_url('invoice') ?>" method="get">
-                            <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Invoice" value="<?php echo (!empty($search)) ? $search : '' ?>">
-                            </div>
-                        </form>
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Invoice" value="">
+                        </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <!-- <div class="dropdown d-inline-block">
@@ -170,31 +168,6 @@
 
                                 $late_fee_amount = $invoice->late_fee;
                                 $current_date    = date('Y-m-d');
-                                
-                                /*$payment_fee     = 0; 
-
-                                $CIcam =& get_instance();
-                                $CIcam->load->model('Customer_advance_model', 'customer_ad_model');                               
-
-                                $customer_billing_info = $CIcam->customer_ad_model->getActiveSubscriptionsByCustomerId($invoice->customer_id);	
-                                $late_fee_activated_date = $invoice->due_date;
-                                if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
-                                    $date1 = new DateTime($current_date);
-                                    $date2 = new DateTime($late_fee_activated_date);
-                                    $total_days = $date2->diff($date1)->format("%a");
-                    
-                                    $late_fee_percentage = $customer_billing_info->payment_fee != null ? $customer_billing_info->payment_fee : 0; 
-                                    $late_fee_amount += ($late_fee_percentage / 100) * $invoice->grand_total;
-                    
-                                    if($total_days > 0) {
-                                        $default_late_fee = $customer_billing_info->late_fee != null ? $customer_billing_info->late_fee : 0;
-                                        if($total_days >= 10) {
-                                            $late_fee_amount += $default_late_fee * $total_days;                        
-                                        } else {
-                                            $late_fee_amount += $default_late_fee * $total_days;
-                                        }   
-                                    }
-                                }*/                                
 
                                 switch ($invoice->status):
                                     case "Partially Paid":
@@ -242,7 +215,7 @@
                                     </td>
                                     <td><?php echo get_format_date($invoice->date_issued) ?></td>
                                     <td><?php echo get_format_date($invoice->due_date) ?></td>
-                                    <td>
+                                    <td class="nsm-text-primary">
                                         <label class="d-block">
                                         <?php 
                                             if( trim($invoice->first_name != '') || trim($invoice->last_name != '') ){
@@ -386,12 +359,9 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
-
         $("#search_field").on("input", debounce(function() {
-            let _form = $(this).closest("form");
-
-            _form.submit();
-        }, 1500));
+            tableSearch($(this));        
+        }, 1000));
 
         $('.view-job-row').on('click', function(){
             var appointment_id = $(this).attr('data-id');
