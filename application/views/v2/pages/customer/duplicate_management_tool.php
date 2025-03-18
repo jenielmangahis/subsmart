@@ -1,45 +1,77 @@
+<style>
+    .columnButtonRemover {
+        /* position: absolute;
+        top: 1px;
+        right: 3px; */
+        cursor: pointer;
+        color: #ff000094;
+    }
+
+    .modalExitButton {
+        cursor: pointer;
+        font-size: large;
+        position: absolute; 
+        top: 35px;
+        right: 35px;
+    }
+
+    .modalExitButton:hover {
+        color: red;
+    }
+</style>
 <div class="row duplicateManagementContent d-none">
     <div class="col-lg-12 mb-3 dupWizardStep1">
-        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="pills-residential-tab" data-bs-toggle="pill" data-bs-target="#pills-residential" type="button" role="tab">Residential</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-commercial-tab" data-bs-toggle="pill" data-bs-target="#pills-commercial" type="button" role="tab">Commercial</button>
-            </li>
-        </ul>
-        <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade show active" id="pills-residential" role="tabpanel">
-                <table id="customerDuplicateTable" class="table table-hover w-100 border-0" style="border-color: #cdcdcd !important;">
-                    <thead>
-                        <tr>
-                            <th>CUSTOMER</th>
-                            <th>TYPE</th>
-                            <th>ADDRESS</th>
-                            <th>LOGS</th>
-                            <th>ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr></tr>
-                    </tbody>
-                </table>
+        <div class="container-fluid mb-3 mt-3">
+            <div class="row">
+                <h4 class="fw-bold">Manage Duplicated Entries</h4>
+                <p>Search and select specific customers to fix/merge.</p>
             </div>
-            <div class="tab-pane fade" id="pills-commercial" role="tabpanel">
-                <table id="commercialDuplicateTable" class="table table-hover w-100 border-0" style="border-color: #cdcdcd !important;">
-                    <thead>
-                        <tr>
-                            <th>COMMERCIAL</th>
-                            <th>TYPE</th>
-                            <th>ADDRESS</th>
-                            <th>LOGS</th>
-                            <th>ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr></tr>
-                    </tbody>
-                </table>
+            <i class="fas fa-times modalExitButton" data-bs-dismiss="modal" aria-label="name-button" name="name-button"></i>
+        </div>
+        <div class="container-fluid">
+            <div class="col-xl-12 mb-3">
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-residential-tab" data-bs-toggle="pill" data-bs-target="#pills-residential" type="button" role="tab">Residential</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-commercial-tab" data-bs-toggle="pill" data-bs-target="#pills-commercial" type="button" role="tab">Commercial</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-residential" role="tabpanel">
+                        <table id="customerDuplicateTable" class="table table-hover w-100 border-0" style="border-color: #cdcdcd !important;">
+                            <thead>
+                                <tr>
+                                    <th>CUSTOMER</th>
+                                    <th>TYPE</th>
+                                    <th>ADDRESS</th>
+                                    <th>LOGS</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="pills-commercial" role="tabpanel">
+                        <table id="commercialDuplicateTable" class="table table-hover w-100 border-0" style="border-color: #cdcdcd !important;">
+                            <thead>
+                                <tr>
+                                    <th>COMMERCIAL</th>
+                                    <th>TYPE</th>
+                                    <th>ADDRESS</th>
+                                    <th>LOGS</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -49,6 +81,7 @@
                 <h4 class="fw-bold">Compare and Merge</h4>
                 <p>Select specific fields to be used for the merged output entry.</p>
             </div>
+            <i class="fas fa-times modalExitButton" data-bs-dismiss="modal" aria-label="name-button" name="name-button"></i>
         </div>
         <div class="row flexWrapUnset">
             <div class="col-lg-1 w-auto entryFields">

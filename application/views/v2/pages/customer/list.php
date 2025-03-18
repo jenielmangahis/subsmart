@@ -423,8 +423,8 @@
                             </ul>
                         </div>
                     <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>            
-                    <button type="button" class="nsm-button batchUpdaterButton"><i class='bx bxs-edit'></i> Customer Management</button>
-                    <button type="button" class="nsm-button dupEntryButton"><i class='bx bxs-duplicate'></i> Duplicate Entries <small class="text-muted dupEntryCount"></small></button>
+                    <button type="button" class="nsm-button batchUpdaterButton"><i class="fas fa-wrench text-muted"></i>&nbsp;&nbsp;Batch Updater Tool</button>
+                    <button type="button" class="nsm-button dupEntryButton"><i class="fas fa-copy text-muted"></i>&nbsp;&nbsp;Manage Duplicated Entries&nbsp;<small class="text-muted dupEntryCount"></small></button>
                     <?php } ?>
                         <div class="nsm-page-buttons primary page-button-container">
                             <div class="dropdown d-inline-block">
@@ -699,24 +699,16 @@
     </div>
 </div>
 
-<div class="modal duplicateRemoverModal" data-bs-backdrop="static" aria-modal="true" role="dialog">
+<div class="modal fade duplicateRemoverModal" aria-modal="true"  role="dialog">
     <div class="modal-dialog modal-fullscreen modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title content-title" style="font-size: 17px;"><i class="fas fa-file-alt"></i>&nbsp;&nbsp;Manage Duplicate Entries</div>
-                <i class="fas fa-times" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
-            </div>
             <div class="modal-body"><span class="duplicateManagementContentLoader">Please wait while fetching duplicates...</span></div>
         </div>
     </div>
 </div>
-<div class="modal batchUpdaterModal" data-bs-backdrop="static" aria-modal="true" role="dialog">
+<div class="modal fade batchUpdaterModal" aria-modal="true"  role="dialog">
     <div class="modal-dialog modal-fullscreen modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title content-title" style="font-size: 17px;"><i class='bx bxs-edit'></i>&nbsp;&nbsp;Customer Management</div>
-                <i class="fas fa-times" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
-            </div>
             <div class="modal-body"><span class="customerUpdaterContentLoader">Please wait while fetching the tool content...</span></div>
         </div>
     </div>
