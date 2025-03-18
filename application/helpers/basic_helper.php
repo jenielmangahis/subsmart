@@ -1375,23 +1375,16 @@ if (!function_exists('getTasks')){
 
         $sql = 'select '.
                'a.task_id, '.
-               'a.subject, '.
+               'a.title, '.
                'a.date_created, '.
                //'DATE_FORMAT(a.estimated_date_complete,"%b %d, %Y %h:%i:%s") as estimated_date_complete_formatted, '.
                //'DATE_FORMAT(a.date_created,"%b %d, %Y %h:%i:%s") as date_created_formatted, '.
-               'DATE_FORMAT(a.estimated_date_complete,"%b %d, %Y") as estimated_date_complete_formatted, '.
-               'DATE_FORMAT(a.date_created,"%b %d, %Y") as date_created_formatted, '.
-               'b.status_color, '.
-               'b.status_text '.
+               'DATE_FORMAT(a.date_due,"%b %d, %Y") as date_due_formatted, '.
+               'DATE_FORMAT(a.date_created,"%b %d, %Y") as date_created_formatted '.
                'from tasks a '.
-               'left join tasks_status b on b.status_id = a.status_id '.
                'left join tasks_participants c on c.task_id = a.task_id '.
-
                'where a.created_by = '. $uid . ' ' .
-                  'or c.user_id = '. $uid . ' ' .
-
                'group by a.task_id '.
-
                'order by date_created desc';
 
         return $CI->db->query($sql)->result();

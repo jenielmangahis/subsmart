@@ -199,11 +199,11 @@ class Dashboard extends Widgets
         }
 
         $status_arr = [];
-        $status_selection = $this->taskhub_status_model->get();
-        foreach ($status_selection as $status_selec) {
-            $task_status = $this->crud->total_record('tasks', "status_id='".$status_selec->status_id."'");
-            $status_arr[] = $status_selec->status_text.'@#@'.$task_status;
-        }
+        // $status_selection = $this->taskhub_status_model->get();
+        // foreach ($status_selection as $status_selec) {
+        //     $task_status = $this->crud->total_record('tasks', "status_id='".$status_selec->status_id."'");
+        //     $status_arr[] = $status_selec->status_text.'@#@'.$task_status;
+        // }
 
         // $this->page_data['events'] = $this->event_model->get_all_events(5);
         // $this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));

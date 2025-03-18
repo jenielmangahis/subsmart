@@ -143,11 +143,11 @@ class Dashboard_v2 extends Widgets {
         }
 
         $status_arr = array();
-        $status_selection = $this->taskhub_status_model->get();
-        foreach ($status_selection as $status_selec) {
-            $task_status = $this->crud->total_record("tasks", "status_id='" . $status_selec->status_id . "'");
-            $status_arr[] = $status_selec->status_text . "@#@" . $task_status;
-        }
+        // $status_selection = $this->taskhub_status_model->get();
+        // foreach ($status_selection as $status_selec) {
+        //     $task_status = $this->crud->total_record("tasks", "status_id='" . $status_selec->status_id . "'");
+        //     $status_arr[] = $status_selec->status_text . "@#@" . $task_status;            
+        // }
         
         $this->page_data['estimate'] = $this->estimate_model->getAllByCompany(logged('company_id'));
         $this->page_data['upcomingJobs'] = $this->jobs_model->getAllUpcomingJobsByCompanyId(logged('company_id'));
