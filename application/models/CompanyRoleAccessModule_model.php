@@ -116,6 +116,7 @@ class CompanyRoleAccessModule_model extends MY_Model
             'calendar-schedule' => 'Calendar Schedule',
             'calendar-settings' => 'Calendar Settings',
             'taskhub' => 'Taskhub',
+            'online-booking' => 'Online Booking',
             'customer-groups' => 'Customer Groups',
             'customer-settings' => 'Customer Settings',  
             'events' => 'Events',
