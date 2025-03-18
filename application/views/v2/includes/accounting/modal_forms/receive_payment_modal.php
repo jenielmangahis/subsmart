@@ -167,8 +167,8 @@
                                                             <label for="overdue-invoices-only">Overdue invoices only</label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12">
-                                                        <button class="nsm-button m-0" type="button" onclick="resetInvoicesFilter(event)">Reset</button>
+                                                    <div class="col-12" style="text-align: right;">
+                                                        <button class="nsm-button m-0" style="margin-right: 5px !important;" type="button" onclick="resetInvoicesFilter(event)">Reset</button>
                                                         <button class="nsm-button success float-end m-0" type="button" onclick="applyInvoicesFilter(event)">Apply</button>
                                                     </div>
                                                 </div>

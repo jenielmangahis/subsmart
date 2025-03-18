@@ -13413,7 +13413,7 @@ class Accounting_modals extends MY_Controller
         }
 
         $data = [
-            'company_id' => getLoggedCompanyID(),
+            'company_id' => logged('company_id'),
             'name' => $post['name'],
             'credit_card' => $post['credit_card'],
             'status' => 1
