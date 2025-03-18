@@ -11,23 +11,29 @@ class Taskhub extends MY_Controller {
 		$this->page_data['module'] = 'calendar';		
 	}
         
-        function loadWidgetContents()
-        {
-            $company_id = logged('company_id');
-            $data['tasks'] = $this->taskhub_model->getTask($company_id);
-            $this->load->view('widgets/task_hub_details', $data);
-                    
-        }
+	function loadWidgetContents()
+	{
+		$company_id = logged('company_id');
+		$data['tasks'] = $this->taskhub_model->getTask($company_id);
+		$this->load->view('widgets/task_hub_details', $data);
+				
+	}
 
-		function loadV2WidgetContents()
-        {
-            $company_id = logged('company_id');
-            $data['tasks'] = $this->taskhub_model->getOngoingTasksByCompanyId($company_id);
-            $this->load->view('v2/widgets/task_hub_details', $data);
-                    
-        }
+	function loadV2WidgetContents()
+	{
+		$company_id = logged('company_id');
+		$data['tasks'] = $this->taskhub_model->getOngoingTasksByCompanyId($company_id);
+		$this->load->view('v2/widgets/task_hub_details', $data);
+				
+	}
 
-	public function index(){		
+	public function index()
+	{		
+		if(!checkRoleCanAccessModule('taskhub', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title  = 'Task Hub';
         $this->page_data['page']->parent = 'Calendar';
 
@@ -139,7 +145,13 @@ class Taskhub extends MY_Controller {
 		$this->load->view('v2/pages/workcalender/taskhub/list', $this->page_data);
 	}	
 
-	public function create(){
+	public function create()
+	{
+		if(!checkRoleCanAccessModule('taskhub', 'write')){
+			show403Error();
+			return false;
+		}
+		
         $this->page_data['page']->title  = 'Task';
         $this->page_data['page']->parent = 'Calendar';
 		$this->page_data['taskhub_tab_subtitle'] = 'Create New Task';
@@ -369,7 +381,7 @@ class Taskhub extends MY_Controller {
 		            $this->taskhub_participants_model->create($data_assigned);
 
 					//Activity Logs
-					$activity_name = 'Created New Task ' . $this->input->post('subject'); 
+					$activity_name = 'Taskhub : Created new task ' . $this->input->post('subject'); 
 					createActivityLog($activity_name);
 				} else {
 					$this->page_data['error'] = 'Error creating task';
@@ -1596,7 +1608,7 @@ class Taskhub extends MY_Controller {
 	        	$this->Taskhub_model->completeAllTasksByTaskId($post['taskId']);
 
 				//Activity Logs
-				$activity_name = 'Updated selected tasks id ' . $task_ids . ' to Completed'; 
+				$activity_name = 'Taskhub : Updated selected tasks id ' . $task_ids . ' to completed'; 
 				createActivityLog($activity_name);
 
 	        	$is_success = 1;
@@ -1628,7 +1640,7 @@ class Taskhub extends MY_Controller {
 	        	$this->Taskhub_model->onGoingAllTasksByTaskId($post['taskId']);
 
 				//Activity Logs
-				$activity_name = 'Updated selected tasks id ' . $task_ids . ' to Ongoing'; 
+				$activity_name = 'Taskhub : Changed selected tasks id ' . $task_ids . ' to ongoing'; 
 				createActivityLog($activity_name);
 
 	        	$is_success = 1;
@@ -1686,7 +1698,7 @@ class Taskhub extends MY_Controller {
 			$this->Taskhub_model->deleteByTaskListId($taskHubList->id);
 
 			//Activity Logs
-			$activity_name = 'Taskhub List : Deleted Task List ' . $taskHubList->name; 
+			$activity_name = 'Taskhub List : Deleted task list ' . $taskHubList->name; 
 			createActivityLog($activity_name);
 
         	$msg ='';
@@ -1716,7 +1728,7 @@ class Taskhub extends MY_Controller {
 					$this->Taskhub_model->deleteByTaskId($taskHub->task_id);
 	
 					//Activity Logs
-					$activity_name = 'Deleted Task ' . $taskHub->subject; 
+					$activity_name = 'Taskhub : Deleted task ' . $taskHub->subject; 
 					createActivityLog($activity_name);
 		
 					$msg = 'Delete tasks successful.';
@@ -1754,7 +1766,7 @@ class Taskhub extends MY_Controller {
 			$this->taskhub_updates_model->trans_create($activity_data);				
 
 			//Activity Logs
-			$activity_name = 'Deleted task comment.'; 
+			$activity_name = 'Taskhub : Deleted task comment.'; 
 			createActivityLog($activity_name);
 
 			$json_data = ['is_success' => 1, 'msg' => $msg];

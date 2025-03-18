@@ -2036,7 +2036,8 @@ $route['customers/_delete_proposed_inverter'] = 'Customer/ajax_delete_proposed_i
 $route['customers/download_statement_of_claims'] = 'Customer/download_statement_of_claims';
 
 //Benchmark for Testing
-$route['benchmark/cron_customer_subscription'] = 'Benchmark/cron_customer_subscription';
+$route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
+$route['benchmark/test_late_invoice_computation'] = 'Benchmark/test_late_invoice_computation';
 
 //Role Access Modules
 $route['users/role_access_modules'] = 'Users/role_access_modules';

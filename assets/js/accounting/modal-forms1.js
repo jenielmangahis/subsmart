@@ -32,7 +32,7 @@ $(document).ready(function () {
     });
 
     function getDefaultAccount() {
-        const base_url = window.location.origin + "/";
+        //const base_url = window.location.origin + "/";
         setTimeout(() => {
             $.ajax({
                 type: "POST",
@@ -56,7 +56,7 @@ $(document).ready(function () {
     
     //  Override script, Select the last check no.
     function getLastCheckNo() {
-        const base_url = window.location.origin + "/";
+        //const base_url = window.location.origin + "/";
         setTimeout(() => {
             $.ajax({
                 type: "POST",

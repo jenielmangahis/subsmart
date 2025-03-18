@@ -4105,20 +4105,20 @@ class Customer extends MY_Controller
                     $profile_id = $input['customer_id'];
                     customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Updated customer '.$input['first_name'].' '.$input['last_name']);
 
-                    $activity_action = 'Updated';
+                    $activity_action = 'Customer : Updated';
                 } else {
                     $profile_id = $this->general->add_return_id($input_profile, 'acs_profile');
 
                     customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Created customer '.$input['first_name'].' '.$input['last_name']);
-                    $activity_action = 'Created';
+                    $activity_action = 'Customer : Created';
                 }
 
                 $companyId = logged('company_id');
                 $save_billing = $this->save_billing_information($input, $profile_id);
-                $save_office = $this->save_office_information($input, $profile_id);
-                $save_alarm = $this->save_alarm_information($input, $profile_id);
-                $save_access = $this->save_access_information($input, $profile_id);
-                $save_papers = $this->save_papers_information($input, $profile_id);
+                $save_office  = $this->save_office_information($input, $profile_id);
+                $save_alarm   = $this->save_alarm_information($input, $profile_id);
+                $save_access  = $this->save_access_information($input, $profile_id);
+                $save_papers  = $this->save_papers_information($input, $profile_id);
                 $save_contacts = $this->save_contacts($input, $profile_id);
                 $save_property = $this->save_property_information($input, $profile_id);
 
@@ -4126,7 +4126,8 @@ class Customer extends MY_Controller
                     $this->save_solar_info($input, $profile_id);
                 }
 
-                if ($save_billing == 0 || $save_office == 0 || $save_alarm == 0 || $save_access == 0 || $save_papers == 0) {
+                if ($save_office == 0 || $save_alarm == 0 || $save_access == 0 || $save_papers == 0) {
+                //if ($save_billing == 0 || $save_office == 0 || $save_alarm == 0 || $save_access == 0 || $save_papers == 0) {
                     echo 'Error Occured on Saving Billing Information';
                     $data_arr = ['success' => false, 'message' => 'Error on saving information'];
                 } else {
@@ -4697,88 +4698,93 @@ class Customer extends MY_Controller
 
     public function save_billing_information($input, $id)
     {
-        $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($input['mmr'], logged('company_id'));
+        if( ($input['bill_method'] && $input['bill_method'] != '') && ($input['mmr'] && $input['mmr'] > 0) ){
+            $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($input['mmr'], logged('company_id'));
 
-        $input_billing = [];
-        // billing data
-        switch ($input['bill_freq']) {
-            case 'One Time Only':
-                $billing_frequency = 0;
-                break;
-            case 'Every 1 Month':
-                $billing_frequency = 1;
-                break;
-            case 'Every 3 Months':
-                $billing_frequency = 3;
-                break;
-            case 'Every 6 Months':
-                $billing_frequency = 6;
-                break;
-            case 'Every 1 Year':
-                $billing_frequency = 12;
-                break;
-            default:
-                $billing_frequency = 1;
-                break;
+            $input_billing = [];
+            // billing data
+            switch ($input['bill_freq']) {
+                case 'One Time Only':
+                    $billing_frequency = 0;
+                    break;
+                case 'Every 1 Month':
+                    $billing_frequency = 1;
+                    break;
+                case 'Every 3 Months':
+                    $billing_frequency = 3;
+                    break;
+                case 'Every 6 Months':
+                    $billing_frequency = 6;
+                    break;
+                case 'Every 1 Year':
+                    $billing_frequency = 12;
+                    break;
+                default:
+                    $billing_frequency = 1;
+                    break;
+            }
+
+            $next_billing_date  = date('m/'.$input['bill_day'].'/Y', strtotime('+'.$billing_frequency.' months', strtotime($input['bill_start_date'])));
+            $next_billing_date  = date('Y-m-d', strtotime($next_billing_date));
+
+            $input_billing['fk_prof_id'] = $id;
+            $input_billing['ac_rate_plan_id'] = $ratePlan->id;
+            $input_billing['card_fname'] = $input['card_fname'];
+            $input_billing['card_lname'] = $input['card_lname'];
+            $input_billing['card_address'] = $input['card_address'];
+            $input_billing['city'] = $input['billing_city'];
+            $input_billing['state'] = $input['billing_state'];
+            $input_billing['zip'] = $input['billing_zip'];
+            $input_billing['equipment'] = $input['equipment'];
+            $input_billing['initial_dep'] = $input['initial_dep'];
+            $input_billing['mmr'] = $ratePlan->amount;
+            $input_billing['bill_freq'] = $input['bill_freq'];
+            $input_billing['bill_day'] = $input['bill_day'];
+            $input_billing['contract_term'] = $input['contract_term'];
+            $input_billing['bill_start_date'] = date("Y-m-d",strtotime($input['bill_start_date']));
+            $input_billing['bill_end_date'] = date("Y-m-d",strtotime($input['bill_end_date']));
+            $input_billing['late_fee'] = $input['late_fee'];
+            $input_billing['payment_fee'] = $input['payment_fee'];
+            $input_billing['bill_method'] = $input['bill_method'];
+            $input_billing['check_num'] = $input['check_num'];
+            $input_billing['bank_name'] = $input['bank_name'];
+            $input_billing['routing_num'] = $input['routing_num'];
+            $input_billing['acct_num'] = $input['acct_num'];
+            $input_billing['credit_card_num'] = $input['credit_card_num'];
+            $input_billing['credit_card_exp'] = $input['credit_card_exp'];
+            $input_billing['credit_card_exp_mm_yyyy'] = $input['credit_card_exp_mm_yyyy'];
+            $input_billing['account_credential'] = $input['account_credential'];
+            $input_billing['account_note'] = $input['account_note'];
+            $input_billing['confirmation'] = $input['confirmation'];
+            $input_billing['finance_amount'] = $input['finance_amount'];
+            $input_billing['recurring_start_date'] = $input['recurring_start_date'];
+            $input_billing['recurring_end_date'] = $input['recurring_end_date'];
+            $input_billing['transaction_amount'] = $input['transaction_amount'];
+            $input_billing['transaction_category'] = $input['transaction_category'];
+            $input_billing['frequency'] = $input['frequency']; // Subscription
+            $input_billing['billing_frequency'] = $input['bill_freq']; // Billing        
+
+            $check = [
+                'where' => [
+                    'fk_prof_id' => $id,
+                ],
+                'table' => 'acs_billing',
+            ];
+
+            $exist = $this->general->get_data_with_param($check, false);
+            if ($exist) {
+                $input_billing['next_billing_date'] = $exist->next_billing_date;
+                $input_billing['next_subscription_billing_date'] = $exist->next_subscription_billing_date;
+                return $this->general->update_with_key_field($input_billing, $input['customer_id'], 'acs_billing', 'fk_prof_id');
+            } else {
+                $input_billing['next_billing_date'] = $next_billing_date;
+                $input_billing['next_subscription_billing_date'] = $next_billing_date;
+                return $this->general->add_($input_billing, 'acs_billing');
+            }
+        }else{
+            return 0;
         }
-
-        $next_billing_date  = date('m/'.$input['bill_day'].'/Y', strtotime('+'.$billing_frequency.' months', strtotime($input['bill_start_date'])));
-        $next_billing_date  = date('Y-m-d', strtotime($next_billing_date));
-
-        $input_billing['fk_prof_id'] = $id;
-        $input_billing['ac_rate_plan_id'] = $ratePlan->id;
-        $input_billing['card_fname'] = $input['card_fname'];
-        $input_billing['card_lname'] = $input['card_lname'];
-        $input_billing['card_address'] = $input['card_address'];
-        $input_billing['city'] = $input['billing_city'];
-        $input_billing['state'] = $input['billing_state'];
-        $input_billing['zip'] = $input['billing_zip'];
-        $input_billing['equipment'] = $input['equipment'];
-        $input_billing['initial_dep'] = $input['initial_dep'];
-        $input_billing['mmr'] = $ratePlan->amount;
-        $input_billing['bill_freq'] = $input['bill_freq'];
-        $input_billing['bill_day'] = $input['bill_day'];
-        $input_billing['contract_term'] = $input['contract_term'];
-        $input_billing['bill_start_date'] = date("Y-m-d",strtotime($input['bill_start_date']));
-        $input_billing['bill_end_date'] = date("Y-m-d",strtotime($input['bill_end_date']));
-        $input_billing['late_fee'] = $input['late_fee'];
-        $input_billing['payment_fee'] = $input['payment_fee'];
-        $input_billing['bill_method'] = $input['bill_method'];
-        $input_billing['check_num'] = $input['check_num'];
-        $input_billing['bank_name'] = $input['bank_name'];
-        $input_billing['routing_num'] = $input['routing_num'];
-        $input_billing['acct_num'] = $input['acct_num'];
-        $input_billing['credit_card_num'] = $input['credit_card_num'];
-        $input_billing['credit_card_exp'] = $input['credit_card_exp'];
-        $input_billing['credit_card_exp_mm_yyyy'] = $input['credit_card_exp_mm_yyyy'];
-        $input_billing['account_credential'] = $input['account_credential'];
-        $input_billing['account_note'] = $input['account_note'];
-        $input_billing['confirmation'] = $input['confirmation'];
-
-        $input_billing['finance_amount'] = $input['finance_amount'];
-        $input_billing['recurring_start_date'] = $input['recurring_start_date'];
-        $input_billing['recurring_end_date'] = $input['recurring_end_date'];
-        $input_billing['transaction_amount'] = $input['transaction_amount'];
-        $input_billing['transaction_category'] = $input['transaction_category'];
-        $input_billing['frequency'] = $input['frequency']; // Subscription
-        $input_billing['billing_frequency'] = $input['bill_freq']; // Billing        
-
-        $check = [
-            'where' => [
-                'fk_prof_id' => $id,
-            ],
-            'table' => 'acs_billing',
-        ];
-        $exist = $this->general->get_data_with_param($check, false);
-        if ($exist) {
-            $input_billing['next_billing_date'] = $exist->next_billing_date;
-            $input_billing['next_subscription_billing_date'] = $exist->next_subscription_billing_date;
-            return $this->general->update_with_key_field($input_billing, $input['customer_id'], 'acs_billing', 'fk_prof_id');
-        } else {
-            $input_billing['next_billing_date'] = $next_billing_date;
-            $input_billing['next_subscription_billing_date'] = $next_billing_date;
-            return $this->general->add_($input_billing, 'acs_billing');
-        }
+        
     }
 
     public function save_contacts($postData, $customerId)
@@ -8415,7 +8421,10 @@ class Customer extends MY_Controller
         $post = $this->input->post();
 
         $paymentHistory = $this->Customer_advance_model->get_all_subscription_payments($post['customer_id']);
+        $totalSubscriptionPayment = $this->Customer_advance_model->getCustomerTotalSubscriptionPayments($post['customer_id']);
+
         $this->page_data['paymentHistory'] = $paymentHistory;
+        $this->page_data['totalSubscriptionPayment'] = $totalSubscriptionPayment;
         // $this->load->view('customer/ajax_load_subscription_payment_history', $this->page_data);
         $this->load->view('v2/pages/customer/load_subscription_payment_history', $this->page_data);
     }

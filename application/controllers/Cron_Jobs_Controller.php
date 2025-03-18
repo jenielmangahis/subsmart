@@ -3148,13 +3148,14 @@ class Cron_Jobs_Controller extends CI_Controller
         $date_to      = date("Y-m-d");
 
         //$activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsBetweenDates($date_from, $date_to);
-        $activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsWithSub14Days($current_date);	  
-
+        $activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsWithSub14Days($current_date);
+        
         $deduct_days_computation = 0;
 		foreach( $activeSubscriptions as $as ) {
             $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);    
 
-            if( $as->mmr > 0 && $customer ){
+            if( $as->mmr > 0 && $customer && $as->bill_method != '' ){
+
                 $totalUnpaidSubscriptions   = $this->AcsCustomerSubscriptionBilling_model->getTotalAmountUnpaidByCustomerId($as->fk_prof_id);
 				$unpaidSubscriptionsDetails = $this->AcsCustomerSubscriptionBilling_model->getUnpaidDetailsByCustomerId($as->fk_prof_id);
                 $total_amount               = $totalUnpaidSubscriptions->total_amount + $as->mmr;	

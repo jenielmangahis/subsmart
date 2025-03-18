@@ -926,10 +926,21 @@ class Customer_advance_model extends MY_Model
         $this->db->from('acs_billing');
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $company_id);
+        $this->db->where('acs_profile.first_name !=', '');
         $this->db->where('acs_billing.recurring_end_date <=', $today);
         $query = $this->db->get();
 
         return $query->result();
+    }
+
+    public function getCustomerTotalSubscriptionPayments($customer_id = 0)
+    {
+        $this->db->select('COALESCE(SUM(acs_transaction_history.subtotal),0) AS total_payments');
+        $this->db->from('acs_transaction_history');
+        $this->db->where('acs_transaction_history.customer_id', $customer_id);
+        $query = $this->db->get();
+
+        return $query->row();
     }
 
     public function get_all_billing_errors_by_company_id($company_id = 0)
@@ -1470,12 +1481,24 @@ class Customer_advance_model extends MY_Model
     public function getAllActiveSubscriptionsWithSub14Days($current_date) {
 
         $this->db->select('acs_profile.*,acs_billing.*');
-        //$this->db->select('acs_billing.next_billing_date, DATE_SUB(acs_billing.next_billing_date, INTERVAL 14 DAY) as next_billing_date_interval, acs_profile.first_name, acs_profile.last_name');
         $this->db->from('acs_billing');
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
 
         $this->db->where('CURDATE() >= DATE_SUB(acs_billing.next_billing_date, INTERVAL 14 DAY)');
         $this->db->where('CURDATE() <= acs_billing.next_billing_date');   
+
+        $query = $this->db->get();
+
+        return $query->result();   
+    }
+
+    public function getAllActiveSubscriptionsByNextBillingDate($next_billing_date) {
+
+        $this->db->select('acs_profile.*,acs_billing.*');
+        $this->db->from('acs_billing');
+        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+
+        $this->db->where('acs_billing.next_billing_date =', $next_billing_date);
 
         $query = $this->db->get();
 
