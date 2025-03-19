@@ -3208,6 +3208,14 @@ class Cron_Jobs_Controller extends CI_Controller
                         $payment_fee = $invoiceSettings->payment_fee_amount;
                     }
 
+                    if( $invoiceSettings->disable_late_fee == 1 ){
+                        $late_fee = 0;
+                    }
+
+                    if( $invoiceSettings->disable_payment_fee == 1 ){
+                        $payment_fee = 0;
+                    }
+
                 }else{
                     $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($customer->company_id);
                     $prefix     = 'INV-';

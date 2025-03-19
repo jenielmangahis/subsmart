@@ -563,9 +563,12 @@ class Invoice extends MY_Controller
 
 
     public function settings()
-    {
-        $this->page_data['page']->title = 'Invoice Settings';
-        $this->page_data['page']->parent = 'Sales';
+    {        
+
+        if(!checkRoleCanAccessModule('invoice-settings', 'read')){
+			show403Error();
+			return false;
+		}
 
         $is_allowed = $this->isAllowedModuleAccess(38);
         if (!$is_allowed) {
@@ -574,10 +577,16 @@ class Invoice extends MY_Controller
             die();
         }
 
-        $comp_id = logged('company_id');
-        $this->page_data['setting'] = null;
-        $setting = $this->invoice_settings_model->getByCompanyId($comp_id);
+        $company_id = logged('company_id');
+        $industry_type = logged('industry_type');
+        $industrySpecificFields = $this->invoice_settings_model->industrySpecificFields($industry_type);
+        $setting = $this->invoice_settings_model->getByCompanyId($company_id);
+
+        $this->page_data['page']->title = 'Invoice Settings';
+        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['setting'] = null;        
         $this->page_data['setting'] = $setting;
+        $this->page_data['industrySpecificFields'] = $industrySpecificFields;
         $this->load->view('v2/pages/invoice/settings', $this->page_data);
     }
 
@@ -809,7 +818,8 @@ class Invoice extends MY_Controller
                 'check_payable_to' => post('payment_to'),
                 'due_terms' => post('due_terms'),
                 'payment_fee_amount' => serialize($payment_fee),
-                'recurring' => post('recurring_on_add_child'),
+                //'recurring' => post('recurring_on_add_child'),
+                'recurring' => 0,
                 'mobile_payment' => post('payment_mobile_status'),
                 'accept_tip' => post('tip_status') ? post('tip_status') : 0,
                 'auto_convert_completed_work_order' => post('autoconvert_work_order'),
@@ -2050,9 +2060,11 @@ class Invoice extends MY_Controller
             if ($invoiceSetting && post('img_setting') != '') {
                 $logo = post('img_setting');
             }
-        }        
-        
+        }     
         if( $is_success == 1 ){
+
+            $industry_specific_fields = json_encode(post('industry_specific_fields'));
+
             if (!$invoiceSetting) {
                 $this->invoice_settings_model->create([
                     'company_id' => $comp_id,
@@ -2090,6 +2102,9 @@ class Invoice extends MY_Controller
                     'invoice_template' => post('invoice_template') ? post('invoice_template') : 0,
                     'late_fee_amount_per_day' => post('late_fee_amount_per_day') ? post('late_fee_amount_per_day') : 0,
                     'num_days_activate_late_fee' => post('num_days_activate_late_fee') ? post('num_days_activate_late_fee') : 0,
+                    'disable_late_fee' => post('disable_late_fee') ? post('disable_late_fee') : 0,
+                    'disable_payment_fee' => post('disable_payment_fee') ? post('disable_payment_fee') : 0,
+                    'industry_specific_fields' => $industry_specific_fields,
                 ]);
     
                 $this->activity_model->add('Created Invoice Settings ' . $user->id . ' Created by User:' . logged('name'), logged('id'));
@@ -2130,6 +2145,9 @@ class Invoice extends MY_Controller
                     'invoice_template' => post('invoice_template') ? post('invoice_template') : 0,
                     'late_fee_amount_per_day' => post('late_fee_amount_per_day') ? post('late_fee_amount_per_day') : 0,
                     'num_days_activate_late_fee' => post('num_days_activate_late_fee') ? post('num_days_activate_late_fee') : 0,
+                    'disable_late_fee' => post('disable_late_fee') ? post('disable_late_fee') : 0,
+                    'disable_payment_fee' => post('disable_payment_fee') ? post('disable_payment_fee') : 0,
+                    'industry_specific_fields' => $industry_specific_fields,
                 ]);
     
                 $this->activity_model->add('Updated Invoice Settings ' . $user->id . ' Updated by User:' . logged('name'), logged('id'));
