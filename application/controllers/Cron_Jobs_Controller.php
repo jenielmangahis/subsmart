@@ -3153,6 +3153,16 @@ class Cron_Jobs_Controller extends CI_Controller
         $deduct_days_computation = 0;
 		foreach( $activeSubscriptions as $as ) {
             $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);    
+            $with_customer_late_fee = 0;
+            $with_customer_payment_fee = 0;
+
+            if( $as->late_fee > 0 ){
+                $with_customer_late_fee = 1;
+            }
+
+            if( $as->payment_fee > 0 ){
+                $with_customer_payment_fee = 1;
+            }
 
             if( $as->mmr > 0 && $customer && $as->bill_method != '' ){
 
@@ -3202,18 +3212,20 @@ class Cron_Jobs_Controller extends CI_Controller
                     $next_number = (int) $invoiceSettings->invoice_num_next;     
                     $prefix      = $invoiceSettings->invoice_num_prefix;	
                     
-                    if( $invoiceSettings->payment_fee_percent > 0  ){                        
-                        $payment_fee = $total_amount * ($invoiceSettings->payment_fee_percent/100);
-                    }else{
-                        $payment_fee = $invoiceSettings->payment_fee_amount;
+                    if( $with_customer_late_fee == 0 ){
+                        if( $invoiceSettings->disable_payment_fee == 1 ){
+                            if( $invoiceSettings->payment_fee_percent > 0  ){                        
+                                $payment_fee = $total_amount * ($invoiceSettings->payment_fee_percent/100);
+                            }else{
+                                $payment_fee = $invoiceSettings->payment_fee_amount;
+                            }
+                        }
                     }
 
-                    if( $invoiceSettings->disable_late_fee == 1 ){
-                        $late_fee = 0;
-                    }
-
-                    if( $invoiceSettings->disable_payment_fee == 1 ){
-                        $payment_fee = 0;
+                    if( $with_customer_payment_fee == 0 ){
+                        if( $invoiceSettings->late_fee_amount_per_day > 0  && $invoiceSettings->disable_late_fee == 0 ){                        
+                            $late_fee = $total_days * $invoiceSettings->late_fee_amount_per_day;
+                        }
                     }
 
                 }else{
