@@ -97,6 +97,10 @@
                                     <div class="nsm-card-header d-block">
                                         <div class="nsm-card-title">
                                             <span>Payment Fee</span>
+                                            <div class="form-check pull-right">
+                                                <input class="form-check-input chk-field-group" name="disable_payment_fee" type="checkbox" value="1" <?= $setting && $setting->disable_payment_fee == 1 ? 'checked="checked"' : ''; ?> id="chk-enable-payment-fee">
+                                                <label class="form-check-label" for="chk-enable-payment-fee">Disable Payment Fee</label>
+                                            </div>
                                         </div>
                                         <label class="nsm-subtitle">Add a payment fee (percent or fixed) to online payments.</label>
                                     </div>
@@ -105,13 +109,13 @@
                                             <div class="col-12 col-md-6">
                                                 <div class="input-group mb-3">
                                                     <span class="input-group-text" id="">%</span>
-                                                    <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Payment Fee Percent %" name="payment_fee_percent" id="payment_fee_percent" value="<?php echo ($setting) ? $setting->payment_fee_percent : '0.00' ?>">                                                    
+                                                    <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Payment Fee Percent %" name="payment_fee_percent" id="payment_fee_percent" <?= $setting && $setting->disable_payment_fee == 1 ? 'disabled=""' : ''; ?> value="<?php echo ($setting) ? $setting->payment_fee_percent : '0.00' ?>">                                                    
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <div class="input-group mb-3">
                                                     <span class="input-group-text" id="">$</span>
-                                                    <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Payment Fee Fixed $" name="payment_fee_amount" id="payment_fee_amount" value="<?php echo ($setting) ? $setting->payment_fee_amount : '0.00' ?>">
+                                                    <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Payment Fee Fixed $" name="payment_fee_amount" id="payment_fee_amount" <?= $setting && $setting->disable_payment_fee == 1 ? 'disabled=""' : ''; ?> value="<?php echo ($setting) ? $setting->payment_fee_amount : '0.00' ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -120,44 +124,50 @@
                             </div>
                             <div class="col-12">
                                 <div class="nsm-card primary">
-                                    <div class="nsm-card-header d-block">
-                                        <div class="nsm-card-title">
-                                            <span>Late Fee</span>
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <div class="nsm-card-header d-block">
+                                                <div class="nsm-card-title">
+                                                    <span>Late Fee</span>
+                                                    <div class="form-check pull-right">
+                                                        <input class="form-check-input chk-field-group" name="disable_late_fee" type="checkbox" value="1" <?= $setting && $setting->disable_late_fee == 1 ? 'checked="checked"' : ''; ?> id="chk-enable-late-fee">
+                                                        <label class="form-check-label" for="chk-enable-late-fee">Disable Late Fee</label>
+                                                    </div>
+                                                </div>
+                                                <label class="nsm-subtitle">Late fee amount per day when invoice is overdue</label>
+                                            </div>
+                                            <div class="nsm-card-content">
+                                                <div class="row g-2">
+                                                    <div class="col-12 col-md-6">
+                                                        <div class="input-group mb-3">
+                                                            <span class="input-group-text" id="">$</span>
+                                                            <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Amount" name="late_fee_amount_per_day" id="late_fee_amount_per_day" <?= $setting && $setting->disable_late_fee == 1 ? 'disabled=""' : ''; ?> value="<?php echo ($setting) ? $setting->late_fee_amount_per_day : '0.00' ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <label class="nsm-subtitle">Late fee amount per day when invoice is overdue</label>
-                                    </div>
-                                    <div class="nsm-card-content">
-                                        <div class="row g-2">
-                                            <div class="col-12 col-md-6">
-                                                <div class="input-group mb-3">
-                                                    <span class="input-group-text" id="">$</span>
-                                                    <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Amount" name="late_fee_amount_per_day" id="late_fee_amount_per_day" value="<?php echo ($setting) ? $setting->late_fee_amount_per_day : '0.00' ?>">
+                                        <div class="col-12">
+                                            <div class="nsm-card-header d-block">
+                                                <div class="nsm-card-title">
+                                                    <span>Activate Late Fee</span>
+                                                </div>
+                                                <label class="nsm-subtitle">Number of business days before activating late fee charges</label>
+                                            </div>
+                                            <div class="nsm-card-content">
+                                                <div class="row g-2">
+                                                    <div class="col-12 col-md-6">
+                                                        <div class="input-group mb-3">
+                                                            <span class="input-group-text" id=""><i class='bx bx-alarm' ></i></span>
+                                                            <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Number of days" name="num_days_activate_late_fee" id="num_days_activate_late_fee" <?= $setting && $setting->disable_late_fee == 1 ? 'disabled=""' : ''; ?> value="<?php echo ($setting) ? $setting->num_days_activate_late_fee : '0'; ?>">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="nsm-card primary">
-                                    <div class="nsm-card-header d-block">
-                                        <div class="nsm-card-title">
-                                            <span>Activate Late Fee</span>
-                                        </div>
-                                        <label class="nsm-subtitle">Number of business days before activating late fee charges</label>
-                                    </div>
-                                    <div class="nsm-card-content">
-                                        <div class="row g-2">
-                                            <div class="col-12 col-md-6">
-                                                <div class="input-group mb-3">
-                                                    <span class="input-group-text" id=""><i class='bx bx-alarm' ></i></span>
-                                                    <input type="number" step="any" min=0 class="form-control nsm-field" placeholder="Number of days" name="num_days_activate_late_fee" id="num_days_activate_late_fee" value="<?php echo ($setting) ? $setting->num_days_activate_late_fee : '0'; ?>">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>                            
+                            </div>                    
                             <!-- <div class="col-12">
                                 <div class="nsm-card">
                                     <div class="nsm-card-content text-center">
@@ -409,7 +419,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <!-- <div class="col-12">
                                 <div class="nsm-card primary">
                                     <div class="nsm-card-content">
                                         <div class="row g-2">
@@ -432,9 +442,33 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
+                            <?php if( $industrySpecificFields ){ ?>
+                                <div class="col-12">
+                                    <div class="nsm-card primary">
+                                        <div class="nsm-card-content">
+                                            <div class="row g-2">
+                                                <div class="col-12">
+                                                    <div class="nsm-card-title">
+                                                        <span>Industry Specific Fields</span>
+                                                    </div>
+                                                    <label class="nsm-subtitle mb-3"></label>
+                                                    <div class="d-block">
+                                                        <?php foreach( $industrySpecificFields as $field_value => $field_name ){ ?>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="industry_specific_fields[]" value="<?= $field_value; ?>" id="industry-specific-<?= $field_value; ?>">
+                                                            <label class="form-check-label" for="industry-specific-<?= $field_value; ?>">Disable <?= $field_name; ?></label>
+                                                        </div>
+                                                        <?php } ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php } ?>
                             <div class="col-12 text-end">
-                                <button type="submit" data-action="save" class="nsm-button primary">
+                                <button type="submit" data-action="save" id="btn-save-invoice-settings" class="nsm-button primary">
                                     Save Changes
                                 </button>
                             </div>
@@ -454,7 +488,27 @@
         });
 
         $('#payment_fee_amount').on('change', function(){
-            $('#payment_fee_percent').val('0');
+            $('#payment_fee_percent').val(0);
+        });
+
+        $('#chk-enable-payment-fee').on('change', function(){
+            if( $(this).is(':checked') ){
+                $('#payment_fee_percent').attr('disabled', true);
+                $('#payment_fee_amount').attr('disabled', true);
+            }else{
+                $('#payment_fee_percent').attr('disabled', false);
+                $('#payment_fee_amount').attr('disabled', false);
+            }
+        });
+
+        $('#chk-enable-late-fee').on('change', function(){
+            if( $(this).is(':checked') ){
+                $('#late_fee_amount_per_day').attr('disabled', true);
+                $('#num_days_activate_late_fee').attr('disabled', true);
+            }else{
+                $('#late_fee_amount_per_day').attr('disabled', false);
+                $('#num_days_activate_late_fee').attr('disabled', false);
+            }
         });
 
         $('#frm-invoice-settings').on('submit', function(e){
@@ -486,9 +540,9 @@
                             html: result.msg
                         });
                     }
-                    
+                    $('#btn-save-invoice-settings').html('Save Changes');
                 }, beforeSend: function() {
-                    
+                    $('#btn-save-invoice-settings').html('<span class="bx bx-loader bx-spin"></span>');
                 },
                 cache: false,
                 contentType: false,
