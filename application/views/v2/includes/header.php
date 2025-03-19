@@ -459,7 +459,7 @@ if ($analog_active == null) {
     $overtime_status = 2;
     $expected_endshift = 0;
 }
-
+$newtasks = getTasks();
 ?>
                             <input type="hidden" id="clockedin_date_time" value="<?php echo $checkin_date_time; ?>">
                             <input type="hidden" id="attendance_status" value="<?php echo $attendance_status; ?>">
@@ -507,32 +507,24 @@ if ($analog_active == null) {
                                     <div class="list-header">
                                         <h6 class="dropdown-header fw-bold">Tasks</h6>
                                     </div>
-                                    <div id="task_container">
-                                        <?php
-            $newtasks = getTasks();
-
-if (count($newtasks) > 0) {
-    foreach ($newtasks as $task) {
-        ?>
+                                    <div id="task_container">                                        
+                                        <?php if (count($newtasks) > 0) { ?>
+                                            <?php foreach ($newtasks as $task) { ?>
                                                 <div class="list-item" onclick="location.href='<?php echo base_url('taskhub/view/'.$task->task_id); ?>'">
                                                     <span class="content-title"><?php echo $task->title; ?></span>
                                                     <span class="content-subtitle">
                                                         <?php
-                        $date_created = date_create($task->date_created);
-        echo date_format($date_created, 'F d, Y h:i:s');
-        ?>
+                                                            $date_created = date_create($task->date_created);
+                                                            echo date_format($date_created, 'F d, Y h:i:s');
+                                                        ?>
                                                     </span>
                                                 </div>
-                                            <?php
-    }
-} else {
-    ?>
-                                            <div class="text-center py-3">
-                                                <span class="content-subtitle">No tasks for now.</span>
-                                            </div>
-                                        <?php
-}
-?>
+                                            <?php } ?>
+                                        <?php } else { ?>
+                                        <div class="text-center py-3">
+                                            <span class="content-subtitle">No tasks for now.</span>
+                                        </div>
+                                        <?php } ?>
                                     </div>
                                     <div>
                                         <hr class="dropdown-divider">
@@ -589,11 +581,11 @@ if (is_null($image)) {
                                     <div class="list-item main-nav-item" id="<?php echo $clock_btn; ?>">
                                         Clock In/Clock Out
                                     </div>
-                                    <div class="list-item main-nav-item position-relative">
-                                        Tasks <span class="nsm-badge badge-circle error">1</span>
+                                    <div class="list-item main-nav-item position-relative" onclick="location.href='<?php echo url('taskhub'); ?>'">
+                                        Tasks <span class="nsm-badge badge-circle error"><?= count($newtasks); ?></span>
                                     </div>
-                                    <div class="list-item main-nav-item position-relative">
-                                        Notifications <span class="nsm-badge badge-circle error">1</span>
+                                    <div class="list-item main-nav-item position-relative" onclick="location.href='<?php echo url('timesheet/notification'); ?>'">
+                                        Notifications <span class="nsm-badge badge-circle error"><?= count($notification); ?></span>
                                     </div>
                                     <div class="list-item" onclick="location.href='<?php echo url('profile'); ?>'">
                                         Public Profile
