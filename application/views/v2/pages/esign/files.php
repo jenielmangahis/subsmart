@@ -182,6 +182,12 @@ echo put_header_assets();
     .sidebar_main{
         padding-left:10px;
     }
+    .esignBuilder__submit{
+        margin: auto 50%;
+        width: 220px;
+        font-size: 16px !important;
+        font-weight:bold !important;
+    }
 </style>
 <div class="nsm-content-container">
     <div class="nsm-content">
