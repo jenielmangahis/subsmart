@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <a href="<?php echo base_url('share_Link/ticketsPDF/' . $tickets->id) ?>" class="nsm-button success">Download as PDF</a> 
             <a href="#" class="nsm-button success" id="printServiceTicket" onclick="printDiv('printableArea')">Print</a>
         </div>
-        <div class="nsm-page" style="padding-left:10%;padding-right:10%;padding-top:1%;" id="printArea">
+        <div class="nsm-page" style="padding-left:10%;padding-right:10%;padding-top:1%;clear:both;" id="printArea">
             <style>
                 @media print {
                     .mustRight 
@@ -71,33 +71,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     }
                 }
             </style>
-            <div class="" style="padding:2%;">
-                <!-- <div class="row">
-                    <div class="col-md-3">
-                        <br>
-                        <?php //echo $tickets->id; ?>
-                    </div>
-                    <div class="col-md-6"></div>
-                    <div class="col-md-3">
-                        <div class="">
-                            <div style="text-align: center;border:solid gray 1px;">
-                                <h5>Ticket no</h5><hr>
-                                <h5><?php //echo $tickets->ticket_no; ?></h5>
-                            </div>
-                            <div style="font-size:16px;">
-                            
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-
-                <div class="row">
-                    <div class="col-md-4" style="text-align:center;">
-                        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 130px; max-height: 130px;" class="compLogo"/> 
+            <div class="mt-4" style="padding:2%;">
+                <div class="row" style="width:100%;">
+                    <div class="col-md-4 col-sm-12 col-12" style="text-align:center;">
+                        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 130px; max-height: 130px;" class="compLogo mb-2"/> 
                     </div>
                     <!-- <div class="col-md-4 spaceDiv"></div> -->
-                    <div class="col-md-8">
-                        <table class="nsm-table">
+                    <div class="col-md-8 col-sm-12 col-12">
+                        <table class="table">
                             <tbody>
                                 <tr>
                                     <td style="width: 40%;">Ticket no:</td>
