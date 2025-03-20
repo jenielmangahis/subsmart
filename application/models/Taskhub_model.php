@@ -34,12 +34,18 @@ class Taskhub_model extends MY_Model {
 
     public function getById($id)
     {
-        $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color, CONCAT(acs_profile.first_name," ",acs_profile.last_name)AS customer_name');
+        /*$this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color, CONCAT(acs_profile.first_name," ",acs_profile.last_name)AS customer_name');
         $this->db->from($this->table);
         $this->db->join('acs_profile','tasks.prof_id = acs_profile.prof_id', 'left');
         $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','left');
         $this->db->where('tasks.task_id', $id);
+        $query = $this->db->get();*/
+
+        $this->db->select('tasks.*');
+        $this->db->from($this->table);
+        $this->db->where('tasks.task_id', $id);
         $query = $this->db->get();
+
         return $query->row();
     }
 

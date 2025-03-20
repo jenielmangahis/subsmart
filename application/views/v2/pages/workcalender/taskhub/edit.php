@@ -81,7 +81,7 @@ if (isset($selected_participants)) {
                                             $title = set_value('title');
                                         } ?>
                                         <label class="content-subtitle fw-bold d-block mb-2">Title</label>
-                                        <input type="text" name="subject" class="nsm-field form-control" value="<?= $title ?>" required>
+                                        <input type="text" name="title" class="nsm-field form-control" value="<?= $title ?>" required>
                                     </div>
 
                                     <?php if (isset($status_selection)) { ?>

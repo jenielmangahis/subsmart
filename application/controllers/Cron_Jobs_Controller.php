@@ -3162,7 +3162,7 @@ class Cron_Jobs_Controller extends CI_Controller
 
             if( $as->payment_fee > 0 ){
                 $with_customer_payment_fee = 1;
-            }
+            }       
 
             if( $as->mmr > 0 && $customer && $as->bill_method != '' ){
 
@@ -3177,6 +3177,7 @@ class Cron_Jobs_Controller extends CI_Controller
 				$payment_fee     = 0;  
 
                 if($unpaidSubscriptionsDetails) {
+
                     //Invoice is due, need to add late fee
                     $recurr_transaction = $this->accounting_recurring_transactions_model->get_by_type_transaction_id_status('invoice', $unpaidSubscriptionsDetails->invoice_id, 2); //2 is pause
                     if(!$recurr_transaction) {
@@ -3190,22 +3191,30 @@ class Cron_Jobs_Controller extends CI_Controller
     
                             if($total_days > $days_activate_late_fee) {
                                 $late_fee_percentage = $as->payment_fee != null ? $as->payment_fee : 0; 
-    
-                                if($as->mmr != null && $as->mmr > 0) {
-                                    $late_fee += ($late_fee_percentage / 100) * $as->mmr;
-                                }
-        
-                                if($total_days > 0) {
-                                    $default_late_fee = $as->late_fee != null ? $as->late_fee : 0;
-                                    if($total_days >= 10) {
-                                        $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);                        
-                                    } else {
-                                        $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);
-                                    }   
+
+                                if($invoiceSettings->disable_late_fee == 0) {
+                                    if($as->mmr != null && $as->mmr > 0) {
+                                        $late_fee += ($late_fee_percentage / 100) * $as->mmr;
+                                    }
+
+                                    if($total_days > 0) {
+                                        $default_late_fee = $as->late_fee != null ? $as->late_fee : 0;
+
+                                        if($default_late_fee <= 0) {
+                                            $default_late_fee = $invoiceSettings->late_fee_amount_per_day != null ? $invoiceSettings->late_fee_amount_per_day : 0;
+                                        }
+
+                                        if($total_days >= 10) {
+                                            $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);                        
+                                        } else {
+                                            $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);
+                                        }   
+                                    }                                    
                                 }
                             }
                         }
                     }
+
                 }
 
                 if( $invoiceSettings ){            
@@ -3213,7 +3222,7 @@ class Cron_Jobs_Controller extends CI_Controller
                     $prefix      = $invoiceSettings->invoice_num_prefix;	
                     
                     if( $with_customer_late_fee == 0 ){
-                        if( $invoiceSettings->disable_payment_fee == 1 ){
+                        if( $invoiceSettings->disable_payment_fee == 0 ){
                             if( $invoiceSettings->payment_fee_percent > 0  ){                        
                                 $payment_fee = $total_amount * ($invoiceSettings->payment_fee_percent/100);
                             }else{
