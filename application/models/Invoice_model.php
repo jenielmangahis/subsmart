@@ -1858,7 +1858,7 @@ class Invoice_model extends MY_Model
         return $query->row();
     }
 
-    public function getAllActiveInvoice($filter = array())
+    public function getAllActiveInvoice($filter = array(), $is_recurring = 0)
     {
         $this->db->select('invoices.*, jobs.job_number AS jobnumber, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');        
         $this->db->from($this->table);
@@ -1869,9 +1869,14 @@ class Invoice_model extends MY_Model
         $this->db->where('invoices.status !=', "Draft");
         $this->db->where('invoices.status !=', "");
 
+        if($is_recurring == 1) {
+            $this->db->where('invoices.is_recurring =', 1);
+        }
+
         $this->db->where('invoices.view_flag', 0);
 
-        //$this->db->where_in('invoices.id', [434]); //for testing only    
+        //Hide this after debugging
+        //$this->db->where_in('invoices.id', [456]); //for testing only    
 
         if (!empty($filter)) {
             if (isset($filter['q'])) {
