@@ -3,10 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 include viewPath('v2/includes/header');
 ini_set('max_input_vars', 30000);
 ?>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <?=put_header_assets();?>
-
 <div class="wrapper wrapper--loading" role="wrapper">
     <div class="esigneditor__loader">
         <div class="esigneditor__loaderInner">

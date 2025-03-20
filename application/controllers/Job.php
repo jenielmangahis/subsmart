@@ -83,11 +83,12 @@ class Job extends MY_Controller
     }
 
     public function new_job1($id = null)
-    {        
+    {    
         $this->load->model('AcsProfile_model');
         $this->load->model('CalendarSettings_model');
         $this->load->model('Tickets_model');
         $this->load->helper('functions');
+        $this->load->model('Invoice_settings_model');
 
         if(!checkRoleCanAccessModule('jobs', 'write')){
             show403Error();
@@ -385,14 +386,22 @@ class Job extends MY_Controller
             $redirect_calendar = 1;
         }
 
+        $invoiceSettings        = $this->Invoice_settings_model->getByCompanyId($comp_id);
+        $industrySpecificFields = $this->Invoice_settings_model->industrySpecificFields(logged('industry_type'));   
+        $disabled_industry_specific_fields = [];
+        if( $invoiceSettings && $invoiceSettings->disable_industry_specific_fields != '' ){
+            $disabled_industry_specific_fields = json_decode($invoiceSettings->disable_industry_specific_fields);
+        }
+
         $this->page_data['cid'] = $comp_id;        
         $this->page_data['default_user'] = $default_user;
         $this->page_data['default_start_date'] = $default_start_date;
         $this->page_data['default_start_time'] = $default_start_time;
         $this->page_data['redirect_calendar']  = $redirect_calendar;
         $this->page_data['default_user_docfile_template_id'] = $default_user_docfile_template_id;
-        // $this->page_data['TEST_JOB_INFO'] = $this->jobs_model->GET_JOB_INFO($id);
         $this->page_data['getAllLocation'] = $this->items_model->getAllLocation();
+        $this->page_data['disabled_industry_specific_fields'] = $disabled_industry_specific_fields;
+        $this->page_data['industrySpecificFields'] = $industrySpecificFields;
         $this->load->view('v2/pages/job/job_new', $this->page_data);
     }
 
@@ -4650,6 +4659,7 @@ class Job extends MY_Controller
         $this->load->model('CalendarSettings_model');
         $this->load->model('User_docflies_model');
         $this->load->model('Contacts_model');
+        $this->load->model('Invoice_settings_model');
 
         $this->load->helper('functions');
         $comp_id = logged('company_id');
@@ -4800,9 +4810,19 @@ class Job extends MY_Controller
 
         $contactRelationshipOptions = $this->Contacts_model->optionRelations();
 
+        //Industry specific fields
+        $invoiceSettings        = $this->Invoice_settings_model->getByCompanyId($comp_id);
+        $industrySpecificFields = $this->Invoice_settings_model->industrySpecificFields(logged('industry_type'));   
+        $disabled_industry_specific_fields = [];
+        if( $invoiceSettings && $invoiceSettings->disable_industry_specific_fields != '' ){
+            $disabled_industry_specific_fields = json_decode($invoiceSettings->disable_industry_specific_fields);
+        }
+
         $this->page_data['contactRelationshipOptions'] = $contactRelationshipOptions;      
         $this->page_data['esignTemplates'] = $esignTemplates;
         $this->page_data['default_start_date'] = $default_start_date;
+        $this->page_data['disabled_industry_specific_fields'] = $disabled_industry_specific_fields;
+        $this->page_data['industrySpecificFields'] = $industrySpecificFields;
         $this->load->view('v2/pages/job/ajax_quick_add_job_form', $this->page_data);
     }
 

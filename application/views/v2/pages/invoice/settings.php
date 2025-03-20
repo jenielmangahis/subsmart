@@ -444,6 +444,12 @@
                                 </div>
                             </div> -->
                             <?php if( $industrySpecificFields ){ ?>
+                                <?php 
+                                    $disabled_industry_specific_fields = [];
+                                    if( $setting->disable_industry_specific_fields != '' ){
+                                        $disabled_industry_specific_fields = json_decode($setting->disable_industry_specific_fields);    
+                                    }                                    
+                                ?>
                                 <div class="col-12">
                                     <div class="nsm-card primary">
                                         <div class="nsm-card-content">
@@ -456,7 +462,7 @@
                                                     <div class="d-block">
                                                         <?php foreach( $industrySpecificFields as $field_value => $field_name ){ ?>
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="industry_specific_fields[]" value="<?= $field_value; ?>" id="industry-specific-<?= $field_value; ?>">
+                                                            <input class="form-check-input" type="checkbox" name="disable_industry_specific_fields[]" value="<?= $field_value; ?>" id="industry-specific-<?= $field_value; ?>" <?= in_array($field_value, $disabled_industry_specific_fields) ? 'checked="checked"' : ''; ?>>
                                                             <label class="form-check-label" for="industry-specific-<?= $field_value; ?>">Disable <?= $field_name; ?></label>
                                                         </div>
                                                         <?php } ?>

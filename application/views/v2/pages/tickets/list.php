@@ -131,7 +131,7 @@
                 </div>
                 <form id="frm-with-selected">
                     <input type="hidden" value="" id="change-status" name="change_status" />
-                    <table class="nsm-table" id="ticket-list-table">
+                    <table class="nsm-table w-100" id="ticket-list-table">
                         <thead>
                             <tr>
                                 <td class="table-icon text-center">
@@ -154,7 +154,7 @@
                             <tr>
                                 <td style="text-align:center;"><input class="form-check-input row-select table-select" name="tickets[]" type="checkbox" name="id_selector" value="<?= $ticket->id; ?>"></td>
                                 <td><div class="table-row-icon"><i class='bx bx-briefcase'></i></div></td>
-                                <td style="width:10%;"><b><?php echo $ticket->ticket_no; ?></b></td>
+                                <td class="show fw-bold nsm-text-primary"><?php echo $ticket->ticket_no; ?></td>
                                 <td style="width:15%;">
                                     <?php if( $ticket->assigned_tech ){ ?>
                                         <div class="techs">   

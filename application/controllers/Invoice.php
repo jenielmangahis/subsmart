@@ -334,6 +334,7 @@ class Invoice extends MY_Controller
             'assets/js/v2/add_items.js',                
         ));
 
+        $company_id  = logged('company_id');
         $query       = $this->input->get();        
         $workorder   = array();
         $w_customer  = array();
@@ -346,30 +347,24 @@ class Invoice extends MY_Controller
             $w_customer  = $this->AcsProfile_model->getByProfId($workorder[0]->customer_id);
         }
 
-        $user_id = logged('id');
-        $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
-        $company_id = logged('company_id');
-        $role = logged('role');
-        if ($role == 1 || $role == 2) {            
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-        } else {            
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        //$setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+        $setting   = $this->invoice_settings_model->getByCompanyId($company_id);
+        $disabled_industry_specific_fields = [];
+        if( $setting && $setting->disable_industry_specific_fields != '' ){
+            $disabled_industry_specific_fields = json_decode($setting->disable_industry_specific_fields);
         }
 
+        $industrySpecificFields = $this->invoice_settings_model->industrySpecificFields(logged('industry_type'));        
+        $terms   = $this->accounting_terms_model->getCompanyTerms_a($company_id);
 
-        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
-        $terms = $this->accounting_terms_model->getCompanyTerms_a($company_id);
-        $this->page_data['number'] = $this->invoice_model->getlastInsert();
-
-        if (!empty($setting)) {
-            foreach ($setting as $key => $value) {
-                if (is_serialized($value)) {
-                    $setting->{$key} = unserialize($value);
-                }
-            }
-            $this->page_data['setting'] = $setting;
-            $this->page_data['terms'] = $terms;
-        }
+        // if (!empty($setting)) {
+        //     foreach ($setting as $key => $value) {
+        //         if (is_serialized($value)) {
+        //             $setting->{$key} = unserialize($value);
+        //         }
+        //     }
+        //     $this->page_data['setting'] = $setting;
+        // }
 
         $default_cust_id = 0;
         if( $this->input->get('cus_id') ){
@@ -382,7 +377,11 @@ class Invoice extends MY_Controller
         }else{
             $default_tax_percentage = 7.5;
         }
-
+        
+        $this->page_data['terms'] = $terms;
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        $this->page_data['industrySpecificFields'] = $industrySpecificFields;
+        $this->page_data['disabled_industry_specific_fields'] = $disabled_industry_specific_fields;
         $this->page_data['default_tax_percentage'] = $default_tax_percentage;
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $this->page_data['default_cust_id'] = $default_cust_id;
@@ -1069,11 +1068,9 @@ class Invoice extends MY_Controller
             $deduct_days_computation = 0;
             $dlate_fee = 0;
 
+            $invoiceSettings    = $this->invoice_settings_model->getByCompanyId($invoice->company_id);
             $recurr_transaction = $this->accounting_recurring_transactions_model->get_by_type_transaction_id_status('invoice', $invoice->id, 2); //2 is pause
             if(!$recurr_transaction) {
-
-                $invoiceSettings = $this->invoice_settings_model->getByCompanyId($invoice->company_id);
-
                 $current_date    = date('Y-m-d');
                 $days_activate_late_fee = 0;
                 $total_late_days = 0;
@@ -1107,6 +1104,12 @@ class Invoice extends MY_Controller
                 
             }
 
+            $industrySpecificFields = $this->invoice_settings_model->industrySpecificFields(logged('industry_type'));   
+            $disabled_industry_specific_fields = [];
+            if( $invoiceSettings && $invoiceSettings->disable_industry_specific_fields != '' ){
+                $disabled_industry_specific_fields = json_decode($invoiceSettings->disable_industry_specific_fields);
+            }   
+
             $this->page_data['dlate_fee']       = $dlate_fee;
             $this->page_data['total_late_days'] = $total_late_days;
             $this->page_data['invoice'] = $invoice;
@@ -1119,6 +1122,8 @@ class Invoice extends MY_Controller
             $this->page_data['terms'] =  $terms;
             $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
             $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
+            $this->page_data['disabled_industry_specific_fields'] = $disabled_industry_specific_fields;
+            $this->page_data['industrySpecificFields'] = $industrySpecificFields;
             $this->page_data['page_title'] = "Invoices & Payments";
             $this->page_data['page']->title = 'Invoices & Payments';
             $this->page_data['page']->parent = 'Sales';
@@ -2063,7 +2068,10 @@ class Invoice extends MY_Controller
         }     
         if( $is_success == 1 ){
 
-            $industry_specific_fields = json_encode(post('industry_specific_fields'));
+            $disable_industry_specific_fields = '';
+            if( post('disable_industry_specific_fields') ){
+                $disable_industry_specific_fields = json_encode(post('disable_industry_specific_fields'));
+            }            
 
             if (!$invoiceSetting) {
                 $this->invoice_settings_model->create([
@@ -2104,7 +2112,7 @@ class Invoice extends MY_Controller
                     'num_days_activate_late_fee' => post('num_days_activate_late_fee') ? post('num_days_activate_late_fee') : 0,
                     'disable_late_fee' => post('disable_late_fee') ? post('disable_late_fee') : 0,
                     'disable_payment_fee' => post('disable_payment_fee') ? post('disable_payment_fee') : 0,
-                    'industry_specific_fields' => $industry_specific_fields,
+                    'disable_industry_specific_fields' => $disable_industry_specific_fields,
                 ]);
     
                 $this->activity_model->add('Created Invoice Settings ' . $user->id . ' Created by User:' . logged('name'), logged('id'));
@@ -2147,7 +2155,7 @@ class Invoice extends MY_Controller
                     'num_days_activate_late_fee' => post('num_days_activate_late_fee') ? post('num_days_activate_late_fee') : 0,
                     'disable_late_fee' => post('disable_late_fee') ? post('disable_late_fee') : 0,
                     'disable_payment_fee' => post('disable_payment_fee') ? post('disable_payment_fee') : 0,
-                    'industry_specific_fields' => $industry_specific_fields,
+                    'disable_industry_specific_fields' => $disable_industry_specific_fields,
                 ]);
     
                 $this->activity_model->add('Updated Invoice Settings ' . $user->id . ' Updated by User:' . logged('name'), logged('id'));

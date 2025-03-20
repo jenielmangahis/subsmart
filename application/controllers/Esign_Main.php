@@ -12,6 +12,11 @@ class Esign_Main extends MY_Controller {
 
 	public function index()
 	{		
+		if(!checkRoleCanAccessModule('esign', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'eSign Tools';
         $this->page_data['page']->parent = 'Tools';
 

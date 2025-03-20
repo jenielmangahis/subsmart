@@ -208,6 +208,11 @@ class Esign_v2 extends MY_Controller
         $this->load->model('EsignCompanyTag_model');
         $this->load->model('User_docflies_model', 'User_docflies_model');
 
+        if(!checkRoleCanAccessModule('esign', 'read')){
+            show403Error();
+            return false;
+        }
+
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['file_id'] = $this->input->get('id');
 
@@ -280,6 +285,7 @@ class Esign_v2 extends MY_Controller
         $optionCompanyFields    = $this->EsignCompanyTagSection_model->optionCompanyFields();
         $optionInvoiceFields    = $this->EsignCompanyTagSection_model->optionInvoiceFields();
         $optionJobFields        = $this->EsignCompanyTagSection_model->optionJobFields();
+        $optionCustomerEmergencyContacts = $this->EsignCompanyTagSection_model->optionCustomerEmergencyContacts();
         
         $companyEsignTagsSections = $this->EsignCompanyTagSection_model->getAllNotDeletedByCompanyId($company_id);
 
@@ -294,7 +300,8 @@ class Esign_v2 extends MY_Controller
         $this->page_data['optionAutoPopulateData'] = $optionAutoPopulateData;
         $this->page_data['optionCustomerFields']   = $optionCustomerFields;
         $this->page_data['optionCompanyFields']    = $optionCompanyFields;
-        $this->page_data['optionInvoiceFields']    = $optionInvoiceFields;        
+        $this->page_data['optionInvoiceFields']    = $optionInvoiceFields;   
+        $this->page_data['optionCustomerEmergencyContacts'] = $optionCustomerEmergencyContacts;     
         $this->page_data['optionJobFields']        = $optionJobFields;        
         $this->page_data['page']->title = 'Add Documents to the Envelope';
         $this->load->view('v2/pages/esign/files', $this->page_data);
@@ -1131,6 +1138,7 @@ SQL;
         $optionCompanyFields    = $this->EsignCompanyTagSection_model->optionCompanyFields();
         $optionInvoiceFields    = $this->EsignCompanyTagSection_model->optionInvoiceFields();
         $optionJobFields        = $this->EsignCompanyTagSection_model->optionJobFields();
+        $optionCustomerEmergencyContacts = $this->EsignCompanyTagSection_model->optionCustomerEmergencyContacts();
 
         $this->page_data['widgetSection'] = $widgetSection;
         $this->page_data['widgetTags'] = $widgetTags;
@@ -1139,6 +1147,7 @@ SQL;
         $this->page_data['optionCompanyFields']    = $optionCompanyFields;
         $this->page_data['optionInvoiceFields']    = $optionInvoiceFields;   
         $this->page_data['optionJobFields']        = $optionJobFields;   
+        $this->page_data['optionCustomerEmergencyContacts'] = $optionCustomerEmergencyContacts;
         $this->load->view('v2/pages/esign/ajax_edit_widget', $this->page_data);
     }
 

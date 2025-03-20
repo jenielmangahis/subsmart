@@ -194,6 +194,11 @@ class DocuSign_v2 extends MYF_Controller
     {   
         $this->checkLogin();
 
+        if(!checkRoleCanAccessModule('esign', 'read')){
+            show403Error();
+            return false;
+        }
+
         add_css([
             'https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css',
             'assets/css/esign/docusign/manage/manage.css',
@@ -217,10 +222,14 @@ class DocuSign_v2 extends MYF_Controller
 
     public function manager()
     {   
+        if(!checkRoleCanAccessModule('esign', 'read')){
+            show403Error();
+            return false;
+        }
+
         $this->checkLogin();
 
         add_css([
-            'https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css',
             'assets/css/esign/docusign/manage/manage.css',
             'assets/css/esign/docusign/template-create/template-create.css',
             'assets/css/esign/esign-builder/esign-builder.css',
@@ -230,9 +239,6 @@ class DocuSign_v2 extends MYF_Controller
         add_footer_js([
             'assets/js/esign/libs/pdf.js',
             'assets/js/esign/libs/pdf.worker.js',
-
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
-            'https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js',
             'assets/js/esign/docusign/v2/manage.js',
         ]);
         
@@ -676,6 +682,11 @@ class DocuSign_v2 extends MYF_Controller
 
     public function templateCreate()
     {        
+        if(!checkRoleCanAccessModule('esign', 'write')){
+			show403Error();
+			return false;
+		}
+
         $this->checkLogin();
 
         add_css([

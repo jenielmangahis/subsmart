@@ -547,35 +547,41 @@ a.btn-primary.btn-md {
                                 <div class="row">
                                     <div class="col-md-8">
                                         <?php if( $tickets->user_docfile_template_id > 0 ){ ?>
-                                            <?php if(checkIndustryAllowedSpecificField('monitoring_rate')){ ?>
-                                            <div class="row">
-                                                <div class="col-md-3 form-group mt-2">
-                                                    <label for="service-ticket-monthly-monitoring-rate"><b>Change Monthly Monitoring Rate</b></label>
-                                                    <select style="display:inline-block;" class="form-control nsm-field form-select" name="monthly_monitoring_rate" id="service-ticket-monthly-monitoring-rate">
-                                                        <option value="0.00">Select Plan Rate</option>
-                                                        <?php foreach( $ratePlans as $rp ){ ?>
-                                                            <option value="<?= $rp->amount; ?>"><?= $rp->plan_name; ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-3 form-group mt-2">
-                                                    <label for=""><b>Monthly Monitoring Rate</b></label>
-                                                    <input style="display:inline-block;" type="number" id="plan-value" name="monthly_monitoring_rate_value" value="<?= $tickets->monthly_monitoring > 0 ? number_format($tickets->monthly_monitoring,2,".","") : '0.00'; ?>" class="form-control" />
-                                                </div>
-                                            </div>
-                                            <?php } ?>
-                                            <div class="row">
-                                                <?php if(checkIndustryAllowedSpecificField('installation_cost')){ ?>
-                                                <div class="col-md-3 form-group mt-2">
-                                                    <label for="service-ticket-installation-cost"><b>Installation Cost</b></label>
-                                                    <input type="number" step="any" class="form-control" value="<?= $tickets->installation_cost > 0 ? number_format($tickets->monthly_monitoring,2,".","") : '0.00'; ?>" name="installation_cost" id="service-ticket-installation-cost">
+                                            <?php if( $industrySpecificFields && array_key_exists('monthly_monitoring_rate', $industrySpecificFields) ){ ?>
+                                                <?php if( !in_array('monthly_monitoring_rate', $disabled_industry_specific_fields) ){ ?>
+                                                <div class="row">
+                                                    <div class="col-md-3 form-group mt-2">
+                                                        <label for="service-ticket-monthly-monitoring-rate"><b>Change Monthly Monitoring Rate</b></label>
+                                                        <select style="display:inline-block;" class="form-control nsm-field form-select" name="monthly_monitoring_rate" id="service-ticket-monthly-monitoring-rate">
+                                                            <option value="0.00">Select Plan Rate</option>
+                                                            <?php foreach( $ratePlans as $rp ){ ?>
+                                                                <option value="<?= $rp->amount; ?>"><?= $rp->plan_name; ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3 form-group mt-2">
+                                                        <label for=""><b>Monthly Monitoring Rate</b></label>
+                                                        <input style="display:inline-block;" type="number" id="plan-value" name="monthly_monitoring_rate_value" value="<?= $tickets->monthly_monitoring > 0 ? number_format($tickets->monthly_monitoring,2,".","") : '0.00'; ?>" class="form-control" />
+                                                    </div>
                                                 </div>
                                                 <?php } ?>
-                                                <?php if(checkIndustryAllowedSpecificField('one_time_program_setup')){ ?>
-                                                <div class="col-md-3 form-group mt-2">
-                                                    <label for="service-ticket-otp"><b>One Time (Program and Setup)</b></label>
-                                                    <input type="number" step="any" class="form-control" value="<?= $tickets->otp_setup > 0 ? number_format($tickets->monthly_monitoring,2,".","") : '0.00'; ?>" name="otp" id="service-ticket-otp">
-                                                </div>
+                                            <?php } ?>
+                                            <div class="row">
+                                                <?php if( $industrySpecificFields && array_key_exists('installation_cost', $industrySpecificFields) ){ ?>
+                                                    <?php if( !in_array('installation_cost', $disabled_industry_specific_fields) ){ ?>
+                                                    <div class="col-md-3 form-group mt-2">
+                                                        <label for="service-ticket-installation-cost"><b>Installation Cost</b></label>
+                                                        <input type="number" step="any" class="form-control" value="<?= $tickets->installation_cost > 0 ? number_format($tickets->monthly_monitoring,2,".","") : '0.00'; ?>" name="installation_cost" id="service-ticket-installation-cost">
+                                                    </div>
+                                                    <?php } ?>
+                                                <?php } ?>
+                                                <?php if( $industrySpecificFields && array_key_exists('otps', $industrySpecificFields) ){ ?>
+                                                    <?php if( !in_array('otps', $disabled_industry_specific_fields) ){ ?>
+                                                    <div class="col-md-3 form-group mt-2">
+                                                        <label for="service-ticket-otp"><b>One Time (Program and Setup)</b></label>
+                                                        <input type="number" step="any" class="form-control" value="<?= $tickets->otp_setup > 0 ? number_format($tickets->monthly_monitoring,2,".","") : '0.00'; ?>" name="otp" id="service-ticket-otp">
+                                                    </div>
+                                                    <?php } ?>
                                                 <?php } ?>
                                             </div>
                                         <?php } ?>

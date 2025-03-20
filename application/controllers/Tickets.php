@@ -1755,6 +1755,7 @@ class Tickets extends MY_Controller
         $this->load->model('Contacts_model');
         $this->load->model('SettingsPlanType_model');
         $this->load->model('PanelType_model');
+        $this->load->model('Invoice_settings_model');
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -1817,6 +1818,13 @@ class Tickets extends MY_Controller
         $settingsPlanTypes = $this->SettingsPlanType_model->getAllByCompanyId($company_id);
         $settingPanelTypes = $this->PanelType_model->getAllByCompanyId($company_id);
 
+        $invoiceSettings        = $this->Invoice_settings_model->getByCompanyId($company_id);
+        $industrySpecificFields = $this->Invoice_settings_model->industrySpecificFields(logged('industry_type'));   
+        $disabled_industry_specific_fields = [];
+        if( $invoiceSettings && $invoiceSettings->disable_industry_specific_fields != '' ){
+            $disabled_industry_specific_fields = json_decode($invoiceSettings->disable_industry_specific_fields);
+        }
+
         $this->page_data['settingsPlanTypes'] = $settingsPlanTypes;
         $this->page_data['settingPanelTypes'] = $settingPanelTypes;
         $this->page_data['planTypeOptions'] = $planTypeOptions;
@@ -1835,6 +1843,8 @@ class Tickets extends MY_Controller
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['contactRelationshipOptions'] = $contactRelationshipOptions;        
         $this->page_data['time_interval'] = 2;
+        $this->page_data['disabled_industry_specific_fields'] = $disabled_industry_specific_fields;
+        $this->page_data['industrySpecificFields'] = $industrySpecificFields;
         $this->load->view('tickets/ajax_quick_add_service_ticket_form', $this->page_data);
     }
 
