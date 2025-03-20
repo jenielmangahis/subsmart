@@ -1,50 +1,54 @@
-<div class="modal fade nsm-modal fade" id="quick_add_job_type" tabindex="-1" aria-labelledby="quick_add_job_type_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form id="frm-quick-add-job-type">
+<div class="modal fade" id="quick_add_job_type" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="quick_add_job_type_modal_label">Quick Add : Job Type</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                <span class="modal-title content-title" style="font-size: 17px;">Add Job Type</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
             <div class="modal-body">
-                <div class="row">
-                <div class="form-group">
-                    <label class="">Job Type Name</label> <span class="form-required">*</span>
-                    <input type="text" name="job_type_name" value="" class="form-control" required="" autocomplete="off" />
-                </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="nsm-button primary">Save</button>
+                <form id="frm-quick-add-job-type">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="mb-2">Job Type Name</label>
+                            <div class="input-group mb-3">
+                                <input type="text" name="job_type_name" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">                        
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="nsm-button primary">Save</button>
+                    </div>
+                </form>
             </div>
         </div>
-        </form>
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="quick_add_job_tag" tabindex="-1" aria-labelledby="quick_add_job_tag_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form id="frm-quick-add-job-tag">
+<div class="modal fade" id="quick_add_job_tag" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="quick_add_job_tag_modal_label">Quick Add : Job Tag</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                <span class="modal-title content-title" style="font-size: 17px;">Add Job Tag</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
             <div class="modal-body">
-                <div class="row">
-                <div class="form-group">
-                    <label class="">Job Tag Name</label> <span class="form-required">*</span>
-                    <input type="text" name="job_tag_name" value="" class="form-control" required="" autocomplete="off" />
-                </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="nsm-button primary">Save</button>
+                <form id="frm-quick-add-job-tag">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="mb-2">Job Tag Name</label>
+                            <div class="input-group mb-3">
+                                <input type="text" name="job_tag_name" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">                        
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="nsm-button primary">Save</button>
+                    </div>
+                </form>
             </div>
         </div>
-        </form>
     </div>
 </div>
 
@@ -74,18 +78,22 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="quick_add_tax_rate" tabindex="-1" aria-labelledby="quick_add_tax_rate_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <form id="frm-quick-add-tax-rate">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="modal-title content-title" id="new_tax_rate_modal_label">Quick Add : Tax Rate</span>
+                    <span class="modal-title content-title" id="new_tax_rate_modal_label">Add Tax Rate</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-12 mb-2">
+                        <div class="form-group">
+                            <label class="">Name</label> <span class="form-required">*</span>
                             <input type="text" placeholder="Name" name="tax_name" class="nsm-field form-control mb-2" required />
-                            <input type="number" placeholder="Percentage" name="tax_rate" min="0" step="any" class="nsm-field form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="">Rate</label> <span class="form-required">*</span>
+                            <input type="number" placeholder="Percentage" name="tax_rate" step="any" class="nsm-field form-control" required />
                         </div>
                     </div>
                 </div>
@@ -117,10 +125,10 @@ $(function(){
             success: function(result) {
                 if( result.is_success == 1 ){
                     $('#quick_add_job_type').modal('hide');                    
-                    var o = $("<option/>", {value: result.job_type.id, text: result.job_type.name});
+                    var o = $("<option/>", {value: result.job_type.name, text: result.job_type.name});
                     o.attr('data-image', result.job_type.icon_marker);
                     $('#job_type').append(o);
-                    $('#job_type option[value="' + result.job_type.id + '"]').prop('selected',true);
+                    $('#job_type option[value="' + result.job_type.name + '"]').prop('selected',true);
                     $('#job_type').trigger('change'); 
 
                     Swal.fire({
