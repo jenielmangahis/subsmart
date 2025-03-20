@@ -1,7 +1,7 @@
 <div class="nsm-page-nav">
     <ul>
         <!-- <li class="<?php echo ($page_title == 'Accounting Dashboard') ? 'active' : '' ; ?>"> -->
-        <li class="<?php echo ($page_title == 'Banking') ? 'active' : '' ; ?>">
+        <li class="<?php echo ($page_title == 'Banking' || $page->title == 'Sales Tax' || $page->title == 'Payroll Tax' || $page->title == '1099 Filings') ? 'active' : '' ; ?>">
             <a class="nsm-page-link" href="/accounting/banking">
                 <i class='bx bx-fw bx-calendar-event'></i>
                 <span>Accounting Dashboard</span>

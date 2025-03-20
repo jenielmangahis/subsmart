@@ -246,8 +246,8 @@
                                     <input class="form-check-input table-select select-all-tasks check-input-all-tasks" id="check-input-all-tasks" type="checkbox">
                                 </td>
                                 <td class="table-icon"></td>
-                                <td data-name="Subject" style="width:35%;">Task</td>     
-                                <td data-name="Assigned" style="width:20%;">Assigned To</td>           
+                                <td data-name="Title" style="width:30%;">Task</td>     
+                                <td data-name="Assigned" style="width:15%;">Assigned To</td>           
                                 <td data-name="Priority">Priority</td>
                                 <td data-name="Status">Status</td>
                                 <td data-name="Due Date">Due Date</td>

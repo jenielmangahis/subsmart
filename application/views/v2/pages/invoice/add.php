@@ -297,29 +297,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                             <input type="number" step="any" min="0" class="form-control" id="total_tax_input" name="taxes" value="0.00" required="" style="width:50%;text-align:right;" />
                                                         </td>
                                                     </tr>
-                                                    <?php if(checkIndustryAllowedSpecificField('installation_cost')){ ?>
-                                                    <tr>
-                                                        <td class="bold">Installation Cost</td>
-                                                        <td colspan="2" align="right">
-                                                            <input type="number" step="any" min="0" class="form-control" id="adjustment_ic" name="installation_cost" value="0.00" required="" style="width:50%;text-align:right;" />
-                                                        </td>
-                                                    </tr>
-                                                    <?php } ?>
-                                                    <?php if(checkIndustryAllowedSpecificField('one_time_program_setup')){ ?>
-                                                    <tr>
-                                                        <td class="bold">One time (Program and Setup)</td>
-                                                        <td colspan="2" align="right">
-                                                            <input type="number" step="any" min="0" class="form-control" id="otps" name="program_setup" value="0.00" required="" style="width:50%;text-align:right;" />
-                                                        </td>
-                                                    </tr>
-                                                    <?php } ?>
-                                                    <?php if(checkIndustryAllowedSpecificField('monitoring_rate')){ ?>
-                                                    <tr>
-                                                        <td class="bold">Monthly Monitoring</td>
-                                                        <td colspan="2" align="right">
-                                                            <input type="number" step="any" min="0" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="0.00" required="" style="width:50%;text-align:right;" />
-                                                        </td>
-                                                    </tr>
+                                                    <?php if( $industrySpecificFields && array_key_exists('installation_cost', $industrySpecificFields) ){ ?>
+                                                        <?php if( !in_array('installation_cost', $disabled_industry_specific_fields) ){ ?>
+                                                        <tr>
+                                                            <td class="bold">Installation Cost</td>
+                                                            <td colspan="2" align="right">
+                                                                <input type="number" step="any" min="0" class="form-control" id="adjustment_ic" name="installation_cost" value="0.00" required="" style="width:50%;text-align:right;" />
+                                                            </td>
+                                                        </tr>
+                                                        <?php } ?>
+                                                    <?php } ?>                                                    
+                                                    <?php if( $industrySpecificFields && array_key_exists('otps', $industrySpecificFields) ){ ?>
+                                                        <?php if( !in_array('otps', $disabled_industry_specific_fields) ){ ?>
+                                                        <tr>
+                                                            <td class="bold">One time (Program and Setup)</td>
+                                                            <td colspan="2" align="right">
+                                                                <input type="number" step="any" min="0" class="form-control" id="otps" name="program_setup" value="0.00" required="" style="width:50%;text-align:right;" />
+                                                            </td>
+                                                        </tr>
+                                                        <?php } ?>
+                                                    <?php } ?>                                                                                                        
+                                                    <?php if( $industrySpecificFields && array_key_exists('monthly_monitoring_rate', $industrySpecificFields) ){ ?>
+                                                        <?php if( !in_array('monthly_monitoring_rate', $disabled_industry_specific_fields) ){ ?>
+                                                        <tr>
+                                                            <td class="bold">Monthly Monitoring</td>
+                                                            <td colspan="2" align="right">
+                                                                <input type="number" step="any" min="0" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="0.00" required="" style="width:50%;text-align:right;" />
+                                                            </td>
+                                                        </tr>
+                                                        <?php } ?>
                                                     <?php } ?>
                                                     <tr>
                                                         <td>

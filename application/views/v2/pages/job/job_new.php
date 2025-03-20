@@ -1067,40 +1067,45 @@
                                                         </div>
                                                     </div>
                                                     <?php //if( in_array($cid, adi_company_ids()) ){ ?>
-                                                        <?php if(checkIndustryAllowedSpecificField('installation_cost')){ ?>
-                                                        <div class="row mt-3">
-                                                            <div class="col-sm-6">
-                                                                <label>Installation Cost</label>
+                                                        <?php if( $industrySpecificFields && array_key_exists('installation_cost', $industrySpecificFields) ){ ?>
+                                                            <?php if( !in_array('installation_cost', $disabled_industry_specific_fields) ){ ?>
+                                                            <div class="row mt-3">
+                                                                <div class="col-sm-6">
+                                                                    <label>Installation Cost</label>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input type="number" step="any" min="0" class="form-control" id="adjustment_ic" name="installation_cost" value="<?= isset($jobs_data) ? $jobs_data->installation_cost : '0.00'; ?>" required="" />
+                                                                </div>
                                                             </div>
-                                                            <div class="col-sm-3">
-                                                                <input type="number" step="any" min="0" class="form-control" id="adjustment_ic" name="installation_cost" value="<?= isset($jobs_data) ? $jobs_data->installation_cost : '0.00'; ?>" required="" />
-                                                            </div>
-                                                        </div>
+                                                            <?php } ?>
                                                         <?php } ?>
-                                                        <?php if(checkIndustryAllowedSpecificField('one_time_program_setup')){ ?>
-                                                        <div class="row mt-2">
-                                                            <div class="col-sm-6">
-                                                                <label>One time (Program and Setup)</label>
+
+                                                        <?php if( $industrySpecificFields && array_key_exists('otps', $industrySpecificFields) ){ ?>
+                                                            <?php if( !in_array('otps', $disabled_industry_specific_fields) ){ ?>
+                                                            <div class="row mt-2">
+                                                                <div class="col-sm-6">
+                                                                    <label>One time (Program and Setup)</label>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input type="number" step="any" min="0" class="form-control" id="adjustment_otps" name="otps" value="<?= isset($jobs_data) ? $jobs_data->program_setup : '0.00'; ?>" required="" />
+                                                                </div>
                                                             </div>
-                                                            <div class="col-sm-3">
-                                                                <input type="number" step="any" min="0" class="form-control" id="adjustment_otps" name="otps" value="<?= isset($jobs_data) ? $jobs_data->program_setup : '0.00'; ?>" required="" />
-                                                            </div>
-                                                        </div>
+                                                            <?php } ?>
                                                         <?php } ?>
-                                                        <?php if(checkIndustryAllowedSpecificField('monitoring_rate')){ ?>
-                                                        <div class="row mt-2 mb-2">
-                                                            <div class="col-sm-6">
-                                                                <label>Monthly Monitoring</label>
+                                                        <?php if( $industrySpecificFields && array_key_exists('monthly_monitoring_rate', $industrySpecificFields) ){ ?>
+                                                            <?php if( !in_array('monthly_monitoring_rate', $disabled_industry_specific_fields) ){ ?>
+                                                            <div class="row mt-2 mb-2">
+                                                                <div class="col-sm-6">
+                                                                    <label>Monthly Monitoring</label>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <input type="number" step="any" min="0" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="<?= isset($jobs_data) ? $jobs_data->monthly_monitoring : '0.00'; ?>" required="" />
+                                                                </div>
                                                             </div>
-                                                            <div class="col-sm-3">
-                                                                <input type="number" step="any" min="0" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="<?= isset($jobs_data) ? $jobs_data->monthly_monitoring : '0.00'; ?>" required="" />
-                                                            </div>
-                                                        </div>
+                                                            <?php } ?>
                                                         <?php } ?>
                                                     <?php //} ?>
-                                                    <div class="row">
-                                                        <hr>
-                                                    </div>                                                    
+                                                    <div class="mt-2"><hr /></div>                                                    
                                                     <?php if( $estimate_dp_amount > 0 ){ ?>
                                                         <div class="row">
                                                             <div class="col-sm-6">
