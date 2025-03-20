@@ -1,7 +1,7 @@
 <style>
     #voice-recorder {
         position: fixed;
-        bottom: 20px;
+        bottom: 100px;
         right: 10px;
         display: flex;
         align-items: center;

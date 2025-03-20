@@ -1487,16 +1487,16 @@
                 $('#delete-upcoming-schedule').attr('data-id', appointment_id);
                 $('#delete-upcoming-schedule').attr('data-ordernum', order_number);
 
-                if( appointment_type != 'job' ){
-                    $('#send-esign').css('display', 'none');
-                }else{
+                if( appointment_type == 'job' ){
                     $('#send-esign').css('display', 'inline-block');
+                }else{
+                    $('#send-esign').css('display', 'none');
                 }
 
-                if( appointment_type != 'service_ticket' ){
-                    $('#send-ticket-esign').css('display', 'none');
-                }else{
+                if( appointment_type == 'service_ticket' || appointment_type == 'ticket' ){
                     $('#send-ticket-esign').css('display', 'inline-block');
+                }else{
+                    $('#send-ticket-esign').css('display', 'none');                    
                 }
 
                 showLoader($(".view-schedule-container")); 
@@ -2388,6 +2388,18 @@
         $('#delete-upcoming-schedule').attr('data-type', appointment_type);
         $('#delete-upcoming-schedule').attr('data-id', appointment_id);
         $('#delete-upcoming-schedule').attr('data-ordernum', order_number);
+
+        if( appointment_type == 'job' ){
+            $('#send-esign').css('display', 'inline-block');
+        }else{
+            $('#send-esign').css('display', 'none');
+        }
+
+        if( appointment_type == 'service_ticket' || appointment_type == 'ticket' ){
+            $('#send-ticket-esign').css('display', 'inline-block');
+        }else{
+            $('#send-ticket-esign').css('display', 'none');                    
+        }
 
         showLoader($(".view-schedule-container")); 
 
