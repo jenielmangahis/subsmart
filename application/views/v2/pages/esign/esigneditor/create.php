@@ -28,7 +28,7 @@ include viewPath('v2/includes/header');
             <div class="form-group mb-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <label for="category">Category</label>
-                    <a class="link nsm-link" href="#" data-toggle="modal" data-bs-toggle="modal" data-target="#manageTemplateModal" data-bs-target="#manageTemplateModal">Manage template categories</a>
+                    <a class="nsm-button btn-small" href="#" data-toggle="modal" data-bs-toggle="modal" data-target="#manageTemplateModal" data-bs-target="#manageTemplateModal">Manage template categories</a>
                 </div>
                 <select class="form-control" id="category" data-name="category_id"></select>
             </div>
@@ -50,6 +50,20 @@ include viewPath('v2/includes/header');
                 <input class="form-control" id="title" data-name="title">
             </div>
             <div class="form-group mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <a class="nsm-button btn-small" style="margin-left:0px;" href="javascript:void(0);" data-toggle="modal" data-bs-toggle="modal" data-bs-target="#createPlaceholderModal">
+                        Manage template placeholders
+                    </a>
+                    <div style="width:25%;">
+                    <select id="use-placeholder" class="form-select">
+                        <option value="">Add placeholder</option>
+                        <?php foreach($placeholders as $p){ ?>
+                            <option value="{<?= $p->code; ?>}"><?= $p->description; ?></option>
+                        <?php } ?>
+                    </select>
+                    </div>
+                </div>
+                
                 <textarea class="form-control" id="letter"></textarea>
             </div>
             <div class="mt-3">
@@ -61,17 +75,6 @@ include viewPath('v2/includes/header');
                 </button>
             </div>
         </form>
-
-        <fieldset>
-            <legend class="d-flex justify-content-between align-items-center">
-                <h2>Placeholders</h2>
-
-                <a class="link nsm-link" href="#" data-toggle="modal" data-bs-toggle="modal" data-bs-target="#createPlaceholderModal">
-                    Manage template placeholders
-                </a>
-            </legend>
-            <ul class="placeholders__list" id="placeholders"></ul>
-        </fieldset>
     </div>
 </div>
 
@@ -124,7 +127,7 @@ include viewPath('v2/includes/header');
 </div>
 
 <div class="modal fade nsm-modal" id="createPlaceholderModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Manage Template Placeholders</h5>
@@ -134,20 +137,45 @@ include viewPath('v2/includes/header');
       </div>
       <div class="modal-body">
         <form id="addPlaceholderForm">
-            <div class="form-group mb-3">
-                <label>Code</label>
-                <input data-name="code" class="form-control" placeholder="Enter code">
-                <small class="form-text text-muted">Only alphanumeric and underscore characters are allowed.</small>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="nsm-card primary">
+                        <div class="nsm-card-header">
+                            <div class="nsm-card-title">
+                                <span><i class="bx bx-fw bx-plus"></i>Add New</span>
+                            </div>
+                        </div>
+                        <div class="nsm-card-content">
+                            <div class="form-group mb-3">
+                                <label>Code</label>
+                                <input data-name="code" class="form-control" placeholder="Enter code">
+                                <small class="form-text text-muted">Only alphanumeric and underscore characters are allowed.</small>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Description</label>
+                                <input data-name="description" class="form-control" placeholder="Enter description">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Value</label>
+                                <input data-name="value" class="form-control" placeholder="Enter value">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="nsm-card primary">
+                        <div class="nsm-card-header">
+                            <div class="nsm-card-title">
+                                <span><i class='bx bx-fw bx-list-ul'></i>Placeholders</span>
+                            </div>
+                        </div>
+                        <div class="nsm-card-content">
+                            <ul class="placeholders__list" id="userplaceholders"></ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group mb-3">
-                <label>Description</label>
-                <input data-name="description" class="form-control" placeholder="Enter description">
-            </div>
-            <div class="form-group mb-3">
-                <label>Value</label>
-                <input data-name="value" class="form-control" placeholder="Enter value">
-            </div>
-            <div class="d-flex justify-content-end">
+            <div class="mt-2 d-flex justify-content-end">
                 <button type="button" class="nsm-button primary esigneditor__btn">
                     <div class="spinner-border spinner-border-sm" role="status">
                         <span class="sr-only">Loading...</span>
@@ -156,11 +184,6 @@ include viewPath('v2/includes/header');
                 </button>
             </div>
         </form>
-
-        <div class="mt-4 d-none">
-            <h6>My Placeholders</h6>
-            <ul class="placeholders__list" id="userplaceholders"></ul>
-        </div>
       </div>
 
   </div>
@@ -171,7 +194,20 @@ include viewPath('v2/includes/header');
         padding: 0;
         list-style-type: none;
     }
+    .select-placeholder{
+        width:40%;
+    }
 </style>
-
+<script>
+$(function(){
+    $('#use-placeholder').select2({width   : 'element'});
+    $('#use-placeholder').on('change', function(e){
+        e.preventDefault();
+        let placeholder = $(this).val();
+        $("#letter").summernote('insertText', placeholder);
+        $('#use-placeholder').val('').select2('destroy').select2();
+    });
+});
+</script>
 <?php include viewPath('v2/includes/footer');?>
 

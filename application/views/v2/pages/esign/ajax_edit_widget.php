@@ -95,6 +95,7 @@ $(function(){
     var editOptionCompanyFields  = <?= json_encode($optionCompanyFields); ?>;
     var editOptionInvoiceFields  = <?= json_encode($optionInvoiceFields); ?>;   
     var editOptionJobFields      = <?= json_encode($optionJobFields); ?>; 
+    var editOptionCustomerEmergencyContacts = <?= json_encode($optionCustomerEmergencyContacts); ?>;
 
     $('.edit-default-dropdown').select2({
         dropdownParent: $("#modal-edit-tags")
@@ -130,6 +131,11 @@ $(function(){
         }else if( selected == 'Job' ){
             $el.empty(); 
             $.each(editOptionJobFields, function(key,value) {                
+                $el.append($("<option></option>").attr("value", key).text(value));
+            });
+        }else if( selected == 'Customer Emergency Contacts' ){
+            $el.empty(); 
+            $.each(editOptionCustomerEmergencyContacts, function(key,value) {                
                 $el.append($("<option></option>").attr("value", key).text(value));
             });
         }

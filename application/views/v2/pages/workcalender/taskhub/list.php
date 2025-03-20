@@ -26,12 +26,14 @@
             </div>
             <span class="nsm-fab-label">Search Task</span>
         </li> -->
+        <?php if( checkRoleCanAccessModule('taskhub', 'write') ){ ?>  
         <li onclick="location.href='<?php echo base_url('taskhub/create') ?>'">
             <div class="nsm-fab-icon">
                 <i class="bx bx-user-plus"></i>
             </div>
             <span class="nsm-fab-label">Add Task</span>
         </li>
+        <?php } ?>
     </ul>
 </div>
 
@@ -203,7 +205,7 @@
                                 </div>
                             </ul>                            
 
-                            
+                            <?php if( checkRoleCanAccessModule('taskhub', 'write') ){ ?>  
                             <div class="dropdown d-inline-block">
                                 <input type="hidden" class="nsm-field form-control" id="selected_ids">
                                 <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
@@ -217,15 +219,16 @@
                                     <li><a class="dropdown-item dropdown-item-delete disabled" href="javascript:void(0);" id="btn-delete-tasks"><i class='bx bx-fw bx-trash'></i> Delete</a></li>
                                 </ul>
                             </div>
-
-                            <?php //if( $selected_customer_id == 0 ){ ?>
+                            <?php } ?>
+                            
                             <!-- <button name="btn_clear" type="button" class="nsm-button btn-clear-all">
                                 <i class='bx bx-fw bx-check'></i> Clear All
                             </button> -->
+                            <?php if( checkRoleCanAccessModule('taskhub', 'write') ){ ?>  
                             <button name="btn_add" type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('taskhub/create'); ?>'">
                                 <i class='bx bx-fw bx-plus'></i> Add Task
                             </button>
-                            <?php //} ?>
+                            <?php } ?>
                             <!-- <button name="btn_search" type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-search'></i> Search Task
                             </button> -->
@@ -268,7 +271,7 @@
                                             </div>
                                         </td>
                                         <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo url('taskhub/view/' . $row->task_id) ?>'">
-                                            <?php echo $row->subject != '' ? $row->subject : $row->title; ?>
+                                            <?php echo $row->title; ?>
                                         </td>   
                                         <td>
                                             <div class="d-flex align-items-center">                
@@ -354,10 +357,9 @@
                                             <?php 
                                                 $dude_date = "--";
                                                 if($row->date_due != NULL) {
-                                                    $dude_date = date("F d, Y", strtotime($row->date_due));
-                                                } else {
-                                                    //$dude_date = date("F d, Y", strtotime($row->date_due));
+                                                    $dude_date = date("m/d/Y", strtotime($row->date_due));
                                                 }
+
                                                 echo $dude_date;
                                             ?>
                                         </td>
@@ -366,30 +368,33 @@
                                             <?php 
                                                 $date_completed = '--';
                                                 if($row->date_completed != null) {
-                                                    $date_completed = date("F d, Y", strtotime($row->date_completed));
+                                                    $date_completed = date("m/d/Y", strtotime($row->date_completed));
                                                 }
                                                 echo $date_completed;
                                             ?>
                                         </td>
-                                        <td><?php echo date("F d, Y", strtotime($row->date_created)); ?></td>
+                                        <td><?php echo date("m/d/Y", strtotime($row->date_created)); ?></td>
                                         <td>
                                             <div class="dropdown table-management">
                                                 <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-end">
+                                                    <?php if( checkRoleCanAccessModule('taskhub', 'write') ){ ?>  
+                                                        <li>
+                                                            <a class="dropdown-item" name="dropdown_edit" href="<?php echo url('taskhub/edit/' . $row->task_id) ?>">Edit</a>
+                                                        </li>
+                                                        <?php if( $row->status != 'Done' && $row->status != 'Closed' ){ ?>
+                                                        <li>
+                                                            <a class="dropdown-item btn-complete-task" name="dropdown_completed" href="javascript:void(0);" data-title="<?= $row->title; ?>" data-id="<?= $row->task_id; ?>">Mark Completed</a>
+                                                        </li>
+                                                        <?php } ?>
+                                                    <?php } ?>
+                                                    <?php if( checkRoleCanAccessModule('taskhub', 'delete') ){ ?>  
                                                     <li>
-                                                        <a class="dropdown-item" name="dropdown_edit" href="<?php echo url('taskhub/edit/' . $row->task_id) ?>">Edit</a>
+                                                        <a class="dropdown-item btn-delete-task" href="javascript:void(0);" data-title="<?= $row->title; ?>" data-id="<?= $row->task_id; ?>">Delete</a>
                                                     </li>
-                                                    <li>
-                                                        <a class="dropdown-item btn-delete-task" href="javascript:void(0);" data-subject="<?= $row->subject; ?>" data-id="<?= $row->task_id; ?>">Delete</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item btn-complete-task" name="dropdown_completed" href="javascript:void(0);" data-subject="<?= $row->subject; ?>" data-id="<?= $row->task_id; ?>">Mark Completed</a>
-                                                    </li>
-                                                    <!-- <li>
-                                                        <a class="dropdown-item" name="dropdown_updated" href="<?php echo url('taskhub/addupdate/' . $row->task_id) ?>">Add Update</a>
-                                                    </li> -->
+                                                    <?php } ?>                                                    
                                                     <li>
                                                         <a class="dropdown-item" name="dropdown_view_comments" href="<?php echo url('taskhub/view/' . $row->task_id) ?>">View</a>
                                                     </li>
@@ -426,6 +431,7 @@
             _form.submit();
         }, 1000));        
 
+        <?php if( checkRoleCanAccessModule('taskhub', 'write') ){ ?>  
         $("#btn-mark-completed").on("click", function() {
 
             Swal.fire({
@@ -521,12 +527,14 @@
                 }
             });
         });
+        <?php } ?>
 
+        <?php if( checkRoleCanAccessModule('taskhub', 'delete') ){ ?>  
         $("#btn-delete-tasks").on("click", function() {
 
             Swal.fire({
                 title: 'Delete All',
-                text: "This will delete all selected tasks. Proceed with action?",
+                html: "This will delete all selected tasks. Proceed with action?",
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -569,14 +577,16 @@
                 }
             });
         });        
+        <?php } ?>
 
+        <?php if( checkRoleCanAccessModule('taskhub', 'write') ){ ?>  
         $(document).on("click", ".btn-complete-task", function() {
             let id = $(this).attr('data-id');
-            let subject = $(this).attr("data-subject");
+            let title = $(this).attr("data-title");
 
             Swal.fire({
                 title: 'Complete Task',
-                text: "Are you sure you want to mark as completed task: " + subject + "?",
+                text: "Are you sure you want to mark as completed task: " + title + "?",
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -622,14 +632,16 @@
                 }
             });
         });
+        <?php } ?>
 
+        <?php if( checkRoleCanAccessModule('taskhub', 'delete') ){ ?>  
         $(document).on("click", ".btn-delete-task", function() {
             let id = $(this).attr('data-id');
-            let subject = $(this).attr("data-subject");
+            let title = $(this).attr("data-title");
 
             Swal.fire({
                 title: 'Delete Task',
-                text: "Are you sure you want to delete task: " + subject + "?",
+                html: "Are you sure you want to delete task: <b>" + title + "</b>?",
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -675,6 +687,7 @@
                 }
             });
         });
+        <?php } ?>
 
         $('#apply-filter-subtask-button').on('click', function() {
             var filterType = $('.filter-task-hub-type').val();            

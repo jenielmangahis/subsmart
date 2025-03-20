@@ -21,6 +21,13 @@ class EsignEditor_v2 extends MY_Controller
 
     public function create()
     {
+        $this->load->model('EditorPlaceholder_model');
+
+        if(!checkRoleCanAccessModule('esign', 'read')){
+            show403Error();
+            return false;
+        }
+
         add_css([
             'assets/textEditor/summernote-bs4.css',
             'assets/css/esign/esign-editor/esign-editor.css',
@@ -31,12 +38,21 @@ class EsignEditor_v2 extends MY_Controller
             'assets/js/esign/esigneditor/v2/create.js',
         ]);
 
-        $this->page_data['page']->title = 'Add Letter';
+        $cid = logged('company_id');
+        $placeholders = $this->EditorPlaceholder_model->getAllByCompanyId($cid);
+        
+        $this->page_data['page']->title  = 'Add Letter';
+        $this->page_data['placeholders'] = $placeholders;
         $this->load->view('v2/pages/esign/esigneditor/create', $this->page_data);
     }
 
     public function letters()
     {
+        if(!checkRoleCanAccessModule('esign', 'read')){
+            show403Error();
+            return false;
+        }
+
         add_css([
             'assets/css/esign/esign-editor/esign-editor.css',
             'https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css',
@@ -45,14 +61,13 @@ class EsignEditor_v2 extends MY_Controller
         add_footer_js([
             'assets/js/esign/esigneditor/v2/letters.js',
             'assets/js/v2/main.js',
-            'https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js',
-
+            //'https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.6/purify.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
         ]);
-
+        
         $this->page_data['page']->title = 'eSign Editor Letters';
         $this->load->view('v2/pages/esign/esigneditor/letters', $this->page_data);
     }
@@ -670,10 +685,14 @@ SQL;
 
     public function apiSeedPlaceholders()
     {
+        $cid = logged('company_id');
+        $user_id = logged('id');
+
         $placeholders = $this->getPlaceholders(null, true);
-        $placeholders = array_map(function ($placeholder) {
-            return ['code' => $placeholder['code'], 'description' => $placeholder['description']];
+        $placeholders = array_map(function ($placeholder) use($cid, $user_id) {
+            return ['code' => $placeholder['code'], 'description' => $placeholder['description'], 'company_id' => logged('company_id'), 'user_id' => $user_id];
         }, $placeholders);
+
         $this->db->insert_batch('esign_editor_placeholders', $placeholders);
     }
 

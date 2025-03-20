@@ -67,7 +67,7 @@
                                 <?php foreach ($updates_and_comments as $key => $value) { ?>
                                     <?php $image = userProfilePicture($value->user_id); ?>
                                     <div class="card my_card" style="margin-bottom: 11px;border: 1px solid #6a4a86;">
-                                        <div class="card-header" style="background-color: #f1f8ff; border-bottom-color: #6a4a86 !important;">
+                                        <div class="card-header" style="background-color: #6a4a86; color:#ffffff; border-bottom-color: #6a4a86 !important;">
                                             <?php 
                                                 $date_updated = date_create($value->update_date);
                                                 $date_updated = date_format($date_updated, "F d, Y h:i:s");
@@ -76,7 +76,11 @@
                                             <p style="margin-bottom: 0 !important">
                                                 <img src="<?php echo $image; ?>" alt="<?php echo $value->user; ?>" class="img-thumbnail" style="width:25px;">
                                                 <strong><?php echo $value->user; ?></strong>
-                                                <a href="javascript:void(0)" onClick="javascript:deleteComment(<?php echo $value->comment_id; ?>, <?php echo $taskHub->task_id; ?>);" class="" style="float:right; margin-left: 3px;"><i style="" class="bx bx-fw bx-trash"></i></a>
+
+                                                <?php if( checkRoleCanAccessModule('taskhub', 'delete') ){ ?>  
+                                                <a href="javascript:void(0)" onClick="javascript:deleteComment(<?php echo $value->comment_id; ?>, <?php echo $taskHub->task_id; ?>);" class="" style="float:right; margin-left: 10px;"><i style="color:#ffffff;" class="bx bx-fw bx-trash"></i></a>
+                                                <?php } ?>
+
                                                 <span style="float:right;"><?= $date_updated; ?></span>
                                             </p>
                                         </div>
@@ -173,21 +177,16 @@
                                                 
                                             </tbody>
                                         </table>
-
-                                        <div class="card my_card" id="card_add_comment">
-                                            <div class="card-header">
-                                                <h4><i class="fa fa-comment-o"></i>&ensp;Add Comment</h4>
+                                        <?php if( checkRoleCanAccessModule('taskhub', 'write') ){ ?> 
+                                            <hr />
+                                            <div class="form-group" style="margin-bottom: 1rem !important">
+                                                <textarea class="form-control" name="comment" id="comment" autocomplete="off" style="height: 300px !important" placeholder="Write your comment"></textarea>
                                             </div>
-                                            <div class="card-body" style="padding-bottom: 1.25rem !important">
-                                                <div class="form-group" style="margin-bottom: 1rem !important">
-                                                    <textarea class="form-control" name="comment" id="comment" autocomplete="off" style="height: 300px !important" placeholder="Place your comment here..."></textarea>
-                                                </div>
-                                                <div class="col-12 mt-3 text-end">
-                                                    <button type="submit" name="btn_back" class="nsm-button" onclick="location.href='<?php echo url('taskhub') ?>'">Go Back to TaskHub List</button>
-                                                    <button type="button" name="btn_save" class="nsm-button primary" id="btnAddComment">Submit</button>
-                                                </div>
+                                            <div class="col-12 mt-3 text-end">
+                                                <button type="submit" name="btn_back" class="nsm-button" onclick="location.href='<?php echo url('taskhub') ?>'">Go Back to TaskHub List</button>
+                                                <button type="button" name="btn_save" class="nsm-button primary" id="btnAddComment">Submit</button>
                                             </div>
-                                        </div>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>

@@ -167,6 +167,18 @@ class Invoice_settings_model extends MY_Model
 //        echo $this->db->last_query(); die;
         return $query->result();
     }
+
+    public function industrySpecificFields($industry_type)
+    {   
+        //Refer to industry_templates table
+        $specific_fields = [];
+
+        if( $industry_type == 'Alarm Industry' || $industry_type == 'Universal' ){ 
+            $specific_fields = ['otps' => 'One Time Program Setup', 'monthly_monitoring_rate' => 'Monthly Monitoring Rate', 'installation_cost' => 'Installation Cost'];
+        }
+
+        return $specific_fields;
+    }
 }
 
 /* End of file Invoice_model.php */

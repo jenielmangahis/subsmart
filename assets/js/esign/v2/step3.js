@@ -133,7 +133,6 @@ function Step3() {
     let widget_type = $subdata.data('widget-type');
     let widget_field = $subdata.data('widget-field');
     let fieldName = $element.text().trim();
-    console.log($subdata);
 
     if ($subdata.attr("data-field-name")) {
       fieldName = $subdata.attr("data-field-name");
@@ -148,7 +147,7 @@ function Step3() {
       }
     }
 
-    if (fieldName === "Text") {
+    if (fieldName === "Text" || (fieldName !== "Radio" && fieldName !== "Checkbox" && fieldName !== "Attachment" && fieldName !== "Approve" && fieldName !== "Decline" )) {
       specs = { ...specs, width: parseInt($element.css("width"), 10) };
     }
 
@@ -192,6 +191,16 @@ function Step3() {
       payload.template_id = fileId;
     }
 
+    if( payload.widget_field == 'Text' ){
+      let element = document.querySelectorAll(`[data-key='${payload.unique_key}']`);
+      if( typeof payload.specs.placeholder != 'undefined' && payload.specs.placeholder != '' ){        
+        console.log('element', element);
+        element[0].innerHTML = `<span>${payload.specs.placeholder}</span>`;
+      }else{
+        element[0].innerHTML = `<span>Text</span>`;;
+      } 
+    }
+
     const response = await fetch(endpoint, {
       method: "POST",
       body: JSON.stringify(payload),
@@ -211,6 +220,8 @@ function Step3() {
         field.unique_key != payload.unique_key ? field : record
       );
     }
+
+    //
   }
 
   async function getFields() {
@@ -492,6 +503,11 @@ function Step3() {
     field.field_name = fieldName;
     field.unique_key = uniqueKey;
 
+    let element_text = fieldName;
+    if( typeof specs.placeholder != 'undefined' && specs.placeholder != '' && widget_autopopulate_field_name == 'Text' ){     
+      element_text = specs.placeholder;
+    }
+
     const rgba = hexToRGB(color, specs.is_required ? 0.7 : 0.3);
 
     const html = `
@@ -500,7 +516,7 @@ function Step3() {
         style="left: ${left}px; top: ${top}px; --color: ${rgba}"
       >
         <div class="subData" data-widget-type="${widget_type}" data-widget-field="${widget_autopopulate_field_name}">
-          <span>${fieldName}</span>
+          <span>${element_text}</span>
         </div>
       </div>
     `;
@@ -623,7 +639,7 @@ function Step3() {
     const activeClass = "esignBuilder__field--active";
     const hasOption = true;
 
-    if (fieldName === "Text") {
+    if (fieldName === "Text" || (fieldName !== "Radio" && fieldName !== "Checkbox" && fieldName !== "Attachment" && fieldName !== "Approve" && fieldName !== "Decline" )) {
       let { specs } = field;
       specs = specs ? JSON.parse(specs) : { width: "initial" };
 
@@ -809,19 +825,18 @@ function Step3() {
           console.log($_document);
           return;
         }
-
+        
         const $item = $(ui.helper).clone();
         const widget_type  = $item.attr('data-type');
         const widget_autopopulate_field_name = $item.attr('data-key');
-        const color = getRecipientColor();
-        console.log(widget_autopopulate_field_name);
+        const color = getRecipientColor();        
         const $element = createField({
           coordinates: JSON.stringify(ui.position),
           field_name: $item.text(),
           color,
           isNew: true,
           widget_type: widget_type,
-          widget_autopopulate_field_name: widget_autopopulate_field_name          
+          widget_autopopulate_field_name: widget_autopopulate_field_name      
         });
 
         $_document.append($element);
@@ -836,7 +851,7 @@ function Step3() {
     });
 
     if (isTemplate) {
-      $formSubmit.text("Save Template");
+      $formSubmit.text("Save Changes");
     }
 
     const setColor = (color) => {

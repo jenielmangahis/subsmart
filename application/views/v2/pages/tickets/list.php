@@ -131,7 +131,7 @@
                 </div>
                 <form id="frm-with-selected">
                     <input type="hidden" value="" id="change-status" name="change_status" />
-                    <table class="nsm-table" id="ticket-list-table">
+                    <table class="nsm-table1" id="ticket-list-table">
                         <thead>
                             <tr>
                                 <td class="table-icon text-center">
