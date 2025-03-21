@@ -3,21 +3,21 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 
 <style>
-    .nsm-table {
-        /*display: none;*/
-    }
-    .nsm-badge.primary-enhanced {
-        background-color: #6a4a86;
-    }
-        table {
-        width: 100% !important;
-    }
-    .dataTables_filter, .dataTables_length{
-        display: none;
-    }
-    table.dataTable thead th, table.dataTable thead td {
-    padding: 10px 18px;
-    border-bottom: 1px solid lightgray;
+.nsm-table {
+    /*display: none;*/
+}
+.nsm-badge.primary-enhanced {
+    background-color: #6a4a86;
+}
+    table {
+    width: 100% !important;
+}
+.dataTables_filter, .dataTables_length{
+    display: none;
+}
+table.dataTable thead th, table.dataTable thead td {
+padding: 10px 18px;
+border-bottom: 1px solid lightgray;
 }
 table.dataTable.no-footer {
      border-bottom: 0px solid #111; 
@@ -32,6 +32,21 @@ table.dataTable.no-footer {
 .btn-view-event{
     text-decoration:none;
     color:unset;
+}
+.techs {
+    display: flex;
+    padding-left: 12px;
+}
+.techs > .nsm-profile {
+    border: 2px solid #fff;
+    box-sizing: content-box;
+    margin-left: -12px;
+}
+.nsm-profile {
+    --size: 35px;
+    max-width: var(--size);
+    height: var(--size);
+    min-width: var(--size);
 }
 </style>
 
@@ -112,7 +127,7 @@ table.dataTable.no-footer {
                                 <div class="techs">                   
                                     <?php $attendees = json_decode($event->employee_id); ?>
                                     <?php foreach($attendees as $eid){ ?>
-                                        <div class="nsm-profile me-3" style="background-image: url('<?= userProfileImage($eid); ?>'); width: 40px;"></div>
+                                        <div class="nsm-profile" style="background-image: url('<?= userProfileImage($eid); ?>');"></div>
                                     <?php } ?>            
                                 </div>
                             </td>                            
