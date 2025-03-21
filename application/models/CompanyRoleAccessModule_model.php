@@ -138,7 +138,8 @@ class CompanyRoleAccessModule_model extends MY_Model
             'my-library' => 'My Library',
             'before-after-photos' => 'Before and After Photos',
             'accounting-sales-payroll-taxes' => 'Accounting Sales and Payroll Taxes',        
-            'accounting-1099-filings' => 'Accounting 1099 Filings'        
+            'accounting-1099-filings' => 'Accounting 1099 Filings',
+            'inventory' => 'Inventory'    
         ];  
 
         return $modules;
