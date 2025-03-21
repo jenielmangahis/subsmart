@@ -211,6 +211,21 @@
 <script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://checkout.stripe.com/checkout.js"></script>
+
+<!-- Map files -->
+<!-- <script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
+<script type="text/javascript" src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
+<link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
+<script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/styles/minimal.css" />
+<script src="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/dist/index.min.js"></script> -->
+<!-- End Map files -->
+
 <script type="text/javascript">
 
     var calendar;
@@ -1443,7 +1458,9 @@
                 var appointment_id   = arg.event._def.extendedProps.eventId;
                 var appointment_type = arg.event._def.extendedProps.eventType;
                 var order_number     = arg.event._def.extendedProps.eventOrderNum;
+                var status           = arg.event._def.extendedProps.eventStatus;
 
+                //console.log('props', arg.event._def.extendedProps);
                 if ( appointment_type == 'job' ) {
                     var url = base_url + "job/_quick_view_details";     
                     //$('#upcoming-schedule-view-more-details').show();               
@@ -1487,16 +1504,81 @@
                 $('#delete-upcoming-schedule').attr('data-id', appointment_id);
                 $('#delete-upcoming-schedule').attr('data-ordernum', order_number);
 
+                // Job Status 
+                $('#job-status-arrived').attr('data-type', appointment_type);
+                $('#job-status-arrived').attr('data-id', appointment_id);
+
+                $('#job-status-started').attr('data-type', appointment_type);
+                $('#job-status-started').attr('data-id', appointment_id);
+
+                $('#job-status-finished').attr('data-type', appointment_type);
+                $('#job-status-finished').attr('data-id', appointment_id);
+                $('#job-status-finished').attr('data-ordernum', order_number);
+                // End Job Status
+
+                // Ticket Status
+                // $('#ticket-status-arrived').attr('data-type', appointment_type);
+                // $('#ticket-status-arrived').attr('data-id', appointment_id);
+
+                // $('#ticket-status-started').attr('data-type', appointment_type);
+                // $('#ticket-status-started').attr('data-id', appointment_id);
+
+                // $('#ticket-status-finished').attr('data-type', appointment_type);
+                // $('#ticket-status-finished').attr('data-id', appointment_id);
+                // $('#ticket-status-finished').attr('data-ordernum', order_number);
+                // End Ticket Status
+
                 if( appointment_type == 'job' ){
                     $('#send-esign').css('display', 'inline-block');
+                    if( status == 'Scheduled' ){
+                        $('#job-status-arrived').css('display', 'inline-block');
+                        $('#job-status-started').css('display', 'none');
+                        $('#job-status-finished').css('display', 'none');
+                    }else if( status == 'Arrival' ){
+                        $('#job-status-started').css('display', 'inline-block');
+                        $('#job-status-arrived').css('display', 'none');
+                        $('#job-status-finished').css('display', 'none');
+                    }else if( status == 'Approved' ){
+                        $('#job-status-finished').css('display', 'inline-block');
+                        $('#job-status-started').css('display', 'none');
+                        $('#job-status-arrived').css('display', 'none');
+                    }else{
+                        $('#job-status-arrived').css('display', 'none');
+                        $('#job-status-started').css('display', 'none');
+                        $('#job-status-finished').css('display', 'none');
+                    }
                 }else{
                     $('#send-esign').css('display', 'none');
+                    $('#job-status-arrived').css('display', 'none');
+                    $('#job-status-started').css('display', 'none');
+                    $('#job-status-finished').css('display', 'none');
                 }
 
                 if( appointment_type == 'service_ticket' || appointment_type == 'ticket' ){
                     $('#send-ticket-esign').css('display', 'inline-block');
+                    if( status == 'Scheduled' ){
+                        $('#ticket-status-arrived').css('display', 'inline-block');
+                        $('#ticket-status-started').css('display', 'none');
+                        $('#ticket-status-finished').css('display', 'none');
+                    }else if( status == 'Arrived' ){
+                        $('#ticket-status-started').css('display', 'inline-block');
+                        $('#ticket-status-arrived').css('display', 'none');
+                        $('#ticket-status-finished').css('display', 'none');
+                    }else if( status == 'Approved' ){
+                        $('#ticket-status-finished').css('display', 'inline-block');
+                        $('#ticket-status-started').css('display', 'none');
+                        $('#ticket-status-arrived').css('display', 'none');
+                    }else{
+                        $('#ticket-status-arrived').css('display', 'none');
+                        $('#ticket-status-started').css('display', 'none');
+                        $('#ticket-status-finished').css('display', 'none');
+                    }
                 }else{
-                    $('#send-ticket-esign').css('display', 'none');                    
+                    $('#send-ticket-esign').css('display', 'none');    
+                    $('#send-esign').css('display', 'none');
+                    $('#ticket-status-arrived').css('display', 'none');
+                    $('#ticket-status-started').css('display', 'none');
+                    $('#ticket-status-finished').css('display', 'none');                
                 }
 
                 showLoader($(".view-schedule-container")); 
@@ -1784,8 +1866,11 @@
             return repo.text;
         }
 
+        // var $container = $(
+        //     '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
+        // );
         var $container = $(
-            '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
+            '<div>' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
         );
 
         return $container;
@@ -2006,6 +2091,7 @@
     $(document).on('click', '.fc-monthView-button', function(){
         $('.calendar-tile-details').hide();
     });
+
     $(document).on('click', '.fc-weekView-button', function(){  
         const current_date = '<?= date("Y-m-d"); ?>';      
         const position = $('[data-date="'+current_date+'"]').last().position();
@@ -2088,28 +2174,8 @@
 
         location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
     });
-
-    /*$(document).on('click', '#calendar-add-ticket', function(){
-        var start_date = $('#action_select_date').val();
-        var start_time = $('#action_select_time').val();
-        var selected_user = $('#action_select_user').val();
-
-        if( selected_user > 0 ){                  
-            location.href = base_url + 'customer/addTicket?start_date='+start_date+'&start_time='+start_time+'&user='+selected_user;
-        }else{
-            location.href = base_url + 'customer/addTicket?start_date='+start_date+'&start_time='+start_time;            
-        }
-
-        location.href = base_url + 'customer/addTicket?start_date='+start_date;            
-
-    });*/
-
      
     $(document).on('click', '#calendar-add-ticket', function(){
-        // var start_date = $('#action_select_date').val();
-        // var start_time = $('#action_select_time').val();
-        // alert('test');
-
         var appointment_date = $('#appointment_date').val();
         var appointment_time = $('#appointment_time').val();
         var appointment_user_id = $('#appointment-user').val();
@@ -2125,20 +2191,6 @@
         var customer_phone = $('#m-customer-mobile').val();
 
         location.href = base_url + 'tickets/addnewTicketApmt?appointment_date='+appointment_date+'&appointment_time='+appointment_time+'&appointment_user_id='+appointment_user_id+'&appointment_customer_id='+appointment_customer_id+'&appointment_type_id='+appointment_type_id+'&appointment_time_to='+appointment_time_to+'&customer_address='+customer_address+'&customer_city='+customer_city+'&customer_state='+customer_state+'&customer_zip='+customer_zip+'&customer_phone='+customer_phone;
-
-        // $.ajax({
-        //     url:"<?php echo base_url(); ?>tickets/addnewTicketApmt",
-        //     type: "POST",
-        //     data: {appointment_date: appointment_date, appointment_time: appointment_time, appointment_user_id:appointment_user_id, appointment_customer_id:appointment_customer_id, appointment_type_id:appointment_type_id},
-        //     success: function(dataResult){
-        //         // $('#table').html(dataResult); 
-        //         alert('success')
-        //     },
-        //         error: function(response){
-        //         alert('Error'+response);
-       
-        //         }
-	    // });
 
     });
 
@@ -2166,152 +2218,6 @@
         $('#create_tc_off_modal').modal('show');
     });
 
-    /*$(document).on('click', '.add-appointment-type', function(){
-        var appointmentEventPriorityOptions = <?= json_encode($appointmentPriorityEventOptions); ?>;
-        var appointmentPriorityOptions      = <?= json_encode($appointmentPriorityOptions); ?>;
-        var appointment_type = $(this).val();
-
-        if( appointment_type == 1 ){
-            $('.appointment-form').hide();
-            var start_date = $('#action_select_date').val();
-            var start_time = $('#action_select_time').val();
-
-            location.href = base_url + 'job/new_job1?start_date='+start_date+'&start_time='+start_time;
-        }else if( appointment_type == 3 ){
-            $('.appointment-form').hide();
-            var appointment_date = $('#appointment_date').val();
-            var appointment_time = $('#appointment_time').val();
-            var appointment_user_id = $('#appointment-user').val();
-            var appointment_customer_id = $('#appointment-customer').val();
-            var appointment_type_id = $("input[name=appointment_type_id]").val();
-            var appointment_time_to = $('#appointment_time_to').val();
-
-            // address 
-            var customer_address = $('#m-customer-address').val();
-            var customer_city = $('#m-customer-city').val();
-            var customer_state = $('#m-customer-state').val();
-            var customer_zip = $('#m-customer-zip').val();
-            var customer_phone = $('#m-customer-mobile').val();
-
-            location.href = base_url + 'tickets/addnewTicketApmt?appointment_date='+appointment_date+'&appointment_time='+appointment_time+'&appointment_user_id='+appointment_user_id+'&appointment_customer_id='+appointment_customer_id+'&appointment_type_id='+appointment_type_id+'&appointment_time_to='+appointment_time_to+'&customer_address='+customer_address+'&customer_city='+customer_city+'&customer_state='+customer_state+'&customer_zip='+customer_zip+'&customer_phone='+customer_phone;
-        }else if( appointment_type > 0 ){
-            $('.appointment-form').show();
-            $('.btn-create-appointment').show();
-            if( appointment_type ==  3 || appointment_type == 1 ){
-                $('.appointment-add-sales-agent').fadeIn(500);
-                $('.invoice-price-container').fadeIn(500);
-            }else if( appointment_type ==  2 ){
-                $('.appointment-add-sales-agent').fadeOut(500);
-                $('.invoice-price-container').fadeIn(500);
-            }else{
-                $('.appointment-add-sales-agent').fadeOut(500);
-                $('.invoice-price-container').fadeOut(500);
-            }
-
-            if( appointment_type == 4 ){ //Event
-                $('.customer-container').fadeOut(500);
-                $('.event-description-container').fadeIn(500);
-                $('.event-location-container').fadeIn(500);
-                $("a.btn-manage-tags").attr("href", base_url + 'events/event_tags');
-                $("#appointment-tags").empty().trigger('change');
-                $('#appointment-tags').select2({
-                    ajax: {
-                        url: base_url + 'autocomplete/_company_event_tags',
-                        dataType: 'json',
-                        delay: 250,
-                        data: function(params) {
-                            return {
-                                q: params.term, // search term
-                                page: params.page
-                            };
-                        },
-                        processResults: function(data, params) {
-                            params.page = params.page || 1;
-
-                            return {
-                                results: data,
-                            };
-                        },
-                        cache: true
-                    },
-                    dropdownParent: $("#create_appointment_modal"),
-                    placeholder: 'Select Tags',
-                    minimumInputLength: 0,
-                    templateResult: formatRepoTag,
-                    templateSelection: formatRepoTagSelection
-                });
-            }else{
-                $('.customer-container').fadeIn(500);
-                $('.event-description-container').fadeOut(500);
-                $('.event-location-container').fadeOut(500);
-                $("a.btn-manage-tags").attr("href", base_url + 'job/job_tags');
-                $("#appointment-tags").empty().trigger('change');
-                $('#appointment-tags').select2({
-                    ajax: {
-                        url: base_url + 'autocomplete/_company_job_tags',
-                        dataType: 'json',
-                        delay: 250,
-                        data: function(params) {
-                            return {
-                                q: params.term, // search term
-                                page: params.page
-                            };
-                        },
-                        processResults: function(data, params) {
-                            params.page = params.page || 1;
-
-                            return {
-                                results: data,
-                            };
-                        },
-                        cache: true
-                    },
-                    dropdownParent: $("#create_appointment_modal"),
-                    placeholder: 'Select Tags',
-                    minimumInputLength: 0,
-                    templateResult: formatRepoTag,
-                    templateSelection: formatRepoTagSelection
-                });
-            }
-
-            if( appointment_type == 4 ){
-                $('.create-tech-attendees').text('Attendees');
-                $('#wait-list-add-employee-popover').popover('dispose');
-                $('#wait-list-add-employee-popover').popover({    
-                    content:'Who will attend the event',
-                    title:'Attendees',        
-                    trigger: 'hover'
-                });
-
-                var $el = $(".add-appointment-priority");
-                $el.empty(); // remove old options
-                $.each(appointmentEventPriorityOptions, function(key,value) {
-                  $el.append($("<option></option>")
-                     .attr("value", value).text(value));
-                });
-
-            }else{
-                $('.create-tech-attendees').text('Assigned Techincian');
-                $('#wait-list-add-employee-popover').popover('dispose');
-                $('#wait-list-add-employee-popover').popover({    
-                    content:'Assign employee that will handle the appointment',
-                    title:'Which Employee',        
-                    trigger: 'hover'
-                }); 
-
-                var $el = $(".add-appointment-priority");
-                $el.empty(); // remove old options
-                $.each(appointmentPriorityOptions, function(key,value) {
-                  $el.append($("<option></option>")
-                     .attr("value", value).text(value));
-                });           
-            }
-        }else{
-            $('.appointment-form').hide();
-            $('.btn-create-appointment').hide();
-        }
-    });*/
-
     $(document).on('change', '.add-appointment-priority', function(){
         var selected = $(this).val();
         if( selected == 'Others' ){
@@ -2320,23 +2226,6 @@
             $('.priority-others').fadeOut(400);
         }
     });
-
-    /*$(document).on('click', '.calendar-tile-minmax', function(){
-        var tile_id   = $(this).data('id');
-        var tile_type = $(this).data('type');        
-
-        if( $(this).hasClass('c-max') ){
-            $('.'+tile_type+'-tile-'+tile_id).fadeIn(5);        
-            $(this).removeClass('c-max');
-            //$(this).parent().closest('.fc-daygrid-event').addClass('multiple-date');
-            $('.'+tile_type+'-min-max-'+tile_id).parent().closest('.fc-daygrid-event').addClass('multiple-date');
-        }else{
-            $(this).addClass('c-max');
-            $('.'+tile_type+'-tile-'+tile_id).fadeOut(5);   
-            $('.'+tile_type+'-min-max-'+tile_id).parent().closest('.fc-daygrid-event').removeClass('multiple-date');
-            //$(this).parent().closest('.fc-daygrid-event').removeClass('multiple-date');
-        }
-    });*/
 
     $(document).on('click', '#btn_edit_job_ticket', function(){
         var schedule_id   = $(this).data('id');
@@ -3042,6 +2931,312 @@
     $(document).on('click', '#send-ticket-esign', function(){        
         $('#modal-quick-view-upcoming-schedule').modal('hide');
         $('#approveThisTicketModal').modal('show');
+    });
+
+    $(document).on('click', '#job-status-arrived', function(){
+        var job_id = $(this).attr('data-id');
+        
+        $('#calendar-job-arrival-id').val(job_id);
+        $('#modal-quick-view-upcoming-schedule').modal('hide');
+        $('#modal-quick-job-arrived-status').modal('show');
+    });
+
+    $(document).on('submit', '#frm-calendar-status-arrival', function(e){
+        e.preventDefault();
+
+        var data = new FormData($('#frm-calendar-status-arrival')[0]);
+        data.append('job_status', 'Arrival');
+        
+        $.ajax({
+            type: "POST",
+            url: base_url + 'job/_update_job_status',
+            dataType:'json',
+            data: data,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    $('#modal-quick-job-arrived-status').modal('hide');
+
+                    Swal.fire({
+                        text: 'Job status was successfully updated',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6a4a86',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        reloadCalendar(selected_calendar_view);
+                        //loadUpcomingSchedules();
+                    });    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#frm-calendar-status-arrival :submit").html('Save');
+            }, beforeSend: function() {
+                $("#frm-calendar-status-arrival :submit").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on('click', '#job-status-started', function(){
+        var job_id = $(this).attr('data-id');
+        
+        $('#calendar-job-started-id').val(job_id);
+        $('#modal-quick-view-upcoming-schedule').modal('hide');
+        $('#modal-quick-job-started-status').modal('show');
+    });
+
+    $(document).on('submit', '#frm-calendar-status-started', function(e){
+        e.preventDefault();
+
+        var data = new FormData($('#frm-calendar-status-started')[0]);
+        data.append('job_status', 'Started');
+        
+        $.ajax({
+            type: "POST",
+            url: base_url + 'job/_update_job_status',
+            dataType:'json',
+            data: data,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    $('#modal-quick-job-started-status').modal('hide');
+
+                    Swal.fire({
+                        text: 'Job status was successfully updated',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6a4a86',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        reloadCalendar(selected_calendar_view);
+                        //loadUpcomingSchedules();
+                    });    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#frm-calendar-status-started :submit").html('Save');
+            }, beforeSend: function() {
+                $("#frm-calendar-status-started :submit").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on('click', '#job-status-finished', function(){        
+        var job_id = $(this).attr('data-id');
+
+        $('#calendar-job-finished-id').val(job_id);
+        $('#modal-quick-view-upcoming-schedule').modal('hide');
+        $('#modal-quick-job-finished-status').modal('show');
+    });
+
+    $(document).on('submit', '#frm-calendar-status-finished', function(e){
+        e.preventDefault();
+
+        var data = new FormData($('#frm-calendar-status-finished')[0]);
+        data.append('job_status', 'Finished');
+        
+        $.ajax({
+            type: "POST",
+            url: base_url + 'job/_update_job_status',
+            dataType:'json',
+            data: data,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    $('#modal-quick-job-finished-status').modal('hide');
+
+                    Swal.fire({
+                        text: 'Job status was successfully updated',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6a4a86',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        reloadCalendar(selected_calendar_view);
+                        //loadUpcomingSchedules();
+                    });    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#frm-calendar-status-finished :submit").html('Save');
+            }, beforeSend: function() {
+                $("#frm-calendar-status-finished :submit").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on('click', '#ticket-status-arrived', function(){
+        var ticket_id = $(this).attr('data-id');
+        
+        $('#calendar-ticket-arrival-id').val(ticket_id);
+        $('#modal-quick-view-upcoming-schedule').modal('hide');
+        $('#modal-quick-ticket-arrived-status').modal('show');
+    });
+
+    $(document).on('submit', '#frm-calendar-ticket-status-arrival', function(e){
+        e.preventDefault();
+
+        var data = new FormData($('#frm-calendar-ticket-status-arrival')[0]);
+        data.append('ticket_status', 'Arrived');
+        
+        $.ajax({
+            type: "POST",
+            url: base_url + 'ticket/_update_ticket_status',
+            dataType:'json',
+            data: data,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    $('#modal-quick-ticket-arrived-status').modal('hide');
+
+                    Swal.fire({
+                        text: 'Service ticket status was successfully updated',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6a4a86',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        reloadCalendar(selected_calendar_view);
+                        //loadUpcomingSchedules();
+                    });    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#frm-calendar-ticket-status-arrival :submit").html('Save');
+            }, beforeSend: function() {
+                $("#frm-calendar-ticket-status-arrival :submit").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on('click', '#ticket-status-started', function(){
+        var ticket_id = $(this).attr('data-id');
+        
+        $('#calendar-ticket-started-id').val(ticket_id);
+        $('#modal-quick-view-upcoming-schedule').modal('hide');
+        $('#modal-quick-ticket-started-status').modal('show');
+    });
+
+    $(document).on('submit', '#frm-calendar-ticket-status-started', function(e){
+        e.preventDefault();
+
+        var data = new FormData($('#frm-calendar-ticket-status-started')[0]);
+        data.append('ticket_status', 'Started');
+        
+        $.ajax({
+            type: "POST",
+            url: base_url + 'ticket/_update_ticket_status',
+            dataType:'json',
+            data: data,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    $('#modal-quick-ticket-started-status').modal('hide');
+
+                    Swal.fire({
+                        text: 'Service ticket status was successfully updated',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6a4a86',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        reloadCalendar(selected_calendar_view);
+                        //loadUpcomingSchedules();
+                    });    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#frm-calendar-ticket-status-started :submit").html('Save');
+            }, beforeSend: function() {
+                $("#frm-calendar-ticket-status-started :submit").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on('click', '#ticket-status-finished', function(){        
+        var ticket_id = $(this).attr('data-id');
+
+        $('#calendar-ticket-finished-id').val(ticket_id);
+        $('#modal-quick-view-upcoming-schedule').modal('hide');
+        $('#modal-quick-ticket-finished-status').modal('show');
+    });
+
+    $(document).on('submit', '#frm-calendar-ticket-status-finished', function(e){
+        e.preventDefault();
+
+        var data = new FormData($('#frm-calendar-ticket-status-finished')[0]);
+        data.append('ticket_status', 'Finished');
+        
+        $.ajax({
+            type: "POST",
+            url: base_url + 'ticket/_update_ticket_status',
+            dataType:'json',
+            data: data,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                if( data.is_success == 1 ){
+                    $('#modal-quick-ticket-finished-status').modal('hide');
+
+                    Swal.fire({
+                        text: 'Service ticket status was successfully updated',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#6a4a86',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        reloadCalendar(selected_calendar_view);
+                        //loadUpcomingSchedules();
+                    });    
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+                
+                $("#frm-calendar-ticket-status-finished :submit").html('Save');
+            }, beforeSend: function() {
+                $("#frm-calendar-ticket-status-finished :submit").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
     });
 
     $('#quick-add-event-form').submit(function(e){
