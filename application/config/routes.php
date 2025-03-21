@@ -2042,6 +2042,7 @@ $route['customers/download_statement_of_claims'] = 'Customer/download_statement_
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
 $route['benchmark/test_late_invoice_computation'] = 'Benchmark/test_late_invoice_computation';
+$route['benchmark/manual_add_customer_invoice'] = 'Benchmark/manualAddCustomerInvoice';
 
 //Role Access Modules
 $route['users/role_access_modules'] = 'Users/role_access_modules';

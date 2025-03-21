@@ -3445,6 +3445,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $date_to       = date("Y-m-d");
 
         $activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsWithSub14Days($current_date);
+
         $deduct_days_computation = 0;
 		foreach( $activeSubscriptions as $as ) {
             $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);    
