@@ -44,58 +44,18 @@ class Benchmark extends MY_Controller {
 
                 $totalUnpaidSubscriptions   = $this->AcsCustomerSubscriptionBilling_model->getTotalAmountUnpaidByCustomerId($as->fk_prof_id);
 				$unpaidSubscriptionsDetails = $this->AcsCustomerSubscriptionBilling_model->getUnpaidDetailsByCustomerId($as->fk_prof_id);
+
                 $total_amount               = $totalUnpaidSubscriptions->total_amount + $as->mmr;
-				
-                $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($customer->company_id);
+                $invoiceSettings            = $this->Invoice_settings_model->getByCompanyId($customer->company_id);
 
                 $current_date    = date('Y-m-d');
 				$late_fee        = 0;
 				$payment_fee     = 0;  
 				$total_late_days = 0;
 
-                if($unpaidSubscriptionsDetails) {
-                    //Invoice is due, need to add late fee
-                    $recurr_transaction = $this->accounting_recurring_transactions_model->get_by_type_transaction_id_status('invoice', $unpaidSubscriptionsDetails->invoice_id, 2); //2 is pause
-                    if(!$recurr_transaction) { //check first if transaction is not pause the late fee
-                        $late_fee_activated_date = $unpaidSubscriptionsDetails->due_date;
-                        if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
-                            $date1 = new DateTime($current_date);
-                            $date2 = new DateTime($late_fee_activated_date);
-                            $total_days = $date2->diff($date1)->format("%a");
-							$total_late_days = $total_days;
-    
-                            $days_activate_late_fee = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
-    
-                            if($total_days > $days_activate_late_fee) {
-                                $late_fee_percentage = $as->payment_fee != null ? $as->payment_fee : 0; 
-    
-                                if($as->mmr != null && $as->mmr > 0) {
-                                    $late_fee += ($late_fee_percentage / 100) * $as->mmr;
-                                }
-        
-                                if($total_days > 0) {
-                                    $default_late_fee = $as->late_fee != null ? $as->late_fee : 0;
-                                    if($total_days >= 10) {
-                                        $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);                        
-                                    } else {
-                                        $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);
-                                    }   
-                                }
-                            }
-                        }
-                    }
-                }
-
                 if( $invoiceSettings ){            
                     $next_number = (int) $invoiceSettings->invoice_num_next;     
                     $prefix      = $invoiceSettings->invoice_num_prefix;	
-                    
-                    if( $invoiceSettings->payment_fee_percent > 0  ){                        
-                        $payment_fee = $total_amount * ($invoiceSettings->payment_fee_percent/100);
-                    }else{
-                        $payment_fee = $invoiceSettings->payment_fee_amount;
-                    }
-
                 }else{
                     $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($customer->company_id);
                     $prefix     = 'INV-';
@@ -258,7 +218,7 @@ class Benchmark extends MY_Controller {
         /**
          * Update invoice late info - start
          */
-        $invoices_data = $this->invoice_model->getAllActiveInvoice();
+        $invoices_data = $this->invoice_model->getAllActiveInvoice([],1);
 
         $deduct_days_computation = 0;
         $total_records           = 0;
@@ -269,14 +229,25 @@ class Benchmark extends MY_Controller {
             if(!$recurr_transaction) {
 
                 $invoiceSettings = $this->invoice_settings_model->getByCompanyId($inv_data->company_id);
-
-                $current_date    = date('Y-m-d');
-                $new_invoice_grand_total = 0;
-                $late_fee        = 0;
-                $days_activate_late_fee = 0;
-                $invdata         = [];
-
                 $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($inv_data->customer_id);	
+
+                $current_date    		 = date('Y-m-d');
+                $new_invoice_grand_total = 0;
+                $late_fee        	     = 0;
+                $days_activate_late_fee  = 0;
+                $invdata         		 = [];
+
+				$with_customer_late_fee    = 0;
+                $with_customer_payment_fee = 0;
+
+				if( $customer_billing_info->late_fee > 0 ){
+                    $with_customer_late_fee = 1;
+                }
+    
+                if( $customer_billing_info->payment_fee > 0 ){
+                    $with_customer_payment_fee = 1;
+                }     
+                
                 $late_fee_activated_date = $inv_data->due_date;
                 if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
                     $date1 = new DateTime($current_date);
@@ -303,6 +274,31 @@ class Benchmark extends MY_Controller {
                     }
                 }       
 
+				if( $invoiceSettings ){   
+
+                    if( $with_customer_late_fee == 0 ){
+                        $late_fee = 0;
+                        if( $total_days > 0 && $invoiceSettings->late_fee_amount_per_day > 0 && $invoiceSettings->disable_late_fee == 0 ){    
+							$default_late_fee = $invoiceSettings->late_fee_amount_per_day != null ? $invoiceSettings->late_fee_amount_per_day : 0;                    
+                            $late_fee += $invoiceSettings->late_fee_amount_per_day * ($total_days - $deduct_days_computation);
+                        }                                            
+                    }
+
+                    if( $with_customer_payment_fee == 0 ) {
+                        $payment_fee = 0;
+                        if( $invoiceSettings->disable_payment_fee == 0 ){
+                            if( $invoiceSettings->payment_fee_percent > 0 ){       
+								$late_fee_percentage = $invoiceSettings->payment_fee_percent != null ? $invoiceSettings->payment_fee_percent : 0;                  
+                                $payment_fee = ($invoiceSettings->payment_fee_percent/100) * $customer_billing_info->mmr;
+                            }else{
+                                $payment_fee = $invoiceSettings->payment_fee_amount;
+                            }
+
+                            $late_fee += $payment_fee;
+                        }                             
+                    }
+                }
+
                 $new_invoice_grand_total = (int) $customer_billing_info->mmr + $late_fee;	
 				
 				echo '<table style="border: 1px solid black; width: 100%;">';
@@ -323,7 +319,7 @@ class Benchmark extends MY_Controller {
 					echo '<th style="border: 1px solid black;">' . $inv_data->due_date . '</th>';
 					echo '<th style="border: 1px solid black;">' . $current_date . '</th>';
 					echo '<th style="border: 1px solid black;">' . $customer_billing_info->mmr . '</th>';
-					echo '<th style="border: 1px solid black;">' . $late_fee_percentage . '</th>';
+					echo '<th style="border: 1px solid black;">' . $late_fee_percentage . '%</th>';
 					echo '<th style="border: 1px solid black;">' . $default_late_fee . '</th>';
 					echo '<th style="border: 1px solid black;">' . $total_days  . '</th>';
 					echo '<th style="border: 1px solid black;">' . $late_fee . '</th>';
