@@ -1236,6 +1236,7 @@ $route['job/_quick_create_job_type'] = 'Job/ajax_quick_create_job_type';
 $route['job/_quick_create_job_tag'] = 'Job/ajax_quick_create_job_tag';
 $route['job/new'] = 'job/new_job1';
 $route['job/edit/(:num)'] = 'job/new_job1/$1';
+$route['job/_update_job_status'] = 'Job/ajax_update_job_status';
 
 // Trac360
 $route['job/bird_eye_view'] = 'JobMap/index';
@@ -1963,6 +1964,7 @@ $route['tickets/_update_status_selected_tickets'] = 'Tickets/ajax_update_status_
 $route['ticket/add'] = 'Tickets/addTicket';
 $route['ticket/_archived_list'] = 'Tickets/ajax_archived_list';
 $route['ticket/_restore_archived'] = 'Tickets/ajax_restore_archived';
+$route['ticket/_update_ticket_status'] = 'Tickets/ajax_update_ticket_status';
 
 //Setting : Index
 $route['tickets/settings'] = 'Tickets/settings_tickets';
