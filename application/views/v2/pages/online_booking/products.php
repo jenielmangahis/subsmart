@@ -74,16 +74,11 @@
                                                 <tr>
                                                     <?php
                                                     $service_item_thumb = $sitem->image;
-                                                    if (file_exists('uploads/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
+                                                    if (file_exists('uploads/service_item/' . $sitem->company_id . '/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
 
                                                         $service_item_thumb_img = base_url('/assets/dashboard/images/online-booking.png');
-                                                        if (file_exists('uploads/service_item/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
-                                                            $service_item_thumb_img = base_url('/assets/dashboard/images/online-booking.png');
-                                                        } else {
-                                                            $service_item_thumb_img = base_url('uploads/service_item/' . $service_item_thumb);
-                                                        }
                                                     } else {
-                                                        $service_item_thumb_img = base_url('uploads/' . $service_item_thumb);
+                                                        $service_item_thumb_img = base_url('uploads/service_item/' . $sitem->company_id . '/' . $service_item_thumb);
                                                     }
                                                     ?>
                                                     <td class="nsm-text-primary">
@@ -150,6 +145,79 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
+        $('#category_id').select2({
+            dropdownParent: $('#add_service_item_modal')
+        });
+
+        $('#price_unit').select2({
+            dropdownParent: $('#add_service_item_modal')
+        });
+
+        $(document).on("submit", "#frm-booking-add-item-service", function(e){
+            e.preventDefault();
+
+            var formData = new FormData($("#frm-booking-add-item-service")[0]);
+
+            $.ajax({
+                type: 'POST',
+                url: base_url + "booking/_save_service_item",
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'json',                
+                success: function(result) {
+                    if( result.is_success === 1 ){
+                        $('#add_service_item_modal').modal('hide');
+                        Swal.fire({
+                            title: 'Add Product / Service',
+                            text: 'New product / service has been added successfully.',
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                //location.reload();
+                            //}
+                        });
+                    }   
+                    
+                    _this.find("button[type=submit]").html("Save");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                },
+                beforeSubmit: function(){
+                    _this.find("button[type=submit]").html("Saving");
+                    _this.find("button[type=submit]").prop("disabled", true);
+                },
+                error: function() {
+                    Swal.fire({
+                        title: 'Error',
+                        text: "Something went wrong, please try again later.",
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            //location.reload();
+                        //}
+                    });
+                },
+            });
+
+        });
+        
         $(document).on("submit", "#frm-booking-create-category", function(e){
             e.preventDefault();
 

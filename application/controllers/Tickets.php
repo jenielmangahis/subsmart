@@ -1741,6 +1741,7 @@ class Tickets extends MY_Controller
 
     public function ajax_quick_view_details()
     {
+        $this->load->helper('functions');
         $this->load->model('User_docflies_model');
         $this->load->model('Customer_advance_model');
 
@@ -1753,6 +1754,25 @@ class Tickets extends MY_Controller
         $tickets = $this->tickets_model->get_tickets_data_one($id);
         $billing = $this->Customer_advance_model->get_data_by_id('fk_prof_id', $tickets->customer_id, 'acs_billing');
         $ticket_rep  = $tickets->sales_rep;
+
+        $default_lat = '';
+        $default_lon = '';
+        $address_line2 = '';
+        $param    = [
+            'text' => $tickets->mail_add.', '.$tickets->cust_city.' '.$tickets->cust_state.' '.$tickets->cust_zip_code.' '.$tickets->cust_country,
+            'format' => 'json',
+            'apiKey' => GEOAPIKEY
+        ];            
+
+        $url = 'https://api.geoapify.com/v1/geocode/search?'.http_build_query($param);
+        $data = file_get_contents($url);            
+        $data = json_decode($data);
+        
+        if( $data && isset($data->results[0] )){ 
+            $default_lat = $data->results[0]->lat;   
+            $default_lon = $data->results[0]->lon;            
+            $address_line2 = $data->results[0]->address_line2;            
+        }   
         
         $this->page_data['reps'] = $this->tickets_model->get_ticket_representative($ticket_rep);
         $this->page_data['ticketsCompany'] = $this->tickets_model->get_tickets_company($tickets->company_id);
@@ -1762,6 +1782,9 @@ class Tickets extends MY_Controller
         $this->page_data['items'] = $this->tickets_model->get_ticket_items($id);
         $this->page_data['payment'] = $this->tickets_model->get_ticket_payments($id);
         $this->page_data['clients'] = $this->tickets_model->get_tickets_clients($tickets->company_id);
+        $this->page_data['default_lat']   = $default_lat;
+        $this->page_data['default_lon']   = $default_lon;
+        $this->page_data['address_line2'] = $address_line2;
         $this->load->view('tickets/ajax_quick_view_details', $this->page_data);
     }
 
