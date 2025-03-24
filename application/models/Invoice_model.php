@@ -1298,35 +1298,35 @@ class Invoice_model extends MY_Model
         $this->db->from($this->table);
         $this->db->join('jobs', 'invoices.job_id = jobs.id', 'LEFT');      
         $this->db->where('invoices.view_flag', 0);
-        $this->db->where('invoices.is_recurring', $type);
+
+        if($type != '') {
+            $this->db->where('invoices.is_recurring', $type);
+        }
 
         if (!empty($filters)) {
             if (isset($filters['status'])) {
                 switch ($filters['status']) {
-                    case 2:
-                        $today = date("Y-m-d");
-                        $this->db->where('invoices.due_date', $today);
-                        break;
-
-                    case 3:
-                        $today = date("Y-m-d");
-                        $this->db->where('invoices.due_date <', $today);
-                        break;
-
-                    case 4:
-                        $this->db->where('invoices.status', 'Partial Paid');
-                        break;
-
-                    case 5:
+                    case 'paid':
                         $this->db->where('invoices.status', 'Paid');
-                        break;
-
-                    case 6:
+                        break;                    
+                    case 'draft':
                         $this->db->where('invoices.status', 'Draft');
                         break;
-
+                    case 'partially_paid':
+                        $today = date("Y-m-d");
+                        $this->db->where('invoices.status', 'Partial Paid');
+                        break;
+                    case 'due':
+                        $this->db->where('invoices.status', 'Due');
+                        break;
+                    case 'overdue':
+                        $this->db->where('invoices.status', 'Overdue');
+                        break;
+                    case 'unpaid':
+                        $this->db->where('invoices.status', 'Unpaid');
+                        break;
                     default:
-                    $this->db->where('invoices.status', $filters['status']);
+                        $this->db->where('invoices.status', $filters['status']);
                     break;
                 }
             } elseif (isset($filters['search'])) {
