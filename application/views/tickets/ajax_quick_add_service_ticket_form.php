@@ -863,9 +863,13 @@ $(document).ready(function(){
                 }else{
                     $("#ticket_customer_phone").val(response.phone_h);
                 }
-
-                //var service_location = response.mail_add + ' ' + response.city + ', ' + response.state + ' ' + response.zip_code;
-                var service_location = response.mail_add;
+                
+                if( response.mail_add == 'NA' ){
+                    response.mail_add = '';
+                }
+                
+                var service_location = response.mail_add + ' ' + response.city + ', ' + response.state + ' ' + response.zip_code;
+                //var service_location = response.mail_add;
                 $("#service_location").val(service_location);
                 $("#customer_city").val(response.city);
                 $("#customer_state").val(response.state);

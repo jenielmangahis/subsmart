@@ -22,7 +22,7 @@
 }
 #modal-quick-view-upcoming-schedule .modal-footer .nsm-button{
     width: 48%;
-    font-size: 16px;
+    font-size: 17px;
 }
 #quick-access-calendar-loading{
     position: absolute;
@@ -35,6 +35,12 @@
     background-color: #6a4a86 !important;
     color: #ffffff;
 }
+@media only screen and (max-width : 480px) {
+    #modal-quick-view-upcoming-schedule .modal-footer .nsm-button{
+        width: 100% !important;
+    }
+}
+
 </style>
 <div class="modal fade nsm-modal fade" id="create_calendar_modal" tabindex="-1" aria-labelledby="create_calendar_modal_label" aria-hidden="true">
     <div class="modal-dialog">
@@ -225,7 +231,7 @@
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body" style="max-height:700px; overflow: auto;">
-                <div class="view-schedule-container row"></div>
+                <div class="view-schedule-container-old row"></div>
             </div>  
             <div class="modal-footer">
                 <button type="button" class="nsm-button primary" data-id="" data-type="" id="btn_edit_job_ticket">Edit</button>
@@ -606,24 +612,257 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="modal-quick-view-upcoming-schedule" data-source="" tabindex="-1" aria-labelledby="modal-quick-view-upcoming-schedule-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">        
+    <div class="modal-dialog modal-lg modal-dialog-centered">        
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">View Calendar Schedule</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <div class="modal-body" style="max-height:700px; overflow: auto;">
-                <div class="view-schedule-container row"></div>
+            <div class="modal-body" style="max-height:550px; overflow: auto;">
+                <div class="view-schedule-container"></div>
             </div> 
             <div class="modal-footer">
                 <button type="button" class="nsm-button primary" data-id="" data-type="" id="upcoming-schedule-view-more-details"><i class="bx bx-window-open"></i> View More Details</button>
-                 <button type="button" class="nsm-button primary" data-id="" data-type="" id="quick-add-gcalendar"><i class="bx bxl-google"></i> Add to Google Calendar</button>
+                <button type="button" class="nsm-button primary" data-id="" data-type="" id="quick-add-gcalendar"><i class="bx bxl-google"></i> Add to Google Calendar</button>
                 <button type="button" class="nsm-button primary quick-edit-schedule" data-id="" data-type="" id="edit-upcoming-schedule"><i class='bx bx-edit-alt'></i> Edit</button>
+
+                <!-- Job status -->
+                <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="job-status-arrived"><i class='bx bxs-truck'></i> Arrived</button>
+                <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="job-status-started"><i class='bx bx-time'></i> Started</button>
+                <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="job-status-finished"><i class='bx bxs-flag-checkered'></i> Finished</button>
+
+                <!-- Ticket status -->
+                <!-- <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="ticket-status-arrived"><i class='bx bxs-truck'></i> Arrived</button>
+                <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="ticket-status-started"><i class='bx bx-time'></i> Started</button>
+                <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="ticket-status-finished"><i class='bx bxs-flag-checkered'></i> Finished</button> -->
+
                 <button type="button" class="nsm-button primary calendar-send-esign" data-id="" data-type="" id="send-esign"><i class='bx bx-edit-alt'></i> Send Esign</button>
                 <button type="button" class="nsm-button primary calendar-send-esign" data-id="" data-type="" id="send-ticket-esign"><i class='bx bx-edit-alt'></i> Send Esign</button>
                 <button type="button" class="nsm-button nsm-button-danger quick-delete-schedule" data-ordernum="" data-id="" data-type="" id="delete-upcoming-schedule"><i class='bx bx-trash'></i> Delete</button>
             </div>           
         </div>        
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-quick-job-arrived-status" tabindex="-1" aria-labelledby="modal-quick-job-arrived-status-label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Job : Arrival</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-calendar-status-arrival" method="post">
+                    <input type="hidden" name="job_id" id="calendar-job-arrival-id" value="">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-3">
+                            <label>This will start travel duration tracking.</label>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="mb-2">Arrive at:</label>
+                            <div class="input-group mb-3">
+                                <input type="date" name="omw_date" id="omw_date" class="form-control" value="<?= date('Y-m-d'); ?>" required>
+                                <select id="omw_time" name="omw_time" class="form-control" required>
+                                    <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                                        <option value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="nsm-button primary">Save</button>
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-quick-ticket-arrived-status" tabindex="-1" aria-labelledby="modal-quick-ticket-arrived-status-label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Service Ticket : Arrival</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-calendar-ticket-status-arrival" method="post">
+                    <input type="hidden" name="ticket_id" id="calendar-ticket-arrival-id" value="">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-3">
+                            <label>This will start travel duration tracking.</label>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="mb-2">Arrive at:</label>
+                            <div class="input-group mb-3">
+                                <input type="date" name="omw_date" id="ticket_omw_date" class="form-control" value="<?= date('Y-m-d'); ?>" required>
+                                <select id="ticket_omw_time" name="omw_time" class="form-control" required>
+                                    <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                                        <option value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="nsm-button primary">Save</button>
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-quick-job-started-status" tabindex="-1" aria-labelledby="modal-quick-job-started-status-label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Job : Started</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-calendar-status-started" method="post">
+                    <input type="hidden" name="job_id" id="calendar-job-started-id" value="">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-3">
+                            <label>This will stop travel duration tracking and start on job duration tracking.</label>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="mb-2">Start at:</label>
+                            <div class="input-group mb-3">
+                                <input type="date" name="job_start_date" id="job_start_date" class="form-control" value="<?= date('Y-m-d');?>" required>
+                                <select id="job_start_time" name="job_start_time" class="form-control" required>
+                                    <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                                    <option value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="nsm-button primary">Save</button>
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-quick-ticket-started-status" tabindex="-1" aria-labelledby="modal-quick-ticket-started-status-label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Service Ticket : Started</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-calendar-ticket-status-started" method="post">
+                    <input type="hidden" name="ticket_id" id="calendar-ticket-started-id" value="">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-3">
+                            <label>This will stop travel duration tracking and start on job duration tracking.</label>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="mb-2">Start at:</label>
+                            <div class="input-group mb-3">
+                                <input type="date" name="ticket_start_date" id="ticket_start_date" class="form-control" value="<?= date('Y-m-d');?>" required>
+                                <select id="ticket_start_time" name="ticket_start_time" class="form-control" required>
+                                    <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                                    <option value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="nsm-button primary">Save</button>
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-quick-job-finished-status" tabindex="-1" aria-labelledby="modal-quick-job-finished-status-label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Job : Finish</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-calendar-status-finished" method="post">
+                    <input type="hidden" name="job_id" id="calendar-job-finished-id" value="">                
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-3">
+                            <label>This will stop on job duration tracking and mark the job end time.</label>
+                        </div>
+                        <div class="col-sm-12 mt-2">
+                            <label class="mb-2">Finish job at:</label>
+                            <div class="input-group">
+                                <input type="date" name="job_finished_date" id="job_finished_date" class="form-control" value="<?php echo date('Y-m-d');?>" required>
+                                <select id="job_finished_time" name="job_finished_time" class="form-control" required>
+                                    <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                                        <option value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" class="nsm-button primary">Save</button>
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-quick-ticket-finished-status" tabindex="-1" aria-labelledby="modal-quick-ticket-finished-status-label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Service Ticket : Finish</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-calendar-ticket-status-finished" method="post">
+                    <input type="hidden" name="ticket_id" id="calendar-ticket-finished-id" value="">                
+                    <div class="row">
+                        <div class="col-sm-12 mt-1 mb-3">
+                            <label>This will stop on job duration tracking and mark the job end time.</label>
+                        </div>
+                        <div class="col-sm-12 mt-2">
+                            <label class="mb-2">Finish job at:</label>
+                            <div class="input-group">
+                                <input type="date" name="ticket_finished_date" id="ticket_finished_date" class="form-control" value="<?php echo date('Y-m-d');?>" required>
+                                <select id="ticket_finished_time" name="ticket_finished_time" class="form-control" required>
+                                    <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                                        <option value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" class="nsm-button primary">Save</button>
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 

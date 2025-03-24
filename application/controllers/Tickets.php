@@ -1122,6 +1122,7 @@ class Tickets extends MY_Controller
         $this->load->model('SettingsPlanType_model');
         $this->load->model('PanelType_model');
         $this->load->model('Invoice_model');
+        $this->load->model('Invoice_settings_model');
 
         if(!checkRoleCanAccessModule('service-tickets', 'write')){
             show403Error();
@@ -1189,6 +1190,13 @@ class Tickets extends MY_Controller
         $ratePlans = $this->Customer_advance_model->getAllSettingsRatePlansByCompanyId($company_id);
         $type = $this->input->get('type');
 
+        $invoiceSettings        = $this->Invoice_settings_model->getByCompanyId($company_id);
+        $industrySpecificFields = $this->Invoice_settings_model->industrySpecificFields(logged('industry_type'));   
+        $disabled_industry_specific_fields = [];
+        if( $invoiceSettings && $invoiceSettings->disable_industry_specific_fields != '' ){
+            $disabled_industry_specific_fields = json_decode($invoiceSettings->disable_industry_specific_fields);
+        }
+
         $this->page_data['redirect_calendar'] = $redirect_calendar;
         $this->page_data['settingsPlanTypes'] = $settingsPlanTypes;
         $this->page_data['settingPanelTypes'] = $settingPanelTypes;
@@ -1208,12 +1216,14 @@ class Tickets extends MY_Controller
         $this->page_data['planTypeOptions'] = $planTypeOptions;
         $this->page_data['time_interval'] = 2;
         $this->page_data['invoicePayment'] = $invoicePayment;
+        $this->page_data['disabled_industry_specific_fields'] = $disabled_industry_specific_fields;
+        $this->page_data['industrySpecificFields'] = $industrySpecificFields;
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('tickets/edit_ticket', $this->page_data);
     }
 
     public function addTicket()
-    {        
+    {   
         $this->hasAccessModule(39);
         $this->load->helper('functions_helper');
         $this->load->model('AcsProfile_model');
@@ -1221,6 +1231,7 @@ class Tickets extends MY_Controller
         $this->load->model('SettingsPlanType_model');
         $this->load->model('PanelType_model');
         $this->load->model('Customer_advance_model');
+        $this->load->model('Invoice_settings_model');
 
         if(!checkRoleCanAccessModule('service-tickets', 'write')){
             show403Error();
@@ -1293,6 +1304,13 @@ class Tickets extends MY_Controller
         $ratePlans = $this->Customer_advance_model->getAllSettingsRatePlansByCompanyId($company_id);
         $type = $this->input->get('type');
 
+        $invoiceSettings        = $this->Invoice_settings_model->getByCompanyId($company_id);
+        $industrySpecificFields = $this->Invoice_settings_model->industrySpecificFields(logged('industry_type'));   
+        $disabled_industry_specific_fields = [];
+        if( $invoiceSettings && $invoiceSettings->disable_industry_specific_fields != '' ){
+            $disabled_industry_specific_fields = json_decode($invoiceSettings->disable_industry_specific_fields);
+        }
+
         $this->page_data['page']->title = 'Service Tickets';
         $this->page_data['prefix'] = $prefix;
         $this->page_data['next_num'] = $next_num;
@@ -1312,6 +1330,8 @@ class Tickets extends MY_Controller
         $this->page_data['companyName'] = $this->tickets_model->getCompany($company_id);
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['time_interval'] = 2;
+        $this->page_data['disabled_industry_specific_fields'] = $disabled_industry_specific_fields;
+        $this->page_data['industrySpecificFields'] = $industrySpecificFields;
         $this->load->view('tickets/add', $this->page_data);
     }
 
@@ -3430,6 +3450,56 @@ class Tickets extends MY_Controller
                 $mail->Send();
             }
         }
+    }
+
+    public function ajax_update_ticket_status()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find job data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $serviceTicket = $this->tickets_model->getByIdAndCompanyId($post['ticket_id'],$company_id);
+        if ($serviceTicket) {                        
+            
+            if( $post['ticket_status'] == 'Arrived' ){
+                $data = [
+                    'omw_date' => date("Y-m-d",strtotime($post['omw_date'])),
+                    'omw_time' => $post['omw_time'],
+                    'ticket_status' => 'Arrived'
+                ];
+            }elseif( $post['ticket_status'] == 'Started' ){
+                $data = [
+                    'started_time' => date("Y-m-d",strtotime($post['ticket_start_date'])),
+                    'started_date' => $post['ticket_start_time'],
+                    'ticket_status' => 'Started'
+                ];
+            }elseif( $post['ticket_status'] == 'Finished' ){
+                $data = [
+                    'finished_time' => date("Y-m-d",strtotime($post['ticket_start_date'])),
+                    'finished_date' => $post['job_start_time'],
+                    'ticket_status' => 'Finished'
+                ];
+            }
+
+            if( $data ){
+                $this->tickets_model->update($serviceTicket->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Service Ticket : Changed service ticket number ' . $serviceTicket->ticket_no . ' status to ' . $post['job_status']; 
+                createActivityLog($activity_name);
+
+                //Audit logs
+                customerAuditLog(logged('id'), $serviceTicket->customer_id, $serviceTicket->id, 'Service Ticket', 'Updated status of service ticket number' . $serviceTicket->ticket_no . ' to ' . $post['job_status']);
+
+                $is_success = 1;
+                $msg = '';
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 }
 

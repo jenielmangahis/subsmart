@@ -4646,11 +4646,43 @@ class Job extends MY_Controller
             'select' => 'id,business_phone,business_name,business_email,street,city,postal_code,state,business_image',
         );
 
+        $jobs_data = $this->jobs_model->get_specific_job($id);  
+        $jobs_data_items = $this->jobs_model->get_specific_job_items($id); 
+
+        $subtotal = 0;
+        foreach ($jobs_data_items as $item){            
+            $subtotal += $item->cost;            
+        }
+
+        $job_total_amount = $subtotal + $jobs_data->tax_rate + $jobs_data->adjustment_value + $jobs_data->program_setup + $jobs_data->monthly_monitoring + $jobs_data->installation_cost;
+        
+        $default_lat = '';
+        $default_lon = '';
+        $address_line2 = '';
+        $param    = [
+            'text' => $jobs_data->mail_add.', '.$jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code.' '.$jobs_data->cust_country,
+            'format' => 'json',
+            'apiKey' => GEOAPIKEY
+        ];            
+
+        $url = 'https://api.geoapify.com/v1/geocode/search?'.http_build_query($param);
+        $data = file_get_contents($url);            
+        $data = json_decode($data);
+        
+        if( $data && isset($data->results[0] )){ 
+            $default_lat = $data->results[0]->lat;   
+            $default_lon = $data->results[0]->lon;            
+            $address_line2 = $data->results[0]->address_line2;            
+        }                 
+
         $this->page_data['cid'] = $comp_id;
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
-        $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
-        $this->page_data['latest_job_payment'] = $this->jobs_model->get_latest_job_payment_by_job_id($id);        
-        $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+        $this->page_data['jobs_data'] = $jobs_data;
+        $this->page_data['default_lat']   = $default_lat;
+        $this->page_data['default_lon']   = $default_lon;
+        $this->page_data['address_line2'] = $address_line2;
+        $this->page_data['latest_job_payment'] = $this->jobs_model->get_latest_job_payment_by_job_id($id);  
+        $this->page_data['job_total_amount']   = $job_total_amount;              
         $this->load->view('v2/pages/job/ajax_quick_view_details', $this->page_data);
     }
 
@@ -6265,6 +6297,59 @@ class Job extends MY_Controller
 
             $is_success = 1;
             $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_update_job_status()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find job data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $job = $this->jobs_model->getByIdAndCompanyId($post['job_id'], $company_id);
+        if ($job) {                        
+            
+            if( $post['job_status'] == 'Arrival' ){
+                $data = [
+                    'omw_date' => date("Y-m-d",strtotime($post['omw_date'])),
+                    'omw_time' => $post['omw_time'],
+                    'status' => 'Arrival'
+                ];
+            }elseif( $post['job_status'] == 'Started' ){
+                $data = [
+                    'job_start_time' => date("Y-m-d",strtotime($post['job_start_date'])),
+                    'job_start_date' => $post['job_start_time'],
+                    'status' => 'Started'
+                ];
+            }elseif( $post['job_status'] == 'Finished' ){
+                $data = [
+                    'job_start_time' => date("Y-m-d",strtotime($post['job_start_date'])),
+                    'job_start_date' => $post['job_start_time'],
+                    'status' => 'Started'
+                ];
+            }
+
+            if( $data ){
+                $this->jobs_model->update($job->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Jobs : Changed job number ' . $job->job_number . ' status to ' . $post['job_status']; 
+                createActivityLog($activity_name);
+
+                //Audit logs
+                customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Updated status of Job #' . $job->job_number . ' to ' . $post['job_status']);
+
+                //SMS Notification
+                createCronAutoSmsNotification($job->company_id, $job->id, 'job', 'arrival', $job->employee_id); 
+
+                $is_success = 1;
+                $msg = '';
+            }
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];

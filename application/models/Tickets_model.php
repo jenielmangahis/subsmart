@@ -94,7 +94,8 @@ class Tickets_model extends MY_Model
             'id' => $id,
         );
 
-        $this->db->select('*, tickets.business_name as business_name, acs_profile.customer_type, acs_profile.business_name AS acs_business_name');
+        $this->db->select('*, tickets.business_name as business_name, acs_profile.customer_type, acs_profile.business_name AS acs_business_name, acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
+        acs_profile.zip_code as cust_zip_code, acs_profile.country as cust_country, acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'tickets.customer_id  = acs_profile.prof_id');
 		$this->db->where($where);
