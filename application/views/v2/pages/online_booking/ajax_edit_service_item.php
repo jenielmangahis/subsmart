@@ -44,16 +44,10 @@
     <div class="col-12 col-md-5">
         <?php
         $service_item_thumb = $service_item->image;
-        if (file_exists('uploads/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
-
+        if (file_exists('uploads/service_item/' . $service_item->company_id . '/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {            
             $service_item_thumb_img = base_url('/assets/dashboard/images/product-no-image.jpg');
-            if (file_exists('uploads/service_item/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
-                $service_item_thumb_img = base_url('/assets/dashboard/images/product-no-image.jpg');
-            } else {
-                $service_item_thumb_img = base_url('uploads/service_item/' . $service_item_thumb);
-            }
         } else {
-            $service_item_thumb_img = base_url('uploads/' . $service_item_thumb);
+            $service_item_thumb_img = base_url('uploads/service_item/' . $service_item->company_id . '/' . $service_item_thumb);
         }
         ?>
         <label class="content-subtitle fw-bold d-block mb-2">Image</label>
