@@ -41,7 +41,11 @@ class Inventory extends MY_Controller
 
     public function index()
     {
-        
+        if(!checkRoleCanAccessModule('inventory', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Inventory';
         $this->page_data['page']->parent = 'Tools';
 
@@ -66,7 +70,7 @@ class Inventory extends MY_Controller
             }*/            
             //$arg   = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active' => 1);
             $arg   = array('company_id'=>$comp_id, 'type' => 'product', 'is_active' => 1); 
-            $items = $this->items_model->getByWhere($arg);
+            $items = $this->items_model->getByWhere($arg);            
         }
         $ITEM_DATA = $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
         $comp = array(
@@ -284,6 +288,11 @@ class Inventory extends MY_Controller
 
     public function add()
     {
+        if(!checkRoleCanAccessModule('inventory', 'write')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Inventory';
         $this->page_data['page']->parent = 'Tools';
 
@@ -402,72 +411,90 @@ class Inventory extends MY_Controller
 
     public function save_new_item()
     {
+        $is_success = 0;
+        $msg = 'Cannot save data.';
+
         $input = $this->input->post();
 
         $input['is_active'] = 1;
         $input['company_id'] = logged('company_id');
-    
-        $ITEM_DATA = array(
-            'company_id' => $input['company_id'],
-            'title' => $input['title'],
-            'brand' => $input['brand'],
-            'price' => $input['price'],
-            'retail' => $input['retail'],
-            'cost_per' => $input['cost_per'],
-            'units' => $input['units'],
-            'vendor_id' => $input['vendor_id'],
-            'type' => $input['type'],
-            'url' => $input['url'],
-            'COGS' => $input['COGS'],
-            'model' => $input['model'],
-            'serial_number' => $input['serial_number'],
-            'points' => $input['points'],
-            'qty_order' => $input['qty_order'],
-            're_order_points' => $input['re_order_points'],
-            'item_categories_id' => $input['item_categories_id'],
-            'description' => $input['description'],
-            'is_active' => $input['is_active'],
-        );
-        $ITEM_ID = $this->items_model->insert($ITEM_DATA);
-
-        for ($i = 0; $i < count($input['loc_id']); $i++) { 
-            $STORAGE_LOCATION_DATA = array(
-                'item_id' => $ITEM_ID,
+        
+        $item = $this->items_model->getByItemTitleAndCompanyId($input['title'], $input['company_id']);
+        if( !$item ){
+            $ITEM_DATA = array(
                 'company_id' => $input['company_id'],
-                'initial_qty' => $input['initial_quantity'],
-                'qty' => $input['initial_quantity'],
-                'loc_id' => $input['loc_id'][$i],
-                'insert_date' => date('Y-m-d H:i:s'),
+                'title' => $input['title'],
+                'brand' => $input['brand'],
+                'price' => $input['price'],
+                'retail' => $input['retail'],
+                'cost_per' => $input['cost_per'],
+                'units' => $input['units'],
+                'vendor_id' => $input['vendor_id'],
+                'type' => $input['type'],
+                'url' => $input['url'],
+                'COGS' => $input['COGS'],
+                'model' => $input['model'],
+                'serial_number' => $input['serial_number'],
+                'points' => $input['points'],
+                'qty_order' => $input['qty_order'],
+                're_order_points' => $input['re_order_points'],
+                'item_categories_id' => $input['item_categories_id'],
+                'description' => $input['description'],
+                'is_active' => $input['is_active'],
             );
-            $this->items_model->saveNewItemLocation($STORAGE_LOCATION_DATA);
-        }
-
-        $customFields = $input['custom_field'];
-        unset($input['custom_field']);
-
-        if ($itemId) {
-            if($customFields) {
-                $customFieldsValue = [];
-                foreach($customFields as $fieldId => $value) {
-                    $customFieldsValue[] = [
-                        'custom_field_id' => $fieldId,
-                        'value' => $value,
-                        'item_id' => $itemId
-                    ];
-                }
-
-                $this->items_model->insert_custom_fields_value($customFieldsValue);
+            $ITEM_ID = $this->items_model->insert($ITEM_DATA);
+    
+            for ($i = 0; $i < count($input['loc_id']); $i++) { 
+                $STORAGE_LOCATION_DATA = array(
+                    'item_id' => $ITEM_ID,
+                    'company_id' => $input['company_id'],
+                    'initial_qty' => $input['initial_quantity'],
+                    'qty' => $input['initial_quantity'],
+                    'loc_id' => $input['loc_id'][$i],
+                    'insert_date' => date('Y-m-d H:i:s'),
+                );
+                $this->items_model->saveNewItemLocation($STORAGE_LOCATION_DATA);
             }
-            echo "1";
-        } else {
-            echo "0";
-        }
+    
+            $customFields = $input['custom_field'];
+            unset($input['custom_field']);
+    
+            if ($itemId) {
+                if($customFields) {
+                    $customFieldsValue = [];
+                    foreach($customFields as $fieldId => $value) {
+                        $customFieldsValue[] = [
+                            'custom_field_id' => $fieldId,
+                            'value' => $value,
+                            'item_id' => $itemId
+                        ];
+                    }
+    
+                    $this->items_model->insert_custom_fields_value($customFieldsValue);
+                }                
+            } 
 
-        // redirect('inventory');
+            //Activity Logs
+            $activity_name = 'Inventory : Created item '.$input['title']; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }else{
+            $msg = 'Item name already exists.';
+        }
+        
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
     }
 
     public function edit_item( $id )
     {
+        if(!checkRoleCanAccessModule('inventory', 'write')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Inventory';
         $this->page_data['page']->parent = 'Tools';
         $get_vendors = array(
@@ -660,9 +687,10 @@ class Inventory extends MY_Controller
         // );
         if ($delete) {
 
-            $this->session->set_flashdata('alert-type', 'success');
-            $this->session->set_flashdata('alert', 'Record was successfully deleted');
-
+            //Activity Logs
+            $activity_name = 'Inventory : Deleted item '.$item->title; 
+            createActivityLog($activity_name);
+            
             echo '1';
         }
     }
@@ -997,27 +1025,41 @@ class Inventory extends MY_Controller
         return $result;
     }
 
-    public function deleteMultiple() {
-        postAllowed();
-        $ids = explode(",",$this->input->post('ids'));
-        
-        foreach($ids as $id) {
-            $item = $this->items_model->getItemById($id)[0];
+    public function deleteMultiple() 
+    {   
+        $is_success = 0;
+        $msg = 'Please select item(s).';
 
-            $attempt = 0;
-            do {
-                $name = $attempt > 0 ? "$item->title (deleted - $attempt)" : "$item->title (deleted)";
-                $checkName = $this->items_model->check_name(logged('company_id'), $name, 1);
+        $post = $this->input->post();
 
-                $attempt++;
-            } while(!is_null($checkName));
+        if( $post['items'] ){
+            foreach($post['items'] as $id) {    
+                $item = $this->items_model->getByID($id);
+                if( $item ){
+                    $attempt = 0;
+                    do {
+                        $name = $attempt > 0 ? "$item->title (deleted - $attempt)" : "$item->title (deleted)";
+                        $checkName = $this->items_model->check_name(logged('company_id'), $name, 1);
+    
+                        $attempt++;
+                    } while(!is_null($checkName));
+    
+                    $data = ['is_active' => 0, 'modified' => date("Y-m-d H:i:s")];
+                    $this->items_model->updateItem($item->id, $data);
+    
+                    //Activity Logs
+                    $activity_name = 'Inventory : Deleted item '.$item->title; 
+                    createActivityLog($activity_name);
+                } 
+                
+            }
 
-            $condition = ['id' => $id, 'company_id' => logged('company_id')];
-            $update = $this->items_model->update($data, $condition);
-            $this->items_model->delete($id);
-        }
+            $is_success = 1;
+            $msg = '';
+        } 
 
-        echo json_encode(true);
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 
     public function ajax_delete_selected_storage_location() {

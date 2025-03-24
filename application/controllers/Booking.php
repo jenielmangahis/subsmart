@@ -648,6 +648,67 @@ class Booking extends MY_Controller {
         redirect('more/addon/booking/products');
     }
 
+	public function ajax_save_service_item()
+    {
+		$this->load->model('BookingServiceItem_model');
+
+		$is_success = 1;
+        $msg = '';
+
+        $user_id = logged('id');
+		$company_id = logged('company_id');
+        $post = $this->input->post();
+
+		$product_image = '';
+		if( isset($_FILES['product_image']) && $_FILES['product_image']['size'] > 0 ){
+
+			$target_dir = './uploads/service_item/'.$company_id.'/';
+
+			if (!file_exists($target_dir)) {
+				mkdir($target_dir, 0777, true);
+			}
+
+			$config = array(
+				'upload_path' => $target_dir,
+				'allowed_types' => '*',
+				'overwrite' => TRUE,
+				'max_size' => '20000',
+				'max_height' => '0',
+				'max_width' => '0',
+				'encrypt_name' => true
+			);
+
+			$this->load->library('upload',$config);
+			$config = $this->uploadlib->initialize($config);
+			if ($this->upload->do_upload("product_image")){
+				$uploadData    = $this->upload->data();	
+				$product_image = $uploadData['file_name'];
+			}
+		}
+
+        if( !empty($post) ){
+        	$data = array(
+        		'company_id' => $company_id,
+        		'user_id' => $user_id,
+        		'category_id' => $post['category_id'],
+        		'name' => $post['name'],
+        		'description' => $post['description'],
+        		'price' => $post['price'],
+        		'price_unit' => $post['price_unit'],
+        		'image' => $product_image,
+        		'date_created' => date("Y-m-d H:i:s")
+        	);
+        	$bookingServiceItem = $this->BookingServiceItem_model->create($data);
+        }
+
+        $return = [
+			'is_success' => $is_success,
+			'msg' => $msg
+		];
+
+		echo json_encode($return);
+    }
+
     public function update_service_item()
     {
     	postAllowed();

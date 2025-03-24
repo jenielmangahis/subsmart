@@ -1987,7 +1987,7 @@ class Job extends MY_Controller
         if ($this->general->delete_($remove_tag)) {
             
             //Activity Logs
-            $activity_name = 'Deleted Job Tag '.$jobTag->name; 
+            $activity_name = 'Job Tags : Deleted job tag '.$jobTag->name; 
             createActivityLog($activity_name);
             echo '1';
         }
