@@ -206,6 +206,40 @@
                     <tbody>
                         <?php if(count($invoices) > 0) : ?>
 						<?php foreach($invoices as $invoice) : ?>
+                        <?php 
+                            switch ($invoice->status):
+                                case "Partially Paid":
+                                    $badge = "secondary";
+                                    break;
+                                case "Paid":
+                                    $badge = "success";
+                                    break;
+                                case "Due":
+                                    $badge = "secondary";
+                                    break;
+                                case "Overdue":
+                                    $badge = "error";
+                                    break;
+                                case "Submitted":
+                                    $badge = "success";
+                                    break;
+                                case "Approved":
+                                    $badge = "success";
+                                    break;
+                                case "Declined":
+                                    $badge = "error";
+                                    break;
+                                case "Scheduled":
+                                    $badge = "primary";
+                                    break;
+                                case "Draft":
+                                    $badge = "error";
+                                    break;
+                                default:
+                                    $badge = "error";
+                                    break;
+                            endswitch;                            
+                        ?>
                         <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
@@ -259,7 +293,11 @@
                                     }
                                 ?>
                             </td>
-                            <td><?= $invoice->status != '' ? $invoice->status : 'Draft'; ?></td>
+                            <td>
+                                <span class="status-label nsm-badge <?= $badge ?>" style="font-size: 13px;">
+                                    <?= $invoice->status != '' ? $invoice->status : 'Draft'; ?>
+                                </span>
+                            </td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">

@@ -140,7 +140,7 @@ class Invoice extends MY_Controller
         }
 
         $role = logged('role');
-        $type = 0;
+        $type = '';
         $comp_id = logged('company_id');
         $sort_by = 'Newest First';
         if (!empty($tab)) {      
@@ -186,56 +186,6 @@ class Invoice extends MY_Controller
 
         $invoiceSettings = $this->invoice_settings_model->getByCompanyId($comp_id);
 
-        /*
-        $deduct_days_computation = 1;
-        foreach($invoices_data as $inv_data) {
-            $current_date    = date('Y-m-d');
-            $new_invoice_grand_total = 0;
-            $late_fee        = 0;
-            $days_activate_late_fee = 0;
-            $invdata         = [];
-
-            $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($inv_data->customer_id);	
-
-            //Invoice is due, need to add late fee
-            $late_fee_activated_date = $inv_data->due_date;
-            if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
-                $date1 = new DateTime($current_date);
-                $date2 = new DateTime($late_fee_activated_date);
-                $total_days = $date2->diff($date1)->format("%a");
-
-                $days_activate_late_fee = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
-                if($total_days > $days_activate_late_fee) {
-                    $late_fee_percentage = $customer_billing_info->payment_fee != null ? $customer_billing_info->payment_fee : 0; 
-                    $late_fee += ($late_fee_percentage / 100) * $inv_data->invoice_totals;
-    
-                    if($total_days > 0) {
-                        $default_late_fee = $customer_billing_info->late_fee != null ? $customer_billing_info->late_fee : 0;
-                        if($total_days >= 10) {
-                            $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);                        
-                        } else {
-                            $late_fee += $default_late_fee * ($total_days - $deduct_days_computation);      
-                        }   
-                    }
-                }
-            }       
-            
-            $new_invoice_grand_total = $inv_data->invoice_totals + $late_fee;
-
-            //Update invoice new grand total & late fee
-            if($late_fee > 0) {
-                $invdata = [
-                    'id' => $inv_data->id,
-                    'balance' => $new_invoice_grand_total,
-                    'grand_total' => $new_invoice_grand_total,
-                    'total_due' => $new_invoice_grand_total,
-                    'late_fee' => $late_fee
-                ];           
-                $this->customer_ad_model->update_data($invdata, 'invoices', 'id');	
-            }
-        }
-        */
-
         $this->page_data['invoiceSettings'] = $invoiceSettings;
         $this->page_data['unpaid_last_365'] = $receivable_payment - $total_amount_received;
         $this->page_data['unpaid_last_30'] = $receivable_last30_days - $total_amount_received_last30_days;
@@ -252,7 +202,6 @@ class Invoice extends MY_Controller
         $this->page_data['graph_data'] = "[" . $this->graph_data_to_text($graph_data) . "]";
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        // $this->page_data['invoices'] = $this->invoice_model->getAllData($company_id);
         $this->page_data['default_late_fee'] = $this->invoice_model->defaultLateFee();
         $this->page_data['page_title'] = "Invoices & Payments";
         $this->page_data['page']->title = 'Invoices & Payments';
