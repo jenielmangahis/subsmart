@@ -1,475 +1,382 @@
 <style>
-@media print {
-    .mustRight 
-    { 
-        float: right !important; 
-        margin-top:-80px !important;
-        font-size: 12px !important;
-    }
-    .descriptionTags
-    {
-        width:25% !important;
-    }
-    .salesRepArea
-    {
-        width:25% !important;
-        float: right !important; 
-    }
-    .serviceLocDiv
-    {
-        width:75% !important;
-    }
-    .paymentArea
-    {
-        width:60% !important;
-    }
-    .spaceDiv
-    {
-        width:5% !important;
-    }
-    .summaryArea
-    {
-        width:35% !important;
-    }
-    .compLogo
-    {
-        width: 80px; 
-        height: 80px;
-    }
-} 
-.quick-view-schedule-container .title-border{
-    background-color: #6a4a86;
-    color: #ffffff;
-    font-size: 15px;
-    padding: 10px;
+.view-schedule-container .bg-primary{
+    background-color:#6a4a86;
 }
-.ticket-bill-method{
-    display:block;
-    margin-top:10px;
+.view-schedule-container .bg-primary{
+    background-color:#6a4a86 !important;
 }
-.clear{
-    clear:both;
+.view-schedule-container .bg-primary .card-body{
+    background-color:#f7f7f9;
 }
-.ticket-bill-method span label{
-    width: 130px;
+
+.view-schedule-container .bg-primary .card-header{
+    color:#ffffff;
+}
+.view-schedule-container .details{
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+.view-schedule-container .details li{
+    font-size:17px;
+    display:inline-block;
+    width:49%;
+    margin-bottom:0px;
+    vertical-align:top;
+}
+.view-schedule-container .details li span.bx{
+    width: 35px;
     display: inline-block;
-    font-weight: bold;
-    margin-bottom: 3px;
-    /* text-transform: capitalize; */
+    font-size: 20px;
+    position: relative;
+    top: 3px;
+}
+#map-ticket-preview{
+    height: 310px;
+}
+
+.job-view-details{
+    font-size: 15px;
+}
+
+.job-view-details .label{
+    font-weight:bold;
+    margin-bottom: 5px;
+}
+.nsm-list-icon {
+    border: 2px solid #fff;
+    box-sizing: content-box;
+    margin-left: -12px;
+}
+.techs {
+    display: flex;
+    padding-left: 12px;
+}
+.techs > .nsm-profile {
+    border: 2px solid #fff;
+    box-sizing: content-box;
+    margin-left: -12px;
+}
+.nsm-profile {
+    --size: 35px;
+    max-width: var(--size);
+    height: var(--size);
+    min-width: var(--size);
+}
+@media (max-width: 932px) {
+    .view-schedule-container .details li {
+        font-size: 17px;
+        display: inline-block;
+        width: 100% !important;
+        margin-bottom: 0px;
+        vertical-align:top;
+    }
+
+    .steps .step {
+        display: inline-block !important;
+        width: 20% !important;
+    }
+}
+
+.steps .step {
+    display: block;
+    width: 100%;
+    margin-bottom: 35px;
+    text-align: center
+}
+
+.steps .step .step-icon-wrap {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 40px;
+    text-align: center
+}
+
+.steps .step .step-icon-wrap::before,
+.steps .step .step-icon-wrap::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    width: 50%;
+    height: 3px;
+    margin-top: -1px;
+    background-color: #e1e7ec;
+    content: '';
+    z-index: 1
+}
+
+.steps .step .step-icon-wrap::before {
+    left: 0
+}
+
+.steps .step .step-icon-wrap::after {
+    right: 0
+}
+
+.steps .step .step-icon {
+    display: inline-block;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e1e7ec;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    color: #374250;
+    font-size: 23px;
+    line-height: 40px !important;
+    z-index: 5
+}
+
+.steps .step .step-title {
+    margin-top: 16px;
+    margin-bottom: 0;
+    color: #606975;
+    font-size: 14px;
+    font-weight: 500
+}
+
+.steps .step:first-child .step-icon-wrap::before {
+    display: none
+}
+
+.steps .step:last-child .step-icon-wrap::after {
+    display: none
+}
+
+.steps .step.completed .step-icon-wrap::before,
+.steps .step.completed .step-icon-wrap::after {
+    background-color: #6a4a86
+}
+
+.steps .step.completed .step-icon {
+    border-color: #6a4a86;
+    background-color: #6a4a86;
+    color: #fff
+}
+
+@media (max-width: 576px) {
+    .flex-sm-nowrap .step .step-icon-wrap::before,
+    .flex-sm-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 768px) {
+    .flex-md-nowrap .step .step-icon-wrap::before,
+    .flex-md-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 991px) {
+    .flex-lg-nowrap .step .step-icon-wrap::before,
+    .flex-lg-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 1200px) {
+    .flex-xl-nowrap .step .step-icon-wrap::before,
+    .flex-xl-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+.bg-faded, .bg-secondary {
+    background-color: #f5f5f5 !important;
+}
+.job-view-details i{
+    position:relative;
+    font-size:18px;
+    top:2px;
 }
 </style>
-<div class="nsm-page-content quick-view-schedule-container" style="padding:2%;">
-    <input type="hidden" value="<?= $tickets->id ?>" id="esignTicketId" />
-    <input type="hidden" value="<?= $tickets->customer_id; ?>" id="ticket_customer_id">
-    <div class="row">
-        <div class="col-md-5">
-            <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="margin-top: 33px; max-width: 130px; max-height: 130px;" class="compLogo"/> 
-        </div>
-        <div class="col-md-7">
-            <table class="table-borderless mustRight" style="width:100%;">
-                <tr>
-                    <td colspan="2"><h1 style="text-align:right;"><b><?= $tickets->ticket_no; ?></b></h1></td>
-                </tr> 
-                <tr>
-                    <td align="right">Job Tags:</td>
-                    <td align="right"><b><?php echo $tickets->job_tag; ?></b></td>
-                </tr>
-                <tr>
-                    <td align="right">Purchase Order No:</td>
-                    <td align="right"><b><?php echo $tickets->purchase_order_no != '' ? $tickets->purchase_order_no : '---'; ?></b></td>
-                </tr>                 
-                <tr>
-                    <td align="right">Panel Type:</td>
-                    <td align="right"><b><?php echo $tickets->panel_type != '' ? $tickets->panel_type : '---'; ?></b></td>
-                </tr>                
-                <tr>
-                    <td align="right" style="width:47%;">Scheduled Date:</td>
-                    <td align="right"><?php echo date('m/d/Y', strtotime($tickets->ticket_date)); ?></td>
-                </tr>
-                <tr>
-                    <td align="right">Scheduled Time:</td>
-                    <td align="right"><?php echo $tickets->scheduled_time.' to '.$tickets->scheduled_time_to; ?></td>
-                </tr>
-                <tr>
-                    <td align="right">Status:</td>
-                    <td align="right"><b><?php echo $tickets->ticket_status; ?></b></td>
-                </tr>
-                <?php if($tickets->business_name != ''){ ?>
-                <tr>
-                    <td align="right">Business Name:</td>
-                    <td align="right"><?php echo $tickets->business_name; ?></td>
-                </tr>
-                <?php } ?>
-            </table>            
-        </div>
-    </div>
-    <br />
-    <div class="row mt-5">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-7">
-                    <h6 class="title-border">FROM :</h6>
-                    <div style="font-size:14px;padding:3px;">
-                        <span style="font-size:16px;font-weight: bold; display: block; margin-bottom:6px;">
-                            <i class='bx bx-buildings'></i> <?php echo $clients->business_name; ?>
-                        </span>
-                        <span><?php echo $clients->street .' <br>'. $clients->city .', '. $clients->state .' '. $clients->postal_code; ?></span><br>
-                        <?php if( $clients->business_email != '' ){ ?>
-                            <span> Email: <a href="mailto:<?= $clients->business_email; ?>"><?= $clients->business_email; ?></a></span><br />
-                        <?php } ?>
-                        <span> Contact Number: <?= formatPhoneNumber($clients->business_phone); ?></span>
-                    </div>  
-                </div>
-                <div class="col-md-5">
-                    <h6 class="title-border">TECHNICIANS :</h6>
-                    <?php 
-                        $assigned_employees = array();
-                        $emp_ids = unserialize($tickets->technicians);
-                        if( is_array($emp_ids) ){
-                            foreach($emp_ids as $eid){
-                                $assigned_employees[] = $eid;    
-                            }
-                        }    
-
-                        if( !empty($assigned_employees) ){
-                            if( !in_array($tickets->sales_rep, $assigned_employees) ){
-                                $assigned_employees[] = $tickets->sales_rep;    
-                            }                            
-                        }else{
-                            $assigned_employees[] = $tickets->sales_rep;    
-                        }
-                    ?>
-                    <?php foreach($assigned_employees as $eid){ ?>
-                        <div class="nsm-list-icon primary" style="background-color:#ffffff;display:inline-block;float:none !important;">
-                            <div class="nsm-profile" style="background-image: url('<?= userProfileImage($eid); ?>');" data-img="<?= userProfileImage($eid); ?>"></div>                            
+<div class="row">
+    <div class="col-12 col-md-12">
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
+                    <div class="step <?= $tickets->ticket_status == 'Scheduled' || $tickets->status != 'Draft' ? 'completed' : '' ?>">
+                        <div class="step-icon-wrap">
+                            <div class="step-icon"><i class='bx bx-calendar'></i></div>
                         </div>
-                    <?php } ?>
-                    <div class="clear"></div>
-                </div>
+                        <h4 class="step-title">Scheduled</h4>
+                    </div>
+                    <div class="step <?= $tickets->ticket_status == 'Started' || ($tickets->ticket_status != 'Draft' && $tickets->ticket_status != 'Scheduled') ? 'completed' : '' ?>">
+                        <div class="step-icon-wrap">
+                            <div class="step-icon"><i class='bx bx-time-five'></i></div>
+                        </div>
+                        <h4 class="step-title">Start</h4>
+                    </div>
+                    <div class="step <?= $tickets->ticket_status == 'Finished' || ($tickets->ticket_status != 'Started' && $tickets->ticket_status != 'Draft')   ? 'completed' : '' ?>">
+                        <div class="step-icon-wrap">
+                            <div class="step-icon"><i class='bx bxs-flag-checkered'></i></div>
+                        </div>
+                        <h4 class="step-title">Finish</h4>
+                    </div>
+                    <div class="step <?= $tickets->ticket_status == 'Invoiced' ? 'completed' : '' ?>">
+                        <div class="step-icon-wrap">
+                            <div class="step-icon"><i class='bx bx-receipt'></i></div>
+                        </div>
+                        <h4 class="step-title">Invoice</h4>
+                    </div>
+                </div>            
+            
             </div>
         </div>
+        <div class="card bg-primary mb-3">
+            <div class="card-header">CUSTOMER</div>
+            <div class="card-body">
+                <div class="form-group">
+                    <ul class="container details">
+                        <li><p><span class='bx bx-user-circle'></span> <b><?= $tickets->first_name .' '. $tickets->last_name; ?></b></p></li>
+                        <li><p><span class='bx bx-map'></span><?= $tickets->cust_city.', '.$tickets->cust_state.' '.$tickets->cust_zip_code; ?></p></li>
+                        <li><p><span class='bx bx-phone'></span> <?= $tickets->phone_m !="" || $tickets->phone_m !=null ? formatPhoneNumber($tickets->phone_m) : 'N/A'; ?></p></li>
+                        <li><p><span class='bx bx-envelope'></span><a href="mailto:<?= $tickets->cust_email; ?>"><?= $tickets->cust_email; ?></a></p></li>
+                        <li><p><span class='bx bx-dollar-circle'></span> <?= number_format($tickets->grandtotal,2,'.',','); ?></p>
+                    </ul>
+                </div>
+            </div>
+        </div> 
 
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-7">
-                    <h6 class="title-border" style="margin-top: 5px;">TO : </h6>
-                    <div style="font-size:14px;padding:3px;">                
-                        <?php if( $tickets->customer_type == 'Business' && $tickets->acs_business_name != '' ){ ?>
-                            <span style="font-size:16px;font-weight: bold; display: block; margin-bottom:6px;">
-                                <i class='bx bx-user-circle' ></i> <?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?> - 
-                                <i class='bx bx-buildings'></i> <?= $tickets->acs_business_name; ?>
-                            </span>
-                        <?php }else{ ?>
-                            <span style="font-size:16px;font-weight: bold; display: block; margin-bottom:6px;">
-                                <i class='bx bx-user-circle'></i> <?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?>
-                            </span>
-                        <?php } ?>
-                        <span><?php echo $tickets->mail_add .' <br>'. $tickets->city .', '. $tickets->state .' '. $tickets->zip_code; ?></span><br>
-                        <?php if( $tickets->email != '' ){ ?>
-                            <span>Email: <a href="mailto:<?php echo $tickets->email; ?>"><?php echo $tickets->email; ?></a></span><br>
-                        <?php } ?>
-                        <span>Contact Number: <?php echo formatPhoneNumber($tickets->phone_m); ?></span>
+        <div class="card bg-primary mb-3">
+            <div class="card-header">MAP</div>
+            <div class="card-body" style="padding:0px;">
+                <div class="form-group">
+                    <div class="text-center map-container">
+                        <div id="map-ticket-preview"></div>
                     </div>
                 </div>
-                <div class="col-md-5">
-                    <?php if( $esign && $billing ){ ?>
-                        <div class="ticket-bill-method">
-                            <h6 class="title-border">BILLING</h6>
-                            <span style="font-size:16px;font-weight: bold; display: block; margin-bottom:6px;">
-                                <?php 
-                                    $billing_method = $billing->bill_method;
-                                    if( $billing_method == 'CC' ){
-                                        $billing_method = 'Credit Card';
-                                    }
-                                    if( $billing_method == 'CHECK' ){
-                                        $billing_method = 'Check';
-                                    }
-                                ?>
-                                <i class='bx bx-spreadsheet'></i> <label><?php echo $billing_method != '' ? $billing_method : '---'; ; ?></label>
-                            </span>   
-                            <?php if( $billing->bill_method == 'CC' ){ ?>     
-                                <span><label>Card Type</label> : <?= $billing->card_type; ?><br /></span>        
-                                <?php 
-                                    if (logged("user_type") == 1){
-                                        $cc_num = $billing->credit_card_num;
-                                    }else{
-                                        $cc_num = strMask($billing->credit_card_num,'X');
-                                    } 
-                                ?>
-                                <span><label>Card Number</label> : <?= $cc_num; ?><br /></span>
-                                <span><label>Card Expiration</label> : <?= $billing->credit_card_exp; ?><br /></span>
-                                <span><label>Card CVC</label> : <?= $billing->credit_card_exp_mm_yyyy; ?><br /></span>
-                            <?php } ?>
-                            <?php if( $billing->bill_method == 'Debit Card' ){ ?>        
-                                <?php 
-                                    if (logged("user_type") == 1){
-                                        $cc_num = $billing->credit_card_num;
-                                    }else{
-                                        $cc_num = strMask($billing->credit_card_num,'X');
-                                    } 
-                                ?>
-                                <span><label>Card Number</label> : <?= $cc_num; ?><br /></span>
-                                <span><label>Card Expiration</label> : <?= $billing->credit_card_exp; ?><br /></span>
-                                <span><label>Card CVC</label> : <?= $billing->credit_card_exp_mm_yyyy; ?><br /></span>
-                            <?php } ?>
-                            <?php if( $billing->bill_method == 'CHECK' ){ ?>  
-                                <span><label>Bank Name</label> : <?= $billing->bank_name; ?><br /></span>
-                                <span><label>Check Number</label> : <?= $billing->check_num; ?><br /></span>
-                                <span><label>Routing Number</label> : <?= $billing->routing_num; ?><br /></span>
-                                <span><label>Account Number</label> : <?= $billing->acct_num; ?><br /></span>
-                            <?php } ?>
-                            <?php if( $billing->bill_method == 'ACH' ){ ?>                                  
-                                <span><label>Routing Number</label> : <?= $billing->routing_num; ?><br /></span>
-                                <span><label>Account Number</label> : <?= $billing->acct_num; ?><br /></span>
-                            <?php } ?>
-                        </div>
-                    <?php } ?>
-                </div>
             </div>
-        </div>
-    </div>    
-    <br />
-    <div class="row">        
-        <div class="col-md-12">
-            <h6 class="title-border">ITEMS :</h6>
-            <table class="table table-bordered">
-                <thead style="background-color: #F3F3F3;">
-                    <th>#</th>
-                    <th>Items</th>
-                    <th>Item Type</th>
-                    <th style="text-align:center;">Price</th>
-                    <th style="text-align:center;">Qty</th>
-                    <th style="text-align:center;">Discount</th>
-                    <th style="text-align:center;">Total</th>
-                </thead>
-                <tbody>
-                    <?php
-                    $i = 1;
-                    $total_discount = 0;
-                     foreach($items as $item){ ?>
-                    <?php $total_discount = $total_discount + $item->discount; ?>
-                    <tr>
-                        <td><?php echo $i; ?></td>
-                        <td><?php echo $item->title; ?></td>
-                        <td><?php echo $item->item_type; ?></td>
-                        <td style="text-align:right;">$<?php echo number_format($item->costing,2); ?></td>
-                        <td style="text-align:center;"><?php echo $item->qty; ?></td>
-                        <td style="text-align:right;">$<?php echo number_format($item->discount,2); ?></td>
-                        <td style="text-align:right;">$<?php echo number_format($item->total,2); ?></td>
-                    </tr>
-                    <?php 
-                        $i++;
-                    } ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-md-6 paymentArea">   
-            <div class="table-responsive">
-                <table class="table table-bordered">                
-                    <?php if( $tickets->otp_setup > 0 ){ ?>
-                    <tr style="font-weight:bold;">
-                        <td>One Time (Program and Setup)</td>
-                        <td style="text-align:right;">$<?php echo number_format($tickets->otp_setup,2); ?></td>
-                    </tr>
-                    <?php } ?>
-                    <?php if( $tickets->monthly_monitoring > 0 ){ ?>
-                    <tr style="font-weight:bold;">
-                        <td>Monthly Monitoring</td>
-                        <td style="text-align:right;">$<?php echo number_format($tickets->monthly_monitoring,2); ?></td>
-                    </tr>
-                    <?php } ?>
-                    <?php if( $tickets->installation_cost > 0 ){ ?>
-                    <tr style="font-weight:bold;">
-                        <td>Installation Cost</td>
-                        <td style="text-align:right;">$<?php echo number_format($tickets->installation_cost,2); ?></td>
-                    </tr>
-                    <?php } ?>
-                    <tr style="font-weight:bold;"><td colspan="2">Service Description</td></tr>
-                    <tr><td colspan="2"><?= $tickets->service_description != '' ? $tickets->service_description : 'None'; ?></td></tr>
-                    <tr style="font-weight:bold;"><td colspan="2">Instructions / Notes</td></tr>
-                    <tr>
-                        <td colspan="2">
+        </div> 
+        <div class="card bg-primary mb-3">
+            <div class="card-header">SERVICE TICKET INFORMATION</div>
+            <div class="card-body">
+                <div class="row job-view-details">
+                    <div class="col-md-4 col-12">
+                        <div class="job-view-info">
+                            <div class="label">SERVICE TICKET NUMBER</div>
+                            <i class='bx bx-hash'></i> <?= $tickets->ticket_no; ?>
+                        </div>                
+                    </div>
+                    <div class="col-md-4 col-12 mt-2">
+                        <div class="label">SERVICE TICKET TAGS</div>
+                        <i class='bx bx-purchase-tag-alt'></i> <?= $tickets->job_tag != '' ? $tickets->job_tag : '---';  ?>
+                    </div>
+                    <div class="col-md-4 col-12 mt-2">
+                        <div class="label">PANEL TYPE</div>
+                        <i class='bx bx-trim'></i> <?= $tickets->panel_type != '' ? $tickets->panel_type : '---';  ?>
+                    </div>
+                    <div class="col-md-4 col-12 mt-2">
+                        <div class="job-view-info">
+                            <div class="label">DATE</div>
+                            <i class='bx bx-calendar'></i><?= date("m/d/Y",strtotime($tickets->ticket_date)); ?>
+                        </div>                
+                    </div>
+                    <div class="col-md-4 col-12 mt-2">
+                        <div class="job-view-info">
+                            <div class="label">TIME</div>
+                            <i class='bx bx-time-five'></i>
                             <?php 
-                                if( $tickets->instructions != '' ){
-                                    echo  $tickets->instructions;
+                                if( $tickets->scheduled_time != $tickets->scheduled_time_to ){
+                                    echo $tickets->scheduled_time . ' to ' . $tickets->scheduled_time_to;
                                 }else{
-                                    echo "None";
+                                    echo $tickets->scheduled_time;
                                 }
                             ?>
-                        </td>
-                    </tr>
-                </table> 
-            </div>       
-            <!-- <table class="table table-borderless">
-                <tr>
-                    <td style="width:150px;"><b>Payment Method: </b></td>
-                    <td style="text-align:;"><?php echo $tickets->payment_method; ?></td>
-                </tr>
-                <tr>
-                    <td><b>Payment Amount: </b></td>
-                    <td style="text-align:;">$<?php echo number_format($tickets->payment_amount,2); ?></td>
-                </tr>
-                <tr>
-                    <td><b>Billing Date: </b></td>
-                    <td style="text-align:;"><?php echo $tickets->billing_date; ?></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                    <?php 
-                    $payment_method                 = $tickets->payment_method;
-                    $check_number                   = $payment->check_number;
-                    $routing_number                 = $payment->routing_number;
-                    $account_number                 = $payment->account_number;
-                    $credit_number                  = $payment->credit_number;
-                    $credit_expiry                  = $payment->credit_expiry;
-                    $credit_cvc                     = $payment->credit_cvc;
-                    $account_credentials            = $payment->account_credentials;
-                    $account_note                   = $payment->account_note;
-                    $confirmation                   = $payment->confirmation;
-                    $mail_address                   = $payment->mail_address;
-                    $mail_locality                  = $payment->mail_locality;
-                    $mail_state                     = $payment->mail_state;
-                    $mail_postcode                  = $payment->mail_postcode;
-                    $mail_cross_street              = $payment->mail_cross_street;
-                    $billing_date                   = $payment->billing_date;
-                    $billing_frequency              = $payment->billing_frequency;
+                        </div>                
+                    </div>
+                    <div class="col-md-4 col-12 mt-2">
+                        <div class="label">ASSIGNED USERS</div>
+                        <?php 
+                            $assigned_employees = array();
+                            $emp_ids = unserialize($tickets->technicians);
+                            if( is_array($emp_ids) ){
+                                foreach($emp_ids as $eid){
+                                    $assigned_employees[] = $eid;    
+                                }
+                            }    
 
-                        if($payment_method ==  'Cash'){
-                            echo '<b>Payment Details:</b>';
-                        }
-                        elseif($payment_method ==  'Check')
-                        {
-                            // echo 'Payment Method: Check';
-                            echo '<b>Payment Details:</b>';
-                            echo '<br> Check Number: '. $check_number;
-                            echo '<br> Rounting Number: '. $routing_number;
-                            echo '<br> Account Number: '. $account_number;
-                        }
-                        elseif($payment_method ==  'Credit Card')
-                        {
-                            // echo 'Payment Method: Credit Card';
-                            echo '<b>Payment Details:</b>';
-                            echo '<br> Credit Number: '. $credit_number;
-                            echo '<br> Credit Expiry: '. $credit_expiry;
-                            echo '<br> CVC: '. $credit_cvc;
-                        }
-                        elseif($payment_method ==  'Debit Card')
-                        {
-                            // echo 'Payment Method: Debit Card';
-                            echo '<b>Payment Details:</b>';
-                            echo '<br> Credit Number: '. $credit_number;
-                            echo '<br> Credit Expiry: '. $credit_expiry;
-                            echo '<br> CVC: '. $credit_cvc;
-                        }
-                        elseif($payment_method ==  'ACH')
-                        {
-                            // echo 'Payment Method: Debit Card';
-                            echo '<b>Payment Details:</b>';
-                            echo '<br> Routing Number: '. $routing_number;
-                            echo '<br> Account Number: '. $account_number;
-                        }
-                        elseif($payment_method ==  'Venmo')
-                        {
-                            // echo 'Payment Method: Venmo';
-                            echo '<b>Payment Details:</b>';
-                            echo '<br> Account Credential: '. $account_credentials;
-                            echo '<br> Account Note: '. $account_note;
-                            echo '<br> Confirmation: '. $confirmation;
-                        }
-                        elseif($payment_method ==  'Paypal')
-                        {
-                            // echo 'Payment Method: Paypal';
-                            echo '<b>Payment Details:</b>';
-                            echo '<br> Account Credential: '. $account_credentials;
-                            echo '<br> Account Note: '. $account_note;
-                            echo '<br> Confirmation: '. $confirmation;
-                        }
-                        elseif($payment_method ==  'Square')
-                        {
-                            // echo 'Payment Method: Square';
-                            echo '<b>Payment Details:</b>';
-                            echo '<br> Account Credential: '. $account_credentials;
-                            echo '<br> Account Note: '. $account_note;
-                            echo '<br> Confirmation: '. $confirmation;
-                        }
-                        elseif($payment_method ==  'Invoicing')
-                        {
-                            // echo 'Payment Method: Invoicing';
-                            echo '<b>Payment Details:</b>';
-                            echo '<br> Address: '. $mail_address.' '. $mail_locality.' '. $mail_state.' '. $mail_postcode.' '. $mail_cross_street;
-                        }
-                        elseif($payment_method ==  'Warranty Work')
-                        {
-                            // echo 'Payment Method: Warranty Work';
-                            echo '<b>Payment Details:</b>';
-                            echo '<br> Account Credential: '. $account_credentials;
-                            echo '<br> Account Note: '. $account_note;
-                        }
-                        elseif($payment_method ==  'Home Owner Financing')
-                        {
-                            // echo 'Payment Method: Home Owner Financing';
-                            echo '<b>Payment Details:</b>';
-                            echo '<br> Account Credential: '. $account_credentials;
-                            echo '<br> Account Note: '. $account_note;
-                        }
-                        elseif($payment_method ==  'e-Transfer')
-                        {
-                            // echo 'Payment Method: e-Transfer';
-                            echo '<b>Payment Details:</b>';
-                            echo '<br> Account Credential: '. $account_credentials;
-                            echo '<br> Account Note: '. $account_note;
-                        }
-                        elseif($payment_method ==  'Other Credit Card Professor')
-                        {
-                            // echo 'Payment Method: Other Credit Card Professor';
-                            echo '<b>Payment Details:</b>';
-                            echo '<br> Credit Number: '. $credit_number;
-                            echo '<br> Credit Expiry: '. $credit_expiry;
-                            echo '<br> CVC: '. $credit_cvc;
-                        }
-                        elseif($payment_method ==  'Other Payment Type')
-                        {
-                            // echo 'Payment Method: Other Payment Type';
-                            echo '<b>Payment Details:</b>';
-                            echo '<br> Account Credential: '. $account_credentials;
-                            echo '<br> Account Note: '. $account_note;
-                        }
+                            if( !empty($assigned_employees) ){
+                                if( !in_array($tickets->sales_rep, $assigned_employees) ){
+                                    $assigned_employees[] = $tickets->sales_rep;    
+                                }                            
+                            }else{
+                                $assigned_employees[] = $tickets->sales_rep;    
+                            }
                         ?>
-                    </td>
-                </tr>
-            </table> -->
-        </div>
-        <div class="col-md-6 summaryArea">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <tr style="font-weight:bold;">
-                        <td>Subtotal</td>
-                        <td style="text-align:right;">$<?php echo number_format($tickets->subtotal,2); ?></td>
-                    </tr>                
-                    <tr style="font-weight:bold;">
-                        <td>Taxes</td>
-                        <td style="text-align:right;">$<?php echo number_format($tickets->taxes,2); ?></td>
-                    </tr>
-                    <tr style="font-weight:bold;">
-                        <td>Discount</td>
-                        <td style="text-align:right;">$<?php echo number_format($total_discount,2); ?></td>
-                    </tr>
-                    <!-- <tr style="font-weight:bold;">
-                        <td>Adjustment: <?php echo $tickets->adjustment; ?></td>
-                        <td style="text-align:right;">$<?php echo number_format($tickets->adjustment_value,2); ?></td>
-                    </tr> -->
-                    <!-- <tr style="font-weight:bold;">
-                        <td>Markup</td>
-                        <td style="text-align:right;">$<?php echo number_format($tickets->markup,2); ?></td>
-                    </tr> -->
-                    <tr style="font-weight:bold;">
-                        <td>Grand Total</td>
-                        <td style="text-align:right;">$<?php echo number_format($tickets->grandtotal,2); ?></td>
-                    </tr>
-                </table>
+                        <div class="techs">
+                            <?php foreach($assigned_employees as $eid){ ?>
+                                <div class="nsm-profile" style="background-image: url('<?= userProfileImage($eid); ?>');"></div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </div> 
+
     </div>
 </div>
+<script>
+$(function(){
+    var myAPIKey = "<?= GEOAPIKEY ?>";  
+    <?php if($default_lat != "" && $default_lon != "") { ?>
+            var default_lat    = '<?php echo $default_lat; ?>';
+            var default_lon    = '<?php echo $default_lon; ?>';        
+            var map_zoom_level = '11';  
+            var address_line2  = '<?= $jobs_data->first_name .' '. $jobs_data->last_name; ?>';
+    <?php } else { ?>
+            var default_lat    = '39.7837304';
+            var default_lon    = '-100.445882';   
+            var map_zoom_level = '5';    
+            var address_line2  = '<?= $jobs_data->first_name .' '. $jobs_data->last_name; ?>';
+    <?php } ?>
+
+    var map_style = 'osm-bright';
+
+    var center = {
+        lat: default_lat,
+        lon: default_lon
+    };  
+
+    var geoMap = new maplibregl.Map({
+    center: [center.lon, center.lat],
+    zoom: map_zoom_level,
+    container: 'map-ticket-preview',
+    style: `https://maps.geoapify.com/v1/styles/${map_style}/style.json?apiKey=${myAPIKey}`,
+    });
+    geoMap.addControl(new maplibregl.NavigationControl()); 
+    var currentMarkers=[];
+
+    var markerIcon = L.icon({
+    iconUrl: `https://api.geoapify.com/v1/icon?size=xx-large&type=material&color=rgb(106,74,134)&icon=my_location&apiKey=${myAPIKey}`,
+    iconSize: [38, 56], // size of the icon
+    iconAnchor: [19, 51], // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -60] // point from which the popup should open relative to the iconAnchor
+    });
+
+    var coordinates = [default_lon, default_lat]
+    var marker_color = 'mediumpurple';
+    let map_icon = `https://api.geoapify.com/v1/icon?size=large&type=material&icon=business_center&noWhiteCircle=0&color=${marker_color}&apiKey=${myAPIKey}`;
+    const el = document.createElement('div');
+    el.className = 'marker';    
+    el.style.width = '30px';
+    el.style.color = marker_color;
+    el.style.height = '50px';
+    el.style.backgroundSize = "contain";
+    el.style.backgroundImage = `url(${map_icon})`;    
+
+    // create the popup
+    const popup = new maplibregl.Popup({offset: 25}).setHTML(
+        address_line2
+    );
+
+    // add marker to map
+    var marker = new maplibregl.Marker({element: el})
+        .setLngLat(coordinates)
+        .setPopup(popup)
+        .addTo(geoMap);
+
+    currentMarkers.push(marker);  
+});
+</script>
