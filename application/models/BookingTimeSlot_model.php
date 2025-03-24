@@ -7,12 +7,8 @@ class BookingTimeSlot_model extends MY_Model
     
     public function findById($id)
     {
-        $user_id = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
-
-        $this->db->where('user_id', $user_id);
         $this->db->where('id', $id);
 
         $query = $this->db->get()->row();
@@ -82,10 +78,18 @@ class BookingTimeSlot_model extends MY_Model
         $this->db->delete($this->table, array('user_id' => $user_id));
     }
 
+    public function deleteAllCompanyTimeSlots($company_id){
+        $this->db->delete($this->table, array('company_id' => $company_id));
+    }
+
     public function deleteUserTimeSlot($id){
         $user_id = logged('id');
 
         $this->db->delete($this->table, array('user_id' => $user_id, 'id' => $id));
+    }
+
+    public function deleteTimeSlot($id){
+        $this->db->delete($this->table, array('id' => $id));
     }
 }
 

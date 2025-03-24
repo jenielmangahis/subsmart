@@ -63,12 +63,13 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-
-    public function getUserByID($id)
+    public function getByItemTitleAndCompanyId($title, $company_id)
     {
         $this->db->select('*');
-        $this->db->from('users');
-        $this->db->where('id', $id);
+        $this->db->from($this->table);
+        $this->db->where('title', $title);
+        $this->db->where('company_id', $company_id);
+
         $query = $this->db->get();
         return $query->result();
     }
@@ -367,6 +368,15 @@ class Items_model extends MY_Model
             return $update ? true : false;
         }
         return false;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function updateItem($id, $data)
+    {
+        $this->db->where('id', $id);
+        $this->db->update($this->table, $data);
     }
 
     public function updateLocationDetails($data, $condition = array())

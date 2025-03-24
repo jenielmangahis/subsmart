@@ -40,6 +40,17 @@ class BookingForms_model extends MY_Model
         return $query->result();
     }   
 
+    public function getAllCustomByCompanyId($company_id, $filters=array())
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('is_default', 0);
+        $this->db->order_by('sort', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }  
 
     public function getAllByUserId($user_id)
     {

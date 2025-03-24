@@ -42,9 +42,9 @@ class BookingServiceItem_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
 
-        if( $role_id > 2 ){
+        //if( $role_id > 2 ){
             $this->db->where('company_id', $company_id);
-        }
+        //}
         //$this->db->where('user_id', $id);
         $this->db->order_by('id', 'DESC');
 
