@@ -203,9 +203,10 @@
                                             <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
-                                            <li><a class="dropdown-item row-view-ticket" href="javascript:void(0);" data-id="<?= $ticket->id; ?>">View</a></li>
+                                            <li><a class="dropdown-item row-view-ticket" href="javascript:void(0);" data-id="<?= $ticket->id; ?>" data-ticket-number="<?= $ticket->ticket_no; ?>">View</a></li>
+                                            <li><a class="dropdown-item row-download-pdf" tabindex="-1" href="javascript:void(0);" data-id="<?= $ticket->id; ?>">Download PDF</a></li>
                                             <?php if(checkRoleCanAccessModule('service-tickets', 'write')){ ?>
-                                            <li><a class="dropdown-item" tabindex="-1" href="<?php echo base_url('tickets/editDetails/' . $ticket->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
+                                            <li><a class="dropdown-item" tabindex="-1" href="<?php echo base_url('tickets/editDetails/' . $ticket->id) ?>">Edit</a></li>
                                             <?php } ?>
                                             <?php if(checkRoleCanAccessModule('service-tickets', 'delete')){ ?>
                                             <li><a class="dropdown-item delete-ticket" href="javascript:void(0);" data-tk-id="<?php echo $ticket->id; ?>">Delete</a></li>
@@ -256,20 +257,17 @@
     </div>
 
     <div class="modal fade nsm-modal fade" id="modal-view-ticket" tabindex="-1" aria-labelledby="modal-view-ticket_label" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="modal-title content-title">View Service Ticket</span>
+                    <span class="modal-title content-title">View Service Ticket : <span id="view-service-ticket-number"></span></span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body" style="max-height:700px;overflow:auto;">
                     <input type="hidden" id="view-ticket-id" value="" />
-                    <div class="row g-3" id="view_ticket_container"></div>
+                    <div class="g-3 view-schedule-container"></div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="nsm-button primary" id="btn-download-pdf">Download PDF</button>
-                    <button type="button" class="nsm-button primary" id="btn-edit-ticket">Edit Ticket</button>
-                </div>
+                <div class="modal-footer"></div>
             </div>
         </div>
     </div>
@@ -288,9 +286,20 @@
         </div>
     </div>
 
-
 </div>
+<!-- Map files -->
+<script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
+<script type="text/javascript" src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
+<link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
+<script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
 
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/styles/minimal.css" />
+<script src="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/dist/index.min.js"></script>
+<!-- End Map files -->
 <script type="text/javascript">
     $(document).ready(function() {
         var ticketListTable = $("#ticket-list-table").DataTable({
@@ -498,26 +507,32 @@
     $(document).on('click', '.row-view-ticket', function(){
         var appointment_id = $(this).attr('data-id');
         var url = base_url + 'ticket/_quick_view_details';
+        var service_ticket_number = $(this).attr('data-ticket-number');
 
         $('#view-ticket-id').val(appointment_id);
         $('#modal-view-ticket').modal('show');
+        $('#view-service-ticket-number').text(service_ticket_number);
 
         $.ajax({
             type: "POST",
             url: url,
             data: {appointment_id: appointment_id},
             success: function(result) {
-                $("#view_ticket_container").html(result);
+                $(".view-schedule-container").html(result);
             },
             beforeSend: function() {
-                $('#view_ticket_container').html('<span class="bx bx-loader bx-spin"></span>');
+                $('.view-schedule-container').html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
     });
 
     $(document).on('click', '#btn-download-pdf', function(){
         var tid = $('#view-ticket-id').val();
+        location.href = base_url + 'share_Link/ticketsPDF/' + tid;
+    });
 
+    $(document).on('click', '.row-download-pdf', function(){
+        var tid = $(this).attr('data-id');
         location.href = base_url + 'share_Link/ticketsPDF/' + tid;
     });
 
