@@ -202,13 +202,13 @@
                         </div>
                         <h4 class="step-title">Scheduled</h4>
                     </div>
-                    <div class="step <?= $tickets->ticket_status == 'Started' || ($tickets->ticket_status != 'Draft' && $tickets->ticket_status != 'Scheduled') ? 'completed' : '' ?>">
+                    <div class="step <?= $tickets->ticket_status == 'Started' || $tickets->ticket_status == 'Finished' || $tickets->ticket_status == 'Invoiced' ? 'completed' : '' ?>">
                         <div class="step-icon-wrap">
                             <div class="step-icon"><i class='bx bx-time-five'></i></div>
                         </div>
                         <h4 class="step-title">Start</h4>
                     </div>
-                    <div class="step <?= $tickets->ticket_status == 'Finished' || ($tickets->ticket_status != 'Started' && $tickets->ticket_status != 'Draft')   ? 'completed' : '' ?>">
+                    <div class="step <?= $tickets->ticket_status == 'Finished' || $tickets->ticket_status == 'Invoiced' ? 'completed' : '' ?>">
                         <div class="step-icon-wrap">
                             <div class="step-icon"><i class='bx bxs-flag-checkered'></i></div>
                         </div>
