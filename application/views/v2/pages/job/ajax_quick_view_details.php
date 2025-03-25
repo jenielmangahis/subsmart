@@ -345,7 +345,7 @@ $(function(){
     el.className = 'marker';    
     el.style.width = '30px';
     el.style.color = marker_color;
-    el.style.height = '50px';
+    el.style.height = '45px';
     el.style.backgroundSize = "contain";
     el.style.backgroundImage = `url(${map_icon})`;    
 
