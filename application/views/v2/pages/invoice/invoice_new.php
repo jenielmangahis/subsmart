@@ -127,11 +127,12 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
                                 <li><a class="dropdown-item" data-id="filter_all" href="<?php echo base_url('invoice') ?>">All</a></li>
-                                <li><a class="dropdown-item" data-id="filter_due" href="<?php echo base_url('invoice/tab/2') ?>">Due</a></li>
-                                <li><a class="dropdown-item" data-id="filter_overdue" href="<?php echo base_url('invoice/tab/3') ?>">Overdue</a></li>
-                                <li><a class="dropdown-item" data-id="filter_partial" href="<?php echo base_url('invoice/tab/4') ?>">Partially Paid</a></li>
-                                <li><a class="dropdown-item" data-id="filter_paid" href="<?php echo base_url('invoice/tab/5') ?>">Paid</a></li>
-                                <li><a class="dropdown-item" data-id="filter_draft" href="<?php echo base_url('invoice/tab/6') ?>">Draft</a></li>
+                                <li><a class="dropdown-item" data-id="filter_draft" href="<?php echo base_url('invoice/tab/draft') ?>">Draft</a></li>
+                                <li><a class="dropdown-item" data-id="filter_partially_paid" href="<?php echo base_url('invoice/tab/partially_paid') ?>">Partially Paid</a></li>
+                                <li><a class="dropdown-item" data-id="filter_paid" href="<?php echo base_url('invoice/tab/paid') ?>">Paid</a></li>
+                                <li><a class="dropdown-item" data-id="filter_due" href="<?php echo base_url('invoice/tab/due') ?>">Due</a></li>
+                                <li><a class="dropdown-item" data-id="filter_overdue" href="<?php echo base_url('invoice/tab/overdue') ?>">Overdue</a></li>
+                                <li><a class="dropdown-item" data-id="filter_unpaid" href="<?php echo base_url('invoice/tab/unpaid') ?>">Unpaid</a></li>
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">

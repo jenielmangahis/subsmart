@@ -63,12 +63,13 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-
-    public function getUserByID($id)
+    public function getByItemTitleAndCompanyId($title, $company_id)
     {
         $this->db->select('*');
-        $this->db->from('users');
-        $this->db->where('id', $id);
+        $this->db->from($this->table);
+        $this->db->where('title', $title);
+        $this->db->where('company_id', $company_id);
+
         $query = $this->db->get();
         return $query->result();
     }
@@ -367,6 +368,15 @@ class Items_model extends MY_Model
             return $update ? true : false;
         }
         return false;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function updateItem($id, $data)
+    {
+        $this->db->where('id', $id);
+        $this->db->update($this->table, $data);
     }
 
     public function updateLocationDetails($data, $condition = array())
@@ -743,6 +753,15 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
+    public function get_package_items_v2($packageId)
+    {
+        $this->db->select('item_package.*,items.*');
+        $this->db->join('items', 'item_package.item_id = items.id', 'left');
+        $this->db->where('package_id', $packageId);
+        $query = $this->db->get('item_package');
+        return $query->result();
+    }
+
     public function get_package_by_id($packageId)
     {
         $this->db->where('id', $packageId);
@@ -767,7 +786,10 @@ class Items_model extends MY_Model
     public function get_company_packages($companyId, $filters = [])
     {
         $this->db->where('company_id', $companyId);
-        $this->db->where_in('status', $filters['status']);
+        $this->db->where('name !=', '');
+        if( $filters ){
+            $this->db->where_in('status', $filters['status']);
+        }        
         $query = $this->db->get('package_details');
         return $query->result();
     }

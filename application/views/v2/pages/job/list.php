@@ -320,7 +320,7 @@ foreach ($jobs as $job) {
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
                                             <!-- <a class="dropdown-item" href="<?php echo base_url('job/job_preview/') . $job->id; ?>">Preview</a> -->
-                                            <a class="dropdown-item view-job-row" href="javascript:void(0);" data-id="<?= $job->id; ?>">View</a>
+                                            <a class="dropdown-item view-job-row" href="javascript:void(0);" data-id="<?= $job->id; ?>" data-job-number="<?= $job->job_number; ?>">View</a>
                                         </li>
                                         
                                         <?php if(checkRoleCanAccessModule('jobs', 'write')){ ?>
@@ -346,15 +346,16 @@ foreach ($jobs as $job) {
             </div>
 
             <div class="modal fade nsm-modal fade" id="modal-quick-view-job" data-source="" tabindex="-1" aria-labelledby="modal-quick-view-upcoming-schedule-label" aria-hidden="true">
-                <div class="modal-dialog modal-lg">        
+                <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">        
                     <div class="modal-content">
                         <div class="modal-header">
-                            <span class="modal-title content-title">View Job</span>
+                            <span class="modal-title content-title">View Job : <span id="view-job-number"></span></span>
                             <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                         </div>
-                        <div class="modal-body" style="max-height:700px; overflow: auto;">
-                            <div class="view-schedule-container row"></div>
-                        </div>                                    
+                        <div class="modal-body">
+                            <div class="view-schedule-container"></div>
+                        </div>     
+                        <div class="modal-footer"></div>                              
                     </div>        
                 </div>
             </div>
@@ -377,6 +378,19 @@ foreach ($jobs as $job) {
     </div>
 </div>
 <?php include viewPath('v2/includes/footer'); ?>
+<!-- Map files -->
+<script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
+<script type="text/javascript" src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
+<link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
+<script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/styles/minimal.css" />
+<script src="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/dist/index.min.js"></script>
+<!-- End Map files -->
 <script type="text/javascript">
 var JOB_LIST_TABLE = $("#JOB_LIST_TABLE").DataTable({
     "ordering": false,
@@ -455,8 +469,10 @@ $(document).ready(function() {
     $('.view-job-row').on('click', function(){
         var appointment_id = $(this).attr('data-id');
         var url = base_url + "job/_quick_view_details";  
+        var job_number = $(this).attr('data-job-number');
 
         $('#modal-quick-view-job').modal('show');
+        $('#view-job-number').text(job_number);
         showLoader($(".view-schedule-container")); 
 
         setTimeout(function () {

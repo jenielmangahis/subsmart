@@ -632,9 +632,9 @@
                 <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="job-status-finished"><i class='bx bxs-flag-checkered'></i> Finished</button>
 
                 <!-- Ticket status -->
-                <!-- <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="ticket-status-arrived"><i class='bx bxs-truck'></i> Arrived</button>
+                <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="ticket-status-arrived"><i class='bx bxs-truck'></i> Arrived</button>
                 <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="ticket-status-started"><i class='bx bx-time'></i> Started</button>
-                <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="ticket-status-finished"><i class='bx bxs-flag-checkered'></i> Finished</button> -->
+                <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="ticket-status-finished"><i class='bx bxs-flag-checkered'></i> Finished</button>
 
                 <button type="button" class="nsm-button primary calendar-send-esign" data-id="" data-type="" id="send-esign"><i class='bx bx-edit-alt'></i> Send Esign</button>
                 <button type="button" class="nsm-button primary calendar-send-esign" data-id="" data-type="" id="send-ticket-esign"><i class='bx bx-edit-alt'></i> Send Esign</button>
@@ -846,7 +846,7 @@
                         <div class="col-sm-12 mt-2">
                             <label class="mb-2">Finish job at:</label>
                             <div class="input-group">
-                                <input type="date" name="ticket_finished_date" id="ticket_finished_date" class="form-control" value="<?php echo date('Y-m-d');?>" required>
+                                <input type="date" name="ticket_finished_date" id="job_finished_date" class="form-control" value="<?php echo date('Y-m-d');?>" required>
                                 <select id="ticket_finished_time" name="ticket_finished_time" class="form-control" required>
                                     <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
                                         <option value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>

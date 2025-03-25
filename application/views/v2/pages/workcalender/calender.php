@@ -213,7 +213,7 @@
 <script src="https://checkout.stripe.com/checkout.js"></script>
 
 <!-- Map files -->
-<!-- <script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
+<script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
 <script type="text/javascript" src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -223,7 +223,7 @@
 <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
 
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/styles/minimal.css" />
-<script src="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/dist/index.min.js"></script> -->
+<script src="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/dist/index.min.js"></script>
 <!-- End Map files -->
 
 <script type="text/javascript">
@@ -1517,15 +1517,15 @@
                 // End Job Status
 
                 // Ticket Status
-                // $('#ticket-status-arrived').attr('data-type', appointment_type);
-                // $('#ticket-status-arrived').attr('data-id', appointment_id);
+                $('#ticket-status-arrived').attr('data-type', appointment_type);
+                $('#ticket-status-arrived').attr('data-id', appointment_id);
 
-                // $('#ticket-status-started').attr('data-type', appointment_type);
-                // $('#ticket-status-started').attr('data-id', appointment_id);
+                $('#ticket-status-started').attr('data-type', appointment_type);
+                $('#ticket-status-started').attr('data-id', appointment_id);
 
-                // $('#ticket-status-finished').attr('data-type', appointment_type);
-                // $('#ticket-status-finished').attr('data-id', appointment_id);
-                // $('#ticket-status-finished').attr('data-ordernum', order_number);
+                $('#ticket-status-finished').attr('data-type', appointment_type);
+                $('#ticket-status-finished').attr('data-id', appointment_id);
+                $('#ticket-status-finished').attr('data-ordernum', order_number);
                 // End Ticket Status
 
                 if( appointment_type == 'job' ){
