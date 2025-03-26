@@ -98,9 +98,19 @@
     color: #000000 !important;
     line-height: 9px;
 }
+.modal-backdrop{
+    width: 100%;
+    height: 100%;
+}
 @media (min-width: 1200px) {
     .modal-xl {
         max-width: 1198px !important;
+    }
+}
+
+@media only screen and (max-width : 480px) {
+    .modal-lg {
+        max-width: 1028 !important;
     }
 }
 </style>
