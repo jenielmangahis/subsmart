@@ -48,8 +48,6 @@ $('#customer_receive_payment_modal').on('hidden.bs.modal', function() {
 get_modal_new_customer();
 
 function get_modal_new_customer() {
-    console.log("data");
-    console.log("data");
     $.ajax({
         url: baseURL + "/accounting/get-add-customer-details-modal",
         type: "GET",
