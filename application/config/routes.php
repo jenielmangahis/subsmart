@@ -886,6 +886,7 @@ $route['booking/create_category'] = 'booking/save_category';
 $route['booking/_save_booking_category'] = 'booking/ajax_save_category';
 $route['booking/create_service_item'] = 'booking/save_service_item';
 $route['booking/_save_service_item'] = 'booking/ajax_save_service_item';
+$route['booking/_create_form_field'] = 'booking/ajax_create_form_field';
 // $route['booking/delete_coupon/(:num)']['GET'] = 'booking/delete_coupon/$1';
 $route['booking/delete_coupon'] = 'booking/delete_coupon';
 $route['booking/delete_service_item'] = 'booking/delete_service_item';
@@ -1622,6 +1623,8 @@ $route['inventory/_create_custom_field'] = 'inventory/ajax_create_custom_field';
 $route['inventory/_update_custom_field'] = 'inventory/ajax_update_custom_field';
 $route['inventory/_delete_custom_field'] = 'inventory/ajax_delete_custom_field';
 $route['inventory/_item_location_list'] = 'inventory/ajax_item_location_list';
+$route['inventory/_delete'] = 'inventory/ajax_delete';
+$route['inventory/_create_service'] = 'inventory/ajax_create_service';
 
 // Inventory Fees
 $route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';
@@ -1822,7 +1825,6 @@ $route['event/_create_event'] = 'Events/ajax_create_event';
 $route['event/_quick_delete_event'] = 'Events/ajax_quick_delete_event';
 $route['event/_delete_event'] = 'Events/ajax_quick_delete_event';
 $route['docusign/debugGeneratePDF'] = 'DocuSign/debugGeneratePDF';
-
 
 // Affiliate
 $route['affiliate/_save_affiliate'] = 'Affiliate/ajax_save_affiliate';
@@ -2092,3 +2094,4 @@ $route['alarm_api/_validate_import_customer'] = 'AlarmApiPortal/ajax_validate_im
 
 //Front eSign 
 $route['esign/_import_signature'] = 'DocuSign/ajax_import_signature';
+$route['esign/view_document/(:any)'] = 'DocuSign/viewEsign/$1';
