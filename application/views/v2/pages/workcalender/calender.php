@@ -108,15 +108,15 @@
     }
 }
 
-@media only screen and (max-width : 600px) {
+@media (max-width : 600px) {
     .modal-lg {
         max-width: 600px !important;
     }
 }
 
-@media only screen and (max-width : 412px) {
+@media (max-width : 428px) {
     .modal-lg {
-        max-width: 405px !important;
+        max-width: 400px !important;
     }
 }
 </style>
