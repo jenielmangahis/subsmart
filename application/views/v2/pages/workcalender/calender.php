@@ -110,7 +110,7 @@
 
 @media only screen and (max-width : 480px) {
     .modal-lg {
-        max-width: 1028 !important;
+        max-width: 915px !important;
     }
 }
 </style>
