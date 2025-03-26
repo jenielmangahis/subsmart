@@ -612,13 +612,13 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="modal-quick-view-upcoming-schedule" data-source="" tabindex="-1" aria-labelledby="modal-quick-view-upcoming-schedule-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">        
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">        
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">View Calendar Schedule</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <div class="modal-body" style="max-height:550px; overflow: auto;">
+            <div class="modal-body">
                 <div class="view-schedule-container"></div>
             </div> 
             <div class="modal-footer">
