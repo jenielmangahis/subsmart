@@ -202,13 +202,13 @@
                         </div>
                         <h4 class="step-title">Scheduled</h4>
                     </div>
-                    <div class="step <?= ($jobs_data->status == 'Started' || $jobs_data->status == 'Arrival') || ($jobs_data->status != 'Draft' && $jobs_data->status != 'Scheduled')  ? 'completed' : '' ?>">
+                    <div class="step <?= ($jobs_data->status == 'Started' || $jobs_data->status == 'Arrival' || $jobs_data->status == 'Finished' || $jobs_data->status == 'Invoiced') ? 'completed' : '' ?>">
                         <div class="step-icon-wrap">
                             <div class="step-icon"><i class='bx bx-time-five'></i></div>
                         </div>
                         <h4 class="step-title">Start</h4>
                     </div>
-                    <div class="step <?= $jobs_data->status == 'Finished' || ($jobs_data->status != 'Started' && $jobs_data->status != 'Scheduled' && $jobs_data->status != 'Draft') ? 'completed' : '' ?>">
+                    <div class="step <?= $jobs_data->status == 'Finished' || $jobs_data->status == 'Invoiced' ? 'completed' : '' ?>">
                         <div class="step-icon-wrap">
                             <div class="step-icon"><i class='bx bxs-flag-checkered'></i></div>
                         </div>
@@ -345,7 +345,7 @@ $(function(){
     el.className = 'marker';    
     el.style.width = '30px';
     el.style.color = marker_color;
-    el.style.height = '50px';
+    el.style.height = '45px';
     el.style.backgroundSize = "contain";
     el.style.backgroundImage = `url(${map_icon})`;    
 

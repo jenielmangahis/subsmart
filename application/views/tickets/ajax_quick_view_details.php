@@ -202,13 +202,13 @@
                         </div>
                         <h4 class="step-title">Scheduled</h4>
                     </div>
-                    <div class="step <?= $tickets->ticket_status == 'Started' || ($tickets->ticket_status != 'Draft' && $tickets->ticket_status != 'Scheduled') ? 'completed' : '' ?>">
+                    <div class="step <?= $tickets->ticket_status == 'Started' || $tickets->ticket_status == 'Finished' || $tickets->ticket_status == 'Invoiced' ? 'completed' : '' ?>">
                         <div class="step-icon-wrap">
                             <div class="step-icon"><i class='bx bx-time-five'></i></div>
                         </div>
                         <h4 class="step-title">Start</h4>
                     </div>
-                    <div class="step <?= $tickets->ticket_status == 'Finished' || ($tickets->ticket_status != 'Started' && $tickets->ticket_status != 'Draft')   ? 'completed' : '' ?>">
+                    <div class="step <?= $tickets->ticket_status == 'Finished' || $tickets->ticket_status == 'Invoiced' ? 'completed' : '' ?>">
                         <div class="step-icon-wrap">
                             <div class="step-icon"><i class='bx bxs-flag-checkered'></i></div>
                         </div>
@@ -324,12 +324,12 @@ $(function(){
             var default_lat    = '<?php echo $default_lat; ?>';
             var default_lon    = '<?php echo $default_lon; ?>';        
             var map_zoom_level = '11';  
-            var address_line2  = '<?= $jobs_data->first_name .' '. $jobs_data->last_name; ?>';
+            var address_line2  = '<?= $tickets->first_name .' '. $tickets->last_name; ?>';
     <?php } else { ?>
             var default_lat    = '39.7837304';
             var default_lon    = '-100.445882';   
             var map_zoom_level = '5';    
-            var address_line2  = '<?= $jobs_data->first_name .' '. $jobs_data->last_name; ?>';
+            var address_line2  = '<?= 'Location not found in map'; ?>';
     <?php } ?>
 
     var map_style = 'osm-bright';
@@ -362,7 +362,7 @@ $(function(){
     el.className = 'marker';    
     el.style.width = '30px';
     el.style.color = marker_color;
-    el.style.height = '50px';
+    el.style.height = '45px';
     el.style.backgroundSize = "contain";
     el.style.backgroundImage = `url(${map_icon})`;    
 
