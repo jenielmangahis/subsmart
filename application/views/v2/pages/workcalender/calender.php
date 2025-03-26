@@ -1505,8 +1505,9 @@
                 $('#edit-upcoming-schedule').attr('data-type', appointment_type);
                 $('#edit-upcoming-schedule').attr('data-id', appointment_id);
 
-                // $('#send-esign').attr('data-type', appointment_type);
-                // $('#send-esign').attr('data-id', appointment_id);
+                $('#send-esign').attr('data-type', appointment_type);
+                $('#send-esign').attr('data-id', appointment_id);
+                
                 // $('#view-esign').attr('data-id', esign_id);
 
                 $('#send-ticket-esign').attr('data-type', appointment_type);
