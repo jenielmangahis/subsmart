@@ -108,7 +108,13 @@
     }
 }
 
-@media only screen and (max-width : 480px) {
+@media only screen and (max-width : 600px) {
+    .modal-lg {
+        max-width: 600px !important;
+    }
+}
+
+@media only screen and (max-width : 412px) {
     .modal-lg {
         max-width: 405px !important;
     }
