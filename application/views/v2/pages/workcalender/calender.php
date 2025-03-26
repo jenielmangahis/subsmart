@@ -1514,7 +1514,7 @@
                 $('#send-esign').attr('data-type', appointment_type);
                 $('#send-esign').attr('data-id', appointment_id);
 
-                $('#view-esign').attr('data-id', esign_id);
+                //$('#view-esign').attr('data-id', esign_id);
 
                 $('#send-ticket-esign').attr('data-type', appointment_type);
                 $('#send-ticket-esign').attr('data-id', appointment_id);
@@ -1548,14 +1548,14 @@
                 // End Ticket Status
 
                 if( appointment_type == 'job' ){
-                    if( esign_id > 0 ){
-                        $('#view-esign').css('display', 'inline-block');
-                        $('#send-esign').css('display', 'none');
-                    }else{
-                        $('#send-esign').css('display', 'inline-block');
-                        $('#view-esign').css('display', 'none');
-                    }
-                    //$('#send-esign').css('display', 'inline-block');
+                    // if( esign_id > 0 ){
+                    //     $('#view-esign').css('display', 'inline-block');
+                    //     $('#send-esign').css('display', 'none');
+                    // }else{
+                    //     $('#send-esign').css('display', 'inline-block');
+                    //     $('#view-esign').css('display', 'none');
+                    // }
+                    $('#send-esign').css('display', 'inline-block');
                     if( status == 'Scheduled' ){
                         $('#job-status-arrived').css('display', 'inline-block');
                         $('#job-status-started').css('display', 'none');
@@ -1581,14 +1581,14 @@
                 }
 
                 if( appointment_type == 'service_ticket' || appointment_type == 'ticket' ){
-                    if( esign_id > 0 ){
-                        $('#view-esign').css('display', 'inline-block');
-                        $('#send-ticket-esign').css('display', 'none');
-                    }else{
-                        $('#send-ticket-esign').css('display', 'inline-block');
-                        $('#view-esign').css('display', 'none');
-                    }
-                    //$('#send-ticket-esign').css('display', 'none');
+                    // if( esign_id > 0 ){
+                    //     $('#view-esign').css('display', 'inline-block');
+                    //     $('#send-ticket-esign').css('display', 'none');
+                    // }else{
+                    //     $('#send-ticket-esign').css('display', 'inline-block');
+                    //     $('#view-esign').css('display', 'none');
+                    // }
+                    $('#send-ticket-esign').css('display', 'none');
                     if( status == 'Scheduled' ){
                         $('#ticket-status-arrived').css('display', 'inline-block');
                         $('#ticket-status-started').css('display', 'none');
