@@ -612,13 +612,13 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="modal-quick-view-upcoming-schedule" data-source="" tabindex="-1" aria-labelledby="modal-quick-view-upcoming-schedule-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">        
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">        
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">View Calendar Schedule</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <div class="modal-body" style="max-height:550px; overflow: auto;">
+            <div class="modal-body">
                 <div class="view-schedule-container"></div>
             </div> 
             <div class="modal-footer">
@@ -627,17 +627,18 @@
                 <button type="button" class="nsm-button primary quick-edit-schedule" data-id="" data-type="" id="edit-upcoming-schedule"><i class='bx bx-edit-alt'></i> Edit</button>
 
                 <!-- Job status -->
-                <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="job-status-arrived"><i class='bx bxs-truck'></i> Arrived</button>
+                <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="job-status-arrived"><i class='bx bxs-truck'></i> Enroute</button>
                 <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="job-status-started"><i class='bx bx-time'></i> Started</button>
                 <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="job-status-finished"><i class='bx bxs-flag-checkered'></i> Finished</button>
 
                 <!-- Ticket status -->
-                <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="ticket-status-arrived"><i class='bx bxs-truck'></i> Arrived</button>
+                <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="ticket-status-arrived"><i class='bx bxs-truck'></i> Enroute</button>
                 <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="ticket-status-started"><i class='bx bx-time'></i> Started</button>
                 <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="ticket-status-finished"><i class='bx bxs-flag-checkered'></i> Finished</button>
 
-                <button type="button" class="nsm-button primary calendar-send-esign" data-id="" data-type="" id="send-esign"><i class='bx bx-edit-alt'></i> Send Esign</button>
-                <button type="button" class="nsm-button primary calendar-send-esign" data-id="" data-type="" id="send-ticket-esign"><i class='bx bx-edit-alt'></i> Send Esign</button>
+                <!-- <button type="button" class="nsm-button primary calendar-view-esign" data-id="" data-type="" id="view-esign"><i class='bx bx-pen'></i> View eSign</button> -->
+                <button type="button" class="nsm-button primary calendar-send-esign" data-id="" data-type="" id="send-esign"><i class='bx bx-pen'></i> Send eSign</button>
+                <button type="button" class="nsm-button primary calendar-send-esign" data-id="" data-type="" id="send-ticket-esign"><i class='bx bx-pen'></i> Send eSign</button>
                 <button type="button" class="nsm-button nsm-button-danger quick-delete-schedule" data-ordernum="" data-id="" data-type="" id="delete-upcoming-schedule"><i class='bx bx-trash'></i> Delete</button>
             </div>           
         </div>        

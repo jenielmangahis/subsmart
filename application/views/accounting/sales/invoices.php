@@ -110,9 +110,9 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
-                        <!-- <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search by tag name">
-                        </div> -->
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search by Invoice">
+                        </div>                        
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
@@ -170,7 +170,7 @@
                                 </div>
                                 <div class="form-check">
                                     <input type="checkbox" checked="checked" name="col_chk" id="chk_due_date" class="form-check-input">
-                                    <label for="chk_due_date" class="form-check-label">Due date</label>
+                                    <label for="chk_due_date" class="form-check-label">Due Date</label>
                                 </div>
                                 <div class="form-check">
                                     <input type="checkbox" checked="checked" name="col_chk" id="chk_po_number" class="form-check-input">
@@ -256,8 +256,8 @@
                                     }                                
                                 ?>
                             </td>
-                            <td><?=$invoice->invoice_number?></td>
-                            <td>
+                            <td class="nsm-text-primary"><?=$invoice->invoice_number?></td>
+                            <td class="nsm-text-primary">
                                 <?php
                                 $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
                                 echo $customer->last_name.', '.$customer->first_name;
@@ -280,7 +280,7 @@
                                     if( $invoice->purchase_order != '' ){
                                         echo $invoice->purchase_order;
                                     }else{
-                                        echo  'not Specified';
+                                        echo  'Not Specified';
                                     }
                                 ?>
                             </td>
@@ -358,6 +358,9 @@
 <script>
 $(function(){
     $("#invoices-table").nsmPagination({itemsPerPage:10});  
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));        
+    }, 1000));
     $(".select-all").click(function(){
         $('.form-check-input').not(this).prop('checked', this.checked);
 
@@ -473,7 +476,6 @@ $(function(){
     $('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function() {
         var chk = $(this);
         var dataName = $(this).next().text();
-
         var index = $(`#invoices-table thead td[data-name="${dataName}"]`).index();
         $(`#invoices-table tr`).each(function() {
             if(chk.prop('checked')) {
