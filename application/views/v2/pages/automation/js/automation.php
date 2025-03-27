@@ -181,9 +181,9 @@
 
             populateWindowDropdown();
 
-            let tagData = await sendGet("/Automation/getJobTags");
+            let tagData = await sendGet("Automation/getJobTags");
             jobTags = tagData.data || [];
-            typeData = await sendGet("/Automation/getJobTypes");
+            typeData = await sendGet("Automation/getJobTypes");
             jobTypes = typeData.data || [];
 
 
@@ -1062,7 +1062,7 @@
             };
             let res = await sendPost(
                 automationData,
-                "/Automation/saveAutomation",
+                "Automation/saveAutomation",
                 message,
                 true,
             );
@@ -1112,7 +1112,7 @@
             };
             let res = await sendPost(
                 automationData,
-                "/Automation/updateAutomation",
+                "Automation/updateAutomation",
                 message,
                 true,
             );
@@ -1144,7 +1144,7 @@
                         };
                         let res = await sendPost(
                             automationData,
-                            "/Automation/deleteAutomation",
+                            "Automation/deleteAutomation",
                             message,
                             true,
                         );
@@ -1435,7 +1435,7 @@
             return new Promise((resolve, reject) => {
                 $.ajax({
                 type: "POST",
-                url: BASE_URL + url,
+                url: base_url + url,
                 data: data,
                 dataType: "JSON",
                 beforeSend: function () {
@@ -1500,7 +1500,7 @@
             return new Promise((resolve, reject) => {
                 $.ajax({
                 type: "GET",
-                url: BASE_URL + url,
+                url: base_url + url,
                 success: function (response) {
                     const parsedResponse = typeof response === "string" ? JSON.parse(response) : response;
                     resolve(parsedResponse);
@@ -1525,7 +1525,7 @@
 
             let res = sendPost(
                 automationData,
-                "/Automation/processQueuedAutomations",
+                "Automation/processQueuedAutomations",
                 message,
             );
         });
@@ -1543,7 +1543,7 @@
                 title: "Success!",
                 body: "Automation has been updated.",
             };
-            let res = sendPost(data, "/Automation/toggleAutomationStatus", message, true);
+            let res = sendPost(data, "Automation/toggleAutomationStatus", message, true);
         });
 
         function getMissingFields(data) {
