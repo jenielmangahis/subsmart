@@ -125,8 +125,8 @@ class Dashboard extends Widgets
     {
         $this->load->model('widgets_model');
         $user_id = logged('id');
-        $this->page_data['widgets'] = $this->widgets_model->getWidgetsList();
-
+        $widgets = $this->widgets_model->getWidgetsList();
+        $this->page_data['widgets'] = $widgets;
         $this->load->view('v2/widgets/add_widgets_details', $this->page_data);
     }
 
@@ -139,7 +139,7 @@ class Dashboard extends Widgets
     }
 
     public function index()
-    {
+    {        
         // load necessary model and functions
         $this->hasAccessModule(39);
         $this->load->model('AcsProfile_model');
@@ -199,19 +199,10 @@ class Dashboard extends Widgets
         }
 
         $status_arr = [];
-        // $status_selection = $this->taskhub_status_model->get();
-        // foreach ($status_selection as $status_selec) {
-        //     $task_status = $this->crud->total_record('tasks', "status_id='".$status_selec->status_id."'");
-        //     $status_arr[] = $status_selec->status_text.'@#@'.$task_status;
-        // }
-
-        // $this->page_data['events'] = $this->event_model->get_all_events(5);
-        // $this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));
         $this->page_data['upcomingInvoice'] = $this->event_model->getUnpaidInvoices();
         $this->page_data['upcomingInvoice'] = $this->event_model->getUnpaidInvoices();
         $this->page_data['dueInvoices'] = $this->Invoice_model->getCompanyDueInvoices($companyId);
         $this->page_data['overdueInvoices'] = $this->Invoice_model->getCompanyOverDueInvoices($companyId);
-        // $this->page_data['subs'] = $this->event_model->getAllsubsByCompanyId($companyId)
         $this->page_data['subs'] = $this->Customer_advance_model->countTotalSubscriptionsByCompanyId($companyId);
         $subsContent =  $this->Customer_advance_model->countCurrentTotalSubscriptionsByCompanyId($companyId);
 
@@ -261,82 +252,10 @@ class Dashboard extends Widgets
             return $job->id;
         }, $latestJobs);
 
-        /*if (!empty($jobIds)) {
-            // Calculate job amount based on saved job's items.
-
-            $this->db->select('job_items.job_id,items.id,items.title,items.price,job_items.total,job_items.cost,job_items.qty,job_items.tax');
-            $this->db->from('job_items');
-            $this->db->join('items', 'items.id = job_items.items_id', 'left');
-            $this->db->where_in('job_items.job_id', $jobIds);
-            $itemsQuery = $this->db->get();
-            $items = $itemsQuery->result();
-
-            $jobAmounts = [];
-            foreach ($items as $item) {
-                if (!array_key_exists($item->job_id, $jobAmounts)) {
-                    $jobAmounts[$item->job_id] = 0;
-                }
-
-                $total = (float) $item->total; // include tax? (float) $item->tax
-                $jobAmounts[$item->job_id] = $jobAmounts[$item->job_id] + $total;
-            }
-
-            $latestJobs = array_map(function ($job) use ($jobAmounts) {
-                if (!array_key_exists($job->id, $jobAmounts)) {
-                    return $job;
-                }
-
-                // make sure to calculate amount from items
-                $job->amount = $jobAmounts[$job->id];
-                return $job;
-            }, $latestJobs);
-        }*/
-
-        /*$latestJobs = array_map(function ($job) {
-            if (!$job->work_order_id) {
-                return $job;
-            }
-
-            $this->db->select('installation_cost,otp_setup,monthly_monitoring');
-            $this->db->where('id', $job->work_order_id);
-            $workorderQuery = $this->db->get('work_orders');
-            $workorder = $workorderQuery->row();
-
-            if (!$workorder) {
-                return $job;
-            }
-
-            // make sure to include adjustment to total
-            if ($workorder->installation_cost) {
-                $job->amount = (float) $job->amount + (float) $workorder->installation_cost;
-            }
-            if ($workorder->otp_setup) {
-                $job->amount = (float) $job->amount + (float) $workorder->otp_setup;
-            }
-            if ($workorder->monthly_monitoring) {
-                $job->amount = (float) $job->amount + (float) $workorder->monthly_monitoring;
-            }
-
-            return $job;
-        }, $latestJobs);*/        
-
-        /*foreach ($latestJobs as $job) {
-            $jobPayment = $this->jobs_model->getJobPaymentByJobId($job->id);
-            if ($jobPayment) {
-                $job->amount = $jobPayment->amount;
-            } else {
-                $job->payment = 0;
-            }
-        }*/
-
         $this->page_data['latestJobs'] = $latestJobs; // fetch Sales Rep and customer they are assigned to
         $this->page_data['company_id'] = $companyId; // Company ID of the logged in USER
 
         $this->page_data['sales'] = $this->event_model->getAllSales();
-        // $this->page_data['mmr']=$this->AcsProfile_model->getCustomerMMR(logged('company_id'));
-        // $mmr = $this->AcsProfile_model->getCustomerMMR(logged('company_id'));
-        // $this->page_data['acct_banks']=$this->accounting_bank_accounts->getAllBanks();
-
         $this->page_data['widgets'] = $this->widgets_model->getWidgetsByCompanyId($companyId);
         $this->page_data['main_widgets'] = array_filter($this->page_data['widgets'], function ($widget) {
             return $widget->wu_is_main == true;
@@ -392,14 +311,6 @@ class Dashboard extends Widgets
         $this->page_data['invoice_paid_last_30days'] = $this->general->get_data_with_param($invoice_paid_last_30days, false);
 
         // fetch open estimates
-        // $total_amount_invoice = [
-        //     'where' => ['company_id' => logged('company_id'), 'status' => 'Paid'],
-        //     'table' => 'invoices',
-        //     'select' => 'SUM(grand_total) as total',
-        // ];
-        // $this->page_data['total_amount_invoice'] = $this->general->get_data_with_param($total_amount_invoice, false);
-
-        // fetch open estimates
         $total_invoice_paid = [
             'where' => ['company_id' => logged('company_id'), 'status' => 'Paid'],
             'table' => 'invoices',
@@ -419,15 +330,6 @@ class Dashboard extends Widgets
             'order' => ['order_by' => 'id', 'ordering' => 'DESC'],
         ];
         $this->page_data['feeds'] = $this->general->get_data_with_param($feeds_query);
-
-        // get customer newsletter
-        // $news_query = array(
-        //     'where' => array('company_id' => logged('company_id')),
-        //     'table' => 'news',
-        //     'select' => '*',
-        // );
-        // $this->page_data['news'] = $this->general->get_data_with_param($news_query);
-
         $this->page_data['total_recurring_payment'] = $this->getTotalRecurringPayment();
         $this->page_data['total_agreements_to_expire_in_30_days'] = $this->getAgreementsToExpireIn30Days();
 
