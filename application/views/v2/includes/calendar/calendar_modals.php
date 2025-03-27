@@ -636,10 +636,12 @@
                 <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="ticket-status-started"><i class='bx bx-time'></i> Started</button>
                 <button type="button" class="nsm-button primary" data-ordernum="" data-id="" data-type="" id="ticket-status-finished"><i class='bx bxs-flag-checkered'></i> Finished</button>
 
-                <!-- <button type="button" class="nsm-button primary calendar-view-esign" data-id="" data-type="" id="view-esign"><i class='bx bx-pen'></i> View eSign</button> -->
+                <button type="button" class="nsm-button primary calendar-view-esign" data-id="" data-type="" id="view-esign"><i class='bx bx-pen'></i> View eSign</button>
                 <button type="button" class="nsm-button primary calendar-send-esign" data-id="" data-type="" id="send-esign"><i class='bx bx-pen'></i> Send eSign</button>
                 <button type="button" class="nsm-button primary calendar-send-esign" data-id="" data-type="" id="send-ticket-esign"><i class='bx bx-pen'></i> Send eSign</button>
-                <button type="button" class="nsm-button nsm-button-danger quick-delete-schedule" data-ordernum="" data-id="" data-type="" id="delete-upcoming-schedule"><i class='bx bx-trash'></i> Delete</button>
+                <?php if( checkRoleCanAccessModule('calendar-schedule', 'delete') ){ ?>  
+                    <button type="button" class="nsm-button nsm-button-danger quick-delete-schedule" data-ordernum="" data-id="" data-type="" id="delete-upcoming-schedule"><i class='bx bx-trash'></i> Delete</button>
+                <?php } ?>
             </div>           
         </div>        
     </div>
