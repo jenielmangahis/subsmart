@@ -72,8 +72,6 @@ class Automation_model extends CI_Model
         return false;
     }
 
-
-
     public function getAutomationsByParams($params)
     {
         $this->db->where($params);
@@ -82,6 +80,15 @@ class Automation_model extends CI_Model
 
         return $query->result_array();
     }
+
+    public function getAutomationByParams($params)
+    {
+        $this->db->where($params);
+        $this->db->order_by('created_at', 'DESC');
+        $query = $this->db->get($this->table);
+
+        return $query->row();
+    }    
 
     public function updateAutomationsByParams($filters, $id)
     {
