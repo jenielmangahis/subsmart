@@ -1474,7 +1474,7 @@
                 var appointment_id   = arg.event._def.extendedProps.eventId;
                 var appointment_type = arg.event._def.extendedProps.eventType;
                 var order_number     = arg.event._def.extendedProps.eventOrderNum;
-                var esign_id         = arg.event._def.extendedProps.esignID;
+                var esign_id         = arg.event._def.extendedProps.esignId;
                 var status           = arg.event._def.extendedProps.eventStatus;
 
                 //console.log('props', arg.event._def.extendedProps);
@@ -1514,14 +1514,16 @@
                 $('#send-esign').attr('data-type', appointment_type);
                 $('#send-esign').attr('data-id', appointment_id);
 
-                //$('#view-esign').attr('data-id', esign_id);
+                $('#view-esign').attr('data-id', esign_id);
 
                 $('#send-ticket-esign').attr('data-type', appointment_type);
                 $('#send-ticket-esign').attr('data-id', appointment_id);
 
-                $('#delete-upcoming-schedule').attr('data-type', appointment_type);
-                $('#delete-upcoming-schedule').attr('data-id', appointment_id);
-                $('#delete-upcoming-schedule').attr('data-ordernum', order_number);
+                <?php if( checkRoleCanAccessModule('calendar-schedule', 'delete') ){ ?>  
+                    $('#delete-upcoming-schedule').attr('data-type', appointment_type);
+                    $('#delete-upcoming-schedule').attr('data-id', appointment_id);
+                    $('#delete-upcoming-schedule').attr('data-ordernum', order_number);
+                <?php } ?>
 
                 // Job Status 
                 $('#job-status-arrived').attr('data-type', appointment_type);
@@ -1546,16 +1548,16 @@
                 $('#ticket-status-finished').attr('data-id', appointment_id);
                 $('#ticket-status-finished').attr('data-ordernum', order_number);
                 // End Ticket Status
-
+                console.log('esign', esign_id);
                 if( appointment_type == 'job' ){
-                    // if( esign_id > 0 ){
-                    //     $('#view-esign').css('display', 'inline-block');
-                    //     $('#send-esign').css('display', 'none');
-                    // }else{
-                    //     $('#send-esign').css('display', 'inline-block');
-                    //     $('#view-esign').css('display', 'none');
-                    // }
-                    $('#send-esign').css('display', 'inline-block');
+                    if( esign_id > 0 ){
+                        $('#view-esign').css('display', 'inline-block');
+                        $('#send-esign').css('display', 'none');
+                    }else{
+                        $('#send-esign').css('display', 'inline-block');
+                        $('#view-esign').css('display', 'none');
+                    }
+                    //$('#send-esign').css('display', 'inline-block');
                     if( status == 'Scheduled' ){
                         $('#job-status-arrived').css('display', 'inline-block');
                         $('#job-status-started').css('display', 'none');
@@ -1581,14 +1583,14 @@
                 }
 
                 if( appointment_type == 'service_ticket' || appointment_type == 'ticket' ){
-                    // if( esign_id > 0 ){
-                    //     $('#view-esign').css('display', 'inline-block');
-                    //     $('#send-ticket-esign').css('display', 'none');
-                    // }else{
-                    //     $('#send-ticket-esign').css('display', 'inline-block');
-                    //     $('#view-esign').css('display', 'none');
-                    // }
-                    $('#send-ticket-esign').css('display', 'none');
+                    if( esign_id > 0 ){
+                        $('#view-esign').css('display', 'inline-block');
+                        $('#send-ticket-esign').css('display', 'none');
+                    }else{
+                        $('#send-ticket-esign').css('display', 'inline-block');
+                        $('#view-esign').css('display', 'none');
+                    }
+                    //$('#send-ticket-esign').css('display', 'none');
                     if( status == 'Scheduled' ){
                         $('#ticket-status-arrived').css('display', 'inline-block');
                         $('#ticket-status-started').css('display', 'none');
@@ -2307,9 +2309,11 @@
         $('#edit-upcoming-schedule').attr('data-type', appointment_type);
         $('#edit-upcoming-schedule').attr('data-id', appointment_id);
 
-        $('#delete-upcoming-schedule').attr('data-type', appointment_type);
-        $('#delete-upcoming-schedule').attr('data-id', appointment_id);
-        $('#delete-upcoming-schedule').attr('data-ordernum', order_number);
+        <?php if( checkRoleCanAccessModule('calendar-schedule', 'delete') ){ ?>  
+            $('#delete-upcoming-schedule').attr('data-type', appointment_type);
+            $('#delete-upcoming-schedule').attr('data-id', appointment_id);
+            $('#delete-upcoming-schedule').attr('data-ordernum', order_number);
+        <?php } ?>
 
         if( appointment_type == 'job' ){
             $('#send-esign').css('display', 'inline-block');
@@ -3117,6 +3121,11 @@
                 $("#frm-calendar-status-finished :submit").html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
+    });
+
+    $(document).on('click', '#view-esign', function(){
+        var esign_id  = $(this).attr('data-id');
+        location.href = base_url + 'esign/view_document/' + esign_id; 
     });
 
     $(document).on('click', '#ticket-status-arrived', function(){
