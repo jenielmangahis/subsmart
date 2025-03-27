@@ -2578,6 +2578,25 @@ SQL;
         redirect($signingURL);
     }
 
+    public function viewEsign($id)
+    {
+        $this->db->where('id', $id);
+        $document = $this->db->get('user_docfile')->row();
+
+        $this->db->where('docfile_id', $document->id);
+        $this->db->order_by('id', 'DESC');
+        $lastRecipient = $this->db->get('user_docfile_recipients')->row();
+
+        $message = json_encode([
+            'recipient_id' => $lastRecipient->id,
+            'document_id' => $document->id
+        ]);
+
+        $hash = encrypt($message, $this->password);
+        $signingURL = $this->getSigningUrl() . '/signing?hash=' . $hash;
+        redirect($signingURL);
+    }
+
     public function apiSendCompleteNotice($documentId)
     {
         $this->db->where('id', $documentId);
