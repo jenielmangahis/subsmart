@@ -108,6 +108,40 @@
                     <tbody>
                         <?php if( $invoices ){ ?>
                             <?php foreach($invoices as $invoice){ ?>
+                                <?php 
+                                    switch ($invoice->status):
+                                        case "Partially Paid":
+                                            $badge = "secondary";
+                                            break;
+                                        case "Paid":
+                                            $badge = "success";
+                                            break;
+                                        case "Due":
+                                            $badge = "secondary";
+                                            break;
+                                        case "Overdue":
+                                            $badge = "error";
+                                            break;
+                                        case "Submitted":
+                                            $badge = "success";
+                                            break;
+                                        case "Approved":
+                                            $badge = "success";
+                                            break;
+                                        case "Declined":
+                                            $badge = "error";
+                                            break;
+                                        case "Scheduled":
+                                            $badge = "primary";
+                                            break;
+                                        case "Draft":
+                                            $badge = "error";
+                                            break;
+                                        default:
+                                            $badge = "error";
+                                            break;
+                                    endswitch;                                    
+                                ?>
                                 <tr>
                                     <td><div class="table-row-icon"><i class='bx bx-calendar-alt'></i></div></td>
                                     <td class="nsm-text-primary"><?= $invoice->invoice_number; ?></td>
@@ -115,7 +149,11 @@
                                     <td><?= date("m/d/Y", strtotime($invoice->date_issued)); ?></td>
                                     <td><?= $invoice->bill_start_date ?></td>
                                     <td><?= $invoice->bill_end_date ?></td>
-                                    <td class="nsm-text-primary"><?= $invoice->status; ?></td>
+                                    <td>
+                                        <span class="status-label nsm-badge <?= $badge ?>" style="font-size: 13px;">
+                                            <?= $invoice->status; ?>
+                                        </span>
+                                    </td>
                                     <td style="text-align:right;">$<?= number_format($invoice->grand_total,2,".",","); ?></td>
                                     <td>
                                         <div class="dropdown table-management">

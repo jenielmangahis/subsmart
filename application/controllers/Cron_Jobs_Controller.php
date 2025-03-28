@@ -3436,9 +3436,13 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('Invoice_settings_model');
 		$this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('accounting_recurring_transactions_model');
+        $this->load->model('Automation_model', 'automation_model');
 
 		$error_count   = 0;
 		$success_count = 0;
+
+        $automation_success = 0;
+        $automation_fail    = 0;
 
         $current_date  = date("Y-m-d");
         $date_from     = date('Y-m-d', strtotime('-14 days', strtotime($current_date))); 
@@ -3653,8 +3657,7 @@ class Cron_Jobs_Controller extends CI_Controller
 						'next_billing_date' => $next_month_bill_date,
 					];
 
-					$this->customer_ad_model->update_data($data, 'acs_billing', 'bill_id');					
-
+					$this->customer_ad_model->update_data($data, 'acs_billing', 'bill_id');	
 					$success_count++;
 				} else {
 					/**
@@ -3664,6 +3667,57 @@ class Cron_Jobs_Controller extends CI_Controller
 				}
 			}
 		}
+
+        if($success_count) {
+            /**
+             * Todo: after successfully created invoice, check for automation - start
+             */
+
+            $auto_params = [
+                'entity' => 'invoice',
+                'trigger_action' => 'send_email',
+                'operation' => 'send',
+                'target' => 'user',
+                'status' => 'active'
+            ];
+            $automationData = $this->automation_model->getAutomationByParams($auto_params);     
+            if($automationData) {
+
+                $targetName    = "";
+                $customerEmail = "";
+
+                $targetUser = $this->users_model->getCompanyUserById($automationData->target_id);
+
+                if($targetUser) {
+                    $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                    $customerEmail = $targetUser->email;
+                }
+
+                if($targetName != "" && $customerEmail != "") {
+
+                    /*$mail = email__getInstance();
+                    $mail->FromName = 'NsmarTrac';
+                    
+                    $mail->addAddress($customerEmail, $targetName);
+                    $mail->isHTML(true);
+                    $mail->Subject = $automationData->title;
+                    $mail->Body    = $automationData->email_subject;
+            
+                    if (!$mail->Send()) {
+                        echo 'Cannot send email <hr />';
+                        $automation_success++;
+                    } else {
+                        echo 'Your mail was successfully sent <hr />';
+                        $automation_fail++;
+                    }*/   
+
+                }
+
+            }
+            /**
+             * Todo: after successfully created invoice, check for automation - end
+             */            
+        }
 
 		echo 'Success count: ' . $success_count . '<br />';
 		echo 'Fail count: ' . $error_count . '<br />';

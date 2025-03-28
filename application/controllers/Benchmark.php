@@ -601,5 +601,80 @@ class Benchmark extends MY_Controller {
 
 	}
 
+    public function testMailFunction() {
+        echo 'TEST MAIL FUNCTION <hr />';
+
+        $this->load->model('Automation_model', 'automation_model');
+
+        $auto_params = [
+            'entity' => 'invoice',
+            'trigger_action' => 'send_email',
+            'operation' => 'send',
+            'target' => 'user',
+            'status' => 'active',
+            'id' => 78945612345
+        ];
+        $automationData = $this->automation_model->getAutomationByParams($auto_params);     
+        if($automationData) {
+
+            $targetName    = "";
+            $customerEmail = "";
+
+            $targetUser = $this->users_model->getCompanyUserById($automationData->target_id);
+
+            if($targetUser) {
+                $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                $customerEmail = $targetUser->email;
+            }
+
+            if($targetName != "" && $customerEmail != "") {
+
+                $mail = email__getInstance();
+                $mail->FromName = 'NsmarTrac';
+                
+                $mail->addAddress($customerEmail, $targetName);
+                $mail->isHTML(true);
+                $mail->Subject = $automationData->title;
+                $mail->Body    = '<p>' . $automationData->email_subject . '</p>';
+        
+                if (!$mail->Send()) {
+                    echo 'Cannot send email <hr />';
+                    $automation_success++;
+                } else {
+                    echo 'Your mail was successfully sent <hr />';
+                    $automation_fail++;
+                }
+
+            }
+
+        } else {
+
+            echo 'Static Mail Sending Test<hr />';
+
+            $mail = email__getInstance();
+            $mail->FromName = 'NsmarTrac';
+            $customerName = 'Jeniel Mangahis';
+            $mail->addAddress('bryann.revina@gmail.com', $customerName);
+            $mail->isHTML(true);
+            $mail->Subject = "nSmartrac: New Recurring Invoice Generated";
+            $mail->Body = '<p>Please do note that this is only a test</p>';
+    
+            if (!$mail->Send()) {
+                echo 'email sending failed <br />';
+            } else {
+                echo 'sending email successfull <br />';
+            }            
+
+
+
+        }
+
+    }
+
+    public function generateMailHTML()
+    { 
+        return $this->load->view('benchmark/mail-html-template', $this->page_data, true);        
+    }
+
 }
 ?>

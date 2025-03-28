@@ -25,6 +25,26 @@ class UserDocfile_model extends MY_Model
         return $query;
     }
 
+    public function getByTicketId($ticket_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('ticket_id', $ticket_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getByJobId($job_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('job_id', $job_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function getAllByCompanyId($cid)
     {
         $this->db->select('*');
