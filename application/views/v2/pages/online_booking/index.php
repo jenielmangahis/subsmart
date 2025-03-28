@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <div class="col-3">
-                        <div class="nsm-counter primary h-100" role="button" onclick="location.href='<?php echo base_url('/more/addon/booking/time'); ?>'">
+                        <div class="nsm-counter primary h-100" role="button" onclick="location.href='<?php echo base_url('more/addon/booking/time'); ?>'">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
                                     <i class="bx bx-check-circle"></i>
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div class="col-3">
-                        <div class="nsm-counter secondary h-100" role="button" onclick="location.href='<?php echo base_url('/more/addon/inquiries'); ?>'">
+                        <div class="nsm-counter secondary h-100" role="button" onclick="location.href='<?php echo base_url('more/addon/inquiries'); ?>'">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
                                     <i class="bx bx-check-circle"></i>
