@@ -887,6 +887,9 @@ $route['booking/_save_booking_category'] = 'booking/ajax_save_category';
 $route['booking/create_service_item'] = 'booking/save_service_item';
 $route['booking/_save_service_item'] = 'booking/ajax_save_service_item';
 $route['booking/_create_form_field'] = 'booking/ajax_create_form_field';
+$route['booking/_create_coupon'] = 'booking/ajax_create_coupon';
+$route['booking/_update_coupon'] = 'booking/ajax_update_coupon';
+$route['booking/_delete_booking_coupon'] = 'booking/ajax_delete_coupon_v2';
 // $route['booking/delete_coupon/(:num)']['GET'] = 'booking/delete_coupon/$1';
 $route['booking/delete_coupon'] = 'booking/delete_coupon';
 $route['booking/delete_service_item'] = 'booking/delete_service_item';
@@ -1625,6 +1628,7 @@ $route['inventory/_delete_custom_field'] = 'inventory/ajax_delete_custom_field';
 $route['inventory/_item_location_list'] = 'inventory/ajax_item_location_list';
 $route['inventory/_delete'] = 'inventory/ajax_delete';
 $route['inventory/_create_service'] = 'inventory/ajax_create_service';
+$route['inventory/_delete_selected'] = 'inventory/ajax_delete_selected';
 
 // Inventory Fees
 $route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';
