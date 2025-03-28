@@ -173,95 +173,74 @@
 </div>
 
 <!-- Modal Add Coupon -->
-<div class="modal fade bd-example-modal-lg" id="modalAddCoupon" tabindex="-1" role="dialog" aria-labelledby="modalAddCouponTitle" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade nsm-modal fade" id="modalAddCoupon" tabindex="-1" aria-labelledby="modalAddCoupon-label" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header border-0fw-bold">
-        <h5 class="modal-title fw-bold" id="exampleModalLongTitle"><i class="fa fa-plus fw-bold"></i> Add New Coupon</h5>
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="exampleModalLongTitle">Add New Coupon</h5>
+        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
       </div>
-      <?php echo form_open_multipart('booking/create_coupon', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+      <?php echo form_open_multipart(null, ['id' => 'frm-booking-coupon', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
       <div class="modal-body">        
-          <div class="validation-error hide"></div>
-
-          <div class="form-group">
-              <label>Coupon Name</label> <span class="form-required">*</span>
-              <input type="text" name="name" value=""  class="form-control" required="" autocomplete="off" />
-          </div>
-          <div class="form-group">
-              <label>Code</label> <span class="form-required">*</span> &nbsp; <span class="help help-sm">(a unique code, can contain only letters, numbers and - _ .)</span>
-              <input type="text" name="code" value=""  class="form-control" required="" autocomplete="off" />
-          </div>
-          <div class="form-group">
-              <label>Discount from Total</label> <span class="form-required">*</span>
-              <div class="row">
-                  <div class="col-6">
-                      <select name="discount_type" class="form-control coupon-discount-type" required="">
-                        <option value="1">Percentage %</option>
-                        <option value="2">Amount $</option>
-                      </select>
-                  </div>
-                  <div class="col-6">
-                    <div id="discount_percent_cnt" class="">
-                        <div class="input-group mb-3">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">%</span>
-                          </div>
-                          <input type="number" name="discount_percent" value="" class="form-control" />
-                        </div>
-                    </div>
-                    <div id="discount_amount_cnt" class="hide">
-                        <div class="input-group mb-3">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">$</span>
-                          </div>
-                          <input type="number" name="discount_amount" value="" class="form-control" autocomplete="off" />
-                        </div>
-                    </div>
-                  </div>
-              </div>
-          </div>
           <div class="row">
             <div class="col-6">
-              <div class="form-group">
-                <label>Valid From</label>
-                <div class="input-group">
-                    <input type="text" name="valid_from" value=""  class="form-control coupon_valid_from" required="" id="coupon_valid_from" autocomplete="off" />
-                    <div class="input-group-addon calendar-button" data-for="coupon_valid_from">
-                        <span class="fa fa-calendar"></span>
-                    </div>
-                </div>
-              </div>
+              <label>Coupon Name</label> <span class="form-required">*</span>
+              <input type="text" name="name" value=""  class="form-control" required="" autocomplete="off" />
             </div>
             <div class="col-6">
-              <div class="form-group">
-                <label>Valid To</label>
-                <div class="input-group">
-                    <input type="text" name="valid_to" value=""  class="form-control coupon_valid_to" required="" id="coupon_valid_to" autocomplete="off" />
-                    <div class="input-group-addon calendar-button" data-for="coupon_valid_to">
-                        <span class="fa fa-calendar"></span>
+              <label>Coupon Code</label> <span class="form-required">*</span>
+              <input type="text" name="code" id="coupon-code" value=""  class="form-control" required="" autocomplete="off" />
+            </div>
+            <div class="col-6 mt-2">
+              <label>Discount Type</label> <span class="form-required">*</span>
+              <select name="discount_type" class="form-control coupon-discount-type" required="">
+                <option value="1">Percentage %</option>
+                <option value="2">Amount $</option>
+              </select>
+            </div>
+            <div class="col-6 mt-2">
+              <label>Discount Amount <span class="form-required">*</span>
+              <div id="discount_percent_cnt" class="">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">%</span>
                     </div>
-                </div>
+                    <input type="number" step="any" name="discount_percent" value="0" class="form-control" />
+                  </div>
+              </div>
+              <div id="discount_amount_cnt" class="hide">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="number" step="any" name="discount_amount" value="0" class="form-control" autocomplete="off" />
+                  </div>
               </div>
             </div>
+            <div class="col-6 mt-2">
+              <label>Valid From</label>
+              <input type="date" name="valid_from" value=""  class="form-control coupon_valid_from" required="" id="coupon_valid_from" autocomplete="off" />
+            </div>
+            <div class="col-6 mt-2">
+              <label>Valid To</label>
+              <input type="date" name="valid_to" value=""  class="form-control coupon_valid_to" required="" id="coupon_valid_to" autocomplete="off" />
+            </div>
+            <div class="col-6 mt-2">
+              <label>Max usage</label>
+              <input type="number" name="uses_max" value="" required="" class="form-control" autocomplete="off" />
+            </div>
+            <div class="col-6 mt-2">
+              <label>Status</label>
+              <select name="status" class="form-control" autocomplete="off">
+                <option value="1">Active</option>
+                <option value="0">Closed</option>
+              </select>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Uses per coupon</label>
-            <input type="number" name="uses_max" value="" required="" class="form-control" autocomplete="off" />
-          </div>
-
-          <div class="row margin-bottom-sec">
-              <div class="col-sm-8">
-                  <label>Status</label>
-                  <select name="status" class="form-control" autocomplete="off">
-                    <option value="1">Active</option>
-                    <option value="0">Closed</option>
-                  </select>
-              </div>
-          </div>      
       </div>
       <div class="modal-footer">
-        <button type="button" class="nsm-button" data-dismiss="modal">Close</button>
-        <button type="submit" class="nsm-button primary">Add</button>
+        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="nsm-button primary" id="btn-save-coupon">Save</button>
       </div>
       <?php echo form_close(); ?>
     </div>
@@ -269,20 +248,18 @@
 </div>
 
 <!-- Modal Edit Coupon -->
-<div class="modal fade bd-example-modal-lg" id="modalEditCoupon" tabindex="-1" role="dialog" aria-labelledby="modalAddCouponTitle" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade nsm-modal fade" id="modalEditCoupon" tabindex="-1" aria-labelledby="modalEditCoupon-label" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-pencil"></i> Edit Coupon</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h5 class="modal-title fw-bold" id="exampleModalLongTitle">Edit Coupon</h5>
+        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
       </div>
-      <?php echo form_open_multipart('booking/update_coupon', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+      <?php echo form_open_multipart(null, ['id' => 'frm-edit-booking-coupon', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
       <div class="modal-body modal-edit-coupon"></div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="nsm-button primary" id="btn-update-coupon">Save</button>
       </div>
       <?php echo form_close(); ?>
     </div>
@@ -424,7 +401,7 @@
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
-              <?php echo form_open_multipart('booking/create_form', [ 'id' => 'frm-booking-add-field', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+              <?php echo form_open_multipart(null, [ 'id' => 'frm-booking-add-field', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
                 <div class="row">                        
                   <div class="col-sm-12 mt-2">
                       <label class="mb-2">Field Name</label>
@@ -435,7 +412,7 @@
                   </div>
                 </div>
                 <div class="d-flex justify-content-end mt-4">
-                    <button type="submit" class="nsm-button primary">Save</button>
+                    <button type="submit" class="nsm-button primary" id="btn-save-form-field">Save</button>
                     <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
                 </div>
               <?php echo form_close(); ?>
