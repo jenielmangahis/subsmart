@@ -238,7 +238,15 @@ class Users_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
-    
+
+    public function getCompanyUserById($user_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('id', $user_id);
+        $query = $this->db->get();
+        return $query->row();
+    }
     
     public function getActiveCompanyUsers($company_id)
     {
