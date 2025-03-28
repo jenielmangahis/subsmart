@@ -144,7 +144,7 @@
                                 ?>
                                 <tr>
                                     <td><div class="table-row-icon"><i class='bx bx-calendar-alt'></i></div></td>
-                                    <td class="nsm-text-primary"><?= $invoice->invoice_number; ?></td>
+                                    <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('invoice/genview/' . $invoice->id) ?>'"><?= formatInvoiceNumber($invoice->invoice_number) ?></td>
                                     <td class="nsm-text-primary"><?= $invoice->customer_name; ?></td>
                                     <td><?= date("m/d/Y", strtotime($invoice->date_issued)); ?></td>
                                     <td><?= $invoice->bill_start_date ?></td>
