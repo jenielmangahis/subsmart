@@ -26,6 +26,17 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
+    public function getItemByTitleAndCompanyId($title, $company_id)
+    {       
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('title', $title);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getLocationList()
     {
         // $this->db->where('company_id', getLoggedCompanyID());
@@ -249,7 +260,8 @@ class Items_model extends MY_Model
     {
         $this->db->where('company_id', $data['company_id']);
         $this->db->where('id', $data['id']);
-        $inactive = $this->db->update($this->table, ['is_active' => 0, 'title' => $data['name']]);
+        //$inactive = $this->db->update($this->table, ['is_active' => 0, 'title' => $data['name']]);
+        $inactive = $this->db->update($this->table, ['is_active' => 0]);
         return $inactive ? true : false;
     }
 
@@ -305,6 +317,7 @@ class Items_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('id', $id);
+
         $query = $this->db->get();
         return $query->row();
     }

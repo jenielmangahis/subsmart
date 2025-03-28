@@ -27,11 +27,20 @@ class BookingCoupon_model extends MY_Model
         return $query->result();
     }
 
+    public function getByName($name)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('coupon_name', $name);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function getById($id)
     {
         $this->db->select('*');
         $this->db->from($this->table);
-
         $this->db->where('id', $id);
 
         $query = $this->db->get()->row();
@@ -75,7 +84,7 @@ class BookingCoupon_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('coupon_code', $coupon_code);
-        $this->db->where('status', 1);
+        //$this->db->where('status', 1);
         
         $query = $this->db->get()->row();
         return $query;
@@ -91,20 +100,21 @@ class BookingCoupon_model extends MY_Model
         $this->db->delete($this->table, array('company_id' => $company_id, 'id' => $id));
     }
 
-    public function getAllActive($filters=array())
+    public function getAllByCompanyId($company_id)
     {
-        $id = logged('id');
-        $company_id = logged('company_id');
-        $role_id = logged('role');
-
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', 'DESC');
 
-        /*if ( !empty($filters) ) {
-            if ( !empty($filters['search']) ) {
-                $this->db->like('name', $filters['search'], 'both');
-            }
-        }*/
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllActive($filters=array())
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
 
         if( !empty($filter) ){
             foreach( $filters as $filter ){
@@ -121,16 +131,8 @@ class BookingCoupon_model extends MY_Model
 
     public function getAllClosed($filters=array())
     {
-        $id = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
-
-        /*if ( !empty($filters) ) {
-            if ( !empty($filters['search']) ) {
-                $this->db->like('name', $filters['search'], 'both');
-            }
-        }*/
 
         if( !empty($filter) ){
             foreach( $filters as $filter ){
