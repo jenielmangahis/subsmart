@@ -256,7 +256,7 @@
                                     }                                
                                 ?>
                             </td>
-                            <td class="nsm-text-primary"><?=$invoice->invoice_number?></td>
+                            <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('invoice/genview/' . $invoice->id) ?>'"><?= formatInvoiceNumber($invoice->invoice_number) ?></td>
                             <td class="nsm-text-primary">
                                 <?php
                                 $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
