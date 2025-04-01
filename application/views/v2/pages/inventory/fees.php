@@ -1,9 +1,5 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/inventory/inventory_modals'); ?>
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
-<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
 <style type="text/css">
     table {
         width: 100% !important;
@@ -47,6 +43,7 @@ table.dataTable.no-footer {
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field_custom" placeholder="Search Fees">
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
@@ -61,12 +58,14 @@ table.dataTable.no-footer {
                         </div>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('inventory/fees/add') ?>'">
-                                <i class='bx bx-fw bx-list-plus'></i> Add New Fee
+                                <i class='bx bx-fw bx-plus'></i> Add New Fee
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>                
                  <div class="row">
+                    <form id="frm-fees">
                     <table class="nsm-table" id="FEES_TABLE">
                         <thead>
                             <tr>
@@ -75,8 +74,8 @@ table.dataTable.no-footer {
                                 </td>
                                 <td class="table-icon"></td>
                                 <td data-name="Item">Item</td>
-                                <td data-name="Cost">Cost</td>
                                 <td data-name="Billing Type">Billing Type</td>
+                                <td data-name="Cost" style="text-align:right;">Cost</td>
                                 <td data-name="Manage"></td>
                             </tr>
                         </thead>
@@ -85,7 +84,7 @@ table.dataTable.no-footer {
                                     <tr>
                                         <td style="width:1%;">
                                             <div class="table-row-icon table-checkbox">
-                                                <input class="form-check-input select-one table-select" type="checkbox" data-id="<?php echo $item[3]; ?>">
+                                                <input class="form-check-input select-one table-select" type="checkbox" name="items[]" value="<?= $item[3]; ?>" data-id="<?php echo $item[3]; ?>">
                                             </div>
                                         </td>
                                         <td style="width:1%;">
@@ -96,21 +95,21 @@ table.dataTable.no-footer {
                                         <td class="nsm-text-primary" style="width:60%;">
                                             <label class="nsm-link default d-block fw-bold"><?php echo $item[0]; ?></label>
                                             <label class="nsm-link default content-subtitle"><?php echo $item[1]; ?></label>
-                                        </td>
-                                        <td><?php echo $item[4]; ?></td>
+                                        </td>                                        
                                         <td><?php echo $item[5]; ?></td>
+                                        <td style="text-align:right;">$<?php echo number_format($item[4],2,".",","); ?></td>
                                         <td>
                                             <div class="dropdown table-management">
                                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-end">
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?= base_url('inventory/fees/edit/'.$item[3]) ?>">Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $item[3]; ?>">Delete</a>
-                                                    </li>
+                                                    <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>
+                                                        <li><a class="dropdown-item" href="<?= base_url('inventory/fees/edit/'.$item[3]) ?>">Edit</a></li>
+                                                    <?php } ?>
+                                                    <?php if(checkRoleCanAccessModule('inventory', 'delete')){ ?>
+                                                        <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-name="<?php echo $item[0]; ?>" data-id="<?= $item[3]; ?>">Delete</a></li>
+                                                    <?php } ?>
                                                 </ul>
                                             </div>
                                         </td>
@@ -118,6 +117,7 @@ table.dataTable.no-footer {
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                    </form>
                 </div>
             </div>
         </div>
@@ -189,12 +189,8 @@ $(document).ready(function() {
     });
 
     $("#delete_selected").on("click", function() {
-        let params = {
-            ids: $("#selected_ids").val(),
-        }
-
         Swal.fire({
-            title: 'Delete Selected Items',
+            title: 'Delete Product Fee',
             text: "Are you sure you want to delete the selected items?",
             icon: 'question',
             confirmButtonText: 'Proceed',
@@ -204,31 +200,31 @@ $(document).ready(function() {
             if (result.isConfirmed) {
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url('inventory/deleteMultiple') ?>",
-                    data: params,
-                    // success: function(response) {
-                    //     Swal.fire({
-                    //         title: 'Delete Success',
-                    //         text: "Selected data has been deleted successfully!",
-                    //         icon: 'success',
-                    //         showCancelButton: false,
-                    //         confirmButtonText: 'Okay'
-                    //     }).then((result) => {
-                    //         if (result.value) {
-                    //             location.reload();
-                    //         }
-                    //     });
-                    // },
-                });
-                Swal.fire({
-                    title: 'Delete Success',
-                    text: "Selected data has been deleted successfully!",
-                    icon: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'Okay'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        location.reload();
+                    url: base_url + "inventory/_delete_selected",
+                    data: $('#frm-fees').serialize(),
+                    dataType:"json",
+                    success: function(data) {
+                        if (data.is_success) {
+                            Swal.fire({
+                                title: 'Delete Product Fee',
+                                text: "Product fees has been deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: "Please try again later.",
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
                     }
                 });
             }
@@ -238,9 +234,11 @@ $(document).ready(function() {
 
     $(document).on("click", ".delete-item", function() {
         let id = $(this).attr('data-id');
+        let name = $(this).attr('data-name');
+
         Swal.fire({
-            title: 'Delete Fee Item',
-            text: "Are you sure you want to delete this item?",
+            title: 'Delete Product Fee',
+            html: `Are you sure you want to delete <b>${name}</b>?`,
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,
@@ -249,50 +247,36 @@ $(document).ready(function() {
             if (result.isConfirmed) {
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url('inventory/delete') ?>",
-                    data: {
-                        id: id
-                    },
-                    // success: function(data) {
-                    //     if (data === "1") {
-                    //         Swal.fire({
-                    //             title: 'Delete Success',
-                    //             text: "Data has been deleted successfully!",
-                    //             icon: 'success',
-                    //             showCancelButton: false,
-                    //             confirmButtonText: 'Okay'
-                    //         }).then((result) => {
-                    //             if (result.value) {
-                    //                 location.reload();
-                    //             }
-                    //         });
-                    //     } else {
-                    //         Swal.fire({
-                    //             title: 'Delete Failed',
-                    //             text: "Please try again later.",
-                    //             icon: 'error',
-                    //             showCancelButton: false,
-                    //             confirmButtonText: 'Okay'
-                    //         });
-                    //     }
-                    // }
-                });
-                Swal.fire({
-                    title: 'Delete Success',
-                    text: "Data has been deleted successfully!",
-                    icon: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'Okay'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        location.reload();
+                    url: base_url + "inventory/_delete",
+                    dataType:'json',
+                    data: {id: id},
+                    success: function(data) {
+                        if (data.is_success) {
+                            Swal.fire({
+                                title: 'Delete Product Fee',
+                                text: "Product fee has been deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: "Please try again later.",
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
                     }
                 });
             }
         });
     });
-
-
 });
 
 function toggleBatchDelete(enable = True) {
