@@ -45,12 +45,12 @@
             </div>
             <span class="nsm-fab-label">New Item</span>
         </li>
-        <li class="btn-share-url">
+        <!-- <li class="btn-share-url">
             <div class="nsm-fab-icon">
                 <i class="bx bx-share-alt"></i>
             </div>
             <span class="nsm-fab-label">Share</span>
-        </li>
+        </li> -->
         <li data-bs-toggle="modal" data-bs-target="#print_inventory_modal">
             <div class="nsm-fab-icon">
                 <i class="bx bx-printer"></i>
@@ -97,90 +97,93 @@
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete_selected">Delete Selected</a></li>
                             </ul>
                         </div>
+                        <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" onclick="location.href='<?php echo url('inventory/import') ?>'">
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('inventory/import') ?>'">
                                 <i class='bx bx-fw bx-import'></i> Import
                             </button>
-                            <button type="button" class="nsm-button export-items">
+                            <button type="button" class="nsm-button export-items primary">
                                 <i class='bx bx-fw bx-export'></i> Export
                             </button>
-                            <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('inventory/add') ?>'">
-                                <i class='bx bx-fw bx-list-plus'></i> New Item
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('inventory/add') ?>'">
+                                <i class='bx bx-fw bx-plus'></i> Add New Item
                             </button>
-                            <button type="button" class="nsm-button btn-share-url">
+                            <!-- <button type="button" class="nsm-button btn-share-url">
                                 <i class='bx bx-fw bx-share-alt'></i>
-                            </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_inventory_modal">
+                            </button> -->
+                            <!-- <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_inventory_modal">
                                 <i class='bx bx-fw bx-printer'></i>
-                            </button>
+                            </button> -->
                         </div>
+                        <?php } ?>
                     </div>
                 </div>
-                <table id="INVENTORY_TABLE" class="nsm-table">
-                    <thead>
-                        <tr>
-                            <td class="table-icon text-center">
-                                <input class="form-check-input select-all table-select" type="checkbox">
-                            </td>
-                            <td class="table-icon"></td>
-                            <td data-name="Item">Item</td>
-                            <td data-name="Model">Model</td>
-                            <td data-name="Brand">Brand</td>
-                            <td data-name="Quantity-OH">Quantity-OH</td>
-                            <td data-name="Quantity-Ordered">Quantity-Ordered</td>
-                            <td data-name="Re-order Point">Re-order Point</td>
-                            <td data-name="Location">Location</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($items as $item) { ?>
-                        <tr>
-                            <td style="width:1%;">
-                                <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" data-id="<?php echo $item[3]; ?>">
-                                </div>
-                            </td>
-                            <td style="width:1%;">
-                                <div class="table-row-icon">
-                                    <i class='bx bx-package' ></i>
-                                </div>
-                            </td>
-                            <td class="nsm-text-primary">
-                                <label class="nsm-link default d-block fw-bold"><?php echo $item[0]; ?></label>
-                                <label class="nsm-link default content-subtitle"><?php echo $item[1]; ?></label>
-                            </td>
-                            <td><?php echo $item[7]; ?></td>
-                            <td><?php echo $item[2]; ?></td>
-                            <td><?php echo getItemQtyOH($item[3]); ?></td>
-                            <td><?php echo $item[8]; ?></td>
-                            <td><?php echo $item[9]; ?></td>
-                            <td>
-                                <button class="nsm-button btn-sm SEE_LOCATION" data-id="<?php echo $item[10]; ?>" disabled>See Location</button>
-                            </td>
-                            <td>
-                                <div class="dropdown table-management">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <a class="dropdown-item history-item link-modal-open" href="#" data-id="" id="history_items" data-toggle="modal" data-target="#history_list" onclick="$('#HISTORY_TABLE_SEARCH').val('<?php echo md5($item[3]); ?>').trigger('keyup');$('#CUSTOMER_HISTORY_TABLE_SEARCH').val('<?php echo md5($item[3]); ?>').trigger('keyup');$('#LOCATION_STATUS_TABLE_SEARCH').val('<?php echo md5($item[3]); ?>').trigger('keyup');$('#INV_ITEM_NAME').text('(<?php echo $item[0]; ?>)')">View Transaction</a>
-                                            <!-- ITEM_LOCATION_TABLE.columns(1).search('^'+DATA_ID+'$', true, false).draw(); -->
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/edit_item/' . $item[3]); ?>" data-id="<?php echo $item[3]; ?>">Edit</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $item[10]; ?>">Delete</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
+                <form id="frm-list-inventory">
+                    <table id="INVENTORY_TABLE" class="nsm-table">
+                        <thead>
+                            <tr>
+                                <td class="table-icon text-center">
+                                    <input class="form-check-input select-all table-select" type="checkbox">
+                                </td>
+                                <td class="table-icon"></td>
+                                <td data-name="Item">Item</td>
+                                <td data-name="Model">Model</td>
+                                <td data-name="Brand">Brand</td>
+                                <td data-name="Quantity-OH" style="text-align:right;">Quantity-OH</td>
+                                <td data-name="Quantity-Ordered" style="text-align:right;">Quantity-Ordered</td>
+                                <td data-name="Re-order Point" style="text-align:right;">Re-order Point</td>
+                                <td data-name="Manage"></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($items as $item) { ?>
+                            <tr>
+                                <td style="width:1%;">
+                                    <div class="table-row-icon table-checkbox">
+                                        <input class="form-check-input select-one table-select" type="checkbox" data-id="<?php echo $item[3]; ?>" name="items[<?= $item[3]; ?>]" value="<?php echo $item[3]; ?>">
+                                    </div>
+                                </td>
+                                <td style="width:1%;">
+                                    <div class="table-row-icon">
+                                        <i class='bx bx-package' ></i>
+                                    </div>
+                                </td>
+                                <td class="nsm-text-primary">
+                                    <label class="nsm-link default d-block fw-bold"><?php echo $item[0]; ?></label>
+                                    <label class="nsm-link default content-subtitle"><?php echo $item[1]; ?></label>
+                                </td>
+                                <td><?php echo $item[7] != '' ? $item[7] : '---'; ?></td>
+                                <td><?php echo $item[2] != '' ? $item[2] : '---'; ?></td>
+                                <td style="text-align:right;"><?php echo getItemQtyOH($item[3]); ?></td>
+                                <td style="text-align:right;"><?php echo $item[8] != '' ? $item[8] : 0; ?></td>
+                                <td style="text-align:right;"><?php echo $item[9] != '' ? $item[9] : 0; ?></td>
+                                <td>
+                                    <div class="dropdown table-management">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">                                        
+                                            <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>
+                                            <li>
+                                                <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/edit_item/' . $item[3]); ?>" data-id="<?php echo $item[3]; ?>">Edit</a>
+                                            </li>
+                                            <?php } ?>
+                                            <li>
+                                                <a class="dropdown-item edit-item SEE_LOCATION" href="javascript:void(0);" data-id="<?php echo $item[10]; ?>">Storage Location</a>
+                                            </li>
+                                            <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>
+                                            <li>
+                                                <a class="dropdown-item delete-item" href="javascript:void(0);" data-name="<?= $item[0]; ?>" data-id="<?php echo $item[10]; ?>">Delete</a>
+                                            </li>
+                                            <?php } ?>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
     </div>
@@ -696,9 +699,6 @@ $(document).ready(function() {
     });
 
     $("#delete_selected").on("click", function() {
-        let params = {
-            ids: $("#selected_ids").val(),
-        }
 
         Swal.fire({
             title: 'Delete Selected Items',
@@ -712,30 +712,28 @@ $(document).ready(function() {
                 $.ajax({
                     type: "POST",
                     url: "<?php echo base_url('inventory/deleteMultiple') ?>",
-                    data: params,
-                    // success: function(response) {
-                    //     Swal.fire({
-                    //         title: 'Delete Success',
-                    //         text: "Selected data has been deleted successfully!",
-                    //         icon: 'success',
-                    //         showCancelButton: false,
-                    //         confirmButtonText: 'Okay'
-                    //     }).then((result) => {
-                    //         if (result.value) {
-                    //             location.reload();
-                    //         }
-                    //     });
-                    // },
-                });
-                Swal.fire({
-                    title: 'Delete Success',
-                    text: "Selected data has been deleted successfully!",
-                    icon: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'Okay'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        location.reload();
+                    data: $('#frm-list-inventory').serialize(),
+                    dataType:'json',
+                    success: function(response) {
+                        if( response.is_success == 1 ){
+                            Swal.fire({
+                                title: 'Delete Inventory Item',
+                                text: "Selected data has been deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.msg,
+                            });  
+                        }
                     }
                 });
             }
@@ -744,10 +742,11 @@ $(document).ready(function() {
 
     $(document).on("click", ".delete-item", function() {
         let id = $(this).attr('data-id');
+        let name = $(this).attr('data-name');
 
         Swal.fire({
             title: 'Delete Inventory Item',
-            text: "Are you sure you want to delete this item?",
+            html: `Are you sure you want to delete item <b>${name}</b>?`,
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,

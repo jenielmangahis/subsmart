@@ -171,7 +171,7 @@
                                         <div class="col-lg-12 mt-2">
                                             <div class="float-end">
                                                 <button class="nsm-button" id="CANCEL_BUTTON_INVENTORY" type="button">Cancel</button>
-                                                <button type="submit" class="nsm-button primary"><i class='bx bx-save'></i>&nbsp;Save</button>
+                                                <button type="submit" class="nsm-button primary" id="btn-submit">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -261,26 +261,39 @@ function readURL(input) {
     }
 }
 $("#inventory_form").submit(function(e) {
-    e.preventDefault(); // avoid to execute the actual submit of the form.
-    var form = $(this);
-    // console.log(form.serialize());
-    var url = form.attr('action');
+    e.preventDefault();
+
+    var form = $(this);    
+
     $.ajax({
         type: "POST",
-        url: "<?= base_url() ?>inventory/save_new_item",
-        data: form.serialize(), // serializes the form's elements.
-        // success: function(data) {
-        //     console.log(data);
-        // }    
-    });
-    Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Item was added successfully!',
-    }).then((result) => {
-        // if (result.isConfirmed) {
-            window.location.href = "<?= base_url()?>/inventory";
-        // }
+        url: base_url + "inventory/save_new_item",
+        data: form.serialize(), 
+        dataType:'json',
+        success: function(response) {
+            if( response.is_success == 1 ){
+                Swal.fire({
+                    title: 'Add New Item',
+                    text: "Item was added successfully!",
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+                    //if (result.value) {
+                    location.href = base_url + 'inventory';                        
+                    //}
+                });
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: response.msg,
+                });  
+            }
+        },
+        beforeSend: function(){
+            $("#btn-submit").html('<span class="bx bx-loader bx-spin"></span>');
+        }
     });
 });
 
