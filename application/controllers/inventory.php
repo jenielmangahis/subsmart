@@ -97,6 +97,7 @@ class Inventory extends MY_Controller
 
     public function services($page = null)
     {
+
         $this->page_data['page']->title = 'Services';
         $this->page_data['page']->parent = 'Tools';
 
@@ -120,9 +121,16 @@ class Inventory extends MY_Controller
         $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
 
         if($page == null){
+            if(!checkRoleCanAccessModule('inventory', 'read')){
+                show403Error();
+                return false;
+            }
             $this->load->view('v2/pages/inventory/services', $this->page_data);
         }else if ($page == 'add'){
-            // $this->load->view('inventory/services_add', $this->page_data);
+            if(!checkRoleCanAccessModule('inventory', 'write')){
+                show403Error();
+                return false;
+            }
             $this->load->view('v2/pages/inventory/action/services_add', $this->page_data);
         }
     }
@@ -162,8 +170,16 @@ class Inventory extends MY_Controller
         $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
 
         if($page == null){
+            if(!checkRoleCanAccessModule('inventory', 'read')){
+                show403Error();
+                return false;
+            }
             $this->load->view('v2/pages/inventory/fees', $this->page_data);
         }else if ($page == 'add'){
+            if(!checkRoleCanAccessModule('inventory', 'write')){
+                show403Error();
+                return false;
+            }
             // $this->load->view('inventory/fees_add', $this->page_data);
             $this->load->view('v2/pages/inventory/action/fees_add', $this->page_data);
         }
@@ -572,6 +588,48 @@ class Inventory extends MY_Controller
         echo "1";
     }
 
+    public function ajax_create_service() 
+    {
+        $is_success = 0;
+        $msg   = 'Cannot create data';
+
+        $input      = $this->input->post();
+        $company_id = logged('company_id');
+
+        $isItemExists = $this->items_model->getItemByTitleAndCompanyId($input['title'], $company_id);
+        if( !$isItemExists ){
+            $data = array(
+                'company_id' => $company_id,
+                'title' => $input['title'],            
+                'price' => $input['price'],
+                'estimated_time' => $input['estimated_time'],
+                'frequency' => $input['frequency'],
+                'vendor_id' => 0,
+                'type' => 'Service',            
+                'description' => $input['description'],
+                'is_active' => 1,
+            );
+            $this->items_model->insert($data);
+            
+            //Activity Logs
+            $activity_name = 'Inventory : Created item '.$input['title']; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+
+        }else{
+            $msg = 'Item name already exists.';
+        }
+        
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
     public function create_fee_item() {
         $input = $this->input->post();
 
@@ -695,6 +753,74 @@ class Inventory extends MY_Controller
         }
     }
 
+    public function ajax_delete()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        $post = $this->input->post();
+        $id   = $post['id'];
+        $company_id =  logged('company_id');
+
+        $item = $this->items_model->getByID($id);
+        if( $item && $item->company_id == $company_id ){
+            $data = [
+                'id' => $id,
+                'company_id' => $company_id
+            ];
+            $delete = $this->items_model->inactiveItem($data);
+
+            //Activity Logs
+            $activity_name = 'Inventory : Deleted item '.$item->title; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_selected()
+    {
+        $is_success = 0;
+        $msg = 'Please select item(s).';
+
+        $post = $this->input->post();
+
+        if( $post['items'] ){
+            foreach($post['items'] as $id) {    
+                $item = $this->items_model->getByID($id);
+                if( $item ){
+                    $attempt = 0;
+                    do {
+                        $name = $attempt > 0 ? "$item->title (deleted - $attempt)" : "$item->title (deleted)";
+                        $checkName = $this->items_model->check_name(logged('company_id'), $name, 1);
+    
+                        $attempt++;
+                    } while(!is_null($checkName));
+    
+                    $data = ['is_active' => 0, 'modified' => date("Y-m-d H:i:s")];
+                    $this->items_model->updateItem($item->id, $data);
+    
+                    //Activity Logs
+                    $activity_name = 'Inventory : Deleted item '.$item->title; 
+                    createActivityLog($activity_name);
+                } 
+                
+            }
+
+            $is_success = 1;
+            $msg = '';
+        } 
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
 
     public function saveItems()
     {
@@ -1775,25 +1901,49 @@ class Inventory extends MY_Controller
         $this->load->view('v2/pages/inventory/ajax_item_location_list', $this->page_data);
     }
 
-    // public function TEST_SERVERSIDE() {
-    //     $comp_id                            = logged('company_id');
-    //     $role_id                            = logged('role');
-    //     if ($role_id == 1 || $role_id == 2) {
-    //         $this->page_data['SERVERSIDE_QUERY'] = "SELECT * FROM items WHERE is_active = '1'";
-    //         // $arg = array(
-    //         //     'type' => ucfirst($type),
-    //         //     'is_active' => 1
-    //         // );
-    //     } else {
-    //         $this->page_data['SERVERSIDE_QUERY'] = "SELECT * FROM items WHERE is_active = '1' AND company_id = '$comp_id'";
-    //         // $arg = array(
-    //         //     'company_id' => $comp_id,
-    //         //     'type' => ucfirst($type),
-    //         //     'is_active' => 1
-    //         // );
-    //     }
-    //     $this->load->view('v2/pages/inventory/TABLE_SERVERSIDE/INVENTORY_TABLE', $this->page_data);
-    // }
+    public function ajax_create_inventory_fee()
+    {
+        $is_success = 0;
+        $msg   = 'Cannot create data';
+
+        $input      = $this->input->post();
+        $company_id = logged('company_id');
+
+        $isItemExists = $this->items_model->getItemByTitleAndCompanyId($input['title'], $company_id);
+        if( !$isItemExists ){
+
+            $data = array(
+                'company_id' => $company_id,
+                'title' => $input['title'],            
+                'price' => $input['price'],
+                'estimated_time' => 0,
+                'frequency' => $input['frequency'],
+                'vendor_id' => 0,
+                'type' => 'Fees',            
+                'description' => $input['description'],
+                'is_active' => 1,
+            );
+            
+            $this->items_model->insert($data);
+            
+            //Activity Logs
+            $activity_name = 'Inventory : Created inventory fee '.$input['title']; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+
+        }else{
+            $msg = 'Inventory fee name already exists.';
+        }
+        
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
 }
 /* End of file items.php */
 

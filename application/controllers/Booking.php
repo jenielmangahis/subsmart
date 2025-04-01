@@ -284,27 +284,24 @@ class Booking extends MY_Controller {
 		$this->load->view('v2/pages/online_booking/coupons', $this->page_data);
 	}
 
-	public function settings() {
+	public function settings() 
+	{
 
 		if(!checkRoleCanAccessModule('online-booking', 'read')){
 			show403Error();
 			return false;
 		}
-
-        $this->page_data['page']->title = 'Settings';
-		$user_id = logged('id');
-		$bookingSetting = $this->BookingSetting_model->findByUserId($user_id);
-
-		$user 	   = $this->Users_model->getUser($user_id);
-		$employees = $this->Users_model->findAllUsersByCompanyId($user->company_id);
+        
+		$user_id        = logged('id');
+		$company_id     = logged('company_id');
+		$bookingSetting = $this->BookingSetting_model->findByCompanyId($company_id);
+		$employees      = $this->Users_model->findAllUsersByCompanyId($company_id);
 
 		$aasignedUsers = array();
 		$setting       = array();
 
 		if( $bookingSetting ){
-
 			$bookingScheduleAssignedUsers = $this->BookingScheduleAssignedUser_model->findAllByBookingSettingId($bookingSetting->id);
-
 			$setting = array(
 				'page_title' => $bookingSetting->page_title,
 				'page_intro' => $bookingSetting->page_introduction,
@@ -349,23 +346,28 @@ class Booking extends MY_Controller {
 
 		$this->page_data['aasignedUsers'] = $aasignedUsers;
 		$this->page_data['employees'] = $employees;
-		$this->page_data['setting'] = $setting;
-		$this->page_data['users']   = $this->users_model->getUser($user_id);
+		$this->page_data['setting']   = $setting;		
         $this->page_data['page']->tab = "Settings";
-		$this->load->view('online_booking/settings', $this->page_data);
+		$this->page_data['page']->title = 'Online Booking';
+		$this->load->view('v2/pages/online_booking/settings', $this->page_data);
 	}
 
-	public function preview() {
-        $this->page_data['page']->title = 'Web Integration';
-        $this->page_data['page']->tab = "Preview";
+	public function preview() 
+	{
+		if(!checkRoleCanAccessModule('online-booking', 'read')){
+			show403Error();
+			return false;
+		}
+		
 		$user = $this->session->userdata('logged');
 		$cid  = logged('company_id');
-    	//$eid  = hashids_encrypt($user['id'], '', 15);
     	$eid  = hashids_encrypt($cid, '', 15);
 
     	$this->page_data['eid']   = $eid;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
-		$this->load->view('online_booking/preview', $this->page_data);
+		$this->page_data['page']->title = 'Online Booking';
+        $this->page_data['page']->tab = "Preview";
+		$this->load->view('v2/pages/online_booking/preview', $this->page_data);
 	}
 
 	public function save_coupon()
@@ -854,13 +856,12 @@ class Booking extends MY_Controller {
 
     public function ajax_save_setting()
     {
-    	postAllowed();
+        $user_id    = logged('id');
+		$company_id = logged('company_id');
+        $post       = $this->input->post();
 
-        $user = $this->session->userdata('logged');
-        $post = $this->input->post();
-
-        $userSetting = $this->BookingSetting_model->findByUserId($user['id']);
-        if( $userSetting ){
+        $bookingSetting = $this->BookingSetting_model->findByCompanyId($company_id);
+        if( $bookingSetting ){
         	$data = array(
         		'page_title' => post('page_title'),
         		'page_instruction' => post('page_intro'),
@@ -878,15 +879,15 @@ class Booking extends MY_Controller {
         		'widget_status' => post('status')
         	);
 
-        	$this->BookingSetting_model->update($userSetting->id, $data);
+        	$this->BookingSetting_model->update($bookingSetting->id, $data);
 
-        	$this->BookingScheduleAssignedUser_model->deleteAllBySettingId($userSetting->id);
+        	$this->BookingScheduleAssignedUser_model->deleteAllBySettingId($bookingSetting->id);
 
         	if( post('convert_lead_to_work_order') == 1 ){
         		$assigned_batch_data = array();
 	        	foreach( $post['lead_work_order_employees'] as $key => $user_id ){
 	        		$assigned_batch_data[] = array(
-	        			'booking_setting_id' => $userSetting->id,
+	        			'booking_setting_id' => $bookingSetting->id,
 	        			'user_id' => $user_id
 	        		);
 	        	}
@@ -896,11 +897,10 @@ class Booking extends MY_Controller {
 	        	}
         	}
 
-
         }else{
         	$data = array(
-        		'company_id' => logged('company_id'),
-        		'user_id' => $user['id'],
+        		'company_id' => $company_id,
+        		'user_id' => $user_id,
         		'page_title' => post('page_title'),
         		'page_instruction' => post('page_intro'),
         		'product_listing_mode' => post('product_list_mode'),
@@ -933,6 +933,10 @@ class Booking extends MY_Controller {
 	        	}
         	}
         }
+
+		//Activity Logs
+		$activity_name = 'Online Booking : Updated booking setting.'; 
+		createActivityLog($activity_name);
 
         $json_data = array('is_success' => true);
 
