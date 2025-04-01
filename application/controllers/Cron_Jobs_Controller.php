@@ -3448,6 +3448,9 @@ class Cron_Jobs_Controller extends CI_Controller
         $date_from     = date('Y-m-d', strtotime('-14 days', strtotime($current_date))); 
         $date_to       = date("Y-m-d");
 
+        $is_automation_activated  = true;
+        $is_live_mail_credentials = false;
+
         $activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsWithSub14Days($current_date);
 
         $deduct_days_computation = 0;
@@ -3547,6 +3550,82 @@ class Cron_Jobs_Controller extends CI_Controller
 					];		
 
 					$invoice_id = $this->Invoice_model->create($data_invoice);
+
+                    //Automation sending email - start
+                    if($is_automation_activated) {
+                        $auto_cust_params = [
+                            'entity' => 'invoice',
+                            'trigger_action' => 'send_email',
+                            'operation' => 'send',
+                            'status' => 'active',
+                            'trigger_time' => 0,
+                            'target' => 'client'
+                        ];
+                        $automationDataCust = $this->automation_model->getAutomationByParams($auto_cust_params);  
+
+                        if($automationDataCust && $invoice_id) {
+                            $targetName    = "";
+                            $customerEmail = "";
+                            if($as->email) {
+                                $targetName    = $as->first_name . ' ' . $as->last_name;
+                                $customerEmail = $as->email;
+                            }
+                    
+                            if($targetName != "" && $customerEmail != "") { 
+                                if($is_live_mail_credentials) {
+                            
+                                    $mail = email__getInstance();
+                                    $mail->FromName = 'nSmarTrac';
+                                    
+                                    $mail->addAddress($customerEmail, $targetName);
+                                    $mail->isHTML(true);
+                                    $mail->Subject = $automationDataCust->title;
+                                    $mail->Body    = $automationDataCust->email_subject;
+                            
+                                    if (!$mail->Send()) {
+                                        $automation_fail++;
+                                    } else {
+                                        $automation_success++;
+                                    }
+                                    
+                                } else {
+            
+                                    $host     = 'smtp.mailtrap.io';
+                                    $port     = 2525;
+                                    $username = 'd7c92e3b5e901d';
+                                    $password = '203aafda110ab7';
+                                    $from     = 'noreply@nsmartrac.com';
+                                    $subject  = $automationDataCust->email_subject;
+                    
+                                    $mail = new PHPMailer;
+                                    $mail->isSMTP();
+                                    $mail->Host = $host;
+                                    $mail->SMTPAuth = true;
+                                    $mail->Username = $username;
+                                    $mail->Password = $password;
+                                    $mail->SMTPSecure = 'tls';
+                                    $mail->Port = $port;
+                    
+                                    // Sender and recipient settings
+                                    $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+                                    $mail->addAddress($customerEmail, $targetName);
+                    
+                                    $mail->IsHTML(true);
+                                    
+                                    $mail->Subject = $subject;
+                                    $mail->Body    = $automationDataCust->email_body;
+                    
+                                    // Send the email
+                                    if(!$mail->send()){
+                                        $automation_fail++;
+                                    } else {
+                                        $automation_success++;
+                                    }      
+                                }                            
+                            }
+                        }
+                    }
+                    //Automation sending email - end
 
 					//Update invoice settings
 					if( $invoiceSettings ){
@@ -3672,53 +3751,99 @@ class Cron_Jobs_Controller extends CI_Controller
             /**
              * Todo: after successfully created invoice, check for automation - start
              */
+            if($is_automation_activated) {
+                $auto_params = [
+                    'entity' => 'invoice',
+                    'trigger_action' => 'send_email',
+                    'operation' => 'send',
+                    'status' => 'active',
+                    'trigger_time' => 0,
+                    'target' => 'user'
+                ];
+                $automationData = $this->automation_model->getAutomationByParams($auto_params);  
 
-            $auto_params = [
-                'entity' => 'invoice',
-                'trigger_action' => 'send_email',
-                'operation' => 'send',
-                'target' => 'user',
-                'status' => 'active'
-            ];
-            $automationData = $this->automation_model->getAutomationByParams($auto_params);     
-            if($automationData) {
+                if($automationData) {
 
-                $targetName    = "";
-                $customerEmail = "";
+                    $targetName    = "";
+                    $customerEmail = "";
 
-                $targetUser = $this->users_model->getCompanyUserById($automationData->target_id);
-
-                if($targetUser) {
-                    $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
-                    $customerEmail = $targetUser->email;
-                }
-
-                if($targetName != "" && $customerEmail != "") {
-
-                    /*$mail = email__getInstance();
-                    $mail->FromName = 'NsmarTrac';
+                    if($automationData->target == 'user') {
+                        $targetUser = $this->users_model->getCompanyUserById($automationData->target_id);
+                        if($targetUser) {
+                            $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                            $customerEmail = $targetUser->email;
+                        }
+                    }
                     
-                    $mail->addAddress($customerEmail, $targetName);
-                    $mail->isHTML(true);
-                    $mail->Subject = $automationData->title;
-                    $mail->Body    = $automationData->email_subject;
+                    if($targetName != "" && $customerEmail != "") {
+
+                        if($is_live_mail_credentials) {
+                            
+                            $mail = email__getInstance();
+                            $mail->FromName = 'nSmarTrac';
+                            
+                            $mail->addAddress($customerEmail, $targetName);
+                            $mail->isHTML(true);
+                            $mail->Subject = $automationData->title;
+                            $mail->Body    = $automationData->email_subject;
+                    
+                            if (!$mail->Send()) {
+                                //echo 'Cannot send email <hr />';
+                                $automation_fail++;
+                            } else {
+                                //echo 'Your mail was successfully sent <hr />';
+                                $automation_success++;
+                            }
+                            
+                        } else {
+
+                            $host     = 'smtp.mailtrap.io';
+                            $port     = 2525;
+                            $username = 'd7c92e3b5e901d';
+                            $password = '203aafda110ab7';
+                            $from     = 'noreply@nsmartrac.com';
+                            $subject  = $automationData->email_subject;
             
-                    if (!$mail->Send()) {
-                        echo 'Cannot send email <hr />';
-                        $automation_success++;
-                    } else {
-                        echo 'Your mail was successfully sent <hr />';
-                        $automation_fail++;
-                    }*/   
+                            $mail = new PHPMailer;
+                            $mail->isSMTP();
+                            $mail->Host = $host;
+                            $mail->SMTPAuth = true;
+                            $mail->Username = $username;
+                            $mail->Password = $password;
+                            $mail->SMTPSecure = 'tls';
+                            $mail->Port = $port;
+            
+                            // Sender and recipient settings
+                            $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+                            $mail->addAddress($customerEmail, $targetName);
+            
+                            $mail->IsHTML(true);
+                            
+                            $mail->Subject = $subject;
+                            $mail->Body    = $automationData->email_body;
+            
+                            // Send the email
+                            if(!$mail->send()){
+                                //echo 'Message could not be sent. Mailer Error: ' . $mail->ErrorInfo . "<br />";
+                                $automation_fail++;
+                            } else {
+                                //echo 'Message has been sent' . "<br />";
+                                $automation_success++;
+                            }      
+                        }
 
+                    }
+                        
                 }
-
             }
             /**
              * Todo: after successfully created invoice, check for automation - end
              */            
         }
 
+        echo 'Success mail count: ' . $automation_success . '<br />';
+        echo 'Fail mail count: ' . $automation_fail . '<br />';
+        echo '<hr />';
 		echo 'Success count: ' . $success_count . '<br />';
 		echo 'Fail count: ' . $error_count . '<br />';
 	}
