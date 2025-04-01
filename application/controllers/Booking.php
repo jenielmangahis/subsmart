@@ -621,6 +621,44 @@ class Booking extends MY_Controller {
         redirect('more/addon/inquiries');
     }
 
+	public function ajax_update_inquiry_details()
+	{
+		$is_success = 0;
+		$msg = 'Cannot find data';
+
+		$post = $this->input->post();
+		$id   = $post['inquiry_id'];
+		$company_id = logged('company_id');
+
+		$bookingInquiry = $this->BookingInquiry_model->findById($id);
+		if($bookingInquiry && $bookingInquiry->company_id == $company_id) {
+			$this->BookingInquiry_model->update($bookingInquiry->id, array(
+				'name' => $post['name'],
+				'phone' => $post['phone'],
+				'email' => $post['email'],
+				'address' => $post['address'],
+				'message' => $post['message'],
+				'preferred_time_to_contact' => $post['preferred_time_to_contact'],
+				'how_did_you_hear_about_us' => $post['how_did_you_hear_about_us'],
+				'status' => $post['status']
+			));
+			
+			//Activity Logs
+			$activity_name = 'Online Booking : Updated inquiry details'; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg = '';
+		}  
+
+		$return = [
+			'is_success' => $is_success,
+			'msg' => $msg
+		];
+
+		echo json_encode($return);
+	}
+
     public function update_inquiry_details()
     {
     	postAllowed();
@@ -1029,13 +1067,18 @@ class Booking extends MY_Controller {
 
     public function inquiries()
     {
+		if(!checkRoleCanAccessModule('online-booking', 'read')){
+			show403Error();
+			return false;
+		}
+
     	$cid = logged('company_id');
     	$inquiries = $this->BookingInquiry_model->findAllByCompanyId($cid);
-		$this->page_data['page']->title = 'Inquiry';
-        $this->page_data['page']->tab = "Inquiry";
 
+		$this->page_data['page']->title = 'Online Booking';
+        $this->page_data['page']->tab = "Inquiry";
     	$this->page_data['inquiries'] = $inquiries;
-		$this->load->view('online_booking/inquiries', $this->page_data);
+		$this->load->view('v2/pages/online_booking/inquiries', $this->page_data);
     }
 
     public function ajax_get_inquiry_details()
@@ -1109,7 +1152,7 @@ class Booking extends MY_Controller {
 
         $this->page_data['inquiry'] = $inquiry;
         $this->page_data['inquiry_id'] = $id;
-        $this->load->view('online_booking/ajax_inquiry_edit_details', $this->page_data);
+        $this->load->view('v2/pages/online_booking/ajax_inquiry_edit_details', $this->page_data);
     }
 
     public function front_items($eid)
@@ -1571,7 +1614,7 @@ class Booking extends MY_Controller {
         $this->page_data['inquiry']    = $inquiry;
         $this->page_data['inquiry_id'] = $id;
         $this->page_data['bookingItems'] = $bookingItems;
-        $this->load->view('online_booking/ajax_view_inquiry', $this->page_data);
+        $this->load->view('v2/pages/online_booking/ajax_view_inquiry', $this->page_data);
     }
 
 	public function ajax_create_coupon()
@@ -1684,6 +1727,38 @@ class Booking extends MY_Controller {
 
 			//Activity Logs
 			$activity_name = 'Online Booking : Deleted coupon ' .$coupon->coupon_name; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg = '';
+		}
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+	public function ajax_delete_inquiry()
+	{
+		$is_success = 0;
+		$msg = 'Cannot find data.';
+
+		$company_id = logged('company_id');
+		$post 	    = $this->input->post();
+
+		$cid = logged('company_id');
+    	$iid = post('iid');
+		$bookingInquiry = $this->BookingInquiry_model->findById($iid);
+		if( $bookingInquiry && $bookingInquiry->company_id == $cid ){
+			$this->BookingInquiry_model->deleteByIdAndCompanyId($iid, $cid);
+
+			$this->activity_model->add("Online Inquiry #$iid Deleted by User:".logged('name'));
+
+			//Activity Logs
+			$activity_name = 'Online Booking : Deleted inquiry dated ' . date("m/d/Y", strtotime($bookingInquiry->schedule_date)) . ' by ' . $bookingInquiry->name; 
 			createActivityLog($activity_name);
 
 			$is_success = 1;
