@@ -34,7 +34,7 @@
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#new_activation_fee_modal">
-                                <i class='bx bx-fw bx-plus'></i> New Activation Fee
+                                <i class='bx bx-fw bx-plus'></i> Add New
                             </button>
                         </div>
                     </div>
