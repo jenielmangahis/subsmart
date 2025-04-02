@@ -1670,6 +1670,7 @@ $route['quick_add/_add_customer'] = 'Quick_Add/ajax_add_company_customer';
 
 // Appointment Types
 $route['appointment_types/index'] = 'Appointment_Types/index';
+$route['appointment_types'] = 'Appointment_Types/index';
 $route['appointment_types/add_new_type'] = 'Appointment_Types/add_new_type';
 $route['appointment_types/create_appointment_type'] = 'Appointment_Types/create_appointment_type';
 $route['appointment_types/edit/(:num)'] = 'Appointment_Types/edit_type/$1';
