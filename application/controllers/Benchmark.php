@@ -601,7 +601,7 @@ class Benchmark extends MY_Controller {
 
 	} 
 
-    public function testMailFunction() {
+    public function testMailFunctionBackup() {
         echo 'TEST MAIL FUNCTION <hr />';
 
         $this->load->model('Automation_model', 'automation_model');
@@ -670,6 +670,74 @@ class Benchmark extends MY_Controller {
 
     }
    
+    public function testMailFunction() {
+        echo 'TEST MAIL FUNCTION <hr />';
+
+        $this->load->model('Automation_model', 'automation_model');
+
+        $auto_params = [
+            'entity' => 'invoice',
+            'trigger_action' => 'send_email',
+            'operation' => 'send',
+            'target' => 'user',
+            'status' => 'active'
+        ];
+
+        $automationData = $this->automation_model->getAutomationByParams($auto_params);     
+        if($automationData) {
+
+            $targetName    = "";
+            $customerEmail = "";
+
+            $targetUser = $this->users_model->getCompanyUserById($automationData->target_id);
+
+            if($targetUser) {
+                $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                $customerEmail = $targetUser->email;
+            }
+
+            if($targetName != "" && $customerEmail != "") {
+            
+                $host     = 'smtp.mailtrap.io';
+                $port     = 2525;
+                $username = 'd7c92e3b5e901d';
+                $password = '203aafda110ab7';
+                $from     = 'noreply@nsmartrac.com';
+                $subject  = 'nSmarTrac Test';
+            
+                include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+
+                $mail = new PHPMailer;
+                $mail->isSMTP();
+                $mail->Host = $host;
+                $mail->SMTPAuth = true;
+                $mail->Username = $username;
+                $mail->Password = $password;
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = $port;
+
+                // Sender and recipient settings
+                $mail->setFrom('from@example.com', 'From Name');
+                $mail->addAddress('recipient@example.com', 'Recipient Name');
+
+                
+                $mail->IsHTML(true);
+                
+                $mail->Subject = $subject;
+                $mail->Body    = '<p>This is the plain text message body</p>';
+
+                // Send the email
+                if(!$mail->send()){
+                    echo 'Message could not be sent. Mailer Error: ' . $mail->ErrorInfo;
+                } else {
+                    echo 'Message has been sent';
+                }               
+
+            }
+
+        }
+
+    }    
 
     public function generateMailHTML()
     { 
