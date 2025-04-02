@@ -41,6 +41,7 @@
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                     <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <a type="button" class="nsm-button primary" href="javascript:void(0);" id="btn-add-new-credit-industry">
@@ -48,6 +49,7 @@
                             </a>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
 
                 <div class="tab-content mt-4">
@@ -83,9 +85,13 @@
                                       <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                           <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                       </a>
-                                      <ul class="dropdown-menu dropdown-menu-end">                                          
+                                      <ul class="dropdown-menu dropdown-menu-end">       
+                                          <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>                                                                               
                                           <li><a class="dropdown-item row-edit-item" href="javascript:void(0);" data-id="<?= $f->id; ?>">Edit</a></li>                                            
+                                          <?php } ?>
+                                          <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
                                           <li><a class="dropdown-item row-delete-item" href="javascript:void(0);" data-name="<?= $f->name; ?>" data-id="<?= $f->id; ?>">Delete</a></li>                                            
+                                          <?php } ?>
                                       </ul>
                                   </div>
                                 </td>
