@@ -18,12 +18,12 @@
                 <span>Lead Contact Form</span>
             </a>
         </li> -->
-        <li class="<?php if($page->title == 'Ask for Review'): echo 'active'; endif; ?>">
+        <!-- <li class="<?php if($page->title == 'Ask for Review'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="#">
                 <i class='bx bx-star' ></i>
                 <span>Ask for Review</span>
             </a>
-        </li>
+        </li> -->
         <!-- <li class="<?php if($page->title == 'Virtual Number'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="#">
                 <i class='bx bx-mobile-alt' ></i>

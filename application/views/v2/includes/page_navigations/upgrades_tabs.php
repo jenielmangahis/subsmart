@@ -12,7 +12,7 @@
                 <span>Online Booking</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Lead Contact Form'): echo 'active'; endif; ?>">
+        <!-- <li class="<?php if($page->title == 'Lead Contact Form'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('online_leads') ?>">
                 <i class='bx bx-notepad' ></i>
                 <span>Lead Contact Form</span>
@@ -59,7 +59,7 @@
                     <li><a class="dropdown-item" href="#">My Accountant</a></li>
                 </ul>
             </div>
-        </li>
+        </li> -->
         <!-- Do not remove the last li -->
         <li><label></label></li>
     </ul>
