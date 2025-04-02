@@ -95,7 +95,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <?php if(checkRoleCanAccessModule('job-settings', 'write')){ ?>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('job_checklists/add_new');?>'">
-                                <i class='bx bx-fw bx-plus'></i> Add New Checklist
+                                <i class='bx bx-fw bx-plus'></i> Add New
                             </button>
                         </div>
                         <?php } ?>
