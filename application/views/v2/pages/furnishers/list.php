@@ -44,7 +44,7 @@
                     <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <a type="button" class="nsm-button primary" href="javascript:void(0);" id="btn-add-new-credit-industry">
-                                <i class='bx bx-fw bx-plus'></i> Add New Credit Industry
+                                <i class='bx bx-fw bx-plus'></i> Add New
                             </a>
                         </div>
                     </div>
