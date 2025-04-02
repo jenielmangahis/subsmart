@@ -11,8 +11,9 @@ class Settings extends MY_Controller {
         $this->hasAccessModule(8);
 
 		$this->page_data['page_title'] = 'Settings';
-		$this->load->helper(array('form', 'url', 'hashids_helper'));
+		$this->load->helper(array('form', 'url', 'hashids_helper', 'functions'));
 		$this->load->library('session');
+
         
         //load Model
         $this->load->model('General_model', 'general_model');
