@@ -54,7 +54,7 @@
                     <?php if(checkRoleCanAccessModule('job-settings', 'write')){ ?>
                     <div class="col-sm-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" id="btn-add-new-job-type"><i class='bx bx-plus-medical'></i> Add New</button>
+                            <button type="button" class="nsm-button primary" id="btn-add-new-job-type"><i class='bx bx-fw bx-plus'></i> Add New</button>
                         </div>
                     </div>
                     <?php } ?>
