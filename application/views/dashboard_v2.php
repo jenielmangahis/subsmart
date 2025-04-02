@@ -425,9 +425,9 @@
                 display: none;
             }
 
-            .divThumbnailCard {
+            /* .divThumbnailCard {
                 display: none;
-            }
+            } */
         </style>
         <button name="button" type="button" class="nsm-button primary" data-bs-toggle="modal"
             data-bs-target="#manage_widgets_modal">
@@ -437,9 +437,11 @@
     </div>
 </div>
 
-
 <div class="row page-content g-0">
     <div class="col-12">
+        
+    <?php include viewPath('widgetThumbnailSettings'); ?>
+
         <div class="row row-cols-md-3 sortable cardContainers1" id="nsm_widgets2">
                 <?php
                     foreach ($widgets as $wids) {

@@ -124,6 +124,9 @@ if ($this->session->userdata('usertimezone') == null) {
         
 <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script> -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/js/bootstrap-colorpicker.min.js"></script>
     <style>
         #hdr-multi-account-list .nsm-loader{            
@@ -1144,7 +1147,7 @@ if ($this->session->userdata('usertimezone') == null) {
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">New Entry Shortcut</span>
-                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
                 <div class="row">

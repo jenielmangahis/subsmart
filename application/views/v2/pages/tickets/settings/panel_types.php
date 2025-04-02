@@ -101,7 +101,7 @@
                 <form id="frm-create-panel-type" method="post">
                     <div class="modal-header">
                         <span class="modal-title content-title" style="font-size: 17px;"><span id="modal-header-label">Add New Panel Type</span></span>
-                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                     </div>
                     <div class="modal-body">                        
                         <div class="row">
@@ -127,7 +127,7 @@
                     <input type="hidden" name="pid" id="pid" value="" />
                     <div class="modal-header">
                         <span class="modal-title content-title" style="font-size: 17px;"><span id="modal-header-label">Edit Panel Type</span></span>
-                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                     </div>
                     <div class="modal-body">                        
                         <div class="row">

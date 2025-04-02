@@ -13,15 +13,15 @@ $icon = '<i class="fas fa-signature"></i>';
         <div class="row">
             <div class="col-md-12">
                 <h5 class="mt-0 fw-bold">
-                    <a role="button" class="text-decoration-none" href="#" style="color:#6a4a86 !important">
-                        <?php echo $icon; ?>&nbsp;&nbsp;<?php echo $thumbanailName; ?>
+                    <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
+                        <?php echo $icon; ?>&nbsp;&nbsp;<?php echo $thumbanailName; ?> <span class="badge bg-secondary position-absolute opacity-25">Thumbnail</span>
                     </a>
                     <div class="dropdown float-end">
-                        <a href="#" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown">
+                        <a href="javascript:void(0)" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown">
                             <i class="fas fa-ellipsis-h text-muted"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove Thumbnail</a></li>
+                            <li><a class="dropdown-item" href="javascript:void(0)" onclick="removeThumbnail('<?php echo $id; ?>');">Remove Thumbnail</a></li>
                         </ul>
                     </div>
                 </h5>
@@ -91,11 +91,11 @@ $icon = '<i class="fas fa-signature"></i>';
         </div>
         <div class="nsm-card-controls">
             <div class="dropdown">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                <a href="javascript:void(0)" class="dropdown-toggle" data-bs-toggle="dropdown">
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#"
+                    <li><a class="dropdown-item" href="javascript:void(0)"
                             onclick="removeThumbnail('<?php echo htmlspecialchars($id); ?>');">Remove Thumbnail</a></li>
                 </ul>
             </div>

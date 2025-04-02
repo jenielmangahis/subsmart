@@ -1,53 +1,46 @@
 <?php
-// if (!is_null($dynamic_load) && $dynamic_load == true) {
-// }
-$category = "subscription";
-$thumbanailName = "Subscription";
-$description = "Subscription tracks recurring customer plans. This card displays the total number and amount of active subscriptions.";
+$title = "Subscription Revenue";
+$description = "Tracks recurring customer plans. This card displays the total number and amount of active subscriptions.";
 $icon = '<i class="fas fa-file-invoice-dollar"></i>';
+$type = "thumbnail";
+$category = "subscription_revenue";
 ?>
-<style> .display_none { display: none; }</style>
 <style>
-    .plus_text {
-        background-color: #6ba77c33;
-        color: #198754;
-        padding: 6px;
-        border-radius: 20px;
-        font-size: 12px;
+    .display_none { 
+        display: none; 
     }
 
-    .subscription-text {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        justify-content: center;
-        margin-bottom: 5px
+    .dnone {
+        display: none;
     }
 
-    .subscription-text h1 {
-        margin: 0 !important;
-    }
+    .showHideGraphCheckbox {
+        height: 17px;
+        width: 17px;
+        cursor: pointer;
+    } 
 </style>
 <div class="card shadow">
     <div class="card-body">
         <div class="row">
             <div class="col-md-12">
                 <h5 class="mt-0 fw-bold">
-                    <a role="button" class="text-decoration-none" href="#" style="color:#6a4a86 !important">
-                        <?php echo $icon; ?>&nbsp;&nbsp;<?php echo $thumbanailName; ?>
+                    <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
+                        <?php echo "$icon&nbsp;&nbsp;$title"; ?> <span class="badge bg-secondary position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
                     </a>
                     <div class="dropdown float-end">
-                        <a href="#" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown">
+                        <a href="javascript:void(0)" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-ellipsis-h text-muted"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item removeDashboardCard" data-id='<?php echo $id; ?>' href="javascript:void(0)">Remove</a></li>
                             <li>
-                                <a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove Thumbnail</a>
+                                <hr class="dropdown-divider">
                             </li>
-                            <li>
-                                <div class="form-check form-switch" style="display: flex; align-items: center;gap: 5px; padding-left: 10px;">
-                                    <input class="form-check-input ms-0" type="checkbox" onclick="manipulateShowGraph(this,'<?php echo $id; ?>')" <?php echo $isListView ? 'checked' : ''; ?> data-addon-delete-modal="open" data-id="WiZ" data-name="WiZ" style="margin: 0" />
-                                    <span class="content-title d-block mb-1">Show Graph</span>
+                            <li class="px-3">
+                                <div class="form-check" style="margin: -4px;">
+                                    <input class="form-check-input showHideGraphCheckbox" type="checkbox">
+                                    <label class="form-check-label text-muted" style=" margin-top: 4px; margin-left: 4px;">Show Graph</label>
                                 </div>
                             </li>
                         </ul>
@@ -63,16 +56,15 @@ $icon = '<i class="fas fa-file-invoice-dollar"></i>';
         <div class="row mb-2">
             <div class="col-md-12">
                 <div class="input-group mb-3">
-                    <select class="form-select filterSubscriptionDate" data-id='<?php echo $id; ?>' onChange="filterSubscription()">
-                        <option value="all">All time</option>
-                        <option value="week">Last 7 days </option>
-                        <option value="two-week">last 14 days</option>
-                        <option value="month">last 30 days </option>
-                        <option value="two-month">last 60 days </option>
-                        <option value="this-year">This Year </option>
+                    <select class="form-select thumbnailFilter1">
+                        <option value="all_time">All Time</option>
+                        <option value="last_7_days">Last 7 Days</option>
+                        <option value="last_14_days">Last 14 Days</option>
+                        <option value="last_30_days">Last 30 Days</option>
+                        <option value="last_60_days">Last 60 Days</option>
                     </select>
-                    <select class="form-select filterSubscriptionStatus" onChange="filterSubscription()">
-                        <option value="">All Status</option>
+                    <select class="form-select thumbnailFilter2">
+                        <option value="all_status">All Status</option>
                         <option value="Active w/RAR">Active w/RAR</option>
                         <option value="Active w/RQR">Active w/RQR</option>
                         <option value="Active w/RMR">Active w/RMR</option>
@@ -83,24 +75,30 @@ $icon = '<i class="fas fa-file-invoice-dollar"></i>';
             </div>
         </div>
         <div class="row">
-            <div class="col textData_<?php echo $id; ?> <?php echo $isListView == 1 ? 'display_none' : ''; ?>">
-                <div class="text-center p-2">
+            <div class="col textDataContainer">
+                <div class="text-center">
                     <strong class="text-muted text-uppercase">TOTAL SUBSCRIPTION REVENUE</strong>
-                    <h2 id="first_content_<?php echo $id; ?>">$<?php echo number_format($subs->total_amount_subscriptions, 2); ?></h2>
-                    <span class="plus_text plus_text_content" data-bs-toggle="popover" data-bs-html="true" title="Details" data-item="<?php echo $subsContent; ?>"><?php echo '+ $'.number_format($subs->total_current_amount_subscriptions, 2); ?></span>
+                    <h2 class="textData1"></h2>
                 </div>
             </div>
-            <div class="col textData_<?php echo $id; ?> <?php echo $isListView == 1 ? 'display_none' : ''; ?>">
-                <div class="text-center p-2">
-                    <strong class="text-muted text-uppercase">SUBSCRIBERS</strong>
-                    <h2 id="second_content_<?php echo $id; ?>" ><?php echo number_format($subs->total_active_subscription, 0); ?></h2>
-                    <span class="plus_text"> + <?php echo number_format($subs->total_current_active_subscription, 0); ?></span>
+            <div class="col textDataContainer">
+                <div class="text-center">
+                    <strong class="text-muted text-uppercase">TOTAL SUBSCRIBERS</strong>
+                    <h2 class="textData2"></h2>
                 </div>
             </div>
-            <div class="col graphData_<?php echo $id; ?> <?php echo $isListView == 0 ? 'display_none' : ''; ?>">
-                <div class="text-center p-2">
-                    <canvas id="income_subscription" class="nsm-chart" data-chart-type="sales" style="max-height: 120px;"></canvas>
+            <div class="col graphDataContainer dnone">
+                <div id="apexThumbnailGraph"></div>
+            </div>
+            <div class="col graphLoaderContainer dnone">
+                <div class="text-center">
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
                 </div>
+            </div>
+            <div class="col noRecordFoundContainer dnone">
+                <div class="text-center">No Record Found...</div>
             </div>
         </div>
         <strong class="dragHandle">⣿⣿⣿⣿</strong>
@@ -109,25 +107,159 @@ $icon = '<i class="fas fa-file-invoice-dollar"></i>';
     </div>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const popoverTriggerList = document.querySelectorAll('.plus_text');
-        const content = $('.plus_text_content').attr('data-item');
+    function graphColorRandomizer() {
+        const colors = [
+            '#FF5733', 
+            '#C70039', 
+            '#900C3F', 
+            '#581845', 
+            '#8E44AD', 
+            '#2980B9', 
+            '#1F618D', 
+            '#16A085', 
+            '#27AE60', 
+            '#D35400', 
+            '#A04000', 
+            '#7D3C98',
+        ];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
 
-        popoverTriggerList.forEach(function (popoverTriggerEl) {
-            // Initialize the popover without data-bs-content
-            const popover = new bootstrap.Popover(popoverTriggerEl, {
-                html: true,
-                title: 'Details',
-                content: function () {
-                    return content;
-                },
-                placement: 'top',
-                trigger: 'hover' 
-            });
+    function processData(category, dateFrom, dateTo, filter2) {
+        $.ajax({
+            url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
+            type: "POST",
+            data: {
+                category: category,
+                dateFrom: dateFrom,
+                dateTo: dateTo,
+                filter2: filter2,
+            },
+            beforeSend: function() {
+                $('.textDataContainer').hide();
+                $('.graphDataContainer').hide();
+                $('.graphLoaderContainer').fadeIn();
+                $('.noRecordFoundContainer').hide();
+            },
+            success: function(response) {
+                let textData1 = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(JSON.parse(response)['TOTAL_SUBSCRIPTION_REVENUE']);
+                let textData2 = JSON.parse(response)['TOTAL_SUBSCRIBERS'];
+                let graphData = JSON.parse(response)['GRAPH'];
+                let currentYear = new Date().getFullYear().toString();
+
+                let filteredGraphData = Object.keys(graphData)
+                    .filter(key => key.startsWith(currentYear))
+                    .reduce((obj, key) => {
+                        obj[key] = parseFloat(graphData[key]);
+                        return obj;
+                    }, {});
+
+                let categories = Object.keys(filteredGraphData).map(month => month.split(' ')[1]);
+                let values = Object.values(filteredGraphData);
+
+                if (values.length === 0) {
+                    $('.textDataContainer').hide();
+                    $('.graphDataContainer').hide();
+                    $('.graphLoaderContainer').hide();
+                    $('.noRecordFoundContainer').fadeIn();
+                } else {
+                    if ($('.showHideGraphCheckbox').is(':checked')) {
+                        $('.textDataContainer').hide();
+                        $('.graphDataContainer').fadeIn();
+                    } else {
+                        $('.textDataContainer').fadeIn();
+                        $('.graphDataContainer').hide();
+                    }
+                    $('.graphLoaderContainer').hide();
+                    $('.noRecordFoundContainer').hide();
+                    $('.textData1').text(textData1);
+                    $('.textData2').text(textData2);
+
+                    chart.updateOptions({
+                        xaxis: { categories: categories },
+                        yaxis: {
+                            labels: {
+                                formatter: function(value) {
+                                    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+                                }
+                            }
+                        },
+                        colors: [graphColorRandomizer()]
+                    });
+
+                    chart.updateSeries([{
+                        name: "Subscription Revenue",
+                        data: values
+                    }]);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("Request failed!");
+                console.error("Status:", textStatus);
+                console.error("Error:", errorThrown);
+            }
         });
+    }
+
+    const category = '<?php echo $category; ?>';
+    const dateFrom = '1970-01-01';
+    const dateTo = new Date().toISOString().split('T')[0];
+    const filter2 = 'all_status';
+    processData(category, dateFrom, dateTo, filter2);
+    
+    var options = {
+        series: [{ name: "Subscription Revenue", data: [] }],
+        xaxis: { categories: [] },
+        chart: { height: 150, type: 'line', zoom: { enabled: false }, toolbar: { show: false } },
+        dataLabels: { enabled: false },
+        stroke: { curve: 'smooth', width: 3 },
+        grid: { show: true, xaxis: { lines: { show: true } } },
+        markers: { size: 6, strokeWidth: 3, hover: { size: 10 } },
+        colors: [graphColorRandomizer()]
+    };
+
+    var chart = new ApexCharts(document.querySelector("#apexThumbnailGraph"), options);
+    chart.render(); 
+
+    $(document).on('change', '.thumbnailFilter1, .thumbnailFilter2', function() {
+        const category = '<?php echo $category; ?>';
+        const filter1 = $('.thumbnailFilter1 option:selected').val();
+        const filter2 = $('.thumbnailFilter2 option:selected').val();
+        let dateFrom = '1970-01-01';
+        let dateTo = new Date().toISOString().split('T')[0];
+        const today = new Date();
+
+        switch (filter1) {
+            case 'last_7_days':
+                dateTo = new Date(today.setDate(today.getDate() - 7)).toISOString().split('T')[0];
+                break;
+            case 'last_14_days':
+                dateTo = new Date(today.setDate(today.getDate() - 14)).toISOString().split('T')[0];
+                break;
+            case 'last_30_days':
+                dateTo = new Date(today.setDate(today.getDate() - 30)).toISOString().split('T')[0];
+                break;
+            case 'last_60_days':
+                dateTo = new Date(today.setDate(today.getDate() - 60)).toISOString().split('T')[0];
+                break;
+            case 'all_time':
+            default:
+                dateTo = new Date().toISOString().split('T')[0];
+                break;
+        }
+
+        processData(category, dateFrom, dateTo, filter2);
+    });
+
+    $(document).on('change', '.showHideGraphCheckbox', function() {
+        if (!$('.noRecordFoundContainer').is(':visible')) {
+            if ($(this).is(':checked')) {
+                $('.textDataContainer').hide();
+                $('.graphDataContainer').fadeIn();
+            } else {
+                $('.textDataContainer').fadeIn();
+                $('.graphDataContainer').hide();
+            }
+        }
     });
 </script>
-<?php
-// if (!is_null($dynamic_load) && $dynamic_load == true) {
-// }
-?>

@@ -131,7 +131,7 @@
             <form id="frm-with-selected-disapprove" method="post">
                 <div class="modal-header">
                     <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-x-circle'></i> <span id="modal-header-label">Disapprove Overtime Request</span></span>
-                    <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                    <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -156,7 +156,7 @@
                 <form id="frm-create-overtime-request" method="post">
                     <div class="modal-header">
                         <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-fw bx-plus'></i> <span id="modal-header-label">Create Overtime Request</span></span>
-                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                     </div>
                     <div class="modal-body"> 
                         <div class="row">
@@ -204,7 +204,7 @@
                     <input type="hidden" name="rid" id="rid" value="0" />
                     <div class="modal-header">
                         <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-fw bx-pencil'></i> <span id="modal-header-label">Edit Overtime Request</span></span>
-                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                     </div>
                     <div class="modal-body" id="edit-overtime-request-container"></div>
                     <div class="modal-footer" id="footer-edit-overtime-request">
@@ -223,7 +223,7 @@
                     <input type="hidden" name="rid" id="disapprove-rid" value="0" />
                     <div class="modal-header">
                         <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-x-circle'></i> <span id="modal-header-label">Disapprove Overtime Request</span></span>
-                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                     </div>
                     <div class="modal-body">
                         <div class="row">

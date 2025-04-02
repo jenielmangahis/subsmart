@@ -103,14 +103,14 @@ endif;
                 Add Task
             </a>
             <div class="dropdown">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                <a href="javascript:void(0)" class="dropdown-toggle" data-bs-toggle="dropdown">
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#"
+                    <li><a class="dropdown-item" href="javascript:void(0)"
                             onclick="addToMain('<?= $id ?>',<?php echo $isMain ? '1' : '0'; ?>,'<?= $isGlobal ?>' )"><?php echo $isMain ? 'Remove From Main' : 'Add to Main'; ?></a>
                     </li>
-                    <li><a class="dropdown-item" href="#" onclick="removeWidget('<?= $id ?>');">Remove Widget</a>
+                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="removeWidget('<?= $id ?>');">Remove Widget</a>
                     </li>
                 </ul>
             </div>
