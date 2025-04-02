@@ -114,7 +114,7 @@ table.dataTable.no-footer {
                                 <div class="col-6 grid-mb text-end">
                                     <div class="nsm-page-buttons page-button-container">
                                         <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#new_tax_rate_modal">
-                                        <i class='bx bxs-plus-circle' ></i> Add Tax Rate
+                                            <i class='bx bx-fw bx-plus'></i> Add New
                                         </button>                                        
                                     </div>
                                 </div>
