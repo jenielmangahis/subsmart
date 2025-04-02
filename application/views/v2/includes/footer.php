@@ -25,26 +25,18 @@
           <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
           <!-- <script src="<?php echo $url->assets; ?>plugins/datatables.net/export/dataTables.buttons.min.js"> -->
 
-          <script src="<?php echo $url->assets; ?>plugins/datatables.net/export/dataTables.buttons.min.js">
-          </script>
-          <script src="<?php echo $url->assets; ?>plugins/datatables.net/export/buttons.bootstrap.min.js">
-          </script>
-          <script src="<?php echo $url->assets; ?>plugins/datatables.net/export/jszip.min.js">
-          </script>
-          <script src="<?php echo $url->assets; ?>plugins/datatables.net/export/pdfmake.min.js">
-          </script>
-          <script src="<?php echo $url->assets; ?>plugins/datatables.net/export/vfs_fonts.js">
-          </script>
-          <script src="<?php echo $url->assets; ?>plugins/datatables.net/export/buttons.html5.min.js">
-          </script>
+          <script src="<?php echo base_url('assets/plugins/datatables.net/export/dataTables.buttons.min.js'); ?>"></script>
+          <script src="<?php echo base_url('assets/plugins/datatables.net/export/buttons.bootstrap.min.js'); ?>"></script>
+          <script src="<?php echo base_url('assets/plugins/datatables.net/export/jszip.min.js'); ?>"></script>
+          <script src="<?php echo base_url('assets/plugins/datatables.net/export/pdfmake.min.js'); ?>"></script>
+          <script src="<?php echo base_url('assets/plugins/datatables.net/export/vfs_fonts.js'); ?>"></script>
+          <script src="<?php echo base_url('assets/plugins/datatables.net/export/buttons.html5.min.js'); ?>"></script>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
           <!-- Validate  -->
-          <script src="<?php echo $url->assets; ?>plugins/switchery/switchery.min.js">
-          </script>
-          <script src="<?php echo $url->assets; ?>plugins/jquery.validate.min.js"></script>
-          <script src="<?php echo $url->assets; ?>plugins/bootstrap-treeview/bootstrap-treeview.js">
-          </script>
+          <script src="<?php echo base_url('assets/plugins/switchery/switchery.min.js'); ?>"></script>
+          <script src="<?php echo base_url('assets/plugins/jquery.validate.min.js'); ?>"></script>
+          <script src="<?php echo base_url('assets/plugins/bootstrap-treeview/bootstrap-treeview.js'); ?>"></script>
           <!-- Chart JS -->
           <script src="<?php echo base_url('assets/js/v2/chart.min.js'); ?>"></script>
           <!-- Boostrap JS -->
@@ -56,9 +48,9 @@
 
 
           <!-- Timepicker -->
-          <script src="<?php echo $url->assets; ?>plugins/jquery-timepicker/jquery.timepicker.min.js"></script>
+          <script src="<?php echo base_url('assets/plugins/jquery-timepicker/jquery.timepicker.min.js'); ?>"></script>
           <!-- Custom JS -->
-          <script src="<?php echo $url->assets; ?>js/custom.js"></script>
+          <script src="<?php echo base_url('assets/js/custom.js'); ?>"></script>
           <!-- Sweetalert JS -->
           <script src="<?php echo base_url('assets/js/v2/sweetalert2.min.js'); ?>"></script>
           <!-- Pusher JS -->
@@ -132,7 +124,7 @@
           <script type="text/javascript" src="<?php echo base_url('assets/js/v2/nsm.draggable.js'); ?>"></script>
           <script type="text/javascript" src="<?php echo base_url('assets/js/v2/nsm.table.js'); ?>"></script>
           <?php if (!$disable_clockjs) { ?>
-          <script src="<?php echo $url->assets; ?>js/timesheet/clock.js"></script>
+          <script src="<?php echo base_url('assets/js/timesheet/clock.js');?>"></script>
           <?php } ?>
 
           <script type="text/javascript">

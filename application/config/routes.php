@@ -887,6 +887,9 @@ $route['booking/_save_booking_category'] = 'booking/ajax_save_category';
 $route['booking/create_service_item'] = 'booking/save_service_item';
 $route['booking/_save_service_item'] = 'booking/ajax_save_service_item';
 $route['booking/_create_form_field'] = 'booking/ajax_create_form_field';
+$route['booking/_create_coupon'] = 'booking/ajax_create_coupon';
+$route['booking/_update_coupon'] = 'booking/ajax_update_coupon';
+$route['booking/_delete_booking_coupon'] = 'booking/ajax_delete_coupon_v2';
 // $route['booking/delete_coupon/(:num)']['GET'] = 'booking/delete_coupon/$1';
 $route['booking/delete_coupon'] = 'booking/delete_coupon';
 $route['booking/delete_service_item'] = 'booking/delete_service_item';
@@ -909,6 +912,8 @@ $route['booking/_inquiry_edit_details'] = 'booking/ajax_inquiry_edit_details';
 $route['booking/update_inquiry_details'] = 'booking/update_inquiry_details';
 $route['booking/delete_inquiry'] = 'booking/delete_inquiry';
 $route['booking/_view_inquiry_details'] = 'booking/ajax_view_inquiry';
+$route['booking/_delete_inquiry'] = 'booking/ajax_delete_inquiry';
+$route['booking/_update_inquiry_details'] = 'booking/ajax_update_inquiry_details';
 // $route['booking/products'] = 'booking/front_items';
 // $route['booking/products/(:any)'] = 'booking/front_items/$1';
 // $route['booking/products_schedule/(:any)'] = 'booking/front_schedule/$1'; //Moved to pages controller to remove auth function
@@ -1625,6 +1630,8 @@ $route['inventory/_delete_custom_field'] = 'inventory/ajax_delete_custom_field';
 $route['inventory/_item_location_list'] = 'inventory/ajax_item_location_list';
 $route['inventory/_delete'] = 'inventory/ajax_delete';
 $route['inventory/_create_service'] = 'inventory/ajax_create_service';
+$route['inventory/_delete_selected'] = 'inventory/ajax_delete_selected';
+$route['inventory/_create_inventory_fee'] = 'inventory/ajax_create_inventory_fee';
 
 // Inventory Fees
 $route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';
@@ -1663,6 +1670,7 @@ $route['quick_add/_add_customer'] = 'Quick_Add/ajax_add_company_customer';
 
 // Appointment Types
 $route['appointment_types/index'] = 'Appointment_Types/index';
+$route['appointment_types'] = 'Appointment_Types/index';
 $route['appointment_types/add_new_type'] = 'Appointment_Types/add_new_type';
 $route['appointment_types/create_appointment_type'] = 'Appointment_Types/create_appointment_type';
 $route['appointment_types/edit/(:num)'] = 'Appointment_Types/edit_type/$1';

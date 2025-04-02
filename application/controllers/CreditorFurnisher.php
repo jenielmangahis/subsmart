@@ -20,6 +20,11 @@ class CreditorFurnisher extends MY_Controller
     {
         $cid  = logged('company_id');
 
+        if(!checkRoleCanAccessModule('customer-settings', 'read')){
+            show403Error();
+            return false;
+        }   
+
         $creditorFurnishers = $this->Furnisher_model->getAllByCompanyId($cid);
 
         $this->page_data['page']->title = 'Creditors / Furnishers';

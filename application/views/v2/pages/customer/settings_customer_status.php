@@ -34,7 +34,7 @@
                     <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#new_customer_status_modal">
-                                <i class='bx bx-fw bx-plus'></i> New Customer Status
+                                <i class='bx bx-fw bx-plus'></i> Add New
                             </button>
                         </div>
                     </div>

@@ -148,14 +148,21 @@ class Inquiries extends MY_Controller {
         $this->load->view('inquiry/inquiries', $this->page_data);
     }
 
-    public function online_lead() {
+    public function online_lead() 
+    {
         $this->hasAccessModule(68);
-        $this->page_data['page']->title = 'Lead Contact Form';
+
+        if(!checkRoleCanAccessModule('lead-contact-form', 'read')){
+			show403Error();
+			return false;
+		}
+        
         $company_id = logged('company_id');
         $this->page_data['lead_forms'] = $this->inquiry_model->getAllLeadFormByCompany($company_id);
         $this->page_data['customize_lead_forms'] = $this->inquiry_model->getAllCustomizeLeadFormByCompany($company_id, 'lead_form');
         $this->page_data['customize_lead_forms_default'] = $this->inquiry_model->getAllCustomizeLeadFormByDefault();
-        $this->load->view('inquiry/online_lead', $this->page_data);
+        $this->page_data['page']->title = 'Lead Contact Form';
+        $this->load->view('v2/pages/inquiry/online_lead', $this->page_data);
     }
 
     public function video_estimate() {

@@ -30,12 +30,12 @@ $icon = '<i class="fas fa-tachometer-alt"></i>';
         <div class="nsm-card-controls">
 
             <div class="dropdown">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                <a href="javascript:void(0)" class="dropdown-toggle" data-bs-toggle="dropdown">
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
 
-                    <li><a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove
+                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="removeThumbnail('<?php echo $id; ?>');">Remove
                             Thumbnail</a></li>
                 </ul>
             </div>

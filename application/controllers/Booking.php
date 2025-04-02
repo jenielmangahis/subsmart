@@ -76,12 +76,16 @@ class Booking extends MY_Controller {
 		$this->load->view('v2/pages/online_booking/products', $this->page_data);
 	}
 
-	public function time() {
+	public function time() 
+	{
+		if(!checkRoleCanAccessModule('online-booking', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Online Booking';
         $this->page_data['page']->parent = 'More';
         $this->page_data['page']->tab = "Time Slots";
-
-        $user = $this->session->userdata('logged');
 
         $cid = logged('company_id');
         $bookingTimeSlots = $this->BookingTimeSlot_model->findAllByCompanyId($cid);
@@ -92,32 +96,70 @@ class Booking extends MY_Controller {
 		$this->load->view('v2/pages/online_booking/time', $this->page_data);
 	}
 
-	public function form() {
-
-		$default_form_fields = array(
-			'Full Name' => 'full_name',
-			'Contact Number' => 'contact_number',
-			'Email' => 'email',
-			'Address' => 'address',
-			'Message' => 'message',
-			'Preferred Time To Contact' => 'preferred_time_to_contact',
-			'How Did You Hear About Us' => 'how_did_you_hear_about_us',
-		);
-
-		$user = $this->session->userdata('logged');
-		$booking_forms = $this->BookingForms_model->getAll();
-		$booking_forms_custom = $this->BookingForms_model->getAllCustom();
-
-		if($booking_forms){
-			$this->page_data['booking_forms'] = $booking_forms;
+	public function form() 
+	{
+		if(!checkRoleCanAccessModule('online-booking', 'read')){
+			show403Error();
+			return false;
 		}
+
+		$company_id = logged('company_id');
+		$default_form_fields  = $this->BookingForms_model->defaultFormFields();		
+		$booking_forms 	      = $this->BookingForms_model->getAllByCompanyId($company_id);
+		$booking_forms_custom = $this->BookingForms_model->getAllCustomByCompanyId($company_id);
+		
         $this->page_data['page']->tab = "Booking Form";
-		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
+		$this->page_data['booking_forms'] = $booking_forms;
 		$this->page_data['default_form_fields'] = $default_form_fields;
 		$this->page_data['booking_forms_custom'] = $booking_forms_custom;
-        $this->page_data['page']->title = 'Booking Form';
+        $this->page_data['page']->title = 'Online Booking';
+		$this->load->view('v2/pages/online_booking/form', $this->page_data);
+	}
 
-		$this->load->view('online_booking/form', $this->page_data);
+	public function ajax_create_form_field()
+	{
+		$is_success = 0;
+		$msg = 'Cannot save data.';
+
+		$company_id = logged('company_id');
+		$user_id    = logged('id');
+		$post = $this->input->post();
+
+		$isExists = $this->BookingForms_model->getByFieldName($post['field_name']);
+		if( $isExists && $isExists->company_id == $company_id ){
+			$msg = 'Field name ' . $post['field_name'] . ' already exits.';
+		}else{
+			$field_name = $this->BookingForms_model->createFieldName($post['field_name']);
+			$lastSort   = $this->BookingForms_model->getLastSortNumberByCompanyId($company_id);
+			$data = [
+				'company_id' => $company_id, 
+				'user_id' => $user_id,
+				'field_name' => $field_name,
+				'label' => $post['field_name'],
+				'type' => 1,
+				'is_required' => 0,
+				'is_visible' => 1,
+				'is_default' => 0,
+				'sort' => $lastSort->sort + 1,
+				'date_created' => date("Y-m-d H:i:s")
+			];
+
+			$this->BookingForms_model->create($data);
+
+			//Activity Logs
+			$activity_name = 'Online Booking : Created new form field ' . $post['field_name']; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg = '';
+		}
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
 	}
 
 	public function save_form()
@@ -209,49 +251,57 @@ class Booking extends MY_Controller {
 
     }
 
-	public function coupons( $param = '' ) {
-        $this->page_data['page']->tab = "Coupons";
-        $this->page_data['page']->title = 'Coupons';
-
-		if( $param == '' ){
-			$param = 'active';
+	public function coupons( $param = '' ) 
+	{
+		if(!checkRoleCanAccessModule('online-booking', 'read')){
+			show403Error();
+			return false;
 		}
 
-		$filters[] = ['field' => 'company_id', 'value' => logged('company_id')];
+		$company_id = logged('company_id');
+		$filters[] = [
+			'field' => 'company_id', 'value' => $company_id
+		];
 
 		if( $param == 'active' ){
 			$coupons = $this->BookingCoupon_model->getAllActive($filters);
-		}else{
+		}elseif( $param == 'closed' ){
 			$coupons = $this->BookingCoupon_model->getAllClosed($filters);
+		}else{			
+			$coupons = $this->BookingCoupon_model->getAllByCompanyId($company_id);
 		}
 		
 		$total_active = $this->BookingCoupon_model->totalActive($filters);
 		$total_closed = $this->BookingCoupon_model->totalClosed($filters);
 
+		$this->page_data['page']->tab = "Coupons";
+        $this->page_data['page']->title = 'Online Booking';
 		$this->page_data['total_active'] = $total_active;
 		$this->page_data['total_closed'] = $total_closed;
 		$this->page_data['coupons'] = $coupons;
 		$this->page_data['active_tab'] = $param;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
-		$this->load->view('online_booking/coupons', $this->page_data);
-
+		$this->load->view('v2/pages/online_booking/coupons', $this->page_data);
 	}
 
-	public function settings() {
-        $this->page_data['page']->title = 'Settings';
-		$user = $this->session->userdata('logged');
-		$bookingSetting = $this->BookingSetting_model->findByUserId($user['id']);
+	public function settings() 
+	{
 
-		$user 	   = $this->Users_model->getUser($user['id']);
-		$employees = $this->Users_model->findAllUsersByCompanyId($user->company_id);
+		if(!checkRoleCanAccessModule('online-booking', 'read')){
+			show403Error();
+			return false;
+		}
+        
+		$user_id        = logged('id');
+		$company_id     = logged('company_id');
+		$bookingSetting = $this->BookingSetting_model->findByCompanyId($company_id);
+		$employees      = $this->Users_model->findAllUsersByCompanyId($company_id);
 
 		$aasignedUsers = array();
 		$setting       = array();
 
 		if( $bookingSetting ){
-
 			$bookingScheduleAssignedUsers = $this->BookingScheduleAssignedUser_model->findAllByBookingSettingId($bookingSetting->id);
-
 			$setting = array(
 				'page_title' => $bookingSetting->page_title,
 				'page_intro' => $bookingSetting->page_introduction,
@@ -296,23 +346,28 @@ class Booking extends MY_Controller {
 
 		$this->page_data['aasignedUsers'] = $aasignedUsers;
 		$this->page_data['employees'] = $employees;
-		$this->page_data['setting'] = $setting;
-		$this->page_data['users']   = $this->users_model->getUser(logged('id'));
+		$this->page_data['setting']   = $setting;		
         $this->page_data['page']->tab = "Settings";
-		$this->load->view('online_booking/settings', $this->page_data);
+		$this->page_data['page']->title = 'Online Booking';
+		$this->load->view('v2/pages/online_booking/settings', $this->page_data);
 	}
 
-	public function preview() {
-        $this->page_data['page']->title = 'Web Integration';
-        $this->page_data['page']->tab = "Preview";
+	public function preview() 
+	{
+		if(!checkRoleCanAccessModule('online-booking', 'read')){
+			show403Error();
+			return false;
+		}
+		
 		$user = $this->session->userdata('logged');
 		$cid  = logged('company_id');
-    	//$eid  = hashids_encrypt($user['id'], '', 15);
     	$eid  = hashids_encrypt($cid, '', 15);
 
     	$this->page_data['eid']   = $eid;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
-		$this->load->view('online_booking/preview', $this->page_data);
+		$this->page_data['page']->title = 'Online Booking';
+        $this->page_data['page']->tab = "Preview";
+		$this->load->view('v2/pages/online_booking/preview', $this->page_data);
 	}
 
 	public function save_coupon()
@@ -366,7 +421,7 @@ class Booking extends MY_Controller {
     	$coupon = $this->BookingCoupon_model->getByIdAndCompanyId($id, $cid);
 
     	$this->page_data['coupon'] = $coupon;
-		$this->load->view('online_booking/ajax_edit_coupon', $this->page_data);
+		$this->load->view('v2/pages/online_booking/ajax_edit_coupon', $this->page_data);
     }
 
     public function delete_coupon()
@@ -565,6 +620,44 @@ class Booking extends MY_Controller {
 
         redirect('more/addon/inquiries');
     }
+
+	public function ajax_update_inquiry_details()
+	{
+		$is_success = 0;
+		$msg = 'Cannot find data';
+
+		$post = $this->input->post();
+		$id   = $post['inquiry_id'];
+		$company_id = logged('company_id');
+
+		$bookingInquiry = $this->BookingInquiry_model->findById($id);
+		if($bookingInquiry && $bookingInquiry->company_id == $company_id) {
+			$this->BookingInquiry_model->update($bookingInquiry->id, array(
+				'name' => $post['name'],
+				'phone' => $post['phone'],
+				'email' => $post['email'],
+				'address' => $post['address'],
+				'message' => $post['message'],
+				'preferred_time_to_contact' => $post['preferred_time_to_contact'],
+				'how_did_you_hear_about_us' => $post['how_did_you_hear_about_us'],
+				'status' => $post['status']
+			));
+			
+			//Activity Logs
+			$activity_name = 'Online Booking : Updated inquiry details'; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg = '';
+		}  
+
+		$return = [
+			'is_success' => $is_success,
+			'msg' => $msg
+		];
+
+		echo json_encode($return);
+	}
 
     public function update_inquiry_details()
     {
@@ -801,13 +894,12 @@ class Booking extends MY_Controller {
 
     public function ajax_save_setting()
     {
-    	postAllowed();
+        $user_id    = logged('id');
+		$company_id = logged('company_id');
+        $post       = $this->input->post();
 
-        $user = $this->session->userdata('logged');
-        $post = $this->input->post();
-
-        $userSetting = $this->BookingSetting_model->findByUserId($user['id']);
-        if( $userSetting ){
+        $bookingSetting = $this->BookingSetting_model->findByCompanyId($company_id);
+        if( $bookingSetting ){
         	$data = array(
         		'page_title' => post('page_title'),
         		'page_instruction' => post('page_intro'),
@@ -825,15 +917,15 @@ class Booking extends MY_Controller {
         		'widget_status' => post('status')
         	);
 
-        	$this->BookingSetting_model->update($userSetting->id, $data);
+        	$this->BookingSetting_model->update($bookingSetting->id, $data);
 
-        	$this->BookingScheduleAssignedUser_model->deleteAllBySettingId($userSetting->id);
+        	$this->BookingScheduleAssignedUser_model->deleteAllBySettingId($bookingSetting->id);
 
         	if( post('convert_lead_to_work_order') == 1 ){
         		$assigned_batch_data = array();
 	        	foreach( $post['lead_work_order_employees'] as $key => $user_id ){
 	        		$assigned_batch_data[] = array(
-	        			'booking_setting_id' => $userSetting->id,
+	        			'booking_setting_id' => $bookingSetting->id,
 	        			'user_id' => $user_id
 	        		);
 	        	}
@@ -843,11 +935,10 @@ class Booking extends MY_Controller {
 	        	}
         	}
 
-
         }else{
         	$data = array(
-        		'company_id' => logged('company_id'),
-        		'user_id' => $user['id'],
+        		'company_id' => $company_id,
+        		'user_id' => $user_id,
         		'page_title' => post('page_title'),
         		'page_instruction' => post('page_intro'),
         		'product_listing_mode' => post('product_list_mode'),
@@ -881,6 +972,10 @@ class Booking extends MY_Controller {
         	}
         }
 
+		//Activity Logs
+		$activity_name = 'Online Booking : Updated booking setting.'; 
+		createActivityLog($activity_name);
+
         $json_data = array('is_success' => true);
 
         echo json_encode($json_data);
@@ -888,18 +983,18 @@ class Booking extends MY_Controller {
 
     public function ajax_save_time_slot()
     {
-        postAllowed();
-        $user = $this->session->userdata('logged');
+        $user_id = logged('id');
+		$company_id = logged('company_id');
         $post = $this->input->post();
 
-        $this->BookingTimeSlot_model->deleteAllUserTimeSlots($user['id']);
+        $this->BookingTimeSlot_model->deleteAllCompanyTimeSlots($company_id);
 
         foreach( $post['time'] as $t ){
         	if(!empty($t['days'])) {
 	            $days = serialize($t['days']);
 	            $data = array(
-	            	'company_id' => logged('company_id'),
-	                'user_id' => $user['id'],
+	            	'company_id' => $company_id,
+	                'user_id' => $user_id,
 	                'time_start' => $t['time_start'],
 	                'time_end' => $t['time_end'],
 	                'days' => $days,
@@ -909,6 +1004,10 @@ class Booking extends MY_Controller {
 	            $bookingTimeSlots = $this->BookingTimeSlot_model->create($data);
         	}
         }
+
+		//Activity Logs
+		$activity_name = 'Online Booking : Updated booking time slot.'; 
+		createActivityLog($activity_name);
 
         $json_data = array('is_success' => true);
 
@@ -920,6 +1019,7 @@ class Booking extends MY_Controller {
         postAllowed();
         $user = $this->session->userdata('logged');
         $post = $this->input->post();
+		$is_success = false;
 
         if( !empty($post) ) {
         	$service_item_id = $post['service_item_id'];
@@ -944,26 +1044,41 @@ class Booking extends MY_Controller {
     }
 
     public function delete_time_slot()
-    {
-        $id = $this->BookingTimeSlot_model->deleteUserTimeSlot(post('tid'));
+    {	
+		$is_success = false;
+		$msg = 'Cannot find data';
 
-        $this->activity_model->add("Time Slot #$id Deleted by User:".logged('name'));
+		$company_id  = logged('company_id');
+		$bookingSlot = $this->BookingTimeSlot_model->findById(post('tid'));
+		if( $bookingSlot && $bookingSlot->company_id == $company_id ){
+			$this->BookingTimeSlot_model->deleteTimeSlot(post('tid'));
 
-        $this->session->set_flashdata('message', 'Time slot has been Deleted Successfully');
-        $this->session->set_flashdata('alert_class', 'alert-success');
+			//Activity Logs
+			$activity_name = 'Online Booking : Deleted time slot.'; 
+			createActivityLog($activity_name);
 
-        redirect('more/addon/booking/time');
+			$this->activity_model->add("Time Slot #$id Deleted by User:".logged('name'));        
+		}
+        
+
+        $json_data = array('is_success' => $is_success, 'msg' => $msg);
+        echo json_encode($json_data);
     }
 
     public function inquiries()
     {
+		if(!checkRoleCanAccessModule('online-booking', 'read')){
+			show403Error();
+			return false;
+		}
+
     	$cid = logged('company_id');
     	$inquiries = $this->BookingInquiry_model->findAllByCompanyId($cid);
-		$this->page_data['page']->title = 'Inquiry';
-        $this->page_data['page']->tab = "Inquiry";
 
+		$this->page_data['page']->title = 'Online Booking';
+        $this->page_data['page']->tab = "Inquiry";
     	$this->page_data['inquiries'] = $inquiries;
-		$this->load->view('online_booking/inquiries', $this->page_data);
+		$this->load->view('v2/pages/online_booking/inquiries', $this->page_data);
     }
 
     public function ajax_get_inquiry_details()
@@ -1037,7 +1152,7 @@ class Booking extends MY_Controller {
 
         $this->page_data['inquiry'] = $inquiry;
         $this->page_data['inquiry_id'] = $id;
-        $this->load->view('online_booking/ajax_inquiry_edit_details', $this->page_data);
+        $this->load->view('v2/pages/online_booking/ajax_inquiry_edit_details', $this->page_data);
     }
 
     public function front_items($eid)
@@ -1499,8 +1614,164 @@ class Booking extends MY_Controller {
         $this->page_data['inquiry']    = $inquiry;
         $this->page_data['inquiry_id'] = $id;
         $this->page_data['bookingItems'] = $bookingItems;
-        $this->load->view('online_booking/ajax_view_inquiry', $this->page_data);
+        $this->load->view('v2/pages/online_booking/ajax_view_inquiry', $this->page_data);
     }
+
+	public function ajax_create_coupon()
+	{
+		$is_success = 0;
+		$msg = 'Cannot save data.';
+
+		$company_id = logged('company_id');
+		$user_id    = logged('id');
+		$post 	    = $this->input->post();
+
+		$isCouponNameExists = $this->BookingCoupon_model->getByName($post['name']);
+		$isCouponCodeExists = $this->BookingCoupon_model->getByCouponCode($post['code']);
+		if( $isCouponNameExists && $isCouponNameExists->company_id == $company_id ){
+			$msg = 'Coupon name ' . $post['name'] . ' already exits.';
+		}elseif( $isCouponCodeExists && $isCouponCodeExists->company_id == $company_id ){
+			$msg = 'Coupon code ' . $post['code'] . ' already exits.';
+		}else{
+			$data = array(
+				'user_id' => $user_id,
+				'company_id' => $company_id,
+				'coupon_name' => $post['name'],
+				'coupon_code' => $post['code'],
+				'discount_from_total' => $post['discount_type'] == 1 ? $post['discount_percent'] : $post['discount_amount'],
+				'discount_from_total_type' => $post['discount_type'],
+				'date_valid_from' => date("Y-m-d",strtotime($post['valid_from'])),
+				'date_valid_to' => date("Y-m-d",strtotime($post['valid_to'])),
+				'used_per_coupon' => $post['uses_max'],
+				'status' => $post['status'],
+				'date_created' => date("Y-m-d H:i:s")
+			);
+			$bookingCoupon = $this->BookingCoupon_model->create($data);
+
+			//Activity Logs
+			$activity_name = 'Online Booking : Created new coupon ' .$post['name']. '/' . $post['code']; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg = '';
+		}
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+	public function ajax_update_coupon()
+	{
+		$is_success = 0;
+		$msg = 'Cannot find data.';
+
+		$company_id = logged('company_id');
+		$user_id    = logged('id');
+		$post 	    = $this->input->post();
+
+		$isCouponNameExists = $this->BookingCoupon_model->getByName($post['name']);
+		$isCouponCodeExists = $this->BookingCoupon_model->getByCouponCode($post['code']);
+		$coupon 			= $this->BookingCoupon_model->getById($post['cid']);
+		if( $isCouponNameExists && $isCouponNameExists->company_id == $company_id && $post['cid'] != $isCouponNameExists->id ){
+			$msg = 'Coupon name ' . $post['name'] . ' already exits.';
+		}elseif( $isCouponCodeExists && $isCouponCodeExists->company_id == $company_id && $post['cid'] != $isCouponCodeExists->id ){
+			$msg = 'Coupon code ' . $post['code'] . ' already exits.';
+		}else{
+			if( $coupon ){
+				$data = array(
+					'user_id' => $user_id,
+					'coupon_name' => $post['name'],
+					'coupon_code' => $post['code'],
+					'discount_from_total' => $post['discount_type'] == 1 ? $post['discount_percent'] : $post['discount_amount'],
+					'discount_from_total_type' => $post['discount_type'],
+					'date_valid_from' => date("Y-m-d",strtotime($post['valid_from'])),
+					'date_valid_to' => date("Y-m-d",strtotime($post['valid_to'])),
+					'used_per_coupon' => $post['uses_max'],
+					'status' => $post['status'],
+					'date_created' => date("Y-m-d H:i:s")
+				);
+				$bookingCoupon = $this->BookingCoupon_model->update($coupon->id, $data);
+	
+				//Activity Logs
+				$activity_name = 'Online Booking : Updated coupon ' .$post['name']. '/' . $post['code']; 
+				createActivityLog($activity_name);
+	
+				$is_success = 1;
+				$msg = '';
+			}
+		}
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+	public function ajax_delete_coupon_v2()
+	{
+		$is_success = 0;
+		$msg = 'Cannot find data.';
+
+		$company_id = logged('company_id');
+		$post 	    = $this->input->post();
+		
+		$coupon = $this->BookingCoupon_model->getById($post['coupon_id']);
+		if( $coupon && $coupon->company_id == $company_id ){
+			$this->BookingCoupon_model->delete($coupon->id);
+
+			//Activity Logs
+			$activity_name = 'Online Booking : Deleted coupon ' .$coupon->coupon_name; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg = '';
+		}
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+	public function ajax_delete_inquiry()
+	{
+		$is_success = 0;
+		$msg = 'Cannot find data.';
+
+		$company_id = logged('company_id');
+		$post 	    = $this->input->post();
+
+		$cid = logged('company_id');
+    	$iid = post('iid');
+		$bookingInquiry = $this->BookingInquiry_model->findById($iid);
+		if( $bookingInquiry && $bookingInquiry->company_id == $cid ){
+			$this->BookingInquiry_model->deleteByIdAndCompanyId($iid, $cid);
+
+			$this->activity_model->add("Online Inquiry #$iid Deleted by User:".logged('name'));
+
+			//Activity Logs
+			$activity_name = 'Online Booking : Deleted inquiry dated ' . date("m/d/Y", strtotime($bookingInquiry->schedule_date)) . ' by ' . $bookingInquiry->name; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg = '';
+		}
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 
 }
 

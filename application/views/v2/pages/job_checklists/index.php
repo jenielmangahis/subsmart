@@ -84,86 +84,119 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-12 col-md-4 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div>
+                    </div>
+                    <div class="col-12 grid-mb text-end">
+                        <?php if(checkRoleCanAccessModule('job-settings', 'write')){ ?>
+                        <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('job_checklists/add_new');?>'">
+                                <i class='bx bx-fw bx-plus'></i> Add New
+                            </button>
+                        </div>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <table class="nsm-table">
+                            <thead>
+                                <tr>
+                                    <td data-name="Name">Name</td>
+                                    <td style="width: 10%;" data-name="Created">Date Created</td>
+                                    <td style="width: 3%;" data-name="Manage"></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($jobChecklists as $j){ ?>
+                                <tr>
+                                    <td class="fw-bold nsm-text-primary"><?= $j->checklist_name; ?></td>
+                                    <td><?= date("m/d/Y H:i:s", strtotime($j->date_created)); ?></td>
+                                    <td>
+                                        <div class="dropdown table-management">
+                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('job-settings', 'write')){ ?>
+                                                <li>
+                                                    <a class="dropdown-item edit-item" href="<?php echo base_url('job_checklists/edit_checklist/' . $j->id) ?>">Edit</a>
+                                                </li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('job-settings', 'delete')){ ?>
+                                                <li>
+                                                    <a class="dropdown-item delete-item delete-job-checklist" href="javascript:void(0);" data-id="<?= $j->id; ?>" data-name="<?= $j->checklist_name; ?>">Delete</a>
+                                                </li>
+                                                <?php } ?>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="row">
-      <div class="col-12 grid-mb text-end">
-          <div class="nsm-page-buttons page-button-container">
-              <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('job_checklists/add_new');?>'">
-                  <i class='bx bx-fw bx-briefcase'></i> Add New
-              </button>
-          </div>
-      </div>
-  </div>
-  <div class="row">
-  <?php include viewPath('flash'); ?>
-    <table class="nsm-table" data-id="coupons">
-        <thead>
-            <tr>
-                <th style="width: 40%;">Name</th>
-                <th style="width: 10%;"></th>
-            </tr>
-        </thead>
-        <tbody>
-          <?php foreach($jobChecklists as $j){ ?>
-            <tr>
-                <td><?= $j->checklist_name; ?></td>
-                <td class="text-right">
-                  <div class="dropdown">
-                      <button type="button" id="dropdown-edit" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                          <span class="btn-label">Manage</span><span class="caret-holder"><i class='bx bx-caret-down'></i></span>
-                      </button>
-                      <ul class="dropdown-menu dropdown-menu-end select-filter">
-                          <li role="presentation">
-                            <a role="menuitem" class="dropdown-item" tabindex="-1" href="<?php echo base_url('job_checklists/edit_checklist/' . $j->id) ?>">
-                            <i class='bx bx-edit'></i></span> Edit
-                            </a>
-                          </li>
-                          <li role="presentation">
-                              <a role="menuitem" class="dropdown-item delete-job-checklist" href="javascript:void(0);" data-id="<?= $j->id; ?>"><i class='bx bx-trash' ></i> Delete</a>
-                          </li>
-                      </ul>
-                  </div>
-              </td>
-            </tr>
-          <?php } ?>
-        </tbody>
-    </table>
-  </div>
 </div>
-
-<?php include viewPath('v2/pages/job_checklists/modals/delete_checklist_modal') ?>
-
 <script type="text/javascript">
 $(function(){
-    $(".delete-job-checklist").click(function(){
+    $(".nsm-table").nsmPagination();
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));        
+    }, 1000));
 
-      var cid = $(this).attr('data-id');
-      $("#cid").val(cid);
-      $("#modalDeleteChecklist").modal('show');
+    $(document).on("click", ".delete-job-checklist", function() {
+        let id = $(this).attr('data-id');
+        let name = $(this).attr('data-name');
+
+        Swal.fire({
+            title: 'Delete Checklist',
+            html: `Are you sure you want to delete this system package type <b>${name}</b>?`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "job_checklists/_delete_checklist",
+                    data: {id: id},
+                    dataType:"json",
+                    success: function(result) {
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Checklist',
+                                text: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: result.msg
+                            });
+                        }
+                    },
+                });
+            }
+        });
     });
 });
-function confirm(){
-      Swal.fire({
-          title: 'Confirm',
-          text: 'Your changes have not been saved. Are you sure you want to go back?',
-          icon: 'warning',
-          showCancelButton: true,
-          showDenyButton: true,
-          showConfirmButton: false,
-          confirmButtonColor: '#32243d',
-          confirmButtonText: 'Save',
-          denyButtonText: 'Go back without saving'
-      }).then((result) => {
-          if (result.isConfirmed) {
-              console.log('sure');
-          } else if (result.isDenied) {
-              location.href= '<?= base_url('plans'); ?>';
-          }
-      });
-  }
-
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
 

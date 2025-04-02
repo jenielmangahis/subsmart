@@ -28,7 +28,7 @@
 
                     <div class="col-6 grid-mb">
                         <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="">
                         </div>
                     </div>               
 
@@ -36,7 +36,7 @@
                         <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#new_sales_area_modal">
-                                <i class='bx bx-fw bx-plus'></i> New Sales Area
+                                <i class='bx bx-fw bx-plus'></i> Add New
                             </button>
                         </div>
                         <?php } ?>

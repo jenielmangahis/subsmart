@@ -466,7 +466,7 @@ $(document).ready(function() {
         loadJobs(_this.attr("data-id"));
     });
 
-    $('.view-job-row').on('click', function(){
+    $(document).on('click', '.view-job-row', function(){
         var appointment_id = $(this).attr('data-id');
         var url = base_url + "job/_quick_view_details";  
         var job_number = $(this).attr('data-job-number');

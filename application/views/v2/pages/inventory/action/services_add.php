@@ -1,6 +1,4 @@
 <?php include viewPath('v2/includes/header'); ?>
-<?php include viewPath('v2/includes/inventory/inventory_settings_modals'); ?>
-
 <div class="row page-content g-0">
 <div class="col-12 mb-3">
     <?php include viewPath('v2/includes/page_navigations/inventory_tabs'); ?>
@@ -8,7 +6,7 @@
 <div class="col-12">
     <div class="nsm-callout primary">
         <button><i class='bx bx-x'></i></button>
-        Create a New Service.
+        Create a New Product Service.
     </div>
 </div>
 <form id="service_form">
@@ -50,7 +48,7 @@
                                         </div>
                                         <div class="col-lg-3 mb-2">
                                             <strong>Estimated Time / Duration</strong>
-                                            <div class="input-group">            
+                                            <div class="input-group" style="width:43%;">            
                                                 <input type="number" step="any" class="form-control" name="estimated_time" id="" required/>                                                                                    
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">HRS</div>
@@ -65,7 +63,7 @@
                                             <div class="float-end">
                                             	<input type="hidden" name="type" value="service"/>
                                                 <button class="nsm-button" type="button" id="btn-cancel">Cancel</button>
-                                                <button type="submit" class="nsm-button primary"><i class='bx bx-save'></i>&nbsp;Save</button>
+                                                <button type="submit" class="nsm-button primary">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -78,9 +76,6 @@
         </div>
     </div>
 </form>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
 $(function(){
     $('#btn-cancel').on('click', function(){
@@ -88,25 +83,36 @@ $(function(){
     });
 
     $("#service_form").submit(function(e) {
-        e.preventDefault(); // avoid to execute the actual submit of the form.
+        e.preventDefault(); 
         var form = $(this);
-        //var url = form.attr('action');
         $.ajax({
             type: "POST",
-            url: "<?= base_url() ?>/inventory/create_service_item",
-            data: form.serialize(), // serializes the form's elements.
-            // success: function(data) {
-            //     console.log(data);
-            // }
-        });
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Service was added successfully!',
-        }).then((result) => {
-            // if (result.isConfirmed) {
-                window.location.href = base_url + "inventory/services";
-            // }
+            url: base_url + "inventory/_create_service",
+            data: form.serialize(), 
+            dataType:'json',
+            success: function(data) {
+                if (data.is_success) {
+                    Swal.fire({
+                        title: 'Add New Service',
+                        text: "Product service has been added successfully!",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.href = base_url + "inventory/services";
+                        //}
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
+                }
+            }
         });
     });
 

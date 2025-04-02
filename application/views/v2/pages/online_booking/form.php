@@ -22,7 +22,7 @@ include viewPath('v2/includes/header'); ?>
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/upgrades_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/online_booking_tabs'); ?>
     </div>
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/online_booking_subtabs'); ?>
@@ -40,22 +40,31 @@ include viewPath('v2/includes/header'); ?>
                 </div>
                 <div class="row">
                     <div class="col-lg-6" id="app-builder">
+                    <?php if( checkRoleCanAccessModule('online-booking', 'write') ){ ?>  
                     <form name="booking_component" id="booking_component" action="<?php echo base_url()."booking/save_form"; ?>" method="post">
+                    <?php } ?>
                         <div class="margin-bottom">
-                            
-
                             <div class="col-12">
                                 <div class="nsm-card primary">
                                     <div class="nsm-card-content">
                                     <div class="col-md-12" style="margin-top: 20px;">
                                         <div class="text-ter margin-bottom-sec fw-bold">Customize Form Fields</div>
-                                        <div class="col-md-12">
+                                        <div class="col-md-12 mb-4">
                                             Select the fields that will be part of the form and required ones.
-                                            <a class="add-text" id="btn-add-new-form-field" href="javascript:void(0);" data-toggle="modal" data-target="#modalAddFormField">
-                                            <i class='bx bx-plus-circle'></i>Add Form Field
-                                            </a>
+
+                                            <?php if( checkRoleCanAccessModule('online-booking', 'write') ){ ?>  
+                                                <a class="nsm-button btn-small float-end" id="btn-add-new-form-field" href="javascript:void(0);" data-toggle="modal" data-target="#modalAddFormField">
+                                                    <i class='bx bx-plus'></i> Add Form Field
+                                                </a>                                            
+                                            <?php } ?>
                                         </div>
-                                        <table class="nsm-table" style="margin-top: 20px;">
+                                        <?php 
+                                            $disabled = '';
+                                            if( !checkRoleCanAccessModule('online-booking', 'write') ){
+                                                $disabled = 'disabled=""';
+                                            }
+                                        ?>
+                                        <table class="nsm-table" style="clear:both;margin-top: 20px;">
                                             <thead>
                                                 <tr>
                                                     <th width="40%" scope="col"><strong>Field</strong></th>
@@ -128,6 +137,7 @@ include viewPath('v2/includes/header'); ?>
 
                                                             $is_required_disabled = "disabled=''";
                                                             $is_visible_disabled = "disabled=''";
+                                                            //$disabled = '';
                                                         }
                                                     ?>
                                                     <?php if($booking_form->is_default==1){ ?> 
@@ -140,100 +150,104 @@ include viewPath('v2/includes/header'); ?>
                                                             <input type="hidden" name="is_field[<?php echo $booking_form->field_name; ?>][]" id="is_field[<?php echo $booking_form->field_name; ?>][]" value="<?php echo $booking_form->label; ?>">
                                                         </td>
                                                         <td width="20%">
-                                                            <div class="checkbox checkbox-sm">
-                                                                <input type="checkbox" name="is_visible[<?php echo $booking_form->field_name; ?>][]" value="1" class="checkbox-select select-form-field-visible" data-field-name="<?php echo $booking_form->field_name; ?>" id="is_visible_<?php echo $booking_form->field_name; ?>" <?= $is_visible ; ?> <?= $is_visible_disabled; ?> >
+                                                            <div class="form-check">
+                                                                <input type="checkbox" name="is_visible[<?php echo $booking_form->field_name; ?>][]" value="1" class="form-check-input select-form-field-visible" data-field-name="<?php echo $booking_form->field_name; ?>" id="is_visible_<?php echo $booking_form->field_name; ?>" <?= $is_visible ; ?> <?= $is_visible_disabled; ?> <?= $disabled; ?>>
                                                                 <label for="is_visible_<?php echo $booking_form->field_name; ?>"></label>
                                                             </div>
                                                         </td>
                                                         <td width="20%" style="">
-                                                            <div class="checkbox checkbox-sm">
-                                                                <input type="checkbox" name="is_required[<?php echo $booking_form->field_name; ?>][]" value="1" data-id="is_required[<?php echo $booking_form->field_name; ?>][]" class="checkbox-select select-form-field-required" id="is_required_<?php echo $booking_form->field_name; ?>" <?= $is_required ; ?> <?= $is_required_disabled; ?> >
+                                                            <div class="form-check">
+                                                                <input type="checkbox" name="is_required[<?php echo $booking_form->field_name; ?>][]" value="1" data-id="is_required[<?php echo $booking_form->field_name; ?>][]" class="form-check-input select-form-field-required" id="is_required_<?php echo $booking_form->field_name; ?>" <?= $is_required ; ?> <?= $is_required_disabled; ?> <?= $disabled; ?>>
                                                                 <label for="is_required_<?php echo $booking_form->field_name; ?>"></label>
                                                             </div>
                                                         </td>
-                                                        <td width="20%">
-                                                            <?php if($booking_form->is_default==1){ ?> 
-                                                                    &nbsp;
-                                                            <?php }else{ ?>
-                                                                   <a href="javascript:void(0);" class="delete-custom-field" data-field-name="<?php echo $booking_form->field_name; ?>" data-row="<?php echo $row_count; ?>"><i class="fa fa-trash"></i></a>          
-                                                            <?php }?>
-                                                        </td>
+                                                        <?php if( checkRoleCanAccessModule('online-booking', 'delete') ){ ?>  
+                                                            <td width="20%">
+                                                                <?php if($booking_form->is_default==1){ ?> 
+                                                                        &nbsp;
+                                                                <?php }else{ ?>
+                                                                    <a href="javascript:void(0);" class="nsm-button btn-small delete-custom-field" data-field-name="<?php echo $booking_form->field_name; ?>" data-row="<?php echo $row_count; ?>"><i class="fa fa-trash"></i></a>          
+                                                                <?php }?>
+                                                            </td>
+                                                        <?php } ?>
                                                     </tr>
                                                  <?php  $row_count++; }
                                                   } ?>
                                               </tbody>
                                         </table>
-                                        <hr class="card-hr"> 
-                                        <button class="nsm-button primary">Save</button>
+                                        <?php if( checkRoleCanAccessModule('online-booking', 'write') ){ ?>  
+                                            <hr class="card-hr"> 
+                                            <button class="nsm-button primary">Save</button>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <?php if( checkRoleCanAccessModule('online-booking', 'write') ){ ?>  
                     </form>
+                    <?php } ?>
                 </div>
                 <div class="col-lg-6" id="app-builder">
-                    <form name="booking_component" id="booking_component" action="<?php echo base_url()."booking/save_form"; ?>" method="post">
-                        <div class="margin-bottom">
-                            <div class="col-12">
-                                <div class="nsm-card primary">
-                                    <div class="nsm-card-content">
-                                        <h3 class="weight-medium margin-bottom">Form Preview</h3> 
-                                        <div>
-                                            <div id="app" class="markate-widget-contact">
-                                                <form name="widget-contact" method="post">
-                                                    <div class="form-fileds-container">
-                                                        <div class="form-group form-group-full_name">
-                                                            <label>Full Name</label> <span class="form-required">*</span> 
-                                                            <input type="text" id="full_name" name="full_name" class="form-control">
-                                                        </div>
-                                                        <div class="form-group form-group-contact_number">
-                                                            <label>Contact Number</label> <span class="form-required">*</span> 
-                                                            <input type="tel" id="contact_number" name="contact_number" class="form-control">
-                                                        </div>
-                                                        <div class="form-group form-group-email">
-                                                            <label>Email</label>
-                                                            <input type="text" id="email" name="email" class="form-control">
-                                                        </div>
-                                                        <div class="form-group form-group-address">
-                                                            <label>Address</label>
-                                                            <input type="text" id="address" name="address" placeholder="" class="form-control pac-target-input" autocomplete="off">
-                                                        </div>
-                                                        <div class="form-group form-group-message">
-                                                            <label>Message</label>
-                                                            <textarea style="min-height: 100px;" name="message" id="message" rows="2" class="form-control"></textarea>
-                                                        </div>
-                                                        <div class="form-group form-group-preferred_time_to_contact">
-                                                            <label>Preferred time to contact</label>
-                                                            <select name="preferred_time_to_contact" id="preferred_time_to_contact" class="form-control">
-                                                                <option value="0" selected="selected">Any time</option> 
-                                                                <option value="1">7am to 10am</option> 
-                                                                <option value="2">10am to Noon</option> 
-                                                                <option value="3">Noon to 4pm</option> 
-                                                                <option value="4">4pm to 7pm</option>
-                                                            </select>
-                                                        </div>                                                        
-                                                        <div class="form-group form-group-how_did_you_hear_about_us">
-                                                            <label>How did you hear about us</label>
-                                                            <input type="text" name="how_did_you_hear_about_us" id="how_did_you_hear_about_us" class="form-control">
-                                                        </div>
-                                                        <?php foreach($booking_forms_custom as $form_custom) { ?>
-                                                            <div class="form-group form-group-<?php echo $form_custom->field_name; ?>">
-                                                                <label><?php echo $form_custom->label; ?></label>
-                                                                <input type="text" name="<?php echo $form_custom->field_name; ?>" id="<?php echo $form_custom->field_name; ?>" class="form-control">
-                                                            </div>
-                                                        <?php } ?>
+                    <div class="margin-bottom">
+                        <div class="col-12">
+                            <div class="nsm-card primary">
+                                <div class="nsm-card-content">
+                                    <h3 class="weight-medium margin-bottom">Form Preview</h3> 
+                                    <div>
+                                        <div id="app" class="markate-widget-contact">
+                                            <form name="widget-contact" method="post">
+                                                <div class="form-fileds-container">
+                                                    <div class="form-group form-group-full_name">
+                                                        <label>Full Name</label> <span class="form-required">*</span> 
+                                                        <input type="text" id="full_name" name="full_name" class="form-control">
                                                     </div>
-                                                </form> 
-                                                <hr class="card-hr"> 
-                                                <div class="widget-contact-submit"><button class="nsm-button primary">Book Now</button></div>
-                                            </div>
+                                                    <div class="form-group form-group-contact_number">
+                                                        <label>Contact Number</label> <span class="form-required">*</span> 
+                                                        <input type="tel" id="contact_number" name="contact_number" class="form-control">
+                                                    </div>
+                                                    <div class="form-group form-group-email">
+                                                        <label>Email</label>
+                                                        <input type="text" id="email" name="email" class="form-control">
+                                                    </div>
+                                                    <div class="form-group form-group-address">
+                                                        <label>Address</label>
+                                                        <input type="text" id="address" name="address" placeholder="" class="form-control pac-target-input" autocomplete="off">
+                                                    </div>
+                                                    <div class="form-group form-group-message">
+                                                        <label>Message</label>
+                                                        <textarea style="min-height: 100px;" name="message" id="message" rows="2" class="form-control"></textarea>
+                                                    </div>
+                                                    <div class="form-group form-group-preferred_time_to_contact">
+                                                        <label>Preferred time to contact</label>
+                                                        <select name="preferred_time_to_contact" id="preferred_time_to_contact" class="form-control">
+                                                            <option value="0" selected="selected">Any time</option> 
+                                                            <option value="1">7am to 10am</option> 
+                                                            <option value="2">10am to Noon</option> 
+                                                            <option value="3">Noon to 4pm</option> 
+                                                            <option value="4">4pm to 7pm</option>
+                                                        </select>
+                                                    </div>                                                        
+                                                    <div class="form-group form-group-how_did_you_hear_about_us">
+                                                        <label>How did you hear about us</label>
+                                                        <input type="text" name="how_did_you_hear_about_us" id="how_did_you_hear_about_us" class="form-control">
+                                                    </div>
+                                                    <?php foreach($booking_forms_custom as $form_custom) { ?>
+                                                        <div class="form-group form-group-<?php echo $form_custom->field_name; ?>">
+                                                            <label><?php echo $form_custom->label; ?></label>
+                                                            <input type="text" name="<?php echo $form_custom->field_name; ?>" id="<?php echo $form_custom->field_name; ?>" class="form-control">
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
+                                            </form> 
+                                            <hr class="card-hr"> 
+                                            <div class="widget-contact-submit"><button class="nsm-button primary">Book Now</button></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
 
             </div>
@@ -272,7 +286,38 @@ $(function(){
         } else {
            $(".form-group-" + field_name).hide();    
         }
-    });    
+    });  
+    
+    $('#frm-booking-add-field').on('submit', function(e){
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: base_url + "booking/_create_form_field",
+            dataType: 'json',
+            data: $('#frm-booking-add-field').serialize(),
+            success: function(data) {    
+                $('#btn-save-form-field').html('Save');                   
+                if (data.is_success) {
+                    $('#modalAddFormField').modal('hide');
+                    location.reload();  
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-save-form-field').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
 
 });
 </script>

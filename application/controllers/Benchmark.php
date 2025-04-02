@@ -599,7 +599,7 @@ class Benchmark extends MY_Controller {
 		echo '</pre>';
 
 
-	}
+	} 
 
     public function testMailFunction() {
         echo 'TEST MAIL FUNCTION <hr />';
@@ -652,9 +652,10 @@ class Benchmark extends MY_Controller {
             echo 'Static Mail Sending Test<hr />';
 
             $mail = email__getInstance();
+
             $mail->FromName = 'NsmarTrac';
             $customerName = 'Jeniel Mangahis';
-            $mail->addAddress('bryann.revina@gmail.com', $customerName);
+            $mail->addAddress('bryannrevina@nsmartrac.com', $customerName);
             $mail->isHTML(true);
             $mail->Subject = "nSmartrac: New Recurring Invoice Generated";
             $mail->Body = '<p>Please do note that this is only a test</p>';
@@ -665,11 +666,10 @@ class Benchmark extends MY_Controller {
                 echo 'sending email successfull <br />';
             }            
 
-
-
         }
 
     }
+   
 
     public function generateMailHTML()
     { 

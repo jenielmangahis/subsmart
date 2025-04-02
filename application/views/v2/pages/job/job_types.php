@@ -48,14 +48,16 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="nsm-field-group search form-group">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_TAG_SEARCHBAR" placeholder="Search Tag...">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_TAG_SEARCHBAR" placeholder="Search Job Type">
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('job-settings', 'write')){ ?>
                     <div class="col-sm-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" id="btn-add-new-job-type"><i class='bx bx-plus-medical'></i> Add New</button>
+                            <button type="button" class="nsm-button primary" id="btn-add-new-job-type"><i class='bx bx-fw bx-plus'></i> Add New</button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
                 <table class="nsm-table" id="job-types-table">
                     <thead>
@@ -92,12 +94,16 @@
                                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
+                                        <?php if(checkRoleCanAccessModule('job-settings', 'write')){ ?>
                                         <li>
                                             <a class="dropdown-item row-edit-job-type" data-id="<?= $types->id; ?>" data-title="<?= $types->title; ?>" data-marker="<?= $types->icon_marker; ?>" href="javascript:void(0);">Edit</a>
                                         </li>
+                                        <?php } ?>
+                                        <?php if(checkRoleCanAccessModule('job-settings', 'delete')){ ?>
                                         <li>
                                             <a class="dropdown-item delete-item" href="javascript:void(0);" data-title="<?= $types->title; ?>" data-id="<?= $types->id; ?>">Delete</a>
                                         </li>
+                                        <?php } ?>
                                     </ul>
                                 </div>
                             </td>
@@ -219,8 +225,6 @@
             </div>
         </div>
     </div>
-
-
 </div>
 
 
@@ -231,9 +235,11 @@
             tableSearch($(this));            
         }, 1000));
 
+        <?php if(checkRoleCanAccessModule('job-settings', 'write')){ ?>
         $('#btn-add-new-job-type').on('click', function(){
             $('#modal-create-job-type').modal('show');
         });
+        <?php } ?>
 
         $('.row-edit-job-type').on('click', function(){
             var jtid   = $(this).attr('data-id');
@@ -284,12 +290,13 @@
             }
         });
 
+        <?php if(checkRoleCanAccessModule('job-settings', 'write')){ ?>
         $("#frm-create-job-type").submit(function(e) {
             e.preventDefault();
             if(!$('#input-upload-image').val() && !$('#chk-add-default-icon').is(':checked')){
                 Swal.fire({
                     title: 'Error',
-                    text: 'Please specify job type icon/marker image.',
+                    text: 'Please select job type icon/marker.',
                     icon: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Okay'
@@ -368,8 +375,10 @@
                     }
                 }
             });
-        })
+        });
+        <?php } ?>
 
+        <?php if(checkRoleCanAccessModule('job-settings', 'delete')){ ?>
         $(document).on("click", ".delete-item", function( event ) {
             var jtid  = $(this).attr("data-id");
             var title = $(this).attr('data-title');
@@ -415,6 +424,7 @@
                 }
             });
         });
+        <?php }_ ?>
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
