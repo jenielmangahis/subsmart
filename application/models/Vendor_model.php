@@ -28,6 +28,17 @@ class Vendor_model extends MY_Model
         return $query->row();
     }
 
+    public function getByVendorName($name)
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);        
+        $this->db->where('vendor_name', $name);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getByIdAndCompanyId($id, $company_id)
     {
 
