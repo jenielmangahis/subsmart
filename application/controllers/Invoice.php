@@ -2857,7 +2857,8 @@ class Invoice extends MY_Controller
         $this->load->model('AcsProfile_model');  
         $this->load->model('Items_model');      
         $this->load->model('Automation_model', 'automation_model');
-
+        $this->load->model('Automation_queue_model', 'automation_queue_model');
+        
         $is_success = 1;
 		$msg  = 'Cannot find invoice data';
 
@@ -3107,7 +3108,7 @@ class Invoice extends MY_Controller
             }
 
             /**
-             * Todo: after successfully created invoice, check for automation - start
+             * After successfully created invoice, check for automation and add send email queue - start
              */
             if($is_automation_activated) {
                 $auto_params = [
@@ -3115,6 +3116,7 @@ class Invoice extends MY_Controller
                     'trigger_action' => 'send_email',
                     'operation' => 'send',
                     'status' => 'active',
+                    'trigger_event' => 'created',
                     'trigger_time' => 0,
                     'target' => 'user'
                 ];
@@ -3122,7 +3124,19 @@ class Invoice extends MY_Controller
 
                 if($automationData) {
 
-                    $targetName    = "";
+                    $data_queue = [
+                        'automation_id' => $automationData->id,
+                        'target_id' => 0,
+                        'entity_type' => 'invoice',
+                        'status' => 'new',
+                        'entity_id' => $invoice_id,
+                        'trigger_time' => null,
+                        'is_triggered' => 0
+                    ];
+            
+                    $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue);                    
+
+                    /*$targetName    = "";
                     $customerEmail = "";
 
                     if($automationData->target == 'user') {
@@ -3190,12 +3204,12 @@ class Invoice extends MY_Controller
                             }      
                         }
 
-                    }
+                    }*/
                         
                 }
             }
             /**
-             * Todo: after successfully created invoice, check for automation - end
+             * After successfully created invoice, check for automation and add send email queue - end
              */             
 
             //Activity Logs

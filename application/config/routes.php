@@ -1518,12 +1518,15 @@ $route['cron/customer_recurring_subscriptions'] = 'Cron_Jobs_Controller/cronCust
 $route['cron/process_accounting_recurring_transaction_payment'] = 'Cron_Payment/process_accounting_recurring_transaction_payment';
 $route['cron/update_invoice'] = 'Cron_Jobs_Controller/cronUpdateInvoice';
 
-
 $route['cron/customer_recurring_subscriptionsv3'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionV3';
 $route['cron/customer_recurring_subscriptions_test'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionV2test';
 
 $route['cron/update_late_fee_by_invoice'] = 'Cron_Jobs_Controller/cronUpdateLateFeeByInvoice';
 $route['cron/customer_recurring_subscriptions_by_active_customer'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionByCustomer';
+
+//Cron Automation
+$route['cron/send_mail_automation'] = 'Cron_Automation_Controller/cronMailAutomation';
+$route['cron/send_sms_automation'] = 'Cron_Automation_Controller/cronSmsAutomation';
 
 // Admin Users
 $route['admin/_update_employee'] = 'Admin/ajaxUpdateEmployee';
