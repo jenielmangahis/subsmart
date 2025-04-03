@@ -383,11 +383,11 @@
 
 <!-- Appointment Types -->
 <div class="modal fade nsm-modal fade" id="create_appointment_type_modal" tabindex="-1" aria-labelledby="create_appointment_type_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <?php echo form_open_multipart('', ['id' => 'frm-create-appointment-type', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
+    <div class="modal-dialog modal-md modal-dialog-centered">        
         <div class="modal-content">
+            <?php echo form_open_multipart('', ['id' => 'frm-create-appointment-type', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
             <div class="modal-header">
-                <span class="modal-title content-title">Create Appointment Type</span>
+                <span class="modal-title content-title">Add Appointment Type</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">                
@@ -402,21 +402,21 @@
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" class="nsm-button primary btn-save-appointment-type">Save</button>
             </div>
-        </div>
-        <?php echo form_close(); ?>
+            <?php echo form_close(); ?>
+        </div>        
     </div>
 </div>
 
 <!-- Appointment Types -->
 <div class="modal fade nsm-modal fade" id="edit_appointment_type_modal" tabindex="-1" aria-labelledby="edit_appointment_type_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <?php echo form_open_multipart('', ['id' => 'frm-update-appointment-type', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
-        <input type="hidden" name="appointment_type_id" id="appointment-type-id" value="">
+    <div class="modal-dialog modal-md modal-dialog-centered">                
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">Edit Appointment Type</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
+            <?php echo form_open_multipart('', ['id' => 'frm-update-appointment-type', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
+            <input type="hidden" name="appointment_type_id" id="appointment-type-id" value="">
             <div class="modal-body">                
                 <div class="row-g-3">
                     <div class="col-12">
@@ -429,8 +429,8 @@
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" class="nsm-button primary btn-update-appointment-type">Save</button>
             </div>
-        </div>
-        <?php echo form_close(); ?>
+            <?php echo form_close(); ?>
+        </div>        
     </div>
 </div>
 

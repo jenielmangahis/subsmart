@@ -117,7 +117,7 @@ echo 'active';
         <!-- <li class="<?php if ($page->title == '') {
             echo 'selected';
         } ?>">
-            <a href="<?php echo base_url('appointment_types/index'); ?>">
+            <a href="<?php echo base_url('appointment_types'); ?>">
                 <i class='bx bx-fw bx-book-add'></i> Appointment Types
             </a>
         </li> -->
@@ -598,7 +598,7 @@ echo 'active';
             </a>
             <ul class="mt-3">
                 <li class="third-sub-menu-item">
-                    <a href="<?php echo base_url('appointment_types/index'); ?>">
+                    <a href="<?php echo base_url('appointment_types'); ?>">
                         <i class='bx bx-fw bx-calendar-week'></i> Appointment Types
                     </a>
                 </li>

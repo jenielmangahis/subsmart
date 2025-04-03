@@ -161,11 +161,11 @@ if ($this->session->userdata('usertimezone') == null) {
             <ul class="nsm-sidebar-menu">
                 <?php
                     $fields = ['id', 'business_name'];
-$cid = logged('company_id');
-$user_type = logged('user_type');
-$role = logged('role');
-$hdrCompanyData = getCompanyData($cid, $fields);
-?>
+                    $cid = logged('company_id');
+                    $user_type = logged('user_type');
+                    $role = logged('role');
+                    $hdrCompanyData = getCompanyData($cid, $fields);
+                ?>
                 <?php if ($hdrCompanyData) { ?>
                     <li>
                         <a href="javscript:void(0);" class="hdr-drpdown-multi-accounts">
