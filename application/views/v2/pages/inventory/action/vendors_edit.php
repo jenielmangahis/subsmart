@@ -135,19 +135,32 @@ $(function(){
             type: "POST",
             url: base_url + "/inventory/_update_vendor",
             data: form.serialize(), // serializes the form's elements.
-            // success: function(data) {
-            //     console.log(data);
-            // }
-        });
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Vendor was updated successfully!',
-        }).then((result) => {
-            //if (result.isConfirmed) {
-                window.location.href = base_url + "/inventory/vendors";
-            //}
-        });
+            success: function(data) {
+                $("#btn-save-vendor").html('Save');
+                if( data.is_success == 1 ){
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Vendors',
+                        text: "Vendor has been updated successfully.",
+                    }).then((result) => {
+                        // if (result.isConfirmed) {
+                            window.location.href = base_url + "/inventory/vendors";
+                        // }
+                    });
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
+                }
+            },
+            beforeSend: function(){
+                $("#btn-save-vendor").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });        
     });
 });
 </script>
