@@ -211,7 +211,7 @@ div.tagsinput input {
                     <input type="hidden" id="ebid" name="ebid" value="" />
                     <div class="modal-header">
                         <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-fw bx-envelope'></i> <span id="modal-header-label">Create Email Broadcast</span></span>
-                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                     </div>
                     <div class="modal-body">                        
                         <div class="row">
@@ -281,7 +281,7 @@ div.tagsinput input {
                 <form id="frm-test-email-broadcast">
                     <div class="modal-header">
                         <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-envelope'></i> Send Test Email</span>
-                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                     </div>
                     <div class="modal-body">
                         <div class="col-12 mb-3">
@@ -303,7 +303,7 @@ div.tagsinput input {
                 <form>
                     <div class="modal-header">
                         <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bxs-user-account' ></i> Select Customer</span>
-                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                     </div>
                     <div class="modal-body">                        
                         <div id="customer-list-container"></div>
@@ -322,7 +322,7 @@ div.tagsinput input {
                 <form>
                     <div class="modal-header">
                         <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-search-alt-2' ></i> Preview</span>
-                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                     </div>
                     <div class="modal-body" style="padding:65px;">
                         <div class="mb-5"><h3 class="preview-subject"></h3></div>
@@ -339,7 +339,7 @@ div.tagsinput input {
                 <form>
                     <div class="modal-header">
                         <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-search-alt-2' ></i> View Email Template</span>
-                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                     </div>
                     <div class="modal-body" style="padding:65px;min-height:600px;max-height:800px;overflow-y:auto;overflow-x:hidden;">
                         <div class="mb-5"><h3 class="email-template-subject"></h3></div>
@@ -356,7 +356,7 @@ div.tagsinput input {
                 <form>
                     <div class="modal-header">
                         <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-list-ul' ></i> Use Template</span>
-                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                     </div>
                     <div class="modal-body">                        
                         <div id="list-email-template-container"></div>
@@ -372,7 +372,7 @@ div.tagsinput input {
                 <form>
                     <div class="modal-header">
                         <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-mail-send'></i> <span id="recipient-summary-broadcast-name"></span></span>
-                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                     </div>
                     <div class="modal-body">                        
                         <div id="recipient-summary-container"></div>
