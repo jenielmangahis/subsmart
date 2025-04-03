@@ -34,7 +34,7 @@ class Items_model extends MY_Model
         $this->db->where('company_id', $company_id);
 
         $query = $this->db->get();
-        return $query->result();
+        return $query->row();
     }
 
     public function getLocationList()

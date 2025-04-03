@@ -32,36 +32,26 @@ class Settings extends MY_Controller {
     {
         $this->load->model('CalendarSettings_model');
         $this->load->model('ColorSettings_model');
+        $this->load->model('GoogleAccounts_model');
 
-		$this->page_data['page']->title = 'Calendar Settings';
-		$this->page_data['page']->parent = 'Calendar';
+        if(!checkRoleCanAccessModule('calendar-settings', 'read')){
+            show403Error();
+            return false;
+        }  
 
-        $this->page_data['google_credentials'] = google_credentials();
-        $this->page_data['module'] = 'calendar';
-        $post       = $this->input->post();
         $get        = $this->input->get();
         $company_id = logged('company_id');
-
-        $settings = $this->CalendarSettings_model->getByCompanyId($company_id);        
-        $this->page_data['settings'] = $settings;
+        $settings = $this->CalendarSettings_model->getByCompanyId($company_id);      
 
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
         ));
 
         add_footer_js(array(
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-            //'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
             'assets/js/v2/bootstrap-datetimepicker.v2.min.js',
             'assets/frontend/js/settings/main.js',
         ));
-
-        if(isset($get['calendar_update']) && $get['calendar_update'] == 1) {
-            $this->session->set_flashdata('alert-type', 'success');
-            $this->session->set_flashdata('alert', 'Calendar Gmail/Gsuit Account Updated Successfully');
-        }
-
-        $this->load->model('GoogleAccounts_model');
+        
         $googleAccount = $this->GoogleAccounts_model->getByCompanyId($company_id);
         $is_glink = false;
         if( $googleAccount ){
@@ -70,10 +60,16 @@ class Settings extends MY_Controller {
 
         $args = array('company_id' => $company_id);
         $colorSettings = $this->ColorSettings_model->getByWhere($args);
+
+        $this->page_data['google_credentials'] = google_credentials();
+        $this->page_data['module'] = 'calendar';
         $this->page_data['googleAccount'] = $googleAccount;
         $this->page_data['colorSettings'] = $colorSettings;
         $this->page_data['is_glink'] = $is_glink;
         $this->page_data['page']->menu = 'settings';
+        $this->page_data['page']->title = 'Calendar Settings';
+		$this->page_data['page']->parent = 'Calendar';
+        $this->page_data['settings'] = $settings;
         // $this->load->view('settings/schedule', $this->page_data);
         $this->load->view('v2/pages/settings/schedule', $this->page_data);
     }

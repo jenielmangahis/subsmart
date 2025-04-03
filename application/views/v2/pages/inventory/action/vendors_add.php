@@ -92,7 +92,7 @@
                                         <div class="col-12 mt-4">
                                             <div class="float-end">                                            	
                                                 <button class="nsm-button" type="button" id="btn-cancel">Cancel</button>
-                                                <button type="submit" class="nsm-button primary">Save</button>
+                                                <button type="submit" class="nsm-button primary" id="btn-save-vendor">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -105,9 +105,6 @@
         </div>
     </div>
 </form>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" type="text/javascript"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
 $(function(){
     $('#btn-cancel').on('click', function(){
@@ -131,25 +128,39 @@ $(function(){
     $("#vendor_form").submit(function(e) {
         e.preventDefault(); // avoid to execute the actual submit of the form.
         var form = $(this);
-        // console.log(form);
-        //var url = form.attr('action');
+
         $.ajax({
             type: "POST",
             url: base_url + "/inventory/_create_vendor",
-            data: form.serialize(), // serializes the form's elements.
-            // success: function(data) {
-            //     console.log(data);
-            // }
+            data: form.serialize(),
+            dataType:'json',
+            success: function(data) {
+                $("#btn-save-vendor").html('Save');
+                if( data.is_success == 1 ){
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Vendors',
+                        text: "Vendor has been created successfully.",
+                    }).then((result) => {
+                        // if (result.isConfirmed) {
+                            window.location.href = base_url + "/inventory/vendors";
+                        // }
+                    });
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
+                }
+            },
+            beforeSend:function(){
+                $("#btn-save-vendor").html('<span class="bx bx-loader bx-spin"></span>');
+            }
         });
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Vendor was added successfully!',
-        }).then((result) => {
-            // if (result.isConfirmed) {
-                window.location.href = base_url + "/inventory/vendors";
-            // }
-        });
+        
     });
 });
 </script>
