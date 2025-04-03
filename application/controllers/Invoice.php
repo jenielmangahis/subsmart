@@ -2521,14 +2521,7 @@ class Invoice extends MY_Controller
 
         $invoice = get_invoice_by_id($post['invoice_id']);
         
-        if( $invoice ){
-            // $payments = $this->payment_records_model->getAllByInvoiceId($invoice->id);
-            // $total_payment = 0;
-            // if( $payments ){
-            //     foreach( $payments as $p ){
-            //         $total_payment +=  $p->invoice_amount;
-            //     }   
-            // }            
+        if( $invoice ){     
 
             // $balance = $invoice->balance;                   
             if( round($invoice->balance) >= round($post['amount']) ){
@@ -2549,7 +2542,7 @@ class Invoice extends MY_Controller
                 ]);
 
                 //Update invoice status
-                if( $new_balance <= $invoice->grand_total ){                    
+                if( $new_balance > 0 ){                    
                     $status = 'Unpaid';
                     //$status = 'Paid';
                     customerAuditLog($uid, $invoice->customer_id, $invoice->id, 'Invoice', 'Partially paid invoice number '.$invoice->invoice_number);
@@ -2557,7 +2550,7 @@ class Invoice extends MY_Controller
                     $status = 'Paid';
                     customerAuditLog($uid, $invoice->customer_id, $invoice->id, 'Invoice', 'Fully paid invoice number '.$invoice->invoice_number);
                 }
-
+                
                 $invoice_data = [
                     'status' => $status,
                     'balance' => $new_balance
