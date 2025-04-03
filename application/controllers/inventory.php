@@ -232,15 +232,20 @@ class Inventory extends MY_Controller
     }
 
     public function vendors($page = null)
-    {
-        $this->page_data['page']->title = 'Vendors';
-        $this->page_data['page']->parent = 'Tools';
+    {        
+        if(!checkRoleCanAccessModule('inventory', 'read')){
+            show403Error();
+            return false;
+        }
 
         $get_vendors = array(
             'where' => array('company_id' => logged('company_id')),
             'table' => 'vendor',
             'select' => '*',
         );
+
+        $this->page_data['page']->title = 'Vendors';
+        $this->page_data['page']->parent = 'Tools';
         $this->page_data['vendors'] = $this->general->get_data_with_param($get_vendors);
         $this->load->view('v2/pages/inventory/vendors', $this->page_data);
     }
@@ -1411,9 +1416,13 @@ class Inventory extends MY_Controller
 
     public function add_vendor()
     {
+        if(!checkRoleCanAccessModule('inventory', 'write')){
+            show403Error();
+            return false;
+        }
+
         $this->page_data['page']->title = 'Vendors';
         $this->page_data['page']->parent = 'Tools';
-        // $this->load->view('inventory/vendor_add', $this->page_data);
         $this->load->view('v2/pages/inventory/action/vendors_add', $this->page_data);
     }
 
@@ -1421,28 +1430,42 @@ class Inventory extends MY_Controller
     {
         $this->load->model('Vendor_model');
 
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
         $post = $this->input->post();
-        $cid  = logged('company_id');
+        $company_id = logged('company_id');
 
-        $data = [
-            'company_id' => $cid,
-            'vendor_name' => $post['vendor_name'],
-            'status' => 0,
-            'business_URL' => $post['vendor_website'],
-            'email' => $post['vendor_email'],
-            'mobile' => $post['vendor_mobile'],
-            'phone' => $post['vendor_phone'],
-            'street_address' => $post['vendor_address'],
-            'suite_unit' => $post['vendor_suite_unit'],
-            'city' => $post['vendor_city'],
-            'postal_code' => $post['vendor_postal_code'],
-            'state' => $post['vendor_state']
-        ];
+        $isExists = $this->Vendor_model->getByVendorName($post['vendor_name']);
+        if( $isExists && $isExists->company_id == $company_id ){
+            $msg = 'Vendor name ' . $post['vendor_name'] . ' already exists';
+        }else{
+            $data = [
+                'company_id' => $company_id,
+                'vendor_name' => $post['vendor_name'],
+                'status' => 0,
+                'business_URL' => $post['vendor_website'],
+                'email' => $post['vendor_email'],
+                'mobile' => $post['vendor_mobile'],
+                'phone' => $post['vendor_phone'],
+                'street_address' => $post['vendor_address'],
+                'suite_unit' => $post['vendor_suite_unit'],
+                'city' => $post['vendor_city'],
+                'postal_code' => $post['vendor_postal_code'],
+                'state' => $post['vendor_state']
+            ];
+    
+            $this->Vendor_model->create($data);
 
-        $this->Vendor_model->create($data);
+            //Activity Logs
+            $activity_name = 'Inventory : Created vendor '.$input['vendor_name']; 
+            createActivityLog($activity_name);
 
-        $json_data = ['is_success' => 1];
+            $is_success = 1;
+            $msg = '';
+        }        
 
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
 
     }
@@ -1911,7 +1934,6 @@ class Inventory extends MY_Controller
 
         $isItemExists = $this->items_model->getItemByTitleAndCompanyId($input['title'], $company_id);
         if( !$isItemExists ){
-
             $data = array(
                 'company_id' => $company_id,
                 'title' => $input['title'],            
@@ -1934,7 +1956,59 @@ class Inventory extends MY_Controller
             $msg = '';
 
         }else{
-            $msg = 'Inventory fee name already exists.';
+            $msg = 'Inventory fee '. $input['title'] .' already exists.';
+        }
+        
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_edit_inventory_fee()
+    {   
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $item = $this->items_model->getCompanyItemById($company_id, $post['id']);
+
+        $this->page_data['page']->title = 'Fees';
+        $this->page_data['page']->parent = 'Tools';
+        $this->page_data['item'] = $item;
+        $this->load->view('v2/pages/inventory/action/ajax_edit_inventory_fee', $this->page_data);
+    }
+
+    public function ajax_update_inventory_fee()
+    {
+        $is_success = 0;
+        $msg   = 'Cannot find data';
+ 
+        $post       = $this->input->post();
+        $company_id = logged('company_id');
+        $item = $this->items_model->getCompanyItemById($company_id, $post['fid']);
+        if( $item ){
+            $isItemExists = $this->items_model->getItemByTitleAndCompanyId($post['title'], $company_id);
+            if( $isItemExists && $isItemExists->id != $post['fid'] ){
+                $msg = 'Inventory fee '. $post['title'] .' already exists.';
+            }else{
+                $data = [
+                    'title' => $post['title'],
+                    'description' => $post['description'],
+                    'price' => $post['price'],
+                    'frequency' => $post['frequency']
+                ];
+                
+                $this->items_model->updateItem($item->id, $data);
+                
+                //Activity Logs
+                $activity_name = 'Inventory : Updated inventory fee '.$post['title']; 
+                createActivityLog($activity_name);
+
+                $is_success = 1;
+                $msg = '';
+            }
         }
         
         $json_data = [

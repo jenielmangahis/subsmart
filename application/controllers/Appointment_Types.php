@@ -8,10 +8,10 @@ class Appointment_Types extends MY_Controller {
 
 		parent::__construct();
 		$this->checkLogin();
-	$this->hasAccessModule(4); 
+		$this->hasAccessModule(4); 
 
 		$this->load->model('AppointmentType_model');
-		$this->load->helper(array('form', 'url', 'hashids_helper'));
+		$this->load->helper(array('form', 'url', 'hashids_helper', 'functions'));
 		$this->load->library('session');
 
 		$this->page_data['page']->title = 'Appointment Types';
@@ -21,9 +21,12 @@ class Appointment_Types extends MY_Controller {
 	public function index()
 	{
 
-		$user_id = logged('id');        
-		$company_id = logged('company_id');
+		if(!checkRoleCanAccessModule('calendar-appointment-types', 'read')){
+			show403Error();
+			return false;
+		}    
 
+		$company_id = logged('company_id');
 		$appointmentTypes = $this->AppointmentType_model->getAllByCompany($company_id, true);
 
 		$this->page_data['appointmentTypes'] = $appointmentTypes;
@@ -150,18 +153,31 @@ class Appointment_Types extends MY_Controller {
 
         $post       = $this->input->post();
         $company_id = logged('company_id');
+
         if( $post['appointment_type_name'] != '' ){
-        	$data_appointment_type = [        		
-		        'company_id' => $company_id,
-				'name' => $post['appointment_type_name'],
-				'created' => date("Y-m-d H:i:s")
-			];
+			$isExists = $this->AppointmentType_model->getByNameAndCompanyId($post['appointment_type_name'], $company_id);
+			if( $isExists ){
+				$msg = 'Appointment type ' . $post['appointment_type_name'] . ' already exists';
+			}else{
+				$data_appointment_type = [        		
+					'company_id' => $company_id,
+					'name' => $post['appointment_type_name'],
+					'created' => date("Y-m-d H:i:s")
+				];
+	
+				$this->AppointmentType_model->create($data_appointment_type);	
 
-			$this->AppointmentType_model->create($data_appointment_type);	
-
-			$is_success = 1;
-			$msg = '';
-        }
+				//Activity Logs
+				$activity_name = 'Appointment Types : Created new appointment type ' . $post['appointment_type_name']; 
+				createActivityLog($activity_name);
+	
+				$is_success = 1;
+				$msg = '';
+			}
+        	
+        }else{
+			$msg = 'Please enter appointment type name';
+		}
         
         $json_data  = ['is_success' => $is_success, 'msg' => $msg];
 
@@ -175,26 +191,33 @@ class Appointment_Types extends MY_Controller {
 		$is_success = 0;
 		$msg  = 'Cannot save data';
 
-        $post = $this->input->post();
-        $appointmentType = $this->AppointmentType_model->getById($post['appointment_type_id']);
-        if( $appointmentType ){
-        	if( $post['appointment_type_name'] != '' ){
-	        	$data_appointment_type = [    
+		$company_id = logged('company_id');
+        $post       = $this->input->post();
+        $appointmentType = $this->AppointmentType_model->getById($post['appointment_type_id']);		
+        if( $appointmentType && $appointmentType->company_id == $company_id ){
+			$isExists = $this->AppointmentType_model->getByNameAndCompanyId($post['appointment_type_name'], $company_id);
+			if( $isExists && $isExists->id != $appointmentType->id ){
+				$msg = 'Appointment type ' . $post['appointment_type_name'] . ' already exists';
+			}else{
+				$data_appointment_type = [    
 					'name' => $post['appointment_type_name']
 				];
 
 				$this->AppointmentType_model->update($appointmentType->id, $data_appointment_type);	
 
+				//Activity Logs
+				$activity_name = 'Appointment Types : Updated appointment type ' . $appointmentType->name; 
+				createActivityLog($activity_name);
+
 				$is_success = 1;
 				$msg = '';
-	        }
+			}
         }else{
         	$msg = 'Cannot find data';
         }
         
         
         $json_data  = ['is_success' => $is_success, 'msg' => $msg];
-
         echo json_encode($json_data);
 	}
 
@@ -211,6 +234,11 @@ class Appointment_Types extends MY_Controller {
 
 		if( $appointmentType ){
 			$this->AppointmentType_model->delete($post['aid']);
+
+			//Activity Logs
+			$activity_name = 'Appointment Types : Deleted appointment type ' . $appointmentType->name; 
+			createActivityLog($activity_name);
+
 			$is_success = 1;
 			$msg = '';
 		}
