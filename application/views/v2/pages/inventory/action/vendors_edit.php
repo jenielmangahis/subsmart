@@ -93,7 +93,7 @@
                                         <div class="col-12 mt-4">
                                             <div class="float-end">                                            	
                                                 <button class="nsm-button" type="button" id="btn-cancel">Cancel</button>
-                                                <button type="submit" class="nsm-button primary"><i class='bx bx-save'></i>&nbsp;Save</button>
+                                                <button type="submit" class="nsm-button primary" id="btn-save-vendor">Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -134,7 +134,8 @@ $(function(){
         $.ajax({
             type: "POST",
             url: base_url + "/inventory/_update_vendor",
-            data: form.serialize(), // serializes the form's elements.
+            data: form.serialize(),
+            dataType:'json',
             success: function(data) {
                 $("#btn-save-vendor").html('Save');
                 if( data.is_success == 1 ){
