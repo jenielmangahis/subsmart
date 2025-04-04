@@ -32,6 +32,17 @@ class AppointmentType_model extends MY_Model
         return $query;
     }
 
+    public function getByNameAndCompanyId($name, $company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('name', $name);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function getById($id)
     {
         $this->db->select('*');

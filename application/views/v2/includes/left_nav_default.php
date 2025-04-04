@@ -117,7 +117,7 @@ echo 'active';
         <!-- <li class="<?php if ($page->title == '') {
             echo 'selected';
         } ?>">
-            <a href="<?php echo base_url('appointment_types/index'); ?>">
+            <a href="<?php echo base_url('appointment_types'); ?>">
                 <i class='bx bx-fw bx-book-add'></i> Appointment Types
             </a>
         </li> -->
@@ -342,22 +342,22 @@ echo 'active';
     </a>
     <ul class="mt-3">
         <li class="<?php echo $page->title === 'Payroll Overview' ? 'selected' : ''; ?>">
-            <a href="/accounting/payroll-overview">
+            <a href="<?= base_url('accounting/payroll-overview'); ?>">
                 <i class='bx bx-fw bx-line-chart'></i> Overview
             </a>
         </li>
         <li class="<?php echo $page->title === 'Employees' ? 'selected' : ''; ?>">
-            <a href="/accounting/employees">
+            <a href="<?= base_url('accounting/employees'); ?>">
                 <i class='bx bx-fw bx-user-pin'></i> Employees
             </a>
         </li>
         <li class="<?php echo $page->title === 'Contractors' ? 'selected' : ''; ?>">
-            <a href="/accounting/contractors">
+            <a href="<?= base_url('accounting/contractors'); ?>">
                 <i class='bx bx-fw bx-group'></i> Contractors
             </a>
         </li>
         <li class="<?php echo $page->title === "Workers' Comp" ? 'selected' : ''; ?>">
-            <a href="/accounting/workers-comp">
+            <a href="<?= base_url('accounting/workers-comp'); ?>">
                 <i class='bx bx-fw bx-group'></i> Workers' Comp
             </a>
         </li>
@@ -598,7 +598,7 @@ echo 'active';
             </a>
             <ul class="mt-3">
                 <li class="third-sub-menu-item">
-                    <a href="<?php echo base_url('appointment_types/index'); ?>">
+                    <a href="<?php echo base_url('appointment_types'); ?>">
                         <i class='bx bx-fw bx-calendar-week'></i> Appointment Types
                     </a>
                 </li>

@@ -24,7 +24,7 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li class="px-3">
+                            <li class="px-3 showGraphButton">
                                 <div class="form-check" style="margin: -4px;">
                                     <input class="form-check-input <?php echo "showHideGraphCheckbox_$id"; ?>" style="height: 17px; width: 17px; cursor: pointer;" type="checkbox">
                                     <label class="form-check-label text-muted" style=" margin-top: 4px; margin-left: 4px;">Show Graph</label>
@@ -130,7 +130,7 @@
 
                 let categories = Object.keys(filteredGraphData).map(month => month.split(' ')[1]);
                 let values = Object.values(filteredGraphData);
-
+                // console.log(categories);
                 if (values.length === 0) {
                     $('.<?php echo "textDataContainer_$id"; ?>').hide();
                     $('.<?php echo "graphDataContainer_$id"; ?>').hide();
@@ -189,7 +189,7 @@
     let <?php echo "options_$id"; ?> = {
         series: [{ name: "<?php echo $title; ?>", data: [] }],
         xaxis: { categories: [] },
-        chart: { height: 150, type: 'line', zoom: { enabled: false }, toolbar: { show: false } },
+        chart: { height: 150, type: 'bar', zoom: { enabled: false }, toolbar: { show: false } },
         dataLabels: { enabled: false },
         stroke: { curve: 'smooth', width: 3 },
         grid: { show: true, xaxis: { lines: { show: true } } },

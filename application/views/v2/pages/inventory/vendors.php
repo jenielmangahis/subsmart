@@ -59,87 +59,23 @@ table.dataTable.no-footer {
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete_selected">Delete Selected</a></li>
                             </ul>
                         </div>
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" onclick="location.href='<?= url('inventory/vendor/export') ?>'">
-                                <i class='bx bx-fw bx-chart'></i> Export
-                            </button>
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('inventory/vendor/add') ?>'">
-                                <i class='bx bx-fw bx-list-plus'></i> Add New Vendor
-                            </button>
-                        </div>
+                        <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>       
+                            <div class="nsm-page-buttons page-button-container">
+                                <button type="button" class="nsm-button" onclick="location.href='<?= url('inventory/vendor/export') ?>'">
+                                    <i class='bx bx-fw bx-chart'></i> Export
+                                </button>
+                                <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('inventory/vendor/add') ?>'">
+                                    <i class='bx bx-fw bx-plus'></i> Add New
+                                </button>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
-                <!-- <table class="nsm-table">
-                    <thead>
-                        <tr>
-                            <td class="table-icon"></td>
-                            <td data-name="Vendor Name">Vendor Name</td>
-                            <td data-name="Email">Email</td>
-                            <td data-name="Phone Number">Phone Number</td>
-                            <td data-name="Address">Address</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (!empty($vendors)) :
-                        ?>
-                            <?php
-                            foreach ($vendors as $row) :
-                            ?>
-                                    <tr>
-                                        <td>
-                                            <div class="nsm-profile">
-                                                <span><?= ucwords($row->vendor_name[0]) ?></span>
-                                            </div>
-                                        </td>
-                                        <td class="nsm-text-primary">
-                                            <label class="d-block fw-bold"><?= $row->vendor_name ?></label>
-                                        </td>
-                                        <td><?= $row->email ?></td>
-                                        <td><?= $row->phone ?></td>
-                                        <td><?= $row->street_address.' '.$row->city. ' '.$row->state ?></td>
-                                        <td>
-                                            <div class="dropdown table-management">
-                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                </a>
-                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo url('inventory/vendor/edit/'.$row->vendor_id); ?>">Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $row->vendor_id; ?>">Delete</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                            <?php
-                            endforeach;
-                            ?>
-                        <?php
-                        else :
-                        ?>
-                            <tr>
-                                <td colspan="6">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        endif;
-                        ?>
-                    </tbody>
-                </table> -->
                 <div class="row">
                     <table class="nsm-table" id="VENDORS_TABLE">
                     <thead>
                         <tr>
-                            <td class="table-icon text-center">
-                                    <input class="form-check-input select-all table-select" type="checkbox">
-                            </td>
+                            <td class="table-icon text-center"><input class="form-check-input select-all table-select" type="checkbox"></td>
                             <td class="table-icon"></td>
                             <td data-name="Vendor Name">Vendor Name</td>
                             <td data-name="Phone Number">Mobile Number</td>
@@ -176,9 +112,13 @@ table.dataTable.no-footer {
                                             <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
-                                            <li><a class="dropdown-item" href="<?php echo url('inventory/vendor/edit/'.$row->vendor_id); ?>">Edit</a></li>
-                                            <li><a class="dropdown-item vendor-send-email" href="javascript:void(0);" data-id="<?= $row->vendor_id; ?>" data-email="<?= $row->email; ?>">Email</a></li>
-                                            <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $row->vendor_id; ?>">Delete</a></li>
+                                            <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>     
+                                                <li><a class="dropdown-item" href="<?php echo url('inventory/vendor/edit/'.$row->vendor_id); ?>">Edit</a></li>
+                                                <li><a class="dropdown-item vendor-send-email" href="javascript:void(0);" data-id="<?= $row->vendor_id; ?>" data-email="<?= $row->email; ?>">Email</a></li>
+                                            <?php } ?>
+                                            <?php if(checkRoleCanAccessModule('inventory', 'delete')){ ?>     
+                                                <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-name="<?= $row->vendor_name; ?>" data-id="<?php echo $row->vendor_id; ?>">Delete</a></li>
+                                            <?php } ?>
                                         </ul>
                                     </div>
                                 </td>
@@ -189,7 +129,7 @@ table.dataTable.no-footer {
                 </div>
 
                 <div class="modal fade nsm-modal fade" id="send_email_modal" tabindex="-1" aria-labelledby="send_email_modal_label" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
                             <form method="POST" id="frm-send-email">
                             <input type="hidden" name="cid" id="vendor-send-email-eid" />
@@ -393,10 +333,11 @@ $(document).ready(function() {
 
     $(document).on("click", ".delete-item", function() {
         let id = $(this).attr('data-id');
+        let name = $(this).attr('data-name');
 
         Swal.fire({
             title: 'Delete Vendor',
-            text: "Are you sure you want to delete this vendor?",
+            html: `Are you sure you want to delete vendor <b>${name}</b>?`,
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,

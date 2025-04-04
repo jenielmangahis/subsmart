@@ -7,12 +7,8 @@ class BookingInquiry_model extends MY_Model
     
     public function findById($id)
     {
-        $user_id = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
-
-        $this->db->where('user_id', $user_id);
         $this->db->where('id', $id);
 
         $query = $this->db->get()->row();
@@ -21,11 +17,8 @@ class BookingInquiry_model extends MY_Model
 
     public function findByIdAndCompanyId($id, $company_id)
     {
-        $user_id = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
-
         $this->db->where('company_id', $company_id);
         $this->db->where('id', $id);
 
@@ -37,9 +30,9 @@ class BookingInquiry_model extends MY_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
-
         $this->db->where('user_id', $user_id);
         $this->db->order_by("id", "desc");
+        
         $query = $this->db->get();
         return $query->result();
     }
@@ -48,9 +41,9 @@ class BookingInquiry_model extends MY_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
-
         $this->db->where('company_id', $company_id);
         $this->db->order_by("id", "desc");
+
         $query = $this->db->get();
         return $query->result();
     }
@@ -59,10 +52,10 @@ class BookingInquiry_model extends MY_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
-
         $this->db->where('company_id', $company_id);
         $this->db->where('status', $company_id);
         $this->db->order_by("id", "desc");
+
         $query = $this->db->get();
         return $query->result();
     }
@@ -72,5 +65,5 @@ class BookingInquiry_model extends MY_Model
     }
 } 
 
-/* End of file BookingSetting_model.php */
-/* Location: ./application/models/BookingSetting_model.php */
+/* End of file BookingInquiry_model.php */
+/* Location: ./application/models/BookingInquiry_model.php */

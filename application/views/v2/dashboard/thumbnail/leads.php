@@ -56,14 +56,8 @@
         <div class="row">
             <div class="col <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center">
-                    <strong class="text-muted text-uppercase">TOTAL AMOUNT</strong>
+                    <strong class="text-muted text-uppercase">TOTAL LEADS</strong>
                     <h2 class="<?php echo "textData1_$id"; ?>"></h2>
-                </div>
-            </div>
-            <div class="col <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center">
-                    <strong class="text-muted text-uppercase">TOTAL COUNT</strong>
-                    <h2 class="<?php echo "textData2_$id"; ?>"></h2>
                 </div>
             </div>
             <div class="col <?php echo "graphDataContainer_$id"; ?> display_none">
@@ -122,7 +116,7 @@
                 $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
             },
             success: function(response) {
-                let <?php echo "textData1_$id"; ?> = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(JSON.parse(response)['TOTAL_AMOUNT']);
+                let <?php echo "textData1_$id"; ?> = JSON.parse(response)['TOTAL_LEADS'];
                 let <?php echo "textData2_$id"; ?> = JSON.parse(response)['TOTAL_COUNT'];
                 let graphData = JSON.parse(response)['GRAPH'];
                 let currentYear = new Date().getFullYear().toString();
@@ -136,7 +130,6 @@
 
                 let categories = Object.keys(filteredGraphData).map(month => month.split(' ')[1]);
                 let values = Object.values(filteredGraphData);
-
                 if (values.length === 0) {
                     $('.<?php echo "textDataContainer_$id"; ?>').hide();
                     $('.<?php echo "graphDataContainer_$id"; ?>').hide();
@@ -160,7 +153,7 @@
                         yaxis: {
                             labels: {
                                 formatter: function(value) {
-                                    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+                                    return parseFloat(value);
                                 }
                             }
                         },
@@ -195,7 +188,7 @@
     let <?php echo "options_$id"; ?> = {
         series: [{ name: "<?php echo $title; ?>", data: [] }],
         xaxis: { categories: [] },
-        chart: { height: 150, type: 'line', zoom: { enabled: false }, toolbar: { show: false } },
+        chart: { height: 150, type: 'bar', zoom: { enabled: false }, toolbar: { show: false } },
         dataLabels: { enabled: false },
         stroke: { curve: 'smooth', width: 3 },
         grid: { show: true, xaxis: { lines: { show: true } } },

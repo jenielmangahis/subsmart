@@ -457,6 +457,17 @@ class Dashboard extends Widgets
         ];
         $this->page_data['thumbnailWidgetOption'] = $this->general->get_data_with_param($thumbnailWidgetOption);
 
+        // getThumbnailWidget user's preset
+        $thumbnailWidgetPreset = [
+            'select' => '*',
+            'table' => 'dashboard_preference',
+            'where' => [
+                'company_id' => logged('company_id'),
+                'user_id' => logged('id'),
+            ],
+        ];
+        $this->page_data['thumbnailWidgetPreset'] = $this->general->get_data_with_param($thumbnailWidgetPreset);
+
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
     }
@@ -2096,8 +2107,11 @@ class Dashboard extends Widgets
     
     public function thumbnailWidgetRequest() {
         $company_id = logged('company_id');
-        $postData = $this->input->post();
-    
+        // $postData = $this->input->post();
+
+        // Temp only for testing
+        $postData = $this->input->post() ?: $this->input->get();
+
         $data = $this->Dashboard_model->fetchThumbnailWidgetData(
             $postData['category'], 
             $postData['dateFrom'], 
@@ -2107,146 +2121,180 @@ class Dashboard extends Widgets
     
         switch ($postData['category']) {
             case 'subscription_revenue':
-                $graphData = [
-                    'GRAPH' => [],
-                    'TOTAL_SUBSCRIPTION_REVENUE' => 0,
-                    'TOTAL_SUBSCRIBERS' => count($data)
-                ];
-    
+                $graphData = ['GRAPH' => [], 'TOTAL_SUBSCRIPTION_REVENUE' => 0, 'TOTAL_SUBSCRIBERS' => count($data) ];
+
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->mmr;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
                     $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
                 }
-    
+
                 $graphData['TOTAL_SUBSCRIPTION_REVENUE'] = number_format($accumulativeValue, 2, '.', '');
-                break;
-    
+            break;
             case 'sales':
-                $graphData = [
-                    'GRAPH' => [],
-                    'TOTAL_AMOUNT' => 0,
-                    'TOTAL_COUNT' => count($data)
-                ];
-    
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
+
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
                     $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
                 }
-    
+
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
-                break;
+            break;
             case 'unpaid_invoices':
-                    $graphData = [
-                        'GRAPH' => [],
-                        'TOTAL_AMOUNT' => 0,
-                        'TOTAL_COUNT' => count($data)
-                    ];
-        
-                    $accumulativeValue = 0.0;
-                    foreach ($data as $datas) {
-                        $accumulativeValue += $datas->total;
-                        $month = strtoupper(date('Y M', strtotime($datas->date)));
-                        $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
-                    }
-        
-                    $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
-                    break;
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
+
+                $accumulativeValue = 0.0;
+                foreach ($data as $datas) {
+                    $accumulativeValue += $datas->total;
+                    $month = strtoupper(date('Y M', strtotime($datas->date)));
+                    $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
+                }
+
+                $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
+            break;
             case 'past_due_invoices':
-                    $graphData = [
-                        'GRAPH' => [],
-                        'TOTAL_AMOUNT' => 0,
-                        'TOTAL_COUNT' => count($data)
-                    ];
-        
-                    $accumulativeValue = 0.0;
-                    foreach ($data as $datas) {
-                        $accumulativeValue += $datas->total;
-                        $month = strtoupper(date('Y M', strtotime($datas->date)));
-                        $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
-                    }
-        
-                    $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
-                    break;
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
+
+                $accumulativeValue = 0.0;
+                foreach ($data as $datas) {
+                    $accumulativeValue += $datas->total;
+                    $month = strtoupper(date('Y M', strtotime($datas->date)));
+                    $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
+                }
+
+                $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
+            break;
             case 'open_invoices':
-                    $graphData = [
-                        'GRAPH' => [],
-                        'TOTAL_AMOUNT' => 0,
-                        'TOTAL_COUNT' => count($data)
-                    ];
-        
-                    $accumulativeValue = 0.0;
-                    foreach ($data as $datas) {
-                        $accumulativeValue += $datas->total;
-                        $month = strtoupper(date('Y M', strtotime($datas->date)));
-                        $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
-                    }
-        
-                    $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
-                    break;
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
+
+                $accumulativeValue = 0.0;
+                foreach ($data as $datas) {
+                    $accumulativeValue += $datas->total;
+                    $month = strtoupper(date('Y M', strtotime($datas->date)));
+                    $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
+                }
+
+                $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
+            break;
             case 'job':
-                    $graphData = [
-                        'GRAPH' => [],
-                        'TOTAL_JOBS' => 0,
-                        'TOTAL_COUNT' => count($data)
-                    ];
+                $graphData = ['GRAPH' => [], 'TOTAL_JOBS' => 0, 'TOTAL_COUNT' => count($data)];
 
-                    $accumulativeValue = 0;
-                    foreach ($data as $datas) {
-                        $accumulativeValue += 1;  
-                        $month = strtoupper(date('Y M', strtotime($datas->date)));
-                        $graphData['GRAPH'][$month] = $accumulativeValue; 
-                    }
+                $accumulativeValue = 0;
+                foreach ($data as $datas) {
+                    $accumulativeValue += 1;
+                    $month = strtoupper(date('Y M', strtotime($datas->date)));
+                    $graphData['GRAPH'][$month] = $accumulativeValue;
+                }
 
-                    $graphData['TOTAL_JOBS'] = $accumulativeValue;
-                    break;
+                $graphData['TOTAL_JOBS'] = $accumulativeValue;
+            break;
             case 'income':
-                $graphData = [
-                    'GRAPH' => [],
-                    'TOTAL_AMOUNT' => 0,
-                    'TOTAL_COUNT' => count($data)
-                ];
-    
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
+
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
                     $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
                 }
-    
+
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
-                break;
+            break;
             case 'collections':
-                $graphData = [
-                    'GRAPH' => [],
-                    'TOTAL_AMOUNT' => 0,
-                    'TOTAL_COUNT' => count($data)
-                ];
-    
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
+
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
                     $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
                 }
-    
+
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
-                break;
+            break;
+            case 'estimates':
+                $graphData = ['GRAPH' => [], 'TOTAL_COUNT' => count($data) ];
+
+                $totalOpen = 0;
+                $totalExpired = 0;
+
+                foreach ($data as $datas) {
+                    if ($datas->expiry_date >= date('Y-m-d')) {
+                        $totalOpen++;
+                    }
+                    else {
+                        $totalExpired++;
+                    }
+                }
+
+                $graphData['TOTAL_OPEN'] = $totalOpen;
+                $graphData['TOTAL_EXPIRED'] = $totalExpired;
+            break;
+            case 'leads':
+                $graphData = ['GRAPH' => [], 'TOTAL_LEADS' => 0, 'TOTAL_COUNT' => count($data)];
+
+                $accumulativeValue = 0;
+                foreach ($data as $datas) {
+                    $accumulativeValue += 1;
+                    $month = strtoupper(date('Y M', strtotime($datas->date)));
+                    $graphData['GRAPH'][$month] = $accumulativeValue;
+                }
+
+                $graphData['TOTAL_LEADS'] = $accumulativeValue;
+            break;
+            case 'contact':
+                $graphData = ['GRAPH' => [], 'TOTAL_COUNT' => count($data)];
+
+                $accumulativeValue = 0;
+                foreach ($data as $datas) {
+                    $accumulativeValue += 1;
+                    $month = strtoupper(date('Y M', strtotime($datas->date)));
+                    $graphData['GRAPH'][$month] = $accumulativeValue;
+                }
+            break;
+            case 'active_customer_groups':
+                $graphData = [
+                    'GRAPH' => [],
+                    'TOTAL_COUNT' => count($data)
+                ];
             
-
-            
-            
-
-
-
+                foreach ($data as $datas) {
+                    $title = $datas->title;
+                    if (!isset($graphData['GRAPH'][$title])) {
+                        $graphData['GRAPH'][$title] = 0;
+                    }
+                    $graphData['GRAPH'][$title]++;
+                }
+            break;
+            case 'accounting_expense':
+                $accounting_expense_filters = [
+                    'company_id' => logged('company_id'),
+                    'type' => 'all-transactions',
+                    'delivery_method' => 'any',
+                    'category' => 'all',
+                    'start-date' => date('Y-m-d', strtotime(date('m/d/Y').' -365 days')),
+                    'end-date' => date('Y-m-d'),
+                ];
+        
+                $bills = $this->get_transactions($accounting_expense_filters);
+                $data_arr = ['Success' => true, 'accounting_expense' => $bills];
+                echo '<pre>';
+                print_r($bills);
+                echo '</pre>';
+            break;
+            case 'esign':
+                foreach ($data as $datas) {
+                    $graphData[$datas->status] = $datas->total;
+                }
+            break;
             default:
                 $graphData = ['error' => 'Invalid category'];
-                break;
+            break;
         }
-    
         echo json_encode($graphData);
 
     }
