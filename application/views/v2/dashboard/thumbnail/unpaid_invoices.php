@@ -20,11 +20,11 @@
                             <i class="fas fa-ellipsis-h text-muted"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item removeDashboardCard" data-id='<?php echo $id; ?>' href="javascript:void(0)">Remove</a></li>
+                            <li><a class="dropdown-item" href="javascript:void(0)">Remove</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li class="px-3">
+                            <li class="px-3 showGraphButton">
                                 <div class="form-check" style="margin: -4px;">
                                     <input class="form-check-input <?php echo "showHideGraphCheckbox_$id"; ?>" style="height: 17px; width: 17px; cursor: pointer;" type="checkbox">
                                     <label class="form-check-label text-muted" style=" margin-top: 4px; margin-left: 4px;">Show Graph</label>
@@ -62,7 +62,7 @@
             </div>
             <div class="col <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center">
-                    <strong class="text-muted text-uppercase">TOTAL INVOICES</strong>
+                    <strong class="text-muted text-uppercase">TOTAL COUNT</strong>
                     <h2 class="<?php echo "textData2_$id"; ?>"></h2>
                 </div>
             </div>

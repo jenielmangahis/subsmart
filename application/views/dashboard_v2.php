@@ -325,12 +325,12 @@
             <span class="nsm-fab-label">Add Newsletter</span>
         </li>
         <?php } ?>
-        <li data-bs-toggle="modal" data-bs-target="#manage_widgets_modal">
-            <div class="nsm-fab-icon">
-                <i class="bx bx-cog"></i>
-            </div>
-            <span class="nsm-fab-label">Dashboard Settings</span>
+        <li data-bs-toggle="modal" data-bs-target="#dashboardThumbnailWidgetSettingsModal">
+            <div class="nsm-fab-icon"><i class="bx bx-cog"></i></div><span class="nsm-fab-label">Dashboard Settings</span>
         </li>
+        <!-- <li data-bs-toggle="modal" data-bs-target="#manage_widgets_modal">
+            <div class="nsm-fab-icon"><i class="bx bx-cog"></i></div><span class="nsm-fab-label">Dashboard Settings</span>
+        </li> -->
     </ul>
 </div>
 <div class="row nsm-page-buttons page-content g-0">
@@ -375,7 +375,7 @@
         <?php } ?>
 
 
-        <button id="toggleLayout" class="nsm-button" type="button"><i class='bx bxs-edit' ></i> Customize Layout</button>
+        <!-- <button id="toggleLayout" class="nsm-button" type="button"><i class='bx bxs-edit' ></i> Customize Layout</button> -->
         <style>
             #sortable .card {
                 min-height: 200px;
@@ -429,20 +429,44 @@
                 display: none;
             } */
         </style>
-        <button name="button" type="button" class="nsm-button primary" data-bs-toggle="modal"
+        <!-- <button name="button" type="button" class="nsm-button primary" data-bs-toggle="modal"
             data-bs-target="#manage_widgets_modal">
 
             <i class='bx bx-fw bx-cog'></i>
-        </button>
+        </button> -->
+        <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#dashboardThumbnailWidgetSettingsModal"><i class='bx bx-fw bx-cog'></i></button>
     </div>
 </div>
-
+<?php 
+    $presetThumbnail = json_decode($thumbnailWidgetPreset[0]->thumbnail, true);
+    include viewPath('widgetThumbnailSettings');  
+?>
 <div class="row page-content g-0">
     <div class="col-12">
-        
-    <?php include viewPath('widgetThumbnailSettings'); ?>
-
         <div class="row row-cols-md-3 sortable cardContainers1" id="nsm_widgets2">
+        <?php 
+            foreach ($presetThumbnail as $presetThumbnails) {
+                foreach ($thumbnailWidgetOption as $thumbnailWidgetOptions) {
+                    if ($thumbnailWidgetOptions->id == $presetThumbnails) {
+                        $thumbnailsWidgetCard = $thumbnailWidgetOptions;
+                        $option_cardClass = "{$thumbnailWidgetOptions->category}{$thumbnailWidgetOptions->id}{$thumbnailWidgetOptions->type}";
+                        $option_id = "{$thumbnailWidgetOptions->id}";
+            
+                        echo "<div class='col-lg-4 mt-3 $option_cardClass' data-id='$option_id'>";
+                        include viewPath("v2/dashboard/thumbnail/{$thumbnailWidgetOptions->category}"); 
+                        echo "</div>";
+            
+                        break; 
+                    }
+                }
+            }
+        ?>
+
+
+
+
+
+
                 <?php
                     foreach ($widgets as $wids) {
                         if ($wids->w_main && checkRoleCanAccessWidget($wids->w_id)) {

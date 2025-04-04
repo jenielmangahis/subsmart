@@ -53,19 +53,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center">
-                    <strong class="text-muted text-uppercase">TOTAL AMOUNT</strong>
-                    <h2 class="<?php echo "textData1_$id"; ?>"></h2>
-                </div>
-            </div>
-            <div class="col <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center">
-                    <strong class="text-muted text-uppercase">TOTAL COUNT</strong>
-                    <h2 class="<?php echo "textData2_$id"; ?>"></h2>
-                </div>
-            </div>
+        <div class="row textDatas">
             <div class="col <?php echo "graphDataContainer_$id"; ?> display_none">
                 <div id="<?php echo "apexThumbnailGraph_$id"; ?>"></div>
             </div>
@@ -109,12 +97,7 @@
         $.ajax({
             url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
             type: "POST",
-            data: {
-                category: category,
-                dateFrom: dateFrom,
-                dateTo: dateTo,
-                filter2: filter2,
-            },
+            data: { category, dateFrom, dateTo, filter2 },
             beforeSend: function() {
                 $('.<?php echo "textDataContainer_$id"; ?>').hide();
                 $('.<?php echo "graphDataContainer_$id"; ?>').hide();
@@ -122,56 +105,39 @@
                 $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
             },
             success: function(response) {
-                let <?php echo "textData1_$id"; ?> = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(JSON.parse(response)['TOTAL_AMOUNT']);
-                let <?php echo "textData2_$id"; ?> = JSON.parse(response)['TOTAL_COUNT'];
-                let graphData = JSON.parse(response)['GRAPH'];
-                let currentYear = new Date().getFullYear().toString();
+                let data = JSON.parse(response);
+                let graphLabels = [];
+                let graphSeries = [];
+                $('.<?php echo "textDataContainer_$id"; ?>').remove();
+                Object.entries(data).forEach(([key, value]) => {
+                    graphLabels.push(key);
+                    graphSeries.push(parseInt(value));
+                    $('.textDatas').append(`
+                        <div class='col <?php echo "textDataContainer_$id"; ?>'>
+                            <div class='text-center'>
+                                <strong class='text-muted text-uppercase'>${key}</strong>
+                                <h2>${value}</h2>
+                            </div>
+                        </div>
+                    `);
+                });
 
-                let filteredGraphData = Object.keys(graphData)
-                    .filter(key => key.startsWith(currentYear))
-                    .reduce((obj, key) => {
-                        obj[key] = parseFloat(graphData[key]);
-                        return obj;
-                    }, {});
+                $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
 
-                let categories = Object.keys(filteredGraphData).map(month => month.split(' ')[1]);
-                let values = Object.values(filteredGraphData);
-
-                if (values.length === 0) {
+                if ($('.<?php echo "showHideGraphCheckbox_$id"; ?>').is(':checked')) {
                     $('.<?php echo "textDataContainer_$id"; ?>').hide();
-                    $('.<?php echo "graphDataContainer_$id"; ?>').hide();
-                    $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
-                    $('.<?php echo "noRecordFoundContainer_$id"; ?>').fadeIn();
+                    $('.<?php echo "graphDataContainer_$id"; ?>').fadeIn();
                 } else {
-                    if ($('.<?php echo "showHideGraphCheckbox_$id"; ?>').is(':checked')) {
-                        $('.<?php echo "textDataContainer_$id"; ?>').hide();
-                        $('.<?php echo "graphDataContainer_$id"; ?>').fadeIn();
-                    } else {
-                        $('.<?php echo "textDataContainer_$id"; ?>').fadeIn();
-                        $('.<?php echo "graphDataContainer_$id"; ?>').hide();
-                    }
-                    $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
-                    $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
-                    $('.<?php echo "textData1_$id"; ?>').text(<?php echo "textData1_$id"; ?>);
-                    $('.<?php echo "textData2_$id"; ?>').text(<?php echo "textData2_$id"; ?>);
-
-                    <?php echo "graphChart_$id"; ?>.updateOptions({
-                        xaxis: { categories: categories },
-                        yaxis: {
-                            labels: {
-                                formatter: function(value) {
-                                    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
-                                }
-                            }
-                        },
-                        colors: [<?php echo "graphColorRandomizer_$id"; ?>()]
-                    });
-
-                    <?php echo "graphChart_$id"; ?>.updateSeries([{
-                        name: "<?php echo $title; ?>",
-                        data: values
-                    }]);
+                    $('.<?php echo "textDataContainer_$id"; ?>').fadeIn();
+                    $('.<?php echo "graphDataContainer_$id"; ?>').hide();
                 }
+
+                <?php echo "graphChart_$id"; ?>.updateOptions({
+                    labels: graphLabels
+                });
+
+                <?php echo "graphChart_$id"; ?>.updateSeries(graphSeries);
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.error("Request failed!");
@@ -180,6 +146,7 @@
             }
         });
     }
+
 
     // let category = '<?php echo $category; ?>';
     // let dateFrom = new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0];
@@ -193,14 +160,20 @@
     );
     
     let <?php echo "options_$id"; ?> = {
-        series: [{ name: "<?php echo $title; ?>", data: [] }],
-        xaxis: { categories: [] },
-        chart: { height: 150, type: 'line', zoom: { enabled: false }, toolbar: { show: false } },
-        dataLabels: { enabled: false },
-        stroke: { curve: 'smooth', width: 3 },
-        grid: { show: true, xaxis: { lines: { show: true } } },
-        markers: { size: 6, strokeWidth: 3, hover: { size: 10 } },
-        colors: [<?php echo "graphColorRandomizer_$id"; ?>()]
+        series: [],
+        chart: {
+            height: 150,
+            type: 'pie'
+        },
+        legend: { position: 'bottom' },
+        labels: ["Open", "Expired"],
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: { height: 150 },
+                legend: { position: 'bottom' }
+            }
+        }]
     };
     
     let <?php echo "graphChart_$id"; ?> = new ApexCharts(document.querySelector("#<?php echo "apexThumbnailGraph_$id"; ?>"), <?php echo "options_$id"; ?>);

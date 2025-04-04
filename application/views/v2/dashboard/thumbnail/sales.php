@@ -24,7 +24,7 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li class="px-3">
+                            <li class="px-3 showGraphButton">
                                 <div class="form-check" style="margin: -4px;">
                                     <input class="form-check-input <?php echo "showHideGraphCheckbox_$id"; ?>" style="height: 17px; width: 17px; cursor: pointer;" type="checkbox">
                                     <label class="form-check-label text-muted" style=" margin-top: 4px; margin-left: 4px;">Show Graph</label>
@@ -62,7 +62,7 @@
             </div>
             <div class="col <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center">
-                    <strong class="text-muted text-uppercase">TOTAL INVOICES</strong>
+                    <strong class="text-muted text-uppercase">TOTAL COUNT</strong>
                     <h2 class="<?php echo "textData2_$id"; ?>"></h2>
                 </div>
             </div>
@@ -195,7 +195,7 @@
     let <?php echo "options_$id"; ?> = {
         series: [{ name: "<?php echo $title; ?>", data: [] }],
         xaxis: { categories: [] },
-        chart: { height: 150, type: 'line', zoom: { enabled: false }, toolbar: { show: false } },
+        chart: { height: 150, type: 'bar', zoom: { enabled: false }, toolbar: { show: false } },
         dataLabels: { enabled: false },
         stroke: { curve: 'smooth', width: 3 },
         grid: { show: true, xaxis: { lines: { show: true } } },
