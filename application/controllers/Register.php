@@ -997,11 +997,6 @@ class Register extends MYF_Controller {
 
         $is_success = true;
         $is_valid   = false;
-        
-        $json_data = ['is_success' => false];
-
-        echo json_encode($json_data);        
-        exit;
 
         $post = $this->input->post(); 
         if( $post['subscription_type'] != 'trial' ){
@@ -1120,39 +1115,6 @@ class Register extends MYF_Controller {
 
             //Send invoice
             $this->send_invoice_email($cid, $sid);
-
-            // //Create customer
-            // $customer_data = array(
-            //     'company_id'      => 1,
-            //     'fk_user_id'      => 5,
-            //     'fk_sa_id'        => 0,
-            //     'contact_name'    => $post['firstname'] . ' ' . $post['lastname'],
-            //     'status'          => '',
-            //     'customer_type'   => 'Business',
-            //     'industry_type_id' => $post['industry_type_id'],
-            //     'business_name'   => $post['business_name'],
-            //     'first_name'      => $post['firstname'],
-            //     'middle_name'     => '',
-            //     'last_name'       => $post['lastname'],
-            //     'mail_add'        => $post['business_address'],
-            //     'city'            => '',
-            //     'state'           => '',
-            //     'zip_code'        => $post['zip_code'],
-            //     'phone_h'         => '',
-            //     'phone_m'         => $post['phone']
-            // );
-            // $fk_prod_id = $this->customer_ad_model->add($customer_data,"acs_profile");
-
-            // //Create leads
-            // $leads_input = array(
-            //     'company_id'    => 1,
-            //     'firstname'     => $post['firstname'],
-            //     'lastname'      => $post['lastname'],
-            //     'phone_cell'    => $post['phone'],
-            //     'email_add'     => $post['email'],
-            //     'address'       => $post['business_address'],
-            // );
-            // $this->Customer_advance_model->add($leads_input, "ac_leads");
         }
 
         $json_data = ['is_success' => $is_success];
