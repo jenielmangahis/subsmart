@@ -37,7 +37,7 @@ $category = "subscription_revenue";
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li class="px-3">
+                            <li class="px-3 showGraphButton">
                                 <div class="form-check" style="margin: -4px;">
                                     <input class="form-check-input showHideGraphCheckbox" type="checkbox">
                                     <label class="form-check-label text-muted" style=" margin-top: 4px; margin-left: 4px;">Show Graph</label>

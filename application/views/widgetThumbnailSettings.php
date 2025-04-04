@@ -11,6 +11,10 @@
     #dashboardThumbnailWidgetSettingsModal .modal-body {
         margin-bottom: -10px;
     }
+    
+    #widgetThumbnail_tabContent {
+        text-align: left !important;
+    }
 </style>
 <div class="modal fade" id="dashboardThumbnailWidgetSettingsModal" role="dialog" data-bs-keyboard="true">
     <div class="modal-dialog modal-lg">
@@ -40,12 +44,21 @@
                                         <div class="row">
                                             <?php
                                                 foreach ($thumbnailWidgetOption as $thumbnailWidgetOptions) {
+                                                    if (in_array($thumbnailWidgetOptions->id, $presetThumbnail)) {
+                                                        $optionState = "enableOption";
+                                                        $switchState = "checked";
+                                                    } else {
+                                                        $optionState = "";
+                                                        $switchState = "";
+                                                    }
+
                                                     $shortDescription = (strlen($text = explode('.', $thumbnailWidgetOptions->description)[0]) > 38) ? substr($text, 0, 38) . '...' : $text . '.';
+                                                    
                                                     if ($thumbnailWidgetOptions->type == "thumbnail") {
                                                         echo "
                                                             <div class='col-md-6 mt-3'>
                                                                 <div class='input-group align-items-center'>
-                                                                    <span class='optionItems input-group-text d-flex justify-content-between w-100' title='$thumbnailWidgetOptions->description'>
+                                                                    <span class='optionItems $optionState input-group-text d-flex justify-content-between w-100' title='$thumbnailWidgetOptions->description'>
                                                                         <div class='d-flex align-items-center'>
                                                                             <i class='$thumbnailWidgetOptions->icon text-muted fs-4'></i>&nbsp;&nbsp;&nbsp;
                                                                             <div class='text-start'>
@@ -54,7 +67,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class='form-check form-switch m-0 ms-auto'>
-                                                                            <input class='enableDisableSwitch form-check-input' type='checkbox' data-id='$thumbnailWidgetOptions->id' data-category='$thumbnailWidgetOptions->category' data-type='$thumbnailWidgetOptions->type'>
+                                                                            <input class='enableDisableSwitch form-check-input' type='checkbox' data-id='$thumbnailWidgetOptions->id' data-category='$thumbnailWidgetOptions->category' data-type='$thumbnailWidgetOptions->type' $switchState>
                                                                         </div>
                                                                     </span>
                                                                 </div>
@@ -67,15 +80,24 @@
                                     </div>
                                     <div class="tab-pane fade" id="widget_pill" role="tabpanel" aria-labelledby="widgetPill_tab">
                                         <label>Select widgets to display with no limit on the number of widgets you can choose.</label>
-                                        <div class="row mt-3">
+                                        <div class="row">
+                                            <div class='col-md-6 mt-3'><i class="text-muted">Currently testing this part...</i></div>
                                             <?php
                                                 foreach ($thumbnailWidgetOption as $thumbnailWidgetOptions) {
+                                                    if (in_array($thumbnailWidgetOptions->id, $presetThumbnail)) {
+                                                        $optionState = "enableOption";
+                                                        $switchState = "checked";
+                                                    } else {
+                                                        $optionState = "";
+                                                        $switchState = "";
+                                                    }
+
                                                     $shortDescription = (strlen($text = explode('.', $thumbnailWidgetOptions->description)[0]) > 41) ? substr($text, 0, 41) . '...' : $text . '.';
                                                     if ($thumbnailWidgetOptions->type == "widget") {
                                                         echo "
                                                             <div class='col-md-6 mb-3'>
                                                                 <div class='input-group align-items-center'>
-                                                                    <span class='optionItems input-group-text d-flex justify-content-between w-100' title='$thumbnailWidgetOptions->description'>
+                                                                    <span class='optionItems $optionState input-group-text d-flex justify-content-between w-100' title='$thumbnailWidgetOptions->description'>
                                                                         <div class='d-flex align-items-center'>
                                                                             <i class='$thumbnailWidgetOptions->icon text-muted fs-4'></i>&nbsp;&nbsp;&nbsp;
                                                                             <div class='text-start'>
@@ -84,7 +106,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class='form-check form-switch m-0 ms-auto'>
-                                                                            <input class='enableDisableSwitch form-check-input' type='checkbox' data-id='$thumbnailWidgetOptions->id' data-category='$thumbnailWidgetOptions->category' data-type='$thumbnailWidgetOptions->type'>
+                                                                            <input class='enableDisableSwitch form-check-input' type='checkbox' data-id='$thumbnailWidgetOptions->id' data-category='$thumbnailWidgetOptions->category' data-type='$thumbnailWidgetOptions->type' $switchState>
                                                                         </div>
                                                                     </span>
                                                                 </div>
@@ -104,8 +126,8 @@
         </div>
     </div>
 </div>
-
 <script>
+let enabledOptionIDs = JSON.parse(<?php echo json_encode($thumbnailWidgetPreset[0]->thumbnail); ?>);
 $(document).on('change', '.enableDisableSwitch', function (e) {
     let checkbox = $(this);
     let optionItem = checkbox.closest('.optionItems');
@@ -115,12 +137,8 @@ $(document).on('change', '.enableDisableSwitch', function (e) {
     let option_type = checkbox.attr('data-type');
     let option_cardClass = `${option_category}${option_id}${option_type}`;
     let totalEnabledOptions = $('.optionItems.enableOption').length;
+    let requestOnAjax = true;
     let initialLoader = `<div class='col-lg-4 mt-3 cardLoader'><div class='card shadow'><div class='card-body'><div class='row'><div class='col-md-12'><p class='card-text placeholder-glow'><span class='placeholder col-3' style='color:#6a4a86'></span><span class='placeholder col-11 mt-3'></span><span class='placeholder col-12'></span><span class='placeholder col-4'></span><span class='placeholder placeholder-lg col-12 mt-3 mb-3'></span><span class='placeholder col-12'></span><span class='placeholder col-12'></span><span class='placeholder col-12'></span><span class='placeholder col-2 mt-3 float-end'></span></p></div></div></div></div></div>`;
-
-    // Get all enabled option IDs before making any changes
-    let enabledOptionIDs = $('.optionItems.enableOption .enableDisableSwitch').map(function () {
-        return $(this).attr('data-id');
-    }).get();
 
     if (isChecked) {
         if (totalEnabledOptions >= 8) {
@@ -130,9 +148,11 @@ $(document).on('change', '.enableDisableSwitch', function (e) {
                 icon: "error",
                 title: "Unable to show more",
                 html: "You can only select up to 8 thumbnails.",
-            });
+            }); 
+            requestOnAjax = false;
         } else {
             optionItem.addClass('enableOption');
+            enabledOptionIDs.push(option_id);
 
             if ($(`.${option_cardClass}`).length > 0) {
                 $(`.${option_cardClass}`).fadeIn();
@@ -142,45 +162,41 @@ $(document).on('change', '.enableDisableSwitch', function (e) {
         }
     } else {
         optionItem.removeClass('enableOption');
-        
+        enabledOptionIDs.indexOf(option_id) > -1 && enabledOptionIDs.splice(enabledOptionIDs.indexOf(option_id), 1);
         if ($(`.${option_cardClass}`).length > 0) {
             $(`.${option_cardClass}`).hide();
         }
     }
 
-    // Update enabledOptionIDs after the change
-    enabledOptionIDs = $('.optionItems.enableOption .enableDisableSwitch').map(function () {
-        return $(this).attr('data-id');
-    }).get();
-
-    // Always send AJAX request regardless of enabling or disabling
-    $.ajax({
-        type: "POST",
-        url: `${window.location.origin}/dashboard/showHideThumbnails`,
-        data: {
-            id: option_id,
-            category: option_category,
-            type: option_type,
-            preset_data: enabledOptionIDs,
-        },
-        beforeSend: function () {
-            if (!$(`.${option_cardClass}`).length > 0) {
-                $('.cardContainers1').append(initialLoader);
-            }
-        },
-        success: function (response) {
-            $('.cardLoader').remove();
-            if (!$(`.${option_cardClass}`).length > 0) {
-                $('.cardContainers1').append(`<div class='col-lg-4 mt-3 ${option_cardClass}' data-id='${option_id}'>${response}</div>`);
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            $('.cardLoader').remove();
-            console.error("Request failed!");
-            console.error("Status:", textStatus);
-            console.error("Error:", errorThrown);
-        },
-    });
+    if (requestOnAjax) {
+        $.ajax({
+            type: "POST",
+            url: `${window.location.origin}/dashboard/showHideThumbnails`,
+            data: {
+                id: option_id,
+                category: option_category,
+                type: option_type,
+                preset_data: enabledOptionIDs,
+            },
+            beforeSend: function () {
+                // if (!$(`.${option_cardClass}`).length > 0) {
+                //     $('.cardContainers1').append(initialLoader);
+                // }
+            },
+            success: function (response) {
+                $('.cardLoader').remove();
+                if (!$(`.${option_cardClass}`).length > 0) {
+                    $('.cardContainers1').append(`<div class='col-lg-4 mt-3 ${option_cardClass}' data-id='${option_id}'>${response}</div>`);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('.cardLoader').remove();
+                console.error("Request failed!");
+                console.error("Status:", textStatus);
+                console.error("Error:", errorThrown);
+            },
+        });
+    }
 });
 
 $(document).on('click', '.optionItems', function (e) {
@@ -194,6 +210,18 @@ $(document).on('click', '.removeDashboardCard', function () {
     const id = $(this).attr('data-id');
     $(`.enableDisableSwitch[data-id="${id}"]`).prop('checked', false).change();
 });
+
+$(document).on('click', '.showGraphButton', function(e) {
+    if (!$(e.target).is('.form-check-input')) {
+        e.stopPropagation();
+        const checkbox = $(this).find('.form-check-input');
+        checkbox.prop('checked', !checkbox.prop('checked')).change();
+    }
+});
+
+$(document).on('click', '.showGraphButton .form-check-input', function(e) {
+    e.stopPropagation(); // Still prevent dropdown from closing
+});
 </script>
 
-<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dashboardThumbnailWidgetSettingsModal">TEST DASHBOARD SETTINGS</button> -->
+<!-- <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#dashboardThumbnailWidgetSettingsModal"><i class='bx bx-fw bx-cog'></i></button> -->
