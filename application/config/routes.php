@@ -1654,6 +1654,7 @@ $route['inventory/vendor/export'] = 'inventory/vendor_export';
 // Item Category
 $route['inventory/_create_item_category'] = 'inventory/ajax_create_item_category';
 $route['inventory/item_groups/edit/(:num)'] = 'inventory/edit_item_category/$1';
+$route['inventory/_edit_item_category'] = 'inventory/ajax_edit_item_category';
 $route['inventory/_update_item_category'] = 'inventory/ajax_update_item_category';
 $route['inventory/item_groups/delete'] = 'inventory/ajax_delete_item_category';
 
