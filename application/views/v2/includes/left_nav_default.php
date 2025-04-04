@@ -501,13 +501,13 @@ echo 'active';
                 <i class='bx bx-fw bx-palette'></i> eSign
             </a>
         </li>
-        <li class="<?php if ($page->title == 'Affiliate Partners' || $page->title == 'Affiliates Stats Dashboard') {
+        <!-- <li class="<?php if ($page->title == 'Affiliate Partners' || $page->title == 'Affiliates Stats Dashboard') {
             echo 'selected';
         } ?>">
             <a href="<?php echo base_url('affiliate'); ?>">
                 <i class='bx bx-fw bx-group'></i> Affiliates
             </a>
-        </li>
+        </li> -->
         <li class="<?php if ($page->title == 'Inventory' || $page->title === 'Inventory Settings' || $page->title == 'Services' || $page->title == 'Fees' || $page->title == 'Vendors' || $page->title == 'Item Categories') {
             echo 'selected';
         } ?>">
