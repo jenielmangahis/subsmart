@@ -2415,19 +2415,21 @@ class Invoice extends MY_Controller
         if( $invoice ){
             $customer = $this->AcsProfile_model->getByProfId($invoice->customer_id);
             if( $customer && $customer->email != '' ){
-                $bccUsers = $this->Users_model->getCompanyUsers($company_id, $post['bcc']); 
+                // $bccUsers = $this->Users_model->getCompanyUsers($company_id, $post['bcc']); 
 
-                $bcc_emails = array();
+                // $bcc_emails = array();
+                // $bcc = '';
+                // if( $bccUsers ){
+                //     foreach($bccUsers as $user){
+                //         $bcc_emails[] = $user->email;
+                //     }
+
+                //     if( !empty($bcc_emails) ){
+                //         $bcc = implode("," , $bcc_emails);
+                //     }
+                // }
+
                 $bcc = '';
-                if( $bccUsers ){
-                    foreach($bccUsers as $user){
-                        $bcc_emails[] = $user->email;
-                    }
-
-                    if( !empty($bcc_emails) ){
-                        $bcc = implode("," , $bcc_emails);
-                    }
-                }
 
                 $subject = 'Invoice Reminder : ' . $invoice->invoice_number; 
                 $data = [
