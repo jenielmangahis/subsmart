@@ -369,8 +369,10 @@ class Users extends MY_Controller
 		$pdata = $_POST;
 		$bid   = $pdata['id'];
 		$comp_id = logged('company_id');
+		$profiledata = $this->business_model->getByCompanyId($comp_id);
+
 		if (!empty($_FILES['image']['name'])) {
-			$target_dir = "./uploads/users/business_profile/$comp_id/";
+			$target_dir = "./uploads/users/business_profile/$profiledata->id/";
 		
 			if (!file_exists($target_dir)) {
 				mkdir($target_dir, 0777, true);
@@ -378,7 +380,8 @@ class Users extends MY_Controller
 		
 			$target_file = $target_dir . basename($_FILES['image']['name']);
 			if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
-				$business_image = $target_file; 
+				//business_image = $target_file; 
+				$business_image = basename($_FILES['image']['name']);
 				$this->business_model->update($bid, ['business_image' => $business_image]);
 			} else {
 				log_message('error', 'File upload failed for ' . $_FILES['image']['name']);
@@ -389,7 +392,8 @@ class Users extends MY_Controller
 		
 		$this->business_model->update($bid, ['business_name' => $pdata['business_name'], 'business_desc' => $pdata['business_desc']],);
 
-		redirect('users/businessview');
+		echo 1;
+		//redirect('users/businessview');
 	}
 
 	public function moveUploadedFile($bid)
