@@ -46,7 +46,7 @@ if ($invoice->due_date > date('Y-m-d')) {
         <table style="padding: 16px;margin-top:5px;margin-bottom:5px;">
             <tr>
                 <td>
-                    <img alt="<?= $company_info->business_name; ?>" src="<?= $company_image; ?>" class="companyimage" />
+                    <img alt="Company Logo" src="<?= $company_image; ?>" class="companyimage" />
                 </td>
                 <td style="text-align: center; width: 1%; white-space: nowrap; padding: 0 16px;">
                     <b>INVOICE NO#</b>
