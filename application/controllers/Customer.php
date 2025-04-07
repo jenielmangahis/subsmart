@@ -5806,7 +5806,7 @@ class Customer extends MY_Controller
         $isNameExists = $this->customer_ad_model->getLeadSourceByNameAndCompanyId(trim($input['ls_name']), $cid);
         if( $isNameExists ){
             $is_success = 0;
-            $msg = 'Lead source name already exists.';
+            $msg = 'Lead source ' . $input['ls_name'] . ' already exists.';
         }
 
         if( $is_success == 1 ){
@@ -5847,13 +5847,13 @@ class Customer extends MY_Controller
         $isNameExists = $this->customer_ad_model->getLeadSourceByNameAndCompanyId(trim($input['ls_name']), $cid);        
         if( $isNameExists && ($isNameExists->ls_id !=  $input['ls_id']) ){
             $is_success = 0;
-            $msg = 'Lead source name already exists.';
+            $msg = 'Lead source ' . $input['ls_name'] . ' already exists.';
         }
 
         $isDefaultExists = $this->customer_ad_model->getDEfaultLeadSourceByName(trim($input['ls_name']));
         if( $isDefaultExists ){
             $is_success = 0;
-            $msg = 'Lead source name already exists.';
+            $msg = 'Lead source ' . $input['ls_name'] . ' already exists.';
         }
 
         if( $is_success == 1 ){
@@ -9851,7 +9851,7 @@ class Customer extends MY_Controller
             $customerStatus = $this->CustomerStatus_model->getByIdAndCompanyId($post['cs_id'], $cid);
             $isExists       = $this->CustomerStatus_model->getByNameAndCompanyId($post['name'], $cid);
             if( $isExists && $isExists->id != $post['cs_id'] ){
-                $msg = 'Status name already exists.';
+                $msg = 'Status name ' . $post['name'] . ' already exists.';
             }else{
                 if( $customerStatus ){
                     $data = ['name' => $post['name']];
@@ -10788,7 +10788,7 @@ class Customer extends MY_Controller
 
         $isExists = $this->FinancingPaymentCategory_model->getByNameAndCompanyId($post['category_name'], $company_id);
         if( $isExists ){
-            $msg   = 'Category name already exists.';
+            $msg   = 'Category name ' . $post['category_name'] . ' already exists.';
         }else{
             $data = [
                 'company_id' => $company_id,
@@ -10852,7 +10852,7 @@ class Customer extends MY_Controller
         $financingCategory = $this->FinancingPaymentCategory_model->getByIdAndCompanyId($post['catid'], $company_id);
         $isExists          = $this->FinancingPaymentCategory_model->getByNameAndCompanyId($post['category_name'], $company_id);
         if( $isExists && $isExists->id != $financingCategory->id ){
-            $msg = 'Category already exists';
+            $msg = 'Category name ' . $post['category_name'] . ' already exists';
         }else{
             if( $financingCategory ){
                 $data = [
@@ -10928,7 +10928,7 @@ class Customer extends MY_Controller
 
         $isExists = $this->CustomerStatus_model->getByNameAndCompanyId($post['status_name'], $company_id);
         if( $isExists ){
-            $msg = 'Status name already exists.';
+            $msg = 'Status name ' . $post['status_name'] . ' already exists.';
         }else{
             if ($post['status_name'] != '') {
                 $data = [
@@ -10972,7 +10972,7 @@ class Customer extends MY_Controller
 
         $isExists = $this->CustomerGroup_model->getByNameAndCompanyId($post['group_name'], $company_id);
         if( $isExists ){
-            $msg = 'Group name already exists.';
+            $msg = 'Group name ' . $post['group_name'] . ' already exists.';
         }else{
             if ($post['group_name'] != '') {
                 $data = [
@@ -11021,7 +11021,7 @@ class Customer extends MY_Controller
         if( $customerGroup ){
             $isExists = $this->CustomerGroup_model->getByNameAndCompanyId($post['group_name'], $company_id);
             if( $isExists && $isExists->id != $post['gid'] ){
-                $msg = 'Group name already exists.';
+                $msg = 'Group name ' . $post['group_name'] . ' already exists.';
             }else{
                 if ($post['group_name'] != '') {
                     $data = [
@@ -11068,7 +11068,7 @@ class Customer extends MY_Controller
 
         $isExists = $this->SalesArea_model->getByNameAndCompanyId($post['sa_name'], $company_id);
         if( $isExists ){
-            $msg = 'Sales area name already exists.';
+            $msg = 'Sales area ' . $post['sa_name'] . ' already exists.';
         }else{
             if ($post['sa_name'] != '') {
                 $data = [
@@ -11115,7 +11115,7 @@ class Customer extends MY_Controller
         $salesArea = $this->SalesArea_model->getByIdAndCompanyId($post['sa_id'], $company_id);
         $isExists  = $this->SalesArea_model->getByNameAndCompanyId($post['sa_name'], $company_id);
         if( $isExists && $isExists->id != $post['sa_id'] ){
-            $msg = 'Sales area name already exists.';
+            $msg = 'Sales area ' . $post['sa_name'] . ' already exists.';
         }else{
             if( $salesArea ){
                 if ($post['sa_name'] != '') {
@@ -11158,7 +11158,7 @@ class Customer extends MY_Controller
 
         $isExists = $this->AccountingTerm_model->getByNameAndCompanyId($post['term_name'], $company_id);
         if( $isExists ){
-            $msg = 'Accounting term name already exists.';
+            $msg = 'Accounting term ' . $post['term_name'] . ' already exists.';
         }else{
             if ($post['term_name'] != '') {
                 $data = [
@@ -11215,7 +11215,7 @@ class Customer extends MY_Controller
 
         $isExists = $this->RatePlan_model->getByNameAndCompanyId($post['plan_name'], $company_id);
         if( $isExists ){
-            $msg = 'Plan name already exists.';
+            $msg = 'Plan name ' . $post['plan_name'] . ' already exists.';
         }else{
             if ($post['plan_name'] != '') {
                 $data = [
@@ -11260,7 +11260,7 @@ class Customer extends MY_Controller
         $ratePlan = $this->RatePlan_model->getByIdAndCompanyId($post['rate_plan_id'], $company_id);
         $isExists  = $this->RatePlan_model->getByNameAndCompanyId($post['plan_name'], $company_id);
         if( $isExists && $isExists->id != $post['rate_plan_id'] ){
-            $msg = 'Plan name already exists.';
+            $msg = 'Plan name ' . $post['plan_name'] . ' already exists.';
         }else{
             if( $ratePlan ){
                 if ( $post['plan_name'] != '') {
@@ -11306,7 +11306,7 @@ class Customer extends MY_Controller
 
         $isExists = $this->SystemPackageType_model->getByNameAndCompanyId($post['package_name'], $company_id);
         if( $isExists ){
-            $msg = 'System package already exists.';
+            $msg = 'System package ' . $post['package_name'] . ' already exists.';
         }else{
             if ($post['package_name'] != '') {
                 $data = [
@@ -11351,7 +11351,7 @@ class Customer extends MY_Controller
 
         $isExists = $this->SystemPackageType_model->getByNameAndCompanyId($post['package_name'], $company_id);
         if( $isExists && $isExists->id != $post['id'] ){
-            $msg = 'System package already exists.';
+            $msg = 'System package ' . $post['package_name'] . ' already exists.';
         }else{
             if ($post['package_name'] != '') {
                 $data = ['name' => $post['package_name']];
@@ -11734,7 +11734,7 @@ class Customer extends MY_Controller
                 $is_success = 1;
                 $msg = '';
             }else{
-                $msg = 'Lender type name already exists';
+                $msg = 'Lender type ' . $post['lender_type_name'] . ' already exists';
             }    
         }else{
             $msg = 'Please enter name.';
@@ -11764,7 +11764,7 @@ class Customer extends MY_Controller
         if ($lenderType) {            
             $isExists   = $this->AcsSolarInfoLenderType_model->getByNameAndCompanyId($post['lender_type_name'], $cid);
             if( $isExists && $lenderType->id != $isExists->id ){
-                $msg = 'Lender type already exists';
+                $msg = 'Lender type ' . $post['lender_type_name'] . ' already exists';
             }else{
                 $data = [
                     'name' => $post['lender_type_name'],
@@ -11854,7 +11854,7 @@ class Customer extends MY_Controller
                 $is_success = 1;
                 $msg = '';
             }else{
-                $msg = 'System size name already exists';
+                $msg = 'System size ' . $post['system_size_name'] . ' already exists';
             }    
         }else{
             $msg = 'Please enter name.';
@@ -11884,7 +11884,7 @@ class Customer extends MY_Controller
         if ($systemSize) {            
             $isExists   = $this->AcsSolarInfoSystemSize_model->getByNameAndCompanyId($post['system_size_name'], $cid);
             if( $isExists && $systemSize->id != $isExists->id ){
-                $msg = 'System size already exists';
+                $msg = 'System size ' . $post['system_size_name'] . ' already exists';
             }else{
                 $data = [
                     'name' => $post['system_size_name'],
@@ -11974,7 +11974,7 @@ class Customer extends MY_Controller
                 $is_success = 1;
                 $msg = '';
             }else{
-                $msg = 'Proposed module name already exists';
+                $msg = 'Proposed module ' . $post['proposed_module_name'] . ' already exists';
             }    
         }else{
             $msg = 'Please enter name.';
@@ -12004,7 +12004,7 @@ class Customer extends MY_Controller
         if ($proposedModule) {            
             $isExists   = $this->AcsSolarInfoProposedModule_model->getByNameAndCompanyId($post['proposed_module_name'], $cid);
             if( $isExists && $proposedModule->id != $isExists->id ){
-                $msg = 'Proposed module already exists';
+                $msg = 'Proposed module ' . $post['proposed_module_name'] . ' already exists';
             }else{
                 $data = [
                     'name' => $post['proposed_module_name'],
@@ -12094,7 +12094,7 @@ class Customer extends MY_Controller
                 $is_success = 1;
                 $msg = '';
             }else{
-                $msg = 'Proposed inverter name already exists';
+                $msg = 'Proposed inverter ' . $post['proposed_inverter_name'] . ' already exists';
             }    
         }else{
             $msg = 'Please enter name.';
@@ -12124,7 +12124,7 @@ class Customer extends MY_Controller
         if ($proposedInverter) {            
             $isExists   = $this->AcsSolarInfoProposedInverter_model->getByNameAndCompanyId($post['proposed_inverter_name'], $cid);
             if( $isExists && $proposedInverter->id != $isExists->id ){
-                $msg = 'Proposed inverter already exists';
+                $msg = 'Proposed inverter ' . $post['proposed_inverter_name'] . ' already exists';
             }else{
                 $data = [
                     'name' => $post['proposed_inverter_name'],

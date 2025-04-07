@@ -37,6 +37,16 @@ class Items_model extends MY_Model
         return $query->row();
     }
 
+    public function findItemCategoryByName($name)
+    {       
+        $this->db->select('*');
+        $this->db->from($this->table_categories);
+        $this->db->where('name', $name);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getLocationList()
     {
         // $this->db->where('company_id', getLoggedCompanyID());
@@ -322,6 +332,16 @@ class Items_model extends MY_Model
         return $query->row();
     }
 
+    public function findItemCategoryById($id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table_categories);
+        $this->db->where('item_categories_id', $id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getRows($params = array())
     {
         $this->db->select('*');
@@ -361,6 +381,15 @@ class Items_model extends MY_Model
     {
         if (!empty($data)) {
             $insert = $this->db->insert($this->table, $data);
+            return $insert ? $this->db->insert_id() : false;
+        }
+        return false;
+    }
+
+    public function createItemCategory($data = array())
+    {
+        if (!empty($data)) {
+            $insert = $this->db->insert($this->table_categories, $data);
             return $insert ? $this->db->insert_id() : false;
         }
         return false;

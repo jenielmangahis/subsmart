@@ -42,7 +42,7 @@
         </div>
         <div class="row mb-2">
             <div class="col-md-12">
-                <div class="input-group mb-3">
+                <div class="input-group">
                     <select class="form-select <?php echo "thumbnailFilter1_$id"; ?>">
                         <option value="all_time">All Time</option>
                         <option value="last_7_days">Last 7 Days</option>
@@ -54,29 +54,29 @@
             </div>
         </div>
         <div class="row">
-            <div class="col <?php echo "textDataContainer_$id"; ?>">
+            <div class="col mt-2 text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center">
                     <strong class="text-muted text-uppercase">TOTAL OPEN</strong>
                     <h2 class="<?php echo "textData1_$id"; ?>"></h2>
                 </div>
             </div>
-            <div class="col <?php echo "textDataContainer_$id"; ?>">
+            <div class="col mt-2 text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center">
                     <strong class="text-muted text-uppercase">TOTAL EXPIRED</strong>
                     <h2 class="<?php echo "textData2_$id"; ?>"></h2>
                 </div>
             </div>
-            <div class="col <?php echo "graphDataContainer_$id"; ?> display_none">
+            <div class="col mt-2 <?php echo "graphDataContainer_$id"; ?> display_none">
                 <div id="<?php echo "apexThumbnailGraph_$id"; ?>"></div>
             </div>
-            <div class="col <?php echo "graphLoaderContainer_$id"; ?> display_none">
+            <div class="col mt-2 <?php echo "graphLoaderContainer_$id"; ?> display_none">
                 <div class="text-center">
                     <div class="spinner-border text-secondary" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
             </div>
-            <div class="col <?php echo "noRecordFoundContainer_$id"; ?> display_none">
+            <div class="col mt-2 <?php echo "noRecordFoundContainer_$id"; ?> display_none">
                 <div class="text-center">No Record Found...</div>
             </div>
         </div>

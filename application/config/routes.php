@@ -1518,12 +1518,15 @@ $route['cron/customer_recurring_subscriptions'] = 'Cron_Jobs_Controller/cronCust
 $route['cron/process_accounting_recurring_transaction_payment'] = 'Cron_Payment/process_accounting_recurring_transaction_payment';
 $route['cron/update_invoice'] = 'Cron_Jobs_Controller/cronUpdateInvoice';
 
-
 $route['cron/customer_recurring_subscriptionsv3'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionV3';
 $route['cron/customer_recurring_subscriptions_test'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionV2test';
 
 $route['cron/update_late_fee_by_invoice'] = 'Cron_Jobs_Controller/cronUpdateLateFeeByInvoice';
 $route['cron/customer_recurring_subscriptions_by_active_customer'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionByCustomer';
+
+//Cron Automation
+$route['cron/send_mail_automation'] = 'Cron_Automation_Controller/cronMailAutomation';
+$route['cron/send_sms_automation'] = 'Cron_Automation_Controller/cronSmsAutomation';
 
 // Admin Users
 $route['admin/_update_employee'] = 'Admin/ajaxUpdateEmployee';
@@ -1632,6 +1635,8 @@ $route['inventory/_delete'] = 'inventory/ajax_delete';
 $route['inventory/_create_service'] = 'inventory/ajax_create_service';
 $route['inventory/_delete_selected'] = 'inventory/ajax_delete_selected';
 $route['inventory/_create_inventory_fee'] = 'inventory/ajax_create_inventory_fee';
+$route['inventory/_edit_inventory_fee'] = 'inventory/ajax_edit_inventory_fee';
+$route['inventory/_update_inventory_fee'] = 'inventory/ajax_update_inventory_fee';
 
 // Inventory Fees
 $route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';
@@ -1649,6 +1654,7 @@ $route['inventory/vendor/export'] = 'inventory/vendor_export';
 // Item Category
 $route['inventory/_create_item_category'] = 'inventory/ajax_create_item_category';
 $route['inventory/item_groups/edit/(:num)'] = 'inventory/edit_item_category/$1';
+$route['inventory/_edit_item_category'] = 'inventory/ajax_edit_item_category';
 $route['inventory/_update_item_category'] = 'inventory/ajax_update_item_category';
 $route['inventory/item_groups/delete'] = 'inventory/ajax_delete_item_category';
 

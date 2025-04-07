@@ -94,7 +94,7 @@ $payment_link = base_url('/invoice/customer_view/' . $invoice->id);
             <table>
                 <tr>
                     <td>
-                        <img alt="<?= $company_info->business_name; ?>" src="<?= $company_image; ?>" class="companyimage companyimage-big" />
+                        <img alt="Company Logo" src="<?= $company_image; ?>" class="companyimage companyimage-big" />
                     </td>
 
                     <td style="width: 50%; white-space: nowrap; margin-right: 8px; padding-right: 16px; vertical-align: top;">
@@ -209,7 +209,7 @@ $payment_link = base_url('/invoice/customer_view/' . $invoice->id);
             <table style="padding: 16px 0;">
                 <tr>
                     <td>
-                        <img alt="<?= $company_info->business_name; ?>" src="<?= $company_image; ?>" class="companyimage" />
+                        <img alt="Company Logo" src="<?= $company_image; ?>" class="companyimage" />
                     </td>
                     <td style="text-align: center; width: 1%; white-space: nowrap; padding: 0 16px;">
                         <b>INVOICE NO#</b>

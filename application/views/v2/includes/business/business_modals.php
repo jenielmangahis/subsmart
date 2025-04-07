@@ -12,7 +12,7 @@
                 <input type="hidden" name="id" value="<?php echo $profiledata->id; ?>">
                 <div class="row gy-3">
                     <div class="col-12">
-                        <div class="nsm-img-upload circle m-auto" id="basic-image-container"  style="background-image:url('<?php echo base_url($profiledata->business_image); ?>');background-size:contain;">
+                        <div class="nsm-img-upload circle m-auto" id="basic-image-container"  style="background-image:url('<?php echo getCompanyBusinessProfileImage(); ?>');background-size:contain;">
                             <span class="nsm-upload-label disable-select">Drop or click image to upload</span>
                             <input type="file" id="image-input" name="image" class="nsm-upload" accept="image/*">
                         </div>

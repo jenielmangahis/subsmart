@@ -186,12 +186,12 @@ class Inventory extends MY_Controller
     }
 
     public function item_groups($page = null)
-    {
+    {        
+
         $this->page_data['page']->title = 'Item Categories';
         $this->page_data['page']->parent = 'Tools';
 
         $comp_id = logged('company_id');
-
         $get_items_categories = array(
             'where' => array('company_id' => $comp_id),
             'table' => 'item_categories',
@@ -200,9 +200,18 @@ class Inventory extends MY_Controller
         $this->page_data['item_categories'] = $this->general->get_data_with_param($get_items_categories);
 
         if($page == null){
+            if(!checkRoleCanAccessModule('inventory', 'read')){
+                show403Error();
+                return false;
+            }
+
             $this->load->view('v2/pages/inventory/item_groups', $this->page_data);
         }else if ($page == 'add'){
-            // $this->load->view('inventory/item_groups_add', $this->page_data);
+            if(!checkRoleCanAccessModule('inventory', 'write')){
+                show403Error();
+                return false;
+            }
+
             $this->load->view('v2/pages/inventory/action/item_groups_add', $this->page_data);
         }
     }
@@ -412,20 +421,34 @@ class Inventory extends MY_Controller
     {
         $this->load->model('Vendor_model');
 
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
         $post = $this->input->post();
-        $cid  = logged('company_id');
+        $company_id = logged('company_id');
 
-        $data = array(
-            'company_id' => $cid,
-            'name' => $this->input->post('category_name'),
-            'description' => $this->input->post('category_description'),
-            'parent_id' => $cid
-        );
+        $isExists = $this->items_model->findItemCategoryByName($post['category_name']);
+        if( $isExists && $isExists->company_id == $company_id ){
+            $msg = 'Category name ' . $post['category_name'] . ' already exists';
+        }else{
+            $data = array(
+                'company_id' => $company_id,
+                'name' => $post['category_name'],
+                'description' => $post['category_description'],
+                'parent_id' => 0
+            );
+            $this->items_model->createItemCategory($data);
 
-        $this->db->insert($this->items_model->table_categories, $data);
+            //Activity Logs
+            $activity_name = 'Inventory : Created item category '.$post['category_name']; 
+            createActivityLog($activity_name);
 
-        $json_data = ['is_success' => 1];
+            $is_success = 1;
+            $msg = '';
 
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
 
     }
@@ -1223,14 +1246,39 @@ class Inventory extends MY_Controller
     }
 
     public function deleteMultipleVendor() {
-        postAllowed();
-        $ids = explode(",",$this->input->post('ids'));
-        
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid = logged('company_id');
+        $ids = explode(",",$this->input->post('ids'));   
+        $total_deleted = 0;
+
         foreach($ids as $id) {
-            $this->vendor_model->deleteByVendorId($id);
+            $vendor = $this->Vendor_model->getByIdAndCompanyId($id, $cid);
+            if( $vendor ){
+                $this->vendor_model->deleteByVendorId($id);
+                
+                //Activity Logs
+                $activity_name = 'Inventory : Created vendor '.$vendor->vendor_name; 
+                createActivityLog($activity_name);
+                
+                $total_deleted++;
+            }            
         }
 
-        echo json_encode(true);
+        if( $total_deleted > 0 ){
+            $is_success = 1;
+            $msg = '';            
+        }else{
+            $msg = 'Nothing to delete';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
     }
 
     public function deleteMultipleItemGroup() {
@@ -1473,6 +1521,12 @@ class Inventory extends MY_Controller
     public function edit_vendor( $id )
     {
         $this->load->model('Vendor_model');
+
+        if(!checkRoleCanAccessModule('inventory', 'write')){
+            show403Error();
+            return false;
+        }
+        
         $this->page_data['page']->title = 'Vendors';
         $this->page_data['page']->parent = 'Tools';
 
@@ -1480,13 +1534,8 @@ class Inventory extends MY_Controller
         $vendor = $this->Vendor_model->getByIdAndCompanyId($id, $cid);
         if( $vendor ){
             $this->page_data['vendor'] = $vendor;
-            // $this->load->view('inventory/vendor_edit', $this->page_data);
             $this->load->view('v2/pages/inventory/action/vendors_edit', $this->page_data);
         }else{
-            
-            $this->session->set_flashdata('message', 'Record not found.');
-            $this->session->set_flashdata('alert_class', 'alert-danger');   
-
             redirect('v2/pages/inventory/vendors');
         }
     }
@@ -1516,31 +1565,42 @@ class Inventory extends MY_Controller
         $this->load->model('Vendor_model');
 
         $is_success = 0;
+        $msg = 'Cannot find data';
 
         $post = $this->input->post();
         $cid  = logged('company_id');
+        
+        $isExists = $this->Vendor_model->getByVendorNameAndCompanyId($post['vendor_name'], $cid);
+        if( $isExists && $isExists->id != $post['vid'] ){
+            $msg = 'Vendor name ' . $post['vendor_name'] . ' already exists';
+        }else{
+            $vendor = $this->Vendor_model->getByIdAndCompanyId($post['vid'], $cid);
+            if( $vendor ){
+                $data = [
+                    'vendor_name' => $post['vendor_name'],
+                    'business_URL' => $post['vendor_website'],
+                    'email' => $post['vendor_email'],
+                    'mobile' => $post['vendor_mobile'],
+                    'phone' => $post['vendor_phone'],
+                    'street_address' => $post['vendor_address'],
+                    'suite_unit' => $post['vendor_suite_unit'],
+                    'city' => $post['vendor_city'],
+                    'postal_code' => $post['vendor_postal_code'],
+                    'state' => $post['vendor_state']
+                ];
+    
+                $this->Vendor_model->updateVendor($post['vid'],$data);
+                
+                //Activity Logs
+                $activity_name = 'Inventory : Updated vendor '.$vendor->vendor_name; 
+                createActivityLog($activity_name);
 
-        $vendor = $this->Vendor_model->getByIdAndCompanyId($post['vid'], $cid);
-        if( $vendor ){
-            $data = [
-                'vendor_name' => $post['vendor_name'],
-                'business_URL' => $post['vendor_website'],
-                'email' => $post['vendor_email'],
-                'mobile' => $post['vendor_mobile'],
-                'phone' => $post['vendor_phone'],
-                'street_address' => $post['vendor_address'],
-                'suite_unit' => $post['vendor_suite_unit'],
-                'city' => $post['vendor_city'],
-                'postal_code' => $post['vendor_postal_code'],
-                'state' => $post['vendor_state']
-            ];
-
-            $this->Vendor_model->updateVendor($post['vid'],$data);
-
-            $is_success = 1;
+                $is_success = 1;
+                $msg = '';
+            }
         }
 
-        $json_data = ['is_success' => $is_success];
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);
 
@@ -1551,12 +1611,17 @@ class Inventory extends MY_Controller
         $this->load->model('ItemCategory_model');
 
         $is_success = 0;
+        $msg = 'Cannot find data';
 
         $post = $this->input->post();
         $cid  = logged('company_id');
 
+        $isExists = $this->ItemCategory_model->getByName($post['category_name']);
+        if( $isExists && $isExists->company_id  )
+
         $itemCategory = $this->ItemCategory_model->getByIdAndCompanyId($post['icid'], $cid);
         if( $itemCategory ){
+            
             $data = [
                 'name' => $post['category_name'],
                 'description' => $post['category_description']
@@ -1567,7 +1632,7 @@ class Inventory extends MY_Controller
             $is_success = 1;
         }
 
-        $json_data = ['is_success' => $is_success];
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);
 
@@ -2017,6 +2082,20 @@ class Inventory extends MY_Controller
         ];
 
         echo json_encode($json_data);
+    }
+
+    public function ajax_edit_item_category()
+    {
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $itemCategory = $this->itemcategory_model->getById($post['id']);
+        if( $itemCategory && $itemCategory->company_id == $company_id ){
+            $this->page_data['itemCategory'] = $itemCategory;
+            $this->load->view('v2/pages/inventory/action/ajax_edit_item_category', $this->page_data);
+        }else{
+            echo 'Data not found.';
+        }
     }
 }
 /* End of file items.php */
