@@ -443,29 +443,23 @@
 ?>
 <div class="row page-content g-0">
     <div class="col-12">
+        <!-- <a href="#" class="text-decoration-none">Customize Thumbnail</a> -->
         <div class="row row-cols-md-3 sortable cardContainers1" id="nsm_widgets2">
         <?php 
             foreach ($presetThumbnail as $presetThumbnails) {
                 foreach ($thumbnailWidgetOption as $thumbnailWidgetOptions) {
                     if ($thumbnailWidgetOptions->id == $presetThumbnails) {
                         $thumbnailsWidgetCard = $thumbnailWidgetOptions;
-                        $option_cardClass = "{$thumbnailWidgetOptions->category}{$thumbnailWidgetOptions->id}{$thumbnailWidgetOptions->type}";
-                        $option_id = "{$thumbnailWidgetOptions->id}";
-            
+                        $option_cardClass = "$thumbnailWidgetOptions->category$thumbnailWidgetOptions->id$thumbnailWidgetOptions->type";
+                        $option_id = "$thumbnailWidgetOptions->id";
                         echo "<div class='col-lg-4 mt-3 $option_cardClass' data-id='$option_id'>";
-                        include viewPath("v2/dashboard/thumbnail/{$thumbnailWidgetOptions->category}"); 
+                        include viewPath("v2/dashboard/thumbnail/$thumbnailWidgetOptions->category"); 
                         echo "</div>";
-            
                         break; 
                     }
                 }
             }
         ?>
-
-
-
-
-
 
                 <?php
                     foreach ($widgets as $wids) {

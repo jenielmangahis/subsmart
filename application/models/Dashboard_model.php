@@ -183,6 +183,19 @@ class Dashboard_model extends MY_Model
                 $query = $this->db->get();
                 return $query->result();
             break;
+            case 'accounting_expense':
+                $this->db->select('accounting_vendor_transaction_categories.id AS id, accounting_check.company_id AS company_id, accounting_chart_of_accounts.name AS account_name, account.account_name AS account_type, SUM(accounting_check.total_amount) AS total, accounting_vendor_transaction_categories.created_at AS date');
+                $this->db->from('accounting_vendor_transaction_categories');
+                $this->db->where('accounting_check.company_id ', $company_id);
+                $this->db->where("DATE_FORMAT(accounting_vendor_transaction_categories.created_at, '%Y-%m-%d') >=", $dateFrom);
+                $this->db->where("DATE_FORMAT(accounting_vendor_transaction_categories.created_at, '%Y-%m-%d') <=", $dateTo);
+                $this->db->join('accounting_chart_of_accounts', 'accounting_chart_of_accounts.id = accounting_vendor_transaction_categories.expense_account_id', 'left');
+                $this->db->join('accounting_check', 'accounting_check.id = accounting_vendor_transaction_categories.transaction_id', 'left');
+                $this->db->join('account', 'account.id = accounting_chart_of_accounts.account_id', 'left');
+                $this->db->group_by('accounting_chart_of_accounts.name');
+                $query = $this->db->get();
+                return $query->result();
+            break;
         }
     }
 }
