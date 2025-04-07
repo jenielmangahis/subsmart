@@ -2849,13 +2849,13 @@ class Invoice extends MY_Controller
         $this->load->model('Invoice_settings_model');
         $this->load->model('AcsProfile_model');  
         $this->load->model('Items_model');      
-        $this->load->model('Automation_model', 'automation_model');
-        $this->load->model('Automation_queue_model', 'automation_queue_model');
+        //$this->load->model('Automation_model', 'automation_model');
+        //$this->load->model('Automation_queue_model', 'automation_queue_model');
         
         $is_success = 1;
 		$msg  = 'Cannot find invoice data';
 
-        $is_automation_activated  = true;
+        $is_automation_activated  = false;
         $is_live_mail_credentials = false;
         
         $post = $this->input->post();
