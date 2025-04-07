@@ -13,10 +13,9 @@ class Automation_Queue_model extends CI_Model
     public function saveAutomationQueue($automationQueueData) {
         try {
             $this->db->insert('automation_queue', $automationQueueData);
-            $res = $this->db->insert_id(); 
-            return ['data' => $res, 'status' => false, 'code' => 1062, 'message' => 'Inserted successfully.'];
+            return $res = $this->db->insert_id(); 
         } catch (Exception $e) {
-            return ['error' => true, 'message' => $e->getMessage(), 'code' => 500]; 
+            return 0;
         }
     }
 
@@ -25,19 +24,33 @@ class Automation_Queue_model extends CI_Model
      *
      * @return array - List of all automations queue
      */
-    public function getAutomationQueue()
+    public function getActiveAutomationQueue($filters = [])
     {
-        /*$company_id = logged('company_id');
-
-        $this->db->select('automations.*');
+        $this->db->select('automation_queue.*');
         $this->db->from($this->table);
 
-        $this->db->join('users', 'automations.user_id = users.id', 'left');
-        $this->db->where('users.company_id', $company_id);
-        $this->db->order_by('automations.created_at', 'DESC');
+        if( !empty($filters) ){
+            foreach($filters as $key => $value){                       
+                $this->db->where($key, $value);
+            }
+        }        
 
-        return $this->db->get()->result();*/
+        $this->db->order_by('automation_queue.created_at', 'DESC');
 
+        $query = $this->db->get();
+        return $query->result();
+
+    }
+
+    public function updateAutomationQueue($id, $data)
+    {
+        $this->db->where('id', $id);
+        $update = $this->db->update($this->table, $data);
+        if ($update) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
