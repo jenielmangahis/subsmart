@@ -1524,8 +1524,11 @@ $route['cron/customer_recurring_subscriptions_test'] = 'Cron_Jobs_Controller/cro
 $route['cron/update_late_fee_by_invoice'] = 'Cron_Jobs_Controller/cronUpdateLateFeeByInvoice';
 $route['cron/customer_recurring_subscriptions_by_active_customer'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionByCustomer';
 
-//Cron Automation
-$route['cron/send_mail_automation'] = 'Cron_Automation_Controller/cronMailAutomation';
+//Cron Automation - Mail
+$route['cron/send_created_invoice_mail_automation'] = 'Cron_Automation_Controller/cronCreatedInvoiceMailAutomation';
+$route['cron/send_paid_invoice_mail_automation'] = 'Cron_Automation_Controller/cronPaidInvoiceMailAutomation'; 
+
+//Cron Automation - Sms
 $route['cron/send_sms_automation'] = 'Cron_Automation_Controller/cronSmsAutomation';
 
 // Admin Users

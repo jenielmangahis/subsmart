@@ -2271,20 +2271,19 @@ class Dashboard extends Widgets
                 }
             break;
             case 'accounting_expense':
-                $accounting_expense_filters = [
-                    'company_id' => logged('company_id'),
-                    'type' => 'all-transactions',
-                    'delivery_method' => 'any',
-                    'category' => 'all',
-                    'start-date' => date('Y-m-d', strtotime(date('m/d/Y').' -365 days')),
-                    'end-date' => date('Y-m-d'),
-                ];
-        
-                $bills = $this->get_transactions($accounting_expense_filters);
-                $data_arr = ['Success' => true, 'accounting_expense' => $bills];
-                echo '<pre>';
-                print_r($bills);
-                echo '</pre>';
+                foreach ($data as $datas) {
+                    if ($datas->account_type == "Expenses") {
+                        $accountName = $datas->account_name;
+                        if ($accountName === 'Payroll Expenses' || $accountName === 'Payrolls Expense') {
+                            $accountName = 'Payroll Expense';
+                        }
+                        
+                        if (!isset($graphData[$accountName])) {
+                            $graphData[$accountName] = 0;
+                        }
+                        $graphData[$accountName] += $datas->total;
+                    }
+                }
             break;
             case 'esign':
                 foreach ($data as $datas) {
