@@ -1334,23 +1334,25 @@ class Invoice extends MY_Controller
                 'operation' => 'send',
                 'status' => 'active',
                 'trigger_event' => 'paid',
-                'trigger_time' => 0,
-                'target' => 'user'
+                'trigger_time' => 0
             ];
-            $automationData = $this->automation_model->getAutomationByParams($auto_params);  
-            if($automationData) {
+            //$automationData = $this->automation_model->getAutomationByParams($auto_params);  
+            $automationsData = $this->automation_model->getAutomationsListByParams($auto_params); 
+            if($automationsData) {
 
-                $data_queue = [
-                    'automation_id' => $automationData->id,
-                    'target_id' => 0,
-                    'entity_type' => 'invoice',
-                    'status' => 'new',
-                    'entity_id' => $id,
-                    'trigger_time' => null,
-                    'is_triggered' => 0
-                ];
-        
-                $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue);                                            
+                foreach($automationsData as $automationData) {
+                    $data_queue = [
+                        'automation_id' => $automationData->id,
+                        'target_id' => 0,
+                        'entity_type' => 'invoice',
+                        'status' => 'new',
+                        'entity_id' => $id,
+                        'trigger_time' => null,
+                        'is_triggered' => 0
+                    ];
+                    $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue);   
+                }
+                                         
             }
         }
         /**
@@ -2894,11 +2896,11 @@ class Invoice extends MY_Controller
 
         $this->load->model('Automation_model', 'automation_model');
         $this->load->model('Automation_queue_model', 'automation_queue_model');
-        
+       
         $is_success = 1;
 		$msg  = 'Cannot find invoice data';
 
-        $is_automation_activated  = false;
+        $is_automation_activated  = true;
         $is_live_mail_credentials = false;
         
         $post = $this->input->post();
@@ -3153,24 +3155,26 @@ class Invoice extends MY_Controller
                     'operation' => 'send',
                     'status' => 'active',
                     'trigger_event' => 'created',
-                    'trigger_time' => 0,
-                    'target' => 'user'
+                    'trigger_time' => 0
                 ];
-                $automationData = $this->automation_model->getAutomationByParams($auto_params);  
+                //$automationData = $this->automation_model->getAutomationByParams($auto_params);  
+                $automationsData = $this->automation_model->getAutomationsListByParams($auto_params); 
 
-                if($automationData) {
+                if($automationsData) {
 
-                    $data_queue = [
-                        'automation_id' => $automationData->id,
-                        'target_id' => 0,
-                        'entity_type' => 'invoice',
-                        'status' => 'new',
-                        'entity_id' => $invoice_id,
-                        'trigger_time' => null,
-                        'is_triggered' => 0
-                    ];
-            
-                    $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue);                                            
+                    foreach($automationsData as $automationData) {
+                        $data_queue = [
+                            'automation_id' => $automationData->id,
+                            'target_id' => 0,
+                            'entity_type' => 'invoice',
+                            'status' => 'new',
+                            'entity_id' => $invoice_id,
+                            'trigger_time' => null,
+                            'is_triggered' => 0
+                        ];
+                        $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue); 
+                    }
+                                           
                 }
             }
             /**
