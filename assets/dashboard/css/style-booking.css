@@ -402,8 +402,9 @@ li {
 /* category-grid */
 .category-grid {
     list-style: none;
-    margin: 0;
+    /* margin: 0; */
     padding: 0;
+    margin-bottom:69px !important;
 }
 .category-grid .category-li {
     margin-bottom: 20px;
