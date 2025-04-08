@@ -26,11 +26,9 @@
                 </div>
                 <div class="row">
                     <div class="col-6 grid-mb">
-                        <form action="<?php echo base_url('customer/settings_lead_types') ?>" method="get">
-                            <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="<?php echo (!empty($search)) ? $search : '' ?>">
-                            </div>
-                        </form>   
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="">
+                        </div>
                     </div> 
 
                     <div class="col-6 grid-mb text-end">
