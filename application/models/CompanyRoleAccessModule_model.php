@@ -146,7 +146,8 @@ class CompanyRoleAccessModule_model extends MY_Model
             'accounting-sales-payroll-taxes' => 'Accounting Sales and Payroll Taxes',        
             'accounting-1099-filings' => 'Accounting 1099 Filings',
             'inventory' => 'Inventory',
-            'affiliate-partners' => 'Affiliates / Partners'
+            //'affiliate-partners' => 'Affiliates / Partners',
+            'my-crm' => 'My CRM',
         ];  
 
         return $modules;
