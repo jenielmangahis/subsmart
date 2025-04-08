@@ -3,9 +3,9 @@
         <tr>
             <td class="table-icon"></td>
             <td data-name="CustomerName">Customer Name</td>
-            <td data-name="CustomerAddress">Address</td>
-            <td data-name="CustomerEmail">Email</td>
+            <td data-name="CustomerAddress">Address</td>            
             <td data-name="CustomerPhone">Phone Number</td>
+            <td data-name="CustomerEmail">Email</td>
             <td data-name="DateStart">Start Date</td>
             <td data-name="DateEnd">End Date</td>
             <td data-name="Amount" style="text-align:right;width:10%;">Subscription Amount</td>
@@ -29,7 +29,7 @@
                         <?php $address = $as->mail_add . ' ' . $as->city . ', ' . $as->state . ' ' . $as->zip_code; ?>
                         <?= $address; ?>
                     </td>
-                    <td><?= formatPhoneNumber($as->phone_m); ?></td>
+                    <td><?= $as->phone_m != '' ? formatPhoneNumber($as->phone_m) : '---'; ?></td>
                     <td><?= $as->email; ?></td>
                     <td>
                         <?php 

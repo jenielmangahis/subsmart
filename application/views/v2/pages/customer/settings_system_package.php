@@ -70,14 +70,10 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
-                                                <li>
-                                                    <a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $type->id; ?>" data-name="<?= $type->name; ?>">Edit</a>
-                                                </li>
+                                                    <li><a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $type->id; ?>" data-name="<?= $type->name; ?>">Edit</a></li>
                                                 <?php } ?>
                                                 <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
-                                                <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $type->id; ?>" data-name="<?= $type->name; ?>">Delete</a>
-                                                </li>
+                                                    <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $type->id; ?>" data-name="<?= $type->name; ?>">Delete</a></li>
                                                 <?php } ?>
                                             </ul>
                                         </div>
