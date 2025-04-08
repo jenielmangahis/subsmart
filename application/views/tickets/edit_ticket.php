@@ -256,7 +256,7 @@ a.btn-primary.btn-md {
                                 <div class="nsm-card-content">
                                     <label for="customers" class="required"><b>Customer</b></label>
                                     <a class="link-modal-open nsm-button btn-small" href="<?= base_url('customer/add_advance'); ?>" style="float:right;">Add New</a>
-                                    <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
+                                    <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-select searchable-dropdown" placeholder="Select">
                                         <option value="">- Select Customer -</option>
                                         <?php foreach($customers as $c){ ?>
                                             <?php $default_customer_id = $tickets->customer_id;
@@ -281,7 +281,7 @@ a.btn-primary.btn-md {
                                         <div class="col-md-12"> 
                                             <label for="job-tag"><b>Service Tag</b></label>
                                             <a class="nsm-button btn-small" style="float:right;" target="_new" href="<?= base_url('job/job_tags'); ?>">Manage Tag</a>
-                                            <select class="form-control" name="job_tag" id="job-tag">
+                                            <select class="form-select" name="job_tag" id="job-tag">
                                                 <?php foreach($tags as $t){ ?>
                                                     <option value="<?= $t->name; ?>" <?php if($t->name == $tickets->job_tag){ echo 'selected'; } ?>><?= $t->name; ?></option>
                                                 <?php } ?>
@@ -390,7 +390,7 @@ a.btn-primary.btn-md {
                                         <label for="ticket_status" class="block-label"><b>Ticket Status</b></label>
                                         <!-- <input type="text" class="form-control" name="ticket_status" id="ticket_status" 
                                             placeholder="Enter Ticket Status" value="<?php //echo $tickets->ticket_status; ?>"/> -->
-                                        <select id="ticket_status" name="ticket_status" class="form-control">
+                                        <select id="ticket_status" name="ticket_status" class="form-select">
                                             <option <?php if(isset($tickets)){ if($tickets->ticket_status == 'New'){echo "selected";} } ?> value="New">New</option>
                                             <option <?php if(isset($tickets)){ if($tickets->ticket_status == 'Draft'){echo "selected";} } ?> value="Draft">Draft</option>
                                             <option <?php if(isset($tickets)){ if($tickets->ticket_status == 'Scheduled'){echo "selected";} } ?> value="Scheduled">Scheduled</option>
@@ -404,7 +404,7 @@ a.btn-primary.btn-md {
                                     </div>
                                     <div class="col-md-3 form-group">
                                         <label for="panel_type" class="block-label"><b>Panel Type</b> <a href="javascript:void(0);" id="btn-quick-add-panel-type" class="btn-small nsm-button">Add New</a></label>                                            
-                                        <select name="panel_type" id="panel_type" class="form-control" data-value="<?= isset($tickets) ? $tickets->panel_type : "" ?>">
+                                        <select name="panel_type" id="panel_type" class="form-select" data-value="<?= isset($tickets) ? $tickets->panel_type : "" ?>">
                                             <?php foreach($settingPanelTypes as $panelType){ ?>
                                                 <option <?= isset($tickets) && $tickets->panel_type == $panelType->name ? 'selected="selected"' : ''; ?> value="<?= $panelType->name; ?>"><?= $panelType->name; ?></option>
                                             <?php } ?>
@@ -431,7 +431,7 @@ a.btn-primary.btn-md {
                                 <div class="row">
                                     <div class="col-md-3">
                                         <label for="service_type" class="block-label"><b>Service Type</b> <a href="#" class="nsm-button btn-small" id="btn-quick-add-service-type">Add New</a></label>
-                                        <select class="form-control" name="service_type" id="service_type">
+                                        <select class="form-select" name="service_type" id="service_type">
                                             <?php foreach($serviceType as $sType){ ?>
                                                 <option value="<?php echo $sType->service_name; ?>" <?php if($sType->service_name == $tickets->service_type){ echo 'selected'; } ?>><?php echo $sType->service_name; ?></option>
                                             <?php } ?>
@@ -439,7 +439,7 @@ a.btn-primary.btn-md {
                                     </div>
                                     <div class="col-md-3 form-group">
                                         <label for="warranty_type" class="block-label"><b>Warranty Type</b></label>
-                                        <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="form-control" >
+                                        <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="form-select" >
                                             <option <?php if(isset($tickets)){ if($tickets->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
                                             <option <?php if(isset($tickets)){ if($tickets->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>
                                             <option <?php if(isset($tickets)){ if($tickets->warranty_type == "1 Year"){ echo 'selected'; } } ?>  value="1 Year">1 Year</option>
@@ -451,7 +451,7 @@ a.btn-primary.btn-md {
                                     </div>
                                     <div class="col-md-3 form-group">
                                         <label for="plan_type" class="block-label"><b>Plan Type</b> <a href="javascript:void(0);" class="btn-small nsm-button" id="btn-quick-add-plan-type">Add New</a></label>
-                                        <select class="form-control" name="plan_type" id="plan_type">
+                                        <select class="form-select" name="plan_type" id="plan_type">
                                             <?php foreach($settingsPlanTypes as $planType){ ?>
                                                 <option <?= $tickets && $tickets->plan_type == $planType->name ? 'selected="selected"' : ''; ?> value="<?= $planType->name; ?>"><?= $planType->name; ?></option>
                                             <?php } ?>
@@ -460,7 +460,7 @@ a.btn-primary.btn-md {
                                     <div class="col-md-3 form-group">
                                         <label for="zip" class="block-label"><b>Created By</b></label>
                                         <!-- <input type="text" class="form-control" name="scheduled_time" id="employeeID" /> -->
-                                        <select class="form-control mb-3" name="employee_id" id="employee_id">
+                                        <select class="form-select mb-3" name="employee_id" id="employee_id">
                                             <option value="0">Select Name</option>
                                             <?php foreach($users_lists as $ulist){ ?>
                                                 <option <?php if($ulist->id == $tickets->employee_id){ echo "selected";} ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
@@ -506,7 +506,7 @@ a.btn-primary.btn-md {
                                                     </td>
                                                     <td>
                                                         <div class="dropdown-wrapper">
-                                                            <select name="item_type[]" id="item_typeid" class="form-control">
+                                                            <select name="item_type[]" id="item_typeid" class="form-select">
                                                                 <option <?php if(isset($itemsLists)){ if($itemL->item_type == "product"){ echo 'selected'; } } ?> value="product">Product</option>
                                                                 <option <?php if(isset($itemsLists)){ if($itemL->item_type == "material"){ echo 'selected'; } } ?> value="material">Material</option>
                                                                 <option <?php if(isset($itemsLists)){ if($itemL->item_type == "service"){ echo 'selected'; } } ?> value="service">Service</option>
@@ -552,7 +552,7 @@ a.btn-primary.btn-md {
                                                 <div class="row">
                                                     <div class="col-md-3 form-group mt-2">
                                                         <label for="service-ticket-monthly-monitoring-rate"><b>Change Monthly Monitoring Rate</b></label>
-                                                        <select style="display:inline-block;" class="form-control nsm-field form-select" name="monthly_monitoring_rate" id="service-ticket-monthly-monitoring-rate">
+                                                        <select style="display:inline-block;" class="form-select nsm-field form-select" name="monthly_monitoring_rate" id="service-ticket-monthly-monitoring-rate">
                                                             <option value="0.00">Select Plan Rate</option>
                                                             <?php foreach( $ratePlans as $rp ){ ?>
                                                                 <option value="<?= $rp->amount; ?>"><?= $rp->plan_name; ?></option>
@@ -589,7 +589,7 @@ a.btn-primary.btn-md {
                                             <div class="form-group col-md-3">
                                                 <div class="select-wrap">
                                                     <b>Payment Method</b>
-                                                    <select name="payment_method" id="payment_method" class="form-control">
+                                                    <select name="payment_method" id="payment_method" class="form-select">
                                                         <!-- <option value="">Choose method</option> -->
                                                         <option <?php if(isset($tickets)){ if($tickets->payment_method == "Cash"){ echo 'selected'; } } ?> value="Cash">Cash</option>
                                                         <option <?php if(isset($tickets)){ if($tickets->payment_method == "Check"){ echo 'selected'; } } ?> value="Check">Check</option>
@@ -614,7 +614,7 @@ a.btn-primary.btn-md {
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <b>Billing Date</b>
-                                                <select name="billing_date" id="" class="form-control">
+                                                <select name="billing_date" id="" class="form-select">
                                                     <option value="">0</option>
                                                     <?php for ($i=1; $i<=31; $i++ ) { ?>
                                                     <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
@@ -1269,6 +1269,8 @@ document.getElementById("payment_method").onchange = function() {
 <script>    
 $(document).ready(function(){
 
+    $('#employee_id').select2({});
+    
     $('#sel-customer_t').select2({     
         minimumInputLength: 0        
     });
