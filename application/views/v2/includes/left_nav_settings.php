@@ -800,7 +800,7 @@
                         </li>                                
                     </ul>
                 </li>
-                <li class="li-third-sub-menu">
+                <!-- <li class="li-third-sub-menu">
                     <a href="javascript:void(0);" class="third-sub-menu">
                         <i class='bx bxs-notification'></i> Notifications <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
@@ -831,7 +831,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
                 <li class="li-third-sub-menu">
                     <a href="javascript:void(0);" class="third-sub-menu">
                         <i class='bx bx-fw bx-calendar-event'></i> Event Settings <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
