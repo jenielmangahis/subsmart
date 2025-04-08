@@ -86,7 +86,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <input type="hidden" value="<?php echo $invoice->id; ?>" name="invoiceDataID">
                                 <label for="invoice_customer" class="bold">Customer</label>
                                 <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#new_customer" style="float:right;">Add New</a>
-                                <select name="customer_id" id="customer_id" class="form-control" required>
+                                <select name="customer_id" id="customer_id" class="form-select" required>
                                 <?php foreach ($customers as $customer):?>
                                 <option <?php if(isset($customers)){ if($customer->prof_id == $invoice->customer_id){echo "selected";} } ?>  value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
                                 <?php endforeach; ?>
@@ -98,7 +98,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>  
                             <div class="col-md-12 mt-4">
                                 <label class="bold" for="status">Status</label><br/>
-                                <select name="status" class="form-control">
+                                <select name="status" class="form-select">
                                     <option <?php if(isset($invoice)){ if($invoice->status == "Draft"){echo "selected";} } ?>  value="Draft">Draft</option>
                                     <option <?php if(isset($invoice)){ if($invoice->status == "Partially Paid"){echo "selected";} } ?> value="Partially Paid">Partially Paid</option>
                                     <option <?php if(isset($invoice)){ if($invoice->status == "Paid"){echo "selected";} } ?> value="Paid">Paid</option>
@@ -174,7 +174,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 Terms
                                                 <a class="link-modal-open nsm-button btn-small" id="btn-quick-add-payment-terms" href="javascript:void(0);" style="float:right;">Add New</a>
                                             </label>                                            
-                                            <select class="form-control" name="terms" id="payment-terms">                                                                                                
+                                            <select class="form-select" name="terms" id="payment-terms">                                                                                                
                                                 <?php foreach($terms as $term) : ?>
                                                 <option <?php if(isset($terms)){ if($term->id == $invoice->terms){echo "selected";} } ?> value="<?php echo $term->id; ?>"><?php echo $term->name; ?></option>
                                                 <?php endforeach; ?>
@@ -191,7 +191,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 Tags
                                                 <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" id="btn-quick-add-job-tags" style="float:right;">Add New</a>
                                             </label>     
-                                            <select class="form-control" name="tags" id="tags">
+                                            <select class="form-select" name="tags" id="tags">
                                                 <?php foreach($tags as $t){ ?>
                                                     <option value="<?= $t->name; ?>" <?php if($t->name == $invoice->tags){ echo 'selected'; } ?>><?= $t->name; ?></option>
                                                 <?php } ?>
@@ -199,21 +199,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                         <div class="col-md-3">
                                             <label for="estimate_date" class="bold block-label">Invoice Type <span style="color:red;">*</span></label>
-                                            <select name="invoice_type" class="form-control">
+                                            <select name="invoice_type" class="form-select">
                                                 <option value="Deposit" <?= $invoice->invoice_type == 'Deposit' ? 'selected="selected"' : ''; ?>>Deposit</option>
                                                 <option value="Partial Payment" <?= $invoice->invoice_type == 'Partial Payment' ? 'selected="selected"' : ''; ?>>Partial Payment</option> 
                                                 <option value="Final Payment" <?= $invoice->invoice_type == 'Final Payment' ? 'selected="selected"' : ''; ?>>Final Payment</option>
                                                 <option value="Total Due" <?= $invoice->invoice_type == 'Total Due' ? 'selected="selected"' : ''; ?>>Total Due</option>
                                             </select>
                                         </div>
+                                        <div class="col-md-3">
+                                            <label class="bold">Sales Representative</label>
+                                            <select class="form-select mb-3" name="user_id" id="user_id">                                            
+                                                <?php foreach($users_lists as $ulist){ ?>
+                                                    <option <?= $invoice->user_id == $ulist->id ? 'selected="selected"' : ''; ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>                                                                           
+                                    </div>
+                                    <div class="row mt-4">                                
                                         <div class="col-md-3 form-group">
                                             <label for="purchase_order" class="bold block-label">Purchase Order Number <span class="bx bx-fw bx-help-circle" id="popover-po"></span></label>
                                             <div class="input-group">
                                                 <input type="text" class="form-control" name="purchase_order" id="purchase_order" value="<?php echo $invoice->purchase_order; ?>">
                                             </div>
-                                        </div>                                        
-                                    </div>
-                                    <div class="row mt-4">                                
+                                        </div>      
                                         <div class="col-md-3">
                                             <label class="bold">Shipping date</label>
                                             <input type="date" class="form-control" name="shipping_date" value="<?php echo $invoice->shipping_date; ?>">
@@ -274,7 +282,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                             </td>
                                                             <td width="15%">
                                                                 <div class="hidden_mobile_view">
-                                                                    <select name="item_type[]" class="form-control">
+                                                                    <select name="item_type[]" class="form-select">
                                                                         <option value="product">Product</option>
                                                                         <option value="material">Material</option>
                                                                         <option value="service">Service</option>
@@ -322,7 +330,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <span class="help help-sm help-block"></span>
                                                 </div>
                                                 <div class="col-md-4 form-group">
-                                                    <select name="deposit_request_type" class="form-control">                                                        
+                                                    <select name="deposit_request_type" class="form-select">                                                        
                                                         <option value="%" <?= $invoice->deposit_request_type == '%' ? 'selected="selected"' : ''; ?>>Percentage %</option>
                                                         <option value="$" <?= $invoice->deposit_request_type == '$' ? 'selected="selected"' : ''; ?>>Deposit amount $</option>
                                                     </select>
@@ -463,7 +471,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <br>
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
-                                    <button class="nsm-button primary" id="btn-update-invoice">Update</button>                                    
+                                    <button class="nsm-button primary" id="btn-update-invoice">Save</button>                                    
                                     <a href="<?php echo url('invoice') ?>" class="btn">Cancel</a>
                                 </div>
                             </div>
@@ -839,6 +847,8 @@ $(document).ready(function(){
     $('#customer_id').select2({     
         minimumInputLength: 0        
     });
+
+    $('#user_id').select2({});
 
     $('#tags').select2({     
         minimumInputLength: 0        
