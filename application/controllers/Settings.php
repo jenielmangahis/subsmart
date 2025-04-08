@@ -76,26 +76,33 @@ class Settings extends MY_Controller {
 
     public function email_templates()
     {
-		$this->page_data['page']->title = 'Email Templates';
-        $this->page_data['page']->parent = 'Company';
+        if(!checkRoleCanAccessModule('settings-email-templates', 'write')){
+            show403Error();
+            return false;
+        }
 
         $company_id = logged('company_id');
-
-        $get_invoice_template = array(
+        $get_company_templates = array(
             'where' => array(
                 'company_id' => $company_id,
             )
         );
+        $emailTemplates = $this->general_model->get_all_with_keys($get_company_templates,'settings_email_template');
 
-        $emailTemplates = $this->general_model->get_all_with_keys($get_invoice_template,'settings_email_template');
         $this->page_data['invoice_templates'] = $emailTemplates;
         $this->page_data['page']->menu = 'email_templates';
-        // $this->load->view('settings/email_templates', $this->page_data);
+        $this->page_data['page']->title = 'Email Templates';
+        $this->page_data['page']->parent = 'Company';        
         $this->load->view('v2/pages/settings/email_templates/list', $this->page_data);
     }
 
     public function email_templates_edit($id=null)
     {
+        if(!checkRoleCanAccessModule('settings-email-templates', 'write')){
+            show403Error();
+            return false;
+        }
+        
         $input = $this->input->post();
         if ($input) {
             $input['user_id'] = logged('id');
@@ -104,22 +111,31 @@ class Settings extends MY_Controller {
                 redirect(base_url('customer/group'));
             }
         }
+
         $get_template_data = array(
             'where' => array(
                 'id' => $id,
             )
         );
         $this->page_data['template'] = $this->general_model->get_all_with_keys($get_template_data,'settings_email_template',FALSE);
+
         if(empty($this->page_data['template'])){
             redirect(base_url('settings/email_templates'));
         }
+
         $this->page_data['page']->menu = 'email_templates';
-        $this->load->view('v2/pages/settings/email_templates/edit', $this->page_data);
-        //$this->load->view('settings/email_templates_edit', $this->page_data);
+        $this->page_data['page']->title = 'Email Templates';
+        $this->page_data['page']->parent = 'Company';      
+        $this->load->view('v2/pages/settings/email_templates/edit', $this->page_data);        
     }
 
     public function email_templates_create()
     {
+        if(!checkRoleCanAccessModule('settings-email-templates', 'write')){
+            show403Error();
+            return false;
+        }
+
         $input = $this->input->post();
         if ($input) {
             unset($input['files']);
@@ -131,8 +147,9 @@ class Settings extends MY_Controller {
         }
 
         $this->page_data['page']->menu = 'email_templates';
+        $this->page_data['page']->title = 'Email Templates';
+        $this->page_data['page']->parent = 'Company';      
         $this->load->view('v2/pages/settings/email_templates/add', $this->page_data);
-        //$this->load->view('settings/email_template_create', $this->page_data);
     }
 
 
@@ -204,6 +221,11 @@ class Settings extends MY_Controller {
 
     public function sms_templates()
     {   
+        if(!checkRoleCanAccessModule('settings-sms-templates', 'read')){
+			show403Error();
+			return false;
+		}
+
 		$this->page_data['page']->title = 'SMS Templates';
         $this->page_data['page']->parent = 'Company';
 
@@ -897,19 +919,34 @@ class Settings extends MY_Controller {
 
     public function ajax_create_email_template()
     {
+        $this->load->model('EmailTemplate_model');
+
         $is_success = 0;
+        $msg = '';
 
         $post       = $this->input->post();
         $user_id    = logged('id');
         $company_id = logged('company_id');
-        $post['user_id']      = $user_id;
-        $post['company_id']   = $company_id;
-        $post['date_created'] = date("d-m-Y h:i A");
-        $this->general_model->add_($post,"settings_email_template");
 
-        $is_success = 1;
-        $json_data  = ['is_success' => $is_success];
+        $isExists = $this->EmailTemplate_model->getByTitle($post['title']);
+        if( $isExists && $isExists->company_id == $company_id ){
+            $msg = 'Email template ' . $post['title'] . ' already exists';
+        }else{
+            $post['details']      = 2; //Custom
+            $post['user_id']      = $user_id;
+            $post['company_id']   = $company_id;
+            $post['date_created'] = date("d-m-Y h:i A");
+            $this->general_model->add_($post,"settings_email_template");
 
+            //Activity Logs
+            $activity_name = 'Email Templates : Created email template '.$post['title']; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data  = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
     }
 
@@ -918,36 +955,44 @@ class Settings extends MY_Controller {
         $this->load->model('EmailTemplate_model');
 
         $is_success = 0;
+        $msg = 'Cannot find data';
 
-        $post       = $this->input->post();
+        $post = $this->input->post();
+        $company_id = logged('company_id');
 
-        $get_template_data = array(
-            'where' => array(
-                'id' => $post['etemplateid'],
-            )
-        );
-
-        $emailTemplate = $this->general_model->get_all_with_keys($get_template_data,'settings_email_template',FALSE);
-        if( $emailTemplate ){
-            $data = [
-                'type_id' => $post['type_id'],
-                'title' => $post['title'],
-                'subject' => $post['subject'],
-                'details' => $post['details'],
-                'email_body' => $post['email_body']
-            ];
-            
-            $this->EmailTemplate_model->update($emailTemplate->id, $data);
-
-            //Activity Logs
-            $activity_name = 'Email Template : Updated template ' . $post['title']; 
-            createActivityLog($activity_name);
-
-            $is_success = 1;
+        $isExists = $this->EmailTemplate_model->getByTitleAndCompanyId($post['title'], $company_id);
+        if( $isExists && $isExists->id != $post['etemplateid'] ){
+            $msg = 'Email template ' . $post['title'] . ' already exists';
+        }else{
+            $get_template_data = array(
+                'where' => array(
+                    'id' => $post['etemplateid'],
+                )
+            );
+    
+            $emailTemplate = $this->general_model->get_all_with_keys($get_template_data,'settings_email_template',FALSE);
+            if( $emailTemplate ){
+                $data = [
+                    'type_id' => $post['type_id'],
+                    'title' => $post['title'],
+                    'subject' => $post['subject'],
+                    'details' => $post['details'],
+                    'email_body' => $post['email_body']
+                ];
+                
+                $this->EmailTemplate_model->update($emailTemplate->id, $data);
+    
+                //Activity Logs
+                $activity_name = 'Email Templates : Updated template ' . $emailTemplate->title; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+            }
         }
         
-        $json_data  = ['is_success' => $is_success];
-
+        
+        $json_data  = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
     }
 
@@ -974,7 +1019,7 @@ class Settings extends MY_Controller {
             $this->EmailTemplate_model->delete($post['tid']);
 
             //Activity Logs
-            $activity_name = 'Email Template : Deleted template ' . $emailTemplate->title; 
+            $activity_name = 'Email Templates : Deleted template ' . $emailTemplate->title; 
             createActivityLog($activity_name);
 
             $is_success = 1;
@@ -1022,6 +1067,9 @@ class Settings extends MY_Controller {
     {
         $this->load->model('SmsTemplate_model');
 
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
         $post = $this->input->post();
         $company_id    =  logged('company_id');
 
@@ -1029,17 +1077,17 @@ class Settings extends MY_Controller {
 
         if( $smsTemplate ){
             $this->SmsTemplate_model->delete($post['smstid']);
+            
+            //Activity Logs
+            $activity_name = 'SMS Templates : Delete sms template '.$smsTemplate->title; 
+            createActivityLog($activity_name);
 
-            $this->session->set_flashdata('message', 'SMS template has been deleted successfully');
-            $this->session->set_flashdata('alert_class', 'alert-success');
-            $this->activity_model->add("Workstatus #$permission Deleted by User: #".logged('id'));
-        }else{
-            $this->session->set_flashdata('message', 'Cannot find data.');
-            $this->session->set_flashdata('alert_class', 'alert-danger');
+            $is_success = 1;
+            $msg = '';
         }
-        
-        
-        redirect('settings/sms_templates');
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 
     public function ajax_create_sms_template()
