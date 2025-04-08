@@ -28,6 +28,17 @@ class ItemCategory_model extends MY_Model
         return $query->row();
     }
 
+    public function getByNameAndCompanyId($name,$company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);        
+        $this->db->where('name', $name);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getByIdAndCompanyId($id, $company_id)
     {
 

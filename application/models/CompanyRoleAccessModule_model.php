@@ -125,6 +125,7 @@ class CompanyRoleAccessModule_model extends MY_Model
             'events-settings' => 'Events Settings',
             'jobs' => 'Jobs',
             'job-settings' => 'Job Settings', 
+            'job-birds-eye-view' => 'Birds Eye View',
             'service-tickets' => 'Service Tickets',
             'service-ticket-settings' => 'Service Ticket Settings',
             'estimates' => 'Estimates',
@@ -133,15 +134,19 @@ class CompanyRoleAccessModule_model extends MY_Model
             'work-order-settings' => 'Work Order Settings',
             'invoices' => 'Invoices',
             'invoice-settings' => 'Invoice Settings',
+            'settings-email-templates' => 'Settings Email Templates',
+            'settings-sms-templates' => 'Settings SMS Templates',
             'accounting-banking' => 'Accounting Banking',
             'accounting-link-bank' => 'Accounting Link Bank',
+            'accounting-credit-notes' => 'Accounting Credit Notes',
             'api-connectors' => 'API Connectors',
             'esign' => 'eSign',
             'my-library' => 'My Library',
             'before-after-photos' => 'Before and After Photos',
             'accounting-sales-payroll-taxes' => 'Accounting Sales and Payroll Taxes',        
             'accounting-1099-filings' => 'Accounting 1099 Filings',
-            'inventory' => 'Inventory'    
+            'inventory' => 'Inventory',
+            'affiliate-partners' => 'Affiliates / Partners'
         ];  
 
         return $modules;
