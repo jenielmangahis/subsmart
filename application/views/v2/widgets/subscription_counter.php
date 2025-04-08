@@ -28,7 +28,7 @@ $category = "subscription_revenue";
                     <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
                         <?php echo "$icon&nbsp;&nbsp;$title"; ?> <span class="badge bg-secondary position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
                     </a>
-                    <div class="dropdown float-end">
+                    <div class="dropdown float-end thumbnailDropdownMenu display_none">
                         <a href="javascript:void(0)" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-ellipsis-h text-muted"></i>
                         </a>
@@ -40,7 +40,7 @@ $category = "subscription_revenue";
                             <li class="px-3 showGraphButton">
                                 <div class="form-check" style="margin: -4px;">
                                     <input class="form-check-input showHideGraphCheckbox" type="checkbox">
-                                    <label class="form-check-label text-muted" style=" margin-top: 4px; margin-left: 4px;">Show Graph</label>
+                                    <label class="form-check-label text-muted graphCheckboxLabel">Show Graph</label>
                                 </div>
                             </li>
                         </ul>

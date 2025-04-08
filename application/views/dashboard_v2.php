@@ -373,123 +373,67 @@
             <i class='bx bx-fw bx-news'></i> Add Newsletter
         </button>
         <?php } ?>
-
-
-        <!-- <button id="toggleLayout" class="nsm-button" type="button"><i class='bx bxs-edit' ></i> Customize Layout</button> -->
-        <style>
-            #sortable .card {
-                min-height: 200px;
-            }
-
-            #sortable>.col {
-                min-width: 500px;
-            }
-
-            .cardContainers {
-                display: none;
-            }
-
-            .cardEditState {
-                outline: dashed 2px #198754 !important;
-            }
-
-            .dragHandle {
-                cursor: grab;
-                display: none;
-                letter-spacing: -.2em;
-                position: absolute;
-                bottom: 7px;
-                right: 10px;
-                color: gray;
-            }
-
-            .widthResizeHandle {
-                right: -10px;
-                top: 50%;
-                transform: translateY(-50%);
-                position: absolute;
-                padding: 15px 5px;
-                background: green;
-                cursor: ew-resize;
-                display: none;
-            }
-
-            .heightResizeHandle {
-                bottom: -10px;
-                left: 50%;
-                transform: translateX(-50%);
-                position: absolute;
-                padding: 5px 15px;
-                background: green;
-                cursor: ns-resize;
-                display: none;
-            }
-
-            /* .divThumbnailCard {
-                display: none;
-            } */
-        </style>
-        <!-- <button name="button" type="button" class="nsm-button primary" data-bs-toggle="modal"
-            data-bs-target="#manage_widgets_modal">
-
-            <i class='bx bx-fw bx-cog'></i>
-        </button> -->
         <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#dashboardThumbnailWidgetSettingsModal"><i class='bx bx-fw bx-cog'></i></button>
     </div>
 </div>
-<?php 
+<!-- <?php 
     $presetThumbnail = json_decode($thumbnailWidgetPreset[0]->thumbnail, true);
+    $isThumbnailPresent = (count($presetThumbnail) != 0) ? true : false;
     include viewPath('widgetThumbnailSettings');  
-?>
+?> -->
+
 <div class="row page-content g-0">
     <div class="col-12">
-        <!-- <a href="#" class="text-decoration-none">Customize Thumbnail</a> -->
-        <div class="row row-cols-md-3 sortable cardContainers1" id="nsm_widgets2">
-        <?php 
-            foreach ($presetThumbnail as $presetThumbnails) {
-                foreach ($thumbnailWidgetOption as $thumbnailWidgetOptions) {
-                    if ($thumbnailWidgetOptions->id == $presetThumbnails) {
-                        $thumbnailsWidgetCard = $thumbnailWidgetOptions;
-                        $option_cardClass = "$thumbnailWidgetOptions->category$thumbnailWidgetOptions->id$thumbnailWidgetOptions->type";
-                        $option_id = "$thumbnailWidgetOptions->id";
-                        echo "<div class='col-lg-4 mt-3 $option_cardClass' data-id='$option_id'>";
-                        include viewPath("v2/dashboard/thumbnail/$thumbnailWidgetOptions->category"); 
-                        echo "</div>";
-                        break; 
-                    }
-                }
-            }
-        ?>
+        <div class="thumbnailLayoutControl display_none">
+            <a href="javascript:void(0)" class="text-decoration-none customizeThumbnailLayout"><span>Customize Thumbnail Layout</span></a>
+            <a href="javascript:void(0)" class="text-decoration-none saveThumbnailLayout display_none"><span>Save Layout</span></a>&nbsp;&nbsp;
+            <a href="javascript:void(0)" class="text-decoration-none text-muted cancelThumbnailLayout display_none"><span>Cancel</span></a>
+        </div>
+        <!-- <div id="thumbnailMasonry" class="row sortable cardContainers1">
+            <?php 
+                if ($isThumbnailPresent) {
+                    foreach ($presetThumbnail as $presetThumbnails) {
+                        foreach ($thumbnailWidgetOption as $thumbnailWidgetOptions) {
+                            if ($thumbnailWidgetOptions->id == $presetThumbnails['id']) {
+                                $thumbnailsWidgetCard = $thumbnailWidgetOptions;
+                                $option_cardContainer = "$thumbnailWidgetOptions->category$thumbnailWidgetOptions->id$thumbnailWidgetOptions->type";
+                                $option_id = "$thumbnailWidgetOptions->id";
+                                
+                                $width = $presetThumbnails['width'];
+                                $colWidth = $presetThumbnails['colWidth'];
+                                $height = $presetThumbnails['height'];
+                                $graphState = $presetThumbnails['graphDisplayState'];
 
-                <?php
-                    foreach ($widgets as $wids) {
-                        if ($wids->w_main && checkRoleCanAccessWidget($wids->w_id)) {
-                            echo "
-                            <div class='col-lg-4 mt-3 cardLoader'>
-                                <div class='card shadow'>
-                                    <div class='card-body'>
-                                        <div class='row'>
-                                            <div class='col-md-12'>
-                                                <p class='card-text placeholder-glow'>
-                                                    <span class='placeholder col-3' style='color:#6a4a86'></span>
-                                                    <span class='placeholder col-11 mt-3'></span>
-                                                    <span class='placeholder col-12'></span>
-                                                    <span class='placeholder col-4'></span>
-                                                    <span class='placeholder placeholder-lg col-12 mt-3 mb-3'></span>
-                                                    <span class='placeholder col-12'></span>
-                                                    <span class='placeholder col-12'></span>
-                                                    <span class='placeholder col-12'></span>
-                                                    <span class='placeholder col-2 mt-3 float-end'></span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            ";
+                                echo "<div class='col-lg-3 mt-3 $option_cardContainer' data-id='$option_id'>";
+                                include viewPath("v2/dashboard/thumbnail/$thumbnailWidgetOptions->category"); 
+                                echo "</div>";
+                                break;
+                            }
                         }
                     }
-                ?>    
+                }
+            ?>
+        </div>
+        <script>
+            var thumbnailMasonry;
+            $('#thumbnailMasonry').ready(function () {
+                thumbnailMasonry = new Masonry(document.getElementById('thumbnailMasonry'), {percentPosition: true, horizontalOrder: true,});
+                $('.thumbnailLayoutControl').show();
+            });
+        </script> -->
+
+
+
+
+
+
+
+
+
+
+
+        
+        <div class="row row-cols-md-3" id="nsm_widgets2">
                 <?php
                     // usort($widgets, function ($a, $b) {
                     //     if ($a->w_sort == 1 && $b->w_sort != 1) {
@@ -541,94 +485,6 @@
                     }
                 ?> 
         </div>
-
-
-        <script>
-        $(document).ready(function() {
-            setTimeout(() => {
-                $('.cardLoader').remove();
-                $('.divThumbnailCard').fadeIn();
-            }, 1000);
-            let sortableList = $(".sortable");
-            let sortableInstance = null;
-            let isEditing = false;
-            let savedLayout = localStorage.getItem("cardLayout1");
-
-            if (savedLayout) {
-                let layout = JSON.parse(savedLayout);
-                layout.forEach(item => {
-                    let card = sortableList.children(`[data-id='${item.id}']`);
-                    sortableList.append(card);
-                    card.find('div.col').css({
-                        width: item.colWidth
-                    });
-                    card.css({
-                        width: item.colWidth
-                    });
-                    card.find('.card').css({
-                        height: item.height
-                    });
-                });
-            }
-
-            $("#toggleLayout").click(function() {
-                if (!isEditing) {
-                    $('.dragHandle, .widthResizeHandle, .heightResizeHandle').show();
-                    $(this).text("Save Layout").removeClass('nsm-button').addClass('nsm-button primary');
-                    $(".sortable > div > .card").addClass("cardEditState").removeClass('shadow');
-                    sortableInstance = new Sortable(sortableList[0], {
-                        animation: 150,
-                        ghostClass: 'sortable-ghost',
-                        handle: '.dragHandle',
-                    });
-                } else {
-                    $('.dragHandle, .widthResizeHandle, .heightResizeHandle').hide();
-                    $(this).text("Customize Layout").removeClass('nsm-button primary').addClass('nsm-button');
-                    $(".sortable > div > .card").removeClass("cardEditState").addClass('shadow');
-                    if (sortableInstance) sortableInstance.destroy();
-
-                    let newLayout = sortableList.children().map(function() {
-                        return {
-                            id: $(this).data("id"),
-                            width: $(this).find('.card').css("width"),
-                            colWidth: $(this).css("width"),
-                            height: $(this).find('.card').css("height")
-                        };
-                    }).get();
-                    localStorage.setItem("cardLayout1", JSON.stringify(newLayout));
-                }
-                isEditing = !isEditing;
-            });
-
-            // Resize functionality
-            $('.widthResizeHandle').on('mousedown', function(e) {
-                e.preventDefault();
-                let col = $(this).closest('div.col');
-                let startX = e.pageX;
-                let startWidth = col.outerWidth();
-                $('.cardEditState').css('height', 'unset');
-                $(document).on('mousemove', function(e) {
-                    let newWidth = startWidth + Math.round((e.pageX - startX) / 10) * 10;
-                    col.css('width', newWidth + 'px');
-                }).on('mouseup', function() {
-                    $(this).off('mousemove mouseup');
-                });
-            });
-
-            $('.heightResizeHandle').on('mousedown', function(e) {
-                e.preventDefault();
-                let card = $(this).closest('.card');
-                let startY = e.pageY;
-                let startHeight = card.outerHeight();
-                $(document).on('mousemove', function(e) {
-                    let newHeight = startHeight + Math.round((e.pageY - startY) / 10) * 10;
-                    card.css('height', newHeight + 'px');
-                }).on('mouseup', function() {
-                    $(this).off('mousemove mouseup');
-                });
-            });
-        });
-    </script>
 
         <div class="row g-3 grid-row-mb nsm-draggable-container-sortable-main mt-3" id="nsm_widgets">
             <?php

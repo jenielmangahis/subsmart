@@ -2895,7 +2895,7 @@ class Invoice extends MY_Controller
         $is_success = 1;
 		$msg  = 'Cannot find invoice data';
 
-        $is_automation_activated  = true;
+        $is_automation_activated  = false;
         $is_live_mail_credentials = false;
         
         $post = $this->input->post();
