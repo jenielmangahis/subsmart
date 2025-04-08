@@ -6,7 +6,7 @@
     $type = trim($thumbnailsWidgetCard->type);
     $category = trim($thumbnailsWidgetCard->category);
 ?>
-<style>.display_none { display: none; }</style>
+
 <div class='card shadow <?php echo "card_$category$id "; ?>'>
     <div class="card-body">
         <div class="row">
@@ -15,19 +15,19 @@
                     <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
                         <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <span class="badge bg-secondary position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
                     </a>
-                    <div class="dropdown float-end">
+                    <div class="dropdown float-end thumbnailDropdownMenu display_none">
                         <a href="javascript:void(0)" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-ellipsis-h text-muted"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="javascript:void(0)">Remove</a></li>
+                            <li><a class="dropdown-item removeDashboardCard" data-id='<?php echo $id; ?>' href="javascript:void(0)">Remove</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li class="px-3 showGraphButton">
                                 <div class="form-check" style="margin: -4px;">
-                                    <input class="form-check-input <?php echo "showHideGraphCheckbox_$id"; ?>" style="height: 17px; width: 17px; cursor: pointer;" type="checkbox">
-                                    <label class="form-check-label text-muted" style=" margin-top: 4px; margin-left: 4px;">Show Graph</label>
+                                    <input class="form-check-input <?php echo "showHideGraphCheckbox_$id"; ?> graphCheckbox" type="checkbox" <?php echo ($graphState == 'block') ? 'checked' : ''; ?>>
+                                    <label class="form-check-label text-muted graphCheckboxLabel">Show Graph</label>
                                 </div>
                             </li>
                         </ul>
@@ -66,7 +66,7 @@
                     <h2 class="<?php echo "textData2_$id"; ?>"></h2>
                 </div>
             </div>
-            <div class="col mt-2 <?php echo "graphDataContainer_$id"; ?> display_none">
+            <div class="col mt-2 <?php echo "graphDataContainer_$id"; ?> thumbnailGraphDisplay display_none">
                 <div id="<?php echo "apexThumbnailGraph_$id"; ?>"></div>
             </div>
             <div class="col mt-2 <?php echo "graphLoaderContainer_$id"; ?> display_none">

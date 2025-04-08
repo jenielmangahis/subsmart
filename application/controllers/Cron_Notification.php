@@ -527,7 +527,7 @@ class Cron_Notification extends MYF_Controller {
                     ];                                     
                 }
 
-                $this->InvoiceScheduledEmailNotification_model->updated($enotification->id, $data_email);
+                $this->InvoiceScheduledEmailNotification_model->update($enotification->id, $data_email);
             }
         }
 

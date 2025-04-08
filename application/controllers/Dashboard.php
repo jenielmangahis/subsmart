@@ -2064,164 +2064,153 @@ class Dashboard extends Widgets
 
         $this->load->view('v2/widgets/accounting/ajax_ledger_table_list', $this->page_data);
     }
-
-    public function showHideThumbnails()
-    {
+    
+    public function saveDashboardPreference() {
         $postData = $this->input->post();
-        $userId = logged('id');
-        $companyId = logged('company_id');
-
+        $user_id = logged('id');
+        $company_id = logged('company_id');
+    
         $column = ($postData['type'] === 'thumbnail') ? 'thumbnail' : 'widget';
-
-        $existingPref = $this->db->get_where('dashboard_preference', [
-            'user_id' => $userId, 
-            'company_id' => $companyId
-        ])->row_array();
-
+    
+        $existingPref = $this->db->get_where('dashboard_preference', ['user_id' => $user_id, 'company_id' => $company_id])->row_array();
+    
         $presetIDs = isset($postData['preset_data']) ? json_encode($postData['preset_data']) : '[]';
-
+    
         $data = [$column => $presetIDs];
-
+    
         if ($existingPref) {
-            $this->general->update_with_key_field($data, $companyId, 'dashboard_preference', 'company_id');
-        } else {
-            $insertData = [
-                'user_id'    => $userId,
-                'company_id' => $companyId,
-                $column      => $presetIDs
-            ];
+            $this->general->update_with_key_field($data, $company_id, 'dashboard_preference', 'company_id');
+        }
+        else {
+            $insertData = ['user_id' => $user_id, 'company_id' => $company_id, $column => $presetIDs];
             $this->db->insert('dashboard_preference', $insertData);
         }
+    }
+    
+    public function showHideThumbnails() {
+        $postData = $this->input->post();
+        $user_id = logged('id');
+        $company_id = logged('company_id');
+    
+        $this->saveDashboardPreference();
 
-        $thumbnailWidgetQuery = [
-            'select' => '*',
-            'table'  => 'dashboard_thumbnail_widget',
-            'where'  => ['id' => $postData['id'], 'category' => $postData['category']],
-        ];
-        $this->page_data['thumbnailsWidgetCard'] = $this->general->get_data_with_param($thumbnailWidgetQuery)[0];
-
+        $thumbnailWidgetQuery = ['select' => '*', 'table' => 'dashboard_thumbnail_widget', 'where' => ['id' => $postData['id'], 'category' => $postData['category']], ];
+        $this->page_data['thumbnailsWidgetCard'] = $this->general->get_data_with_param($thumbnailWidgetQuery) [0];
+    
         echo $this->load->view("v2/dashboard/thumbnail/{$postData['category']}", $this->page_data, true);
     }
 
-
-    
     public function thumbnailWidgetRequest() {
         $company_id = logged('company_id');
         // $postData = $this->input->post();
-
         // Temp only for testing
-        $postData = $this->input->post() ?: $this->input->get();
-
-        $data = $this->Dashboard_model->fetchThumbnailWidgetData(
-            $postData['category'], 
-            $postData['dateFrom'], 
-            $postData['dateTo'], 
-            $postData['filter2']
-        );
+        $postData = $this->input->post() ? : $this->input->get();
+    
+        $data = $this->Dashboard_model->fetchThumbnailWidgetData($postData['category'], $postData['dateFrom'], $postData['dateTo'], $postData['filter2']);
     
         switch ($postData['category']) {
             case 'subscription_revenue':
                 $graphData = ['GRAPH' => [], 'TOTAL_SUBSCRIPTION_REVENUE' => 0, 'TOTAL_SUBSCRIBERS' => count($data) ];
-
+    
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->mmr;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
                     $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
                 }
-
+    
                 $graphData['TOTAL_SUBSCRIPTION_REVENUE'] = number_format($accumulativeValue, 2, '.', '');
             break;
             case 'sales':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
-
+    
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
                     $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
                 }
-
+    
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
             break;
             case 'unpaid_invoices':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
-
+    
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
                     $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
                 }
-
+    
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
             break;
             case 'past_due_invoices':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
-
+    
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
                     $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
                 }
-
+    
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
             break;
             case 'open_invoices':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
-
+    
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
                     $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
                 }
-
+    
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
             break;
             case 'job':
-                $graphData = ['GRAPH' => [], 'TOTAL_JOBS' => 0, 'TOTAL_COUNT' => count($data)];
-
+                $graphData = ['GRAPH' => [], 'TOTAL_JOBS' => 0, 'TOTAL_COUNT' => count($data) ];
+    
                 $accumulativeValue = 0;
                 foreach ($data as $datas) {
                     $accumulativeValue += 1;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
                     $graphData['GRAPH'][$month] = $accumulativeValue;
                 }
-
+    
                 $graphData['TOTAL_JOBS'] = $accumulativeValue;
             break;
             case 'income':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
-
+    
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
                     $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
                 }
-
+    
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
             break;
             case 'collections':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
-
+    
                 $accumulativeValue = 0.0;
                 foreach ($data as $datas) {
                     $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
                     $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
                 }
-
+    
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
             break;
             case 'estimates':
                 $graphData = ['GRAPH' => [], 'TOTAL_COUNT' => count($data) ];
-
+    
                 $totalOpen = 0;
                 $totalExpired = 0;
-
+    
                 foreach ($data as $datas) {
                     if ($datas->expiry_date >= date('Y-m-d')) {
                         $totalOpen++;
@@ -2230,25 +2219,25 @@ class Dashboard extends Widgets
                         $totalExpired++;
                     }
                 }
-
+    
                 $graphData['TOTAL_OPEN'] = $totalOpen;
                 $graphData['TOTAL_EXPIRED'] = $totalExpired;
             break;
             case 'leads':
-                $graphData = ['GRAPH' => [], 'TOTAL_LEADS' => 0, 'TOTAL_COUNT' => count($data)];
-
+                $graphData = ['GRAPH' => [], 'TOTAL_LEADS' => 0, 'TOTAL_COUNT' => count($data) ];
+    
                 $accumulativeValue = 0;
                 foreach ($data as $datas) {
                     $accumulativeValue += 1;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
                     $graphData['GRAPH'][$month] = $accumulativeValue;
                 }
-
+    
                 $graphData['TOTAL_LEADS'] = $accumulativeValue;
             break;
             case 'contact':
-                $graphData = ['GRAPH' => [], 'TOTAL_COUNT' => count($data)];
-
+                $graphData = ['GRAPH' => [], 'TOTAL_COUNT' => count($data) ];
+    
                 $accumulativeValue = 0;
                 foreach ($data as $datas) {
                     $accumulativeValue += 1;
@@ -2257,11 +2246,8 @@ class Dashboard extends Widgets
                 }
             break;
             case 'active_customer_groups':
-                $graphData = [
-                    'GRAPH' => [],
-                    'TOTAL_COUNT' => count($data)
-                ];
-            
+                $graphData = ['GRAPH' => [], 'TOTAL_COUNT' => count($data) ];
+    
                 foreach ($data as $datas) {
                     $title = $datas->title;
                     if (!isset($graphData['GRAPH'][$title])) {
@@ -2277,7 +2263,7 @@ class Dashboard extends Widgets
                         if ($accountName === 'Payroll Expenses' || $accountName === 'Payrolls Expense') {
                             $accountName = 'Payroll Expense';
                         }
-                        
+    
                         if (!isset($graphData[$accountName])) {
                             $graphData[$accountName] = 0;
                         }
@@ -2295,44 +2281,8 @@ class Dashboard extends Widgets
             break;
         }
         echo json_encode($graphData);
-
-    }
-
     
-
-
-    // public function testCodeOnly()
-    // {
-    //     $data = [
-    //         (object) ['mmr' => 35.00, 'date' => '2025-03-02'],
-    //         (object) ['mmr' => 20.95, 'date' => '2025-03-01'],
-    //         (object) ['mmr' => 32.00, 'date' => '2025-02-03'],
-    //         (object) ['mmr' => 35.00, 'date' => '2025-02-01'],
-    //         (object) ['mmr' => 15.00, 'date' => '2025-01-01'],
-    //         (object) ['mmr' => 49.99, 'date' => '2024-12-12'],
-    //         (object) ['mmr' => 50.00, 'date' => '2024-11-12'],
-    //         (object) ['mmr' => 25.00, 'date' => '2024-10-12'],
-    //     ];
-
-    //     $graphData = [
-    //         'SERIES' => [],
-    //         'TOTAL_SUBSCRIPTION_REVENUE' => 0,
-    //         'TOTAL_SUBSCRIBERS' => count($data)
-    //     ];
-
-    //     foreach ($data as $datas) {
-    //         $month = strtoupper(date('M Y', strtotime($datas->date))); // Convert to "JAN 2025" format
-    //         $graphData['SERIES'][$month] = number_format(($graphData['SERIES'][$month] ?? 0) + $datas->mmr, 2, '.', '');
-    //     }
-
-    //     $graphData['TOTAL_SUBSCRIPTION_REVENUE'] = number_format(array_sum($graphData['SERIES']), 2, '.', '');
-
-    //     echo '<pre>';
-    //     print_r($graphData);
-    //     echo '</pre>';
-
-    // }
-
+    }
 
 }
 

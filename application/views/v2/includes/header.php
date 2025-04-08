@@ -93,6 +93,8 @@ if ($this->session->userdata('usertimezone') == null) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
+
 
     <style>
         .nsm-nav-items #clockOut i {
@@ -143,8 +145,6 @@ if ($this->session->userdata('usertimezone') == null) {
         var baseURL = '<?php echo base_url(); ?>';
     </script>
 </head>
-
-
 <body>
     <div class="nsm-container">
         <div class="nsm-sidebar-bg general-transition"></div>

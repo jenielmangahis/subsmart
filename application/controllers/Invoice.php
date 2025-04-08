@@ -1224,6 +1224,9 @@ class Invoice extends MY_Controller
         $is_success = 0;
         $msg = 'Cannot find data';
 
+        $this->load->model('Automation_model', 'automation_model');
+        $this->load->model('Automation_queue_model', 'automation_queue_model');
+
         $id   = $this->input->post('invoiceDataID');
         $cid  = logged('company_id');
         $post = $this->input->post();
@@ -1316,6 +1319,40 @@ class Invoice extends MY_Controller
 
         $is_success = 1;
         $msg = '';
+
+        /**
+         * After successfully update invoice to paid, check for automation and add send email queue - start
+         */
+        $is_automation_activated = true;
+        if($is_automation_activated && $this->input->post('status') == 'Paid') {
+            $auto_params = [
+                'entity' => 'invoice',
+                'trigger_action' => 'send_email',
+                'operation' => 'send',
+                'status' => 'active',
+                'trigger_event' => 'paid',
+                'trigger_time' => 0,
+                'target' => 'user'
+            ];
+            $automationData = $this->automation_model->getAutomationByParams($auto_params);  
+            if($automationData) {
+
+                $data_queue = [
+                    'automation_id' => $automationData->id,
+                    'target_id' => 0,
+                    'entity_type' => 'invoice',
+                    'status' => 'new',
+                    'entity_id' => $id,
+                    'trigger_time' => null,
+                    'is_triggered' => 0
+                ];
+        
+                $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue);                                            
+            }
+        }
+        /**
+         *  After successfully update invoice to paid, check for automation and add send email queue - end
+         */         
 
         $return = [
             'is_success' => $is_success,
@@ -2415,19 +2452,21 @@ class Invoice extends MY_Controller
         if( $invoice ){
             $customer = $this->AcsProfile_model->getByProfId($invoice->customer_id);
             if( $customer && $customer->email != '' ){
-                $bccUsers = $this->Users_model->getCompanyUsers($company_id, $post['bcc']); 
+                // $bccUsers = $this->Users_model->getCompanyUsers($company_id, $post['bcc']); 
 
-                $bcc_emails = array();
+                // $bcc_emails = array();
+                // $bcc = '';
+                // if( $bccUsers ){
+                //     foreach($bccUsers as $user){
+                //         $bcc_emails[] = $user->email;
+                //     }
+
+                //     if( !empty($bcc_emails) ){
+                //         $bcc = implode("," , $bcc_emails);
+                //     }
+                // }
+
                 $bcc = '';
-                if( $bccUsers ){
-                    foreach($bccUsers as $user){
-                        $bcc_emails[] = $user->email;
-                    }
-
-                    if( !empty($bcc_emails) ){
-                        $bcc = implode("," , $bcc_emails);
-                    }
-                }
 
                 $subject = 'Invoice Reminder : ' . $invoice->invoice_number; 
                 $data = [
@@ -2849,13 +2888,14 @@ class Invoice extends MY_Controller
         $this->load->model('Invoice_settings_model');
         $this->load->model('AcsProfile_model');  
         $this->load->model('Items_model');      
+
         $this->load->model('Automation_model', 'automation_model');
         $this->load->model('Automation_queue_model', 'automation_queue_model');
         
         $is_success = 1;
 		$msg  = 'Cannot find invoice data';
 
-        $is_automation_activated  = true;
+        $is_automation_activated  = false;
         $is_live_mail_credentials = false;
         
         $post = $this->input->post();
@@ -3127,78 +3167,7 @@ class Invoice extends MY_Controller
                         'is_triggered' => 0
                     ];
             
-                    $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue);                    
-
-                    /*$targetName    = "";
-                    $customerEmail = "";
-
-                    if($automationData->target == 'user') {
-                        $targetUser = $this->users_model->getCompanyUserById($automationData->target_id);
-                        if($targetUser) {
-                            $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
-                            $customerEmail = $targetUser->email;
-                        }
-                    }
-                    
-                    if($targetName != "" && $customerEmail != "") {
-
-                        if($is_live_mail_credentials) {
-                            
-                            $mail = email__getInstance();
-                            $mail->FromName = 'nSmarTrac';
-                            
-                            $mail->addAddress($customerEmail, $targetName);
-                            $mail->isHTML(true);
-                            $mail->Subject = $automationData->title;
-                            $mail->Body    = $automationData->email_subject;
-                    
-                            if (!$mail->Send()) {
-                                //echo 'Cannot send email <hr />';
-                                $automation_fail++;
-                            } else {
-                                //echo 'Your mail was successfully sent <hr />';
-                                $automation_success++;
-                            }
-                            
-                        } else {
-
-                            $host     = 'smtp.mailtrap.io';
-                            $port     = 2525;
-                            $username = 'd7c92e3b5e901d';
-                            $password = '203aafda110ab7';
-                            $from     = 'noreply@nsmartrac.com';
-                            $subject  = $automationData->email_subject;
-            
-                            $mail = new PHPMailer;
-                            $mail->isSMTP();
-                            $mail->Host = $host;
-                            $mail->SMTPAuth = true;
-                            $mail->Username = $username;
-                            $mail->Password = $password;
-                            $mail->SMTPSecure = 'tls';
-                            $mail->Port = $port;
-            
-                            // Sender and recipient settings
-                            $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
-                            $mail->addAddress($customerEmail, $targetName);
-            
-                            $mail->IsHTML(true);
-                            
-                            $mail->Subject = $subject;
-                            $mail->Body    = $automationData->email_body;
-            
-                            // Send the email
-                            if(!$mail->send()){
-                                //echo 'Message could not be sent. Mailer Error: ' . $mail->ErrorInfo . "<br />";
-                                $automation_fail++;
-                            } else {
-                                //echo 'Message has been sent' . "<br />";
-                                $automation_success++;
-                            }      
-                        }
-
-                    }*/
-                        
+                    $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue);                                            
                 }
             }
             /**
