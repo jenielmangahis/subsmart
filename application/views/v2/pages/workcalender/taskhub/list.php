@@ -226,7 +226,7 @@
                             </button> -->
                             <?php if( checkRoleCanAccessModule('taskhub', 'write') ){ ?>  
                             <button name="btn_add" type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('taskhub/create'); ?>'">
-                                <i class='bx bx-fw bx-plus'></i> Add Task
+                                <i class='bx bx-fw bx-plus'></i> Add New
                             </button>
                             <?php } ?>
                             <!-- <button name="btn_search" type="button" class="nsm-button">
