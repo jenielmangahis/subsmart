@@ -2802,11 +2802,13 @@ class Customer extends MY_Controller
                 $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_alarm');
                 $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_audit_import');
                 // $this->page_data['minitab'] = $this->uri->segment(5);
-                $this->page_data['task_info'] = $this->taskhub_model->getAllNotCompletedTasksByCustomerId($id);
+                //$this->page_data['task_info'] = $this->taskhub_model->getAllNotCompletedTasksByCustomerId($id);
+                $this->page_data['task_info'] = [];
                 $this->page_data['item_details'] = $this->customer_ad_model->get_customer_item_details($id);
                 // $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$id,"acs_tasks");
                 $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id', $user_id, 'ac_module_sort');
-                $this->page_data['tasks'] = $this->customer_ad_model->get_data_by_id('prof_id', $user_id, 'tasks');
+                //$this->page_data['tasks'] = $this->customer_ad_model->get_data_by_id('prof_id', $user_id, 'tasks');
+                $this->page_data['tasks'] = [];
                 $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
                 $this->page_data['cus_id'] = $id;
 
