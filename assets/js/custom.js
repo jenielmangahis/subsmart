@@ -2631,8 +2631,9 @@ function calculation(counter) {
       fixedTaxes = 0;
     }
   }
-  
-  sls = parseFloat(sls).toFixed(2);
+
+  fixedTaxes = parseFloat(fixedTaxes);  
+  sls        = parseFloat(sls).toFixed(2);
   $("#sales_taxs").val(sls);
   $("#total_tax_").html(sls);
   $("#total_tax_input").val(sls);
