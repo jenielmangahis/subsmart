@@ -3017,6 +3017,8 @@ class Invoice extends MY_Controller
             );
     
             $invoice_id = $this->invoice_model->createInvoice($new_data);
+            $hash_id    = $this->invoice_model->generateHashId($invoice_id);
+            $this->invoice_model->update($invoice_id, ['hash_id' => $hash_id]);
 
             //Create invoice payment record if partially paid
             if( $post['status'] == 'Partially Paid' || $post['status'] == 'Paid' ){
