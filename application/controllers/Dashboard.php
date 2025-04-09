@@ -2106,7 +2106,7 @@ class Dashboard extends Widgets
         // Temp only for testing
         $postData = $this->input->post() ? : $this->input->get();
     
-        $data = $this->Dashboard_model->fetchThumbnailWidgetData($postData['category'], $postData['dateFrom'], $postData['dateTo'], $postData['filter2']);
+        $data = $this->Dashboard_model->fetchThumbnailWidgetData($postData['category'], $postData['dateFrom'], $postData['dateTo'], $postData['filter3']);
     
         switch ($postData['category']) {
             case 'subscription_revenue':
@@ -2276,12 +2276,28 @@ class Dashboard extends Widgets
                     $graphData[$datas->status] = $datas->total;
                 }
             break;
+            case 'payment_types':
+                foreach ($data as $datas) {
+                    if ($datas->payment_method == "cc") {
+                        $graphData['Credit Card'] += $datas->total;
+                    } else if ($datas->payment_method == "paypal") {
+                        $graphData['PayPal'] += $datas->total;
+                    } else if ($datas->payment_method == "check") {
+                        $graphData['Check'] += $datas->total;
+                    } else if ($datas->payment_method == "cash") {
+                        $graphData['Cash'] += $datas->total;
+                    } else if ($datas->payment_method == "deposit") {
+                        $graphData['Direct Deposit'] += $datas->total;
+                    } else {
+                        $graphData['Other'] += $datas->total;
+                    }
+                }
+            break;
             default:
                 $graphData = ['error' => 'Invalid category'];
             break;
         }
         echo json_encode($graphData);
-    
     }
 
 }

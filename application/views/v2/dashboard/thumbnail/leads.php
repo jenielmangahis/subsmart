@@ -44,6 +44,10 @@
                 <div class="input-group">
                     <select class="form-select <?php echo "thumbnailFilter1_$id"; ?>">
                         <option value="all_time">All Time</option>
+                        <option value="this_year">This Year</option>
+                    </select>
+                    <select class="form-select <?php echo "thumbnailFilter2_$id"; ?>">
+                        <option value="recent">Recent</option>
                         <option value="last_7_days">Last 7 Days</option>
                         <option value="last_14_days">Last 14 Days</option>
                         <option value="last_30_days">Last 30 Days</option>
@@ -98,7 +102,7 @@
         return colors[Math.floor(Math.random() * colors.length)];
     }
 
-    function <?php echo "processData_$id"; ?>(category, dateFrom, dateTo, filter2) { 
+    function <?php echo "processData_$id"; ?>(category, dateFrom, dateTo, filter3) { 
         $.ajax({
             url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
             type: "POST",
@@ -106,7 +110,7 @@
                 category: category,
                 dateFrom: dateFrom,
                 dateTo: dateTo,
-                filter2: filter2,
+                filter3: filter3,
             },
             beforeSend: function() {
                 $('.<?php echo "textDataContainer_$id"; ?>').hide();
@@ -179,7 +183,7 @@
     // let filter2 = 'all_status';
     <?php echo "processData_$id"; ?>(
         '<?php echo $category; ?>', 
-        new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0], 
+        '1970-01-01', 
         new Date().toISOString().split('T')[0], 
         'all_status'
     );
@@ -198,15 +202,25 @@
     let <?php echo "graphChart_$id"; ?> = new ApexCharts(document.querySelector("#<?php echo "apexThumbnailGraph_$id"; ?>"), <?php echo "options_$id"; ?>);
     <?php echo "graphChart_$id"; ?>.render(); 
 
-    $(document).on('change', '.<?php echo "thumbnailFilter1_$id"; ?>, .<?php echo "thumbnailFilter2_$id"; ?>', function() {
+    $(document).on('change', '.<?php echo "thumbnailFilter1_$id"; ?>, .<?php echo "thumbnailFilter2_$id"; ?>, .<?php echo "thumbnailFilter3_$id"; ?>', function() {
         let category = '<?php echo $category; ?>';
         let filter1 = $('.<?php echo "thumbnailFilter1_$id"; ?> option:selected').val();
         let filter2 = $('.<?php echo "thumbnailFilter2_$id"; ?> option:selected').val();
+        let filter3 = $('.<?php echo "thumbnailFilter3_$id"; ?> option:selected').val();
         let dateFrom = new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0];
         let dateTo = new Date().toISOString().split('T')[0];
         let today = new Date();
 
         switch (filter1) {
+            case 'all_time':
+                dateFrom = '1970-01-01';
+                break;
+            case 'this_year':
+                dateFrom = new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0];
+                break;
+        }
+
+        switch (filter2) {
             case 'last_7_days':
                 dateTo = new Date(today.setDate(today.getDate() - 7)).toISOString().split('T')[0];
                 break;
@@ -219,13 +233,13 @@
             case 'last_60_days':
                 dateTo = new Date(today.setDate(today.getDate() - 60)).toISOString().split('T')[0];
                 break;
-            case 'all_time':
+            case 'recent':
             default:
                 dateTo = new Date().toISOString().split('T')[0];
                 break;
         }
 
-        <?php echo "processData_$id"; ?>(category, dateFrom, dateTo, filter2);
+        <?php echo "processData_$id"; ?>(category, dateFrom, dateTo, filter3);
     });
 
     $(document).on('change', '.<?php echo "showHideGraphCheckbox_$id"; ?>', function() {
