@@ -2,7 +2,7 @@
 
 class Dashboard_model extends MY_Model
 {
-    public function fetchThumbnailWidgetData($category, $dateFrom, $dateTo, $filter2 = null)
+    public function fetchThumbnailWidgetData($category, $dateFrom, $dateTo, $filter3 = null)
     {
         $company_id = logged('company_id');
         switch ($category) {
@@ -13,11 +13,11 @@ class Dashboard_model extends MY_Model
                 $this->db->where('acs_profile.company_id', $company_id);
                 $this->db->where("DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') >=", $dateFrom);
                 $this->db->where("DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') <=", $dateTo);
-                if ($filter2 == "all_status") {
+                if ($filter3 == "all_status") {
                     $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR', 'Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
                 }
                 else {
-                    $this->db->where('acs_profile.status', $filter2);
+                    $this->db->where('acs_profile.status', $filter3);
                 }
                 $this->db->order_by('acs_billing.bill_start_date', 'ASC');
                 $query = $this->db->get();
@@ -193,6 +193,16 @@ class Dashboard_model extends MY_Model
                 $this->db->join('accounting_check', 'accounting_check.id = accounting_vendor_transaction_categories.transaction_id', 'left');
                 $this->db->join('account', 'account.id = accounting_chart_of_accounts.account_id', 'left');
                 $this->db->group_by('accounting_chart_of_accounts.name');
+                $query = $this->db->get();
+                return $query->result();
+            break;
+            case 'payment_types':
+                $this->db->select('payment_records.id AS id,payment_records.company_id AS company_id,payment_records.payment_method AS payment_method,SUM(payment_records.invoice_amount) AS total,payment_records.payment_date AS date');
+                $this->db->from('payment_records');
+                $this->db->where('payment_records.company_id ', $company_id);
+                $this->db->where("DATE_FORMAT(payment_records.payment_date, '%Y-%m-%d') >=", $dateFrom);
+                $this->db->where("DATE_FORMAT(payment_records.payment_date, '%Y-%m-%d') <=", $dateTo);
+                $this->db->group_by('payment_records.payment_method');
                 $query = $this->db->get();
                 return $query->result();
             break;

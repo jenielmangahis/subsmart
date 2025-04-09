@@ -41,11 +41,11 @@
                         }
                     ?>
                     <tr>
-                        <td><?= $row; ?></td>
-                        <td class="fw-bold nsm-text-primary"><?= $key ?></td>
-                        <td class="nsm-text-primary"><?= $ld['description']; ?></td>
-                        <td style="text-align:right;">$<?= number_format($income, 2, '.', ','); ?></td>
-                        <td style="text-align:right;">$<?= number_format($payment, 2, '.', ','); ?></td>
+                        <td class="show"><?= $row; ?></td>
+                        <td class="fw-bold nsm-text-primary show"><?= $key ?></td>
+                        <td class="nsm-text-primary show"><?= $ld['description']; ?></td>
+                        <td class="show" style="text-align:right;">$<?= number_format($income, 2, '.', ','); ?></td>
+                        <td class="show" style="text-align:right;">$<?= number_format($payment, 2, '.', ','); ?></td>
                     </tr>
                     <?php if($ld['late_fee'] > 0) { ?>
                         <tr>
@@ -67,8 +67,8 @@
             </tr>
             <tr>
                 <?php $balance = $total_income - $total_payment; ?>
-                <td colspan="3" style="font-weight:bold;font-size:22px;">BALANCE</td>
-                <td colspan="2" style="font-weight:bold;font-size:22px;text-align:center;">$<?= number_format($balance, 2, '.', ','); ?></td>
+                <td class="show" colspan="3" style="font-weight:bold;font-size:22px;">BALANCE</td>
+                <td class="show" colspan="2" style="font-weight:bold;font-size:22px;text-align:center;">$<?= number_format($balance, 2, '.', ','); ?></td>
             </tr>
         </tbody>
     </table>

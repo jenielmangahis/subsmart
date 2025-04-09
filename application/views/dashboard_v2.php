@@ -374,13 +374,17 @@
         </button>
         <?php } ?>
         <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#dashboardThumbnailWidgetSettingsModal"><i class='bx bx-fw bx-cog'></i></button>
+        <!-- <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#manage_widgets_modal">TEST ONLY</button> -->
     </div>
 </div>
-<!-- <?php 
-    $presetThumbnail = json_decode($thumbnailWidgetPreset[0]->thumbnail, true);
+<?php 
+    $presetThumbnail = [];    
+    if( $thumbnailWidgetPreset ){
+        $presetThumbnail = json_decode($thumbnailWidgetPreset[0]->thumbnail, true);
+    }
     $isThumbnailPresent = (count($presetThumbnail) != 0) ? true : false;
     include viewPath('widgetThumbnailSettings');  
-?> -->
+?>
 
 <div class="row page-content g-0">
     <div class="col-12">
@@ -389,7 +393,7 @@
             <a href="javascript:void(0)" class="text-decoration-none saveThumbnailLayout display_none"><span>Save Layout</span></a>&nbsp;&nbsp;
             <a href="javascript:void(0)" class="text-decoration-none text-muted cancelThumbnailLayout display_none"><span>Cancel</span></a>
         </div>
-        <!-- <div id="thumbnailMasonry" class="row sortable cardContainers1">
+        <div id="thumbnailMasonry" class="row sortable cardContainers1">
             <?php 
                 if ($isThumbnailPresent) {
                     foreach ($presetThumbnail as $presetThumbnails) {
@@ -420,19 +424,7 @@
                 thumbnailMasonry = new Masonry(document.getElementById('thumbnailMasonry'), {percentPosition: true, horizontalOrder: true,});
                 $('.thumbnailLayoutControl').show();
             });
-        </script> -->
-
-
-
-
-
-
-
-
-
-
-
-        
+        </script>
         <div class="row row-cols-md-3" id="nsm_widgets2">
                 <?php
                     // usort($widgets, function ($a, $b) {

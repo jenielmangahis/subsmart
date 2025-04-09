@@ -95,7 +95,6 @@ if ($this->session->userdata('usertimezone') == null) {
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
 
-
     <style>
         .nsm-nav-items #clockOut i {
             color: "green";

@@ -57,7 +57,7 @@ $category = "subscription_revenue";
             <div class="col-md-12">
                 <div class="input-group mb-3">
                     <select class="form-select thumbnailFilter1">
-                        <option value="all_time">All Time</option>
+                        <option value="recent">Recent</option>
                         <option value="last_7_days">Last 7 Days</option>
                         <option value="last_14_days">Last 14 Days</option>
                         <option value="last_30_days">Last 30 Days</option>
@@ -133,7 +133,7 @@ $category = "subscription_revenue";
                 category: category,
                 dateFrom: dateFrom,
                 dateTo: dateTo,
-                filter2: filter2,
+                filter3: filter3,
             },
             beforeSend: function() {
                 $('.textDataContainer').hide();
@@ -230,6 +230,15 @@ $category = "subscription_revenue";
         const today = new Date();
 
         switch (filter1) {
+            case 'all_time':
+                dateFrom = '1970-01-01';
+                break;
+            case 'this_year':
+                dateFrom = new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0];
+                break;
+        }
+
+        switch (filter2) {
             case 'last_7_days':
                 dateTo = new Date(today.setDate(today.getDate() - 7)).toISOString().split('T')[0];
                 break;
@@ -242,7 +251,7 @@ $category = "subscription_revenue";
             case 'last_60_days':
                 dateTo = new Date(today.setDate(today.getDate() - 60)).toISOString().split('T')[0];
                 break;
-            case 'all_time':
+            case 'recent':
             default:
                 dateTo = new Date().toISOString().split('T')[0];
                 break;

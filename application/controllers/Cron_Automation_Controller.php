@@ -35,8 +35,8 @@ class Cron_Automation_Controller extends CI_Controller
         ];
 
         $automationsData = $this->automation_model->getAutomationsListByParams($auto_to_user_params);  
-
         if($automationsData) {
+
             foreach($automationsData as $automationData) {
 
                 $automation_id = $automationData->id;
@@ -67,6 +67,14 @@ class Cron_Automation_Controller extends CI_Controller
                                     $customerEmail = $targetUser->email;
                                 } 
                             }
+                        }elseif($automationData->target == 'sales_rep') {
+                            if($invoice && $invoice->user_id) {
+                                $targetUser = $this->users_model->getCompanyUserById($invoice->user_id);
+                                if($targetUser) {
+                                    $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                    $customerEmail = $targetUser->email;
+                                }                                   
+                            }
                         }
                         
                         if($targetName != "" && $customerEmail != "") {
@@ -78,8 +86,9 @@ class Cron_Automation_Controller extends CI_Controller
                                 
                                 $mail->addAddress($customerEmail, $targetName);
                                 $mail->isHTML(true);
-                                $mail->Subject = $automationData->title;
-                                $mail->Body    = $automationData->email_subject;
+                                $mail->Subject = $automationData->email_subject;
+                                $body_with_smart_tags = $this->replaceSmartTags($automationData->email_body, $invoice->id);
+                                $mail->Body    = $body_with_smart_tags;
                         
                                 if (!$mail->Send()) {
                                     $automation_fail++;
@@ -112,7 +121,8 @@ class Cron_Automation_Controller extends CI_Controller
                                 $mail->IsHTML(true);
                                 
                                 $mail->Subject = $subject;
-                                $mail->Body    = $automationData->email_body;
+                                $body_with_smart_tags = $this->replaceSmartTags($automationData->email_body, $invoice->id);
+                                $mail->Body    = $body_with_smart_tags;
                 
                                 // Send the email
                                 if(!$mail->send()){
@@ -198,6 +208,14 @@ class Cron_Automation_Controller extends CI_Controller
                                     $customerEmail = $targetUser->email;
                                 } 
                             }
+                        }elseif($automationData->target == 'sales_rep') {
+                            if($invoice && $invoice->user_id) {
+                                $targetUser = $this->users_model->getCompanyUserById($invoice->user_id);
+                                if($targetUser) {
+                                    $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                    $customerEmail = $targetUser->email;
+                                }                                   
+                            }
                         }
                         
                         if($targetName != "" && $customerEmail != "") {
@@ -209,8 +227,9 @@ class Cron_Automation_Controller extends CI_Controller
                                 
                                 $mail->addAddress($customerEmail, $targetName);
                                 $mail->isHTML(true);
-                                $mail->Subject = $automationData->title;
-                                $mail->Body    = $automationData->email_subject;
+                                $mail->Subject = $automationData->email_subject;
+                                $body_with_smart_tags = $this->replaceSmartTags($automationData->email_body, $invoice->id);
+                                $mail->Body    = $body_with_smart_tags;
                         
                                 if (!$mail->Send()) {
                                     $automation_fail++;
@@ -241,13 +260,13 @@ class Cron_Automation_Controller extends CI_Controller
                                 $mail->addAddress($customerEmail, $targetName);
                 
                                 $mail->IsHTML(true);
-                                
                                 $mail->Subject = $subject;
-                                $mail->Body    = $automationData->email_body;
-                
+                                $body_with_smart_tags = $this->replaceSmartTags($automationData->email_body, $invoice->id);
+                                $mail->Body    = $body_with_smart_tags;
+
                                 // Send the email
                                 if(!$mail->send()){
-                                    $automation_fail++; // echo 'mailer error: ' . $mail->ErrorInfo;
+                                    $automation_fail++;
                                 } else {
                                     $automation_success++;
 
@@ -277,8 +296,29 @@ class Cron_Automation_Controller extends CI_Controller
          echo 'automation success: ' . $automation_success;
     }
 
+    public function cronSetToDueInvoiceMailAutomation()
+    {
+
+    }
+
+    public function cronSetToPastDueInvoiceMailAutomation()
+    {
+
+    }
+
     public function cronSmsAutomation()
     {
         
     }
+
+    public function replaceSmartTags($message, $invoice_id = 0){
+        $invoice = $this->invoice_model->getinvoice($invoice_id); 
+        if($invoice) {
+            $message = str_replace("{due_date}", $invoice->due_date, $message);
+            $message = str_replace("{invoice_number}", $invoice->invoice_number, $message);
+            $message = str_replace("{total_due}", $invoice->total_due, $message);
+            $message = str_replace("{invoice_totals}", $invoice->invoice_totals, $message);
+        }
+        return $message;
+    }    
 }
