@@ -92,7 +92,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="col-md-12">
                                 <label for="invoice_customer" class="bold">Customer</label>
                                 <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#new_customer" style="float:right;">Add New</a>
-                                <select name="customer_id" id="customer_id" class="form-control" required>
+                                <select name="customer_id" id="customer_id" class="form-select" required>
+                                    <option value="">- Select Customer -</option>
                                     <?php foreach ($customers as $customer): ?>
                                         <option value="<?php echo $customer->prof_id ?>"><?php echo $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
                                     <?php endforeach; ?>
@@ -265,7 +266,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         <span class="help help-sm help-block"></span>
                                                     </div>
                                                     <div class="col-md-4 form-group">
-                                                        <select name="deposit_request_type" class="form-control">
+                                                        <select name="deposit_request_type" class="form-select">
                                                             <option value="%">Percentage %</option>
                                                             <option value="$">Deposit amount $</option>
                                                         </select>
@@ -381,7 +382,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <br>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-12 form-group">
-                                        <button class="nsm-button primary" id="btn-update-invoice">Save</button>
+                                        <button class="nsm-button primary" id="btn-save-invoice">Save</button>
                                         <a href="<?php echo url('invoice') ?>" class="btn">Cancel</a>
                                     </div>
                                 </div>
@@ -678,8 +679,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 var formData = new FormData(this);
 
                 var url = base_url + "invoice/_create_invoice";
-                _this.find("button[type=submit]").html("Saving");
-                _this.find("button[type=submit]").prop("disabled", true);
+                $('#btn-save-invoice').html("Saving");
+                $('#btn-save-invoice').prop("disabled", true);
 
                 $.ajax({
                     type: 'POST',
@@ -689,8 +690,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     success: function(result) {
                         if (result.is_success == 1) {
                             Swal.fire({
-                                //title: 'Save Successful!',
-                                text: "Invoice has been saved successfully.",
+                                title: 'Create Invoice',
+                                text: "Invoice has been created successfully.",
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
@@ -707,8 +708,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             });
                         }
 
-                        _this.find("button[type=submit]").html("Submit");
-                        _this.find("button[type=submit]").prop("disabled", false);
+                        $('#btn-save-invoice').html("Save");
+                        $('#btn-save-invoice').prop("disabled", false);
                     },
                     cache: false,
                     contentType: false,
