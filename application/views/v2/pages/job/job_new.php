@@ -1467,7 +1467,7 @@
                                                         Send an email after scheduling this job.
                                                       </label>
                                                     </div>
-                                                    <button type="submit" class="nsm-button primary"><i class='bx bx-fw bx-calendar-plus'></i>
+                                                    <button type="submit" class="nsm-button primary" id="btn-schedule-job"><i class='bx bx-fw bx-calendar-plus'></i>
                                                         <?= isset($jobs_data) ? 'Update' : 'Schedule'; ?>
                                                     </button>
                                                 <?php //endif; ?>
