@@ -67,11 +67,6 @@ if (isset($selected_participants)) {
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-card primary">
-                            <div class="nsm-card-header">
-                                <div class="nsm-card-title">
-                                    <span>Task Info</span>
-                                </div>
-                            </div>
                             <div class="nsm-card-content">
                                 <div class="row g-3">
                                     <div class="col-12 col-md-4">

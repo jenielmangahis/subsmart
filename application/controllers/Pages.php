@@ -810,7 +810,7 @@ class Pages extends MYF_Controller {
 		$cart_items = $this->session->userdata('cartItems');
 		$coupon     = $this->session->userdata('coupon');
 		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
-
+		
 		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
 		$this->page_data['booking_settings'] = $booking_settings;
 		$this->page_data['search_query'] = $search_query;

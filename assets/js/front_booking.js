@@ -22,7 +22,7 @@ $(document).ready(function() {
 
     $(".product__img__cnt").click(function(){
       var pid = $(this).attr('data-product-id');
-      var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading...</div>';
+      var msg = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>';
       var url = base_url + '/booking/_product_details';
 
       $("#modalQuickLook").modal('show');
@@ -60,16 +60,17 @@ $(document).ready(function() {
                 $('.btn-add-cart').html('Add to cart');
 
                 if( o.is_success == 1 ){
-                    Swal.fire({
-                        text: 'Your cart was successfully updated',
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonColor: '#32243d',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ok'
-                    }).then((result) => {                        
-                        location.reload();
-                    });                
+                    // Swal.fire({
+                    //     text: 'Your cart was successfully updated',
+                    //     icon: 'success',
+                    //     showCancelButton: false,
+                    //     confirmButtonColor: '#32243d',
+                    //     cancelButtonColor: '#d33',
+                    //     confirmButtonText: 'Ok'
+                    // }).then((result) => {                        
+                    //     location.reload();
+                    // });                
+                    location.reload();
                 }else{
                     Swal.fire({
                         icon: 'error',
@@ -138,16 +139,17 @@ $(document).ready(function() {
              success: function(o)
              {
                 $(this).html('<span class="fa fa-trash"></span>');
-                Swal.fire({
-                    text: 'Your cart was successfully updated',
-                    icon: 'success',
-                    showCancelButton: false,
-                    confirmButtonColor: '#32243d',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ok'
-                }).then((result) => {
-                    location.reload();
-                });
+                // Swal.fire({
+                //     text: 'Your cart was successfully updated',
+                //     icon: 'success',
+                //     showCancelButton: false,
+                //     confirmButtonColor: '#32243d',
+                //     cancelButtonColor: '#d33',
+                //     confirmButtonText: 'Ok'
+                // }).then((result) => {
+                //     location.reload();
+                // });
+                location.reload();
              }
           });
       }, 1000);

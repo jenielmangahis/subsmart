@@ -9,7 +9,7 @@
 	<?php if($page_title) { ?>
 			<title><?php echo $page_title; ?></title>
 	<?php } else { ?>
-		<title>Nsmart</title>
+		<title>nSmartrac : Online Booking</title>
 	<?php } ?>
 
     <meta content="<?php echo $page_title; ?>" name="description">
@@ -21,20 +21,9 @@
     <link href="<?php echo $url->assets ?>dashboard/css/style.css" rel="stylesheet" type="text/css">
     <link href="<?php echo $url->assets ?>dashboard/css/style-booking.css" rel="stylesheet" type="text/css">
     <link href="<?php echo $url->assets ?>css/jquery.timepicker.css" rel="stylesheet" type="text/css">
-     <!-- DataTables -->
-    <!-- <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
-    <link rel="stylesheet" href="<?php //echo $url->assets ?>plugins/switchery/switchery.min.css">
-    <link rel="stylesheet" href="<?php //echo $url->assets ?>plugins/select2/dist/css/select2.min.css" />
-    <link rel="stylesheet" href="<?php //echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" /> -->
-
-    <!-- <link rel="stylesheet" href="<?php //echo $url->assets ?>plugins/morris.js/morris.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css"> -->
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
-
-    <!-- <script src="//cdn.tiny.cloud/1/s4us18xf53yysd7r07a6wxqkmlmkl3byiw6c9wl6z42n0egg/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script> -->
-
     <!-- Booking CSS -->
     <link rel="stylesheet" href="<?php echo $url->assets?>css/addons/booking.css">
     <!-- <link rel="stylesheet" href="<?php //echo $url->assets?>bootstrap/css/bootstrap.min.css"> -->

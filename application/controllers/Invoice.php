@@ -340,6 +340,7 @@ class Invoice extends MY_Controller
         $this->page_data['page_title'] = "Invoice Add";
         $this->page_data['page']->title = 'Invoices & Payments';
         $this->page_data['page']->parent = 'Sales';
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['tags'] = $this->JobTags_model->getAllByCompanyId($company_id);        
         $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
         $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
@@ -1073,6 +1074,7 @@ class Invoice extends MY_Controller
             $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
             $this->page_data['disabled_industry_specific_fields'] = $disabled_industry_specific_fields;
             $this->page_data['industrySpecificFields'] = $industrySpecificFields;
+            $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($comp_id);
             $this->page_data['page_title'] = "Invoices & Payments";
             $this->page_data['page']->title = 'Invoices & Payments';
             $this->page_data['page']->parent = 'Sales';
@@ -1248,6 +1250,7 @@ class Invoice extends MY_Controller
         $update_data = array(
             'id'                        => $this->input->post('invoiceDataID'),//
             'customer_id'               => $this->input->post('customer_id'),//
+            'user_id'                   => $this->input->post('user_id'),
             'job_location'              => $this->input->post('jobs_location'), //
             'job_name'                  => $this->input->post('job_name'),//
             'invoice_type'              => $this->input->post('invoice_type'),//
@@ -1375,7 +1378,7 @@ class Invoice extends MY_Controller
         // }
 
         $this->page_data['invoice'] = $this->invoice_model->getById($id);
-
+        
         $this->load->view('invoice/edit', $this->page_data);
     }
 
@@ -2900,7 +2903,7 @@ class Invoice extends MY_Controller
         
         $post = $this->input->post();
         $cid  = logged('company_id');
-        $uid  = logged('id');
+        $uid  = $post['user_id'];
 
         if( $post['grand_total'] <= 0 ){
             $is_success = 0;

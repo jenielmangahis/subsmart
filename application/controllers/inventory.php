@@ -1281,15 +1281,42 @@ class Inventory extends MY_Controller
         echo json_encode($json_data);
     }
 
-    public function deleteMultipleItemGroup() {
-        postAllowed();
+    public function deleteMultipleItemGroup() 
+    {
+        $this->load->model('ItemCategory_model');
+            
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        $company_id = logged('company_id');
+
+        $total_deleted = 0;
         $ids = explode(",",$this->input->post('ids'));
-        
         foreach($ids as $id) {
-            $this->itemcategory_model->deleteByItemCategoryId($id);
+            $itemCategory = $this->ItemCategory_model->getById($id);
+            if( $itemCategory && $itemCategory->company_id == $company_id ){
+                $this->itemcategory_model->deleteByItemCategoryId($id);
+
+                //Activity Logs
+                $activity_name = 'Inventory : Deleted item category '.$itemCategory->name; 
+                createActivityLog($activity_name);
+
+                $total_deleted++;
+            }            
         }
 
-        echo json_encode(true);
+        if( $total_deleted > 0 ){
+            $is_success = 1;
+            $msg = '';
+        }else{
+            $msg = 'Nothing to delete';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
     }
 
     public function addNewLocation(){
@@ -1616,26 +1643,31 @@ class Inventory extends MY_Controller
         $post = $this->input->post();
         $cid  = logged('company_id');
 
-        $isExists = $this->ItemCategory_model->getByName($post['category_name']);
-        if( $isExists && $isExists->company_id  )
+        $isExists = $this->ItemCategory_model->getByNameAndCompanyId($post['category_name'], $cid);
+        if( $isExists && $isExists->id != $post['icid'] ){
+            $msg = 'Category name ' . $post['category_name'] . ' already exists';
+        }else{
+            $itemCategory = $this->ItemCategory_model->getById($post['icid']);
+            if( $itemCategory && $itemCategory->company_id == $cid ){
+                $data = [
+                    'name' => $post['category_name'],
+                    'description' => $post['category_description']
+                ];
+    
+                $this->ItemCategory_model->updateItemCategory($post['icid'],$data);
 
-        $itemCategory = $this->ItemCategory_model->getByIdAndCompanyId($post['icid'], $cid);
-        if( $itemCategory ){
-            
-            $data = [
-                'name' => $post['category_name'],
-                'description' => $post['category_description']
-            ];
-
-            $this->ItemCategory_model->updateItemCategory($post['icid'],$data);
-
-            $is_success = 1;
+                //Activity Logs
+                $activity_name = 'Inventory : Updated item category '.$itemCategory->name; 
+                createActivityLog($activity_name);
+    
+                $is_success = 1;
+                $msg = '';
+            }
         }
+        
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
-
         echo json_encode($json_data);
-
     }
 
     public function ajax_delete_vendor()
@@ -1665,20 +1697,24 @@ class Inventory extends MY_Controller
         $this->load->model('ItemCategory_model');
 
         $is_success = 0;
+        $msg = 'Cannot find data';
 
         $post = $this->input->post();
         $cid  = logged('company_id');
 
         $itemCategory = $this->ItemCategory_model->getByIdAndCompanyId($post['id'], $cid);
         if( $itemCategory ){
-            
             $this->ItemCategory_model->deleteByItemCategoryId($post['id']);
 
+            //Activity Logs
+            $activity_name = 'Inventory : Deleted item category '.$itemCategory->name; 
+            createActivityLog($activity_name);
+
             $is_success = 1;
+            $msg = '';
         }
 
-        $json_data = ['is_success' => $is_success];
-
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
     }
 

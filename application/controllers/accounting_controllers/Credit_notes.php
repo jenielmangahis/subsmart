@@ -112,6 +112,11 @@ class Credit_notes extends MY_Controller {
 
     public function index()
     {   
+        if(!checkRoleCanAccessModule('accounting-credit-notes', 'write')){
+            show403Error();
+            return false;
+        }
+
         add_footer_js(array(
             "assets/js/v2/accounting/sales/credit_notes/list.js",
             "assets/js/v2/printThis.js",
@@ -130,6 +135,18 @@ class Credit_notes extends MY_Controller {
             if( $customer ){
                 $customerName = $customer->first_name . ' ' . $customer->last_name;
                 $print_url = base_url() . 'accounting/customers/print-transaction/credit-memo/' . $creditMemo->id;
+
+                $action_edit = '';
+                $action_void = '';
+                $action_send = '';
+                $action_copy = '';
+                if(checkRoleCanAccessModule('accounting-credit-notes', 'write')){
+                    $action_edit = "<li><a class='dropdown-item view-edit-credit-memo' href='#'>Edit</a></li>";
+                    $action_void = "<li><a class='dropdown-item void-credit-memo' href='#'>Void</a></li>";
+                    $action_send = "<li><a class='dropdown-item send-credit-memo' href='#'>Send</a></li>";
+                    $action_copy = "<li><a class='dropdown-item copy-transaction' href='#'>Copy</a></li>";
+                }
+
                 $manageCol = "<div class='dropdown table-management'>
                     <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
@@ -137,19 +154,15 @@ class Credit_notes extends MY_Controller {
                     <ul class='dropdown-menu dropdown-menu-end'>
                         <li>
                             <a class='dropdown-item print-credit-memo' href='$print_url' target='_blank'>Print</a>
-                        </li>
-                        <li>
-                            <a class='dropdown-item send-credit-memo' href='#'>Send</a>
-                        </li>
-                        <li>
-                            <a class='dropdown-item view-edit-credit-memo' href='#'>View/Edit</a>
-                        </li>
-                        <li>
-                            <a class='dropdown-item copy-transaction' href='#'>Copy</a>
-                        </li>
-                        <li>
-                            <a class='dropdown-item void-credit-memo' href='#'>Void</a>
-                        </li>
+                        </li>".
+                        $action_send
+                        .
+                        $action_edit
+                        .
+                        $action_copy
+                        .
+                        $action_void
+                        ."
                     </ul>
                 </div>";
 

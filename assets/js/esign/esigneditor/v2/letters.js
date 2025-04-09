@@ -161,7 +161,7 @@ const columns = {
       </a>
       <ul class="dropdown-menu dropdown-menu-end">
         <li>
-          <a class="dropdown-item" href="#" data-action="${primary.value}">
+          <a class="dropdown-item action" href="#" data-action="${primary.value}">
             ${primary.text}
           </a>
         </li>

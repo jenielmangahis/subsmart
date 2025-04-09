@@ -1967,6 +1967,11 @@ class Job extends MY_Controller
 
     public function bird_eye_view()
     {
+        if(!checkRoleCanAccessModule('job-birds-eye-view', 'write')){
+            show403Error();
+            return false;
+        }
+
         $this->page_data['title'] = 'Bird Eye View';
         $this->load->view('job/job_settings/bird_eye_view', $this->page_data);
     }

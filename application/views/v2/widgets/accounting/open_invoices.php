@@ -66,54 +66,6 @@ endif;
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    $(document).ready(function() {
-        initializeInvoiceChart();
-    });
-
-    function initializeInvoiceChart() {
-        var invoices = $("#invoice_chart");
-        var totalDueInvoices = <?= count($dueInvoices) ?>;
-        var totalOverDueInvoices = <?= count($overdueInvoices) ?>;
-
-        new Chart(invoices, {
-            type: 'bar',
-            data: {
-                labels: ['DUE', 'OVERDUE'],
-                datasets: [{
-                    label: 'Open Invoices',
-                    data: [totalDueInvoices, totalOverDueInvoices],
-                    backgroundColor: [
-                        '#A5BFCC',
-                        '#FEA303',
-                    ],
-                    borderColor: [
-                        '#A5BFCC',
-                        '#FEA303',
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        display: false
-                    },
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                },
-                aspectRatio: 1.5
-            }
-        });
-    }
-</script>
-
-
 <?php
 if (!is_null($dynamic_load) && $dynamic_load == true):
     echo '</div>';

@@ -459,26 +459,23 @@
 </div>
 
 <!-- Modal Edit Info Inquiry --> 
-<div class="modal fade" id="modalViewEditInquiryInfo" tabindex="-1" role="dialog" aria-labelledby="modalViewEditInquiryInfoTitle" aria-hidden="true">
-   <?php echo form_open_multipart('booking/update_inquiry_details', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-   <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-pencil"></i> Edit Inquiry</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+<div class="modal fade nsm-modal fade" id="modalViewEditInquiryInfo" tabindex="-1" aria-labelledby="modalViewEditInquiryInfo_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <input type="hidden" id="customer-esign" value="" />
+        <div class="modal-content">
+            <?php echo form_open_multipart(null, ['id' =>'frm-update-inquiry', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+            <div class="modal-header">
+                <span class="modal-title content-title" id="edit_cc_label">Edit Inquiry</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body inquiry-edit-info-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-customer-send-esign-template">Send</button>
+            </div>
+            <?php echo form_close(); ?>
         </div>
-        <div class="modal-body">
-          <div class="inquiry-edit-info-body"></div>
-        </div>
-        <div class="modal-footer">          
-          <button type="submit" class="btn btn-primary">Update</button>
-          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-        </div>        
-      </div>
     </div>
-    <?php echo form_close(); ?>
 </div>
 
 <!-- Modal Delete Inquiry -->
@@ -506,18 +503,15 @@
 </div>
 
 <!-- Modal View Inquiry --> 
-<div class="modal fade" id="modalViewInquiry" tabindex="-1" role="dialog" aria-labelledby="modalViewEditInquiryInfoTitle" aria-hidden="true">
-   <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-eye"></i> View Inquiry</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+<div class="modal fade nsm-modal fade" id="modalViewInquiry" tabindex="-1" aria-labelledby="modalViewInquiry_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <input type="hidden" id="customer-esign" value="" />
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="edit_cc_label">View Inquiry</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body view-inquiry-body"></div>            
         </div>
-        <div class="modal-body">
-          <div class="view-inquiry-body"></div>
-        </div>
-      </div>
     </div>
 </div>

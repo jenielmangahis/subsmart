@@ -3329,8 +3329,12 @@ class Tickets extends MY_Controller
     {
         $this->load->model('TicketSettings_model');
 
-        $cid = logged('company_id');
+        if(!checkRoleCanAccessModule('service-ticket-settings', 'read')){
+            show403Error();
+            return false;
+        }
 
+        $cid = logged('company_id');
         $settings = $this->TicketSettings_model->getByCompanyId($cid);
 
         $this->page_data['settings'] = $settings;

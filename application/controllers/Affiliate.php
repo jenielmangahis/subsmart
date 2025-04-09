@@ -11,21 +11,19 @@ class Affiliate extends MY_Controller {
 		$this->page_data['page']->menu = 'affiliate';
         $this->load->model('Affiliate_model', 'affiliate_model');
 
-		add_css(array(
-            'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-            'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-        ));
-
         // JS to add only Job module
         add_footer_js(array(
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-            'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
             'assets/frontend/js/affiliate/main.js'
         ));
 	}
 
 	public function index()
 	{        
+        if(!checkRoleCanAccessModule('affiliate-partners', 'write')){
+            show403Error();
+            return false;
+        }
+
         $this->page_data['page']->title = 'Affiliate Partners';
         $this->page_data['page']->parent = 'Tools';
 

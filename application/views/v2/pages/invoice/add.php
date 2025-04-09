@@ -104,7 +104,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <div class="col-md-12 mt-4">
                                 <label class="bold" for="status">Status</label><br />
-                                <select name="status" class="form-control">
+                                <select name="status" class="form-select">
                                     <option value="Draft">Draft</option>
                                     <!-- <option value="Partially Paid">Partially Paid</option> -->
                                     <option value="Paid">Paid</option>
@@ -163,7 +163,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     Terms
                                                     <a class="link-modal-open nsm-button btn-small" id="btn-quick-add-payment-terms" href="javascript:void(0);" style="float:right;">Add New</a>
                                                 </label>
-                                                <select class="form-control" name="terms" id="payment-terms">
+                                                <select class="form-select" name="terms" id="payment-terms">
                                                     <?php foreach ($terms as $term) : ?>
                                                         <option value="<?php echo $term->id; ?>"><?php echo $term->name; ?></option>
                                                     <?php endforeach; ?>
@@ -176,7 +176,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     Tags
                                                     <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" id="btn-quick-add-job-tags" style="float:right;">Add New</a>
                                                 </label>
-                                                <select class="form-control" name="tags" id="tags">
+                                                <select class="form-select" name="tags" id="tags">
                                                     <?php foreach ($tags as $t) { ?>
                                                         <option value="<?= $t->name; ?>" <?php if ($t->name == $invoice->tags) {
                                                                                                 echo 'selected';
@@ -186,7 +186,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="estimate_date" class="bold block-label">Invoice Type <span style="color:red;">*</span></label>
-                                                <select name="invoice_type" class="form-control">
+                                                <select name="invoice_type" class="form-select">
                                                     <option value="Deposit">Deposit</option>
                                                     <option value="Partial Payment">Partial Payment</option>
                                                     <option value="Final Payment">Final Payment</option>
@@ -200,9 +200,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
-                                                <label class="bold">Shipping date</label>
-                                                <input type="date" class="form-control" name="shipping_date" value="">
-                                            </div>
+                                                <label class="bold">Sales Representative</label>
+                                                <select class="form-select mb-3" name="user_id" id="user_id">                                            
+                                                    <?php foreach($users_lists as $ulist){ ?>
+                                                        <option value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>                                            
                                         </div>
                                         <div class="row mt-4">
                                             <div class="col-md-3">
@@ -210,9 +214,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <input type="text" class="form-control" name="tracking_number" value="">
                                             </div>
                                             <div class="col-md-3">
+                                                <label class="bold">Shipping date</label>
+                                                <input type="date" class="form-control" name="shipping_date" value="">
+                                            </div>
+                                            <div class="col-md-3">
                                                 <label class="bold">Ship via</label>
                                                 <input type="text" class="form-control" name="ship_via" value="">
                                             </div>
+                                        </div>
+                                        <div class="row mt-4">
                                             <div class="col-md-3">
                                                 <label class="bold">Shipping to</label>
                                                 <textarea class="form-control" style="width:100%;" name="shipping_to_address" id="shipping_address"></textarea>
@@ -750,6 +760,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
             $('#customer_id').select2({
                 minimumInputLength: 0
             });
+
+            $('#user_id').select2({});
 
             $('#tags').select2({
                 minimumInputLength: 0

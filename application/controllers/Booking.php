@@ -911,7 +911,8 @@ class Booking extends MY_Controller {
         		'notification_app' => post('notify_push'),
         		'accept_blocked_time' => post('event_blocked_check'),
         		'accept_booking_overlap_calendar_event' => post('event_all_check'),
-        		'auto_schedule_work_order' => post('convert_lead_to_work_order'),
+        		//'auto_schedule_work_order' => post('convert_lead_to_work_order'),
+				'auto_schedule_work_order' => 0,
         		'google_analytics_tracking_id' => post('google_analytics_tracking_id'),
         		'website_url' => post('google_analytics_origin'),
         		'widget_status' => post('status')
@@ -921,19 +922,19 @@ class Booking extends MY_Controller {
 
         	$this->BookingScheduleAssignedUser_model->deleteAllBySettingId($bookingSetting->id);
 
-        	if( post('convert_lead_to_work_order') == 1 ){
-        		$assigned_batch_data = array();
-	        	foreach( $post['lead_work_order_employees'] as $key => $user_id ){
-	        		$assigned_batch_data[] = array(
-	        			'booking_setting_id' => $bookingSetting->id,
-	        			'user_id' => $user_id
-	        		);
-	        	}
+        	// if( post('convert_lead_to_work_order') == 1 ){
+        	// 	$assigned_batch_data = array();
+	        // 	foreach( $post['lead_work_order_employees'] as $key => $user_id ){
+	        // 		$assigned_batch_data[] = array(
+	        // 			'booking_setting_id' => $bookingSetting->id,
+	        // 			'user_id' => $user_id
+	        // 		);
+	        // 	}
 
-	        	if( !empty($assigned_batch_data) ){
-	        		$this->BookingScheduleAssignedUser_model->batchInsert($assigned_batch_data);
-	        	}
-        	}
+	        // 	if( !empty($assigned_batch_data) ){
+	        // 		$this->BookingScheduleAssignedUser_model->batchInsert($assigned_batch_data);
+	        // 	}
+        	// }
 
         }else{
         	$data = array(

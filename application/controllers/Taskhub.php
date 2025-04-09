@@ -6,7 +6,7 @@ class Taskhub extends MY_Controller {
 		parent::__construct();
 		$this->checkLogin();
 		$this->load->model(array('taskhub_model','taskhub_updates_model','taskhub_status_model','taskhub_participants_model', 'taskslists_model'));
-
+		$this->load->helper('functions');
 		$this->page_data['page']->menu = 'taskhub';
 		$this->page_data['module'] = 'calendar';		
 	}
@@ -89,7 +89,7 @@ class Taskhub extends MY_Controller {
 		$this->page_data['total_task_done']         = count($total_task_done);
 		$this->page_data['total_task_closed']       = count($total_task_closed);
 
-		$this->page_data['selected_customer_id'] = $selected_customer_id;
+		$this->page_data['selected_customer_id'] = $selected_customer_id;		
 		$this->load->view('v2/pages/workcalender/taskhub/list', $this->page_data);
 	}
 

@@ -29,13 +29,13 @@ async function initPlaceholders() {
 }
 
 function appendPlaceholderInList(placeholder) {
-  const $list = document.getElementById("placeholders");
-  const $item = window.helpers.htmlToElement(
-    `<li data-id=${placeholder.id}>
-      {${placeholder.code}} - <strong>${placeholder.description}</strong>
-    </li>`
-  );
-  $list.appendChild($item);
+  // const $list = document.getElementById("placeholders");
+  // const $item = window.helpers.htmlToElement(
+  //   `<li data-id=${placeholder.id}>
+  //     {${placeholder.code}} - <strong>${placeholder.description}</strong>
+  //   </li>`
+  // );
+  // $list.appendChild($item);
 
   if (placeholder._user_defined === true) {
     const $userList = document.getElementById("userplaceholders");
@@ -58,13 +58,21 @@ function appendPlaceholderInList(placeholder) {
 
     const $delete = $userItem.querySelector("[data-action=edit_placeholder]");
     $delete.addEventListener("click", async () => {
-      if (!confirm("Are you sure you want to delete placeholder?")) {
-        return;
-      }
 
-      const response = await window.api.deletePlaceholder(placeholder.id);
-      if (response.success !== false) {
-        $item.remove();
+      const response = await Swal.fire({
+          title: 'Delete Placeholder',
+          html: `Are you sure you want to delete selected placeholder?`,
+          icon: 'question',
+          confirmButtonText: 'Proceed',
+          showCancelButton: true,
+          cancelButtonText: "Cancel"
+      }).then((result) => {
+          if (result.value) {
+            return window.api.deletePlaceholder(placeholder.id);
+          }
+      });
+
+      if (response.success !== false) {        
         $userItem.remove();
 
         if (!$userList.querySelectorAll(".userPlaceholder__item").length) {
@@ -233,6 +241,7 @@ function initAddPlaceholderForm() {
     appendPlaceholderInList(data);
     resetInputs();
     $inputs[0].focus();
+    $("#letter").summernote('insertText', '{' + data.code + '}');
   });
 
   $($modal).on("show.bs.modal", () => {
