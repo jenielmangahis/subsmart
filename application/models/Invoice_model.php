@@ -140,12 +140,23 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllInvoices()
+    public function getAllInvoices($filter = array(), $limit = 0)
     {
         $this->db->select('*');        
         $this->db->from($this->table);
-        $this->db->order_by('invoices.id', 'ASC');
 
+        if( !empty($filter) ){
+            foreach($filter as $f){         
+                $this->db->where($f['field'], $f['value']);
+            }
+        }
+
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }
+
+        $this->db->order_by('invoices.id', 'ASC');
+        
         $query = $this->db->get();
         return $query->result();
     }

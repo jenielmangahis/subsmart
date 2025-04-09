@@ -2,13 +2,8 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-
-
 class Business_model extends MY_Model
 {
-
-
-
     public $table = 'business_profile';
     public function __construct()
     {
@@ -76,7 +71,6 @@ class Business_model extends MY_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
-
         $this->db->where('profile_slug', $slug);
 
         $query = $this->db->get()->row();
@@ -87,7 +81,6 @@ class Business_model extends MY_Model
     {
         $this->db->select('id,company_id,business_image');
         $this->db->from($this->table);
-
         $this->db->where('company_id', $company_id);
 
         $query = $this->db->get()->row();
@@ -98,11 +91,25 @@ class Business_model extends MY_Model
     {
         $this->db->select('id,company_id,business_cover_photo');
         $this->db->from($this->table);
-
         $this->db->where('company_id', $company_id);
 
         $query = $this->db->get()->row();
         return $query;
+    }
+
+    // Use this method for updating data using is_updated field.
+    public function getAllIsNotUpdated($limit = 0)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('is_updated', 0);
+
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }        
+
+        $query = $this->db->get();
+        return $query->result();
     }
 
     public function getAll()
@@ -247,7 +254,6 @@ class Business_model extends MY_Model
             return 'recorded';
         }
     }
-
 
 }
 
