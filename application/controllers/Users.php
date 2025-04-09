@@ -2417,10 +2417,10 @@ class Users extends MY_Controller
 				//$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
 			}
 
-			$slug = createSlug($post['profile_slug'], '-');
+			//$slug = createSlug($post['profile_slug'], '-');			
 
 			$data = [
-				'profile_slug' => $slug,
+				//'profile_slug' => $slug,
 				'business_tags' => $post['company_tags'],
 				'business_cover_photo' => $image_name
 			];
