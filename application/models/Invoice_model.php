@@ -1921,6 +1921,15 @@ class Invoice_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function generateHashId($invoice_id)
+    {
+        $CI = get_instance();
+        $CI->load->helper('hashids_helper');
+
+        $hash_id = hashids_encrypt($invoice_id, '', 15);
+        return $hash_id;
+    }
 }
 
 /* End of file Invoice_model.php */
