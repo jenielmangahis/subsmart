@@ -1336,7 +1336,6 @@ class Invoice extends MY_Controller
                 'trigger_event' => 'paid',
                 'trigger_time' => 0
             ];
-            //$automationData = $this->automation_model->getAutomationByParams($auto_params);  
             $automationsData = $this->automation_model->getAutomationsListByParams($auto_params); 
             if($automationsData) {
 
@@ -1354,6 +1353,32 @@ class Invoice extends MY_Controller
                 }
                                          
             }
+        }elseif($is_automation_activated && $this->input->post('status') == 'Due') {
+
+            $auto_params = [
+                'entity' => 'invoice',
+                'operation' => 'send',
+                'trigger_event' => 'due',
+                'trigger_action' => 'send_email',
+                'status' => 'active',
+                'trigger_time' => 0
+            ];
+            $automationsData = $this->automation_model->getAutomationsListByParams($auto_params); 
+            if($automationsData) {
+                foreach($automationsData as $automationData) {
+                    $data_queue = [
+                        'automation_id' => $automationData->id,
+                        'target_id' => 0,
+                        'entity_type' => 'invoice',
+                        'status' => 'new',
+                        'entity_id' => $id,
+                        'trigger_time' => null,
+                        'is_triggered' => 0
+                    ];
+                    $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue);   
+                }                    
+            }            
+
         }
         /**
          *  After successfully update invoice to paid, check for automation and add send email queue - end
