@@ -296,6 +296,16 @@ class Cron_Automation_Controller extends CI_Controller
          echo 'automation success: ' . $automation_success;
     }
 
+    public function cronSetToDueInvoiceMailAutomation()
+    {
+
+    }
+
+    public function cronSetToPastDueInvoiceMailAutomation()
+    {
+
+    }
+
     public function cronSmsAutomation()
     {
         
