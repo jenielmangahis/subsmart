@@ -3015,6 +3015,41 @@ class Debug extends MY_Controller {
         print_r($data);
         
     }
+
+    public function invoiceCreateHashId()
+    {
+        $this->load->model('Invoice_model');
+
+        $filter[] = ['field' => 'hash_id', 'value' => NULL];
+        $limit    = 200;
+        $invoices = $this->Invoice_model->getAllInvoices($filter, $limit);
+
+        $total_updated = 0;
+        foreach( $invoices as $i ){
+            $hash_id = $this->Invoice_model->generateHashId($i->id);
+            $this->Invoice_model->update($i->id, ['hash_id' => $hash_id]);
+            
+            $total_updated++;
+        }
+
+        echo 'Total updated : ' . $total_updated;
+    }
+
+    public function createCompanySlug()
+    {
+        $this->load->model('Business_model');
+
+        $companies = $this->Business_model->getAllIsNotUpdated(200);
+
+        $total_updated = 0;
+        foreach( $companies as $c ){
+            $slug = createSlug($c->business_name, '-');	
+            $this->Business_model->update($c->id, ['profile_slug' => $slug, 'is_updated' => 1]);
+            $total_updated++;
+        }
+
+        echo 'Total updated ' . $total_updated;
+    }
 }
 /* End of file Debug.php */
 

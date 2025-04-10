@@ -140,12 +140,23 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllInvoices()
+    public function getAllInvoices($filter = array(), $limit = 0)
     {
         $this->db->select('*');        
         $this->db->from($this->table);
-        $this->db->order_by('invoices.id', 'ASC');
 
+        if( !empty($filter) ){
+            foreach($filter as $f){         
+                $this->db->where($f['field'], $f['value']);
+            }
+        }
+
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }
+
+        $this->db->order_by('invoices.id', 'ASC');
+        
         $query = $this->db->get();
         return $query->result();
     }
@@ -713,6 +724,17 @@ class Invoice_model extends MY_Model
         $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
         $query = $this->db->get('');
         return $query->row();
+    }
+
+    public function get_all_company_payments($company_id)
+    {
+        $this->db->select('SUM(invoices.grand_total) AS total');
+        $this->db->from('invoices');
+        $this->db->where('invoices.status', "Paid");
+        $this->db->where('invoices.company_id', $company_id);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $query = $this->db->get();
+        return $query->result();
     }
 
     public function get_company_payments_graph($company_id)
@@ -1920,6 +1942,15 @@ class Invoice_model extends MY_Model
 
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function generateHashId($invoice_id)
+    {
+        $CI = get_instance();
+        $CI->load->helper('hashids_helper');
+
+        $hash_id = hashids_encrypt($invoice_id, '', 15);
+        return $hash_id;
     }
 }
 

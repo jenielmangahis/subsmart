@@ -32,17 +32,19 @@
                         </div> -->
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
+                        <?php if(checkRoleCanAccessModule('inventory', 'delete')){ ?>
                         <div class="dropdown d-inline-block">
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>
-                                    Batch Actions
+                                    With Selected
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">                                
                                 <li><a class="dropdown-item dropdown-delete-credit-notes disabled" href="javascript:void(0);" id="delete-credit-notes">Delete</a></li>
                             </ul>
                         </div>
+                        <?php } ?>
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
@@ -102,19 +104,21 @@
                                 </div>
                             </ul>
                         </div>
-
+                        <?php if(checkRoleCanAccessModule('accounting-credit-notes', 'write')){ ?>
                         <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" id="new-credit-note">
-                                <span>
-                                    <i class='bx bx-fw bx-list-plus'></i> New Credit Note
-                                </span>
+                            <button type="button" class="dropdown-toggle nsm-button primary" id="new-credit-note">
+                                <i class='bx bx-plus'></i> Add New
                             </button>
                         </div>
+                        <?php } ?>
 
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button export-transactions">
+                            <?php if(checkRoleCanAccessModule('accounting-credit-notes', 'write')){ ?>
+                            <button type="button" class="nsm-button export-transactions primary">
                                 <i class='bx bx-fw bx-export'></i> Export
                             </button>
+                            <?php } ?>
+
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_credit_notes_modal">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
@@ -163,26 +167,6 @@
                                     <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
                                     <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
                                 </div>
-                                <p class="m-0">Rows</p>
-                                <div class="dropdown d-inline-block">
-                                    <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                        <span>
-                                            10
-                                        </span> <i class='bx bx-fw bx-chevron-down'></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
-                                        <li><a class="dropdown-item active" href="javascript:void(0);" data-row="10">10</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-row="50">50</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-row="75">75</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-row="100">100</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-row="150">150</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);" data-row="300">300</a></li>
-                                    </ul>
-                                </div>
-                                <!-- <div class="form-check">
-                                    <input type="checkbox" id="compact" class="form-check-input">
-                                    <label for="compact" class="form-check-label">Compact</label>
-                                </div> -->
                             </ul>
                         </div>
                     </div>

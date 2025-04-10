@@ -25601,6 +25601,10 @@ class Accounting_modals extends MY_Controller
 
                 $this->Accounting_account_transactions_model->update($transac->id, $transacData);
                 //$this->Accounting_account_transactions_model->update_transaction($transac->id, $transacData);
+
+                //Activity Logs
+                $activity_name = 'Accounting Credit Notes : Void transaction id #' . $transac->id; 
+                createActivityLog($activity_name);
             }
 
             $this->void_customer_transaction_items('Credit Memo', $creditMemoId);

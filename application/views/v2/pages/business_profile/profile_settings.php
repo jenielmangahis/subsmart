@@ -24,27 +24,17 @@
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title">
                                     <span>Your Business Profile URL</span>
-                                    <label class="content-subtitle d-block">Customize your profile URL so it can be easy to remember.</label>
+                                    <label class="content-subtitle d-block">Your company profile URL Slug</label>
                                 </div>
                             </div>
                             <div class="nsm-card-content">
-                                <?php
-                                $slug = '';
-                                if (isset($profiledata) && $profiledata->profile_slug != '') {
-                                    $slug = $profiledata->profile_slug;
-                                }
-                                ?>
                                 <div class="row g-1">
                                     <div class="col-12">
-                                        <label class="content-subtitle fw-bold d-block mb-2">Slug</label>
-                                        <input type="text" name="profile_slug" class="nsm-field form-control" required value="<?= isset($profiledata) ? $profiledata->profile_slug : '';  ?>" />
-                                    </div>
-                                    <div class="col-12">
-                                        <?php if ($slug != '') { ?>
-                                            <a href="<?= base_url('business/' . $slug . "/" . $profiledata->company_id); ?>" class="nsm-link nsm-text-success" target="_new"><?= base_url('business/' . $slug); ?></a>
-                                        <?php } else { ?>
-                                            <a href="" class="nsm-link default"><?= base_url('business/'); ?></a>
-                                        <?php } ?>
+                                        <label class="content-subtitle fw-bold d-block mb-2">
+                                            Name
+                                            <a href="<?= base_url('business/' . $profiledata->profile_slug); ?>" class="nsm-button btn-small pull-right" target="_new" style="margin-bottom:3px;">View Profile</a>
+                                        </label>
+                                        <input type="text" class="nsm-field form-control" required value="<?= isset($profiledata) ? $profiledata->profile_slug : '';  ?>" disabled="" />
                                     </div>
                                 </div>
                             </div>

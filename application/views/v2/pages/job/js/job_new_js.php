@@ -203,7 +203,8 @@ $("#attachment-file").change(function() {
                 var form = $(this);
                 console.log(form);
                 const $overlay = document.getElementById('overlay');
- 
+                
+                var submit_button_text = $('#btn-schedule-job').text();
                 //var url = form.attr('action');
                 $.ajax({
                     type: "POST",
@@ -211,6 +212,9 @@ $("#attachment-file").change(function() {
                     data: form.serialize(), // serializes the form's elements.
                     dataType:'json',
                     success: function(data) {
+                        $('#btn-schedule-job').html(submit_button_text);
+                        $('#btn-schedule-job').prop("disabled", false);
+
                         if( data.is_success == 1 ){
                             if ($overlay) $overlay.style.display = "none";
                             sucess_add_job(data);
@@ -222,7 +226,9 @@ $("#attachment-file").change(function() {
                         }
                         
                     }, beforeSend: function() {
-                        if ($overlay) $overlay.style.display = "flex";
+                        $('#btn-schedule-job').html("Saving");
+                        $('#btn-schedule-job').prop("disabled", true);
+                        //if ($overlay) $overlay.style.display = "flex";
                     }
                 });
             }

@@ -2874,6 +2874,8 @@ class Tickets extends MY_Controller
         );
 
         $invoice_id = $this->Invoice_model->createInvoice($new_data);
+        $hash_id    = $this->Invoice_model->generateHashId($invoice_id);
+        $this->Invoice_model->update($invoice_id, ['hash_id' => $hash_id]);
 
         //Update invoice settings
         if( $invoiceSettings ){

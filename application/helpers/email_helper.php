@@ -57,7 +57,6 @@ function email__getInstance($config = [])
     return $mail;
 }
 
-
 function emai__isLocalhost(): bool
 {
     $whitelist = ['127.0.0.1', '::1'];

@@ -139,6 +139,8 @@ class CompanyRoleAccessModule_model extends MY_Model
             'accounting-banking' => 'Accounting Banking',
             'accounting-link-bank' => 'Accounting Link Bank',
             'accounting-credit-notes' => 'Accounting Credit Notes',
+            'accounting-estimates' => 'Accounting Estimates',
+            'accounting-all-sales' => 'Accounting Sales',
             'api-connectors' => 'API Connectors',
             'esign' => 'eSign',
             'my-library' => 'My Library',
@@ -148,6 +150,7 @@ class CompanyRoleAccessModule_model extends MY_Model
             'inventory' => 'Inventory',
             //'affiliate-partners' => 'Affiliates / Partners',
             'my-crm' => 'My CRM',
+            'monthly-membership' => 'Monthly Membership'
         ];  
 
         return $modules;

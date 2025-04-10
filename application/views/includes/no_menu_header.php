@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimal-ui">
-    <title>Home</title>
+    <title>nSmarTrac : Company Onboarding</title>
     <meta content="Admin Dashboard" name="description">
     <link rel="shortcut icon" href="#">
     <link rel="stylesheet" href="<?php echo $url->assets?>plugins/font-awesome/css/font-awesome.min.css">
