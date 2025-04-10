@@ -726,6 +726,17 @@ class Invoice_model extends MY_Model
         return $query->row();
     }
 
+    public function get_all_company_payments($company_id)
+    {
+        $this->db->select('SUM(invoices.grand_total) AS total');
+        $this->db->from('invoices');
+        $this->db->where('invoices.status', "Paid");
+        $this->db->where('invoices.company_id', $company_id);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function get_company_payments_graph($company_id)
     {
         $this->db->select('*');
