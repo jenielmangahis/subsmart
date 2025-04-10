@@ -116,6 +116,7 @@ class Credit_notes extends MY_Controller {
             show403Error();
             return false;
         }
+        
 
         add_footer_js(array(
             "assets/js/v2/accounting/sales/credit_notes/list.js",
