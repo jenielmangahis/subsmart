@@ -112,6 +112,11 @@ class All_sales extends MY_Controller
 
     public function index()
     {
+        if(!checkRoleCanAccessModule('accounting-all-sales', 'write')){
+            show403Error();
+            return false;
+        }
+
         add_footer_js([
             'assets/js/v2/accounting/sales/all_sales/list.js',
             'assets/js/v2/printThis.js',
@@ -187,7 +192,7 @@ class All_sales extends MY_Controller
         }, ARRAY_FILTER_USE_BOTH);
 
         $this->page_data['unbilledActs'] = $this->get_unbilled_incomes([], ['start-date' => date('m/d/Y')]);
-        $this->page_data['recent_payments'] = $this->invoice_model->get_company_payments(logged('company_id'));
+        $this->page_data['recent_payments'] = $this->invoice_model->get_all_company_payments(logged('company_id'));
         $this->page_data['open_invoices'] = $openInvoices;
         $this->page_data['overdue_invoices'] = $overdueInvoices;
         $this->page_data['open_estimates'] = $openEstimates;

@@ -9156,6 +9156,11 @@ class Accounting extends MY_Controller
     {   
         $this->load->model('EstimateItem_model');
 
+        if(!checkRoleCanAccessModule('accounting-estimates', 'write')){
+            show403Error();
+            return false;
+        }
+
         $is_allowed = $this->isAllowedModuleAccess(18);
         if (!$is_allowed) {
             $this->page_data['module'] = 'estimate';

@@ -725,7 +725,7 @@ class Estimate extends MY_Controller
         $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogPayload);
 
         //Activity Logs
-        $activity_name = 'Estimate : Deleted Estimate Number : ' . $estimateInfo->estimate_number; 
+        $activity_name = 'Estimate : Deleted estimate number : ' . $estimateInfo->estimate_number; 
         createActivityLog($activity_name);
 
         $delete = $this->estimate_model->deleteEstimate($data);
