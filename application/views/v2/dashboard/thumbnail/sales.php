@@ -91,22 +91,24 @@
 </div>
 <script>
     
-    function <?php echo "graphColorRandomizer_$id"; ?>() {
-        let colors = [
-            '#FF5733', 
-            '#C70039', 
-            '#900C3F', 
-            '#581845', 
-            '#8E44AD', 
-            '#2980B9', 
-            '#1F618D', 
-            '#16A085', 
-            '#27AE60', 
-            '#D35400', 
-            '#A04000', 
-            '#7D3C98',
+    function <?php echo "graphColorRandomizer_$id"; ?>(type = 'single', count = 20) {
+        const colorPalette = [
+            '#FF5733', '#C70039', '#900C3F', '#581845', 
+            '#8E44AD', '#2980B9', '#1F618D', '#16A085', 
+            '#27AE60', '#D35400', '#A04000', '#7D3C98',
+            '#008FFB', '#00E396', '#FEB019', '#FF4560', 
+            '#775DD0', '#3F51B5', '#4CAF50', '#FFC107'
         ];
-        return colors[Math.floor(Math.random() * colors.length)];
+        
+        if (type === 'single') {
+            return colorPalette[Math.floor(Math.random() * colorPalette.length)];
+        } 
+        else if (type === 'multiple') {
+            const shuffled = [...colorPalette].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, Math.min(count, colorPalette.length));
+        }
+        
+        return colorPalette[0];
     }
 
     function <?php echo "processData_$id"; ?>(category, dateFrom, dateTo, filter3) { 
@@ -168,7 +170,7 @@
                                 }
                             }
                         },
-                        colors: [<?php echo "graphColorRandomizer_$id"; ?>()]
+                        colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple')
                     });
 
                     <?php echo "graphChart_$id"; ?>.updateSeries([{
@@ -204,7 +206,7 @@
         stroke: { curve: 'smooth', width: 3 },
         grid: { show: true, xaxis: { lines: { show: true } } },
         markers: { size: 6, strokeWidth: 3, hover: { size: 10 } },
-        colors: [<?php echo "graphColorRandomizer_$id"; ?>()]
+        colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple')
     };
     
     let <?php echo "graphChart_$id"; ?> = new ApexCharts(document.querySelector("#<?php echo "apexThumbnailGraph_$id"; ?>"), <?php echo "options_$id"; ?>);
