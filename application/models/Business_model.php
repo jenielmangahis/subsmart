@@ -45,6 +45,16 @@ class Business_model extends MY_Model
         return $query;
     }
 
+    public function getByProfileSlug($profile_slug)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('profile_slug', $profile_slug);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     // Balance Sheet Summary 4
     public function update_clients_name($business_name, $clientId)
     {
