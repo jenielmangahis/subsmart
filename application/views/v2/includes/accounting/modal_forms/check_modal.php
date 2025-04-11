@@ -862,6 +862,11 @@
                                 </div>
                             </div>
                         </div>
+                        <script>
+                            $('.checkBankNameSelect').change(function(e) {
+                                e.stopPropagation();
+                            });
+                        </script>
                     </div>
                     <div class="container mt-3">
                         <div class="row virtualOtherDetails"></div>
