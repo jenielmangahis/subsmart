@@ -388,6 +388,9 @@ $route['accounting/show-pdf'] = 'accounting_modals/showPDF';
 $route['accounting/download-pdf'] = 'accounting_modals/downloadPDF';
 $route['accounting/send-email-form']['post'] = 'accounting_modals/showEmailModal';
 
+// Accounting Sales Tax
+$route['accounting/download_sales_tax_returns'] = 'accounting/download_sales_tax_returns';
+
 // Workers Comp
 $route['accounting/_create_workers_comp'] = 'accounting/ajax_create_workers_comp_quote';
 
