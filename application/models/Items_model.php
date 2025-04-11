@@ -941,6 +941,21 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
+    // For fixing items table data. is_updated field is needed
+    public function getAllItemsNotUpdated($limit = 0) 
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('is_updated', 0);
+
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }
+ 
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function recordItemTransaction($item_id, $quantity, $location_id, $transactionType, $name_transaction, $name_type)
     {
 
