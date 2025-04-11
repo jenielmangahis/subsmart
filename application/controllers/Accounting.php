@@ -17708,9 +17708,10 @@ class Accounting extends MY_Controller
     {
         $this->load->library('pdf');
         $this->load->model('Business_model');
-
+    
         $company_id = logged('company_id');
-        $company    = $this->Business_model->getByCompanyId();
+        $company    = $this->Business_model->getByCompanyId($company_id);
+
         $filename   = 'sales_and_return_tax';
         
         $this->page_data['company'] = $company;     
