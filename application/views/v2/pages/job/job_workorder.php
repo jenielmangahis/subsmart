@@ -1263,7 +1263,7 @@
                                         <td>
                                             <?php 
                                                 if( $item->retail > 0 ){
-                                                    echo number_format($item->retail, 2);
+                                                    echo $item->retail;
                                                 }else{
                                                     echo '0.00';
                                                 }                                                

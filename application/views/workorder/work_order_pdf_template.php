@@ -1,47 +1,45 @@
+<!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+<head>    
     <title>Work Order</title>
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css">
     <style>
-        /* body
-        {
-            margin:5px;
-        } */
-table {
- border-collapse: collapse;
-}
+    .item-container{
+        min-height:450px;
+        display:block;
+    }
+    .job-details-container{
+        height:100px;
+        display:block;
+    }
+    .others-container{
+        display:block;
+        margin-top:20%;
+    }
     </style>
 </head>
-<body style="font-family: Gill Sans, sans-serif; font-size: 11px;" >
-    <div style="box-shadow:0 2px 8px 0 rgba(0,0,0,.2);background-color: #fff;border: 1px solid #d4d7dc;-webkit-transition: all .3s ease;position:relative;top:20px;width: 95%;margin: 0 auto; padding:1%;">
-        <div style="text-align: justify; text-justify: inter-word;">
-            <!-- This workorder agreement (the "agreement") is made as of 05-07-2021, by and between ADI Smart Home, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service") -->
+<body style="font-family: Gill Sans, sans-serif; font-size: 11px;">
+    <div style="width: 95%;margin: 0 auto; padding:1%;">
+        <div style="margin-bottom:150px;">
             <?php echo $header; ?>
         </div>
-
-        <div class="" style="float: right;">
-            <h3 style="margin:0px;"><?php echo $workorder; ?></h3>
-            Job Tags: <?php echo $tags; ?> <br>
-            Date Issued: <?php echo $wDate = $date_issued; ?> <br>
-            Priority: <?php echo $priority; ?> <br>
-            Password: <?php echo strMask($password); ?> <br>
-            Security Number: <?php echo strMask($security_number); ?> <br>
-            Agent: <?php echo $first->FName.' '.$first->LName; ?> <br>
-            <!-- Contacts: <br> -->
-				
-        </div>
-
-
-        <div style="padding:20px 0px;">
-        <!-- <img src="<?php echo base_url('uploads/users/business_profile/'.$company_id.'/'.$business_logo); ?>" style="width:110px;height:80px;"> -->
-        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 300px;margin:0px;" />
-        </div>
-        <div style="clear:both;"></div>
-        <div style="margin-top:5%">
+        <br />
+        <table style="margin-top:10%;">
+            <tr>
+                <td><img src="<?= getCompanyBusinessProfileImage(); ?>"  style="width: 150px;margin-right:40%;" /></td>
+                <td style="width:250px;"><div style="width:300px;display:block;"></div></td>
+                <td>
+                <b><?php echo $workorder; ?></b> <br />
+                Job Tags: <?php echo $tags; ?> <br>
+                Date Issued: <?php echo $wDate = $date_issued; ?> <br>
+                Priority: <?php echo $priority; ?> <br>
+                Password: <?php echo strMask($password); ?> <br>
+                Security Number: <?php echo strMask($security_number); ?> <br>
+                Agent: <?php echo $first->FName.' '.$first->LName; ?> <br>
+                </td>                
+            </tr>
+        </table>        
+        <div style="margin-top:10%;">
             <table style="width:100%;">
                 <tr>
                     <td style="vertical-align:top;">
@@ -49,50 +47,19 @@ table {
                         <!-- <hr style="width: 50% !important; align:left !important;"> -->
                         <?php echo $company; ?><br>
                         <?php echo $business_address; ?><br>
-                        <?php echo $bussiness_email; ?><br>
-                        Phone: <?php echo $phone_number; ?><br><br>
+                        Email: <?php echo $bussiness_email != '' ? $bussiness_email : '---'; ?><br>
+                        Phone: <?php echo $phone_number != '' ? $phone_number : '---'; ?><br><br>
                     </td>
                     <td style="vertical-align:top;">
                         <b>TO:</b><br>
-                        <!-- <hr style="width: 50% !important; align:left !important;"> -->
                         <?php echo $acs_name; ?><br>
-                        <?php //if(!empty($job_location)){ echo $job_location.'<br>'; } ?>
-                        <?php //if(!empty($job_location2)){ echo $job_location2.'<br>'; } ?>
-                        <?= $job_location2 != '' ? $job_location2 : '---'; ?><br />
-                        Email: <?php echo $email; ?><br>
-                        Phone: <?php echo $phone; ?><br>
-                        Mobile: <?php echo $mobile; ?><br><br>
+                        Email: <?php echo $email != '' ? $email : '---'; ?><br>
+                        Phone: <?php echo $phone != '' ? $phone : '---'; ?><br>
+                        Mobile: <?php echo $mobile != '' ? $mobile : '---'; ?><br><br>
                     </td>
-
                 </tr>
-            </table>   
-            <div>
-                <b>ADDITIONAL:</b>
-                <hr><br>
-                <?php if($template == '1'){ ?>
-                <?php foreach($customs as $c){ ?>
-                    <?php if(empty($c->value)){ }else{ ?>
-                        <?php echo $c->name; ?>: <?php echo $c->value; ?><br>
-                    <?php } ?>
-                <?php } 
-                }
-                else{ ?>
-                <?php if(!empty($first_verification_name)){ echo $first_verification_name.'<br>'; } ?> 
-                <?php if(!empty($first_number)){ echo $first_number.'<br>'; } ?>
-                <?php if(!empty($first_relation)){ echo $first_relation.'<br><br>'; } ?>
-
-				<?php if(!empty($second_verification_name)){ echo $second_verification_name.'<br>'; } ?>
-                <?php if(!empty($second_number)){ echo $second_number.'<br>'; } ?>
-                <?php if(!empty($second_relation)){ echo $second_relation.'<br><br>'; } ?>
-
-				<?php if(!empty($third_verification_name)){ echo $third_verification_name.'<br>'; } ?>
-                <?php if(!empty($third_number)){ echo $third_number.'<br>'; } ?>
-                <?php if(!empty($third_relation)){ echo $third_relation.'<br><br>'; } ?>
-                <?php }
-                ?>
-                <br><br>
-            </div>
-            <div class="">
+            </table>               
+            <div class="job-details-container">
                 <b>JOB DETAILS:</b>
                 <hr>
                 <table class="table">
@@ -100,36 +67,23 @@ table {
                         <td style="width:100px;">Job Name :</td>
                         <td><?php echo $job_name; ?></td>
                         <td style="width:50px;">&nbsp;</td>
-                        <td style="width:100px;">Job Location :</td>
-                        <td>
-                            <?php 
-                                //echo $job_location . ' ' . $job_location2; 
-                                echo $job_location2; 
-                            ?>
-                        </td>                        
-                    </tr>
-                    <tr>
                         <td style="width:150px;">Job Description :</td>
                         <td><?php echo $job_description; ?></td>
-                        <td style="width:50px;">&nbsp;</td>
-                        <td style="width:150px;">Installation Date :</td>
-                        <td><?php echo date("m-d-Y", strtotime($installation_date)); ?></td>
                     </tr>
                     <tr>
+                        <td style="width:150px;">Installation Date :</td>
+                        <td><?php echo date("m-d-Y", strtotime($installation_date)); ?></td>
+                        <td style="width:50px;">&nbsp;</td>
                         <td style="width:150px;">Status :</td>
                         <td><?php echo $status; ?></td>
-                        <td style="width:50px;">&nbsp;</td>
-                        <td style="width:150px;"></td>
-                        <td></td>
                     </tr>
                 </table>
             </div>
             <br><br>
-            <div class="" style="margin-">
+            <div class="item-container">
                 <b>ITEMS:</b>
                 <hr>
-                <div align="center">
-                <table class="pure-table" style="border-collapse: collapse !important;align:center !important;width:100%;">
+                <table class="pure-table" style="width:100%;">
                     <tr style="background-color: #E9DDFF !important;">
                         <th>Items</th>
                         <th>Qty</th>
@@ -139,267 +93,80 @@ table {
                         <th>Total</th>
                     </tr>
                     <tbody>
-                        <tr>
-                            <td data-column=""> </td>
-                            <td data-column=""> </td>
-                            <td data-column=""> </td>
-                            <td data-column=""> </td>
-                            <td data-column=""> </td>
-                            <td data-column=""> </td>
-                        </tr>
                         <?php foreach($items as $item){ ?>
                         <tr>
-                            <td data-column=""><?php echo $item->title; ?></td>
-                            <td data-column=""><?php echo $item->qty; ?></td>
-                            <td data-column=""><?php echo number_format($item->costing,2); ?></td>
-                            <td data-column=""><?php //echo $item->discount; ?>0</td>
-                            <td data-column=""><?php echo number_format($item->tax,2); ?> </td>
-                            <td data-column=""><?php //echo $item->total; 
-                             $a = $item->qty * $item->costing; $b = $a + $item->tax; echo number_format($b,2); ?></td>
+                            <td><?php echo $item->title; ?></td>
+                            <td><?php echo $item->qty; ?></td>
+                            <td style="text-align:right;"><?php echo number_format($item->costing,2); ?></td>
+                            <td style="text-align:right;"><?php echo $item->discount > 0 ? number_format($item->discount,2) : '0.00'; ?></td>
+                            <td style="text-align:right;"><?php echo number_format($item->tax,2); ?> </td>
+                            <td style="text-align:right;"><?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo number_format($b,2); ?></td>
                         </tr>
                         <?php } ?>
                         <tr style="background-color: #F7F4FF !important;">
                             <td colspan="5" style="background-color: #F8F8F8 !important;">Subtotal</td>
-                            <!-- <td data-column=""></td>
-                            <td data-column=""></td>
-                            <td data-column=""></td>
-                            <td data-column=""></td> -->
-                            <td style="background-color: #F8F8F8 !important;"><?php echo number_format($subtotal,2); ?></td>
+                            <td style="background-color: #F8F8F8 !important;text-align:right;"><?php echo number_format($subtotal,2); ?></td>
                         </tr>
                         <tr style="background-color: #E9DDFF !important;">
                             <td colspan="5" style="background-color: #F8F8F8 !important;">Taxes</td>
-                            <!-- <td data-column=""></td>
-                            <td data-column=""></td>
-                            <td data-column=""></td> 
-                            <td data-column=""></td>-->
-                            <td style="background-color: #F8F8F8 !important;"><?php echo number_format($taxes,2); ?></td>
+                            <td style="background-color: #F8F8F8 !important;text-align:right;"><?php echo number_format($taxes,2); ?></td>
                         </tr>
-                        <?php if(empty($adjustment_value)){  } else{ ?>
+                        <?php if( $adjustment_value > 0 ){ ?>
                         <tr style="background-color: #F3F3F3 !important;">
                             <td style="background-color: #F8F8F8 !important;" colspan="5"><?php echo $adjustment_name; ?></td>
-                            <!-- <td data-column=""></td>
-                            <td data-column=""></td>
-                            <td data-column=""></td> -->
-                            <td style="background-color: #F8F8F8 !important;"><?php echo $adjustment_value; ?></td>
+                            <td style="background-color: #F8F8F8 !important;text-align:right;"><?php echo $adjustment_value; ?></td>
                         </tr>
                         <?php } ?>
-                        <?php if(empty($voucher_value)){  } else{ ?>
-                        <tr style="background-color: #F3F3F3 !important;">
-                            <td style="background-color: #F8F8F8 !important;" colspan="5">Voucher</td>
-                            <!-- <td data-column=""></td>
-                            <td data-column=""></td>
-                            <td data-column=""></td>
-                            <td data-column=""></td> -->
-                            <td style="background-color: #F8F8F8 !important;"><?php echo $voucher_value; ?></td>
-                        </tr>
-                        <?php } ?>
-                        <?php if(empty($otp_setup)){ } else{ ?>
+                        <?php if( $otp_setup > 0 ){ ?>
                         <tr style="background-color: #F3F3F3 !important;">
                             <td style="background-color: #F8F8F8 !important;" colspan="5">One Time Program and Setup</td>
-                            <!-- <td data-column=""></td>
-                            <td data-column=""></td> 
-                            <td data-column=""></td>
-                            <td data-column=""></td>-->
-                            <td style="background-color: #F8F8F8 !important;"><?php echo $otp_setup; ?></td>
+                            <td style="background-color: #F8F8F8 !important;text-align:right;"><?php echo $otp_setup; ?></td>
                         </tr>
                         <?php } ?>
-                        <?php if(empty($monthly_monitoring)){ } else{ ?>
+                        <?php if( $monthly_monitoring > 0 ){ ?>
                         <tr style="background-color: #F3F3F3 !important;">
                             <td style="background-color: #F8F8F8 !important;" colspan="5">Monthly Monitoring</td>
-                            <!-- <td data-column=""></td>
-                            <td data-column=""></td> 
-                            <td data-column=""></td>
-                            <td data-column=""></td>-->
-                            <td style="background-color: #F8F8F8 !important;"><?php echo $monthly_monitoring; ?></td>
+                            <td style="background-color: #F8F8F8 !important;text-align:right;"><?php echo $monthly_monitoring; ?></td>
                         </tr>
                         <?php } ?>
                         <tr style="background-color: #F3F3F3 !important;">
                             <td style="background-color: #F8F8F8 !important;" colspan="5"><b>Grand Total</b></td>
-                            <!-- <td data-column=""></td>
-                            <td data-column=""></td>
-                            <td data-column=""></td>
-                            <td data-column=""></td> -->
-                            <td style="background-color: #F8F8F8 !important;"><b><?php echo number_format($total,2); ?></b></td>
+                            <td style="background-color: #F8F8F8 !important;text-align:right;"><b><?php echo number_format($total,2); ?></b></td>
                         </tr>
                     </tbody>
-                </table></div></center>
-            </div>
-            <br><br>
-            <div style="text-align: justify; text-justify: inter-word;">
-                <b>TERMS & CONDITIONS:</b>
-                <hr>
-                <?php echo $terms_and_conditions; ?>
-            </div>
-            <br><br>
-            <div style="text-align: justify; text-justify: inter-word;">
-                <b>TERMS OF USE:</b>
-                <hr>
-                <?php echo $terms_of_use; ?><br><br>
-            </div>
-
-            <div style="text-align: justify; text-justify: inter-word;">
-                <b>JOB DESCRIPTION:</b>
-                <hr>
-                <?php echo $job_description; ?><br><br>
-            </div>
-
-            <div style="text-align: justify; text-justify: inter-word;">
-                <b>INSTRUCTIONS:</b>
-                <hr>
-                <?php echo $instructions; ?><br><br>
-            </div>
-
-            <!-- <div style="text-align: justify; text-justify: inter-word;">
-                <b>ACCEPTED PAYMENT METHODS:</b>
-                <hr>
-                <ul>
-                    <li>Cash</li>
-                    <li>Check</li>
-                    <li>Credit Card</li>
-                    <li>Debit Card</li>
-                    <li>ACH</li>
-                    <li>Venmo</li>
-                    <li>Paypal</li>
-                    <li>Square</li>
-                    <li>Invoicing</li>
-                    <li>Warranty Work</li>
-                    <li>Home Owner Financing</li>
-                    <li>Home Owner Financing</li>
-                    <li>e-Transfer</li>
-                    <li>Other Credit Card Professor</li>
-                    <li>Other Payment Type</li>
-                </ul> 
-                <br><br><br>
-            </div> -->
-
-            <div style="text-align: justify; text-justify: inter-word;">
-                <b>PAYMENT DETAILS:</b>
-                <hr>
-                    <?php echo 'Amount: '.$amount; ?><br>
-                    <?php 
-                    if($payment_method ==  'Cash'){
-                        echo 'Payment Method: Cash';
-                    }
-                    elseif($payment_method ==  'Check')
-                    {
-                        echo 'Payment Method: Check';
-                        echo '<br> Check Number: '. $check_number;
-                        echo '<br> Rounting Number: '. $routing_number;
-                        echo '<br> Account Number: '. $account_number;
-                    }
-                    elseif($payment_method ==  'Credit Card')
-                    {
-                        echo 'Payment Method: Credit Card';
-                        echo '<br> Credit Number: '. $credit_number;
-                        echo '<br> Credit Expiry: '. $credit_expiry;
-                        echo '<br> CVC: '. $credit_cvc;
-                    }
-                    elseif($payment_method ==  'Debit Card')
-                    {
-                        echo 'Payment Method: Debit Card';
-                        echo '<br> Credit Number: '. $credit_number;
-                        echo '<br> Credit Expiry: '. $credit_expiry;
-                        echo '<br> CVC: '. $credit_cvc;
-                    }
-                    elseif($payment_method ==  'ACH')
-                    {
-                        echo 'Payment Method: Debit Card';
-                        echo '<br> Routing Number: '. $routing_number;
-                        echo '<br> Account Number: '. $account_number;
-                    }
-                    elseif($payment_method ==  'Venmo')
-                    {
-                        echo 'Payment Method: Venmo';
-                        echo '<br> Account Credential: '. $account_credentials;
-                        echo '<br> Account Note: '. $account_note;
-                        echo '<br> Confirmation: '. $confirmation;
-                    }
-                    elseif($payment_method ==  'Paypal')
-                    {
-                        echo 'Payment Method: Paypal';
-                        echo '<br> Account Credential: '. $account_credentials;
-                        echo '<br> Account Note: '. $account_note;
-                        echo '<br> Confirmation: '. $confirmation;
-                    }
-                    elseif($payment_method ==  'Square')
-                    {
-                        echo 'Payment Method: Square';
-                        echo '<br> Account Credential: '. $account_credentials;
-                        echo '<br> Account Note: '. $account_note;
-                        echo '<br> Confirmation: '. $confirmation;
-                    }
-                    elseif($payment_method ==  'Invoicing')
-                    {
-                        echo 'Payment Method: Invoicing';
-                        echo '<br> Address: '. $mail_address.' '. $mail_locality.' '. $mail_state.' '. $mail_postcode.' '. $mail_cross_street;
-                    }
-                    elseif($payment_method ==  'Warranty Work')
-                    {
-                        echo 'Payment Method: Warranty Work';
-                        echo '<br> Account Credential: '. $account_credentials;
-                        echo '<br> Account Note: '. $account_note;
-                    }
-                    elseif($payment_method ==  'Home Owner Financing')
-                    {
-                        echo 'Payment Method: Home Owner Financing';
-                        echo '<br> Account Credential: '. $account_credentials;
-                        echo '<br> Account Note: '. $account_note;
-                    }
-                    elseif($payment_method ==  'e-Transfer')
-                    {
-                        echo 'Payment Method: e-Transfer';
-                        echo '<br> Account Credential: '. $account_credentials;
-                        echo '<br> Account Note: '. $account_note;
-                    }
-                    elseif($payment_method ==  'Other Credit Card Professor')
-                    {
-                        echo 'Payment Method: Other Credit Card Professor';
-                        echo '<br> Credit Number: '. $credit_number;
-                        echo '<br> Credit Expiry: '. $credit_expiry;
-                        echo '<br> CVC: '. $credit_cvc;
-                    }
-                    elseif($payment_method ==  'Other Payment Type')
-                    {
-                        echo 'Payment Method: Other Payment Type';
-                        echo '<br> Account Credential: '. $account_credentials;
-                        echo '<br> Account Note: '. $account_note;
-                    }
-                    ?>
-                <br><br><br>
-            </div>
-
-            <div>
-                <b>ASSIGNED TO:</b>
-                <hr><br>
-                <table>
-                    <tr>
-                        <td align="center">
-                            <?php if(empty($company_representative_signature)){ } else{ ?>
-                            <img src="<?php echo base_url('uploads/workorders/signatures/'.$company_id.'/'.$company_representative_signature); ?>" style="background-color:red;width:30%;height:80px;"><br>
-                            <?php echo $first->FName.' '.$first->LName; ?>
-                            <?php } ?>
-                        </td>
-                        
-                        <td align="center">
-                            <?php if(empty($primary_account_holder_signature)){ } else{ ?>
-                            <img src="<?php echo base_url('uploads/workorders/signatures/'.$company_id.'/'.$primary_account_holder_signature); ?>" style="width:30%;height:80px;"><br>
-                            <?php echo $primary_account_holder_name; ?>
-                            <?php } ?>
-                        </td>
-                        
-                        <td align="center">
-                            <?php if(empty($secondary_account_holder_signature)){ } else{ ?>
-                            <img src="<?php echo base_url('uploads/workorders/signatures/'.$company_id.'/'.$secondary_account_holder_signature); ?>" style="width:30%;height:80px;"><br>
-                            <?php echo $secondary_account_holder_name; ?>
-                            <?php } ?>
-                        </td>
-                    </tr>
                 </table>
-                <br>
             </div>
-
+            <br><br>
+            <div class="others-container">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <b>TERMS & CONDITIONS:</b>
+                                <hr>
+                                <?php echo strip_tags($terms_and_conditions); ?>
+                            </td>
+                        </tr>
+                        <tr><td><br></td></tr>
+                        <tr>
+                            <td>
+                                <b>TERMS OF USE:</b>
+                                <hr>
+                                <?php echo strip_tags($terms_of_use); ?>
+                            </td>
+                        </tr>
+                        <tr><td><br></td></tr>
+                        <tr>
+                            <td>
+                                <b>INSTRUCTIONS:</b>
+                                <hr>
+                                <?php echo strip_tags($instructions); ?><br><br>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-
     </div>
 </body>
 </html>

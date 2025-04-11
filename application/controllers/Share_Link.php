@@ -769,7 +769,7 @@ class Share_Link extends MY_P_Controller
         $first = $this->workorder_model->getuserfirst($workData->company_representative_name);
         $second = $this->workorder_model->getusersecond($workData->primary_account_holder_name);
         $third = $this->workorder_model->getuserthird($workData->secondary_account_holder_name);
-        $companyData = $this->Business_model->getById($workData->company_id);
+        $companyData = $this->Business_model->getByCompanyId($workData->company_id);
         $company_address = $companyData->street .' '.$companyData->city .', '.$companyData->state .' '.$companyData->postal_code;
 
         $lead = $this->workorder_model->getleadSource($workData->lead_source_id);       
@@ -780,7 +780,7 @@ class Share_Link extends MY_P_Controller
             'priority'                          => $workData->priority,
             'password'                          => $workData->password,
             'security_number'                   => $workData->security_number,
-            'source_name'                       => $lead->ls_name,
+            'source_name'                       => $lead ? $lead->ls_name : '---',
             'company_representative_signature'  => $workData->company_representative_signature,
             'company_representative_name'       => $workData->company_representative_name,
             'primary_account_holder_signature'  => $workData->primary_account_holder_signature,
@@ -873,13 +873,10 @@ class Share_Link extends MY_P_Controller
         // $this->load->library('pdf');
         // $this->pdf->load_view('workorder/send_email_acs_alarm', $data, $filename, "portrait");
         $this->load->library('pdf');
-
-
+        //$this->load->view('workorder/work_order_pdf_template', $data);
         $this->pdf->load_view('workorder/work_order_pdf_template', $data, $filename, "portrait");
-        // $this->pdf->render();
-
-
-        // $this->pdf->stream($filename);
+        //$this->pdf->render();
+        //$this->pdf->stream($filename);
     }
 
     public function work_order_pdf_agreement($wo_id)
