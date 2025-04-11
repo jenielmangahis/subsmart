@@ -430,7 +430,135 @@ class Cron_Automation_Controller extends CI_Controller
 
     public function cronSetToPastDueInvoiceMailAutomation()
     {
+        $automation_fail = 0; 
+        $automation_success = 0;
+        $is_live_mail_credentials = false;
 
+        /**
+         * Send email automation for set invoice paid - Start
+         */
+        $auto_to_user_params = [
+            'entity' => 'invoice',
+            'operation' => 'send',
+            'trigger_event' => 'past_due',
+            'trigger_action' => 'send_email',
+            'status' => 'active',
+            'trigger_time' => 0,
+        ];
+
+        $automationsData = $this->automation_model->getAutomationsListByParams($auto_to_user_params);  
+        if($automationsData) {
+            foreach($automationsData as $automationData) {
+
+                $automation_id = $automationData->id;
+                $filters['automation_id'] = $automation_id;
+                $filters['is_triggered']  = 0;
+                $filters['status']        = 'new';
+                $automation_queues = $this->automation_queue_model->getActiveAutomationQueue($filters);  
+
+                if($automation_queues) {
+                    foreach($automation_queues as $automation_queue) {
+                        $queue_entity_id = $automation_queue->entity_id;
+                        $invoice = $this->invoice_model->getinvoice($queue_entity_id); 
+                        
+                        $targetName    = "";
+                        $customerEmail = "";
+
+                        if($automationData->target == 'user') {
+                            $targetUser = $this->users_model->getCompanyUserById($automationData->target_id);
+                            if($targetUser) {
+                                $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                $customerEmail = $targetUser->email;
+                            }
+                        }elseif($automationData->target == 'client') {
+                            if($invoice && $invoice->customer_id) {
+                                $targetUser = $this->AcsProfile_model->getByProfId($invoice->customer_id);    
+                                if($targetUser) {
+                                    $targetName    = $targetUser->first_name . ' ' . $targetUser->last_name;
+                                    $customerEmail = $targetUser->email;
+                                } 
+                            }
+                        }elseif($automationData->target == 'sales_rep') {
+                            if($invoice && $invoice->user_id) {
+                                $targetUser = $this->users_model->getCompanyUserById($invoice->user_id);
+                                if($targetUser) {
+                                    $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                    $customerEmail = $targetUser->email;
+                                }                                   
+                            }
+                        }
+                        
+                        if($targetName != "" && $customerEmail != "") {
+
+                            if($is_live_mail_credentials) {
+                                
+                                $mail = email__getInstance();
+                                $mail->FromName = 'nSmarTrac';
+                                
+                                $mail->addAddress($customerEmail, $targetName);
+                                $mail->isHTML(true);
+                                $mail->Subject = $automationData->email_subject;
+                                $body_with_smart_tags = $this->replaceSmartTags($automationData->email_body, $invoice->id);
+                                $mail->Body    = $body_with_smart_tags;
+                        
+                                if (!$mail->Send()) {
+                                    $automation_fail++;
+                                } else {
+                                    $automation_success++;
+                                }
+                                
+                            } else {
+
+                                $host     = 'smtp.mailtrap.io';
+                                $port     = 2525;
+                                $username = 'd7c92e3b5e901d';
+                                $password = '203aafda110ab7';
+                                $from     = 'noreply@nsmartrac.com';
+                                $subject  = $automationData->email_subject;
+                
+                                $mail = new PHPMailer;
+                                $mail->isSMTP();
+                                $mail->Host = $host;
+                                $mail->SMTPAuth = true;
+                                $mail->Username = $username;
+                                $mail->Password = $password;
+                                $mail->SMTPSecure = 'tls';
+                                $mail->Port = $port;
+                
+                                // Sender and recipient settings
+                                $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+                                $mail->addAddress($customerEmail, $targetName);
+                
+                                $mail->IsHTML(true);
+                                $mail->Subject = $subject;
+                                $body_with_smart_tags = $this->replaceSmartTags($automationData->email_body, $invoice->id);
+                                $mail->Body    = $body_with_smart_tags;
+
+                                // Send the email
+                                if(!$mail->send()){
+                                    $automation_fail++;
+                                } else {
+                                    $automation_success++;
+
+                                    //Update queue status
+                                    $queue_data['is_triggered'] = 1;
+                                    $queue_data['status']       = 'sent';
+                                    $this->automation_queue_model->updateAutomationQueue($automation_queue->id, $queue_data);
+                                }
+
+                            }
+
+                        }
+        
+                    }
+                }
+
+            }
+        }
+
+        echo 'automation fail: ' . $automation_fail;
+        echo '<hr />';
+        echo 'automation success: ' . $automation_success; 
     }
 
     public function cronSmsAutomation()
