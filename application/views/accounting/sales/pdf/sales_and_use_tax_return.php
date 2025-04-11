@@ -5,8 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <html lang="en">
 
 <head>
-    <link rel="stylesheet"
-        href="<?=base_url('assets/dashboard/css/bootstrap.min.css')?>">
+    <!-- <link rel="stylesheet" href="<?=base_url('assets/dashboard/css/bootstrap.min.css')?>"> -->
     <style>
         html {
             margin: 15px;
@@ -149,33 +148,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <body>
 
-    <table style="width: 100%; margin-bottom: 10px; font-size: 10px;">
+    <table style="width: 100%; margin-bottom: 1px; font-size: 10px;">
         <tbody>
             <tr>
-                <td style="width:30%"><img src="<?= base_url('assets/frontend/images/sales_tax_return.jpg'); ?>"  style="max-width: 100px" /></td>
+                <td style="width:30%"><img src="<?= base_url('assets/frontend/images/sales_tax_return.jpg'); ?>"  style="max-width: 80px" /></td>
                 <td style="width:30%;text-align:center;"><h4>Sales and Use Tax Return</h4></td>
                 <td style="width:30%;text-align:right;">
-                    <p style="font-weight:bold;margin:0px;">DR-15</p>
-                    <p style="font-weight:bold;margin:0px;">R. 01/25</p>
-                    <p style="font-weight:bold;font-size:12px;margin:0px;">Rule 12A-1.097, F.A.C.</p>
-                    <p style="font-weight:bold;font-size:12px;margin:0px;">Page 1 of 2</p>
+                    <p style="font-weight:bold;margin:0px;">DR-15</p><br />
+                    <p style="font-weight:bold;margin:0px;">R. 01/25</p><br />
+                    <p style="font-weight:bold;font-size:12px;margin:0px;">Rule 12A-1.097, F.A.C.</p><br />
+                    <p style="font-weight:bold;font-size:12px;margin:0px;">Page 1 of 2</p><br />
                 </td>            
             </tr>
             
         </tbody>
     </table>
 
-    <table style="width: 100%; margin-bottom: 10px;">
+    <table style="width: 100%; margin-top: 1px; margin-bottom: 1px;">
         <tbody>
             <tr>
                 <td style="width:60%"></td>
                 <td style="width:40%">
-                    <p style="font-size:10px;margin-right:29px;float:right;">You may file and pay tax online or you may complete this return and pay tax by check or money order and mail to:</p>
-                    <div style="clear:both;"></div>
-                    <p style="font-size:12px;margin-right:29px;float:right;">Florida Department 2 of Revenue 5050 W Tennessee StreetTallahassee, FL 32399-0120</p>
-                    <div style="clear:both;"></div>
-                    <p style="font-size:10px;margin-right:29px;float:right;">Please read the Instructions for DR-15 Sales and Use Tax Returns (Form DR-15N), incorporated by reference in Rule 12A-1.097, F.A.C., before you complete this return. Instructions are posted at <b>floridarevenue.com/forms</b>. </p>
-                    <div style="clear:both;"></div>
+                    <p style="font-size:10px;margin-right:29px;float:right;">You may file and pay tax online or you may complete this return and pay tax by check or money order and mail to:</p><br /><br />
+                    <p style="font-size:12px;margin-right:29px;float:right;">Florida Department 2 of Revenue 5050 W Tennessee StreetTallahassee, FL 32399-0120</p><br /><br />
+                    <p style="font-size:10px;margin-right:29px;float:right;">Please read the Instructions for DR-15 Sales and Use Tax Returns (Form DR-15N), incorporated by reference in Rule 12A-1.097, F.A.C., before you complete this return. Instructions are posted at <b>floridarevenue.com/forms</b>. </p><br /><br />
+                    <br />
                 </td>
             </tr>
         </tbody>
@@ -224,7 +221,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <td style="border:rgb(255,109,106) 1px solid"></td>
             </tr>
             <tr>
-                <td>E. Food & Beverages Vending</td>
+                <td>E. Food & Bev. Vending</td>
                 <td style="border:rgb(255,109,106) 1px solid"></td>
                 <td style="border:rgb(255,109,106) 1px solid"></td>
                 <td style="border:rgb(255,109,106) 1px solid"></td>
@@ -246,7 +243,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </tr>
             <tr>
                 <td rowspan="4" style="border-right:rgb(255,109,106) 1px solid; color:rgb(255,109,106);text-align:right;">
-                    <p>Name : <?= $company->business_name; ?><br />Address : <?= $company->street; ?><br />City/St <?= $company->city . '/' . $company->state; ?><br />Zip</p>
+                    <p>Name : <?= isset($company->business_name) ? $company->business_name : ''; ?><br />Address : <?= isset($company->street) ? $company->street : ''; ?><br />City/St <?= isset($company->city) ? $company->city : '' ?> / <?= isset($company->state) ? $company->state : ''; ?><br />Zip</p><br />
                 </td>
                 <td style=""></td>
                 <td style=""></td>
@@ -308,7 +305,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </tr>
             <tr>
                 <td style=""><b>Late After:</b></td>
-                <td colspan="4" style="text-align:center; font-size:20px; border-top:rgb(255,109,106) 1px solid; border-left:rgb(255,109,106) 1px solid">9100&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;20259999&nbsp;&nbsp;&nbsp;0001003031&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;4999999999&nbsp;&nbsp;&nbsp;0000&nbsp;&nbsp;&nbsp;5</td>
+                <td colspan="4" style="text-align:center; font-size:18px; border-top:rgb(255,109,106) 1px solid; border-left:rgb(255,109,106) 1px solid">9100&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;20259999&nbsp;&nbsp;&nbsp;0001003031&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;4999999999&nbsp;&nbsp;&nbsp;0000&nbsp;&nbsp;&nbsp;5</td>
             </tr>  
             <tr>
                 <td style="">&nbsp;</td>
@@ -357,7 +354,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <td style="border:rgb(255,109,106) 1px solid"></td>
             </tr>
             <tr>
-                <td>E. Food & Beverages Vending</td>
+                <td>E. Food & Bev. Vending</td>
                 <td style="border:rgb(255,109,106) 1px solid"></td>
                 <td style="border:rgb(255,109,106) 1px solid"></td>
                 <td style="border:rgb(255,109,106) 1px solid"></td>
@@ -379,7 +376,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </tr>
             <tr>
                 <td rowspan="4" style="border-right:rgb(255,109,106) 1px solid; color:rgb(255,109,106);text-align:right;">
-                    <p>Name<br />Address<br />City/St<br />Zip</p>
+                    <p>Name<br />Address<br />City/St<br />Zip</p><br />
                 </td>
                 <td style=""></td>
                 <td style=""></td>
@@ -441,7 +438,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </tr>
             <tr>
                 <td style=""><b>Late After:</b></td>
-                <td colspan="4" style="text-align:center; font-size:20px; border-top:rgb(255,109,106) 1px solid; border-left:rgb(255,109,106) 1px solid">9100&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;20259999&nbsp;&nbsp;&nbsp;0001003031&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;4999999999&nbsp;&nbsp;&nbsp;0000&nbsp;&nbsp;&nbsp;5</td>
+                <td colspan="4" style="text-align:center; font-size:18px; border-top:rgb(255,109,106) 1px solid; border-left:rgb(255,109,106) 1px solid">9100&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;20259999&nbsp;&nbsp;&nbsp;0001003031&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;4999999999&nbsp;&nbsp;&nbsp;0000&nbsp;&nbsp;&nbsp;5</td>
             </tr>  
             <tr>
                 <td style="">&nbsp;</td>
@@ -458,10 +455,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <td style="width:30%">&nbsp;</td>
                 <td style="width:30%;text-align:center;">&nbsp;</td>
                 <td style="width:30%;text-align:right;">
-                    <p style="font-weight:bold;margin:0px;">DR-15</p>
-                    <p style="font-weight:bold;margin:0px;">R. 01/25</p>
-                    <p style="font-weight:bold;font-size:12px;margin:0px;">Rule 12A-1.097, F.A.C.</p>
-                    <p style="font-weight:bold;font-size:12px;margin:0px;">Page 2 of 2</p>
+                    <p style="font-weight:bold;margin:0px;">DR-15</p><br />
+                    <p style="font-weight:bold;margin:0px;">R. 01/25</p><br />
+                    <p style="font-weight:bold;font-size:12px;margin:0px;">Rule 12A-1.097, F.A.C.</p><br />
+                    <p style="font-weight:bold;font-size:12px;margin:0px;">Page 2 of 2</p><br />
                 </td>            
             </tr>
             
@@ -472,15 +469,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 to deduct a collection allowance of 2.5% (.025) of the first $1,200 of tax due, not to exceed $30. To pay timely, you must initiate
 payment and receive a confirmation number, no later than 5:00 p.m. ET on the business day prior to the 20th. More information on
 filing and paying electronically, including a Florida eServices Calendar of Electronic Payment Deadlines (Form DR-659), is available at
-<b>floridarevenue.com</b></p>
+<b>floridarevenue.com</b></p><br /><br /><br /><br />
 
     <p style="font-size: 11px;">Due Dates. Returns and payments are <b>due on the 1st and late after the 20th day of the month</b> following each reporting period.
 <b>A return must be filed for each reporting period, even if no tax is due.</b> If the 20th falls on a Saturday, Sunday, or a state or federal
 holiday, returns are timely if postmarked or hand delivered on the first business day following the 20th.
 <b>Penalty</b>. If you file your return or pay tax late, a late penalty of 10% of the amount of tax owed, but not less than $50, may be charged.
 The $50 minimum penalty applies even if no tax is due. A floating rate of interest also applies to late payments and underpayments of
-tax.</p>
-    <br /><br />
+tax.</p><br />
+    <br /><br /><br /><br /><br />
     
     <table style="width: 100%; margin-bottom: 10px; font-size:10px;">
         <tbody>
@@ -634,7 +631,7 @@ tax.</p>
         </tbody>
     </table>
 
-    <table style="width: 100%; font-size:10px; margin-bottom: 10px; margin-top: 60px;">
+    <table style="width: 100%; font-size:10px; margin-bottom: 5px; margin-top: 5px;">
         <tbody>
             <tr>
                 <td colspan="10" style="text-align:center; padding-bottom: 25px;">Under penalties of perjury, I declare that I have read this return and the facts stated in it are true.</td>
@@ -715,10 +712,7 @@ tax.</p>
                 <td style="">&nbsp;</td>
                 <td style="">&nbsp;</td>
             </tr>
-            
         </tbody>
     </table>    
-
 </body>
-
 </html>
