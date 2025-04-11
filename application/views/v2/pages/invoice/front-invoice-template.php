@@ -11,8 +11,8 @@ if ($invoice->due_date > date('Y-m-d')) {
 <input type="hidden" id="pay-now-total-amount" value="<?= $invoice->grand_total; ?>" />
 <input type="hidden" id="pay-now-invoice-number" value="<?= $invoice->invoice_number; ?>" />
 
-<div class="container" style="background-color:#ffffff;">
-    <div class="main" style="width:1000px;">            
+<div class="container">
+    <div class="main" style="background-color:#ffffff;">            
         <div class="container-left">
             <table style="margin-bottom: 50px;">
                 <tr>
@@ -91,11 +91,11 @@ if ($invoice->due_date > date('Y-m-d')) {
                     <?php if($item->type == 'Service'){ ?>
                     <tr>
                         <td style="padding: 8px; border: 1px solid;"><?= $item->title; ?></td>
-                        <td style="padding: 8px; border: 1px solid; text-align: center;"><?= $item->qty; ?></td>
-                        <td style="padding: 8px; border: 1px solid; text-align: center;">$<?= number_format((float) $item->costing, 2); ?></td>
-                        <td style="padding: 8px; border: 1px solid; text-align: center;">$<?= number_format((float) $item->discount, 2); ?></td>
-                        <td style="padding: 8px; border: 1px solid; text-align: center;">$<?= number_format((float) $item->tax, 2); ?></td>
-                        <td style="padding: 8px; border: 1px solid; text-align: center;">
+                        <td style="padding: 8px; border: 1px solid;text-align: center;"><?= $item->qty; ?></td>
+                        <td style="padding: 8px; border: 1px solid;text-align:center;">$<?= number_format((float) $item->costing, 2); ?></td>
+                        <td style="padding: 8px; border: 1px solid;text-align:center;">$<?= number_format((float) $item->discount, 2); ?></td>
+                        <td style="padding: 8px; border: 1px solid;text-align:center;">$<?= number_format((float) $item->tax, 2); ?></td>
+                        <td style="padding: 8px; border: 1px solid;text-align:right;">
                             <?php $a = (float) $item->qty * (float) $item->costing; ?>
                             <?php $b = $a + (float) $item->tax; ?>
                             $<?= number_format($item->total,2); //number_format((float) $b, 2);  ?>
@@ -104,11 +104,11 @@ if ($invoice->due_date > date('Y-m-d')) {
                     <?php }else{ ?>
                     <tr>
                         <td style="padding: 8px; border: 1px solid;"><?= $item->title; ?></td>
-                        <td style="padding: 8px; border: 1px solid; text-align: center;"><?= $item->qty; ?></td>
-                        <td style="padding: 8px; border: 1px solid; text-align: center;">$<?= number_format((float) $item->costing, 2); ?></td>
-                        <td style="padding: 8px; border: 1px solid; text-align: center;">$<?= number_format((float) $item->discount, 2); ?></td>
-                        <td style="padding: 8px; border: 1px solid; text-align: center;">$<?= number_format((float) $item->tax, 2); ?></td>
-                        <td style="padding: 8px; border: 1px solid; text-align: center;">
+                        <td style="padding: 8px; border: 1px solid;text-align: center;"><?= $item->qty; ?></td>
+                        <td style="padding: 8px; border: 1px solid;text-align:center;">$<?= number_format((float) $item->costing, 2); ?></td>
+                        <td style="padding: 8px; border: 1px solid;text-align:center;">$<?= number_format((float) $item->discount, 2); ?></td>
+                        <td style="padding: 8px; border: 1px solid;text-align:center;">$<?= number_format((float) $item->tax, 2); ?></td>
+                        <td style="padding: 8px; border: 1px solid;text-align:right;">
                             <?php $a = (float) $item->qty * (float) $item->costing; ?>
                             <?php $b = ($a + (float) $item->tax) - $item->discount; ?>
                             $<?= number_format($item->total,2); //number_format((float) $b, 2);  ?>
@@ -121,11 +121,12 @@ if ($invoice->due_date > date('Y-m-d')) {
             <tr>
                 <td colspan="3" rowspan="9">
                     <?php if( $invoice->status != 'Paid' ){ ?>
+                    <?php $payment_link = base_url('customer_invoice/'.$company_info->profile_slug.'/' . $invoice->hash_id); ?>
                     <a href="javascript:void(0);" class="payinvoice">
                         <b>PAY INVOICE</b>
                     </a>  
                     
-                    <div class="online-payment-container" style="display:none;">
+                    <div class="online-payment-container" style="display:none;margin-top:10px;">
                         <div class="row">
                             <div class="col-md-12">
                                 <select name="payment_method" id="pay-now-payment-method" class="form-control" style="width:80%;">
@@ -168,42 +169,49 @@ if ($invoice->due_date > date('Y-m-d')) {
                 <td colspan="2" style="padding: 8px; border: 1px solid;">
                     <b>SUBTOTAL (WITHOUT TAX)</b>
                 </td>
-                <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->sub_total, 2, '.', ','); ?></td>
+                <td style="padding: 8px; border: 1px solid;text-align:right;">$<?= number_format((float) $invoice->sub_total, 2, '.', ','); ?></td>
             </tr>
 
             <tr>
                 <td colspan="2" style="padding: 8px; border: 1px solid;">
                     <b>TAXES</b>
                 </td>
-                <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->taxes, 2, '.', ','); ?></td>
+                <td style="padding: 8px; border: 1px solid;text-align:right;">$<?= number_format((float) $invoice->taxes, 2, '.', ','); ?></td>
             </tr>
 
+            <?php if( $invoice->installation_cost > 0 ){ ?>
             <tr>
                 <td colspan="2" style="padding: 8px; border: 1px solid;">
                     <b>INSTALLATION COST</b>
                 </td>
-                <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->installation_cost , 2, '.', ','); ?></td>
+                <td style="padding: 8px; border: 1px solid;text-align:right;">$<?= number_format((float) $invoice->installation_cost , 2, '.', ','); ?></td>
             </tr>
+            <?php } ?>
 
+            <?php if( $invoice->program_setup > 0 ){ ?>
             <tr>
                 <td colspan="2" style="padding: 8px; border: 1px solid;">
                     <b>ONE TIME (PROGRAM AND SETUP)</b>
                 </td>
-                <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->program_setup, 2, '.', ','); ?></td>
+                <td style="padding: 8px; border: 1px solid;text-align:right;">$<?= number_format((float) $invoice->program_setup, 2, '.', ','); ?></td>
             </tr>
+            <?php } ?>
 
+            <?php if( $invoice->monthly_monitoring > 0 ){ ?>
             <tr>
                 <td colspan="2" style="padding: 8px; border: 1px solid;">
                     <b>MONTHLY MONITORING</b>
                 </td>
-                <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->monthly_monitoring, 2, '.', ','); ?></td>
+                <td style="padding: 8px; border: 1px solid;text-align:right;">$<?= number_format((float) $invoice->monthly_monitoring, 2, '.', ','); ?></td>
             </tr>
+            <?php } ?>
+
             <?php if( $invoice->adjustment_value > 0 ){ ?>
                 <tr>
                     <td colspan="2" style="padding: 8px; border: 1px solid;text-transform: uppercase;">
                         <b><?=  $invoice->adjustment_name != '' ? $invoice->adjustment_name : 'ADJUSTMENT' ?></b>
                     </td>
-                    <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->adjustment_value, 2, '.', ','); ?></td>
+                    <td style="padding: 8px; border: 1px solid;text-align:right;">$<?= number_format((float) $invoice->adjustment_value, 2, '.', ','); ?></td>
                 </tr>
             <?php } ?>
             <?php if( $invoice->no_tax == 1 ){ ?>
@@ -220,7 +228,7 @@ if ($invoice->due_date > date('Y-m-d')) {
                     <td colspan="2" style="padding: 8px; border: 1px solid;">
                         <b>PAYMENT FEE</b>
                     </td>
-                    <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->payment_fee, 2, '.', ','); ?></td>
+                    <td style="padding: 8px; border: 1px solid;text-align:right;">$<?= number_format((float) $invoice->payment_fee, 2, '.', ','); ?></td>
                 </tr>
             <?php } ?>
 
@@ -233,7 +241,7 @@ if ($invoice->due_date > date('Y-m-d')) {
                             <b>LATE FEE </b>
                         <?php } ?>
                     </td>
-                    <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->late_fee, 2, '.', ','); ?></td>
+                    <td style="padding: 8px; border: 1px solid;text-align:right;">$<?= number_format((float) $invoice->late_fee, 2, '.', ','); ?></td>
                 </tr>
             <?php } ?>
 
@@ -241,21 +249,21 @@ if ($invoice->due_date > date('Y-m-d')) {
                 <td colspan="2" style="padding: 8px; border: 1px solid;">
                     <b>GRAND TOTAL</b>
                 </td>
-                <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->grand_total, 2, '.', ','); ?></td>
+                <td style="padding: 8px; border: 1px solid;text-align:right;">$<?= number_format((float) $invoice->grand_total, 2, '.', ','); ?></td>
             </tr>
 
             <tr>
                 <td colspan="2" style="padding: 8px; border: 1px solid;">
                     <b>DEPOSIT</b>
                 </td>
-                <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->deposit_request, 2); ?></td>
+                <td style="padding: 8px; border: 1px solid;text-align:right;">$<?= number_format((float) $invoice->deposit_request, 2); ?></td>
             </tr>
 
             <tr>
                 <td colspan="2" style="padding: 8px; border: 1px solid; font-size: 20px;">
                     <b>BALANCE DUE</b>
                 </td>
-                <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); ?></td>
+                <td style="padding: 8px; border: 1px solid;text-align:right;">$<?= number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); ?></td>
             </tr>
         </table>
 

@@ -1567,6 +1567,50 @@ class Pages extends MYF_Controller {
         }
     }
 
+	public function front_customer_invoice_pay_now_v2($slug, $invoice_hash_id)
+    {
+        include APPPATH . 'libraries/braintree/lib/Braintree.php'; 
+        
+        $this->load->model('Invoice_model', 'invoice_model');        
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Business_model');
+		$this->config->load('api_credentials');
+
+        if ($invoice_hash_id != '' && $slug != '') {			
+            $invoice = $this->invoice_model->getByHashId($invoice_hash_id);
+			$company = $this->Business_model->getByProfileSlug($slug);
+            if( ($invoice && $company) && ($invoice->company_id == $company->company_id) ){
+                $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company->company_id);                
+                if( $companyOnlinePaymentAccount && ($companyOnlinePaymentAccount->braintree_merchant_id != '' && $companyOnlinePaymentAccount->braintree_public_key != '' && $companyOnlinePaymentAccount->braintree_private_key != '') ){
+                    $gateway = new Braintree\Gateway([
+                        'environment' => BRAINTREE_ENVIRONMENT,
+                        'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
+                        'publicKey' => $companyOnlinePaymentAccount->braintree_public_key,
+                        'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
+                    ]);
+    
+                    try {
+                        $braintree_token = $gateway->ClientToken()->generate();	
+                    } catch (Exception $e) {
+                        $braintree_token = '';
+                    }
+                }         
+                
+                $this->page_data['onlinePaymentAccount'] = $companyOnlinePaymentAccount;
+                $this->page_data['invoice_template']  = $this->generateInvoiceHTML($invoice->id, 2);
+                $this->page_data['braintree_token'] = $braintree_token;
+                $this->page_data['square_client_id'] = $this->config->item('square_client_id');
+                $this->page_data['company_info'] = $company;
+                $this->load->view('v2/pages/invoice/front_pay_now', $this->page_data);
+            }else{
+                redirect('/');
+            }            
+        }else{
+            redirect('/');
+        }
+    }
+
 	public function generateInvoiceHTML($id, $type = 1)
     {
 		$this->load->model('Invoice_model', 'invoice_model');       

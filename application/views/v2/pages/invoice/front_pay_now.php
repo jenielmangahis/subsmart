@@ -15,12 +15,12 @@
 
         .container {
             padding: 16px;
-            background-color: #f5f5f5;
         }
 
         .main {
-            width: 800px;
-            margin: auto;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;            
             padding: 16px;
             box-sizing: border-box;
             background-color: #fff;
@@ -212,8 +212,8 @@
         }
         #btn-pay-stripe{
             display:block;
-            width: 95%;
-            margin-left: 7px;
+            width: 97%;
+            margin-left: 0px;
             text-align: center;
             margin-top:10px;
             background-color: #6a4a86 !important;
@@ -228,6 +228,9 @@
             width: 100%;
             margin-left: -1px;
             text-align: center;
+        }
+        .braintree-placeholder{
+            margin-bottom:0px !important;
         }
     </style>
 

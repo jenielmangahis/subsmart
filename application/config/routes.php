@@ -316,6 +316,7 @@ $route['invoice/_archived_list'] = 'Invoice/ajax_archived_list';
 $route['invoice/_restore_archived'] = 'Invoice/ajax_restore_archived';
 $route['invoice/_update_status/(:any)'] = 'Invoice/ajax_update_status/$1';
 $route['invoice/recurring/(:any)'] = 'Invoice/recurring/$1';
+$route['customer_invoice/(:any)/(:any)'] = 'Pages/front_customer_invoice_pay_now_v2/$1/$2';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 
