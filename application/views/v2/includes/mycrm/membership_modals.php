@@ -99,3 +99,69 @@
         </form>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="modal-buy-license" tabindex="-1" aria-labelledby="modal-buy-license_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Buy License</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <form id="frm-buy-license" method="post">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <label>Price per license</label>
+                        <div class="col-auto">
+                            <label class="visually-hidden" for="price-per-license">Amount</label>
+                            <div class="input-group">
+                                <div class="input-group-text">$</div>
+                                <input type="text" class="form-control" id="price-per-license" value="<?= number_format($plan->price_per_license, 2); ?>" disabled="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label>Number of license to buy</label>
+                        <input type="number" step="1" min="1" class="form-control" name="num_license" id="num-license" value="1" required/>
+                    </div>
+                    <div class="col-6 mt-4">
+                        <label>Card Number</label>
+                        <input type="text" class="form-control" name="card_number" id="" value="" required/>
+                    </div>
+                    <div class="col-6 mt-4">
+                        <label>Expiration</label>
+                        <br />
+                        <input type="text" class="form-control" name="cvc" id="cvc" value="" style="width:58%;display:inline-block;" placeholder="MM/YY" required/>
+                        <input type="text" maxlength="4" class="form-control" name="cvc" id="cvc" value="" style="width:40%;display:inline-block;" placeholder="CVC" required/>
+                    </div>
+                    <div class="col-6 mt-2">
+                        <label>Total Amount</label>
+                        <div class="col-auto">
+                            <label class="visually-hidden" for="license-total-amount">Total Amount</label>
+                            <div class="input-group">
+                                <div class="input-group-text">$</div>
+                                <input type="number" class="form-control" name="total_license"  id="license-total-amount" value="<?= number_format($plan->price_per_license, 2); ?>" disabled="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-buy-license">Buy</button>
+            </div>
+            </form>
+        </div>        
+    </div>
+</div>
+<script>
+$(function(){
+    $("#num-license").change(function(){
+        var price       = $("#price-per-license").val();
+        var num_license = $(this).val();
+        var total_price = parseFloat(price) * parseFloat(num_license);
+
+        $("#license-total-amount").val(total_price.toFixed(2));
+    });
+});
+</script>

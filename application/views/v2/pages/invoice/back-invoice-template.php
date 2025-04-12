@@ -8,7 +8,8 @@ if ($invoice->due_date > date('Y-m-d')) {
 }
 
 //$payment_link = base_url('/invoice/pay_now_form_fr_email/' . $invoice->id);
-$payment_link = base_url('/invoice/customer_view/' . $invoice->id);
+//$payment_link = base_url('/invoice/customer_view/' . $invoice->id);
+$payment_link = base_url('customer_invoice/'.$company_info->profile_slug.'/' . $invoice->hash_id);
 ?>
 
 <!doctype html>
@@ -288,11 +289,7 @@ $payment_link = base_url('/invoice/customer_view/' . $invoice->id);
 
                 <tr>
                     <td colspan="3" rowspan="9">
-
-                        <a href="<?= $payment_link; ?>" class="payinvoice">
-                            <b>PAY INVOICE</b>
-                        </a>
-
+                        <a href="<?= $payment_link; ?>" class="payinvoice"><b>PAY INVOICE</b></a>
                         <?php
                         $paymentMethods = [];
                         if ($invoice->accept_credit_card) array_push($paymentMethods, 'Credit Card');

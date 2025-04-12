@@ -17707,10 +17707,12 @@ class Accounting extends MY_Controller
     public function download_sales_tax_returns()
     {
         $this->load->library('pdf');
-        $this->load->model('Business_model');
-
+        //$this->load->model('Business_model');
+        $this->load->model('Business_model', 'business_model');
+    
         $company_id = logged('company_id');
-        $company    = $this->Business_model->getByCompanyId();
+        $company    = $this->business_model->getByCompanyId($company_id);
+
         $filename   = 'sales_and_return_tax';
         
         $this->page_data['company'] = $company;     

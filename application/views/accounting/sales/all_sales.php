@@ -140,7 +140,7 @@
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>
-                                    Batch Actions
+                                    With Selected
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
@@ -374,9 +374,13 @@
                                     </div>
                                 </div>
                             </ul>
-                        </div>
+                        </div>  
+                        <button type="button" class="nsm-button export-transactions">
+                            <i class='bx bx-fw bx-export'></i> Export
+                        </button>
+                        <?php if(checkRoleCanAccessModule('accounting-all-sales', 'write')){ ?>
                         <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                            <button type="button" class="dropdown-toggle nsm-button primary" data-bs-toggle="dropdown">
                                 <span>
                                     <i class='bx bx-fw bx-list-plus'></i> New transaction
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
@@ -400,11 +404,9 @@
                                         Activity</a></li>
                             </ul>
                         </div>
+                        <?php } ?>
 
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button export-transactions">
-                                <i class='bx bx-fw bx-export'></i> Export
-                            </button>
+                        <div class="nsm-page-buttons page-button-container">                            
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_all_sales_transactions_modal">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>

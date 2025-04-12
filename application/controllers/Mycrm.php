@@ -19,6 +19,11 @@ class Mycrm extends MY_Controller
 
     public function index()
     {
+        if(!checkRoleCanAccessModule('my-crm', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'My Account';
         $this->page_data['page']->parent = 'Company';
 
@@ -116,6 +121,11 @@ class Mycrm extends MY_Controller
 
     public function membership()
     {
+        if(!checkRoleCanAccessModule('monthly-membership', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Monthly Membership';
         $this->page_data['page']->parent = 'Company';
 
@@ -190,7 +200,7 @@ class Mycrm extends MY_Controller
         $this->page_data['default_plan_feature'] = $default_plan_feature;
         $this->page_data['client'] = $client;
         $this->page_data['offerCode'] = $offerCode;
-        // $this->load->view('mycrm/membership', $this->page_data);
+        //$this->load->view('mycrm/membership', $this->page_data);
         $this->load->view('v2/pages/mycrm/membership', $this->page_data);
     }
 

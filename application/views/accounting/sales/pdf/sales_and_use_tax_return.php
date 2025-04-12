@@ -246,7 +246,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </tr>
             <tr>
                 <td rowspan="4" style="border-right:rgb(255,109,106) 1px solid; color:rgb(255,109,106);text-align:right;">
-                    <p>Name : <?= $company->business_name; ?><br />Address : <?= $company->street; ?><br />City/St <?= $company->city . '/' . $company->state; ?><br />Zip</p>
+                    <p>Name : <?= isset($company->business_name) ? $company->business_name : ''; ?><br />Address : <?= isset($company->street) ? $company->street : ''; ?><br />City/St <?= isset($company->city) ? $company->city : '' ?> / <?= isset($company->state) ? $company->state : ''; ?><br />Zip</p>
                 </td>
                 <td style=""></td>
                 <td style=""></td>

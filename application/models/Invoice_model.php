@@ -253,6 +253,16 @@ class Invoice_model extends MY_Model
         return $query->row();
     }
 
+    public function getByHashId($hash_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);   
+        $this->db->where('hash_id', $hash_id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getByTicketId($tid)
     {
         $this->db->select('*');

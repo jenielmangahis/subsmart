@@ -3050,6 +3050,15 @@ class Debug extends MY_Controller {
 
         echo 'Total updated ' . $total_updated;
     }
+
+    public function invoiceLink()
+    {        
+        $invoice_hash  = 'vJ4openpDb7Az1X';
+        $business_slug = 'nsmart-llc-test';
+        $payment_link  = base_url('customer_invoice/'.$business_slug.'/' . $invoice_hash); 
+        echo $payment_link; 
+        exit;
+    }
 }
 /* End of file Debug.php */
 

@@ -316,6 +316,7 @@ $route['invoice/_archived_list'] = 'Invoice/ajax_archived_list';
 $route['invoice/_restore_archived'] = 'Invoice/ajax_restore_archived';
 $route['invoice/_update_status/(:any)'] = 'Invoice/ajax_update_status/$1';
 $route['invoice/recurring/(:any)'] = 'Invoice/recurring/$1';
+$route['customer_invoice/(:any)/(:any)'] = 'Pages/front_customer_invoice_pay_now_v2/$1/$2';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 
@@ -387,6 +388,9 @@ $route['accounting/generate-pdf'] = 'accounting_modals/generatePDF';
 $route['accounting/show-pdf'] = 'accounting_modals/showPDF';
 $route['accounting/download-pdf'] = 'accounting_modals/downloadPDF';
 $route['accounting/send-email-form']['post'] = 'accounting_modals/showEmailModal';
+
+// Accounting Sales Tax
+$route['accounting/download_sales_tax_returns'] = 'accounting/download_sales_tax_returns';
 
 // Workers Comp
 $route['accounting/_create_workers_comp'] = 'accounting/ajax_create_workers_comp_quote';
