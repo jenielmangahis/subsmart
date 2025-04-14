@@ -54,20 +54,18 @@
                         <option value="last_30_days">Last 30 Days</option>
                         <option value="last_60_days">Last 60 Days</option>
                     </select>
+                    <select class="form-select <?php echo "thumbnailFilter3_$id"; ?>">
+                        <option value="all_status">All Groups</option>
+                        <option selected value="active_only">Active Only</option>
+                    </select>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center textData">
-                    <strong class="text-muted text-uppercase">TOTAL AMOUNT</strong>
-                    <h4 class="<?php echo "textData1_$id"; ?>"></h2>
-                </div>
-            </div>
-            <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center textData">
                     <strong class="text-muted text-uppercase">TOTAL COUNT</strong>
-                    <h4 class="<?php echo "textData2_$id"; ?>"></h4>
+                    <h4 class="<?php echo "textData1_$id"; ?>"></h2>
                 </div>
             </div>
             <div class="col mt-2 <?php echo "graphDataContainer_$id"; ?> thumbnailGraphDisplay display_none">
@@ -100,6 +98,7 @@
             '#775DD0', '#3F51B5', '#4CAF50', '#FFC107'
         ];
         
+        
         if (type === 'single') {
             return colorPalette[Math.floor(Math.random() * colorPalette.length)];
         } 
@@ -128,25 +127,18 @@
                 $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
             },
             success: function(response) {
-                let <?php echo "textData1_$id"; ?> = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(JSON.parse(response)['TOTAL_AMOUNT']);
-                let <?php echo "textData2_$id"; ?> = JSON.parse(response)['TOTAL_COUNT'];
-                let graphData = JSON.parse(response)['GRAPH'];
-                let currentYear = new Date().getFullYear().toString();
+                let jsonData = JSON.parse(response);
+                let graphData = jsonData['GRAPH']; 
+                let totalCount = jsonData['TOTAL_COUNT'];
 
-                let filteredGraphData = Object.keys(graphData)
-                    .filter(key => key.startsWith(currentYear))
-                    .reduce((obj, key) => {
-                        obj[key] = parseFloat(graphData[key]);
-                        return obj;
-                    }, {});
+                let labels = Object.keys(graphData).map(key => `${key}: ${graphData[key]}`);
+                let series = Object.values(graphData);
 
-                let categories = Object.keys(filteredGraphData).map(month => month.split(' ')[1]);
-                let values = Object.values(filteredGraphData);
+                $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
 
-                if (values.length === 0) {
-                    $('.<?php echo "textDataContainer_$id"; ?>').hide();
+                if (totalCount === 0) {
                     $('.<?php echo "graphDataContainer_$id"; ?>').hide();
-                    $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
                     $('.<?php echo "noRecordFoundContainer_$id"; ?>').fadeIn();
                 } else {
                     if ($('.<?php echo "showHideGraphCheckbox_$id"; ?>').is(':checked')) {
@@ -156,27 +148,15 @@
                         $('.<?php echo "textDataContainer_$id"; ?>').fadeIn();
                         $('.<?php echo "graphDataContainer_$id"; ?>').hide();
                     }
-                    $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
-                    $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
-                    $('.<?php echo "textData1_$id"; ?>').text(<?php echo "textData1_$id"; ?>);
-                    $('.<?php echo "textData2_$id"; ?>').text(<?php echo "textData2_$id"; ?>);
+
+                    $('.<?php echo "textData1_$id"; ?>').text(totalCount);
 
                     <?php echo "graphChart_$id"; ?>.updateOptions({
-                        xaxis: { categories: categories },
-                        yaxis: {
-                            labels: {
-                                formatter: function(value) {
-                                    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
-                                }
-                            }
-                        },
+                        labels: labels,
                         colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple')
                     });
 
-                    <?php echo "graphChart_$id"; ?>.updateSeries([{
-                        name: "<?php echo $title; ?>",
-                        data: values
-                    }]);
+                    <?php echo "graphChart_$id"; ?>.updateSeries(series);
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -186,6 +166,7 @@
             }
         });
     }
+
 
     // let category = '<?php echo $category; ?>';
     // let dateFrom = new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0];
@@ -199,25 +180,36 @@
     );
     
     let <?php echo "options_$id"; ?> = {
-        series: [{ name: "<?php echo $title; ?>", data: [] }],
-        xaxis: { categories: [] },
-        chart: { height: 150, type: 'bar', zoom: { enabled: false }, toolbar: { show: false } },
-        dataLabels: { enabled: false },
-        stroke: { curve: 'smooth', width: 3 },
-        grid: { show: true, xaxis: { lines: { show: true } } },
-        markers: { size: 6, strokeWidth: 3, hover: { size: 10 } },
+        series: [],
+        chart: {
+            height: 185,
+            type: 'pie'
+        },
+        legend: { position: 'bottom' },
+        labels: [], // Labels will be dynamically updated
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: { height: 150 },
+                legend: { position: 'bottom' }
+            }
+        }],
         colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple')
     };
-    
-    let <?php echo "graphChart_$id"; ?> = new ApexCharts(document.querySelector("#<?php echo "apexThumbnailGraph_$id"; ?>"), <?php echo "options_$id"; ?>);
-    <?php echo "graphChart_$id"; ?>.render(); 
+
+    let <?php echo "graphChart_$id"; ?> = new ApexCharts(
+        document.querySelector("#<?php echo "apexThumbnailGraph_$id"; ?>"), 
+        <?php echo "options_$id"; ?>
+    );
+    <?php echo "graphChart_$id"; ?>.render();
+
 
     $(document).on('change', '.<?php echo "thumbnailFilter1_$id"; ?>, .<?php echo "thumbnailFilter2_$id"; ?>, .<?php echo "thumbnailFilter3_$id"; ?>', function() {
         let category = '<?php echo $category; ?>';
         let filter1 = $('.<?php echo "thumbnailFilter1_$id"; ?> option:selected').val();
         let filter2 = $('.<?php echo "thumbnailFilter2_$id"; ?> option:selected').val();
         let filter3 = $('.<?php echo "thumbnailFilter3_$id"; ?> option:selected').val();
-        let dateFrom = new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0];
+        let dateFrom = '1970-01-01';
         let dateTo = new Date().toISOString().split('T')[0];
         let today = new Date();
 

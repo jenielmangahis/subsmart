@@ -377,23 +377,30 @@
         <!-- <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#manage_widgets_modal">TEST ONLY</button> -->
     </div>
 </div>
+
 <?php 
-    $presetThumbnail = [];    
-    if( $thumbnailWidgetPreset ){
-        $presetThumbnail = json_decode($thumbnailWidgetPreset[0]->thumbnail, true);
+    $presetThumbnail = [];
+    $presetWidget = [];
+
+    if (!empty($thumbnailWidgetPreset) && isset($thumbnailWidgetPreset[0])) {
+        $presetThumbnail = json_decode($thumbnailWidgetPreset[0]->thumbnail ?? '[]', true);
+        $presetWidget = json_decode($thumbnailWidgetPreset[0]->widget ?? '[]', true);
     }
-    $isThumbnailPresent = (count($presetThumbnail) != 0) ? true : false;
-    include viewPath('widgetThumbnailSettings');  
+
+    $isThumbnailPresent = !empty($presetThumbnail);
+    $isWidgetPresent = !empty($presetWidget);
+
+    include viewPath('widgetThumbnailSettings');
 ?>
 
 <div class="row page-content g-0">
-    <div class="col-12">
+    <div class="col-lg-12">
         <div class="thumbnailLayoutControl display_none">
-            <a href="javascript:void(0)" class="text-decoration-none customizeThumbnailLayout"><span>Customize Thumbnail Layout</span></a>
-            <a href="javascript:void(0)" class="text-decoration-none saveThumbnailLayout display_none"><span>Save Layout</span></a>&nbsp;&nbsp;
-            <a href="javascript:void(0)" class="text-decoration-none text-muted cancelThumbnailLayout display_none"><span>Cancel</span></a>
+            <a href="javascript:void(0)" class="text-decoration-none thumbnailCustomizeLayout"><span>Customize Thumbnail Layout</span></a>
+            <a href="javascript:void(0)" class="text-decoration-none thumbnailSaveLayout display_none"><span>Save Layout</span></a>&nbsp;&nbsp;
+            <a href="javascript:void(0)" class="text-decoration-none thumbnailCancelLayout display_none text-muted"><span>Cancel</span></a>
         </div>
-        <div id="thumbnailMasonry" class="row sortable cardContainers1">
+        <div id="thumbnailMasonry" class="row thumbnailSortable thumbnailCardContainers">
             <?php 
                 if ($isThumbnailPresent) {
                     foreach ($presetThumbnail as $presetThumbnails) {
@@ -421,10 +428,58 @@
         <script>
             var thumbnailMasonry;
             $('#thumbnailMasonry').ready(function () {
-                thumbnailMasonry = new Masonry(document.getElementById('thumbnailMasonry'), {percentPosition: true, horizontalOrder: true,});
-                $('.thumbnailLayoutControl').show();
+                setTimeout(() => {
+                    thumbnailMasonry = new Masonry(document.getElementById('thumbnailMasonry'), {percentPosition: true, horizontalOrder: true,});
+                    $('.thumbnailLayoutControl').show();
+                }, 1000);
             });
         </script>
+    </div>
+    <div class="col-lg-12">
+        <hr style="margin: 2em;">
+    </div>
+    <div class="col-lg-12">
+        <div class="widgetLayoutControl display_none">
+            <a href="javascript:void(0)" class="text-decoration-none widgetCustomizeLayout"><span>Customize Widget Layout</span></a>
+            <a href="javascript:void(0)" class="text-decoration-none widgetSaveLayout display_none"><span>Save Layout</span></a>&nbsp;&nbsp;
+            <a href="javascript:void(0)" class="text-decoration-none widgetCancelLayout display_none text-muted "><span>Cancel</span></a>
+        </div>
+        <div id="widgetMasonry" class="row widgetSortable widgetCardContainers">
+            <?php 
+                if ($isWidgetPresent) {
+                    foreach ($presetWidget as $presetWidgets) {
+                        foreach ($thumbnailWidgetOption as $thumbnailWidgetOptions) {
+                            if ($thumbnailWidgetOptions->id == $presetWidgets['id']) {
+                                $thumbnailsWidgetCard = $thumbnailWidgetOptions;
+                                $option_cardContainer = "$thumbnailWidgetOptions->category$thumbnailWidgetOptions->id$thumbnailWidgetOptions->type";
+                                $option_id = "$thumbnailWidgetOptions->id";
+                                
+                                $width = $presetWidgets['width'];
+                                $colWidth = $presetWidgets['colWidth'];
+                                $height = $presetWidgets['height'];
+                                $graphState = $presetWidgets['graphDisplayState'];
+
+                                echo "<div class='col-lg-4 mt-3 $option_cardContainer' data-id='$option_id'>";
+                                include viewPath("v2/dashboard/widget/$thumbnailWidgetOptions->category"); 
+                                echo "</div>";
+                                break;
+                            }
+                        }
+                    }
+                }
+            ?>
+        </div>
+        <script>
+            var widgetMasonry;
+            $('#widgetMasonry').ready(function () {
+                setTimeout(() => {
+                    widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), {percentPosition: true, horizontalOrder: true,});
+                    $('.widgetLayoutControl').show();
+                }, 1000);
+            });
+        </script>
+    </div>
+    <div class="col-lg-12">
         <div class="row row-cols-md-3" id="nsm_widgets2">
                 <?php
                     // usort($widgets, function ($a, $b) {
@@ -538,10 +593,7 @@
             ?>
         </div>
     </div>
-</div>
-
-<div class="row nsm-tickertape mb-3 page-content g-0 mt-3">
-    <div class="col-12">
+    <div class="col-lg-12">
         <div class="nsm-card pb-1 pt-2">
             <div class="tradingview-widget-container">
                 <div class="tradingview-widget-container__widget"></div>
@@ -578,6 +630,10 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="row nsm-tickertape mb-3 page-content g-0 mt-3">
+    
 </div>
 
 
@@ -659,7 +715,7 @@
     </div>
 </div>
 
-<div class="row nsm-tickertape mb-3 page-content g-0">
+<!-- <div class="row nsm-tickertape mb-3 page-content g-0">
     <div class="col-12">
         <div class="nsm-card pb-1 pt-2">
             <div class="tradingview-widget-container">
@@ -697,7 +753,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="modal fade nsm-modal" tabindex="-1" role="dialog" id="drw--modal">
     <div class="modal-dialog" role="document">
