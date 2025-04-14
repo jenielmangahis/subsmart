@@ -2097,7 +2097,7 @@ class Dashboard extends Widgets
         $thumbnailWidgetQuery = ['select' => '*', 'table' => 'dashboard_thumbnail_widget', 'where' => ['id' => $postData['id'], 'category' => $postData['category']], ];
         $this->page_data['thumbnailsWidgetCard'] = $this->general->get_data_with_param($thumbnailWidgetQuery) [0];
     
-        echo $this->load->view("v2/dashboard/thumbnail/{$postData['category']}", $this->page_data, true);
+        echo $this->load->view("v2/dashboard/$postData[type]/$postData[category]", $this->page_data, true);
     }
 
     public function thumbnailWidgetRequest() {
@@ -2245,7 +2245,7 @@ class Dashboard extends Widgets
                     $graphData['GRAPH'][$month] = $accumulativeValue;
                 }
             break;
-            case 'active_customer_groups':
+            case 'customer_groups':
                 $graphData = ['GRAPH' => [], 'TOTAL_COUNT' => count($data) ];
     
                 foreach ($data as $datas) {
@@ -2291,6 +2291,54 @@ class Dashboard extends Widgets
                     } else {
                         $graphData['Other'] += $datas->total;
                     }
+                }
+            break;
+            case 'service_tickets':
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
+    
+                $accumulativeValue = 0.0;
+                foreach ($data as $datas) {
+                    $accumulativeValue += $datas->total;
+                    $month = strtoupper(date('Y M', strtotime($datas->date)));
+                    $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
+                }
+    
+                $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
+                break;
+            case 'lead_source':
+                foreach ($data as $datas) {
+                    $graphData[$datas->lead_source] = $datas->total;
+                }
+            break;
+            case 'job_status':
+                $allStatuses = [
+                    'Draft',
+                    'Scheduled',
+                    'Arrival',
+                    'Started',
+                    'Approved',
+                    'Finished',
+                    'Cancelled',
+                    'Invoiced',
+                    'Completed'
+                ];
+
+                $graphData = array_fill_keys($allStatuses, 0);
+
+                foreach ($data as $datas) {
+                    if (isset($graphData[$datas->status])) {
+                        $graphData[$datas->status] = $datas->total ?? 0;
+                    }
+                }
+            break;
+            case 'customer_status':
+                foreach ($data as $datas) {
+                    $graphData[$datas->status] = $datas->total;
+                }
+            break;
+            case 'job_tags':
+                foreach ($data as $datas) {
+                    $graphData[$datas->tags] = $datas->total;
                 }
             break;
             default:

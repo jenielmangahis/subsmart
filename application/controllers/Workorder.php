@@ -2208,7 +2208,7 @@ class Workorder extends MY_Controller
             'monthly_monitoring'                => $workData->monthly_monitoring,
 
             'payment_method'                    => $payment->payment_method,
-            'amount'                            => $payment->amount, //
+            'amount'                            => $payment->amount > 0 ? $payment->amount : '0.00', //
             'check_number'                      => $payment->check_number,
             'routing_number'                    => $payment->routing_number,
             'account_number'                    => $payment->account_number,
