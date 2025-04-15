@@ -260,6 +260,40 @@ class Dashboard_model extends MY_Model
                 $query = $this->db->get();
                 return $query->result();
             break;
+            case 'taskhub':
+                $query = $this->db->query("
+                    SELECT 
+                        tasks.task_id AS id,
+                        tasks.company_id AS company_id,
+                        tasks.assigned_employee_ids AS assigned_employees,
+                        JSON_LENGTH(tasks.assigned_employee_ids) AS shared_tasks,
+                        COALESCE(activity_counts.activities, 0) AS activities,
+                        tasks.status AS status,
+                        tasks.priority AS priority,
+                        latest_updates.date_updated AS date
+                    FROM tasks
+            
+                    LEFT JOIN (
+                        SELECT task_id, COUNT(*) AS activities
+                        FROM tasks_updates
+                        GROUP BY task_id
+                    ) AS activity_counts ON activity_counts.task_id = tasks.task_id
+            
+                    LEFT JOIN (
+                        SELECT task_id, MAX(date_updated) AS date_updated
+                        FROM tasks_updates
+                        GROUP BY task_id
+                    ) AS latest_updates ON latest_updates.task_id = tasks.task_id
+            
+                    WHERE tasks.company_id = {$company_id}
+                    AND DATE_FORMAT(latest_updates.date_updated, '%Y-%m-%d') >= '{$dateFrom}'
+                    AND DATE_FORMAT(latest_updates.date_updated, '%Y-%m-%d') <= '{$dateTo}'
+                    ORDER BY latest_updates.date_updated DESC
+                ");
+                $data = $query->result();
+                return $data;
+                break;
+            
         }
     }
 }

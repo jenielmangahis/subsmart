@@ -66,18 +66,27 @@
                 <hr>
                 <table class="table">
                     <tr>
-                        <td style="width:100px;">Job Name :</td>
-                        <td><?php echo $job_name; ?></td>
-                        <td style="width:50px;">&nbsp;</td>
-                        <td style="width:150px;">Job Description :</td>
-                        <td><?php echo $job_description; ?></td>
+                        <td style="width:100px;">Job Name</td>
+                        <td>: <?php echo $job_name != '' ? $job_name : '---'; ?></td>
+                        <td style="width:100px;">&nbsp;</td>
+                        <td style="width:100px;">Installation Date</td>
+                        <td>: <?php echo date("m/d/Y", strtotime($installation_date)); ?></td>
                     </tr>
                     <tr>
-                        <td style="width:150px;">Installation Date :</td>
-                        <td><?php echo date("m/d/Y", strtotime($installation_date)); ?></td>
-                        <td style="width:50px;">&nbsp;</td>
-                        <td style="width:150px;">Status :</td>
-                        <td><?php echo $status; ?></td>
+                        <td colspan="5">&nbsp;</td>
+                    </tr>
+                    <tr>                        
+                        <td style="width:100px;">Status</td>
+                        <td>: <?php echo $status; ?></td>
+                        <td style="width:100px;">&nbsp;</td>
+                        <td style="width:100px;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="width:100px;">Job Description</td>
+                        <td colspan="4">: <?php echo $job_description; ?></td>
                     </tr>
                 </table>
             </div>
