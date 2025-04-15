@@ -2101,6 +2101,7 @@ class Dashboard extends Widgets
     }
 
     public function thumbnailWidgetRequest() {
+        $user_id = logged('id');
         $company_id = logged('company_id');
         // $postData = $this->input->post();
         // Temp only for testing
@@ -2294,17 +2295,28 @@ class Dashboard extends Widgets
                 }
             break;
             case 'service_tickets':
-                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
-    
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data)];
+            
                 $accumulativeValue = 0.0;
+                $accumulativeCount = 0;
+                $lastMonth = ''; 
+                
                 foreach ($data as $datas) {
-                    $accumulativeValue += $datas->total;
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
-                    $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
+                    
+                    if ($month !== $lastMonth) {
+                        $accumulativeValue = 0.0; 
+                        $accumulativeCount = 0; 
+                    }
+                    
+                    $accumulativeValue += $datas->total;
+                    $accumulativeCount += 1;
+                    $graphData['GRAPH'][$month] = number_format($accumulativeCount, 2, '.', '');
+                    $lastMonth = $month;
                 }
-    
+            
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
-                break;
+            break;
             case 'lead_source':
                 foreach ($data as $datas) {
                     $graphData[$datas->lead_source] = $datas->total;
@@ -2341,6 +2353,16 @@ class Dashboard extends Widgets
                     $graphData[$datas->tags] = $datas->total;
                 }
             break;
+            case 'taskhub':
+                foreach ($data as $datas) {
+                    $graphData['Activities'] += 1;
+                    $graphData['Shared Tasks'] += ($datas->shared_tasks > 1) ? $datas->shared_tasks : 0;
+                    $graphData['Flagged'] += ($datas->priority == 'Urgent') ? 1 : 0;
+                    $graphData['Done'] += ($datas->status == 'Done') ? 1 : 0;
+                    $graphData['My Tasks'] += (in_array($user_id, json_decode($datas->assigned_employees, true))) ? 1 : 0;
+                    $graphData['Today`s Tasks'] += (date('Y-m-d', strtotime($datas->date)) === $postData['dateTo']) ? 1 : 0;
+                }
+                break;
             default:
                 $graphData = ['error' => 'Invalid category'];
             break;

@@ -64,14 +64,14 @@
         <div class="row">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center textData">
-                    <strong class="text-muted text-uppercase">TOTAL COUNT</strong>
+                    <small class="text-muted text-uppercase fw-bold">TOTAL COUNT</small>
                     <h4 class="<?php echo "textData1_$id"; ?>"></h2>
                 </div>
             </div>
             <div class="col mt-2 <?php echo "graphDataContainer_$id"; ?> thumbnailGraphDisplay display_none">
                 <div id="<?php echo "apexThumbnailGraph_$id"; ?>"></div>
             </div>
-            <div class="col mt-2 <?php echo "graphLoaderContainer_$id"; ?> display_none">
+            <div class="col mt-2 <?php echo "graphLoaderContainer_$id"; ?> graphLoader display_none">
                 <div class="text-center">
                     <div class="spinner-border text-secondary" role="status">
                         <span class="visually-hidden">Loading...</span>
