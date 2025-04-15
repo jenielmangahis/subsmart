@@ -99,7 +99,7 @@
     }
 
     .textData:hover {
-        background: #fff4df;
+        background: #ffa7001a;
         cursor: pointer;
     }
 
@@ -654,5 +654,33 @@
                 horizontalOrder: true,
             });
         });
+
+        // function textDataRandomColor() {
+        //     const colorPalette = [
+        //         "#ffa7001a", // Light Orange (base)
+        //         "#ff4d4d1a", // Soft Red
+        //         "#00bfff1a", // Soft Sky Blue
+        //         "#32cd321a", // Soft Green
+        //         "#ff69b41a", // Soft Pink
+        //         "#8a2be21a", // Soft Purple
+        //         "#ffd7001a", // Soft Gold
+        //         "#00ced11a", // Soft Turquoise
+        //         "#ff14931a", // Soft Hot Pink
+        //         "#ff8c001a", // Soft Dark Orange
+        //         "#1e90ff1a", // Soft Dodger Blue
+        //         "#7fff001a", // Soft Chartreuse
+        //         "#ff63471a", // Soft Coral
+        //         "#ba55d31a", // Soft Orchid
+        //         "#20b2aa1a", // Soft Teal
+        //         "#adff2f1a", // Soft Green-Yellow
+        //         "#ff45001a", // Soft Orange Red
+        //         "#da70d61a", // Soft Orchid Pink
+        //         "#3cb3711a", // Soft Medium Sea Green
+        //         "#4682b41a"  // Soft Steel Blue
+        //     ];
+        //     const shuffled = colorPalette.sort(() => 0.5 - Math.random());
+        //     return shuffled.slice(0, Math.min(1, colorPalette.length))[0];
+        // }
+
     });
 </script>

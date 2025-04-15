@@ -425,15 +425,6 @@
                 }
             ?>
         </div>
-        <script>
-            var thumbnailMasonry;
-            $('#thumbnailMasonry').ready(function () {
-                setTimeout(() => {
-                    thumbnailMasonry = new Masonry(document.getElementById('thumbnailMasonry'), {percentPosition: true, horizontalOrder: true,});
-                    $('.thumbnailLayoutControl').show();
-                }, 1000);
-            });
-        </script>
     </div>
     <div class="col-lg-12">
         <hr style="margin: 2em;">
@@ -470,14 +461,56 @@
             ?>
         </div>
         <script>
-            var widgetMasonry;
-            $('#widgetMasonry').ready(function () {
-                setTimeout(() => {
-                    widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), {percentPosition: true, horizontalOrder: true,});
-                    $('.widgetLayoutControl').show();
-                }, 1000);
+        $(document).ready(function() {
+            const graphLoaders = document.querySelectorAll('.graphLoader');
+
+            if (graphLoaders.length === 0) {
+                initMasonry();
+                return;
+            }
+
+            const observer = new MutationObserver(() => {
+                const count = $('.graphLoader').filter(function() {
+                    return $(this).css('display') !== 'none';
+                }).length;
+
+                if (count === 0) {
+                    observer.disconnect();
+                    initMasonry();
+                }
             });
-        </script>
+
+            graphLoaders.forEach(el => {
+                observer.observe(el, {
+                    attributes: true,
+                    attributeFilter: ['style', 'class']
+                });
+            });
+
+            const initialCount = $('.graphLoader').filter(function() {
+                return $(this).css('display') !== 'none';
+            }).length;
+
+            if (initialCount === 0) {
+                observer.disconnect();
+                initMasonry();
+            }
+        });
+
+        function initMasonry() {
+            thumbnailMasonry = new Masonry(document.getElementById('thumbnailMasonry'), {
+                percentPosition: true,
+                horizontalOrder: true,
+            });
+            $('.thumbnailLayoutControl').show();
+
+            widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), {
+                percentPosition: true,
+                horizontalOrder: true,
+            });
+            $('.widgetLayoutControl').show();
+        }
+    </script>
     </div>
     <div class="col-lg-12">
         <div class="row row-cols-md-3" id="nsm_widgets2">

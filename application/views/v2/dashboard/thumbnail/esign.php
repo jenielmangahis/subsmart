@@ -44,8 +44,8 @@
             <div class="col-md-12">
                 <div class="input-group">
                     <select class="form-select <?php echo "thumbnailFilter1_$id"; ?>">
-                        <option value="all_time" selected>All Time</option>
-                        <option value="this_year">This Year</option>
+                        <option value="all_time">All Time</option>
+                        <option value="this_year" selected>This Year</option>
                     </select>
                     <select class="form-select <?php echo "thumbnailFilter2_$id"; ?>">
                         <option value="recent" selected>Recent</option>
@@ -61,7 +61,7 @@
             <div class="col mt-2 <?php echo "graphDataContainer_$id"; ?> thumbnailGraphDisplay display_none">
                 <div id="<?php echo "apexThumbnailGraph_$id"; ?>"></div>
             </div>
-            <div class="col mt-2 <?php echo "graphLoaderContainer_$id"; ?> display_none">
+            <div class="col mt-2 <?php echo "graphLoaderContainer_$id"; ?> graphLoader display_none">
                 <div class="text-center">
                     <div class="spinner-border text-secondary" role="status">
                         <span class="visually-hidden">Loading...</span>
@@ -130,7 +130,7 @@
                     $('.<?php echo "textDatas_$id"; ?>').append(`
                         <div class='col text-nowrap <?php echo "textDataContainer_$id"; ?>'>
                             <div class='text-center textData'>
-                                <strong class='text-muted text-uppercase'>${key}</strong>
+                                <small class='text-muted text-uppercase fw-bold'>${key}</small>
                                 <h4>${value}</h4>
                             </div>
                         </div>
