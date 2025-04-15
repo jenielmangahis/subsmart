@@ -744,5 +744,12 @@ class Benchmark extends MY_Controller {
         return $this->load->view('benchmark/mail-html-template', $this->page_data, true);        
     }
 
+    public function testSMSAutomation() {
+        echo 'Test Automation Helper<hr />';
+
+        createAutomationQueue('invoice', 'invoice', 'created', 1234);
+
+    }
+
 }
 ?>

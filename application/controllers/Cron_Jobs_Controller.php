@@ -3439,12 +3439,6 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('Automation_model', 'automation_model');
         $this->load->model('Automation_queue_model', 'automation_queue_model');
 
-        $mailtrap_host     = 'smtp.mailtrap.io';
-        $mailtrap_port     = 2525;
-        $mailtrap_username = 'd7c92e3b5e901d';
-        $mailtrap_password = '203aafda110ab7';
-        $mailtrap_from     = 'noreply@nsmartrac.com';
-
 		$error_count   = 0;
 		$success_count = 0;
 
@@ -3455,7 +3449,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $date_from     = date('Y-m-d', strtotime('-14 days', strtotime($current_date))); 
         $date_to       = date("Y-m-d");
 
-        $is_automation_activated  = true;
+        $is_automation_activated  = enableAutomationActivated();
         $is_live_mail_credentials = false;
 
         $activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsWithSub14Days($current_date);
@@ -3558,7 +3552,7 @@ class Cron_Jobs_Controller extends CI_Controller
 					$invoice_id = $this->Invoice_model->create($data_invoice);
 
                     //Automation add sending email queue - start
-                    if($is_automation_activated) {
+                    /*if($is_automation_activated) {
                         $auto_params = [
                             'entity' => 'invoice',
                             'trigger_action' => 'send_email',
@@ -3584,6 +3578,11 @@ class Cron_Jobs_Controller extends CI_Controller
                             }
                                                    
                         }
+                    }*/
+
+                    if($is_automation_activated) {
+                        createAutomationQueue('send_email', 'invoice', 'invoice', 'created', $invoice_id);
+                        createAutomationQueue('send_sms', 'invoice', 'invoice', 'created', $invoice_id);
                     }
                     //Automation add sending email queue - end
 

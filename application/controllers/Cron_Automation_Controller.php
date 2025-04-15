@@ -20,7 +20,7 @@ class Cron_Automation_Controller extends CI_Controller
         $automation_fail = 0; 
         $automation_success = 0;
 
-        $is_live_mail_credentials = false;
+        $is_live_mail_credentials = isLiveMailSmptCredentials();
 
         /**
          * Send email automation for creating new invoice - Start
@@ -162,7 +162,7 @@ class Cron_Automation_Controller extends CI_Controller
     {
         $automation_fail = 0; 
         $automation_success = 0;
-        $is_live_mail_credentials = false;
+        $is_live_mail_credentials = isLiveMailSmptCredentials();
 
         /**
          * Send email automation for set invoice paid - Start
@@ -299,7 +299,7 @@ class Cron_Automation_Controller extends CI_Controller
     {
         $automation_fail = 0; 
         $automation_success = 0;
-        $is_live_mail_credentials = false;
+        $is_live_mail_credentials = isLiveMailSmptCredentials();
 
         /**
          * Send email automation for set invoice paid - Start
@@ -432,7 +432,7 @@ class Cron_Automation_Controller extends CI_Controller
     {
         $automation_fail = 0; 
         $automation_success = 0;
-        $is_live_mail_credentials = false;
+        $is_live_mail_credentials = isLiveMailSmptCredentials();
 
         /**
          * Send email automation for set invoice paid - Start
@@ -561,9 +561,340 @@ class Cron_Automation_Controller extends CI_Controller
         echo 'automation success: ' . $automation_success; 
     }
 
-    public function cronSmsAutomation()
+    public function cronCreatedInvoiceSMSAutomation()
     {
+        $automation_fail = 0; 
+        $automation_success = 0;
+
+        /**
+         * Send email automation for creating new invoice - Start
+         */
+        $auto_to_user_params = [
+            'entity' => 'invoice',
+            'trigger_action' => 'send_sms',
+            'operation' => 'send',
+            'status' => 'active',
+            'trigger_event' => 'created',
+            'trigger_time' => 0,
+        ];
+
+        $automationsData = $this->automation_model->getAutomationsListByParams($auto_to_user_params);  
+
+        if($automationsData) {
+
+            foreach($automationsData as $automationData) {
+
+                $automation_id = $automationData->id;
+                $filters['automation_id'] = $automation_id;
+                $filters['is_triggered']  = 0;
+                $filters['status']        = 'new';                
+                $automation_queues = $this->automation_queue_model->getActiveAutomationQueue($filters);  
+
+                if($automation_queues) {
+                    foreach($automation_queues as $automation_queue) {
+                        $queue_entity_id = $automation_queue->entity_id;
+                        $invoice = $this->invoice_model->getinvoice($queue_entity_id); 
+                        
+                        $targetName    = "";
+                        $sendSmsNumber = "";
+
+                        if($automationData->target == 'user') {
+                            $targetUser = $this->users_model->getCompanyUserById($automationData->target_id);
+                            if($targetUser) {
+                                $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                $sendSmsNumber = $targetUser->mobile;
+                            }
+                        }elseif($automationData->target == 'client') {
+                            if($invoice && $invoice->customer_id) {
+                                $targetUser = $this->AcsProfile_model->getByProfId($invoice->customer_id);    
+                                if($targetUser) {
+                                    $targetName    = $targetUser->first_name . ' ' . $targetUser->last_name;
+                                    $sendSmsNumber = $targetUser->phone_m;
+                                } 
+                            }
+                        }elseif($automationData->target == 'sales_rep') {
+                            if($invoice && $invoice->user_id) {
+                                $targetUser = $this->users_model->getCompanyUserById($invoice->user_id);
+                                if($targetUser) {
+                                    $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                    $sendSmsNumber = $targetUser->mobile;;
+                                }                                   
+                            }
+                        }
+                        
+                        if($targetName != "" && $sendSmsNumber != "") {
+
+                            //Send SMS Here
+                            $sms_body_with_smart_tags = $this->replaceSmartTags($automationData->sms_body, $invoice->id);
+
+                        }
         
+                    }
+                }
+    
+
+            }
+
+        }
+        /**
+         * Send email automation for creating new invoice - End
+         */
+
+         echo 'automation fail: ' . $automation_fail;
+         echo '<hr />';
+         echo 'automation success: ' . $automation_success;        
+    }
+
+    public function cronPaidInvoiceSMSAutomation() 
+    {
+        $automation_fail = 0; 
+        $automation_success = 0;
+
+        /**
+         * Send email automation for updating invoice status to paid - Start
+         */
+        $auto_to_user_params = [
+            'entity' => 'invoice',
+            'trigger_action' => 'send_sms',
+            'operation' => 'send',
+            'status' => 'active',
+            'trigger_event' => 'paid',
+            'trigger_time' => 0,
+        ];    
+
+        $automationsData = $this->automation_model->getAutomationsListByParams($auto_to_user_params);  
+
+        if($automationsData) {
+
+            foreach($automationsData as $automationData) {
+
+                $automation_id = $automationData->id;
+                $filters['automation_id'] = $automation_id;
+                $filters['is_triggered']  = 0;
+                $filters['status']        = 'new';                
+                $automation_queues = $this->automation_queue_model->getActiveAutomationQueue($filters);  
+
+                if($automation_queues) {
+                    foreach($automation_queues as $automation_queue) {
+                        $queue_entity_id = $automation_queue->entity_id;
+                        $invoice = $this->invoice_model->getinvoice($queue_entity_id); 
+                        
+                        $targetName    = "";
+                        $sendSmsNumber = "";
+
+                        if($automationData->target == 'user') {
+                            $targetUser = $this->users_model->getCompanyUserById($automationData->target_id);
+                            if($targetUser) {
+                                $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                $sendSmsNumber = $targetUser->mobile;
+                            }
+                        }elseif($automationData->target == 'client') {
+                            if($invoice && $invoice->customer_id) {
+                                $targetUser = $this->AcsProfile_model->getByProfId($invoice->customer_id);    
+                                if($targetUser) {
+                                    $targetName    = $targetUser->first_name . ' ' . $targetUser->last_name;
+                                    $sendSmsNumber = $targetUser->phone_m;
+                                } 
+                            }
+                        }elseif($automationData->target == 'sales_rep') {
+                            if($invoice && $invoice->user_id) {
+                                $targetUser = $this->users_model->getCompanyUserById($invoice->user_id);
+                                if($targetUser) {
+                                    $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                    $sendSmsNumber = $targetUser->mobile;;
+                                }                                   
+                            }
+                        }
+                        
+                        if($targetName != "" && $sendSmsNumber != "") {
+
+                            //Send SMS Here
+                            $sms_body_with_smart_tags = $this->replaceSmartTags($automationData->sms_body, $invoice->id);
+
+                        }
+        
+                    }
+                }
+    
+
+            }
+
+        }
+        /**
+         * Send email automation for updating invoice status to paid - End
+         */
+
+         echo 'automation fail: ' . $automation_fail;
+         echo '<hr />';
+         echo 'automation success: ' . $automation_success;       
+    }
+
+    public function cronSetToDueInvoiceSMSAutomation() 
+    {
+        $automation_fail = 0; 
+        $automation_success = 0;
+
+        /**
+         * Send email automation for updating invoice status to due - Start
+         */
+        $auto_to_user_params = [
+            'entity' => 'invoice',
+            'trigger_action' => 'send_sms',
+            'operation' => 'send',
+            'status' => 'active',
+            'trigger_event' => 'due',
+            'trigger_time' => 0,
+        ];    
+
+        $automationsData = $this->automation_model->getAutomationsListByParams($auto_to_user_params);  
+
+        if($automationsData) {
+
+            foreach($automationsData as $automationData) {
+
+                $automation_id = $automationData->id;
+                $filters['automation_id'] = $automation_id;
+                $filters['is_triggered']  = 0;
+                $filters['status']        = 'new';                
+                $automation_queues = $this->automation_queue_model->getActiveAutomationQueue($filters);  
+
+                if($automation_queues) {
+                    foreach($automation_queues as $automation_queue) {
+                        $queue_entity_id = $automation_queue->entity_id;
+                        $invoice = $this->invoice_model->getinvoice($queue_entity_id); 
+                        
+                        $targetName    = "";
+                        $sendSmsNumber = "";
+
+                        if($automationData->target == 'user') {
+                            $targetUser = $this->users_model->getCompanyUserById($automationData->target_id);
+                            if($targetUser) {
+                                $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                $sendSmsNumber = $targetUser->mobile;
+                            }
+                        }elseif($automationData->target == 'client') {
+                            if($invoice && $invoice->customer_id) {
+                                $targetUser = $this->AcsProfile_model->getByProfId($invoice->customer_id);    
+                                if($targetUser) {
+                                    $targetName    = $targetUser->first_name . ' ' . $targetUser->last_name;
+                                    $sendSmsNumber = $targetUser->phone_m;
+                                } 
+                            }
+                        }elseif($automationData->target == 'sales_rep') {
+                            if($invoice && $invoice->user_id) {
+                                $targetUser = $this->users_model->getCompanyUserById($invoice->user_id);
+                                if($targetUser) {
+                                    $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                    $sendSmsNumber = $targetUser->mobile;;
+                                }                                   
+                            }
+                        }
+                        
+                        if($targetName != "" && $sendSmsNumber != "") {
+
+                            //Send SMS Here
+                            $sms_body_with_smart_tags = $this->replaceSmartTags($automationData->sms_body, $invoice->id);
+
+                        }
+        
+                    }
+                }
+    
+
+            }
+
+        }
+        /**
+         * Send email automation for updating invoice status to due - End
+         */
+
+         echo 'automation fail: ' . $automation_fail;
+         echo '<hr />';
+         echo 'automation success: ' . $automation_success;     
+    }
+
+    public function cronSetToPastDueInvoiceSMSAutomation() 
+    {
+        $automation_fail = 0; 
+        $automation_success = 0;
+
+        /**
+         * Send email automation for updating invoice status to past due - Start
+         */
+        $auto_to_user_params = [
+            'entity' => 'invoice',
+            'trigger_action' => 'send_sms',
+            'operation' => 'send',
+            'status' => 'active',
+            'trigger_event' => 'past_due',
+            'trigger_time' => 0,
+        ];    
+
+        $automationsData = $this->automation_model->getAutomationsListByParams($auto_to_user_params);  
+
+        if($automationsData) {
+
+            foreach($automationsData as $automationData) {
+
+                $automation_id = $automationData->id;
+                $filters['automation_id'] = $automation_id;
+                $filters['is_triggered']  = 0;
+                $filters['status']        = 'new';                
+                $automation_queues = $this->automation_queue_model->getActiveAutomationQueue($filters);  
+
+                if($automation_queues) {
+                    foreach($automation_queues as $automation_queue) {
+                        $queue_entity_id = $automation_queue->entity_id;
+                        $invoice = $this->invoice_model->getinvoice($queue_entity_id); 
+                        
+                        $targetName    = "";
+                        $sendSmsNumber = "";
+
+                        if($automationData->target == 'user') {
+                            $targetUser = $this->users_model->getCompanyUserById($automationData->target_id);
+                            if($targetUser) {
+                                $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                $sendSmsNumber = $targetUser->mobile;
+                            }
+                        }elseif($automationData->target == 'client') {
+                            if($invoice && $invoice->customer_id) {
+                                $targetUser = $this->AcsProfile_model->getByProfId($invoice->customer_id);    
+                                if($targetUser) {
+                                    $targetName    = $targetUser->first_name . ' ' . $targetUser->last_name;
+                                    $sendSmsNumber = $targetUser->phone_m;
+                                } 
+                            }
+                        }elseif($automationData->target == 'sales_rep') {
+                            if($invoice && $invoice->user_id) {
+                                $targetUser = $this->users_model->getCompanyUserById($invoice->user_id);
+                                if($targetUser) {
+                                    $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                    $sendSmsNumber = $targetUser->mobile;;
+                                }                                   
+                            }
+                        }
+                        
+                        if($targetName != "" && $sendSmsNumber != "") {
+
+                            //Send SMS Here
+                            $sms_body_with_smart_tags = $this->replaceSmartTags($automationData->sms_body, $invoice->id);
+
+                        }
+        
+                    }
+                }
+    
+
+            }
+
+        }
+        /**
+         * Send email automation for updating invoice status to past due - End
+         */
+
+         echo 'automation fail: ' . $automation_fail;
+         echo '<hr />';
+         echo 'automation success: ' . $automation_success;
     }
 
     public function replaceSmartTags($message, $invoice_id = 0){
