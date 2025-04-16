@@ -2018,6 +2018,7 @@ $route['customer/download_document/(:any)?'] = 'CustomerDashboardQuickActions/do
 $route['customer/_delete_client_agreement']  = 'CustomerDashboardQuickActions/ajaxDeleteClientAgreement';
 $route['customer/_get_document_archives']  = 'CustomerDashboardQuickActions/ajaxGetDocumentArchives';
 $route['customer/_restore_archived_document']  = 'CustomerDashboardQuickActions/ajaxRestoreArchivedDocument';
+$route['customer/_save_signature']  = 'Customer/ajax_save_signature';
 
 //Customer
 $route['customer/_restore_archived']    = 'Customer/ajax_restore_archived';
