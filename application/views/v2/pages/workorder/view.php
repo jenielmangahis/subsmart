@@ -359,12 +359,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <?php 
                                   $qty = $item->qty > 0 ? $item->qty : 0;
                                   $total_cost = $item->price > 0 ? $item->price : 0;
-                                  $unit_cost  = $total_cost / $qty;
-                                  $unit_cost  = is_nan($unit_cost) ? 0 : $unit_cost;
+                                  if( $total_cost > 0 ){
+                                    $unit_cost  = $total_cost / $qty;
+                                  }else{
+                                    $unit_cost  = 0;
+                                  }
                                 ?>
                                 <tr class="table-items__tr">
                                   <td style="width: 30px; text-align: center;" valign="top"><?= $row; ?></td>
-                                  <td valign="top"> <?php echo $item->item; ?>   </td>
+                                  <td valign="top"> <?php echo $item->item; ?></td>
                                   <td style="width: 50px; text-align: right;" valign="top"> <?php echo intval($qty); ?>  </td>
                                   <td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($unit_cost,2) ?></td>
                                   <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">$0.00</td>

@@ -2362,7 +2362,13 @@ class Dashboard extends Widgets
                     $graphData['My Tasks'] += (in_array($user_id, json_decode($datas->assigned_employees, true))) ? 1 : 0;
                     $graphData['Today`s Tasks'] += (date('Y-m-d', strtotime($datas->date)) === $postData['dateTo']) ? 1 : 0;
                 }
-                break;
+            break;
+            case 'activity_logs':
+                $graphData = $data;
+            break;
+            case 'recent_customers':
+                $graphData = $data;
+            break;
             default:
                 $graphData = ['error' => 'Invalid category'];
             break;
