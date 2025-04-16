@@ -426,9 +426,7 @@
             ?>
         </div>
     </div>
-    <div class="col-lg-12">
-        <hr style="margin: 2em;">
-    </div>
+    <div class="col-lg-12 mt-5 mb-5"></div>
     <div class="col-lg-12">
         <div class="widgetLayoutControl display_none">
             <a href="javascript:void(0)" class="text-decoration-none widgetCustomizeLayout"><span>Customize Widget Layout</span></a>
