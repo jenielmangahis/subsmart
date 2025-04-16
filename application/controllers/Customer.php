@@ -2745,9 +2745,15 @@ class Customer extends MY_Controller
         $this->load->model('Clients_model');
         $this->load->model('taskhub_model');
         $this->load->model('CustomerStatementClaim_model');
+        $this->load->model('CustomerSignature_model');
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->library('wizardlib');        
         error_reporting(0);       
+
+        add_footer_js([
+			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
+			'assets/js/jquery.signaturepad.js'
+        ]);
        
         $cid = logged('company_id');
         $customer = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
@@ -2880,8 +2886,9 @@ class Customer extends MY_Controller
             }
 
             $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
-            $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($cid);
+            $twilioAccount  = $this->TwilioAccounts_model->getByCompanyId($cid);
             $statementClaim = $this->CustomerStatementClaim_model->getByCustomerId($id);
+            $customerSignature = $this->CustomerSignature_model->getByCustomerId($id);
 
             $this->page_data['twilioAccount'] = $twilioAccount;
             $this->page_data['ringCentralAccount'] = $ringCentralAccount;
@@ -2899,6 +2906,7 @@ class Customer extends MY_Controller
             $this->page_data['twilioAccount'] = $twilioAccount;
             $this->page_data['alarm_customer_info'] = $alarm_customer_info;
             $this->page_data['statementClaim'] = $statementClaim;
+            $this->page_data['customerSignature'] = $customerSignature;
             $this->load->view('v2/pages/customer/module', $this->page_data);
         }else{
             redirect('customer');
@@ -12208,12 +12216,10 @@ class Customer extends MY_Controller
             $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            
             foreach( $payments as $p ){
                 $date = date("m/d/Y", strtotime($p->payment_date));
-                $payment_method = $p->payment_method;
                 $ledger[$date][] = [
                     'id' => $p->id,
                     'type' => 'payment',          
                     'date' => $date,      
-                    'payment_method' => $payment_method,
                     //'description' => 'Payment for invoice number ' . $invoice->invoice_number,
                     'description' => 'Month rent ' . date('M Y', strtotime($invoice->due_date)),
                     'amount' => $p->invoice_amount
@@ -12315,5 +12321,44 @@ class Customer extends MY_Controller
             //$this->load->view('v2/pages/customer/pdf/statement_of_claims', $this->page_data);   
             $this->pdf->load_view('v2/pages/customer/pdf/statement_of_claims', $this->page_data, $filename, "P");
         }
+    }
+
+    public function ajax_save_signature()
+    {
+        $this->load->model('CustomerSignature_model');
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 0;
+        $msg  = 'Cannot find data';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+        
+        $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
+        if( $customer ){
+            $customerSignature = $this->CustomerSignature_model->getByCustomerId($post['customer_id']);
+            if( $customerSignature ){
+                $data = ['value' => $post['signature_value'],'date_updated' => date("Y-m-d H:i:s")];
+                $this->CustomerSignature_model->update($customerSignature->id, $data);
+            }else{
+                $data = [
+                    'company_id' => $cid,
+                    'customer_id' => $customer->prof_id,              
+                    'customer_name' => $customer->first_name . ' ' . $customer->last_name,
+                    'date' => date("Y-m-d"),
+                    'time' => date("h:i A"),
+                    'value' => $post['signature_value'],
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+                $this->CustomerSignature_model->create($data);
+            }
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 }

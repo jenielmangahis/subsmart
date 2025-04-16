@@ -5697,24 +5697,26 @@ class Workorder extends MY_Controller
         $total      = $this->input->post('total');
 
         $this->workorder_model->delete_items($workorder->id);
-        foreach($items as $key => $value){
-            $package_id = 0;
-            if( isset($packageID[$key]) ){
-                $package_id = $packageID[$key];
+        if( $items ){
+            foreach($items as $key => $value){
+                $package_id = 0;
+                if( isset($packageID[$key]) ){
+                    $package_id = $packageID[$key];
+                }
+    
+                $items = [
+                    'items_id' => $value,      
+                    'package_id' => $package_id,
+                    'qty' => $quantity[$key],
+                    'cost' => $price[$key],
+                    'tax' => $tax[$key],
+                    'discount' => $discount[$key],
+                    'total' => $total[$key],
+                    'work_order_id' => $workorder->id
+                ];   
+                $this->workorder_model->add_work_order_details($items);
             }
-
-            $items = [
-                'items_id' => $value,      
-                'package_id' => $package_id,
-                'qty' => $quantity[$key],
-                'cost' => $price[$key],
-                'tax' => $tax[$key],
-                'discount' => $discount[$key],
-                'total' => $total[$key],
-                'work_order_id' => $workorder->id
-            ];   
-            $this->workorder_model->add_work_order_details($items);
-        }
+        }        
 
         $getname = $this->workorder_model->getname($user_id);
 
