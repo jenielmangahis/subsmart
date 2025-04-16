@@ -317,7 +317,7 @@ class Inventory extends MY_Controller
     }
 
     public function add()
-    {
+    {        
         if(!checkRoleCanAccessModule('inventory', 'write')){
 			show403Error();
 			return false;
