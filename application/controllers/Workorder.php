@@ -12187,6 +12187,12 @@ class Workorder extends MY_Controller
         $this->load->model('Clients_model');
         $this->load->model('Checklist_model');
         $this->load->model('AcsAccess_model');
+        $this->load->helper('functions');
+
+        if(!checkRoleCanAccessModule('work-orders', 'write')){
+			show403Error();
+			return false;
+		}
 
         $estimate = $this->estimate_model->getById($id);
         $company_id = logged('company_id');
@@ -12220,39 +12226,15 @@ class Workorder extends MY_Controller
         $this->load->library('session');
 
         $users_data = $this->session->all_userdata();
-        // foreach($users_data as $usersD){
-        //     $userID = $usersD->id;
-            
-        // }
 
-        // print_r($user_id);
-        // $users = $this->users_model->getUserByID($user_id);
-        // print_r($users);
-        // echo $company_id;
-
-        $role = logged('role');
-        if( $role == 1 || $role == 2){
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-            // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }else{
-            // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
-        $this->page_data['items'] = $this->items_model->getItemlist();
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         // $this->page_data['number'] = $this->estimate_model->getlastInsert();
         $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
-
-        // $termsCondi = $this->workorder_model->getTerms($company_id);
-        // if($termsCondi){
-        //     // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
-        //     $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
-        // }else{
-        //     // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
-        //     $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
-        // }
 
         $termsCondi = $this->workorder_model->getWOTerms($company_id);
         if($termsCondi){

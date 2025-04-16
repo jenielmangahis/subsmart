@@ -812,6 +812,11 @@ class Mycrm extends MY_Controller
                 $this->CompanySubscriptionPayments_model->update($id, $data);
 
                 $is_success = 1;
+
+                //Activity Logs
+                $activity_name = 'MyCRM : Purchase plan license'; 
+                createActivityLog($activity_name);
+
             } else {
                 $message = $result['msg'];
             }
