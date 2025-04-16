@@ -7,29 +7,20 @@
     $category = trim($thumbnailsWidgetCard->category);
 ?>
 
-<div class='card shadow <?php echo "card_$category$id "; ?>'>
+<div class='card shadow widgetBorder <?php echo "card_$category$id "; ?>'>
     <div class="card-body">
         <div class="row">
             <div class="col-md-12">
                 <h5 class="mt-0 fw-bold">
                     <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
-                        <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <span class="badge bg-secondary position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
+                        <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <span class="badge widgetBadge position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
                     </a>
-                    <div class="dropdown float-end thumbnailDropdownMenu display_none">
+                    <div class="dropdown float-end widgetDropdownMenu display_none">
                         <a href="javascript:void(0)" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-ellipsis-h text-muted"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item removeDashboardCard" data-id='<?php echo $id; ?>' href="javascript:void(0)">Remove</a></li>
-                            <!-- <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li class="px-3 showGraphButton">
-                                <div class="form-check" style="margin: -4px;">
-                                    <input class="form-check-input <?php echo "showHideGraphCheckbox_$id"; ?> graphCheckbox" type="checkbox" <?php echo ($graphState == 'block') ? 'checked' : ''; ?>>
-                                    <label class="form-check-label text-muted graphCheckboxLabel">Show Graph</label>
-                                </div>
-                            </li> -->
                         </ul>
                     </div>
                 </h5>
@@ -41,13 +32,13 @@
             </div>
         </div>
         <div class="row mb-2">
-            <div class="col-md-12">
+            <!-- <div class="col-md-12">
                 <div class="input-group">
-                    <select class="form-select <?php echo "thumbnailFilter1_$id"; ?>">
-                        <option value="all_time" selected>All Time</option>
-                        <option value="this_year">This Year</option>
+                    <select class="form-select <?php echo "widgetFilter1_$id"; ?>">
+                        <option value="all_time">All Time</option>
+                        <option value="this_year" selected>This Year</option>
                     </select>
-                    <select class="form-select <?php echo "thumbnailFilter2_$id"; ?>">
+                    <select class="form-select <?php echo "widgetFilter2_$id"; ?>">
                         <option value="recent" selected>Recent</option>
                         <option value="last_7_days">Last 7 Days</option>
                         <option value="last_14_days">Last 14 Days</option>
@@ -55,17 +46,17 @@
                         <option value="last_60_days">Last 60 Days</option>
                     </select>
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="row">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center textData">
-                    <small class="text-muted text-uppercase fw-bold">TOTAL COUNT</small>
-                    <h4 class="<?php echo "textData1_$id"; ?>"></h2>
+                <div class="table-responsive" style="max-height: 500px;">
+                    <table class="table <?php echo "tableData_$id"; ?> table-hover w-100 mb-0">
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-            <div class="col mt-2 <?php echo "graphDataContainer_$id"; ?> thumbnailGraphDisplay display_none">
-                <div id="<?php echo "apexThumbnailGraph_$id"; ?>"></div>
             </div>
             <div class="col mt-2 <?php echo "graphLoaderContainer_$id"; ?> graphLoader display_none">
                 <div class="text-center">
@@ -78,22 +69,20 @@
                 <div class="text-center">No Record Found...</div>
             </div>
         </div>
-        <strong class="thumbnailDragHandle">⣿⣿⣿⣿</strong>
-        <span class="thumbnailWidthResizeHandle"></span>
-        <span class="thumbnailHeightResizeHandle"></span>
+        <strong class="widgetDragHandle">⣿⣿⣿⣿</strong>
+        <span class="widgetWidthResizeHandle"></span>
+        <span class="widgetHeightResizeHandle"></span>
     </div>
 </div>
 <script>
-    
     function <?php echo "graphColorRandomizer_$id"; ?>(type = 'single', count = 20) {
         const colorPalette = [
-            '#FF5733', '#C70039', '#900C3F', '#581845', 
-            '#8E44AD', '#2980B9', '#1F618D', '#16A085', 
-            '#27AE60', '#D35400', '#A04000', '#7D3C98',
-            '#008FFB', '#00E396', '#FEB019', '#FF4560', 
-            '#775DD0', '#3F51B5', '#4CAF50', '#FFC107'
+            "#FEA303",
+            "#D9A1A0",
+            "#BEAFC2",
+            "#EFB6C8"
         ];
-        
+
         if (type === 'single') {
             return colorPalette[Math.floor(Math.random() * colorPalette.length)];
         } 
@@ -101,9 +90,10 @@
             const shuffled = [...colorPalette].sort(() => 0.5 - Math.random());
             return shuffled.slice(0, Math.min(count, colorPalette.length));
         }
-        
+
         return colorPalette[0];
     }
+
 
     function <?php echo "processData_$id"; ?>(category, dateFrom, dateTo, filter3) { 
         $.ajax({
@@ -117,30 +107,40 @@
             },
             beforeSend: function() {
                 $('.<?php echo "textDataContainer_$id"; ?>').hide();
-                $('.<?php echo "graphDataContainer_$id"; ?>').hide();
                 $('.<?php echo "graphLoaderContainer_$id"; ?>').fadeIn();
                 $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
             },
             success: function(response) {
-                let <?php echo "textData1_$id"; ?> = JSON.parse(response)['TOTAL_COUNT'];
+                let data = JSON.parse(response);
+                
+                Object.entries(data).forEach(([key, value]) => {
+                    const initials = data[key].user.split(' ').map(word => word.charAt(0)).join('');
+                    const timestamp = new Date(data[key].date).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }).replace(/(AM|PM)/, match => match.toUpperCase()).replace(',', '');
 
+                    $('.<?php echo "tableData_$id"; ?> > tbody').append(`
+                        <tr>
+                            <td class="p-2 align-middle">
+                                <div class="d-flex position-relative">
+                                    <div class="me-2 flex-shrink-0">
+                                        <div class="nsm-profile" style="background-color:#6a4a8691!important;">
+                                            <span>${initials}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 min-width-0">
+                                        <strong>${data[key].user}</strong><br>
+                                        <span class="d-block text-wrap" style="font-size: 13px;">${data[key].activity}</span>
+                                    </div>
+                                    <small class="text-muted position-absolute" style="top: 0; right: 1px;">${timestamp}</small>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+
+                $('.<?php echo "textDataContainer_$id"; ?>').fadeIn();
                 $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
                 $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
-                $('.<?php echo "textData1_$id"; ?>').text(<?php echo "textData1_$id"; ?>);
-
-                if ($('.<?php echo "showHideGraphCheckbox_$id"; ?>').is(':checked')) {
-                    $('.<?php echo "textDataContainer_$id"; ?>').hide();
-                    $('.<?php echo "graphDataContainer_$id"; ?>').fadeIn();
-                } else {
-                    $('.<?php echo "textDataContainer_$id"; ?>').fadeIn();
-                    $('.<?php echo "graphDataContainer_$id"; ?>').hide();
-                }
-
-                // <?php echo "graphChart_$id"; ?>.updateOptions({
-                //     labels: ["Open", "Expired"]
-                // });
-
-                // <?php echo "graphChart_$id"; ?>.updateSeries([totalOpen, totalExpired]);
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.error("Request failed!");
@@ -150,44 +150,19 @@
         });
     }
 
-
-    // let category = '<?php echo $category; ?>';
-    // let dateFrom = new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0];
-    // let dateTo = new Date().toISOString().split('T')[0];
-    // let filter2 = 'all_status';
     <?php echo "processData_$id"; ?>(
         '<?php echo $category; ?>', 
-        ($('.<?php echo "thumbnailFilter1_$id"; ?> option:selected').val() == 'all_time') ? '1970-01-01' : new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0], 
+        ($('.<?php echo "widgetFilter1_$id"; ?> option:selected').val() == 'all_time') ? '1970-01-01' : new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0], 
         new Date().toISOString().split('T')[0], 
-        $('.<?php echo "thumbnailFilter3_$id"; ?> option:selected').val()
+        $('.<?php echo "widgetFilter3_$id"; ?> option:selected').val()
     );
-    
-    // let <?php echo "options_$id"; ?> = {
-    //     series: [],
-    //     chart: {
-    //         height: 150,
-    //         type: 'donut'
-    //     },
-    //     legend: { position: 'bottom' },
-    //     labels: ["Open", "Expired"],
-    //     responsive: [{
-    //         breakpoint: 480,
-    //         options: {
-    //             chart: { height: 150 },
-    //             legend: { position: 'bottom' }
-    //         }
-    //     }]
-    // };
-    
-    // let <?php echo "graphChart_$id"; ?> = new ApexCharts(document.querySelector("#<?php echo "apexThumbnailGraph_$id"; ?>"), <?php echo "options_$id"; ?>);
-    // <?php echo "graphChart_$id"; ?>.render(); 
-
-    $(document).on('change', '.<?php echo "thumbnailFilter1_$id"; ?>, .<?php echo "thumbnailFilter2_$id"; ?>, .<?php echo "thumbnailFilter3_$id"; ?>', function() {
+  
+    $(document).on('change', '.<?php echo "widgetFilter1_$id"; ?>, .<?php echo "widgetFilter2_$id"; ?>, .<?php echo "widgetFilter3_$id"; ?>', function() {
         let category = '<?php echo $category; ?>';
-        let filter1 = $('.<?php echo "thumbnailFilter1_$id"; ?> option:selected').val();
-        let filter2 = $('.<?php echo "thumbnailFilter2_$id"; ?> option:selected').val();
-        let filter3 = $('.<?php echo "thumbnailFilter3_$id"; ?> option:selected').val();
-        let dateFrom = '1970-01-01';
+        let filter1 = $('.<?php echo "widgetFilter1_$id"; ?> option:selected').val();
+        let filter2 = $('.<?php echo "widgetFilter2_$id"; ?> option:selected').val();
+        let filter3 = $('.<?php echo "widgetFilter3_$id"; ?> option:selected').val();
+        let dateFrom = new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0];
         let dateTo = new Date().toISOString().split('T')[0];
         let today = new Date();
 
@@ -226,10 +201,8 @@
         if (!$('.<?php echo "noRecordFoundContainer_$id"; ?>').is(':visible')) {
             if ($(this).is(':checked')) {
                 $('.<?php echo "textDataContainer_$id"; ?>').hide();
-                $('.<?php echo "graphDataContainer_$id"; ?>').fadeIn();
             } else {
                 $('.<?php echo "textDataContainer_$id"; ?>').fadeIn();
-                $('.<?php echo "graphDataContainer_$id"; ?>').hide();
             }
         }
     });

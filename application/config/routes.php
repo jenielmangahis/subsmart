@@ -1534,6 +1534,12 @@ $route['cron/send_paid_invoice_mail_automation'] = 'Cron_Automation_Controller/c
 $route['cron/send_set_due_invoice_mail_automation'] = 'Cron_Automation_Controller/cronSetToDueInvoiceMailAutomation'; 
 $route['cron/send_set_past_due_invoice_mail_automation'] = 'Cron_Automation_Controller/cronSetToPastDueInvoiceMailAutomation'; 
 
+//Cron Automation - SMS
+$route['cron/send_created_invoice_sms_automation'] = 'Cron_Automation_Controller/cronCreatedInvoiceSMSAutomation';
+$route['cron/send_paid_invoice_sms_automation'] = 'Cron_Automation_Controller/cronPaidInvoiceSMSAutomation'; 
+$route['cron/send_set_due_invoice_sms_automation'] = 'Cron_Automation_Controller/cronSetToDueInvoiceSMSAutomation'; 
+$route['cron/send_set_past_due_invoice_sms_automation'] = 'Cron_Automation_Controller/cronSetToPastDueInvoiceSMSAutomation'; 
+
 //Cron Automation - Sms
 $route['cron/send_sms_automation'] = 'Cron_Automation_Controller/cronSmsAutomation';
 
@@ -2069,6 +2075,8 @@ $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscr
 $route['benchmark/test_late_invoice_computation'] = 'Benchmark/test_late_invoice_computation';
 $route['benchmark/manual_add_customer_invoice'] = 'Benchmark/manualAddCustomerInvoice';
 $route['benchmark/test_mail_function'] = 'Benchmark/testMailFunction';
+$route['benchmark/test_sms_automation'] = 'Benchmark/testSMSAutomation';
+
 
 //Role Access Modules
 $route['users/role_access_modules'] = 'Users/role_access_modules';

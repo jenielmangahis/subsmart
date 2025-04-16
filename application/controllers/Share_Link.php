@@ -831,7 +831,7 @@ class Share_Link extends MY_P_Controller
             'monthly_monitoring'                => $workData->monthly_monitoring,
 
             'payment_method'                    => $payment->payment_method,
-            'amount'                            => $payment->amount, //
+            'amount'                            => $payment->amount > 0 ? $payment->amount : '0.00', //
             'check_number'                      => $payment->check_number,
             'routing_number'                    => $payment->routing_number,
             'account_number'                    => $payment->account_number,
@@ -874,7 +874,7 @@ class Share_Link extends MY_P_Controller
         // $this->pdf->load_view('workorder/send_email_acs_alarm', $data, $filename, "portrait");
         $this->load->library('pdf');
         //$this->load->view('workorder/work_order_pdf_template', $data);
-        $this->pdf->load_view('workorder/work_order_pdf_template', $data, $filename, "portrait");
+        $this->pdf->load_view('workorder/work_order_pdf_template', $data, $filename, "p");
         //$this->pdf->render();
         //$this->pdf->stream($filename);
     }

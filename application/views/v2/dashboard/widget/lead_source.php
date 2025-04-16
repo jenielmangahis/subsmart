@@ -7,15 +7,15 @@
     $category = trim($thumbnailsWidgetCard->category);
 ?>
 
-<div class='card shadow <?php echo "card_$category$id "; ?>'>
+<div class='card shadow widgetBorder <?php echo "card_$category$id "; ?>'>
     <div class="card-body">
         <div class="row">
             <div class="col-md-12">
                 <h5 class="mt-0 fw-bold">
                     <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
-                        <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <span class="badge bg-secondary position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
+                        <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <span class="badge widgetBadge position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
                     </a>
-                    <div class="dropdown float-end thumbnailDropdownMenu display_none">
+                    <div class="dropdown float-end widgetDropdownMenu display_none">
                         <a href="javascript:void(0)" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-ellipsis-h text-muted"></i>
                         </a>
@@ -41,13 +41,13 @@
             </div>
         </div>
         <div class="row mb-2">
-            <div class="col-md-12">
+            <!-- <div class="col-md-12">
                 <div class="input-group">
-                    <select class="form-select <?php echo "thumbnailFilter1_$id"; ?>">
+                    <select class="form-select <?php echo "widgetFilter1_$id"; ?>">
                         <option value="all_time">All Time</option>
                         <option value="this_year" selected>This Year</option>
                     </select>
-                    <select class="form-select <?php echo "thumbnailFilter2_$id"; ?>">
+                    <select class="form-select <?php echo "widgetFilter2_$id"; ?>">
                         <option value="recent" selected>Recent</option>
                         <option value="last_7_days">Last 7 Days</option>
                         <option value="last_14_days">Last 14 Days</option>
@@ -55,23 +55,16 @@
                         <option value="last_60_days">Last 60 Days</option>
                     </select>
                 </div>
-            </div>
+            </div> -->
         </div>
-        <div class="row">
+        <div class="row <?php echo "textDatas_$id"; ?>">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center textData">
-                    <small class="text-muted text-uppercase fw-bold">TOTAL AMOUNT</small>
-                    <h4 class="<?php echo "textData1_$id"; ?>"></h2>
+                    
                 </div>
             </div>
-            <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center textData">
-                    <small class="text-muted text-uppercase fw-bold">TOTAL COUNT</small>
-                    <h4 class="<?php echo "textData2_$id"; ?>"></h4>
-                </div>
-            </div>
-            <div class="col mt-2 <?php echo "graphDataContainer_$id"; ?> thumbnailGraphDisplay display_none">
-                <div id="<?php echo "apexThumbnailGraph_$id"; ?>"></div>
+            <div class="col mt-2 <?php echo "graphDataContainer_$id"; ?> widgetGraphDisplay display_none">
+                <div id="<?php echo "apexwidgetGraph_$id"; ?>"></div>
             </div>
             <div class="col mt-2 <?php echo "graphLoaderContainer_$id"; ?> graphLoader display_none">
                 <div class="text-center">
@@ -84,9 +77,9 @@
                 <div class="text-center">No Record Found...</div>
             </div>
         </div>
-        <strong class="thumbnailDragHandle">⣿⣿⣿⣿</strong>
-        <span class="thumbnailWidthResizeHandle"></span>
-        <span class="thumbnailHeightResizeHandle"></span>
+        <strong class="widgetDragHandle">⣿⣿⣿⣿</strong>
+        <span class="widgetWidthResizeHandle"></span>
+        <span class="widgetHeightResizeHandle"></span>
     </div>
 </div>
 <script>
@@ -128,57 +121,52 @@
                 $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
             },
             success: function(response) {
-                let <?php echo "textData1_$id"; ?> = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(JSON.parse(response)['TOTAL_AMOUNT']);
-                let <?php echo "textData2_$id"; ?> = JSON.parse(response)['TOTAL_COUNT'];
-                let graphData = JSON.parse(response)['GRAPH'];
-                let currentYear = new Date().getFullYear().toString();
+                let data = JSON.parse(response);
+                let graphLabels = [];
+                let graphSeries = [];
+                let labelWithCounts = [];
 
-                let filteredGraphData = Object.keys(graphData)
-                    .filter(key => key.startsWith(currentYear))
-                    .reduce((obj, key) => {
-                        obj[key] = parseFloat(graphData[key]);
-                        return obj;
-                    }, {});
+                $('.<?php echo "textDataContainer_$id"; ?>').remove();
 
-                let categories = Object.keys(filteredGraphData).map(month => month.split(' ')[1]);
-                let values = Object.values(filteredGraphData);
+                Object.entries(data).forEach(([key, value]) => {
+                    graphLabels.push(key);
+                    graphSeries.push(parseInt(value));
+                    labelWithCounts.push(`${key}: ${value}`);
+                    $('.<?php echo "textDatas_$id"; ?>').append(`
+                        <div class='col-6 col-md-4 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
+                            <div class='text-center textData'>
+                                <small class='text-muted text-uppercase fw-bold'>${key}</small>
+                                <h4>${value}</h4>
+                            </div>
+                        </div>
+                    `);
+                });
 
-                if (values.length === 0) {
+                $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
+
+                if ($('.<?php echo "showHideGraphCheckbox_$id"; ?>').is(':checked')) {
                     $('.<?php echo "textDataContainer_$id"; ?>').hide();
-                    $('.<?php echo "graphDataContainer_$id"; ?>').hide();
-                    $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
-                    $('.<?php echo "noRecordFoundContainer_$id"; ?>').fadeIn();
+                    $('.<?php echo "graphDataContainer_$id"; ?>').fadeIn();
                 } else {
-                    if ($('.<?php echo "showHideGraphCheckbox_$id"; ?>').is(':checked')) {
-                        $('.<?php echo "textDataContainer_$id"; ?>').hide();
-                        $('.<?php echo "graphDataContainer_$id"; ?>').fadeIn();
-                    } else {
-                        $('.<?php echo "textDataContainer_$id"; ?>').fadeIn();
-                        $('.<?php echo "graphDataContainer_$id"; ?>').hide();
-                    }
-                    $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
-                    $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
-                    $('.<?php echo "textData1_$id"; ?>').text(<?php echo "textData1_$id"; ?>);
-                    $('.<?php echo "textData2_$id"; ?>').text(<?php echo "textData2_$id"; ?>);
-
-                    <?php echo "graphChart_$id"; ?>.updateOptions({
-                        xaxis: { categories: categories },
-                        yaxis: {
-                            labels: {
-                                formatter: function(value) {
-                                    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
-                                }
-                            }
-                        },
-                        colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple')
-                    });
-
-                    <?php echo "graphChart_$id"; ?>.updateSeries([{
-                        name: "<?php echo $title; ?>",
-                        data: values
-                    }]);
+                    $('.<?php echo "textDataContainer_$id"; ?>').fadeIn();
+                    $('.<?php echo "graphDataContainer_$id"; ?>').hide();
                 }
+
+                <?php echo "graphChart_$id"; ?>.updateOptions({
+                    labels: graphLabels,
+                    colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple'),
+                    legend: {
+                        formatter: function(seriesName, opts) {
+                            const count = opts.w.config.series[opts.seriesIndex];
+                            return `${seriesName}: <strong>${count}</strong>`;
+                        }
+                    }
+                });
+
+                <?php echo "graphChart_$id"; ?>.updateSeries(graphSeries);
             },
+
             error: function(jqXHR, textStatus, errorThrown) {
                 console.error("Request failed!");
                 console.error("Status:", textStatus);
@@ -193,30 +181,37 @@
     // let filter2 = 'all_status';
     <?php echo "processData_$id"; ?>(
         '<?php echo $category; ?>', 
-        ($('.<?php echo "thumbnailFilter1_$id"; ?> option:selected').val() == 'all_time') ? '1970-01-01' : new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0], 
+        ($('.<?php echo "widgetFilter1_$id"; ?> option:selected').val() == 'all_time') ? '1970-01-01' : new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0], 
         new Date().toISOString().split('T')[0], 
-        $('.<?php echo "thumbnailFilter3_$id"; ?> option:selected').val()
+        $('.<?php echo "widgetFilter3_$id"; ?> option:selected').val()
     );
     
     let <?php echo "options_$id"; ?> = {
-        series: [{ name: "<?php echo $title; ?>", data: [] }],
-        xaxis: { categories: [] },
-        chart: { height: 150, type: 'bar', zoom: { enabled: false }, toolbar: { show: false } },
-        dataLabels: { enabled: false },
-        stroke: { curve: 'smooth', width: 3 },
-        grid: { show: true, xaxis: { lines: { show: true } } },
-        markers: { size: 6, strokeWidth: 3, hover: { size: 10 } },
+        series: [],
+        chart: {
+            height: 400,
+            type: 'pie'
+        },
+        legend: { position: 'bottom' },
+        labels: [],
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: { height: 150 },
+                legend: { position: 'bottom' }
+            }
+        }],
         colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple')
     };
     
-    let <?php echo "graphChart_$id"; ?> = new ApexCharts(document.querySelector("#<?php echo "apexThumbnailGraph_$id"; ?>"), <?php echo "options_$id"; ?>);
+    let <?php echo "graphChart_$id"; ?> = new ApexCharts(document.querySelector("#<?php echo "apexwidgetGraph_$id"; ?>"), <?php echo "options_$id"; ?>);
     <?php echo "graphChart_$id"; ?>.render(); 
 
-    $(document).on('change', '.<?php echo "thumbnailFilter1_$id"; ?>, .<?php echo "thumbnailFilter2_$id"; ?>, .<?php echo "thumbnailFilter3_$id"; ?>', function() {
+    $(document).on('change', '.<?php echo "widgetFilter1_$id"; ?>, .<?php echo "widgetFilter2_$id"; ?>, .<?php echo "widgetFilter3_$id"; ?>', function() {
         let category = '<?php echo $category; ?>';
-        let filter1 = $('.<?php echo "thumbnailFilter1_$id"; ?> option:selected').val();
-        let filter2 = $('.<?php echo "thumbnailFilter2_$id"; ?> option:selected').val();
-        let filter3 = $('.<?php echo "thumbnailFilter3_$id"; ?> option:selected').val();
+        let filter1 = $('.<?php echo "widgetFilter1_$id"; ?> option:selected').val();
+        let filter2 = $('.<?php echo "widgetFilter2_$id"; ?> option:selected').val();
+        let filter3 = $('.<?php echo "widgetFilter3_$id"; ?> option:selected').val();
         let dateFrom = new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0];
         let dateTo = new Date().toISOString().split('T')[0];
         let today = new Date();

@@ -1710,7 +1710,7 @@ function addThumbnail(id, link) {
                     </div>
                 </div>
         </div>`;
-    $(".cardContainers1").append(divContainer);
+    $(".thumbnailCardContainers").append(divContainer);
     $.ajax({
         url: '<?php echo base_url(); ?>widgets/addV2Thumbnail',
         method: 'POST',

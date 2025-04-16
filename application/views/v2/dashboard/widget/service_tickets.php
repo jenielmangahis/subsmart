@@ -7,15 +7,15 @@
     $category = trim($thumbnailsWidgetCard->category);
 ?>
 
-<div class='card shadow <?php echo "card_$category$id "; ?>'>
+<div class='card shadow widgetBorder <?php echo "card_$category$id "; ?>'>
     <div class="card-body">
         <div class="row">
             <div class="col-md-12">
                 <h5 class="mt-0 fw-bold">
                     <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
-                        <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <span class="badge bg-secondary position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
+                        <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <span class="badge widgetBadge position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
                     </a>
-                    <div class="dropdown float-end thumbnailDropdownMenu display_none">
+                    <div class="dropdown float-end widgetDropdownMenu display_none">
                         <a href="javascript:void(0)" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-ellipsis-h text-muted"></i>
                         </a>
@@ -43,11 +43,11 @@
         <div class="row mb-2">
             <div class="col-md-12">
                 <div class="input-group">
-                    <select class="form-select <?php echo "thumbnailFilter1_$id"; ?>">
-                        <option value="all_time">All Time</option>
+                    <select class="form-select <?php echo "widgetFilter1_$id"; ?>">
+                        <!-- <option value="all_time">All Time</option> -->
                         <option value="this_year" selected>This Year</option>
                     </select>
-                    <select class="form-select <?php echo "thumbnailFilter2_$id"; ?>">
+                    <select class="form-select <?php echo "widgetFilter2_$id"; ?>">
                         <option value="recent" selected>Recent</option>
                         <option value="last_7_days">Last 7 Days</option>
                         <option value="last_14_days">Last 14 Days</option>
@@ -70,7 +70,7 @@
                     <h4 class="<?php echo "textData2_$id"; ?>"></h4>
                 </div>
             </div>
-            <div class="col mt-2 <?php echo "graphDataContainer_$id"; ?> thumbnailGraphDisplay display_none">
+            <div class="col mt-2 <?php echo "graphDataContainer_$id"; ?> widgetGraphDisplay display_none">
                 <div id="<?php echo "apexThumbnailGraph_$id"; ?>"></div>
             </div>
             <div class="col mt-2 <?php echo "graphLoaderContainer_$id"; ?> graphLoader display_none">
@@ -84,9 +84,9 @@
                 <div class="text-center">No Record Found...</div>
             </div>
         </div>
-        <strong class="thumbnailDragHandle">⣿⣿⣿⣿</strong>
-        <span class="thumbnailWidthResizeHandle"></span>
-        <span class="thumbnailHeightResizeHandle"></span>
+        <strong class="widgetDragHandle">⣿⣿⣿⣿</strong>
+        <span class="widgetWidthResizeHandle"></span>
+        <span class="widgetHeightResizeHandle"></span>
     </div>
 </div>
 <script>
@@ -163,13 +163,13 @@
 
                     <?php echo "graphChart_$id"; ?>.updateOptions({
                         xaxis: { categories: categories },
-                        yaxis: {
-                            labels: {
-                                formatter: function(value) {
-                                    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
-                                }
-                            }
-                        },
+                        // yaxis: {
+                        //     labels: {
+                        //         formatter: function(value) {
+                        //             return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+                        //         }
+                        //     }
+                        // },
                         colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple')
                     });
 
@@ -193,9 +193,9 @@
     // let filter2 = 'all_status';
     <?php echo "processData_$id"; ?>(
         '<?php echo $category; ?>', 
-        ($('.<?php echo "thumbnailFilter1_$id"; ?> option:selected').val() == 'all_time') ? '1970-01-01' : new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0], 
+        ($('.<?php echo "widgetFilter1_$id"; ?> option:selected').val() == 'all_time') ? '1970-01-01' : new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0], 
         new Date().toISOString().split('T')[0], 
-        $('.<?php echo "thumbnailFilter3_$id"; ?> option:selected').val()
+        $('.<?php echo "widgetFilter3_$id"; ?> option:selected').val()
     );
     
     let <?php echo "options_$id"; ?> = {
@@ -212,11 +212,11 @@
     let <?php echo "graphChart_$id"; ?> = new ApexCharts(document.querySelector("#<?php echo "apexThumbnailGraph_$id"; ?>"), <?php echo "options_$id"; ?>);
     <?php echo "graphChart_$id"; ?>.render(); 
 
-    $(document).on('change', '.<?php echo "thumbnailFilter1_$id"; ?>, .<?php echo "thumbnailFilter2_$id"; ?>, .<?php echo "thumbnailFilter3_$id"; ?>', function() {
+    $(document).on('change', '.<?php echo "widgetFilter1_$id"; ?>, .<?php echo "widgetFilter2_$id"; ?>, .<?php echo "widgetFilter3_$id"; ?>', function() {
         let category = '<?php echo $category; ?>';
-        let filter1 = $('.<?php echo "thumbnailFilter1_$id"; ?> option:selected').val();
-        let filter2 = $('.<?php echo "thumbnailFilter2_$id"; ?> option:selected').val();
-        let filter3 = $('.<?php echo "thumbnailFilter3_$id"; ?> option:selected').val();
+        let filter1 = $('.<?php echo "widgetFilter1_$id"; ?> option:selected').val();
+        let filter2 = $('.<?php echo "widgetFilter2_$id"; ?> option:selected').val();
+        let filter3 = $('.<?php echo "widgetFilter3_$id"; ?> option:selected').val();
         let dateFrom = new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0];
         let dateTo = new Date().toISOString().split('T')[0];
         let today = new Date();

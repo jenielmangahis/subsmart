@@ -16,8 +16,6 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('accounting_attachments_model');
         $this->load->model('tags_model');
         $this->load->model('chart_of_accounts_model');
-
-        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
     }
     public function get_time_sheet_storage($company_id, $timezone, $timesheet_report_timezone_id)
     {
@@ -3439,12 +3437,6 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('Automation_model', 'automation_model');
         $this->load->model('Automation_queue_model', 'automation_queue_model');
 
-        $mailtrap_host     = 'smtp.mailtrap.io';
-        $mailtrap_port     = 2525;
-        $mailtrap_username = 'd7c92e3b5e901d';
-        $mailtrap_password = '203aafda110ab7';
-        $mailtrap_from     = 'noreply@nsmartrac.com';
-
 		$error_count   = 0;
 		$success_count = 0;
 
@@ -3455,7 +3447,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $date_from     = date('Y-m-d', strtotime('-14 days', strtotime($current_date))); 
         $date_to       = date("Y-m-d");
 
-        $is_automation_activated  = true;
+        $is_automation_activated  = enableAutomationActivated();
         $is_live_mail_credentials = false;
 
         $activeSubscriptions = $this->customer_ad_model->getAllActiveSubscriptionsWithSub14Days($current_date);
@@ -3559,31 +3551,8 @@ class Cron_Jobs_Controller extends CI_Controller
 
                     //Automation add sending email queue - start
                     if($is_automation_activated) {
-                        $auto_params = [
-                            'entity' => 'invoice',
-                            'trigger_action' => 'send_email',
-                            'operation' => 'send',
-                            'status' => 'active',
-                            'trigger_event' => 'created',
-                            'trigger_time' => 0
-                        ];  
-                        $automationsData = $this->automation_model->getAutomationsListByParams($auto_params); 
-                        if($automationsData) {
-        
-                            foreach($automationsData as $automationData) {
-                                $data_queue = [
-                                    'automation_id' => $automationData->id,
-                                    'target_id' => 0,
-                                    'entity_type' => 'invoice',
-                                    'status' => 'new',
-                                    'entity_id' => $invoice_id,
-                                    'trigger_time' => null,
-                                    'is_triggered' => 0
-                                ];
-                                $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue); 
-                            }
-                                                   
-                        }
+                        createAutomationQueue('send_email', 'invoice', 'invoice', 'created', $invoice_id);
+                        createAutomationQueue('send_sms', 'invoice', 'invoice', 'created', $invoice_id);
                     }
                     //Automation add sending email queue - end
 

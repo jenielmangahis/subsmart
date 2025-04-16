@@ -5149,6 +5149,55 @@ if(!function_exists('set_expense_graph_data')) {
         return $is_success;
     }
 
+    function enableAutomationActivated() {
+        return true;
+    }
+
+    function isLiveMailSmptCredentials() {
+        return false;
+    }
+
+    function createAutomationQueue($trigger_action = null, $entity = null, $entity_type = null, $trigger_event = null, $entity_id = 0) {
+
+        $CI =& get_instance();
+        $CI->load->model('Automation_model');
+        $CI->load->model('Automation_queue_model');
+        
+        $queue_success_count = 0;
+         
+        $auto_params = [
+            'entity' => $entity,
+            'trigger_action' => $trigger_action,
+            'operation' => 'send',
+            'status' => 'active',
+            'trigger_event' => $trigger_event,
+            'trigger_time' => 0
+        ];
+
+        $automationsData = $CI->Automation_model->getAutomationsListByParams($auto_params);
+        
+        if($automationsData) {
+            foreach($automationsData as $automationData) {
+                $data_queue = [
+                    'automation_id' => $automationData->id,
+                    'target_id' => 0,
+                    'entity_type' => $entity_type,
+                    'status' => 'new',
+                    'entity_id' => $entity_id,
+                    'trigger_time' => null,
+                    'is_triggered' => 0
+                ];
+                $automation_queue = $CI->Automation_queue_model->saveAutomationQueue($data_queue); 
+                if($automation_queue) {
+                    $queue_success_count++;
+                }
+            }            
+        }
+
+        return $queue_success_count;
+
+    }
+
     function maskString($string, $length = 5){
         $mask_string =  str_repeat("*", strlen($string)-$length) . substr($string, -$length);
         

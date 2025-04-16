@@ -145,7 +145,7 @@ class Dashboard_model extends MY_Model
                 $this->db->select('ac_leads.leads_id AS id, ac_leads.date_created AS date');
                 $this->db->from('ac_leads');
                 $this->db->where('ac_leads.company_id', $company_id);
-                // $this->db->where("DATE_FORMAT(ac_leads.date_created, '%Y-%m-%d') >=", $dateFrom);
+                $this->db->where("DATE_FORMAT(ac_leads.date_created, '%Y-%m-%d') >=", $dateFrom);
                 $this->db->where("DATE_FORMAT(ac_leads.date_created, '%Y-%m-%d') <=", $dateTo);
                 $query = $this->db->get();
                 return $query->result();
@@ -161,11 +161,14 @@ class Dashboard_model extends MY_Model
                 $query = $this->db->get();
                 return $query->result();
             break;
-            case 'active_customer_groups':
+            case 'customer_groups':
                 $this->db->select('acs_profile.prof_id AS id, acs_profile.`status` AS status, customer_groups.title AS title, acs_profile.created_at AS date');
                 $this->db->from('acs_profile');
                 $this->db->where('acs_profile.company_id', $company_id);
-                $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR', 'Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
+                if ($filter3 == "active_only") {
+                    $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR', 'Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
+
+                }
                 $this->db->where('customer_groups.title !=', "");
                 $this->db->where("DATE_FORMAT(acs_profile.created_at, '%Y-%m-%d') >=", $dateFrom);
                 $this->db->where("DATE_FORMAT(acs_profile.created_at, '%Y-%m-%d') <=", $dateTo);
@@ -203,6 +206,109 @@ class Dashboard_model extends MY_Model
                 $this->db->where("DATE_FORMAT(payment_records.payment_date, '%Y-%m-%d') >=", $dateFrom);
                 $this->db->where("DATE_FORMAT(payment_records.payment_date, '%Y-%m-%d') <=", $dateTo);
                 $this->db->group_by('payment_records.payment_method');
+                $query = $this->db->get();
+                return $query->result();
+            break;
+            case 'service_tickets':
+                $this->db->select('tickets.id AS id, tickets.company_id AS company_id, tickets.created_at AS date, tickets.grandtotal AS total');
+                $this->db->from('tickets');
+                $this->db->where('tickets.company_id ', $company_id);
+                $this->db->where("DATE_FORMAT(tickets.created_at, '%Y-%m-%d') >=", $dateFrom);
+                $this->db->where("DATE_FORMAT(tickets.created_at, '%Y-%m-%d') <=", $dateTo);
+                $query = $this->db->get();
+                return $query->result();
+            break;
+            case 'lead_source':
+                $this->db->select('acs_profile.prof_id AS id, acs_profile.company_id AS company_id, acs_office.lead_source AS lead_source, COUNT(acs_office.lead_source) AS total');
+                $this->db->from('acs_profile');
+                $this->db->where('acs_profile.company_id', $company_id);
+                $this->db->where('acs_office.lead_source !=', "");
+                $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
+                $this->db->group_by('acs_office.lead_source');
+                $query = $this->db->get();
+                return $query->result();
+            break;  
+            case 'job_status':
+                $this->db->select('jobs.id AS id, jobs.company_id AS company_id, jobs.status AS status, COUNT(jobs.id) AS total, jobs.date_created AS date');
+                $this->db->from('jobs');
+                $this->db->where('jobs.company_id', $company_id);
+                $this->db->where("DATE_FORMAT(jobs.date_created, '%Y-%m-%d') >=", $dateFrom);
+                $this->db->where("DATE_FORMAT(jobs.date_created, '%Y-%m-%d') <=", $dateTo);
+                $this->db->group_by('jobs.status');
+                $query = $this->db->get();
+                return $query->result();
+            break;  
+            case 'customer_status':
+                $this->db->select('acs_profile.prof_id AS id, acs_profile.company_id AS company_id, acs_profile.status AS status,COUNT(acs_profile.prof_id) AS total, acs_profile.updated_at AS date');
+                $this->db->from('acs_profile');
+                $this->db->where('acs_profile.company_id', $company_id);
+                $this->db->where('acs_profile.status !=', "");
+                $this->db->where("DATE_FORMAT(acs_profile.updated_at, '%Y-%m-%d') >=", $dateFrom);
+                $this->db->where("DATE_FORMAT(acs_profile.updated_at, '%Y-%m-%d') <=", $dateTo);
+                $this->db->group_by('acs_profile.status');
+                $query = $this->db->get();
+                return $query->result();
+            break; 
+            case 'job_tags':
+                $this->db->select('jobs.id AS id, jobs.company_id AS company_id, jobs.tags AS tags, COUNT(jobs.id) AS total, jobs.date_created AS date');
+                $this->db->from('jobs');
+                $this->db->where('jobs.company_id', $company_id);
+                $this->db->where('jobs.tags !=', "");
+                $this->db->where("DATE_FORMAT(jobs.date_created, '%Y-%m-%d') >=", $dateFrom);
+                $this->db->where("DATE_FORMAT(jobs.date_created, '%Y-%m-%d') <=", $dateTo);
+                $this->db->group_by('jobs.tags');
+                $query = $this->db->get();
+                return $query->result();
+            break;
+            case 'taskhub':
+                $query = $this->db->query("
+                    SELECT 
+                        tasks.task_id AS id,
+                        tasks.company_id AS company_id,
+                        tasks.assigned_employee_ids AS assigned_employees,
+                        JSON_LENGTH(tasks.assigned_employee_ids) AS shared_tasks,
+                        COALESCE(activity_counts.activities, 0) AS activities,
+                        tasks.status AS status,
+                        tasks.priority AS priority,
+                        latest_updates.date_updated AS date
+                    FROM tasks
+            
+                    LEFT JOIN (
+                        SELECT task_id, COUNT(*) AS activities
+                        FROM tasks_updates
+                        GROUP BY task_id
+                    ) AS activity_counts ON activity_counts.task_id = tasks.task_id
+            
+                    LEFT JOIN (
+                        SELECT task_id, MAX(date_updated) AS date_updated
+                        FROM tasks_updates
+                        GROUP BY task_id
+                    ) AS latest_updates ON latest_updates.task_id = tasks.task_id
+            
+                    WHERE tasks.company_id = {$company_id}
+                    AND DATE_FORMAT(latest_updates.date_updated, '%Y-%m-%d') >= '{$dateFrom}'
+                    AND DATE_FORMAT(latest_updates.date_updated, '%Y-%m-%d') <= '{$dateTo}'
+                    ORDER BY latest_updates.date_updated DESC
+                ");
+                $data = $query->result();
+                return $data;
+            break;
+            case 'activity_logs':
+                $this->db->select('activity_logs.id AS id, users.id AS user_id, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS user, activity_logs.activity_name AS activity, activity_logs.created_at AS date');
+                $this->db->from('activity_logs');
+                $this->db->where('users.company_id', $company_id);
+                $this->db->join('users', 'users.id = activity_logs.user_id', 'left');
+                $this->db->order_by('activity_logs.created_at', 'DESC');
+                $this->db->limit(50);
+                $query = $this->db->get();
+                return $query->result();
+            break;
+            case 'recent_customers':
+                $this->db->select('acs_profile.prof_id AS id, acs_profile.company_id AS company_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, acs_profile.customer_type AS customer_type, CONCAT(acs_profile.city, ", ", acs_profile.state, " ", acs_profile.zip_code) AS address, acs_profile.created_at AS date');
+                $this->db->from('acs_profile');
+                $this->db->where('acs_profile.company_id', $company_id);
+                $this->db->order_by('acs_profile.created_at', 'DESC');
+                $this->db->limit(10);
                 $query = $this->db->get();
                 return $query->result();
             break;

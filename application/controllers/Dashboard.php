@@ -2097,10 +2097,11 @@ class Dashboard extends Widgets
         $thumbnailWidgetQuery = ['select' => '*', 'table' => 'dashboard_thumbnail_widget', 'where' => ['id' => $postData['id'], 'category' => $postData['category']], ];
         $this->page_data['thumbnailsWidgetCard'] = $this->general->get_data_with_param($thumbnailWidgetQuery) [0];
     
-        echo $this->load->view("v2/dashboard/thumbnail/{$postData['category']}", $this->page_data, true);
+        echo $this->load->view("v2/dashboard/$postData[type]/$postData[category]", $this->page_data, true);
     }
 
     public function thumbnailWidgetRequest() {
+        $user_id = logged('id');
         $company_id = logged('company_id');
         // $postData = $this->input->post();
         // Temp only for testing
@@ -2245,7 +2246,7 @@ class Dashboard extends Widgets
                     $graphData['GRAPH'][$month] = $accumulativeValue;
                 }
             break;
-            case 'active_customer_groups':
+            case 'customer_groups':
                 $graphData = ['GRAPH' => [], 'TOTAL_COUNT' => count($data) ];
     
                 foreach ($data as $datas) {
@@ -2292,6 +2293,81 @@ class Dashboard extends Widgets
                         $graphData['Other'] += $datas->total;
                     }
                 }
+            break;
+            case 'service_tickets':
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data)];
+            
+                $accumulativeValue = 0.0;
+                $accumulativeCount = 0;
+                $lastMonth = ''; 
+                
+                foreach ($data as $datas) {
+                    $month = strtoupper(date('Y M', strtotime($datas->date)));
+                    
+                    if ($month !== $lastMonth) {
+                        $accumulativeValue = 0.0; 
+                        $accumulativeCount = 0; 
+                    }
+                    
+                    $accumulativeValue += $datas->total;
+                    $accumulativeCount += 1;
+                    $graphData['GRAPH'][$month] = number_format($accumulativeCount, 2, '.', '');
+                    $lastMonth = $month;
+                }
+            
+                $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
+            break;
+            case 'lead_source':
+                foreach ($data as $datas) {
+                    $graphData[$datas->lead_source] = $datas->total;
+                }
+            break;
+            case 'job_status':
+                $allStatuses = [
+                    'Draft',
+                    'Scheduled',
+                    'Arrival',
+                    'Started',
+                    'Approved',
+                    'Finished',
+                    'Cancelled',
+                    'Invoiced',
+                    'Completed'
+                ];
+
+                $graphData = array_fill_keys($allStatuses, 0);
+
+                foreach ($data as $datas) {
+                    if (isset($graphData[$datas->status])) {
+                        $graphData[$datas->status] = $datas->total ?? 0;
+                    }
+                }
+            break;
+            case 'customer_status':
+                foreach ($data as $datas) {
+                    $graphData[$datas->status] = $datas->total;
+                }
+            break;
+            case 'job_tags':
+                foreach ($data as $datas) {
+                    $graphData[$datas->tags] = $datas->total;
+                }
+            break;
+            case 'taskhub':
+                foreach ($data as $datas) {
+                    $graphData['Activities'] += 1;
+                    $graphData['Shared Tasks'] += ($datas->shared_tasks > 1) ? $datas->shared_tasks : 0;
+                    $graphData['Flagged'] += ($datas->priority == 'Urgent') ? 1 : 0;
+                    $graphData['Done'] += ($datas->status == 'Done') ? 1 : 0;
+                    $graphData['My Tasks'] += (in_array($user_id, json_decode($datas->assigned_employees, true))) ? 1 : 0;
+                    $graphData['Today`s Tasks'] += (date('Y-m-d', strtotime($datas->date)) === $postData['dateTo']) ? 1 : 0;
+                }
+            break;
+            case 'activity_logs':
+                $graphData = $data;
+            break;
+            case 'recent_customers':
+                $graphData = $data;
             break;
             default:
                 $graphData = ['error' => 'Invalid category'];

@@ -64,9 +64,9 @@ $icon = '<i class="fas fa-users"></i>';
                 </div>
             </div>
         </div>
-        <strong class="dragHandle">⣿⣿⣿⣿</strong>
-        <span class="widthResizeHandle"></span>
-        <span class="heightResizeHandle"></span>
+        <strong class="thumbnailDragHandle">⣿⣿⣿⣿</strong>
+        <span class="thumbnailWidthResizeHandle"></span>
+        <span class="thumbnailHeightResizeHandle"></span>
     </div>
 </div>
 <?php

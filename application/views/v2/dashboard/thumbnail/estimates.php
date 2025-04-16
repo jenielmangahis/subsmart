@@ -45,10 +45,10 @@
                 <div class="input-group">
                     <select class="form-select <?php echo "thumbnailFilter1_$id"; ?>">
                         <option value="all_time">All Time</option>
-                        <option value="this_year">This Year</option>
+                        <option value="this_year" selected>This Year</option>
                     </select>
                     <select class="form-select <?php echo "thumbnailFilter2_$id"; ?>">
-                        <option value="recent">Recent</option>
+                        <option value="recent" selected>Recent</option>
                         <option value="last_7_days">Last 7 Days</option>
                         <option value="last_14_days">Last 14 Days</option>
                         <option value="last_30_days">Last 30 Days</option>
@@ -58,22 +58,22 @@
             </div>
         </div>
         <div class="row">
-            <div class="col mt-2 text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center">
-                    <strong class="text-muted text-uppercase">TOTAL OPEN</strong>
-                    <h2 class="<?php echo "textData1_$id"; ?>"></h2>
+            <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
+                <div class="text-center textData">
+                    <small class="text-muted text-uppercase fw-bold">TOTAL OPEN</small>
+                    <h4 class="<?php echo "textData1_$id"; ?>"></h2>
                 </div>
             </div>
-            <div class="col mt-2 text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center">
-                    <strong class="text-muted text-uppercase">TOTAL EXPIRED</strong>
-                    <h2 class="<?php echo "textData2_$id"; ?>"></h2>
+            <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
+                <div class="text-center textData">
+                    <small class="text-muted text-uppercase fw-bold">TOTAL EXPIRED</small>
+                    <h4 class="<?php echo "textData2_$id"; ?>"></h4>
                 </div>
             </div>
             <div class="col mt-2 <?php echo "graphDataContainer_$id"; ?> thumbnailGraphDisplay display_none">
                 <div id="<?php echo "apexThumbnailGraph_$id"; ?>"></div>
             </div>
-            <div class="col mt-2 <?php echo "graphLoaderContainer_$id"; ?> display_none">
+            <div class="col mt-2 <?php echo "graphLoaderContainer_$id"; ?> graphLoader display_none">
                 <div class="text-center">
                     <div class="spinner-border text-secondary" role="status">
                         <span class="visually-hidden">Loading...</span>
@@ -84,9 +84,9 @@
                 <div class="text-center">No Record Found...</div>
             </div>
         </div>
-        <strong class="dragHandle">⣿⣿⣿⣿</strong>
-        <span class="widthResizeHandle"></span>
-        <span class="heightResizeHandle"></span>
+        <strong class="thumbnailDragHandle">⣿⣿⣿⣿</strong>
+        <span class="thumbnailWidthResizeHandle"></span>
+        <span class="thumbnailHeightResizeHandle"></span>
     </div>
 </div>
 <script>
@@ -166,7 +166,7 @@
     // let filter2 = 'all_status';
     <?php echo "processData_$id"; ?>(
         '<?php echo $category; ?>', 
-        '1970-01-01', 
+        ($('.<?php echo "thumbnailFilter1_$id"; ?> option:selected').val() == 'all_time') ? '1970-01-01' : new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0], 
         new Date().toISOString().split('T')[0], 
         'all_status'
     );
@@ -178,7 +178,7 @@
             type: 'pie'
         },
         legend: { position: 'bottom' },
-        labels: ["Open", "Expired"],
+        labels: [],
         responsive: [{
             breakpoint: 480,
             options: {

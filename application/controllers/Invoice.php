@@ -1327,9 +1327,9 @@ class Invoice extends MY_Controller
         /**
          * After successfully update invoice to paid, check for automation and add send email queue - start
          */
-        $is_automation_activated = true;
+        $is_automation_activated = enableAutomationActivated();
         if($is_automation_activated && $this->input->post('status') == 'Paid') {
-            $auto_params = [
+            /*$auto_params = [
                 'entity' => 'invoice',
                 'trigger_action' => 'send_email',
                 'operation' => 'send',
@@ -1353,10 +1353,14 @@ class Invoice extends MY_Controller
                     $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue);   
                 }
                                          
-            }
+            }*/
+            
+            createAutomationQueue('send_email', 'invoice', 'invoice', 'paid', $id);
+            createAutomationQueue('send_sms', 'invoice', 'invoice', 'paid', $id);         
+
         }elseif($is_automation_activated && $this->input->post('status') == 'Due') {
 
-            $auto_params = [
+            /*$auto_params = [
                 'entity' => 'invoice',
                 'operation' => 'send',
                 'trigger_event' => 'due',
@@ -1378,10 +1382,13 @@ class Invoice extends MY_Controller
                     ];
                     $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue);   
                 }                    
-            }            
+            }*/        
+            
+            createAutomationQueue('send_email', 'invoice', 'invoice', 'due', $id);    
+            createAutomationQueue('send_sms', 'invoice', 'invoice', 'due', $id);         
 
         }elseif($is_automation_activated && $this->input->post('status') == 'Overdue') {
-            $auto_params = [
+            /*$auto_params = [
                 'entity' => 'invoice',
                 'operation' => 'send',
                 'trigger_event' => 'past_due',
@@ -1403,11 +1410,15 @@ class Invoice extends MY_Controller
                     ];
                     $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue);   
                 }
-            }
+            }*/
+
+            createAutomationQueue('send_email', 'invoice', 'invoice', 'past_due', $id);
+            createAutomationQueue('send_sms', 'invoice', 'invoice', 'past_due', $id);
+
         }
         /**
          *  After successfully update invoice to paid, check for automation and add send email queue - end
-         */         
+         */              
 
         $return = [
             'is_success' => $is_success,
@@ -2541,6 +2552,12 @@ class Invoice extends MY_Controller
 
                 $this->InvoiceScheduledEmailNotification_model->create($data);
 
+                $is_automation_activated = enableAutomationActivated();
+                if($is_automation_activated) {
+                    createAutomationQueue('send_email', 'invoice', 'invoice', 'sent', $post['invoice_id']);
+                    createAutomationQueue('send_sms', 'invoice', 'invoice', 'sent', $post['invoice_id']);   
+                }
+
                 customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Send email reminder on '.$post['email_scheduled_date'].' for invoice number '.$newInvoice->invoice_number);
                 
                 $invoice_id = $invoice->id;
@@ -2685,7 +2702,7 @@ class Invoice extends MY_Controller
 
                 $this->AcsTransactionHistory_model->create($transaction_history_data);
 
-                $is_automation_activated = true;
+                $is_automation_activated = enableAutomationActivated();
                 if($status == 'Paid') {
                     /**
                      * After successfully update invoice to paid, check for automation and add send email queue - start
@@ -2716,7 +2733,9 @@ class Invoice extends MY_Controller
                             }
                                                     
                         }
-                    }    
+                    }
+                    createAutomationQueue('send_email', 'invoice', 'invoice', 'paid', $invoice->id);    
+                    createAutomationQueue('send_sms', 'invoice', 'invoice', 'paid', $invoice->id);     
                     /**
                      * After successfully update invoice to paid, check for automation and add send email queue - end
                      */  
@@ -2990,7 +3009,7 @@ class Invoice extends MY_Controller
         $is_success = 1;
 		$msg  = 'Cannot find invoice data';
 
-        $is_automation_activated  = true;
+        $is_automation_activated  = enableAutomationActivated();
         $is_live_mail_credentials = false;
         
         $post = $this->input->post();
@@ -3240,7 +3259,7 @@ class Invoice extends MY_Controller
             /**
              * After successfully created invoice, check for automation and add send email queue - start
              */
-            if($is_automation_activated) {
+            /*if($is_automation_activated) {
                 $auto_params = [
                     'entity' => 'invoice',
                     'trigger_action' => 'send_email',
@@ -3249,7 +3268,7 @@ class Invoice extends MY_Controller
                     'trigger_event' => 'created',
                     'trigger_time' => 0
                 ];
-                //$automationData = $this->automation_model->getAutomationByParams($auto_params);  
+
                 $automationsData = $this->automation_model->getAutomationsListByParams($auto_params); 
 
                 if($automationsData) {
@@ -3268,10 +3287,17 @@ class Invoice extends MY_Controller
                     }
                                            
                 }
+            }*/
+
+            if($is_automation_activated) {
+                createAutomationQueue('send_email', 'invoice', 'invoice', 'created', $invoice_id);
+                createAutomationQueue('send_sms', 'invoice', 'invoice', 'created', $invoice_id);
             }
+
             /**
              * After successfully created invoice, check for automation and add send email queue - end
-             */             
+             */          
+            
 
             //Activity Logs
             $activity_name = 'Invoice : Created Invoice Number : ' . $invoiceNumber; 
