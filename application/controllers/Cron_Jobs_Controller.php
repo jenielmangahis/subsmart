@@ -16,8 +16,6 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('accounting_attachments_model');
         $this->load->model('tags_model');
         $this->load->model('chart_of_accounts_model');
-
-        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
     }
     public function get_time_sheet_storage($company_id, $timezone, $timesheet_report_timezone_id)
     {
@@ -3552,34 +3550,6 @@ class Cron_Jobs_Controller extends CI_Controller
 					$invoice_id = $this->Invoice_model->create($data_invoice);
 
                     //Automation add sending email queue - start
-                    /*if($is_automation_activated) {
-                        $auto_params = [
-                            'entity' => 'invoice',
-                            'trigger_action' => 'send_email',
-                            'operation' => 'send',
-                            'status' => 'active',
-                            'trigger_event' => 'created',
-                            'trigger_time' => 0
-                        ];  
-                        $automationsData = $this->automation_model->getAutomationsListByParams($auto_params); 
-                        if($automationsData) {
-        
-                            foreach($automationsData as $automationData) {
-                                $data_queue = [
-                                    'automation_id' => $automationData->id,
-                                    'target_id' => 0,
-                                    'entity_type' => 'invoice',
-                                    'status' => 'new',
-                                    'entity_id' => $invoice_id,
-                                    'trigger_time' => null,
-                                    'is_triggered' => 0
-                                ];
-                                $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue); 
-                            }
-                                                   
-                        }
-                    }*/
-
                     if($is_automation_activated) {
                         createAutomationQueue('send_email', 'invoice', 'invoice', 'created', $invoice_id);
                         createAutomationQueue('send_sms', 'invoice', 'invoice', 'created', $invoice_id);
