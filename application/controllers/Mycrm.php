@@ -271,7 +271,9 @@ class Mycrm extends MY_Controller
         $company_id = logged('company_id');
         $post = $this->input->post();
 
-        $plan = $this->NsmartPlan_model->getById($post['plan_id']);
+        $company = $this->Business_model->getByCompanyId($company_id);
+        $client  = $this->Clients_model->getById($company_id);
+        $plan    = $this->NsmartPlan_model->getById($post['plan_id']);
         if ($plan) {
             if ($post['subscription_type'] == 'yearly') {
                 $amount = $plan->price * 12;
@@ -281,8 +283,6 @@ class Mycrm extends MY_Controller
                 $next_billing_date = date('Y-m-d', strtotime('+1 month'));
             }
 
-            $company = $this->Business_model->getByCompanyId($company_id);
-            $client = $this->Clients_model->getById($company_id);
             $address = $company->street.' '.$company->city.' '.$company->state;
             $zip_code = $company->postal_code;
             $converge_data = [
@@ -297,11 +297,10 @@ class Mycrm extends MY_Controller
             ];
             $result = $this->converge_send_sale($converge_data);
             if ($result['is_success']) {
-                $next_billing_date = date('Y-m-d', strtotime('+1 month'));
+                //$next_billing_date = date('Y-m-d', strtotime('+1 month'));
                 $data = [
-                    'payment_method' => 'converge',
-                    'plan_date_registered' => date('Y-m-d'),
-                    'plan_date_expiration' => date('Y-m-d', strtotime('+1 month')),
+                    'plan_date_registered' => date("Y-m-d"),
+                    'plan_date_expiration' => $next_billing_date,
                     'date_modified' => date('Y-m-d H:i:s'),
                     'is_plan_active' => 1,
                     'nsmart_plan_id' => $plan->nsmart_plans_id,
@@ -328,7 +327,7 @@ class Mycrm extends MY_Controller
                 // Record payment
                 $data_payment = [
                     'company_id' => $company_id,
-                    'description' => 'Paid Membership, '.ucwords($post['subscription_type']),
+                    'description' => 'Paid Membership - '.ucwords($post['subscription_type']),
                     'payment_date' => date('Y-m-d'),
                     'total_amount' => $amount,
                     'date_created' => date('Y-m-d H:i:s'),
@@ -339,6 +338,10 @@ class Mycrm extends MY_Controller
 
                 $data = ['order_number' => $order_number];
                 $this->CompanySubscriptionPayments_model->update($id, $data);
+
+                //Activity Logs
+                $activity_name = 'MyCRM : Paid Membership ' . ucwords($post['subscription_type']); 
+                createActivityLog($activity_name);
 
                 $is_success = 1;
             } else {
@@ -381,10 +384,12 @@ class Mycrm extends MY_Controller
 
             if ($client->recurring_payment_type == 'monthly') {
                 $amount = $amount;
-                $next_billing_date = date('Y-m-d', strtotime('+1 month', strtotime($client->next_billing_date)));
+                $next_billing_date    = date('Y-m-d', strtotime('+1 month', strtotime($client->next_billing_date)));
+                $plan_date_expiration = date('Y-m-d', strtotime('+1 month', strtotime($client->plan_date_expiration)));
             } else {
-                $amount *= 12;
-                $next_billing_date = date('Y-m-d', strtotime('+1 year', strtotime($client->next_billing_date)));
+                $amount = $plan->price * 12;
+                $next_billing_date    = date('Y-m-d', strtotime('+1 year', strtotime($client->next_billing_date)));
+                $plan_date_expiration = date('Y-m-d', strtotime('+1 year', strtotime($client->plan_date_expiration)));
             }
 
             $company = $this->Business_model->getByCompanyId($company_id);
@@ -409,11 +414,9 @@ class Mycrm extends MY_Controller
 
                 $data = [
                     'payment_method' => 'converge',
-                    // 'plan_date_registered' => date("Y-m-d"),
-                    // 'plan_date_expiration' => date("Y-m-d", strtotime("+1 month")),
+                    'plan_date_expiration' => $plan_date_expiration,
                     'date_modified' => date('Y-m-d H:i:s'),
                     'is_plan_active' => 1,
-                    // 'nsmart_plan_id' => $plan->nsmart_plans_id,
                     'is_trial' => 0,
                     'next_billing_date' => $next_billing_date,
                     'num_months_discounted' => $num_months_discounted,
@@ -435,7 +438,7 @@ class Mycrm extends MY_Controller
                 // Record payment
                 $data_payment = [
                     'company_id' => $company_id,
-                    'description' => 'Paid Membership, '.ucwords($client->recurring_payment_type),
+                    'description' => 'Paid Membership - '.ucwords($client->recurring_payment_type),
                     'payment_date' => date('Y-m-d'),
                     'total_amount' => $amount,
                     'date_created' => date('Y-m-d H:i:s'),
