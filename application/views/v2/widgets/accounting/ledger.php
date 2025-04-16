@@ -135,7 +135,7 @@ endif;
                                 <tr>
                                     <td data-name="Date" style="width:20%;">Date</td>       
                                     <td data-name="Description" style="width:40%;">Description</td>                                
-                                    <td data-name="Income" style="text-align:right; width:20%;">Income</td>
+                                    <td data-name="Invoice" style="text-align:right; width:20%;">Invoice</td>
                                     <td data-name="Payment" style="text-align:right; width:20%;">Payment</td>                                    
                                 </tr>
                             </thead>

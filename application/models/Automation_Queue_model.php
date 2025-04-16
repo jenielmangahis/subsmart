@@ -1,6 +1,7 @@
 <?php
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Automation_Queue_model extends CI_Model
+class Automation_Queue_model extends MY_Model
 {
     public $table = 'automation_queue';
 

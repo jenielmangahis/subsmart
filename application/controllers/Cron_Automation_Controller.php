@@ -7,12 +7,10 @@ class Cron_Automation_Controller extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Automation_model', 'automation_model');
-        $this->load->model('Automation_queue_model', 'automation_queue_model');
+        $this->load->model('Automation_Queue_model', 'automation_queue_model');
 
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->model('AcsProfile_model', 'AcsProfile_model');   
-
-        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
     }
 
     public function cronCreatedInvoiceMailAutomation()
@@ -97,6 +95,8 @@ class Cron_Automation_Controller extends CI_Controller
                                 }
                                 
                             } else {
+
+                                include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
 
                                 $host     = 'smtp.mailtrap.io';
                                 $port     = 2525;
@@ -239,6 +239,7 @@ class Cron_Automation_Controller extends CI_Controller
                                 
                             } else {
 
+                                include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
                                 $host     = 'smtp.mailtrap.io';
                                 $port     = 2525;
                                 $username = 'd7c92e3b5e901d';
@@ -376,6 +377,7 @@ class Cron_Automation_Controller extends CI_Controller
                                 
                             } else {
 
+                                include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
                                 $host     = 'smtp.mailtrap.io';
                                 $port     = 2525;
                                 $username = 'd7c92e3b5e901d';
@@ -509,6 +511,7 @@ class Cron_Automation_Controller extends CI_Controller
                                 
                             } else {
 
+                                include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
                                 $host     = 'smtp.mailtrap.io';
                                 $port     = 2525;
                                 $username = 'd7c92e3b5e901d';

@@ -5161,7 +5161,7 @@ if(!function_exists('set_expense_graph_data')) {
 
         $CI =& get_instance();
         $CI->load->model('Automation_model');
-        $CI->load->model('Automation_queue_model');
+        $CI->load->model('Automation_Queue_model');
         
         $queue_success_count = 0;
          
@@ -5187,7 +5187,7 @@ if(!function_exists('set_expense_graph_data')) {
                     'trigger_time' => null,
                     'is_triggered' => 0
                 ];
-                $automation_queue = $CI->Automation_queue_model->saveAutomationQueue($data_queue); 
+                $automation_queue = $CI->Automation_Queue_model->saveAutomationQueue($data_queue); 
                 if($automation_queue) {
                     $queue_success_count++;
                 }
