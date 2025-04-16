@@ -93,7 +93,7 @@ class Register extends MYF_Controller {
                     $this->Clients_model->update($cid, array(
                         'is_plan_active' => 1,
                         'is_startup' => 1,
-                        'plan_date_registered' => date("Y-m-d H:i:s")
+                        'plan_date_registered' => date("Y-m-d")
                     ));
 
                     $this->users_model->update($uid,[
