@@ -926,6 +926,7 @@ class Items_model extends MY_Model
     public function getLocationStorage()
     {
         $company_id = logged('company_id');
+        
         $this->db->select('*');
         $this->db->from('items_has_storage_loc');
         $this->db->where('items_has_storage_loc.company_id', $company_id);
@@ -941,7 +942,7 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    // For fixing items table data. is_updated field is needed
+    // For fixing items table data. Remove is_updated field once done fixing data.
     public function getAllItemsNotUpdated($limit = 0) 
     {
         $this->db->select('*');
