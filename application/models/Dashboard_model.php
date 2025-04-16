@@ -292,8 +292,26 @@ class Dashboard_model extends MY_Model
                 ");
                 $data = $query->result();
                 return $data;
-                break;
-            
+            break;
+            case 'activity_logs':
+                $this->db->select('activity_logs.id AS id, users.id AS user_id, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS user, activity_logs.activity_name AS activity, activity_logs.created_at AS date');
+                $this->db->from('activity_logs');
+                $this->db->where('users.company_id', $company_id);
+                $this->db->join('users', 'users.id = activity_logs.user_id', 'left');
+                $this->db->order_by('activity_logs.created_at', 'DESC');
+                $this->db->limit(50);
+                $query = $this->db->get();
+                return $query->result();
+            break;
+            case 'recent_customers':
+                $this->db->select('acs_profile.prof_id AS id, acs_profile.company_id AS company_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, acs_profile.customer_type AS customer_type, CONCAT(acs_profile.city, ", ", acs_profile.state, " ", acs_profile.zip_code) AS address, acs_profile.created_at AS date');
+                $this->db->from('acs_profile');
+                $this->db->where('acs_profile.company_id', $company_id);
+                $this->db->order_by('acs_profile.created_at', 'DESC');
+                $this->db->limit(10);
+                $query = $this->db->get();
+                return $query->result();
+            break;
         }
     }
 }
