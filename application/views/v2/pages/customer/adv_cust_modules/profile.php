@@ -205,79 +205,44 @@ div#controls div#call-controls div#volume-indicators > div {
                         </label>
                     </div>
                 </div>
-                <!-- <div class="col-12 col-md-12 mt-5">
-                    <a role="button" class="nsm-button primary w-100 ms-0 mt-5 send-sms-message" href="javascript:void(0);" data-customer-name="<?= ucwords($profile_info->first_name) . ' ' . ucwords($profile_info->last_name) ?>" data-id="<?= $profile_info->prof_id; ?>" data-phone="<?= $profile_info->phone_m; ?>" style="width:100px !important;">
-                        Send SMS
-                    </a>
-                    <?php $phone = cleanMobileNumber($profile_info->phone_m); ?>
-                    <a role="button" class="nsm-button primary w-100 ms-0 mt-5 call-customer" href="javascript:void(0);" data-id="<?= $profile_info->prof_id; ?>" data-phone="<?= $phone; ?>" style="width:100px !important;">
-                        Call
-                    </a>
-                </div> -->
-                <div class="col-12 mb-2" id="customerquickactions">
-                    <div class="d-flex justify-content-end mb-3">
-                        <a href="#" class="nsm-link" id="managequickactions">Manage Quick Actions</a>
-                    </div>
-
-                    <!-- <div class="nsm-empty empty-message">
-                        Click Manage Quick Actions to view available shortcuts for this customer.
-                    </div> -->
-
-                    <button class="nsm-button light w-100 ms-0 mt-3" onclick="window.open('<?= base_url('/tickets/addTicketCust/'.$profile_info->prof_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
-                        <i class='bx bx-fw'></i> Submit Service Ticket
-                    </button>
-
-                    <div class="actions-wrapper" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 8px;"></div>
-                    
-                    <div class="d-none">
-                        <!-- Actions will come from database -->
-                        <button role="button" class="nsm-button w-100 ms-0">
-                            <i class='bx bx-fw bx-import'></i> 1-Click Import and Audit, Pull reports & Create audit
-                        </button>
-                        <a href="<?=base_url('EsignEditor/wizard?customer_id=' . $profile_info->prof_id)?>" role="button" class="nsm-button d-flex justify-content-center align-items-center w-100 ms-0">
-                            <i class='bx bx-fw bxs-magic-wand'></i> Run Dispute Wizard, Create letters/correct errors
-                        </a>
-                        <button role="button" class="nsm-button w-100 ms-0">
-                            <i class='bx bx-fw bx-message-rounded-check'></i> Send Secure Message, Via Client Portal
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="col-12 col-md-4" data-id="<?= $id ?>" id="<?= $id ?>">
-    <div class="nsm-card nsm-grid">
-        <div class="nsm-card-header d-block">
-            <div class="nsm-card-title">
-                <span>Activities</span>
-            </div>
-        </div>
-        <div class="nsm-card-content">
-            <div class="row g-3">
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table id="CUSTOMER_LOG_TABLE" class="table table-hover w-100">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th style="width: 0%;">Datetime</th>
-                                    <th>Logs</th>
-                                    <a href="#"></a>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                    foreach ($log_info as $log_infos) {
-                                ?>
-                                <tr>
-                                    <td><?php echo $log_infos->date; ?></td>
-                                    <td><?php echo $log_infos->logs; ?></td>
-                                </tr>
-                                <?php } ?>
-                            </tbody>
-                        </table>
+                
+                <div class="col-12 col-md-12">
+                    <div class="nsm-card">
+                        <div class="nsm-card-header d-block">
+                            <div class="nsm-card-title">
+                                <span>Activities</span>
+                            </div>
+                        </div>
+                        <div class="nsm-card-content">
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table id="CUSTOMER_LOG_TABLE" class="table table-hover w-100">
+                                            <thead class="bg-light">
+                                                <tr>
+                                                    <th style="width: 0%;">Datetime</th>
+                                                    <th>Logs</th>
+                                                    <a href="#"></a>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                    foreach ($log_info as $log_infos) {
+                                                ?>
+                                                <tr>
+                                                    <td><?php echo $log_infos->date; ?></td>
+                                                    <td><?php echo $log_infos->logs; ?></td>
+                                                </tr>
+                                                <?php } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
