@@ -12,7 +12,7 @@ class Cron_Automation_Controller extends CI_Controller
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->model('AcsProfile_model', 'AcsProfile_model');   
 
-        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+        //include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
     }
 
     public function cronCreatedInvoiceMailAutomation()
