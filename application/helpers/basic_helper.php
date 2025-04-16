@@ -5161,7 +5161,7 @@ if(!function_exists('set_expense_graph_data')) {
 
         $CI =& get_instance();
         $CI->load->model('Automation_model');
-        $CI->load->model('Automation_queue_model');
+        $CI->load->model('Automation_Queue_model');
         
         $queue_success_count = 0;
          

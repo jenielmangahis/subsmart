@@ -3435,7 +3435,7 @@ class Cron_Jobs_Controller extends CI_Controller
 		$this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('accounting_recurring_transactions_model');
         $this->load->model('Automation_model', 'automation_model');
-        $this->load->model('Automation_queue_model', 'automation_queue_model');
+        $this->load->model('Automation_Queue_model', 'automation_queue_model');
 
 		$error_count   = 0;
 		$success_count = 0;

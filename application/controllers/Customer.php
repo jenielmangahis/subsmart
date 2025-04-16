@@ -12208,10 +12208,12 @@ class Customer extends MY_Controller
             $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            
             foreach( $payments as $p ){
                 $date = date("m/d/Y", strtotime($p->payment_date));
+                $payment_method = $p->payment_method;
                 $ledger[$date][] = [
                     'id' => $p->id,
                     'type' => 'payment',          
                     'date' => $date,      
+                    'payment_method' => $payment_method,
                     //'description' => 'Payment for invoice number ' . $invoice->invoice_number,
                     'description' => 'Month rent ' . date('M Y', strtotime($invoice->due_date)),
                     'amount' => $p->invoice_amount

@@ -1,6 +1,8 @@
 <?php
 
-class Automation_model extends CI_Model
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class Automation_model extends MY_Model
 {
     public $table = 'automations';
 
@@ -8,7 +10,6 @@ class Automation_model extends CI_Model
     public function __construct()
     {
         parent::__construct();
-
     }
 
     /**

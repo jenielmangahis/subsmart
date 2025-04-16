@@ -5,7 +5,7 @@
                 <td data-name="No." style="width:5%;font-size:12px;">#</td>
                 <td data-name="Date" style="width:20%;font-size:12px;">Date</td>       
                 <td data-name="Description" style="font-size:12px;">Description</td>                                
-                <td data-name="Income" style="text-align:right;width:15%;font-size:12px;">Income</td>
+                <td data-name="Income" style="text-align:right;width:15%;font-size:12px;">Invoice</td>
                 <td data-name="Payment" style="text-align:right;width:15%;font-size:12px;">Payment</td>
             </tr>
         </thead>
@@ -24,6 +24,8 @@
                         $payment = 0;
                         $late_fee_income  = 0;
                         $late_fee_payment = 0;
+                        $payment_method = "-";
+
                         if( $ld['type'] == 'income' ){
                             $income = $ld['amount'];
                             if($ld['late_fee']) {
@@ -36,6 +38,12 @@
                             if($ld['late_fee']) {
                                 $payment = $ld['amount'] - $ld['late_fee'];
                             }
+                            if($ld['payment_method'] == 'cc') {
+                                $payment_method = "Credit Card";
+                            } else {
+                                $payment_method = ucwords($ld['payment_method']);
+                            }
+                            
                             $late_fee_payment = $ld['late_fee'];
                             $total_payment += $ld['amount'];
                         }
@@ -47,6 +55,12 @@
                         <td class="show" style="text-align:right;">$<?= number_format($income, 2, '.', ','); ?></td>
                         <td class="show" style="text-align:right;">$<?= number_format($payment, 2, '.', ','); ?></td>
                     </tr>
+                    <?php if($payment > 0) { ?>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td colspan="4" style="text-align:right;"><strong>Method:</strong> <?php echo $payment_method; ?> | <strong>Recorded Date:</strong> <?= $key ?></td>
+                        </tr>  
+                    <?php } ?>
                     <?php if($ld['late_fee'] > 0) { ?>
                         <tr>
                             <td>&nbsp;</td>
@@ -55,7 +69,7 @@
                             <td style="text-align:right;">$<?= number_format($late_fee_income, 2, '.', ','); ?></td>
                             <td style="text-align:right;">$<?= number_format($late_fee_payment, 2, '.', ','); ?></td>
                         </tr>
-                    <?php } ?>
+                    <?php } ?>                  
                 <?php $row++; ?>
                 <?php } ?>                            
             <?php } ?>
