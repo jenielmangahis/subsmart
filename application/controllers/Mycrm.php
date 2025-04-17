@@ -506,6 +506,8 @@ class Mycrm extends MY_Controller
         $this->load->model('SubscriberNsmartUpgrade_model');
 
         $is_success = 0;
+        $msg = 'Cannot process request';
+
         $company_id = logged('company_id');
         $post = $this->input->post();
 
@@ -515,7 +517,7 @@ class Mycrm extends MY_Controller
             $is_success = 1;
         }
 
-        $json = ['is_success' => $is_success];
+        $json = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json);
     }
@@ -525,6 +527,8 @@ class Mycrm extends MY_Controller
         $this->load->model('SubscriberNsmartUpgrade_model');
 
         $is_success = 0;
+        $msg = 'Cannot process request';
+
         $company_id = logged('company_id');
         $post = $this->input->post();
 
@@ -534,7 +538,7 @@ class Mycrm extends MY_Controller
             $is_success = 1;
         }
 
-        $json = ['is_success' => $is_success];
+        $json = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json);
     }

@@ -2577,7 +2577,8 @@ class Invoice extends MY_Controller
                     'payment_method' => $post['payment_method'],
                     'invoice_number' => $invoice->invoice_number,
                     'reference_number' => $post['reference'],
-                    'notes' => $post['notes']
+                    'notes' => $post['notes'],
+                    'date_created' => date("Y-m-d H:i:s")
                 ]);
 
                 //Update invoice status
