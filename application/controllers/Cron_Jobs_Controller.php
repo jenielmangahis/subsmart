@@ -3854,7 +3854,7 @@ class Cron_Jobs_Controller extends CI_Controller
                                 'invoice_tip' => 0,
                                 'payment_date' => $current_date,
                                 'payment_method' => 'CC',
-                                'invoice_number' => $unpaidSubscriptionsDetails->invoice_number
+                                'invoice_number' => $unpaidSubscriptionsDetails->invoice_number,
                             ];
                             $this->customer_ad_model->add($payment_data, 'payment_records');	   
                         }
