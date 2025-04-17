@@ -438,7 +438,7 @@
                                     </li>
                                     <?php } ?>
                                     <li>
-                                        <a class="dropdown-item" href="<?= url('customer/import_customer') ?>"><i class='bx bx-fw bx-file'></i> Export</a>
+                                        <a class="dropdown-item" href="<?= url('customer/export_customer') ?>"><i class='bx bx-fw bx-file'></i> Export</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item" id="print-customer-list" href="javascript:void(0)"><i class='bx bx-fw bx-printer'></i> Print</a>

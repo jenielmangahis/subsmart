@@ -1,12 +1,27 @@
-<div class="tab-content mt-4">
-    <table class="nsm-table" style="font-size:12px;">
+<div class="nsm-page-buttons primary page-button-container text-end w-100">
+    <div class="dropdown d-inline-block">
+        <button type="button" class="dropdown-toggle nsm-button primary" data-bs-toggle="dropdown" style="width:122px;">
+            <span>More Action <i class='bx bx-fw bx-chevron-down'></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="<?= url('customer/export_customer_ledger'); ?>"><i class='bx bx-spreadsheet'></i> Export to Excel</a></li>
+            <li><a class="dropdown-item" href="<?= url('customer/ledger_send_email'); ?>"><i class='bx bx-envelope' ></i> Send to email</a></li>
+            <li><a class="dropdown-item" href="javascript:void(0);" id="btn-print-customer-ledger"><i class='bx bx-printer' ></i>Print</a></li>
+        </ul>     
+    </div>
+</div>
+<div class="tab-content mt-4" style="overflow: auto;">    
+    <table class="nsm-table" style="font-size:12px;width:150%; overflow: auto;">
         <thead>
             <tr>
-                <td data-name="No." style="width:5%;font-size:12px;">#</td>
-                <td data-name="Date" style="width:20%;font-size:12px;">Date</td>       
-                <td data-name="Description" style="font-size:12px;">Description</td>                                
-                <td data-name="Income" style="text-align:right;width:15%;font-size:12px;">Invoice</td>
-                <td data-name="Payment" style="text-align:right;width:15%;font-size:12px;">Payment</td>
+                <td data-name="No." style="width:5%;">#</td>
+                <td data-name="Date" style="width:20%;">Date</td>       
+                <td data-name="Description">Description</td>                                
+                <td data-name="Description">Method</td>                                
+                <td data-name="Description">Recorded Date</td>                                
+                <td data-name="Description">Entered By</td>                                
+                <td data-name="Income" style="text-align:right;width:15%;">Invoice</td>
+                <td data-name="Payment" style="text-align:right;width:15%;">Payment</td>
             </tr>
         </thead>
 
@@ -52,18 +67,18 @@
                         <td class="show"><?= $row; ?></td>
                         <td class="fw-bold nsm-text-primary show"><?= $key ?></td>
                         <td class="nsm-text-primary show"><?= $ld['description']; ?></td>
+                        <td class="nsm-text-primary show"><?= $ld['payment_method']; ?></td>
+                        <td class="nsm-text-primary show"><?= date("m/d/Y",strtotime($ld['date_created'])); ?></td>
+                        <td class="nsm-text-primary show"><?= $ld['user']; ?></td>
                         <td class="show" style="text-align:right;">$<?= number_format($income, 2, '.', ','); ?></td>
                         <td class="show" style="text-align:right;">$<?= number_format($payment, 2, '.', ','); ?></td>
                     </tr>
-                    <?php if($payment > 0) { ?>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td colspan="4" style="text-align:right;"><strong>Method:</strong> <?php echo $payment_method; ?> | <strong>Recorded Date:</strong> <?= $key ?></td>
-                        </tr>  
-                    <?php } ?>
                     <?php if($ld['late_fee'] > 0) { ?>
                         <tr>
                             <td>&nbsp;</td>
+                            <td class="fw-bold nsm-text-primary">&nbsp;</td>
+                            <td class="fw-bold nsm-text-primary">&nbsp;</td>
+                            <td class="fw-bold nsm-text-primary">&nbsp;</td>
                             <td class="fw-bold nsm-text-primary">&nbsp;</td>
                             <td class="nsm-text-primary" style="text-align:right;"><strong>Interest Penalty:</strong></td>
                             <td style="text-align:right;">$<?= number_format($late_fee_income, 2, '.', ','); ?></td>
@@ -75,20 +90,20 @@
             <?php } ?>
         <?php } ?>
             <tr>
-                <td colspan="3">TOTAL</td>
-                <td style="text-align:right;">$<?= number_format($total_income, 2, '.', ','); ?></td>
-                <td style="text-align:right;">$<?= number_format($total_payment, 2, '.', ','); ?></td>
+                <td colspan="6" style="font-weight:bold;">TOTAL</td>
+                <td style="text-align:right;font-weight:bold;">$<?= number_format($total_income, 2, '.', ','); ?></td>
+                <td style="text-align:right;font-weight:bold;">$<?= number_format($total_payment, 2, '.', ','); ?></td>
             </tr>
             <tr>
                 <?php $balance = $total_income - $total_payment; ?>
-                <td class="show" colspan="3" style="font-weight:bold;font-size:22px;">BALANCE</td>
-                <td class="show" colspan="2" style="font-weight:bold;font-size:22px;text-align:center;">$<?= number_format($balance, 2, '.', ','); ?></td>
+                <td class="show" colspan="6" style="font-weight:bold;font-size:22px;">BALANCE</td>
+                <td class="show" colspan="2" style="font-weight:bold;font-size:22px;text-align:right;">$<?= number_format($balance, 2, '.', ','); ?></td>
             </tr>
         </tbody>
     </table>
 </div>
 <script>
     $(document).ready(function() {
-        $(".nsm-table").nsmPagination({itemsPerPage:15});
+        //$(".nsm-table").nsmPagination({itemsPerPage:15});
     });
 </script>
