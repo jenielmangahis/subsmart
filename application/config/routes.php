@@ -111,6 +111,8 @@ $route['customer/_create_customer_group'] = 'Customer/ajax_create_customer_group
 $route['customer/_import_preview'] = 'Customer/ajax_import_preview';
 $route['customer/_ledger'] = 'Customer/ajax_customer_ledger';
 $route['customer/_delete_reason'] = 'Customer/ajax_delete_company_reason';
+$route['customer/_print_ledger'] = 'Customer/ajax_print_customer_ledger';
+$route['customer/_send_email_ledger'] = 'Customer/ajax_send_email_ledger';
 
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -1633,6 +1635,8 @@ $route['customer/_customer_add_billing_information'] = 'Customer/ajax_customer_a
 $route['customer/_customer_add_emergency_contacts_information'] = 'Customer/ajax_customer_add_emergency_contacts_information';
 $route['customer/_customer_add_basic_information'] = 'Customer/ajax_customer_add_basic_information';
 $route['customer/_quick_save'] = 'Customer/ajax_quick_save_customer_v2';
+$route['customer/export_customer'] = 'Customer/customer_export';
+$route['customer/export_customer_ledger'] = 'Customer/export_customer_ledger';
 
 // Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';
