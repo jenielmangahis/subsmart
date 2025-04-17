@@ -150,7 +150,8 @@ class CompanyRoleAccessModule_model extends MY_Model
             'inventory' => 'Inventory',
             //'affiliate-partners' => 'Affiliates / Partners',
             'my-crm' => 'My CRM',
-            'monthly-membership' => 'Monthly Membership'
+            'monthly-membership' => 'Monthly Membership',
+            'cards-on-file' => 'Card on File'
         ];  
 
         return $modules;
