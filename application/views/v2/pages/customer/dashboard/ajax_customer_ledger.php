@@ -1,3 +1,15 @@
+<style>
+table.table-fit {
+  width: 135% !important;
+  table-layout: auto !important;
+}
+table.table-fit thead th,
+table.table-fit tbody td,
+table.table-fit tfoot th,
+table.table-fit tfoot td {
+  width: auto !important;
+}
+</style>
 <div class="nsm-page-buttons primary page-button-container text-end w-100">
     <div class="dropdown d-inline-block">
         <button type="button" class="dropdown-toggle nsm-button primary" data-bs-toggle="dropdown" style="width:122px;">
@@ -11,17 +23,17 @@
     </div>
 </div>
 <div class="tab-content mt-4" id="customer-ledger-container" style="overflow: auto;">    
-    <table class="nsm-table" style="font-size:12px;width:110%; overflow: auto;">
+    <table class="nsm-table table-fit" style="font-size:12px;width:110%; overflow: auto;">
         <thead>
             <tr>
                 <td data-name="No." style="width:5%;">#</td>
                 <td data-name="Date" style="width:12%;">Date</td>       
-                <td data-name="Description" style="width:13%;">Description</td>                                
-                <td data-name="Income" style="text-align:right;width:12%;">Invoice</td>
-                <td data-name="Payment" style="text-align:right;width:12%;">Payment</td>                
+                <td data-name="Description">Description</td>                                
+                <td data-name="Income" style="text-align:right;">Invoice</td>
+                <td data-name="Payment" style="text-align:right;">Payment</td>                
                 <td data-name="Description">Payment Method</td>                                
-                <td data-name="Description" style="width:12%;">Record Date</td>                                
-                <td data-name="Description" style="width:20%;">Entry By</td>                                
+                <td data-name="Description">Record Date</td>                                
+                <td data-name="Description">Entry By</td>                                
                 
             </tr>
         </thead>
