@@ -12410,7 +12410,7 @@ class Customer extends MY_Controller
         foreach( $invoices as $invoice ){
 
             if( $company_id == 139 || $company_id == 1 ){
-                $description = 'Month rent ' . date('M Y', strtotime($invoice->due_date));
+                $description =  date('F', strtotime($invoice->due_date)) . ' rent';
             }else{
                 $description = 'Issued invoice number ' . $invoice->invoice_number;
             }
@@ -12474,7 +12474,7 @@ class Customer extends MY_Controller
             $user = $this->Users_model->getUserByID($invoice->user_id);
 
             if( $company_id == 139 || $company_id == 1 ){
-                $description = 'Month rent ' . date('M Y', strtotime($invoice->due_date));
+                $description =  date('F', strtotime($invoice->due_date)) . ' rent';
             }else{
                 $description = 'Issued invoice number ' . $invoice->invoice_number;
             }
