@@ -12205,11 +12205,11 @@ class Customer extends MY_Controller
 
         $ledger = [];
         foreach( $invoices as $invoice ){
-            $date = date("m/d/Y", strtotime($invoice->date_issued));
+            $date = date("m/d/y", strtotime($invoice->date_issued));
             $user = $this->Users_model->getUserByID($invoice->user_id);
 
             if( $company_id == 139 || $company_id == 1 ){
-                $description = 'Month rent ' . date('M Y', strtotime($invoice->due_date));
+                $description =  date('F', strtotime($invoice->due_date)) . ' rent';
             }else{
                 $description = 'Issued invoice number ' . $invoice->invoice_number;
             }
@@ -12228,7 +12228,7 @@ class Customer extends MY_Controller
 
             $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            
             foreach( $payments as $p ){
-                $date = date("m/d/Y", strtotime($p->payment_date));
+                $date = date("m/d/y", strtotime($p->payment_date));
                 $user = $this->Users_model->getUserByID($p->user_id);
                 $payment_method = $p->payment_method == 'cc' ? 'Credit Card' : ucwords($p->payment_method); 
 
