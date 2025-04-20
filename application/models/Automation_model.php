@@ -1,6 +1,8 @@
 <?php
 
-class Automation_model extends CI_Model
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class Automation_model extends MY_Model
 {
     public $table = 'automations';
 
@@ -8,7 +10,6 @@ class Automation_model extends CI_Model
     public function __construct()
     {
         parent::__construct();
-
     }
 
     /**
@@ -79,6 +80,15 @@ class Automation_model extends CI_Model
         $query = $this->db->get($this->table);
 
         return $query->result_array();
+    }
+
+    public function getAutomationsListByParams($params)
+    {
+        $this->db->where($params);
+        $this->db->order_by('created_at', 'DESC');
+        $query = $this->db->get($this->table);
+
+        return $query->result();
     }
 
     public function getAutomationByParams($params)

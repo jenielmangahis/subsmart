@@ -2745,9 +2745,15 @@ class Customer extends MY_Controller
         $this->load->model('Clients_model');
         $this->load->model('taskhub_model');
         $this->load->model('CustomerStatementClaim_model');
+        $this->load->model('CustomerSignature_model');
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->library('wizardlib');        
         error_reporting(0);       
+
+        add_footer_js([
+			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
+			'assets/js/jquery.signaturepad.js'
+        ]);
        
         $cid = logged('company_id');
         $customer = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
@@ -2880,8 +2886,11 @@ class Customer extends MY_Controller
             }
 
             $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
-            $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($cid);
+            $twilioAccount  = $this->TwilioAccounts_model->getByCompanyId($cid);
             $statementClaim = $this->CustomerStatementClaim_model->getByCustomerId($id);
+            $customerSignature = $this->CustomerSignature_model->getByCustomerId($id);
+
+            $this->session->set_userdata('module_customer_id', $id);
 
             $this->page_data['twilioAccount'] = $twilioAccount;
             $this->page_data['ringCentralAccount'] = $ringCentralAccount;
@@ -2899,6 +2908,7 @@ class Customer extends MY_Controller
             $this->page_data['twilioAccount'] = $twilioAccount;
             $this->page_data['alarm_customer_info'] = $alarm_customer_info;
             $this->page_data['statementClaim'] = $statementClaim;
+            $this->page_data['customerSignature'] = $customerSignature;
             $this->load->view('v2/pages/customer/module', $this->page_data);
         }else{
             redirect('customer');
@@ -12184,41 +12194,58 @@ class Customer extends MY_Controller
     {
         $this->load->model('Payment_records_model');
         $this->load->model('Invoice_model');
-        $this->load->model('AcsProfile_model');
+        $this->load->model('AcsProfile_model');    
+        $this->load->model('Users_model');    
 
         $company_id = logged('company_id');
         $post       = $this->input->post();
-        $cid        = $post['customer_id'];
+        $cid        = isset($post['customer_id']) && $post['customer_id'] > 0 ? $post['customer_id'] : $this->session->userdata('module_customer_id');
         $payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
         $invoices   = $this->Invoice_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
 
         $ledger = [];
         foreach( $invoices as $invoice ){
-            $date = date("m/d/Y", strtotime($invoice->date_issued));
+            $date = date("m/d/y", strtotime($invoice->date_issued));
+            $user = $this->Users_model->getUserByID($invoice->user_id);
+
+            if( $company_id == 139 || $company_id == 1 ){
+                $description =  date('F', strtotime($invoice->due_date)) . ' rent';
+            }else{
+                $description = 'Issued invoice number ' . $invoice->invoice_number;
+            }
+
             $ledger[$date][] = [
                 'id' => $invoice->id,
+                'user' => $user ? $user->FName . ' ' . $user->LName : '---',
+                'payment_method' => '---',                
                 'type' => 'income',                
                 'date' => $date,
-                //'description' => 'Issued invoice number ' . $invoice->invoice_number,
-                'description' => 'Month rent ' . date('M Y', strtotime($invoice->due_date)),
+                'description' => $description,
                 'amount' => $invoice->grand_total,
-                'late_fee' => $invoice->late_fee
+                'late_fee' => $invoice->late_fee,
+                'date_created' => $invoice->date_created
             ];
 
             $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            
             foreach( $payments as $p ){
-                $date = date("m/d/Y", strtotime($p->payment_date));
+                $date = date("m/d/y", strtotime($p->payment_date));
+                $user = $this->Users_model->getUserByID($p->user_id);
+                $payment_method = $p->payment_method == 'cc' ? 'Credit Card' : ucwords($p->payment_method); 
+
                 $ledger[$date][] = [
                     'id' => $p->id,
+                    'user' => $user ? $user->FName . ' ' . $user->LName : '---',
                     'type' => 'payment',          
+                    'payment_method' => $payment_method,
                     'date' => $date,      
-                    //'description' => 'Payment for invoice number ' . $invoice->invoice_number,
-                    'description' => 'Month rent ' . date('M Y', strtotime($invoice->due_date)),
-                    'amount' => $p->invoice_amount
+                    'description' => $description,
+                    'amount' => $p->invoice_amount,
+                    'date_created' => $p->date_created
                 ];
             }
         }
 
+        $this->page_data['default_email'] = logged('email');
         $this->page_data['ledger']    = $ledger;
         $this->load->view('v2/pages/customer/dashboard/ajax_customer_ledger', $this->page_data);
     }
@@ -12313,5 +12340,282 @@ class Customer extends MY_Controller
             //$this->load->view('v2/pages/customer/pdf/statement_of_claims', $this->page_data);   
             $this->pdf->load_view('v2/pages/customer/pdf/statement_of_claims', $this->page_data, $filename, "P");
         }
+    }
+
+    public function ajax_save_signature()
+    {
+        $this->load->model('CustomerSignature_model');
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 0;
+        $msg  = 'Cannot find data';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+        
+        $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
+        if( $customer ){
+            $customerSignature = $this->CustomerSignature_model->getByCustomerId($post['customer_id']);
+            if( $customerSignature ){
+                $data = ['value' => $post['signature_value'],'date_updated' => date("Y-m-d H:i:s")];
+                $this->CustomerSignature_model->update($customerSignature->id, $data);
+            }else{
+                $data = [
+                    'company_id' => $cid,
+                    'customer_id' => $customer->prof_id,              
+                    'customer_name' => $customer->first_name . ' ' . $customer->last_name,
+                    'date' => date("Y-m-d"),
+                    'time' => date("h:i A"),
+                    'value' => $post['signature_value'],
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+                $this->CustomerSignature_model->create($data);
+            }
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function export_customer_ledger()
+    {
+        $this->load->model('Payment_records_model');
+        $this->load->model('Invoice_model');
+        $this->load->model('AcsProfile_model');    
+        $this->load->model('Users_model');    
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+        $cid        = $this->session->userdata('module_customer_id');
+        $payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+        $invoices   = $this->Invoice_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+
+        $fields = ['#', 'Date', 'Description', 'Method', 'Recorded Date', 'Entered By', 'Invoice', 'Payment'];
+        $ledger = [];
+        $row    = 1;
+
+        $delimiter = ',';
+        $time      = time();
+        $filename  = 'customer_ledger_'.$time.'.csv';
+        
+        $f = fopen('php://memory', 'w');
+        fputcsv($f, $fields, $delimiter);
+
+        $total_income  = 0;
+        $total_payment = 0;
+        foreach( $invoices as $invoice ){
+
+            if( $company_id == 139 || $company_id == 1 ){
+                $description =  date('F', strtotime($invoice->due_date)) . ' rent';
+            }else{
+                $description = 'Issued invoice number ' . $invoice->invoice_number;
+            }
+
+            $date = date("m/d/Y", strtotime($invoice->date_issued));
+            $user = $this->Users_model->getUserByID($invoice->user_id);
+            $encoder  = $user ? $user->FName . ' ' . $user->LName : '---';
+            $amount   = $invoice->grand_total;
+            $payment  = 0;
+            $ledger   = [$row, $date, $description, '---', $invoice->date_created, $encoder, $amount, $payment];
+            fputcsv($f, $ledger, $delimiter);
+
+            $total_income += $amount;
+            $row++;
+
+            $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            
+            foreach( $payments as $p ){
+                $date = date("m/d/Y", strtotime($p->payment_date));
+                $user = $this->Users_model->getUserByID($p->user_id);
+                $encoder  = $user ? $user->FName . ' ' . $user->LName : '---';
+                $amount   = 0;
+                $payment  = $p->invoice_amount;
+                $payment_method = $p->payment_method == 'cc' ? 'Credit Card' : ucwords($p->payment_method); 
+                $ledger   = [$row, $date, $description, $payment_method, $invoice->date_created, $encoder, $amount, $payment];
+                fputcsv($f, $ledger, $delimiter);
+
+                $total_payment += $payment;
+                $row++;
+            }
+        }
+
+        $ledger = ['Total', '', '', '', '', '', $total_income, $total_payment];
+        fputcsv($f, $ledger, $delimiter);
+
+        $total_balance = $total_income - $total_payment;
+        $ledger = ['Balance', '', '', '', '', '', '', $total_balance];
+        fputcsv($f, $ledger, $delimiter);
+        
+        fseek($f, 0);
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="'.$filename.'";');
+        fpassthru($f);
+    }
+
+    public function ajax_print_customer_ledger()
+    {
+        $this->load->model('Payment_records_model');
+        $this->load->model('Invoice_model');
+        $this->load->model('AcsProfile_model');    
+        $this->load->model('Users_model');    
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+        $cid        = isset($post['customer_id']) && $post['customer_id'] > 0 ? $post['customer_id'] : $this->session->userdata('module_customer_id');
+        $payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+        $invoices   = $this->Invoice_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+
+        $ledger = [];
+        foreach( $invoices as $invoice ){
+            $date = date("m/d/Y", strtotime($invoice->date_issued));
+            $user = $this->Users_model->getUserByID($invoice->user_id);
+
+            if( $company_id == 139 || $company_id == 1 ){
+                $description =  date('F', strtotime($invoice->due_date)) . ' rent';
+            }else{
+                $description = 'Issued invoice number ' . $invoice->invoice_number;
+            }
+
+            $ledger[$date][] = [
+                'id' => $invoice->id,
+                'user' => $user ? $user->FName . ' ' . $user->LName : '---',
+                'payment_method' => '---',                
+                'type' => 'income',                
+                'date' => $date,
+                'description' => $description,
+                'amount' => $invoice->grand_total,
+                'late_fee' => $invoice->late_fee,
+                'date_created' => $invoice->date_created
+            ];
+
+            $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            
+            foreach( $payments as $p ){
+                $date = date("m/d/Y", strtotime($p->payment_date));
+                $user = $this->Users_model->getUserByID($p->user_id);
+                $payment_method = $p->payment_method == 'cc' ? 'Credit Card' : ucwords($p->payment_method); 
+
+                $ledger[$date][] = [
+                    'id' => $p->id,
+                    'user' => $user ? $user->FName . ' ' . $user->LName : '---',
+                    'type' => 'payment',          
+                    'payment_method' => $payment_method,
+                    'date' => $date,      
+                    'description' => $description,
+                    'amount' => $p->invoice_amount,
+                    'date_created' => $p->date_created
+                ];
+            }
+        }
+
+        $this->page_data['ledger']    = $ledger;
+        $this->load->view('v2/pages/customer/dashboard/ajax_print_customer_ledger', $this->page_data);
+    }
+
+    public function ajax_send_email_ledger()
+    {
+        $this->load->model('Invoice_model');
+        $this->load->model('AcsProfile_model');    
+        $this->load->model('Users_model');   
+
+        $is_success = 0;
+        $msg = 'Cannot send email';
+        $post = $this->input->post();
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+        $cid        = $this->session->userdata('module_customer_id');
+        $payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+        $invoices   = $this->Invoice_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+
+        $fields = ['#', 'Date', 'Description', 'Method', 'Recorded Date', 'Entered By', 'Invoice', 'Payment'];
+        $ledger = [];
+        $row    = 1;
+        
+        $time       = time();
+        $filename   = 'customer_ledger_'.$time.'.csv';
+        $target_dir = "./uploads/customer_ledger_csv/" . $company_id . "/";
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+
+
+        $filepath  = $target_dir . $filename;
+        $f = fopen($filepath, 'w');
+        fputcsv($f, $fields, $delimiter);
+
+        $total_income  = 0;
+        $total_payment = 0;
+        foreach( $invoices as $invoice ){
+
+            if( $company_id == 139 || $company_id == 1 ){
+                $description = 'Month rent ' . date('M Y', strtotime($invoice->due_date));
+            }else{
+                $description = 'Issued invoice number ' . $invoice->invoice_number;
+            }
+
+            $date = date("m/d/Y", strtotime($invoice->date_issued));
+            $user = $this->Users_model->getUserByID($invoice->user_id);
+            $encoder  = $user ? $user->FName . ' ' . $user->LName : '---';
+            $amount   = $invoice->grand_total;
+            $payment  = 0;
+            $ledger   = [$row, $date, $description, '---', $invoice->date_created, $encoder, $amount, $payment];
+            fputcsv($f, $ledger, $delimiter);
+
+            $total_income += $amount;
+            $row++;
+
+            $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            
+            foreach( $payments as $p ){
+                $date = date("m/d/Y", strtotime($p->payment_date));
+                $user = $this->Users_model->getUserByID($p->user_id);
+                $encoder  = $user ? $user->FName . ' ' . $user->LName : '---';
+                $amount   = 0;
+                $payment  = $p->invoice_amount;
+                $payment_method = $p->payment_method == 'cc' ? 'Credit Card' : ucwords($p->payment_method); 
+                $ledger   = [$row, $date, $description, $payment_method, $invoice->date_created, $encoder, $amount, $payment];
+                fputcsv($f, $ledger, $delimiter);
+
+                $total_payment += $payment;
+                $row++;
+            }
+        }
+
+        $ledger = ['Total', '', '', '', '', '', $total_income, $total_payment];
+        fputcsv($f, $ledger, $delimiter);
+
+        $total_balance = $total_income - $total_payment;
+        $ledger = ['Balance', '', '', '', '', '', '', $total_balance];
+        fputcsv($f, $ledger, $delimiter);
+        
+        rewind($fd);
+        fclose($fd);
+
+        $subject = 'Customer Ledger';
+        if( $post['email_subject'] != '' ){
+            $subject = $post['email_subject'];
+        }
+        // Send Email
+        $mail = email__getInstance();
+        $mail->FromName = 'nSmarTrac';
+        $mail->addAddress($post['recipient_email'], $post['recipient_email']);
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body = $post['email_body'];
+
+        $attachmentName = preg_replace('/\s+/', '_', $envelope['subject']);
+        $attachment = $this->generatePDF($envelope['id']);
+        $mail->addStringAttachment($filepath, $filename);
+
+        if( $mail->Send() ){
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;
     }
 }

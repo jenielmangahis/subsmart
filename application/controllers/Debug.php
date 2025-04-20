@@ -3059,6 +3059,77 @@ class Debug extends MY_Controller {
         echo $payment_link; 
         exit;
     }
+
+    public function fixInventoryData()
+    {
+        $this->load->model('Items_model');
+
+        $total_updated = 0;
+
+        $limit = 100;
+        $items = $this->Items_model->getAllItemsNotUpdated($limit);
+        foreach($items as $i){
+            $retail_price = intval(str_replace(",","",$i->retail));
+            
+            if( $i->units == '1' || $i->units == null || $i->units == '' ){
+                $units = 'Each';
+            }else{
+                $units = $i->units;
+            }
+
+            if( !is_numeric($i->cost_per) || $i->cost_per == '' || $i->cost_per == null  ){
+                $cost_per = '0.00';
+            }else{
+                $cost_per = $i->cost_per;
+            }
+
+            if( !is_numeric($i->retail) || $i->retail == '' || $i->retail == null ){
+                $retail = '0.00';
+            }else{
+                $retail = $i->retail;
+            }
+
+            if( !is_numeric($i->rebate) || $i->rebate == '' || $i->rebate == null ){
+                $rebate = '0.00';
+            }else{
+                $rebate = $i->rebate;
+            }
+
+            if( !is_numeric($i->points) || $i->points == '' || $i->points == null ){
+                $points = '0.00';
+            }else{
+                $points = $i->points;
+            }
+
+            if( !is_numeric($i->qty_order) || $i->qty_order == '' || $i->qty_order == null ){
+                $qty_order = '0.00';
+            }else{
+                $qty_order = $i->qty_order;
+            }
+
+            if( !is_numeric($i->re_order_points) || $i->re_order_points == '' || $i->re_order_points == null ){
+                $re_order_points = '0.00';
+            }else{
+                $re_order_points = $i->re_order_points;
+            }
+
+            $data = [
+                'units' => $units,
+                'cost_per' => $cost_per,
+                'retail' => $retail,
+                'rebate' => $rebate,
+                'points' => $points,
+                'qty_order' => $qty_order,
+                're_order_points' => $re_order_points,
+                'is_updated' => 1
+            ];
+            $this->Items_model->updateItem($i->id, $data);
+
+            $total_updated++;
+        }
+
+        echo 'Total updated ' . $total_updated;
+    }
 }
 /* End of file Debug.php */
 

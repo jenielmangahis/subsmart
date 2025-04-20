@@ -77,6 +77,13 @@
             <div class="col mt-2 <?php echo "noRecordFoundContainer_$id"; ?> display_none">
                 <div class="text-center">No Record Found...</div>
             </div>
+            <div class="col mt-2 <?php echo "networkErrorContainer_$id"; ?> display_none">
+                <div class="text-center">Unable to retrieve results due to a network error.<br>
+                    <small>
+                        <a class="text-decoration-none" href="javascript:void(0)" onclick='$(`.<?php echo "thumbnailFilter1_$id"; ?>`).change();'><i class="fas fa-redo-alt"></i>&nbsp;&nbsp;Refresh</a>
+                    </small>
+                </div>
+            </div>
         </div>
         <strong class="thumbnailDragHandle">⣿⣿⣿⣿</strong>
         <span class="thumbnailWidthResizeHandle"></span>
@@ -118,73 +125,82 @@
             beforeSend: function() {
                 $('.<?php echo "textDataContainer_$id"; ?>').hide();
                 $('.<?php echo "graphDataContainer_$id"; ?>').hide();
-                $('.<?php echo "graphLoaderContainer_$id"; ?>').fadeIn();
+                $('.<?php echo "graphLoaderContainer_$id"; ?>').show();
                 $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
+                $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
             },
             success: function(response) {
-                let <?php echo "textData1_$id"; ?> = JSON.parse(response)['TOTAL_JOBS'];
-                let <?php echo "textData2_$id"; ?> = JSON.parse(response)['TOTAL_COUNT'];
-                let graphData = JSON.parse(response)['GRAPH'];
-                let currentYear = new Date().getFullYear().toString();
+                if (response != "null") {
+                    let <?php echo "textData1_$id"; ?> = JSON.parse(response)['TOTAL_JOBS'];
+                    let <?php echo "textData2_$id"; ?> = JSON.parse(response)['TOTAL_COUNT'];
+                    let graphData = JSON.parse(response)['GRAPH'];
+                    let currentYear = new Date().getFullYear().toString();
 
-                let filteredGraphData = Object.keys(graphData)
-                    .filter(key => key.startsWith(currentYear))
-                    .reduce((obj, key) => {
-                        obj[key] = parseFloat(graphData[key]);
-                        return obj;
-                    }, {});
+                    let filteredGraphData = Object.keys(graphData)
+                        .filter(key => key.startsWith(currentYear))
+                        .reduce((obj, key) => {
+                            obj[key] = parseFloat(graphData[key]);
+                            return obj;
+                        }, {});
 
-                let categories = Object.keys(filteredGraphData).map(month => month.split(' ')[1]);
-                let values = Object.values(filteredGraphData);
-                // console.log(categories);
-                if (values.length === 0) {
+                    let categories = Object.keys(filteredGraphData).map(month => month.split(' ')[1]);
+                    let values = Object.values(filteredGraphData);
+                    if (values.length === 0) {
+                        $('.<?php echo "textDataContainer_$id"; ?>').hide();
+                        $('.<?php echo "graphDataContainer_$id"; ?>').hide();
+                        $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                        $('.<?php echo "noRecordFoundContainer_$id"; ?>').show();
+                        $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
+                    } else {
+                        if ($('.<?php echo "showHideGraphCheckbox_$id"; ?>').is(':checked')) {
+                            $('.<?php echo "textDataContainer_$id"; ?>').hide();
+                            $('.<?php echo "graphDataContainer_$id"; ?>').show();
+                        } else {
+                            $('.<?php echo "textDataContainer_$id"; ?>').show();
+                            $('.<?php echo "graphDataContainer_$id"; ?>').hide();
+                        }
+                        $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                        $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
+                        $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
+                        $('.<?php echo "textData1_$id"; ?>').text(<?php echo "textData1_$id"; ?>);
+                        $('.<?php echo "textData2_$id"; ?>').text(<?php echo "textData2_$id"; ?>);
+
+                        <?php echo "graphChart_$id"; ?>.updateOptions({
+                            xaxis: { categories: categories },
+                            yaxis: {
+                                labels: {
+                                    formatter: function(value) {
+                                        return parseInt(value);
+                                    }
+                                }
+                            },
+                            colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple')
+                        });
+
+                        <?php echo "graphChart_$id"; ?>.updateSeries([{
+                            name: "<?php echo $title; ?>",
+                            data: values
+                        }]);
+                    }
+                } else {
                     $('.<?php echo "textDataContainer_$id"; ?>').hide();
                     $('.<?php echo "graphDataContainer_$id"; ?>').hide();
                     $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
-                    $('.<?php echo "noRecordFoundContainer_$id"; ?>').fadeIn();
-                } else {
-                    if ($('.<?php echo "showHideGraphCheckbox_$id"; ?>').is(':checked')) {
-                        $('.<?php echo "textDataContainer_$id"; ?>').hide();
-                        $('.<?php echo "graphDataContainer_$id"; ?>').fadeIn();
-                    } else {
-                        $('.<?php echo "textDataContainer_$id"; ?>').fadeIn();
-                        $('.<?php echo "graphDataContainer_$id"; ?>').hide();
-                    }
-                    $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
-                    $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
-                    $('.<?php echo "textData1_$id"; ?>').text(<?php echo "textData1_$id"; ?>);
-                    $('.<?php echo "textData2_$id"; ?>').text(<?php echo "textData2_$id"; ?>);
-
-                    <?php echo "graphChart_$id"; ?>.updateOptions({
-                        xaxis: { categories: categories },
-                        yaxis: {
-                            labels: {
-                                formatter: function(value) {
-                                    return parseInt(value);
-                                }
-                            }
-                        },
-                        colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple')
-                    });
-
-                    <?php echo "graphChart_$id"; ?>.updateSeries([{
-                        name: "<?php echo $title; ?>",
-                        data: values
-                    }]);
+                    $('.<?php echo "noRecordFoundContainer_$id"; ?>').show();
+                    $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                console.error("Request failed!");
-                console.error("Status:", textStatus);
-                console.error("Error:", errorThrown);
+                $('.<?php echo "textDataContainer_$id"; ?>').hide();
+                $('.<?php echo "graphDataContainer_$id"; ?>').hide();
+                $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
+                $('.<?php echo "networkErrorContainer_$id"; ?>').show();
+                console.error('Unable to retrieve results due to a network error.');
             }
         });
     }
 
-    // let category = '<?php echo $category; ?>';
-    // let dateFrom = new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0];
-    // let dateTo = new Date().toISOString().split('T')[0];
-    // let filter2 = 'all_status';
     <?php echo "processData_$id"; ?>(
         '<?php echo $category; ?>', 
         ($('.<?php echo "thumbnailFilter1_$id"; ?> option:selected').val() == 'all_time') ? '1970-01-01' : new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0], 
@@ -250,9 +266,9 @@
         if (!$('.<?php echo "noRecordFoundContainer_$id"; ?>').is(':visible')) {
             if ($(this).is(':checked')) {
                 $('.<?php echo "textDataContainer_$id"; ?>').hide();
-                $('.<?php echo "graphDataContainer_$id"; ?>').fadeIn();
+                $('.<?php echo "graphDataContainer_$id"; ?>').show();
             } else {
-                $('.<?php echo "textDataContainer_$id"; ?>').fadeIn();
+                $('.<?php echo "textDataContainer_$id"; ?>').show();
                 $('.<?php echo "graphDataContainer_$id"; ?>').hide();
             }
         }

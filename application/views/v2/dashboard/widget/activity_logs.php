@@ -31,8 +31,8 @@
                 <span><?php echo $description; ?></span>
             </div>
         </div>
-        <div class="row mb-2">
-            <!-- <div class="col-md-12">
+        <!-- <div class="row mb-2">
+            <div class="col-md-12">
                 <div class="input-group">
                     <select class="form-select <?php echo "widgetFilter1_$id"; ?>">
                         <option value="all_time">All Time</option>
@@ -46,8 +46,8 @@
                         <option value="last_60_days">Last 60 Days</option>
                     </select>
                 </div>
-            </div> -->
-        </div>
+            </div>
+        </div> -->
         <div class="row">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="table-responsive" style="max-height: 500px;">
@@ -67,6 +67,13 @@
             </div>
             <div class="col mt-2 <?php echo "noRecordFoundContainer_$id"; ?> display_none">
                 <div class="text-center">No Record Found...</div>
+            </div>
+            <div class="col mt-2 <?php echo "networkErrorContainer_$id"; ?> display_none">
+                <div class="text-center">Unable to retrieve results due to a network error.<br>
+                    <small>
+                        <a class="text-decoration-none" href="javascript:void(0)" onclick='$(`.<?php echo "widgetFilter1_$id"; ?>`).change();'><i class="fas fa-redo-alt"></i>&nbsp;&nbsp;Refresh</a>
+                    </small>
+                </div>
             </div>
         </div>
         <strong class="widgetDragHandle">⣿⣿⣿⣿</strong>
@@ -107,45 +114,71 @@
             },
             beforeSend: function() {
                 $('.<?php echo "textDataContainer_$id"; ?>').hide();
-                $('.<?php echo "graphLoaderContainer_$id"; ?>').fadeIn();
+                $('.<?php echo "graphDataContainer_$id"; ?>').hide();
+                $('.<?php echo "graphLoaderContainer_$id"; ?>').show();
                 $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
+                $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
             },
             success: function(response) {
-                let data = JSON.parse(response);
-                
-                Object.entries(data).forEach(([key, value]) => {
-                    const initials = data[key].user.split(' ').map(word => word.charAt(0)).join('');
-                    const timestamp = new Date(data[key].date).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }).replace(/(AM|PM)/, match => match.toUpperCase()).replace(',', '');
+                if (response != "null") {
+                    let data = JSON.parse(response);
+                    
+                    Object.entries(data).forEach(([key, value]) => {
+                        const initials = data[key].user.split(' ').map(word => word.charAt(0)).join('');
+                        const timestamp = new Date(data[key].date).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }).replace(/(AM|PM)/, match => match.toUpperCase()).replace(',', '');
 
+                        $('.<?php echo "tableData_$id"; ?> > tbody').append(`
+                            <tr>
+                                <td class="p-2 align-middle">
+                                    <div class="d-flex position-relative">
+                                        <div class="me-2 flex-shrink-0">
+                                            <div class="nsm-profile" style="background-color:#6a4a8691!important;">
+                                                <span>${initials}</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 min-width-0">
+                                            <strong>${data[key].user}</strong><br>
+                                            <span class="d-block text-wrap" style="font-size: 13px;">${data[key].activity}</span>
+                                        </div>
+                                        <small class="text-muted position-absolute" style="top: 0; right: 1px;">${timestamp}</small>
+                                    </div>
+                                </td>
+                            </tr>
+                        `);
+                    });
+
+                    const urlModule = `${window.origin}/activity_logs`;
                     $('.<?php echo "tableData_$id"; ?> > tbody').append(`
-                        <tr>
+                        <tr style="cursor: pointer;" onclick="window.open('${urlModule}', '_blank')">
                             <td class="p-2 align-middle">
                                 <div class="d-flex position-relative">
-                                    <div class="me-2 flex-shrink-0">
-                                        <div class="nsm-profile" style="background-color:#6a4a8691!important;">
-                                            <span>${initials}</span>
-                                        </div>
-                                    </div>
                                     <div class="flex-grow-1 min-width-0">
-                                        <strong>${data[key].user}</strong><br>
-                                        <span class="d-block text-wrap" style="font-size: 13px;">${data[key].activity}</span>
+                                        <a href="javascript:void(0)" class="d-block text-wrap text-decoration-none" style="font-size: 13px;">Click here to see more details.</a>
                                     </div>
-                                    <small class="text-muted position-absolute" style="top: 0; right: 1px;">${timestamp}</small>
-                                </div>
+                               </div>
                             </td>
                         </tr>
                     `);
-                });
 
-
-                $('.<?php echo "textDataContainer_$id"; ?>').fadeIn();
-                $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
-                $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
+                    $('.<?php echo "textDataContainer_$id"; ?>').show();
+                    $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                    $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
+                    $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
+                } else {
+                    $('.<?php echo "textDataContainer_$id"; ?>').hide();
+                    $('.<?php echo "graphDataContainer_$id"; ?>').hide();
+                    $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                    $('.<?php echo "noRecordFoundContainer_$id"; ?>').show();
+                    $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
+                }
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                console.error("Request failed!");
-                console.error("Status:", textStatus);
-                console.error("Error:", errorThrown);
+                $('.<?php echo "textDataContainer_$id"; ?>').hide();
+                $('.<?php echo "graphDataContainer_$id"; ?>').hide();
+                $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
+                $('.<?php echo "networkErrorContainer_$id"; ?>').show();
+                console.error('Unable to retrieve results due to a network error.');
             }
         });
     }
@@ -202,7 +235,7 @@
             if ($(this).is(':checked')) {
                 $('.<?php echo "textDataContainer_$id"; ?>').hide();
             } else {
-                $('.<?php echo "textDataContainer_$id"; ?>').fadeIn();
+                $('.<?php echo "textDataContainer_$id"; ?>').show();
             }
         }
     });

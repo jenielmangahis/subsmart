@@ -1227,7 +1227,7 @@ class Invoice extends MY_Controller
         $msg = 'Cannot find data';
 
         $this->load->model('Automation_model', 'automation_model');
-        $this->load->model('Automation_queue_model', 'automation_queue_model');
+        $this->load->model('Automation_Queue_model', 'automation_queue_model');
 
         $id   = $this->input->post('invoiceDataID');
         $cid  = logged('company_id');
@@ -1327,87 +1327,23 @@ class Invoice extends MY_Controller
         /**
          * After successfully update invoice to paid, check for automation and add send email queue - start
          */
-        $is_automation_activated = true;
+        $is_automation_activated = enableAutomationActivated();
         if($is_automation_activated && $this->input->post('status') == 'Paid') {
-            $auto_params = [
-                'entity' => 'invoice',
-                'trigger_action' => 'send_email',
-                'operation' => 'send',
-                'status' => 'active',
-                'trigger_event' => 'paid',
-                'trigger_time' => 0
-            ];
-            $automationsData = $this->automation_model->getAutomationsListByParams($auto_params); 
-            if($automationsData) {
+            createAutomationQueue('send_email', 'invoice', 'invoice', 'paid', $id);
+            createAutomationQueue('send_sms', 'invoice', 'invoice', 'paid', $id);         
 
-                foreach($automationsData as $automationData) {
-                    $data_queue = [
-                        'automation_id' => $automationData->id,
-                        'target_id' => 0,
-                        'entity_type' => 'invoice',
-                        'status' => 'new',
-                        'entity_id' => $id,
-                        'trigger_time' => null,
-                        'is_triggered' => 0
-                    ];
-                    $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue);   
-                }
-                                         
-            }
         }elseif($is_automation_activated && $this->input->post('status') == 'Due') {
-
-            $auto_params = [
-                'entity' => 'invoice',
-                'operation' => 'send',
-                'trigger_event' => 'due',
-                'trigger_action' => 'send_email',
-                'status' => 'active',
-                'trigger_time' => 0
-            ];
-            $automationsData = $this->automation_model->getAutomationsListByParams($auto_params); 
-            if($automationsData) {
-                foreach($automationsData as $automationData) {
-                    $data_queue = [
-                        'automation_id' => $automationData->id,
-                        'target_id' => 0,
-                        'entity_type' => 'invoice',
-                        'status' => 'new',
-                        'entity_id' => $id,
-                        'trigger_time' => null,
-                        'is_triggered' => 0
-                    ];
-                    $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue);   
-                }                    
-            }            
+            createAutomationQueue('send_email', 'invoice', 'invoice', 'due', $id);    
+            createAutomationQueue('send_sms', 'invoice', 'invoice', 'due', $id);         
 
         }elseif($is_automation_activated && $this->input->post('status') == 'Overdue') {
-            $auto_params = [
-                'entity' => 'invoice',
-                'operation' => 'send',
-                'trigger_event' => 'past_due',
-                'trigger_action' => 'send_email',
-                'status' => 'active',
-                'trigger_time' => 0
-            ];
-            $automationsData = $this->automation_model->getAutomationsListByParams($auto_params); 
-            if($automationsData) {
-                foreach($automationsData as $automationData) {
-                    $data_queue = [
-                        'automation_id' => $automationData->id,
-                        'target_id' => 0,
-                        'entity_type' => 'invoice',
-                        'status' => 'new',
-                        'entity_id' => $id,
-                        'trigger_time' => null,
-                        'is_triggered' => 0
-                    ];
-                    $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue);   
-                }
-            }
+            createAutomationQueue('send_email', 'invoice', 'invoice', 'past_due', $id);
+            createAutomationQueue('send_sms', 'invoice', 'invoice', 'past_due', $id);
+
         }
         /**
          *  After successfully update invoice to paid, check for automation and add send email queue - end
-         */         
+         */              
 
         $return = [
             'is_success' => $is_success,
@@ -2541,6 +2477,12 @@ class Invoice extends MY_Controller
 
                 $this->InvoiceScheduledEmailNotification_model->create($data);
 
+                $is_automation_activated = enableAutomationActivated();
+                if($is_automation_activated) {
+                    createAutomationQueue('send_email', 'invoice', 'invoice', 'sent', $post['invoice_id']);
+                    createAutomationQueue('send_sms', 'invoice', 'invoice', 'sent', $post['invoice_id']);   
+                }
+
                 customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Send email reminder on '.$post['email_scheduled_date'].' for invoice number '.$newInvoice->invoice_number);
                 
                 $invoice_id = $invoice->id;
@@ -2607,7 +2549,7 @@ class Invoice extends MY_Controller
         $this->load->model('AcsTransactionHistory_model');
 
         $this->load->model('Automation_model', 'automation_model');
-        $this->load->model('Automation_queue_model', 'automation_queue_model');
+        $this->load->model('Automation_Queue_model', 'automation_queue_model');
         
         $is_success = 0;
         $msg = 'Cannot find invoice';
@@ -2635,7 +2577,8 @@ class Invoice extends MY_Controller
                     'payment_method' => $post['payment_method'],
                     'invoice_number' => $invoice->invoice_number,
                     'reference_number' => $post['reference'],
-                    'notes' => $post['notes']
+                    'notes' => $post['notes'],
+                    'date_created' => date("Y-m-d H:i:s")
                 ]);
 
                 //Update invoice status
@@ -2685,38 +2628,15 @@ class Invoice extends MY_Controller
 
                 $this->AcsTransactionHistory_model->create($transaction_history_data);
 
-                $is_automation_activated = true;
+                $is_automation_activated = enableAutomationActivated();
                 if($status == 'Paid') {
                     /**
                      * After successfully update invoice to paid, check for automation and add send email queue - start
                      */
                     if($is_automation_activated) {
-                        $auto_params = [
-                            'entity' => 'invoice',
-                            'trigger_action' => 'send_email',
-                            'operation' => 'send',
-                            'status' => 'active',
-                            'trigger_event' => 'paid',
-                            'trigger_time' => 0
-                        ];
-                        $automationsData = $this->automation_model->getAutomationsListByParams($auto_params); 
-                        if($automationsData) {
-
-                            foreach($automationsData as $automationData) {
-                                $data_queue = [
-                                    'automation_id' => $automationData->id,
-                                    'target_id' => 0,
-                                    'entity_type' => 'invoice',
-                                    'status' => 'new',
-                                    'entity_id' => $invoice->id,
-                                    'trigger_time' => null,
-                                    'is_triggered' => 0
-                                ];
-                                $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue);   
-                            }
-                                                    
-                        }
-                    }    
+                        createAutomationQueue('send_email', 'invoice', 'invoice', 'paid', $invoice->id);    
+                        createAutomationQueue('send_sms', 'invoice', 'invoice', 'paid', $invoice->id);    
+                    }
                     /**
                      * After successfully update invoice to paid, check for automation and add send email queue - end
                      */  
@@ -2985,12 +2905,12 @@ class Invoice extends MY_Controller
         $this->load->model('Items_model');      
 
         $this->load->model('Automation_model', 'automation_model');
-        $this->load->model('Automation_queue_model', 'automation_queue_model');
+        $this->load->model('Automation_Queue_model', 'automation_queue_model');
        
         $is_success = 1;
 		$msg  = 'Cannot find invoice data';
 
-        $is_automation_activated  = true;
+        $is_automation_activated  = enableAutomationActivated();
         $is_live_mail_credentials = false;
         
         $post = $this->input->post();
@@ -3240,38 +3160,16 @@ class Invoice extends MY_Controller
             /**
              * After successfully created invoice, check for automation and add send email queue - start
              */
+
             if($is_automation_activated) {
-                $auto_params = [
-                    'entity' => 'invoice',
-                    'trigger_action' => 'send_email',
-                    'operation' => 'send',
-                    'status' => 'active',
-                    'trigger_event' => 'created',
-                    'trigger_time' => 0
-                ];
-                //$automationData = $this->automation_model->getAutomationByParams($auto_params);  
-                $automationsData = $this->automation_model->getAutomationsListByParams($auto_params); 
-
-                if($automationsData) {
-
-                    foreach($automationsData as $automationData) {
-                        $data_queue = [
-                            'automation_id' => $automationData->id,
-                            'target_id' => 0,
-                            'entity_type' => 'invoice',
-                            'status' => 'new',
-                            'entity_id' => $invoice_id,
-                            'trigger_time' => null,
-                            'is_triggered' => 0
-                        ];
-                        $automation_queue = $this->automation_queue_model->saveAutomationQueue($data_queue); 
-                    }
-                                           
-                }
+                createAutomationQueue('send_email', 'invoice', 'invoice', 'created', $invoice_id);
+                createAutomationQueue('send_sms', 'invoice', 'invoice', 'created', $invoice_id);
             }
+
             /**
              * After successfully created invoice, check for automation and add send email queue - end
-             */             
+             */          
+            
 
             //Activity Logs
             $activity_name = 'Invoice : Created Invoice Number : ' . $invoiceNumber; 

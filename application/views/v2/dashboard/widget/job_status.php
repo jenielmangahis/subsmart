@@ -76,6 +76,13 @@
             <div class="col mt-2 <?php echo "noRecordFoundContainer_$id"; ?> display_none">
                 <div class="text-center">No Record Found...</div>
             </div>
+            <div class="col mt-2 <?php echo "networkErrorContainer_$id"; ?> display_none">
+                <div class="text-center">Unable to retrieve results due to a network error.<br>
+                    <small>
+                        <a class="text-decoration-none" href="javascript:void(0)" onclick='$(`.<?php echo "widgetFilter1_$id"; ?>`).change();'><i class="fas fa-redo-alt"></i>&nbsp;&nbsp;Refresh</a>
+                    </small>
+                </div>
+            </div>
         </div>
         <strong class="widgetDragHandle">⣿⣿⣿⣿</strong>
         <span class="widgetWidthResizeHandle"></span>
@@ -117,67 +124,75 @@
             beforeSend: function() {
                 $('.<?php echo "textDataContainer_$id"; ?>').hide();
                 $('.<?php echo "graphDataContainer_$id"; ?>').hide();
-                $('.<?php echo "graphLoaderContainer_$id"; ?>').fadeIn();
+                $('.<?php echo "graphLoaderContainer_$id"; ?>').show();
                 $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
+                $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
             },
             success: function(response) {
-                let data = JSON.parse(response);
-                let graphLabels = [];
-                let graphSeries = [];
-                let labelWithCounts = [];
+                if (response != "null") {
+                    let data = JSON.parse(response);
+                    let graphLabels = [];
+                    let graphSeries = [];
+                    let labelWithCounts = [];
 
-                $('.<?php echo "textDataContainer_$id"; ?>').remove();
+                    $('.<?php echo "textDataContainer_$id"; ?>').remove();
 
-                Object.entries(data).forEach(([key, value]) => {
-                    graphLabels.push(key);
-                    graphSeries.push(parseInt(value));
-                    labelWithCounts.push(`${key}: ${value}`);
-                    $('.<?php echo "textDatas_$id"; ?>').append(`
-                        <div class='col-4 col-md-3 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
-                            <div class='text-center textData'>
-                                <small class='text-muted text-uppercase fw-bold'>${key}</small>
-                                <h4>${value}</h4>
+                    Object.entries(data).forEach(([key, value]) => {
+                        graphLabels.push(key);
+                        graphSeries.push(parseInt(value));
+                        labelWithCounts.push(`${key}: ${value}`);
+                        $('.<?php echo "textDatas_$id"; ?>').append(`
+                            <div class='col-4 col-md-3 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
+                                <div class='text-center textData'>
+                                    <small class='text-muted text-uppercase fw-bold'>${key}</small>
+                                    <h4>${value}</h4>
+                                </div>
                             </div>
-                        </div>
-                    `);
-                });
+                        `);
+                    });
 
-                $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
-                $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
-
-                if ($('.<?php echo "showHideGraphCheckbox_$id"; ?>').is(':checked')) {
-                    $('.<?php echo "textDataContainer_$id"; ?>').hide();
-                    $('.<?php echo "graphDataContainer_$id"; ?>').fadeIn();
-                } else {
-                    $('.<?php echo "textDataContainer_$id"; ?>').fadeIn();
-                    $('.<?php echo "graphDataContainer_$id"; ?>').hide();
-                }
-
-                <?php echo "graphChart_$id"; ?>.updateOptions({
-                    labels: graphLabels,
-                    colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple'),
-                    legend: {
-                        formatter: function(seriesName, opts) {
-                            const count = opts.w.config.series[opts.seriesIndex];
-                            return `${seriesName}: <strong>${count}</strong>`;
-                        }
+                    $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                    $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
+                    $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
+                    if ($('.<?php echo "showHideGraphCheckbox_$id"; ?>').is(':checked')) {
+                        $('.<?php echo "textDataContainer_$id"; ?>').hide();
+                        $('.<?php echo "graphDataContainer_$id"; ?>').show();
+                    } else {
+                        $('.<?php echo "textDataContainer_$id"; ?>').show();
+                        $('.<?php echo "graphDataContainer_$id"; ?>').hide();
                     }
-                });
 
-                <?php echo "graphChart_$id"; ?>.updateSeries(graphSeries);
+                    <?php echo "graphChart_$id"; ?>.updateOptions({
+                        labels: graphLabels,
+                        colors: <?php echo "graphColorRandomizer_$id"; ?>('multiple'),
+                        legend: {
+                            formatter: function(seriesName, opts) {
+                                const count = opts.w.config.series[opts.seriesIndex];
+                                return `${seriesName}: <strong>${count}</strong>`;
+                            }
+                        }
+                    });
+
+                    <?php echo "graphChart_$id"; ?>.updateSeries(graphSeries);
+                } else {
+                    $('.<?php echo "textDataContainer_$id"; ?>').hide();
+                    $('.<?php echo "graphDataContainer_$id"; ?>').hide();
+                    $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                    $('.<?php echo "noRecordFoundContainer_$id"; ?>').show();
+                    $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
+                }
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                console.error("Request failed!");
-                console.error("Status:", textStatus);
-                console.error("Error:", errorThrown);
+                $('.<?php echo "textDataContainer_$id"; ?>').hide();
+                $('.<?php echo "graphDataContainer_$id"; ?>').hide();
+                $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
+                $('.<?php echo "networkErrorContainer_$id"; ?>').show();
+                console.error('Unable to retrieve results due to a network error.');
             }
         });
     }
 
-    // let category = '<?php echo $category; ?>';
-    // let dateFrom = new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0];
-    // let dateTo = new Date().toISOString().split('T')[0];
-    // let filter2 = 'all_status';
     <?php echo "processData_$id"; ?>(
         '<?php echo $category; ?>', 
         ($('.<?php echo "widgetFilter1_$id"; ?> option:selected').val() == 'all_time') ? '1970-01-01' : new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0], 
@@ -250,9 +265,9 @@
         if (!$('.<?php echo "noRecordFoundContainer_$id"; ?>').is(':visible')) {
             if ($(this).is(':checked')) {
                 $('.<?php echo "textDataContainer_$id"; ?>').hide();
-                $('.<?php echo "graphDataContainer_$id"; ?>').fadeIn();
+                $('.<?php echo "graphDataContainer_$id"; ?>').show();
             } else {
-                $('.<?php echo "textDataContainer_$id"; ?>').fadeIn();
+                $('.<?php echo "textDataContainer_$id"; ?>').show();
                 $('.<?php echo "graphDataContainer_$id"; ?>').hide();
             }
         }

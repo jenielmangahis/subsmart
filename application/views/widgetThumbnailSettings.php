@@ -102,7 +102,6 @@
         background: #ffa7001a;
         cursor: pointer;
     }
-
 </style>
 <div class="modal fade" id="dashboardThumbnailWidgetSettingsModal" role="dialog" data-bs-keyboard="true">
     <div class="modal-dialog modal-lg">
@@ -309,8 +308,6 @@
                     },
                 });
             }
-
-            console.log(thumbnailEnabledOptionIDs);
         });
 
         $(document).on('click', '.thumbnailOptionItems', function(e) {
@@ -357,8 +354,6 @@
                     graphDisplayState: thumbnailGraphState
                 });
             });
-
-            console.log(newLayoutOptionIDs);
 
             $.ajax({
                 type: "POST",
@@ -502,7 +497,6 @@
                 });
             }
 
-            console.log(widgetEnabledOptionIDs);
         });
 
         $(document).on('click', '.widgetOptionItems', function(e) {
@@ -549,8 +543,6 @@
                     graphDisplayState: widgetGraphState
                 });
             });
-
-            console.log(newLayoutOptionIDs);
 
             $.ajax({
                 type: "POST",

@@ -442,10 +442,9 @@ class Accounting_model extends MY_Model
         if ($reportType == 'open_estimates') {
             $this->db->select('estimates.id AS id, estimates.company_id AS company_id, estimates.estimate_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, estimates.job_name AS job, estimates.job_location AS location, estimates.status AS status, estimates.created_at AS date_created, estimates.grand_total AS total');
             $this->db->from('estimates');
-            $this->db->where_in('estimates.status', [
-                'Draft',
-                'Pending',
-            ]);
+            $this->db->where('estimates.status !=', "Draft");
+            $this->db->where('estimates.status !=', "Pending");
+            $this->db->where('estimates.view_flag', 0);
             $this->db->where('estimates.company_id', $companyID);
             $this->db->where("DATE_FORMAT(estimates.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
             $this->db->where("DATE_FORMAT(estimates.created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");

@@ -111,6 +111,8 @@ $route['customer/_create_customer_group'] = 'Customer/ajax_create_customer_group
 $route['customer/_import_preview'] = 'Customer/ajax_import_preview';
 $route['customer/_ledger'] = 'Customer/ajax_customer_ledger';
 $route['customer/_delete_reason'] = 'Customer/ajax_delete_company_reason';
+$route['customer/_print_ledger'] = 'Customer/ajax_print_customer_ledger';
+$route['customer/_send_email_ledger'] = 'Customer/ajax_send_email_ledger';
 
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -1534,6 +1536,12 @@ $route['cron/send_paid_invoice_mail_automation'] = 'Cron_Automation_Controller/c
 $route['cron/send_set_due_invoice_mail_automation'] = 'Cron_Automation_Controller/cronSetToDueInvoiceMailAutomation'; 
 $route['cron/send_set_past_due_invoice_mail_automation'] = 'Cron_Automation_Controller/cronSetToPastDueInvoiceMailAutomation'; 
 
+//Cron Automation - SMS
+$route['cron/send_created_invoice_sms_automation'] = 'Cron_Automation_Controller/cronCreatedInvoiceSMSAutomation';
+$route['cron/send_paid_invoice_sms_automation'] = 'Cron_Automation_Controller/cronPaidInvoiceSMSAutomation'; 
+$route['cron/send_set_due_invoice_sms_automation'] = 'Cron_Automation_Controller/cronSetToDueInvoiceSMSAutomation'; 
+$route['cron/send_set_past_due_invoice_sms_automation'] = 'Cron_Automation_Controller/cronSetToPastDueInvoiceSMSAutomation'; 
+
 //Cron Automation - Sms
 $route['cron/send_sms_automation'] = 'Cron_Automation_Controller/cronSmsAutomation';
 
@@ -1627,6 +1635,8 @@ $route['customer/_customer_add_billing_information'] = 'Customer/ajax_customer_a
 $route['customer/_customer_add_emergency_contacts_information'] = 'Customer/ajax_customer_add_emergency_contacts_information';
 $route['customer/_customer_add_basic_information'] = 'Customer/ajax_customer_add_basic_information';
 $route['customer/_quick_save'] = 'Customer/ajax_quick_save_customer_v2';
+$route['customer/export_customer'] = 'Customer/customer_export';
+$route['customer/export_customer_ledger'] = 'Customer/export_customer_ledger';
 
 // Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';
@@ -2012,6 +2022,7 @@ $route['customer/download_document/(:any)?'] = 'CustomerDashboardQuickActions/do
 $route['customer/_delete_client_agreement']  = 'CustomerDashboardQuickActions/ajaxDeleteClientAgreement';
 $route['customer/_get_document_archives']  = 'CustomerDashboardQuickActions/ajaxGetDocumentArchives';
 $route['customer/_restore_archived_document']  = 'CustomerDashboardQuickActions/ajaxRestoreArchivedDocument';
+$route['customer/_save_signature']  = 'Customer/ajax_save_signature';
 
 //Customer
 $route['customer/_restore_archived']    = 'Customer/ajax_restore_archived';
@@ -2069,6 +2080,8 @@ $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscr
 $route['benchmark/test_late_invoice_computation'] = 'Benchmark/test_late_invoice_computation';
 $route['benchmark/manual_add_customer_invoice'] = 'Benchmark/manualAddCustomerInvoice';
 $route['benchmark/test_mail_function'] = 'Benchmark/testMailFunction';
+$route['benchmark/test_sms_automation'] = 'Benchmark/testSMSAutomation';
+
 
 //Role Access Modules
 $route['users/role_access_modules'] = 'Users/role_access_modules';

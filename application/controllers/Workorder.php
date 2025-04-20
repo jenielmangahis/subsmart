@@ -4041,6 +4041,11 @@ class Workorder extends MY_Controller
 
     public function workorderInstallation()
     {
+        if(!checkRoleCanAccessModule('work-orders', 'write')){
+			show403Error();
+			return false;
+		}
+
         add_footer_js([
 			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
 			'assets/js/jquery.signaturepad.js'
@@ -4065,44 +4070,18 @@ class Workorder extends MY_Controller
             $this->page_data['auto_increment_estimate_id'] = 0;
         }
 
-        $user_id = logged('id');
-
+        $user_id    = logged('id');
         $company_id = logged('company_id');
         $this->load->library('session');
 
         $users_data = $this->session->all_userdata();
-        // foreach($users_data as $usersD){
-        //     $userID = $usersD->id;
-            
-        // }
-
-        // print_r($user_id);
-        // $users = $this->users_model->getUserByID($user_id);
-        // print_r($users);
-        // echo $company_id;
-
         $role = logged('role');
-        if( $role == 1 || $role == 2){
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-            // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }else{
-            // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }
         $type = $this->input->get('type');
+
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         $this->page_data['type'] = $type;
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
-        // $this->page_data['number'] = $this->estimate_model->getlastInsert();
-
-        // $termsCondi = $this->workorder_model->getTerms($company_id);
-        // if($termsCondi){
-        //     // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
-        //     $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
-        // }else{
-        //     // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
-        //     $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
-        // }
 
         $termsCondi = $this->workorder_model->getWOTerms($company_id);
         if($termsCondi){
@@ -4110,8 +4089,6 @@ class Workorder extends MY_Controller
         }else{
             $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
         }
-
-        // $this->workorder_model->getWOtermsByID();
 
         $termsUse = $this->workorder_model->getTermsUse($company_id);
         if($termsUse){
@@ -4160,20 +4137,14 @@ class Workorder extends MY_Controller
 
         $this->page_data['prefix'] = $prefix;
         $this->page_data['next_num'] = $next_num;
-
-        // print_r($this->page_data['terms_conditions']);
         $this->page_data['fields'] = $this->workorder_model->getCustomByID();
         $this->page_data['headers'] = $this->workorder_model->getheaderInstallationByID();
-        //$this->page_data['checklists'] = $this->workorder_model->getchecklistByUser($user_id);
         $this->page_data['checklists'] = $checklists;
         $this->page_data['job_types'] = $this->workorder_model->getjob_types();
-
         $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
-        
         $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
-
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
@@ -4182,22 +4153,18 @@ class Workorder extends MY_Controller
         $this->page_data['getSettings'] = $this->workorder_model->getSettings($company_id);
 
         $org_id = array('58','31');
-            // if($company_id == 58 || $company_id == 31)
-            // {
-            //     // $workorder = $this->workorder_model->getFilterworkorderListMultiple($org_id, $filter); 
-            //     $this->page_data['number'] = $this->workorder_model->getlastInsertMultiple($org_id);
-            // }else{
-                $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
-            // }
+        // if($company_id == 58 || $company_id == 31)
+        // {
+        //     // $workorder = $this->workorder_model->getFilterworkorderListMultiple($org_id, $filter); 
+        //     $this->page_data['number'] = $this->workorder_model->getlastInsertMultiple($org_id);
+        // }else{
+            $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
+        // }
         
 
         $this->page_data['ids'] = $this->workorder_model->getlastInsertID();
-        
-
         $this->page_data['page_title'] = "Work Order";
         $this->page_data['checklists'] = [];
-        // print_r($this->page_data['lead_source']);
-
         // $this->load->view('workorder/addWorkorderInstallation', $this->page_data);
         $this->load->view('v2/pages/workorder/addWorkorderInstallation', $this->page_data);
     }
@@ -5730,24 +5697,26 @@ class Workorder extends MY_Controller
         $total      = $this->input->post('total');
 
         $this->workorder_model->delete_items($workorder->id);
-        foreach($items as $key => $value){
-            $package_id = 0;
-            if( isset($packageID[$key]) ){
-                $package_id = $packageID[$key];
+        if( $items ){
+            foreach($items as $key => $value){
+                $package_id = 0;
+                if( isset($packageID[$key]) ){
+                    $package_id = $packageID[$key];
+                }
+    
+                $items = [
+                    'items_id' => $value,      
+                    'package_id' => $package_id,
+                    'qty' => $quantity[$key],
+                    'cost' => $price[$key],
+                    'tax' => $tax[$key],
+                    'discount' => $discount[$key],
+                    'total' => $total[$key],
+                    'work_order_id' => $workorder->id
+                ];   
+                $this->workorder_model->add_work_order_details($items);
             }
-
-            $items = [
-                'items_id' => $value,      
-                'package_id' => $package_id,
-                'qty' => $quantity[$key],
-                'cost' => $price[$key],
-                'tax' => $tax[$key],
-                'discount' => $discount[$key],
-                'total' => $total[$key],
-                'work_order_id' => $workorder->id
-            ];   
-            $this->workorder_model->add_work_order_details($items);
-        }
+        }        
 
         $getname = $this->workorder_model->getname($user_id);
 
@@ -12220,6 +12189,12 @@ class Workorder extends MY_Controller
         $this->load->model('Clients_model');
         $this->load->model('Checklist_model');
         $this->load->model('AcsAccess_model');
+        $this->load->helper('functions');
+
+        if(!checkRoleCanAccessModule('work-orders', 'write')){
+			show403Error();
+			return false;
+		}
 
         $estimate = $this->estimate_model->getById($id);
         $company_id = logged('company_id');
@@ -12253,39 +12228,15 @@ class Workorder extends MY_Controller
         $this->load->library('session');
 
         $users_data = $this->session->all_userdata();
-        // foreach($users_data as $usersD){
-        //     $userID = $usersD->id;
-            
-        // }
 
-        // print_r($user_id);
-        // $users = $this->users_model->getUserByID($user_id);
-        // print_r($users);
-        // echo $company_id;
-
-        $role = logged('role');
-        if( $role == 1 || $role == 2){
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-            // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }else{
-            // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
-        $this->page_data['items'] = $this->items_model->getItemlist();
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         // $this->page_data['number'] = $this->estimate_model->getlastInsert();
         $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
-
-        // $termsCondi = $this->workorder_model->getTerms($company_id);
-        // if($termsCondi){
-        //     // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
-        //     $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
-        // }else{
-        //     // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
-        //     $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
-        // }
 
         $termsCondi = $this->workorder_model->getWOTerms($company_id);
         if($termsCondi){

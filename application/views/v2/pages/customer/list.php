@@ -438,7 +438,7 @@
                                     </li>
                                     <?php } ?>
                                     <li>
-                                        <a class="dropdown-item" href="<?= url('customer/import_customer') ?>"><i class='bx bx-fw bx-file'></i> Export</a>
+                                        <a class="dropdown-item" href="<?= url('customer/export_customer') ?>"><i class='bx bx-fw bx-file'></i> Export</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item" id="print-customer-list" href="javascript:void(0)"><i class='bx bx-fw bx-printer'></i> Print</a>
@@ -721,9 +721,7 @@
                 <div class="modal-title content-title" style="font-size: 17px;"><i class="fas fa-history"></i>&nbsp;&nbsp;Update History</div>
                 <i class="fas fa-times" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
-            <div class="modal-body">
-                test
-            </div>
+            <div class="modal-body"></div>
         </div>
     </div>
 </div>

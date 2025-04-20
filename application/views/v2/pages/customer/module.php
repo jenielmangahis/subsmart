@@ -246,7 +246,6 @@
 
     function addModule(id) {
         var mod = $('#custom_modules').val();
-        console.log(mod);
         var arr = mod.split(',');
         if (mod != "") {
             for (var i = 0; i < arr.length; i++) {
@@ -265,7 +264,6 @@
                 ams_id: <?php echo $module_sort->ams_id; ?>
             }, // serializes the form's elements.
             success: function(data) {
-                console.log(data)
                 // $(data).insertBefore($('#addModuleBody'));
                 $("#customer_modules").append(data);
             }
