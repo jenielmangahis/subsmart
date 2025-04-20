@@ -2369,6 +2369,30 @@ class Dashboard extends Widgets
             case 'recent_customers':
                 $graphData = $data;
             break;
+            case 'unpaid_invoices_list':
+                $graphData = $data;
+            break;
+            case 'overdue_invoices_list':
+                $graphData = $data;
+            break;
+            case 'paid_invoices':
+                $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
+    
+                $accumulativeValue = 0.0;
+                foreach ($data as $datas) {
+                    $accumulativeValue += $datas->total;
+                    $month = strtoupper(date('Y M', strtotime($datas->date)));
+                    $graphData['GRAPH'][$month] = number_format($accumulativeValue, 2, '.', '');
+                }
+    
+                $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
+            break;
+            case 'open_invoices_list':
+                $graphData = $data;
+            break;
+            case 'open_estimates_list':
+                $graphData = $data;
+            break;
             default:
                 $graphData = ['error' => 'Invalid category'];
             break;

@@ -192,8 +192,19 @@ $category = "subscription_revenue";
                         data: values
                     }]);
                 }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
+                } else {
+        $('.<?php echo "textDataContainer_$id"; ?>').hide();
+        $('.<?php echo "graphDataContainer_$id"; ?>').hide();
+        $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+        $('.<?php echo "noRecordFoundContainer_$id"; ?>').show();
+    }
+},
+error: function(jqXHR, textStatus, errorThrown) {
+                $('.<?php echo "textDataContainer_$id"; ?>').hide();
+                $('.<?php echo "graphDataContainer_$id"; ?>').hide();
+                $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
+                $('.<?php echo "networkErrorContainer_$id"; ?>').show();
                 console.error("Request failed!");
                 console.error("Status:", textStatus);
                 console.error("Error:", errorThrown);

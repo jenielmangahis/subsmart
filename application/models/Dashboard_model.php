@@ -312,6 +312,84 @@ class Dashboard_model extends MY_Model
                 $query = $this->db->get();
                 return $query->result();
             break;
+            case 'unpaid_invoices_list':
+                $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date, invoices.grand_total AS total');
+                $this->db->from('invoices');
+                $this->db->where('invoices.status !=', "Paid");
+                $this->db->where('invoices.status !=', "Draft");
+                $this->db->where('invoices.status !=', "");
+                $this->db->where('invoices.view_flag', 0);
+                $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-90 days')));
+                $this->db->where('invoices.due_date <=', date('Y-m-d'));            
+                $this->db->where('invoices.company_id', $company_id);
+                $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+                $this->db->order_by('invoices.date_created', 'DESC');
+                $this->db->limit(100);
+                $data = $this->db->get();
+                return $data->result();
+            break;
+            case 'overdue_invoices_list':
+                $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date, invoices.grand_total AS total');
+                $this->db->from('invoices');
+                $this->db->where('invoices.status !=', "Paid");
+                $this->db->where('invoices.status !=', "Draft");
+                $this->db->where('invoices.status !=', "");
+                $this->db->where('invoices.view_flag', 0);
+                $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-14 days')));          
+                $this->db->where('invoices.company_id', $company_id);
+                $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+                $this->db->order_by('invoices.date_created', 'DESC');
+                $this->db->limit(100);
+                $data = $this->db->get();
+                return $data->result();
+            break;
+            case 'paid_invoices':
+                $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date, invoices.grand_total AS total');
+                $this->db->from('invoices');
+                $this->db->where('invoices.status =', "Paid");
+                $this->db->where('invoices.view_flag', 0);
+                $this->db->where('invoices.company_id', $company_id);
+                $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >=", $dateFrom);
+                $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <=", $dateTo);
+                $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+                $this->db->order_by('invoices.date_created', 'DESC');
+                $data = $this->db->get();
+                return $data->result();
+            break;
+            case 'open_invoices_list':
+                $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date, invoices.grand_total AS total');
+                $this->db->from('invoices');
+                $this->db->where('invoices.status !=', "Paid");
+                $this->db->where('invoices.status !=', "Draft");
+                $this->db->where('invoices.status !=', "");
+                $this->db->where('invoices.view_flag', 0);
+                $this->db->where('invoices.due_date <=', date('Y-m-d'));      
+                $this->db->where('invoices.company_id', $company_id);
+                $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+                $this->db->order_by('invoices.date_created', 'DESC');
+                $this->db->limit(100);
+                $data = $this->db->get();
+                return $data->result();
+            break;
+
+            case 'open_estimates_list':
+                $this->db->select('estimates.id AS id, estimates.company_id AS company_id, estimates.estimate_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, estimates.status AS status, estimates.created_at AS date, estimates.grand_total AS total');
+                $this->db->from('estimates');
+                $this->db->where('estimates.status !=', "Draft");
+                $this->db->where('estimates.status !=', "Invoiced");
+                $this->db->where('estimates.status !=', "Lost");
+                $this->db->where('estimates.status !=', "Declined by Customer");
+                $this->db->where('estimates.status !=', "Cancelled");
+                $this->db->where('estimates.view_flag', 0);
+                $this->db->where('estimates.company_id', $company_id);
+                $this->db->where("DATE_FORMAT(estimates.created_at, '%Y-%m-%d') >=", $dateFrom);
+                $this->db->where("DATE_FORMAT(estimates.created_at, '%Y-%m-%d') <=", $dateTo);
+                $this->db->join('acs_profile', 'acs_profile.prof_id = estimates.customer_id', 'left');
+                $this->db->order_by('estimates.created_at', 'DESC');
+                $this->db->limit(100);
+                $data = $this->db->get();
+                return $data->result();
+            break;
         }
     }
 }

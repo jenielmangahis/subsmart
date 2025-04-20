@@ -721,9 +721,7 @@
                 <div class="modal-title content-title" style="font-size: 17px;"><i class="fas fa-history"></i>&nbsp;&nbsp;Update History</div>
                 <i class="fas fa-times" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
-            <div class="modal-body">
-                test
-            </div>
+            <div class="modal-body"></div>
         </div>
     </div>
 </div>

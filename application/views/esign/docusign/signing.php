@@ -353,9 +353,6 @@
                 var type = $(this).attr('data-type');
                 var signature = $(this).val();
                 var field_id = $('#importSignatureModal').attr('data-field-id');
-                if( field_id != '' ){
-
-                }
             });
         <?php } ?>
 
