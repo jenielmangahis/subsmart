@@ -5155,7 +5155,7 @@ if(!function_exists('set_expense_graph_data')) {
     }
 
     function isLiveMailSmptCredentials() {
-        return false;
+        return true;
     }
 
     function createAutomationQueue($trigger_action = null, $entity = null, $entity_type = null, $trigger_event = null, $entity_id = 0) {

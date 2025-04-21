@@ -345,6 +345,11 @@ class Cron_Automation_Controller extends CI_Controller
                                         if (!$mail->Send()) {
                                             $automation_fail++;
                                         } else {
+                                            //Update queue status
+                                            $queue_data['is_triggered'] = 1;
+                                            $queue_data['status']       = 'sent';
+                                            $this->automation_queue_model->updateAutomationQueue($automation_queue->id, $queue_data);  
+    
                                             $automation_success++;
                                         }
                                         
@@ -536,6 +541,11 @@ class Cron_Automation_Controller extends CI_Controller
                                         if (!$mail->Send()) {
                                             $automation_fail++;
                                         } else {
+                                            //Update queue status
+                                            $queue_data['is_triggered'] = 1;
+                                            $queue_data['status']       = 'sent';
+                                            $this->automation_queue_model->updateAutomationQueue($automation_queue->id, $queue_data);
+
                                             $automation_success++;
                                         }
                                         
@@ -724,6 +734,11 @@ class Cron_Automation_Controller extends CI_Controller
                                         if (!$mail->Send()) {
                                             $automation_fail++;
                                         } else {
+                                            //Update queue status
+                                            $queue_data['is_triggered'] = 1;
+                                            $queue_data['status']       = 'sent';
+                                            $this->automation_queue_model->updateAutomationQueue($automation_queue->id, $queue_data);
+
                                             $automation_success++;
                                         }
                                         
@@ -912,6 +927,11 @@ class Cron_Automation_Controller extends CI_Controller
                                         if (!$mail->Send()) {
                                             $automation_fail++;
                                         } else {
+                                            //Update queue status
+                                            $queue_data['is_triggered'] = 1;
+                                            $queue_data['status']       = 'sent';
+                                            $this->automation_queue_model->updateAutomationQueue($automation_queue->id, $queue_data);
+                                            
                                             $automation_success++;
                                         }
                                         
