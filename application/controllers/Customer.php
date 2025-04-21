@@ -12519,6 +12519,7 @@ class Customer extends MY_Controller
         $this->load->model('Invoice_model');
         $this->load->model('AcsProfile_model');    
         $this->load->model('Users_model');   
+        $this->load->model('Payment_records_model');
 
         $is_success = 0;
         $msg = 'Cannot send email';
@@ -12528,12 +12529,14 @@ class Customer extends MY_Controller
         $post       = $this->input->post();
         $cid        = $this->session->userdata('module_customer_id');
         $payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+
         $invoices   = $this->Invoice_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
 
         $fields = ['#', 'Date', 'Description', 'Method', 'Recorded Date', 'Entered By', 'Invoice', 'Payment'];
         $ledger = [];
         $row    = 1;
         
+        $delimiter  = ',';
         $time       = time();
         $filename   = 'customer_ledger_'.$time.'.csv';
         $target_dir = "./uploads/customer_ledger_csv/" . $company_id . "/";
@@ -12541,9 +12544,9 @@ class Customer extends MY_Controller
             mkdir($target_dir, 0777, true);
         }
 
-
         $filepath  = $target_dir . $filename;
         $f = fopen($filepath, 'w');
+
         fputcsv($f, $fields, $delimiter);
 
         $total_income  = 0;
@@ -12590,13 +12593,14 @@ class Customer extends MY_Controller
         $ledger = ['Balance', '', '', '', '', '', '', $total_balance];
         fputcsv($f, $ledger, $delimiter);
         
-        rewind($fd);
-        fclose($fd);
+        rewind($f);
+        fclose($f);
 
         $subject = 'Customer Ledger';
         if( $post['email_subject'] != '' ){
             $subject = $post['email_subject'];
         }
+
         // Send Email
         $mail = email__getInstance();
         $mail->FromName = 'nSmarTrac';
@@ -12605,9 +12609,7 @@ class Customer extends MY_Controller
         $mail->Subject = $subject;
         $mail->Body = $post['email_body'];
 
-        $attachmentName = preg_replace('/\s+/', '_', $envelope['subject']);
-        $attachment = $this->generatePDF($envelope['id']);
-        $mail->addStringAttachment($filepath, $filename);
+        $mail->addStringAttachment($target_dir, $filename);
 
         if( $mail->Send() ){
             $is_success = 1;
