@@ -1380,6 +1380,7 @@ $route['cards_file/update_card'] = 'CardsFile/update_card';
 $route['cards_file/_create_card_vault'] = 'CardsFile/ajax_create_card_vault';
 $route['cards_file/_edit_card_vault'] = 'CardsFile/ajax_edit_card_vault';
 $route['cards_file/_update_card_vault'] = 'CardsFile/ajax_update_card_vault';
+$route['cards_file/_delete_credit_card'] = 'CardsFile/delete_card';
 
 // Tools
 $route['tools/_get_converge_api_credentials'] = 'Tools/ajax_load_company_converge_form';
