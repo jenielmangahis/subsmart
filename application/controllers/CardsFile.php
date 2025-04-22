@@ -33,14 +33,17 @@ class CardsFile extends MY_Controller {
 
 	public function index()
 	{	
-		$this->page_data['page']->title = 'Cards File';
-        $this->page_data['page']->parent = 'Company';
-
+		if(!checkRoleCanAccessModule('cards-on-file', 'read')){
+			show403Error();
+			return false;
+		}
 
 		$company_id = logged('company_id');
 		$cardsFile  = $this->CardsFile_model->getAllByCompanyId($company_id);
 
 		$this->page_data['cardsFile'] = $cardsFile;
+		$this->page_data['page']->title = 'Cards File';
+        $this->page_data['page']->parent = 'Company';
 		// $this->load->view('cards_file/index', $this->page_data);
 		$this->load->view('v2/pages/cards_file/index', $this->page_data);
 	}
@@ -256,13 +259,17 @@ class CardsFile extends MY_Controller {
 		$company_id = logged('company_id');
 
 		$cardFile = $this->CardsFile_model->getById($post['cid']);
-		if( $cardFile ){
-			if( $cardFile->company_id == $company_id ){
-				$this->CardsFile_model->deleteCard($post['cid']);
+		if( $cardFile && $cardFile->company_id == $company_id ){
+			$this->CardsFile_model->deleteCard($post['cid']);
 
-				$is_success = true;
-				$msg = '';
-			} 
+			//Activity Logs
+			$card_number = maskCreditCardNumber($cardFile->card_number);
+
+			$activity_name = 'Cards File : Deleted credit card ' . $card_number; 
+			createActivityLog($activity_name);
+
+			$is_success = true;
+			$msg = '';
 		}
 
 		$json_data = [
@@ -318,26 +325,43 @@ class CardsFile extends MY_Controller {
         $post       = $this->input->post();
         $isValid    = $this->check_cc($post['card_number']);
         if( $isValid ){
-        	$data = [
-				'company_id' => $company_id,
-		        'card_owner_first_name' => $post['card_owner_first_name'],
-		        'card_owner_last_name' => $post['card_owner_last_name'],
+			$cc_exp_date = $post['expiration_month'] . date("y",strtotime($post['expiration_year'] . "-01-01"));
+			$data_cc = [
 				'card_number' => $post['card_number'],
-				'expiration_month' => $post['expiration_month'],
-				'expiration_year' => $post['expiration_year'],
-				'card_cvv' => $post['card_cvv'],
-				'is_primary' => 0,
-				'cc_type' => $isValid,
-				'created' => date("Y-m-d H:i:s"),
-				'modified' => date("Y-m-d H:i:s")
+				'exp_date' => $cc_exp_date,
+				'cvc' => $post['card_cvv'],
+				'ssl_amount' => 0,
+				'ssl_first_name' => $post['card_owner_first_name'],
+				'ssl_last_name' => $post['card_owner_last_name']
 			];
+			$is_valid = $this->converge_check_cc_details_valid($data_cc);
+			if( $is_valid['is_success'] > 0 ){
+				$data = [
+					'company_id' => $company_id,
+					'card_owner_first_name' => $post['card_owner_first_name'],
+					'card_owner_last_name' => $post['card_owner_last_name'],
+					'card_number' => $post['card_number'],
+					'expiration_month' => $post['expiration_month'],
+					'expiration_year' => $post['expiration_year'],
+					'card_cvv' => $post['card_cvv'],
+					'is_primary' => 0,
+					'cc_type' => $isValid,
+					'created' => date("Y-m-d H:i:s"),
+					'modified' => date("Y-m-d H:i:s")
+				];
+	
+				$cardsFile = $this->CardsFile_model->create($data);
 
-			$cardsFile = $this->CardsFile_model->create($data);
-			if( $cardsFile > 0 ){				
-				$is_success = 1;
-				$msg = '';
-
+				if( $cardsFile > 0 ){				
+					//Activity Logs
+					$activity_name = 'Cards File : Created card on vault'; 
+					createActivityLog($activity_name);
+	
+					$is_success = 1;
+					$msg = '';
+				}
 			}
+        	
         }else{
         	$msg = 'Invalid credit card number';        	
         }
@@ -395,6 +419,10 @@ class CardsFile extends MY_Controller {
 
 					$this->CardsFile_model->updateCardsFile($post['cid'], $data);
 
+					//Activity Logs
+					$activity_name = 'Cards File : Updated card on vault'; 
+					createActivityLog($activity_name);
+
 					$is_success = 1;
 					$msg = '';
 		        }else{		        	
@@ -410,8 +438,6 @@ class CardsFile extends MY_Controller {
         echo json_encode($json_data);
     }
 }
-
-
 
 /* End of file CardsFile.php */
 
