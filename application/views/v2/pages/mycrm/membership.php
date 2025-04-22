@@ -30,11 +30,11 @@
                                 <div class="nsm-card-controls">
                                     <?php if ($client->is_plan_active == 1 || in_array($client->id, exempted_company_ids())) : ?>
                                         <button type="button" class="nsm-button primary"  data-bs-toggle="modal" data-bs-target="#upgrade_plan_modal">
-                                            <i class='bx bx-fw bxs-up-arrow'></i> Upgrade Plan
+                                            <i class='bx bx-fw bx-list-check'></i> Upgrade Plan
                                         </button>
                                     <?php endif; ?>
 
-                                    <button type="button" class="nsm-button primary">
+                                    <button type="button" class="nsm-button primary btn-pay-subscription">
                                         <i class='bx bx-fw bx-purchase-tag'></i>
                                         <?php if ($client->is_plan_active == 1) : ?>
                                             Pay Subscription
@@ -127,7 +127,7 @@
                                                 <label class="content-title">Number of License</label>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <?= $client->number_of_license; ?> <button class="nsm-button btn-sm ms-3">Buy License</button>
+                                                <?= $client->number_of_license; ?> <button class="nsm-button btn-sm ms-3 btn-buy-license">Buy License</button>
                                             </div>
                                             <?php if ($client->payment_method == 'offer code') : ?>
                                                 <div class="col-12 col-md-6">
@@ -234,7 +234,7 @@
                                                 <?php else : ?>
                                                     ---
                                                 <?php endif; ?>
-                                                <button class="nsm-button btn-sm ms-3" onclick="location.href='<?= base_url('cards_file/list'); ?>''">Manage Card</button>
+                                                <button class="nsm-button btn-sm ms-3" id="btn-manage-cards">Manage Card</button>
                                             </div>
                                         </div>
                                     </div>
@@ -248,6 +248,7 @@
                     <div class="col-12 col-md-6">
                         <label class="fw-bold fs-5">Available Add-ons</label>
                     </div>
+                    <?php if(checkRoleCanAccessModule('monthly-membership', 'write')){ ?>
                     <div class="col-12 col-md-6 text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('more/upgrades'); ?>'">
@@ -255,6 +256,7 @@
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
                 <table class="nsm-table">
                     <thead>
@@ -263,13 +265,13 @@
                             <td data-name="Details">Details</td>
                             <td data-name="Type">Type</td>
                             <td data-name="Price">Price</td>
+                            <?php if(checkRoleCanAccessModule('monthly-membership', 'write')){ ?>
                             <td data-name="Manage"></td>
+                            <?php } ?>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        foreach ($default_plan_feature as $value) :
-                        ?>
+                        <?php foreach ($default_plan_feature as $value) : ?>
                             <tr>
                                 <td>
                                     <div class="table-row-icon">
@@ -279,15 +281,13 @@
                                 <td class="nsm-text-primary"><?= $value; ?></td>
                                 <td>Added</td>
                                 <td>0.00</td>
+                                <?php if(checkRoleCanAccessModule('monthly-membership', 'write')){ ?>
                                 <td></td>
+                                <?php } ?>
                             </tr>
-                        <?php
-                        endforeach;
-                        ?>
+                        <?php endforeach; ?>
 
-                        <?php
-                        foreach ($addons as $a) :
-                        ?>
+                        <?php foreach ($addons as $a) : ?>
                             <tr>
                                 <td>
                                     <div class="table-row-icon">
@@ -304,7 +304,8 @@
                                     ?>
                                 </td>
                                 <td>Monthly (<?= $start_billing_period; ?> to <?= $end_billing_period; ?>)</td>
-                                <td><?= number_format($a->service_fee, 2); ?></td>
+                                <td>$<?= number_format($a->service_fee, 2); ?></td>
+                                <?php if(checkRoleCanAccessModule('monthly-membership', 'write')){ ?>
                                 <td class="text-end">
                                     <?php if ($a->with_request_removal == 1) : ?>
                                         <button class="nsm-button btn-sm error btn-cancel-addon" data-id="<?= $a->id; ?>" data-name="<?= $a->name; ?>">Cancel Request</button>
@@ -312,10 +313,9 @@
                                         <button class="nsm-button btn-sm primary btn-remove-addon" data-id="<?= $a->id; ?>" data-name="<?= $a->name; ?>">Request Remove</button>
                                     <?php endif; ?>
                                 </td>
+                                <?php } ?>
                             </tr>
-                        <?php
-                        endforeach;
-                        ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
@@ -325,6 +325,9 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+
+        $(".nsm-table").nsmPagination();
+        
         $(".btn-activate-recurring").on("click", function() {
             updateRecurring();
         });
@@ -333,13 +336,154 @@
             updateRecurring(false);
         });
 
+        $(".btn-buy-license").click(function(){
+            $("#modal-buy-license").modal('show');
+        });
+
+        $(".btn-pay-subscription").click(function(){
+            $("#modal-pay-subscription").modal('show');
+        });
+
+        $('#btn-manage-cards').on('click', function(){
+            location.href = base_url + 'cards_file/list';
+        });
+
+        $("#frm-buy-license").submit(function(e){
+            e.preventDefault();
+            var url = base_url + 'mycrm/_buy_plan_license';
+            $(".btn-modal-buy-license").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                data: $("#frm-buy-license").serialize(),
+                success: function(o)
+                {
+                    $("#modal-buy-license").modal('hide'); 
+                    if( o.is_success == 1 ){
+                        Swal.fire({
+                            title: 'Payment Successful!',
+                            text: "Your plan license was successfully updated",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#32243d',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });
+                    }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot process payment',
+                        text: o.message
+                    });
+                    }
+
+                    $("#btn-buy-license").html('Buy');
+                },
+                beforeSend: function(){
+                    $("#btn-buy-license").html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $("#frm-upgrade-subscription").submit(function(e){
+            e.preventDefault();
+            var url = base_url + 'mycrm/_upgrade_subscription';
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                data: $("#frm-upgrade-subscription").serialize(),
+                success: function(o)
+                {
+                    $("#modal-upgrade-plan").modal('hide'); 
+                    $("#btn-modal-upgrade-plan").html('Upgrade');
+
+                    if( o.is_success == 1 ){                        
+                        Swal.fire({
+                            title: 'Update Successful!',
+                            text: "Your plan was successfully upgraded",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#32243d',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Cannot upgrade plan',
+                            text: o.message
+                        });
+                    }
+                },
+                beforeSend: function(){
+                    $("#btn-modal-upgrade-plan").html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $("#frm-pay-subscription").submit(function(e){
+            e.preventDefault();
+            var url = base_url + 'mycrm/_pay_subscription';
+            $("#btn-modal-pay-subscription").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'mycrm/_pay_subscription',
+                dataType: "json",
+                data: $("#frm-pay-subscription").serialize(),
+                success: function(o)
+                {
+                    $("#btn-modal-pay-subscription").html('Pay');
+                    $("#modal-upgrade-plan").modal('hide'); 
+
+                    if( o.is_success == 1 ){
+                        Swal.fire({
+                            title: 'Subscription Payment',
+                            text: "Payment successful. Your subscription plan was successfully updated.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#32243d',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Cannot process payment',
+                            text: o.message
+                        });
+                    }
+                },
+                beforeSend: function(){
+                    $("#btn-modal-pay-subscription").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+                }
+            });
+        });
+
+        <?php if(checkRoleCanAccessModule('monthly-membership', 'write')){ ?>
         $(document).on("click", ".btn-remove-addon", function() {
             let id = $(this).attr("data-id");
+            let name = $(this).attr('data-name');
             let url = "<?php echo base_url('mycrm/_request_remove_addon'); ?>";
 
             Swal.fire({
-                title: "Removing Add-On",
-                text: "Removing addon will take affect on the next billing. Would you like to proceed removing this addon?",
+                title: "Remove Add-On",
+                html: `Removing addon will take affect on the next billing. Would you like to proceed removing <b>${name}</b> addon?`,
                 icon: 'question',
                 confirmButtonText: 'Confirm',
                 showCancelButton: true,
@@ -369,7 +513,7 @@
                             } else {
                                 Swal.fire({
                                     title: 'Error',
-                                    text: result.message,
+                                    text: result.msg,
                                     icon: 'error',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
@@ -380,14 +524,15 @@
                 }
             });
         });
+        <?php } ?>
 
         $(document).on("click", ".btn-cancel-addon", function() {
             let id = $(this).attr("data-id");
             let url = "<?php echo base_url('mycrm/_cancel_remove_addon'); ?>";
 
             Swal.fire({
-                title: "Canceling Removal of Add-On",
-                text: "Would you like to cancel the request to remove this add-on?",
+                title: "Cancel remove add-on",
+                text: "Are you sure you want to proceed cancelling your request?",
                 icon: 'question',
                 confirmButtonText: 'Confirm',
                 showCancelButton: true,
@@ -417,7 +562,7 @@
                             } else {
                                 Swal.fire({
                                     title: 'Error',
-                                    text: result.message,
+                                    text: result.msg,
                                     icon: 'error',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
@@ -455,7 +600,7 @@
                         if (result.is_success) {
                             let message = activate ? "Auto recurring was successfully activated" : "Auto recurring was successfully deactivated";
                             Swal.fire({
-                                title: 'Success',
+                                title: 'Recurring Payments',
                                 text: message,
                                 icon: 'success',
                                 showCancelButton: false,
