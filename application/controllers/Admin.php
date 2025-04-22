@@ -9,36 +9,15 @@ class Admin extends CI_Controller
         parent::__construct();
 
         date_default_timezone_set(setting('timezone'));
-
-        /*add_css(array(
-           // 'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-            "assets/css/accounting/accounting.css",
-            'assets/css/dashboard.css',
-            'assets/barcharts/css/chart.min.css',
-            'assets/barcharts/css/chart.min.css',
-            'assets/fa-5/css/fontawesome.min.css',
-            'assets/fa-5/css/all.min.css'
-        ));
-        add_header_js(array(
-            'assets/barcharts/js/chart.min.js',
-            'assets/barcharts/js/utils.js',
-            'assets/barcharts/js/chartjs-plugin-labels.js',
-            'assets/js/timeago/dist/timeago.min.js',
-            
-        ));
-        add_footer_js(array(
-            //'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
-            'assets/frontend/js/dashboard/main.js',
-            'assets/ringcentral/config.js',
-            'assets/ringcentral/es6-promise.auto.js',
-            'assets/ringcentral/fetch.umd.js',
-            'assets/ringcentral/pubnub.4.20.1.js',
-            'assets/ringcentral/ringcentral.js',
-            'assets/ringcentral/rc_authentication.js'
-        ));*/
         
-        if (is_admin_logged()) {
-            redirect('admin/dashboard', 'refresh');
+        // if (is_admin_logged()) {
+        //     redirect('admin/dashboard', 'refresh');
+        // }else{
+        //     redirect('dashboard');
+        // }
+
+        if (!is_admin_logged()) {
+            redirect('dashboard');
         }
 
         $this->page_data = [
