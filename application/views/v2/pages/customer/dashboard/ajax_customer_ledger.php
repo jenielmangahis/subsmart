@@ -83,7 +83,7 @@ table.table-fit tfoot td {
                         <td class="show" style="text-align:right;">$<?= number_format($income, 2, '.', ','); ?></td>
                         <td class="show" style="text-align:right;">$<?= number_format($payment, 2, '.', ','); ?></td>                        
                         <td class="nsm-text-primary show"><?= $ld['payment_method']; ?></td>
-                        <td class="nsm-text-primary show"><?= date("m/d/y",strtotime($ld['date_created'])); ?></td>
+                        <td class="nsm-text-primary show"><?= strtotime($ld['date_created']) > 0 ? date("m/d/y",strtotime($ld['date_created'])) : '---'; ?></td>
                         <td class="nsm-text-primary show"><?= $ld['user']; ?></td>
                         
                     </tr>

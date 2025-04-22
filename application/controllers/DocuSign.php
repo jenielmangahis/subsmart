@@ -3443,14 +3443,14 @@ SQL;
         return $filePath;
     }
 
-    public function debugGeneratePDF(){
-        $pdf = $this->debugGeneratePDFMaker(1306);
+    public function debugGeneratePDF(){        
+        //$pdf = $this->debugGeneratePDFMaker(1894);
+        $pdf = $this->generatePDF(1894);
         echo 'Finish';
     }
 
     public function debugGeneratePDFMaker($documentId)
-    {
-
+    {        
         $this->db->where('id', $documentId);
         $document = $this->db->get('user_docfile')->row();
 
@@ -3460,10 +3460,10 @@ SQL;
 
         // if ($document->status !== 'Completed') {
         //     return;
-        // }
-
+        // }             
+        error_reporting(E_ALL); ini_set('display_errors', 1);  
         require_once(APPPATH . 'libraries/tcpdf/tcpdf.php');
-        require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
+        require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');  
         // require_once(APPPATH . 'libraries/fpdi/autoload.php');
         // require_once(APPPATH . 'libraries/fpdi/Fpdi.php');
 
@@ -3834,15 +3834,15 @@ SQL;
         $fileName = uniqid($document->id . rand(1, 9999999)) . '.pdf';
         $uploadFilePath = $uploadPath . $fileName;
 
-        $this->db->insert('user_docfile_generated_pdfs', [
-            'path' => str_replace(FCPATH, '/', $uploadFilePath),
-            'docfile_id' => $document->id,
-            'label' => $document->name
-        ]);
+        // $this->db->insert('user_docfile_generated_pdfs', [
+        //     'path' => str_replace(FCPATH, '/', $uploadFilePath),
+        //     'docfile_id' => $document->id,
+        //     'label' => $document->name
+        // ]);
 
-        $docfileGeneratedPdfId = $this->db->insert_id();
-        $this->db->where('docfile_id', $document->id);
-        $this->db->update('user_customer_docfile', ['user_docfile_generated_pdfs_id' => $docfileGeneratedPdfId]);
+        // $docfileGeneratedPdfId = $this->db->insert_id();
+        // $this->db->where('docfile_id', $document->id);
+        // $this->db->update('user_customer_docfile', ['user_docfile_generated_pdfs_id' => $docfileGeneratedPdfId]);
 
         // Display in browser
         // $pdf->Output('I');

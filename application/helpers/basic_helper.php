@@ -939,8 +939,9 @@ if (!function_exists('getLoggedIsPlanActive')) {
         $CI = &get_instance();
         $user = $CI->session->userdata('logged');
 
-        if (!is_null($user)) {
-            return ((object) $user)->is_plan_active;
+        if (!is_null($user) && $user) {
+            return 1;
+            //return ((object) $user)->is_plan_active;
         }
     }
 }
@@ -5154,7 +5155,7 @@ if(!function_exists('set_expense_graph_data')) {
     }
 
     function isLiveMailSmptCredentials() {
-        return false;
+        return true;
     }
 
     function createAutomationQueue($trigger_action = null, $entity = null, $entity_type = null, $trigger_event = null, $entity_id = 0) {
