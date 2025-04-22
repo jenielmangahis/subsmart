@@ -152,7 +152,8 @@ class CompanyRoleAccessModule_model extends MY_Model
             'my-crm' => 'My CRM',
             'my-crm-account-summary' => 'MyCRM Account Summary',
             'monthly-membership' => 'Monthly Membership',
-            'cards-on-file' => 'Card on File'
+            'cards-on-file' => 'Card on File',
+            'chatbot-settings' => 'Chatbot Settings'
         ];  
 
         return $modules;
