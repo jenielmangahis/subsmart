@@ -26,6 +26,10 @@ label{
     position:relative;
     top:5px;
 }
+.form-check .form-check-input{
+    position: relative;
+    top:4px;
+}
 </style>
 
 <div class="row page-content g-0">
@@ -61,25 +65,18 @@ label{
                             <div class="nsm-card primary">
                                 <div class="nsm-card-content">
                                     <div class="form-group">
-                                        <label>Page Title</label>
-                                        <div class="help help-block">
-                                            Set your own title for the booking page
-                                        </div>
+                                        <label>Page Title <span class="bx bx-fw bx-help-circle" id="popover-page-title"></span></label>
                                         <input type="text" name="page_title" value="<?php echo $setting['page_title']; ?>"  class="form-control"  autocomplete="off" <?= $input_disabled; ?> />
                                     </div>
-                                    <div class="form-group">
-                                        <label>Page Instructions</label>
-                                        <div class="help help-block">
-                                            Optionally, input a text with some help or instructions, that will appear below title.
-                                        </div>
-                                        <textarea cols="40" rows="10" class="form-control ft-instruction ckeditor" <?= $input_disabled; ?>><?php echo $setting['page_instructions']; ?></textarea>
+                                    <div class="form-group mt-2">
+                                        <label>Page Instructions <span class="bx bx-fw bx-help-circle" id="popover-page-instructions"></span></label>
+                                        <textarea cols="40" rows="10" name="page_intro" class="form-control ft-instruction ckeditor" <?= $input_disabled; ?>><?php echo $setting['page_instructions']; ?></textarea>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Products listing mode</label>
-                                        <div class="help help-block">How the products shoulds be listed on widget page, like a grid of boxes or a list.</div>
+                                    <div class="form-group mt-2">
+                                        <label>Products listing mode <span class="bx bx-fw bx-help-circle" id="popover-product-listing-mode"></span></label>
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                <select name="product_list_mode" class="form-control" <?= $input_disabled; ?>>
+                                                <select name="product_list_mode" class="form-select" <?= $input_disabled; ?>>
                                                     <option <?php echo($setting['product_list_mode'] == 'grid' ? 'selected="selected"' : ''); ?> value="grid" selected="selected">Grid View</option>
                                                     <option <?php echo($setting['product_list_mode'] == 'list' ? 'selected="selected"' : ''); ?> value="list">List View</option>
                                                 </select>
@@ -94,8 +91,7 @@ label{
                             <div class="nsm-card primary">
                                 <div class="nsm-card-content">
                                     <div class="form-group p-relative-bottom-36">
-                                        <label>Appointments per time slot</label>
-                                        <div class="help help-block">How many appointments can be made for same time slot and date.</div>
+                                        <label>Appointments per time slot <span class="bx bx-fw bx-help-circle" id="popover-appointments-per-time-slot"></span></label>
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <select name="time_slot_bookings" class="form-control" <?= $input_disabled; ?>>
@@ -114,12 +110,8 @@ label{
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Minimum price for entire booking</label>
-                                        <div class="help help-block">
-                                            Customers have to book products with total value over this minimum price.<br>
-                                            Set 0 for no minimum.
-                                        </div>
+                                    <div class="form-group mt-3">
+                                        <label>Minimum price for entire booking <span class="bx bx-fw bx-help-circle" id="popover-min-price-entire-booking"></span></label>
                                         <div class="input-group mb-3" style="width: 50%;">
                                             <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1">$</span>
@@ -128,11 +120,7 @@ label{
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label>Minimum price alert</label>
-                                        <div class="help help-block">
-                                            A notification text displayed to customer if min price is not met.<br>
-                                            The tag {{amount}} will be replaced with min price value.
-                                        </div>
+                                        <label>Minimum price alert <span class="bx bx-fw bx-help-circle" id="popover-min-price-alert"></span></label>
                                         <div class="input-group mb-3" style="width: 50%;">
                                             <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1">Minimum booking amount is</span>
@@ -141,8 +129,7 @@ label{
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label>Notifications</label>
-                                        <div class="help help-block">Select how you want to be notified on a new booking.</div>
+                                        <label>Notifications <span class="bx bx-fw bx-help-circle" id="popover-customer-notification"></span></label>
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" name="notify_email" value="1" <?php echo $setting['notify_email'] == 1 ? 'checked="checked"' : ''; ?>  id="notify_email" <?= $input_disabled; ?> />
                                             <label class="form-check-label" for="notify_email">Email</label>
@@ -152,19 +139,9 @@ label{
                                             <label class="form-check-label" for="notify_push">App Notification</label>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- end second col -->
-                    </div>
-                    <!-- end first row -->
-                    <div class="row" style="margin-top: 20px;">
-                        <div class="col-6">
-                            <div class="nsm-card primary">
-                                <div class="nsm-card-content">
-                                    <div class="form-group">
-                                        <label>Don't accept booking during blocked time</label>
-                                        <div class="help help-block">Customers should not be able to book your services during blocked time.</div>
+
+                                    <div class="form-group mt-4">
+                                        <label>Don't accept booking during blocked time <span class="bx bx-fw bx-help-circle" id="popover-booking-blocked-time"></span></label>
                                         <div class="row">
                                             <div class="col-sm-24">
                                                 <div class="form-check">
@@ -175,8 +152,6 @@ label{
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label>Don't accept booking if it overlaps with a calendar event</label>
-                                        <div class="help help-block">Customers should not be able to book your services if another event exists in calendar.</div>
                                         <div class="row">
                                             <div class="col-sm-24">
                                                 <div class="form-check">
@@ -185,66 +160,25 @@ label{
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Auto-Schedule a Work Order</label>
-                                        <div class="help help-block">
-                                            When a booking is made automatically schedule a Work Order.
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="convert_lead_to_work_order" value="1" <?php echo $setting['convert_lead_to_work_order'] == 1 ? 'checked="checked"' : ''; ?>  id="convert_lead_to_work_order" <?= $input_disabled; ?> />
-                                            <label class="form-check-label" for="convert_lead_to_work_order">Auto-Schedule a Work Order</label>
-                                        </div>
-                                    </div>
-                                    <?php
-                                        $hide = 'hide';
-                                        if( $setting['convert_lead_to_work_order'] == 1){
-                                            $hide = '';
-                                        }
-                                    ?>
-                                    <div class="form-group">
-                                        <label>Assign To</label>
-                                        <div class="row">
-                                            <div class="col-sm-12 col-md-6">
-                                                <select class="form-control" name="lead_work_order_employees[]" id="workoder-employees" <?= $input_disabled; ?>>
-                                                    <?php foreach($employees as $e){ ?>
-                                                    <option value="<?= $e->id; ?>" <?= in_array($e->id, $aasignedUsers) ? 'selected="selected"' : ''; ?>><?= $e->FName . ' ' . $e->LName; ?></option>
-                                                    <?php } ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- end of 3rd col -->
-                        <div class="col-6">
-                            <div class="nsm-card primary">
-                                <div class="nsm-card-content">
-                                    <div class="form-group">
-                                        <label>Google Analytics Tracking Id</label>
-                                        <div class="help help-block">
-                                            The unique id set on your Google tracking code. e.g. UA-12345678-1
-                                        </div>
+                                    </div>     
+
+                                    <div class="form-group mt-4">
+                                        <label>Google Analytics Tracking Id <span class="bx bx-fw bx-help-circle" id="popover-google-analytics"></span></label>
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <input type="text" name="google_analytics_tracking_id" value="<?php echo $setting['google_analytics_tracking_id']; ?>"  class="form-control" autocomplete="off" <?= $input_disabled; ?> />
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Website URL</label>
-                                        <div class="help help-block">
-                                            Your website URL where the widget is placed.
-                                        </div>
+                                    <div class="form-group mt-2">
+                                        <label>Website URL <span class="bx bx-fw bx-help-circle" id="popover-website-url"></span></label>                                        
                                         <input type="text" name="google_analytics_origin" value="<?php echo $setting['google_analytics_origin']; ?>"  class="form-control" autocomplete="off" <?= $input_disabled; ?> />
                                     </div>
-                                    <div class="form-group">
-                                        <label>Widget status</label>
-                                        <div class="help help-block">Switch the booking widget off while you are on vacation.</div>
+                                    <div class="form-group mt-2">
+                                        <label>Widget status <span class="bx bx-fw bx-help-circle" id="popover-widget-status"></span></label>
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                <select name="status" class="form-control" style="width:50%;" <?= $input_disabled; ?>>
+                                                <select name="status" class="form-select" style="width:50%;" <?= $input_disabled; ?>>
                                                     <option value="1" <?php echo ($setting['status'] == '1' ? 'selected="selected"' : ''); ?>>Active</option>
                                                     <option value="2" <?php echo ($setting['status'] == '2' ? 'selected="selected"' : ''); ?>>Inactive</option>
                                                 </select>
@@ -254,8 +188,9 @@ label{
                                 </div>
                             </div>
                         </div>
+                        <!-- end second col -->
                     </div>
-                    <!-- end 2nd row -->
+                    <!-- end first row -->
                     <?php if(checkRoleCanAccessModule('online-booking', 'write')){ ?>
                     <div class="row-fluid margin-top">
                         <div class="col-sm-12">
@@ -278,8 +213,111 @@ label{
 $(function(){    
     <?php if(checkRoleCanAccessModule('online-booking', 'write')){ ?>
     $('#workoder-employees').select2({});
+
+    $('#popover-page-title').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Set your own title for the booking page';
+        }
+    });
+
+    $('#popover-page-instructions').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Optionally, a text with help or instructions that will appear below title.';
+        }
+    });
+
+    $('#popover-product-listing-mode').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'How the products shoulds be listed on widget page, like a grid of boxes or a list.';
+        }
+    });
+
+    $('#popover-appointments-per-time-slot').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'How many appointments can be made for same time slot and date.';
+        }
+    });
+
+    $('#popover-min-price-entire-booking').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Customers have to book products with total value over this minimum price. Set 0 for no minimum.';
+        }
+    });
+
+    $('#popover-min-price-alert').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'A notification text displayed to customer if min price is not met. The tag {{amount}} will be replaced with min price value.';
+        }
+    });
+
+    $('#popover-customer-notification').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Select how you want to be notified on a new booking.';
+        }
+    });
+
+    $('#popover-booking-blocked-time').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Customers should not be able to book your services during blocked time.';
+        }
+    });
+
+    $('#popover-google-analytics').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'The unique id set on your Google tracking code. e.g. UA-12345678-1';
+        }
+    });
+
+    $('#popover-website-url').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Your website URL where the widget is placed.';
+        }
+    });
+
+    $('#popover-widget-status').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Switch the booking widget off while you are on vacation.';
+        }
+    });
+
     $("#frm-booking-settings").on('submit', function(e){
         e.preventDefault();
+        for ( instance in CKEDITOR.instances ){
+            CKEDITOR.instances[instance].updateElement();        
+        }
 
         var url = base_url + 'booking/_save_setting';
         $.ajax({
