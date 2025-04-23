@@ -157,6 +157,20 @@ class AcsCustomerSubscriptionBilling_model extends MY_Model
         return $query->row();
     }
 
+    public function getTotalAmountLastUnpaidByCustomerId($prof_id)
+    {
+        $this->db->select('invoices.grand_total as total_amount');
+        $this->db->from($this->table);
+        $this->db->join('invoices', 'acs_customer_subscription_billing.invoice_id = invoices.id', 'left');
+        $this->db->where('acs_customer_subscription_billing.customer_id', $prof_id);
+        $this->db->where('invoices.status', 'Unpaid');
+        $this->db->order_by('invoices.id', 'DESC');
+		$this->db->limit(1);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getByCustomerIdAndInvoiceId($customer_id, $invoice_id)
     {
         $this->db->select('*');
