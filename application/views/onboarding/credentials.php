@@ -87,6 +87,18 @@ error_reporting(0);
     white-space: nowrap;
     vertical-align: middle;
 }
+.input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n+3), .input-group:not(.has-validation)>:not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.checkbox-sec input:checked+label::before {
+    font-family: 'FontAwesome';
+    content: "\f00c";
+    color: #fff;
+    padding: 2px 0px 0px 3px;
+    border: 2px solid #38c46e;
+    background-color: #64d38f;
+}
 </style>
 <div>
    <div class="wrapper-onboarding">
@@ -147,10 +159,7 @@ error_reporting(0);
                     <div class="col-md-4">
                         <label>License Expiration Date</label>
                         <div class="input-group">
-                            <input type="text" name="license_exp_date" value="<?= $profiledata->license_expiry_date != '0000-00-00' ? date("m-d-Y",strtotime($profiledata->license_expiry_date)) : ''; ?>" class="form-control default-datepicker" id="license_exp_date">
-                            <div class="input-group-addon calendar-button" data-for="license_exp_date">
-                                <span class="fa fa-calendar"></span>
-                            </div>
+                            <input type="date" name="license_exp_date" value="<?= strtotime($profiledata->license_expiry_date) > 0  ? date("Y-m-d",strtotime($profiledata->license_expiry_date)) : date("Y-m-d"); ?>" class="form-control" id="license_exp_date">
                         </div>
                         <span class="validation-error-field" style="display: none;"></span>
                     </div>
@@ -191,18 +200,15 @@ error_reporting(0);
                     <div class="col-md-4">
                         <label>Bond Amount</label>
                         <div class="input-group">
-                            <div class="input-group-addon">$</div>
-                                <input type="text" name="bonded_amount" value="<?= $profiledata->bond_amount; ?>" class="form-control">
-                            </div>
+                            <div class="input-group-text">$</div>
+                            <input type="text" name="bonded_amount" value="<?= $profiledata->bond_amount; ?>" class="form-control">
+                        </div>
                         <span class="validation-error-field" style="display: none;"></span>
                     </div>
                     <div class="col-md-4">
                         <label>Bond Expiration Date</label>
                         <div class="input-group">
-                            <input type="text" name="bonded_exp_date" value="<?= $profiledata->bond_expiry_date != '0000-00-00' ? date("m-d-Y",strtotime($profiledata->bond_expiry_date)) : ''; ?>" class="form-control default-datepicker" id="bonded_exp_date">
-                            <div class="input-group-addon calendar-button" data-for="bonded_exp_date">
-                                <span class="fa fa-calendar"></span>
-                            </div>
+                            <input type="date" name="bonded_exp_date" value="<?= strtotime($profiledata->bond_expiry_date) > 0 ? date("Y-m-d",strtotime($profiledata->bond_expiry_date)) : date("Y-m-d"); ?>" class="form-control" id="bonded_exp_date">
                         </div>
                         <span class="validation-error-field" style="display: none;"></span>
                     </div>
@@ -251,10 +257,7 @@ error_reporting(0);
                     <div class="col-md-4">
                         <label>Insurance Expiration Date</label>
                         <div class="input-group">
-                            <input type="text" name="insured_exp_date" value="<?= $profiledata->insurance_expiry_date != '0000-00-00' ? date("m-d-Y",strtotime($profiledata->insurance_expiry_date)) : ''; ?>" class="form-control default-datepicker" id="insured_exp_date">
-                            <div class="input-group-addon calendar-button" data-for="insured_exp_date">
-                                <span class="fa fa-calendar"></span>
-                            </div>
+                            <input type="date" name="insured_exp_date" value="<?= strtotime($profiledata->insurance_expiry_date) > 0 ? date("Y-m-d",strtotime($profiledata->insurance_expiry_date)) : date("Y-m-d"); ?>" class="form-control" id="insured_exp_date">
                         </div>
                         <span class="validation-error-field" data-formerrors-for-name="insured_exp_date" data-formerrors-message="true" style="display: none;"></span>
                     </div>
@@ -304,7 +307,8 @@ error_reporting(0);
                <div class="col-xs-16 text-right submit-onboard">
                   <a class="btn btn-default btn-lg margin-right" href="<?php echo base_url("/dashboard");?>">Skip</a>
                   <a class="btn btn-default btn-lg" href="<?php echo base_url("/onboarding/availability");?>">« Back</a>
-                  <button class="btn btn-primary btn-lg margin-left" name="action" value="credentials" type="submit">Next »</button>
+                  <!-- <button class="btn btn-primary btn-lg margin-left" name="action" value="credentials" type="submit">Next »</button> -->
+                  <button class="btn btn-primary btn-lg margin-left" name="action" value="credentials" type="submit">Finish</button>
                </div>
             </div>
     </div>

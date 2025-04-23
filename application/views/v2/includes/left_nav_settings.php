@@ -695,14 +695,7 @@
                     <a href="<?php echo base_url('inventory'); ?>">
                         <i class='bx bx-fw bx-box'></i> Inventory
                     </a>
-                </li>
-                <li class="<?php if ($page->title == 'My Forms') {
-                    echo 'selected';
-                } ?>">
-                    <a href="<?php echo base_url('fb'); ?>">
-                        <i class='bx bx-fw bx-add-to-queue'></i> Form Builder
-                    </a>
-                </li>
+                </li>                
                 <li>
                     <a href="<?php echo base_url('tools/api_connectors'); ?>">
                         <i class='bx bx-fw bx-code-alt'></i> API Connectors
@@ -999,27 +992,4 @@
         </li>
 
     <?php } ?>
-
-    <?php if( $menu->menu_name == 'University' ){ ?>
-        
-        <li>
-            <a href="#">
-                <i class='bx bx-fw bxs-graduation'></i> University <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
-            </a>
-            <ul class="mt-3">
-                <li>
-                    <a href="<?php echo base_url('SlideShare'); ?>">
-                        <i class='bx bx-fw bx-video'></i> Slide Share
-                    </a>
-                </li>
-                <li>
-                    <a href="<?php echo base_url('flashcard'); ?>">
-                        <i class='bx bx-fw bx-card'></i> Flash Card
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-    <?php } ?>
-
 <?php } ?>

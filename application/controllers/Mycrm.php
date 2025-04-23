@@ -39,6 +39,11 @@ class Mycrm extends MY_Controller
 
     public function account_summary()
     {
+        if(!checkRoleCanAccessModule('my-crm-account-summary', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Account Summary';
         $this->page_data['page']->parent = 'Company';
 
@@ -211,6 +216,11 @@ class Mycrm extends MY_Controller
 
     public function orders()
     {
+        if(!checkRoleCanAccessModule('my-crm', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['page']->title = 'Orders';
         $this->page_data['page']->parent = 'Company';
 
@@ -547,6 +557,11 @@ class Mycrm extends MY_Controller
     {
         $this->load->model('CompanySubscriptionPayments_model');
         $this->load->model('Business_model');
+
+        if(!checkRoleCanAccessModule('my-crm', 'read')){
+			show403Error();
+			return false;
+		}
 
         $company_id = logged('company_id');
         $payment = $this->CompanySubscriptionPayments_model->getById($id);

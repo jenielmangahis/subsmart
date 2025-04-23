@@ -1380,6 +1380,7 @@ $route['cards_file/update_card'] = 'CardsFile/update_card';
 $route['cards_file/_create_card_vault'] = 'CardsFile/ajax_create_card_vault';
 $route['cards_file/_edit_card_vault'] = 'CardsFile/ajax_edit_card_vault';
 $route['cards_file/_update_card_vault'] = 'CardsFile/ajax_update_card_vault';
+$route['cards_file/_delete_credit_card'] = 'CardsFile/delete_card';
 
 // Tools
 $route['tools/_get_converge_api_credentials'] = 'Tools/ajax_load_company_converge_form';
@@ -1535,12 +1536,14 @@ $route['cron/send_created_invoice_mail_automation'] = 'Cron_Automation_Controlle
 $route['cron/send_paid_invoice_mail_automation'] = 'Cron_Automation_Controller/cronPaidInvoiceMailAutomation'; 
 $route['cron/send_set_due_invoice_mail_automation'] = 'Cron_Automation_Controller/cronSetToDueInvoiceMailAutomation'; 
 $route['cron/send_set_past_due_invoice_mail_automation'] = 'Cron_Automation_Controller/cronSetToPastDueInvoiceMailAutomation'; 
+$route['cron/send_sent_invoice_mail_automation'] = 'Cron_Automation_Controller/cronSentInvoiceMailAutomation'; 
 
 //Cron Automation - SMS
 $route['cron/send_created_invoice_sms_automation'] = 'Cron_Automation_Controller/cronCreatedInvoiceSMSAutomation';
 $route['cron/send_paid_invoice_sms_automation'] = 'Cron_Automation_Controller/cronPaidInvoiceSMSAutomation'; 
 $route['cron/send_set_due_invoice_sms_automation'] = 'Cron_Automation_Controller/cronSetToDueInvoiceSMSAutomation'; 
 $route['cron/send_set_past_due_invoice_sms_automation'] = 'Cron_Automation_Controller/cronSetToPastDueInvoiceSMSAutomation'; 
+$route['cron/send_sent_invoice_sms_automation'] = 'Cron_Automation_Controller/cronSentInvoiceSMSAutomation'; 
 
 //Cron Automation - Sms
 $route['cron/send_sms_automation'] = 'Cron_Automation_Controller/cronSmsAutomation';

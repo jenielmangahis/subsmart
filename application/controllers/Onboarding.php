@@ -17,8 +17,13 @@ class Onboarding extends MY_Controller {
 		$this->load->model('SubscriberNsmartUpgrade_model');
 		$this->load->model('Clients_model');
 
-		$this->page_data['page_title'] = 'Onboarding';
+		$cid  = logged('company_id');
+		$client      = $this->Clients_model->getById($cid);
+		if( $client->is_startup == 0 ){
+			redirect('dashboard');
+		}
 
+		$this->page_data['page_title'] = 'Onboarding';
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
 		$this->load->library('session');
 	}
@@ -30,10 +35,6 @@ class Onboarding extends MY_Controller {
 		$cid  = logged('company_id');
 		$profiledata = $this->business_model->getByCompanyId($cid);
 		$client      = $this->Clients_model->getById($cid);
-
-		if( $client->is_startup == 0 ){
-			redirect('dashboard');
-		}
 
 		$business_name    = $client->business_name;
 		$business_address = $client->business_address;
@@ -71,7 +72,7 @@ class Onboarding extends MY_Controller {
 		  'Other' => 'Other',
         ];
 
-        $cid=logged('company_id');
+        $cid =logged('company_id');
         $client      = $this->Clients_model->getById($cid);
         $industryTypeId = $client->industry_type_id;
 		//ifPermissions('businessdetail');
@@ -143,9 +144,7 @@ class Onboarding extends MY_Controller {
 	}
 
 	public function company_size() {
-		$user = (object)$this->session->userdata('logged');
 		$cid  = logged('company_id');
-
 		$NsmartUpgrades = $this->NsmartUpgrades_model->getAll();
 		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
 		$this->page_data['NsmartUpgrades'] = $NsmartUpgrades;
@@ -154,8 +153,6 @@ class Onboarding extends MY_Controller {
 	}
 
 	public function add_ons() {
-		
-		$user = (object)$this->session->userdata('logged');
 		$cid  = logged('company_id');
 		$NsmartUpgradedItems = $this->SubscriberNsmartUpgrade_model->getAllByClientId($cid);
 		$NsmartUpgrades = $this->NsmartUpgrades_model->getAll();
@@ -178,15 +175,12 @@ class Onboarding extends MY_Controller {
 	}
 
 	public function about(){
-		error_reporting(0);
-		$user = (object)$this->session->userdata('logged');
-		$uid  = logged('id');
-		$cid  = logged('company_id');
+		$user_id = logged('id');
+		$cid     = logged('company_id');
 
 		$profiledata = $this->business_model->getByWhere(array('company_id'=>$cid));	
 		$client      = $this->Clients_model->getById($cid);
-
-		$num_emp          = $client->number_of_employee;
+		$num_emp     = $client->number_of_employee;
 		if( $profiledata ){
 			if( $profiledata[0]->employee_count != '' ){
 				$num_emp = $profiledata[0]->employee_count;
@@ -194,9 +188,8 @@ class Onboarding extends MY_Controller {
 		}
 		
 		$this->page_data['num_emp'] = $num_emp;
-		$this->page_data['userid'] = $user->id;
+		$this->page_data['userid']  = $user_id;
 		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-
 		$this->load->view('onboarding/about', $this->page_data);
 	}
 
@@ -398,7 +391,9 @@ class Onboarding extends MY_Controller {
 				];
 
 				$this->business_model->update($bid,$data_availability);	
-				redirect('onboarding/booking_online_demo');
+				//redirect('onboarding/booking_online_demo');
+				$this->ajax_complete_onboarding();
+				redirect('dashboard');
 				
 			}elseif( $action == 'about' ){
 				$this->business_model->update($bid,$pdata);	
@@ -458,12 +453,9 @@ class Onboarding extends MY_Controller {
 	}
 
 	public function availability() {
-		
-		//ifPermissions('businessdetail');
-		$user = (object)$this->session->userdata('logged');	
 		$cid  = logged('company_id');
+		$client      = $this->Clients_model->getById($cid);
 		$profiledata = $this->business_model->getByCompanyId($cid);
-
 		$workingDays = unserialize($profiledata->working_days);
 		
 		$data_working_days = array();
@@ -538,13 +530,14 @@ class Onboarding extends MY_Controller {
             'assets/js/user.js'
         ));
 
-		$user = (object)$this->session->userdata('logged');
-		$cid  = logged('company_id');
+		$user_id = logged('id');
+		$cid     = logged('company_id');
 		$profiledata = $this->business_model->getByCompanyId($cid);	
+		$client      = $this->Clients_model->getById($cid);
 		$states = statesList();
 
 		$this->page_data['states'] = $states;
-		$this->page_data['userid'] = $user->id;
+		$this->page_data['userid'] = $user_id;
 		$this->page_data['profiledata'] = $profiledata;
 		
 		$this->load->view('onboarding/credentials', $this->page_data);
@@ -587,7 +580,7 @@ class Onboarding extends MY_Controller {
 		$import_settings['status'] = 1;
 		$import_settings['company_id'] = $comp_id;
 		$import_settings['created_at'] = date("Y-m-d H:i:s");
-		$this->CustomerSettings_model->save($import_settings);
+		$this->CustomerSettings_model->create($import_settings);
 		
 		$json_data = ['is_success' => $is_success, 'msg' => $msg];
 		echo json_encode($json_data);

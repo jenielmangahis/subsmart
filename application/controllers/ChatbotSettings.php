@@ -11,6 +11,11 @@ class ChatbotSettings extends MY_Controller
 
     public function settings() 
     {
+        if(!checkRoleCanAccessModule('chatbot-settings', 'read')){
+			show403Error();
+			return false;
+		}
+
         $company_id = logged('company_id');
         $preference = $this->Chatbot_model->fetchPreference($company_id);
         $this->page_data['preference'] = $preference;
