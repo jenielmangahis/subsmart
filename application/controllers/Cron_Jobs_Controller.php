@@ -3471,7 +3471,14 @@ class Cron_Jobs_Controller extends CI_Controller
                 $totalUnpaidSubscriptions   = $this->AcsCustomerSubscriptionBilling_model->getTotalAmountUnpaidByCustomerId($as->fk_prof_id);
 				$unpaidSubscriptionsDetails = $this->AcsCustomerSubscriptionBilling_model->getUnpaidDetailsByCustomerId($as->fk_prof_id);
 
-                $previous_total_amount      = $totalUnpaidSubscriptions->total_amount;
+                $totalLastUnpaidPreviousSubscription = $this->AcsCustomerSubscriptionBilling_model->getTotalAmountLastUnpaidByCustomerId($as->fk_prof_id);
+
+                if($totalLastUnpaidPreviousSubscription->total_amount) {
+                    $previous_total_amount      = $totalLastUnpaidPreviousSubscription->total_amount;
+                } else {
+                    $previous_total_amount      = $totalUnpaidSubscriptions->total_amount;
+                }
+                
                 $total_amount               = $totalUnpaidSubscriptions->total_amount + $as->mmr;	
             
                 $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($customer->company_id);
