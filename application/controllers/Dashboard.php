@@ -2031,37 +2031,58 @@ class Dashboard extends Widgets
     public function ajax_customer_ledgers($customer_id)
     {
         $this->load->model('Payment_records_model');
+        $this->load->model('Invoice_model');
+        $this->load->model('AcsProfile_model');    
+        $this->load->model('Users_model');    
+
         $cid               = $customer_id;
-        $ledger_payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $companyId);
+        $company_id        = logged('company_id');
+        //$ledger_payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $companyId);
         $ledger_invoices   = $this->invoice_model->getAllByCustomerIdAndCompanyId($cid, $companyId);
 
         $customer_ledger = [];
         foreach( $ledger_invoices as $ledger_invoice ){
-            $date = date("m/d/Y", strtotime($ledger_invoice->date_issued));
+            $date = date("m/d/y", strtotime($ledger_invoice->date_issued));
+            $user = $this->Users_model->getUserByID($ledger_invoice->user_id);
+
+            if( $company_id == 139 || $company_id == 1 ){
+                $description =  date('F', strtotime($ledger_invoice->due_date)) . ' rent';
+            }else{
+                $description = 'Issued invoice number ' . $ledger_invoice->invoice_number;
+            }
+
             $customer_ledger[$date][] = [
                 'id' => $ledger_invoice->id,
+                'user' => $user ? $user->FName . ' ' . $user->LName : '---',
+                'payment_method' => '---',      
                 'type' => 'income',                
                 'date' => $date,
-                'description' => 'Month rent ' . date('M Y', strtotime($ledger_invoice->due_date)),
+                'description' => $description,
                 'amount' => $ledger_invoice->grand_total,
-                'late_fee' => $ledger_invoice->late_fee
+                'late_fee' => $ledger_invoice->late_fee,
+                'date_created' => $ledger_invoice->date_created
             ];
 
             $ledger_payments = $this->Payment_records_model->getAllByInvoiceId($ledger_invoice->id);            
             foreach( $ledger_payments as $p ){
-                $date = date("m/d/Y", strtotime($p->payment_date));
+                $date = date("m/d/y", strtotime($p->payment_date));
+                $user = $this->Users_model->getUserByID($p->user_id);
+                $payment_method = $p->payment_method == 'cc' ? 'Credit Card' : ucwords($p->payment_method); 
+
                 $customer_ledger[$date][] = [
                     'id' => $p->id,
+                    'user' => $user ? $user->FName . ' ' . $user->LName : '---',
+                    'payment_method' => $payment_method,
                     'type' => 'payment',          
                     'date' => $date,      
-                    'description' => 'Month rent ' . date('M Y', strtotime($ledger_invoice->due_date)),
-                    'amount' => $p->invoice_amount
+                    'description' => $description,                    
+                    'amount' => $p->invoice_amount,
+                    'date_created' => $p->date_created
                 ];
             }
         }
 
-        $this->page_data['customerLedgers'] = $customer_ledger;         
-
+        $this->page_data['ledger'] = $customer_ledger;        
         $this->load->view('v2/widgets/accounting/ajax_ledger_table_list', $this->page_data);
     }
     

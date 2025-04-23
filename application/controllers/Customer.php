@@ -12200,7 +12200,7 @@ class Customer extends MY_Controller
         $company_id = logged('company_id');
         $post       = $this->input->post();
         $cid        = isset($post['customer_id']) && $post['customer_id'] > 0 ? $post['customer_id'] : $this->session->userdata('module_customer_id');
-        $payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
+        //$payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
         $invoices   = $this->Invoice_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
 
         $ledger = [];
