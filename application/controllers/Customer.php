@@ -12196,6 +12196,7 @@ class Customer extends MY_Controller
         $this->load->model('Invoice_model');
         $this->load->model('AcsProfile_model');    
         $this->load->model('Users_model');    
+        $this->load->model('Jobs_model');
 
         $company_id = logged('company_id');
         $post       = $this->input->post();
@@ -12206,12 +12207,23 @@ class Customer extends MY_Controller
         $ledger = [];
         foreach( $invoices as $invoice ){
             $date = date("m/d/y", strtotime($invoice->date_issued));
-            $user = $this->Users_model->getUserByID($invoice->user_id);
-
+            $user = $this->Users_model->getUserByID($invoice->user_id);            
             if( $company_id == 139 || $company_id == 1 ){
                 $description =  date('F', strtotime($invoice->due_date)) . ' rent';
+                if( $invoice->job_id > 0 ){
+                    $job = $this->Jobs_model->getByIdAndCompanyId($invoice->job_id, $invoice->company_id);
+                    if( $job ){
+                        $description = 'Issued invoice for job number ' . $job->job_number;
+                    }
+                }                
             }else{
                 $description = 'Issued invoice number ' . $invoice->invoice_number;
+                if( $invoice->job_id > 0 ){
+                    $job = $this->Jobs_model->getByIdAndCompanyId($invoice->job_id, $invoice->company_id);
+                    if( $job ){
+                        $description = 'Issued invoice for job number ' . $job->job_number;
+                    }
+                }
             }
 
             $ledger[$date][] = [

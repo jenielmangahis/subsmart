@@ -2034,6 +2034,7 @@ class Dashboard extends Widgets
         $this->load->model('Invoice_model');
         $this->load->model('AcsProfile_model');    
         $this->load->model('Users_model');    
+        $this->load->model('Jobs_model');
 
         $cid               = $customer_id;
         $company_id        = logged('company_id');
@@ -2047,8 +2048,20 @@ class Dashboard extends Widgets
 
             if( $company_id == 139 || $company_id == 1 ){
                 $description =  date('F', strtotime($ledger_invoice->due_date)) . ' rent';
+                if( $invoice->job_id > 0 ){
+                    $job = $this->Jobs_model->getByIdAndCompanyId($invoice->job_id, $invoice->company_id);
+                    if( $job ){
+                        $description = 'Issued invoice for job number ' . $job->job_number;
+                    }
+                }   
             }else{
                 $description = 'Issued invoice number ' . $ledger_invoice->invoice_number;
+                if( $invoice->job_id > 0 ){
+                    $job = $this->Jobs_model->getByIdAndCompanyId($invoice->job_id, $invoice->company_id);
+                    if( $job ){
+                        $description = 'Issued invoice for job number ' . $job->job_number;
+                    }
+                }
             }
 
             $customer_ledger[$date][] = [
