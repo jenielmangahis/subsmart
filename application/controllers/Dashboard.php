@@ -304,12 +304,12 @@ class Dashboard extends Widgets
         ];
         $this->page_data['invoice_due'] = $this->general->get_data_with_param($invoice_due, false);
 
-        $invoice_paid_last_30days = [
-            'where' => ['company_id' => logged('company_id'), 'status' => 'Paid', 'due_date ' => 'Paid'],
-            'table' => 'invoices',
-            'select' => 'count(*) as total',
-        ];
-        $this->page_data['invoice_paid_last_30days'] = $this->general->get_data_with_param($invoice_paid_last_30days, false);
+        // $invoice_paid_last_30days = [
+        //     'where' => ['company_id' => logged('company_id'), 'status' => 'Paid', 'due_date ' => 'Paid'],
+        //     'table' => 'invoices',
+        //     'select' => 'count(*) as total',
+        // ];
+        // $this->page_data['invoice_paid_last_30days'] = $this->general->get_data_with_param($invoice_paid_last_30days, false);
 
         // fetch open estimates
         $total_invoice_paid = [
@@ -2031,37 +2031,71 @@ class Dashboard extends Widgets
     public function ajax_customer_ledgers($customer_id)
     {
         $this->load->model('Payment_records_model');
+        $this->load->model('Invoice_model');
+        $this->load->model('AcsProfile_model');    
+        $this->load->model('Users_model');    
+        $this->load->model('Jobs_model');
+
         $cid               = $customer_id;
-        $ledger_payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $companyId);
+        $company_id        = logged('company_id');
+        //$ledger_payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $companyId);
         $ledger_invoices   = $this->invoice_model->getAllByCustomerIdAndCompanyId($cid, $companyId);
 
         $customer_ledger = [];
         foreach( $ledger_invoices as $ledger_invoice ){
-            $date = date("m/d/Y", strtotime($ledger_invoice->date_issued));
+            $date = date("m/d/y", strtotime($ledger_invoice->date_issued));
+            $user = $this->Users_model->getUserByID($ledger_invoice->user_id);
+
+            if( $company_id == 139 || $company_id == 1 ){
+                $description =  date('F', strtotime($ledger_invoice->due_date)) . ' rent';
+                if( $invoice->job_id > 0 ){
+                    $job = $this->Jobs_model->getByIdAndCompanyId($invoice->job_id, $invoice->company_id);
+                    if( $job ){
+                        $description = 'Issued invoice for job number ' . $job->job_number;
+                    }
+                }   
+            }else{
+                $description = 'Issued invoice number ' . $ledger_invoice->invoice_number;
+                if( $invoice->job_id > 0 ){
+                    $job = $this->Jobs_model->getByIdAndCompanyId($invoice->job_id, $invoice->company_id);
+                    if( $job ){
+                        $description = 'Issued invoice for job number ' . $job->job_number;
+                    }
+                }
+            }
+
             $customer_ledger[$date][] = [
                 'id' => $ledger_invoice->id,
+                'user' => $user ? $user->FName . ' ' . $user->LName : '---',
+                'payment_method' => '---',      
                 'type' => 'income',                
                 'date' => $date,
-                'description' => 'Month rent ' . date('M Y', strtotime($ledger_invoice->due_date)),
+                'description' => $description,
                 'amount' => $ledger_invoice->grand_total,
-                'late_fee' => $ledger_invoice->late_fee
+                'late_fee' => $ledger_invoice->late_fee,
+                'date_created' => $ledger_invoice->date_created
             ];
 
             $ledger_payments = $this->Payment_records_model->getAllByInvoiceId($ledger_invoice->id);            
             foreach( $ledger_payments as $p ){
-                $date = date("m/d/Y", strtotime($p->payment_date));
+                $date = date("m/d/y", strtotime($p->payment_date));
+                $user = $this->Users_model->getUserByID($p->user_id);
+                $payment_method = $p->payment_method == 'cc' ? 'Credit Card' : ucwords($p->payment_method); 
+
                 $customer_ledger[$date][] = [
                     'id' => $p->id,
+                    'user' => $user ? $user->FName . ' ' . $user->LName : '---',
+                    'payment_method' => $payment_method,
                     'type' => 'payment',          
                     'date' => $date,      
-                    'description' => 'Month rent ' . date('M Y', strtotime($ledger_invoice->due_date)),
-                    'amount' => $p->invoice_amount
+                    'description' => $description,                    
+                    'amount' => $p->invoice_amount,
+                    'date_created' => $p->date_created
                 ];
             }
         }
 
-        $this->page_data['customerLedgers'] = $customer_ledger;         
-
+        $this->page_data['ledger'] = $customer_ledger;        
         $this->load->view('v2/widgets/accounting/ajax_ledger_table_list', $this->page_data);
     }
     
@@ -2121,6 +2155,7 @@ class Dashboard extends Widgets
                 }
     
                 $graphData['TOTAL_SUBSCRIPTION_REVENUE'] = number_format($accumulativeValue, 2, '.', '');
+                echo json_encode($graphData);
             break;
             case 'sales':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
@@ -2133,6 +2168,7 @@ class Dashboard extends Widgets
                 }
     
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
+                echo json_encode($graphData);
             break;
             case 'unpaid_invoices':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
@@ -2145,6 +2181,7 @@ class Dashboard extends Widgets
                 }
     
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
+                echo json_encode($graphData);
             break;
             case 'past_due_invoices':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
@@ -2157,6 +2194,7 @@ class Dashboard extends Widgets
                 }
     
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
+                echo json_encode($graphData);
             break;
             case 'open_invoices':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
@@ -2169,6 +2207,7 @@ class Dashboard extends Widgets
                 }
     
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
+                echo json_encode($graphData);
             break;
             case 'job':
                 $graphData = ['GRAPH' => [], 'TOTAL_JOBS' => 0, 'TOTAL_COUNT' => count($data) ];
@@ -2181,6 +2220,7 @@ class Dashboard extends Widgets
                 }
     
                 $graphData['TOTAL_JOBS'] = $accumulativeValue;
+                echo json_encode($graphData);
             break;
             case 'income':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
@@ -2193,6 +2233,7 @@ class Dashboard extends Widgets
                 }
     
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
+                echo json_encode($graphData);
             break;
             case 'collections':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
@@ -2205,6 +2246,7 @@ class Dashboard extends Widgets
                 }
     
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
+                echo json_encode($graphData);
             break;
             case 'estimates':
                 $graphData = ['GRAPH' => [], 'TOTAL_COUNT' => count($data) ];
@@ -2223,6 +2265,7 @@ class Dashboard extends Widgets
     
                 $graphData['TOTAL_OPEN'] = $totalOpen;
                 $graphData['TOTAL_EXPIRED'] = $totalExpired;
+                echo json_encode($graphData);
             break;
             case 'leads':
                 $graphData = ['GRAPH' => [], 'TOTAL_LEADS' => 0, 'TOTAL_COUNT' => count($data) ];
@@ -2235,6 +2278,7 @@ class Dashboard extends Widgets
                 }
     
                 $graphData['TOTAL_LEADS'] = $accumulativeValue;
+                echo json_encode($graphData);
             break;
             case 'contact':
                 $graphData = ['GRAPH' => [], 'TOTAL_COUNT' => count($data) ];
@@ -2245,6 +2289,7 @@ class Dashboard extends Widgets
                     $month = strtoupper(date('Y M', strtotime($datas->date)));
                     $graphData['GRAPH'][$month] = $accumulativeValue;
                 }
+                echo json_encode($graphData);
             break;
             case 'customer_groups':
                 $graphData = ['GRAPH' => [], 'TOTAL_COUNT' => count($data) ];
@@ -2256,6 +2301,7 @@ class Dashboard extends Widgets
                     }
                     $graphData['GRAPH'][$title]++;
                 }
+                echo json_encode($graphData);
             break;
             case 'accounting_expense':
                 foreach ($data as $datas) {
@@ -2271,11 +2317,13 @@ class Dashboard extends Widgets
                         $graphData[$accountName] += $datas->total;
                     }
                 }
+                echo json_encode($graphData);
             break;
             case 'esign':
                 foreach ($data as $datas) {
                     $graphData[$datas->status] = $datas->total;
                 }
+                echo json_encode($graphData);
             break;
             case 'payment_types':
                 foreach ($data as $datas) {
@@ -2293,6 +2341,7 @@ class Dashboard extends Widgets
                         $graphData['Other'] += $datas->total;
                     }
                 }
+                echo json_encode($graphData);
             break;
             case 'service_tickets':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data)];
@@ -2316,11 +2365,13 @@ class Dashboard extends Widgets
                 }
             
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
+                echo json_encode($graphData);
             break;
             case 'lead_source':
                 foreach ($data as $datas) {
                     $graphData[$datas->lead_source] = $datas->total;
                 }
+                echo json_encode($graphData);
             break;
             case 'job_status':
                 $allStatuses = [
@@ -2342,16 +2393,19 @@ class Dashboard extends Widgets
                         $graphData[$datas->status] = $datas->total ?? 0;
                     }
                 }
+                echo json_encode($graphData);
             break;
             case 'customer_status':
                 foreach ($data as $datas) {
                     $graphData[$datas->status] = $datas->total;
                 }
+                echo json_encode($graphData);
             break;
             case 'job_tags':
                 foreach ($data as $datas) {
                     $graphData[$datas->tags] = $datas->total;
                 }
+                echo json_encode($graphData);
             break;
             case 'taskhub':
                 foreach ($data as $datas) {
@@ -2362,18 +2416,23 @@ class Dashboard extends Widgets
                     $graphData['My Tasks'] += (in_array($user_id, json_decode($datas->assigned_employees, true))) ? 1 : 0;
                     $graphData['Today`s Tasks'] += (date('Y-m-d', strtotime($datas->date)) === $postData['dateTo']) ? 1 : 0;
                 }
+                echo json_encode($graphData);
             break;
             case 'activity_logs':
                 $graphData = $data;
+                echo json_encode($graphData);
             break;
             case 'recent_customers':
                 $graphData = $data;
+                echo json_encode($graphData);
             break;
             case 'unpaid_invoices_list':
                 $graphData = $data;
+                echo json_encode($graphData);
             break;
             case 'overdue_invoices_list':
                 $graphData = $data;
+                echo json_encode($graphData);
             break;
             case 'paid_invoices':
                 $graphData = ['GRAPH' => [], 'TOTAL_AMOUNT' => 0, 'TOTAL_COUNT' => count($data) ];
@@ -2386,18 +2445,64 @@ class Dashboard extends Widgets
                 }
     
                 $graphData['TOTAL_AMOUNT'] = number_format($accumulativeValue, 2, '.', '');
+                echo json_encode($graphData);
             break;
             case 'open_invoices_list':
                 $graphData = $data;
+                echo json_encode($graphData);
             break;
             case 'open_estimates_list':
                 $graphData = $data;
+                echo json_encode($graphData);
+            break;
+            case 'job_activities':
+                foreach ($data as $datas) {
+                    $job_total = '$'.number_format($datas->job_total, 2, ".", ",");
+                    $data_created = date('M d Y, g:i A', strtotime($datas->date_created));
+                    $data_updated = date('M d Y, g:i A', strtotime($datas->date_updated));
+                    $technician = json_decode($datas->technicians, true);
+
+                    $techniciansList = "<ul>";
+                    foreach ($technician as $technicians) {
+                        $techniciansList .= "<li>$technicians</li>";
+                    }
+                    $techniciansList .= "</ul>";
+                    echo "<tr style='cursor: pointer;'>
+                            <td class='p-2 align-middle'>
+                                <div class='d-flex position-relative'>
+                                    <div class='flex-grow-1 min-width-0'>
+                                        <strong>$datas->job_number</strong> <small class='text-muted' data-bs-trigger='hover focus' data-bs-toggle='popover' data-bs-original-title='$datas->job_number' data-bs-content='<strong>Customer:&nbsp;&nbsp;</strong>$datas->customer<br><strong>Address:&nbsp;&nbsp;</strong>$datas->customer_address<br><strong>Job Location:&nbsp;&nbsp;</strong>$datas->job_location<br><strong>Status:&nbsp;&nbsp;</strong>$datas->status<br><strong>Sales Rep:&nbsp;&nbsp;</strong>$datas->sales_rep<br><strong>Tech rep:&nbsp;&nbsp;</strong>$techniciansList<strong>Amount:&nbsp;&nbsp;</strong>$job_total<br><strong>Last Updated:&nbsp;&nbsp;</strong>$data_updated' data-bs-html='true'><i class='fas fa-search'></i></small>
+                                        <span class='d-block text-wrap' style='font-size: 13px;'>$datas->status / $job_total</span>
+                                    </div>
+                                    <small class='text-muted position-absolute' style='top: 0; right: 1px;'>$data_created</small>
+                                </div>
+                            </td>
+                        </tr>";
+                }
+            break;
+            case 'ytd_stats':
+                foreach ($data as $datas) {
+                    if ($datas->category == "earned") {
+                        $graphData["Earned"] = floatval($datas->total); 
+                    } else if ($datas->category == "invoice_amount") {
+                        $graphData["Invoice Amount"] = floatval($datas->total);
+                    } else if ($datas->category == "jobs_completed") {
+                        $graphData["Jobs Completed"] = intval($datas->total);
+                    } else if ($datas->category == "new_jobs") {
+                        $graphData["New Jobs"] = intval($datas->total);
+                    } else if ($datas->category == "lost_accounts") {
+                        $graphData["Lost Accounts"] = intval($datas->total);
+                    } else if ($datas->category == "service_projective_income") {
+                        $graphData["Svc Projected Income"] = floatval($datas->total);
+                    }
+                }
+                echo json_encode($graphData);
             break;
             default:
                 $graphData = ['error' => 'Invalid category'];
             break;
         }
-        echo json_encode($graphData);
+
     }
 
 }

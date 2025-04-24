@@ -3456,6 +3456,7 @@ class Cron_Jobs_Controller extends CI_Controller
             $customer = $this->AcsProfile_model->getByProfId($as->fk_prof_id);    
             $with_customer_late_fee = 0;
             $with_customer_payment_fee = 0;
+            $previous_total_amount = 0;
 
             if( $as->late_fee > 0 ){
                 $with_customer_late_fee = 1;
@@ -3470,6 +3471,14 @@ class Cron_Jobs_Controller extends CI_Controller
                 $totalUnpaidSubscriptions   = $this->AcsCustomerSubscriptionBilling_model->getTotalAmountUnpaidByCustomerId($as->fk_prof_id);
 				$unpaidSubscriptionsDetails = $this->AcsCustomerSubscriptionBilling_model->getUnpaidDetailsByCustomerId($as->fk_prof_id);
 
+                $totalLastUnpaidPreviousSubscription = $this->AcsCustomerSubscriptionBilling_model->getTotalAmountLastUnpaidByCustomerId($as->fk_prof_id);
+
+                if($totalLastUnpaidPreviousSubscription->total_amount) {
+                    $previous_total_amount      = $totalLastUnpaidPreviousSubscription->total_amount;
+                } else {
+                    $previous_total_amount      = $totalUnpaidSubscriptions->total_amount;
+                }
+                
                 $total_amount               = $totalUnpaidSubscriptions->total_amount + $as->mmr;	
             
                 $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($customer->company_id);
@@ -3528,6 +3537,7 @@ class Cron_Jobs_Controller extends CI_Controller
 						'status' => 'Unpaid',
 						'customer_email' => $customer->email,
 						'total_due' => $total_amount,
+                        'previous_balance' => $previous_total_amount,
 						'balance' => $total_amount,
 						'date_created' => date("Y-m-d H:i:s"),
 						'date_updated' => date("Y-m-d H:i:s"),

@@ -1,44 +1,58 @@
 <?php
-    if(!is_null($dynamic_load) && $dynamic_load == true):
-        echo '<div class="col-12 col-lg-4">';
-    endif;
+    $id = trim($thumbnailsWidgetCard->id);
+    $title = trim($thumbnailsWidgetCard->title);
+    $description = trim($thumbnailsWidgetCard->description);
+    $icon = trim($thumbnailsWidgetCard->icon);
+    $type = trim($thumbnailsWidgetCard->type);
+    $category = trim($thumbnailsWidgetCard->category);
 ?>
 
-<div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
-    <div class="nsm-card-header" id="discover_more_widget">
-        <div class="nsm-card-title">
-            <span>Discover More</span>
-        </div>
-        <div class="nsm-card-controls">
-            <div class="dropdown">
-                <a href="javascript:void(0)" class="dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="addToMain('<?= $id ?>',<?php echo ($isMain?'1':'0') ?>,'<?= $isGlobal ?>' )"><?php echo ($isMain?'Remove From Main':'Add to Main') ?></a></li>
-                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="removeWidget('<?= $id ?>');">Remove Widget</a></li>
-                </ul>
+<div class='card shadow widgetBorder <?php echo "card_$category$id "; ?>'>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <h5 class="mt-0 fw-bold">
+                    <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
+                        <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <span class="badge widgetBadge position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
+                    </a>
+                    <div class="dropdown float-end widgetDropdownMenu display_none">
+                        <a href="javascript:void(0)" class="dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-ellipsis-h text-muted"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item removeDashboardCard" data-id='<?php echo $id; ?>' href="javascript:void(0)">Remove</a></li>
+                        </ul>
+                    </div>
+                </h5>
             </div>
         </div>
-    </div>
-
-    <style>
-        .adCarouselIndicators [data-bs-target] {
-            border-radius: 100%;
-            width: 12px;
-            height: 12px;
-        }
-    </style>
-
-    <div class="nsm-card-content adbanner_card">
-        <div id="discover_carousel" class="carousel slide h-100 pb-4" data-bs-ride="carousel">
-            <div class="carousel-indicators adCarouselIndicators d-flex"></div>
-            <div class="carousel-inner adCarouselContent h-100"></div>
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <span><?php echo $description; ?></span>
+            </div>
         </div>
+        <div class="row">
+            <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?> display_none">
+                <div class="nsm-card-content adbanner_card">
+                    <div id="discover_carousel" class="carousel slide h-100 pb-4" data-bs-ride="carousel">
+                        <div class="carousel-indicators adCarouselIndicators d-flex"></div>
+                        <div class="carousel-inner adCarouselContent h-100"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mt-2 <?php echo "graphLoaderContainer_$id"; ?> graphLoader">
+                <div class="text-center">
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <strong class="widgetDragHandle">⣿⣿⣿⣿</strong>
+        <span class="widgetWidthResizeHandle"></span>
+        <span class="widgetHeightResizeHandle"></span>
     </div>
-
 </div>
-
 <script>
     $(document).ready(function() {
         $.ajax({
@@ -107,14 +121,11 @@
                         }
                     });
                 }
+                setTimeout(() => {
+                    $('.<?php echo "textDataContainer_$id"; ?>').show();
+                    $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
+                }, 1000);
             },
         });
     });   
 </script>
-
-
-<?php
-    if(!is_null($dynamic_load) && $dynamic_load == true):
-        echo '</div>';
-    endif;
-?>
