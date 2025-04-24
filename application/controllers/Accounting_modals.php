@@ -11093,7 +11093,7 @@ class Accounting_modals extends MY_Controller
                     'date' => date("m/d/Y", strtotime($check->payment_date)),
                     'name' => str_replace("Not Specified","",$payeeName),
                     'total' => $totalDecimal,
-                    'mailing_address' => str_replace("Not Specified","",$check->mailing_address),
+                    'mailing_address' => str_replace(["<br />", "<br>", "Not Specified"], [", ", ", ", ""], $check->mailing_address),
                     'payment_account' => $paymentAcc->name,
                     'type' => 'check',
                     'total_in_words' => $totalWords
@@ -11210,7 +11210,14 @@ class Accounting_modals extends MY_Controller
 
         $this->pdf->save_pdf($view, ['data' => $data], $fileName, 'portrait');
 
-        $pdf = base64_encode(file_get_contents(base_url("/assets/pdf/$fileName")));
+        $pdf_path = FCPATH . "assets/pdf/$fileName";
+        if (file_exists($pdf_path)) {
+            $pdf = base64_encode(file_get_contents($pdf_path));
+            unlink($pdf_path);
+        } else {
+            log_message('error', 'PDF file not found: ' . $pdf_path);
+        }
+
         if (file_exists(getcwd()."/assets/pdf/$fileName")) {
             unlink(getcwd()."/assets/pdf/$fileName");
         }

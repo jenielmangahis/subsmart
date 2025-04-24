@@ -371,7 +371,6 @@ class Dashboard_model extends MY_Model
                 $data = $this->db->get();
                 return $data->result();
             break;
-
             case 'open_estimates_list':
                 $this->db->select('estimates.id AS id, estimates.company_id AS company_id, estimates.estimate_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, estimates.status AS status, estimates.created_at AS date, estimates.grand_total AS total');
                 $this->db->from('estimates');
@@ -389,6 +388,123 @@ class Dashboard_model extends MY_Model
                 $this->db->limit(100);
                 $data = $this->db->get();
                 return $data->result();
+            break;
+            case 'job_activities':
+                $query = $this->db->query("
+                    SELECT
+                        jobs.id AS id, 
+                        jobs.company_id AS company_id, 
+                        jobs.customer_id AS customer_id, 
+                        CONCAT(acs_profile.first_name, ' ', acs_profile.last_name) AS customer, 
+                        CONCAT(acs_profile.city, ', ', acs_profile.state, ' ', acs_profile.zip_code) AS customer_address, 
+                        jobs.job_number AS job_number, 
+                        jobs.status AS status, 
+                        jobs.job_location AS job_location, 
+                        CONCAT(u1.FName, ' ', u1.LName) AS sales_rep, 
+
+                        CONCAT(
+                            '[',
+                            IF(jobs.employee2_id != 0 AND u2.id IS NOT NULL, CONCAT('\"', u2.FName, ' ', u2.LName, '\"'), ''),
+                            IF(jobs.employee3_id != 0 AND u3.id IS NOT NULL, CONCAT(', \"', u3.FName, ' ', u3.LName, '\"'), ''),
+                            IF(jobs.employee4_id != 0 AND u4.id IS NOT NULL, CONCAT(', \"', u4.FName, ' ', u4.LName, '\"'), ''),
+                            IF(jobs.employee5_id != 0 AND u5.id IS NOT NULL, CONCAT(', \"', u5.FName, ' ', u5.LName, '\"'), ''),
+                            IF(jobs.employee6_id != 0 AND u6.id IS NOT NULL, CONCAT(', \"', u6.FName, ' ', u6.LName, '\"'), ''),
+                            ']'
+                        ) AS technicians,
+
+                        invoices.grand_total AS job_total, 
+                        jobs.date_created AS date_created, 
+                        jobs.date_updated AS date_updated
+
+                    FROM jobs
+                    LEFT JOIN acs_profile ON acs_profile.prof_id = jobs.customer_id
+                    LEFT JOIN invoices ON invoices.job_id = jobs.id
+
+                    LEFT JOIN users u1 ON u1.id = jobs.employee_id
+                    LEFT JOIN users u2 ON u2.id = jobs.employee2_id
+                    LEFT JOIN users u3 ON u3.id = jobs.employee3_id
+                    LEFT JOIN users u4 ON u4.id = jobs.employee4_id
+                    LEFT JOIN users u5 ON u5.id = jobs.employee5_id
+                    LEFT JOIN users u6 ON u6.id = jobs.employee6_id
+
+                    WHERE jobs.company_id = 31
+                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') >= '{$dateFrom}'
+                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') <= '{$dateTo}'
+                    ORDER BY jobs.date_created DESC;
+                ");
+                $data = $query->result();
+                return $data;
+            break;
+            case 'ytd_stats':
+                $query = $this->db->query("
+                    SELECT
+                    invoices.company_id AS company_id, 
+                    'earned' AS category, 
+                    SUM(invoices.grand_total) AS total
+                    FROM invoices
+                    WHERE invoices.company_id = '{$company_id}' 
+                        AND invoices.status = 'Paid'
+                        AND invoices.view_flag = 0
+                        AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >= '{$dateFrom}'
+                        AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <= '{$dateTo}'
+                    UNION
+                    SELECT
+                    invoices.company_id AS company_id, 
+                    'invoice_amount' AS category, 
+                    SUM(invoices.grand_total) AS total
+                    FROM invoices
+                    WHERE invoices.company_id = '{$company_id}' 
+                        AND invoices.status != 'Draft'
+                        AND invoices.status != ''
+                        AND invoices.view_flag = 0
+                        AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >= '{$dateFrom}'
+                        AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <= '{$dateTo}'
+                    UNION
+                    SELECT
+                    jobs_completed_view.company_id AS company_id, 
+                    'jobs_completed' AS category, 
+                    COUNT(jobs_completed_view.id) AS total
+                    FROM jobs_completed_view
+                    WHERE jobs_completed_view.company_id = '{$company_id}'
+                        AND jobs_completed_view.status IN ('Finished', 'Completed')
+                        AND DATE_FORMAT(jobs_completed_view.date, '%Y-%m-%d') >= '{$dateFrom}'
+                        AND DATE_FORMAT(jobs_completed_view.date, '%Y-%m-%d') <= '{$dateTo}'
+                    UNION 
+                    SELECT
+                    jobs.company_id AS company_id, 
+                    'new_jobs' AS category, 
+                    COUNT(jobs.id) AS total
+                    FROM jobs
+                    WHERE jobs.company_id = '{$company_id}'
+                        AND jobs.status = 'Scheduled'
+                        AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') >= '{$dateFrom}'
+                        AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') <= '{$dateTo}'
+                    UNION
+                    SELECT
+                    acs_profile.company_id AS company_id, 
+                    'lost_accounts' AS category, 
+                    COUNT(acs_profile.prof_id) AS total
+                    FROM acs_profile
+                    WHERE acs_profile.company_id = '{$company_id}'
+                        AND acs_profile.status = 'Cancelled'
+                        AND DATE_FORMAT(acs_profile.updated_at, '%Y-%m-%d') >= '{$dateFrom}'
+                        AND DATE_FORMAT(acs_profile.updated_at, '%Y-%m-%d') <= '{$dateTo}'
+                    UNION
+                    SELECT
+                    invoices.company_id AS company_id, 
+                    'service_projective_income' AS category, 
+                    SUM(invoices.grand_total) AS total
+                    FROM invoices
+                    WHERE invoices.company_id = '{$company_id}' 
+                        AND invoices.status != 'Draft'
+                        AND invoices.status != 'Paid'
+                        AND invoices.status != ''
+                        AND invoices.view_flag = 0
+                        AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >= '{$dateFrom}'
+                        AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <= '{$dateTo}';
+                ");
+                $data = $query->result();
+                return $data;
             break;
         }
     }
