@@ -2190,6 +2190,7 @@ class Timesheet extends MY_Controller
         // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
         // $getTimeZone = json_decode($ipInfo);
         $user_timezone = $this->session->userdata('usertimezone');
+        date_default_timezone_set($user_timezone);
         // date_default_timezone_set($getTimeZone->geoplugin_timezone);
         // $clock_in = time();
         // date_default_timezone_set('UTC');
@@ -2200,12 +2201,13 @@ class Timesheet extends MY_Controller
         $attendance = array(
             'user_id' => $user_id,
             'status' => 1,
-            'overtime_status' => 0
+            'overtime_status' => 0,
+            'date_created' => $clock_in
         );
         $this->db->insert('timesheet_attendance', $attendance);
         $attn_id = $this->db->insert_id();
         $check_attendance = $this->db->get_where('timesheet_attendance', array('id' => $attn_id));
-        date_default_timezone_set($this->session->userdata('usertimezone'));
+        
         if ($entry_type == "Manual") {
             $content_notification = 'Manually clocked In ' . " at " . date('M d, Y h:i A') . " " . $this->session->userdata('offset_zone');
             $approved_by = logged('id');
@@ -2238,7 +2240,8 @@ class Timesheet extends MY_Controller
                 'user_location_address' => $employee_address,
                 'entry_type' => $entry_type,
                 'company_id' => getLoggedCompanyID(),
-                'approved_by' => $approved_by
+                'approved_by' => $approved_by,
+                'date_created' => $clock_in
             );
             $this->db->insert('timesheet_logs', $logs_insert);
             $timesheet_logs_id = $this->db->insert_id();
@@ -2653,8 +2656,11 @@ class Timesheet extends MY_Controller
     {
         // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
         // $getTimeZone = json_decode($ipInfo);
-        $_SESSION['autoclockout_timer_closed'] = false;
-        date_default_timezone_set('UTC');
+        $user_timezone = $this->session->userdata('usertimezone');
+        date_default_timezone_set($user_timezone);
+        //date_default_timezone_set('UTC');
+
+        $_SESSION['autoclockout_timer_closed'] = false;        
         $attn_id = $this->input->post('attn_id');
         $entry_type = $this->input->post('auto');
         if ($entry_type == "") {
@@ -2697,7 +2703,7 @@ class Timesheet extends MY_Controller
                 'company_id' => getLoggedCompanyID()
             );
             $this->db->insert('user_notification', $clock_out_notify);
-            date_default_timezone_set('UTC');
+            //date_default_timezone_set('UTC');
 
             $out = array(
                 'attendance_id' => $attn_id,
@@ -2706,7 +2712,8 @@ class Timesheet extends MY_Controller
                 'user_location' => $this->timesheet_model->employeeCoordinates(),
                 'user_location_address' => $this->employeeAddress(),
                 'entry_type' => $entry_type,
-                'company_id' => getLoggedCompanyID()
+                'company_id' => getLoggedCompanyID(),
+                'date_created' => $clock_out
             );
             $this->db->insert('timesheet_logs', $out);
             $timesheet_logs_id = $this->db->insert_id();
@@ -2718,7 +2725,8 @@ class Timesheet extends MY_Controller
                 //                'break_duration' => $break_duration,
                 'overtime' => round($hours_worked[1], 2),
                 //                'date_out' => date('Y-m-d'),
-                'status' => 0
+                'status' => 0,
+                'date_created' => $clock_out
             );
             $this->db->where('id', $attn_id);
             $this->db->update('timesheet_attendance', $update);
@@ -2739,7 +2747,7 @@ class Timesheet extends MY_Controller
             $query = $this->db->get();
             $getUserDetail = $query->row();
 
-            date_default_timezone_set($this->session->userdata('usertimezone'));
+            //date_default_timezone_set($this->session->userdata('usertimezone'));
 
             $data = new stdClass();
             $data->clock_out_time = date('h:i A');
@@ -2797,7 +2805,8 @@ class Timesheet extends MY_Controller
     {
         //      $end_break = $this->input->post('end_of_break');
         $attn_id = $this->input->post('attn_id');
-        date_default_timezone_set('UTC');
+        date_default_timezone_set($this->session->userdata('usertimezone'));
+        //date_default_timezone_set('UTC');
         $lunch_in = time();
         $timestamp = 0;
         $latest_in = 0;
@@ -2829,7 +2838,7 @@ class Timesheet extends MY_Controller
         // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
         // $getTimeZone = json_decode($ipInfo);
         $user_timezone = $this->session->userdata('usertimezone');
-        date_default_timezone_set($this->session->userdata('usertimezone'));
+        //date_default_timezone_set($this->session->userdata('usertimezone'));
 
 
         $data = new stdClass();
@@ -2873,7 +2882,8 @@ class Timesheet extends MY_Controller
     {
         $attn_id = $this->input->post('attn_id');
         $pause_time = $this->input->post('pause_time');
-        date_default_timezone_set('UTC');
+        //date_default_timezone_set('UTC');
+        date_default_timezone_set($this->session->userdata('usertimezone'));
         $lunch_out = time();
         $user_id = logged('id');
         //        $check = $this->db->get_where('timesheet_logs',array('attendance_id'=>$attn_id,'action'=>'Break out'));
@@ -2901,7 +2911,7 @@ class Timesheet extends MY_Controller
         // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
         // $getTimeZone = json_decode($ipInfo);
         $user_timezone = $this->session->userdata('usertimezone');
-        date_default_timezone_set($this->session->userdata('usertimezone'));
+        //date_default_timezone_set($this->session->userdata('usertimezone'));
 
         $data = new stdClass();
         $data->lunch_time =  date('h:i A', time());
@@ -3108,7 +3118,8 @@ class Timesheet extends MY_Controller
     }
     public function worked_hourschecker()
     {
-        date_default_timezone_set('UTC');
+        //date_default_timezone_set('UTC');
+        date_default_timezone_set($this->session->userdata('usertimezone'));
         $user_id = logged('id');
         $user_logs = $this->timesheet_model->getAllLogsToday($user_id, date('Y-m-d'));
         // var_dump($user_logs);

@@ -17,6 +17,9 @@ if ($this->session->userdata('usertimezone') == null) {
     <meta name="description" content="nSmarTrac Website">
     <title>nSmarTrac</title>
 
+    <!-- Sample Favicon Only -->
+    <link rel="shortcut icon" href="<?php echo base_url('assets/img/favicoTemp.ico'); ?>" type="image/x-icon">
+    
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/accounting/accounting-modal-forms.css'); ?>">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/v2/main.css'); ?>">
@@ -332,6 +335,7 @@ $overtime_status = 1;
 
 try {
     $UserTimeZone = new DateTimeZone($this->session->userdata('usertimezone'));
+    date_default_timezone_set($this->session->userdata('usertimezone'));
 } catch (Exception $e) {
     header('Location: '.base_url().'/logout');
 }
@@ -356,9 +360,9 @@ foreach ($attendances as $attn) {
                 $date_created = $log->date_created;
                 $attendance_status = 1;
                 $date_created = $log->date_created;
-                date_default_timezone_set('UTC');
+                //date_default_timezone_set('UTC');
                 $datetime_defaultTimeZone = new DateTime($date_created);
-                $datetime_defaultTimeZone->setTimezone($UserTimeZone);
+                //$datetime_defaultTimeZone->setTimezone($UserTimeZone);
                 $userZone_date_created = $datetime_defaultTimeZone->format('Y-m-d H:i:s');
                 $clock_in = date('h:i A', strtotime($userZone_date_created));
                 $shift_end = strtotime($log->date_created);
@@ -392,16 +396,16 @@ foreach ($attendances as $attn) {
             // var_dump($attendance_id);
             if ($log->action == 'Check in') {
                 $date_created = $log->date_created;
-                date_default_timezone_set('UTC');
+                //date_default_timezone_set('UTC');
                 $datetime_defaultTimeZone = new DateTime($date_created);
-                $datetime_defaultTimeZone->setTimezone($UserTimeZone);
+                //$datetime_defaultTimeZone->setTimezone($UserTimeZone);
                 $userZone_date_created = $datetime_defaultTimeZone->format('Y-m-d H:i:s');
                 $clock_in = date('h:i A', strtotime($userZone_date_created));
             } elseif ($log->action == 'Check out') {
                 $date_created = $log->date_created;
-                date_default_timezone_set('UTC');
+                //date_default_timezone_set('UTC');
                 $datetime_defaultTimeZone = new DateTime($date_created);
-                $datetime_defaultTimeZone->setTimezone($UserTimeZone);
+                //$datetime_defaultTimeZone->setTimezone($UserTimeZone);
                 $userZone_date_created = $datetime_defaultTimeZone->format('Y-m-d H:i:s');
                 $clock_out = date('h:i A', strtotime($userZone_date_created));
             }

@@ -133,7 +133,7 @@
                         graphSeries.push(parseInt(value));
                         
                         let displayValue;
-                        if (["Earned", "Invoice Amount", "Service Projective Income"].includes(key)) {
+                        if (["Total & Recurring Payments"].includes(key)) {
                             displayValue = parseFloat(value).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
                         } else {
                             displayValue = value;

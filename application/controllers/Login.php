@@ -166,6 +166,7 @@ class Login extends CI_Controller
                     $this->load->model('UserAllowedIP_model');
                     $user_location = getUserPublicIP();
                     if( $user_location['ip'] != '' ){
+                        $this->session->set_userdata('usertimezone', $user_location['timezone']);
                         if( $user->last_login_ip_address != '' ){
                             $allowedIp = $this->UserAllowedIP_model->getByUserIdAndIPAddress($user->id, $user_location['ip']);
                             if( $allowedIp ){
@@ -221,8 +222,9 @@ class Login extends CI_Controller
                         //Log last login ip
                         $update_user = ['last_login_ip_address' => $user_location['ip']];
                         $this->users_model->update($user->id, $update_user);
+                    }else{
+                        $this->session->set_userdata('usertimezone', 'America/New_York');
                     }
-
                 }
             }
         } elseif ($attempt == 'invalid_password') {

@@ -27,8 +27,7 @@ class Dashboard_model extends MY_Model
                 $this->db->select('invoices.id AS id, invoices.date_created AS date, invoices.grand_total AS total');
                 $this->db->from('invoices');
                 $this->db->where('invoices.company_id', $company_id);
-                $this->db->where('invoices.status != ', "Draft");
-                $this->db->where('invoices.status != ', "");
+                $this->db->where_not_in('invoices.status', ['Draft', '']);
                 $this->db->where('invoices.view_flag', 0);
                 $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >=", $dateFrom);
                 $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <=", $dateTo);
@@ -39,9 +38,7 @@ class Dashboard_model extends MY_Model
                 $this->db->select('invoices.id AS id, invoices.date_created AS date, invoices.grand_total AS total');
                 $this->db->from('invoices');
                 $this->db->where('invoices.company_id', $company_id);
-                $this->db->where('invoices.status !=', "Paid");
-                $this->db->where('invoices.status !=', "Draft");
-                $this->db->where('invoices.status !=', "");
+                $this->db->where_not_in('invoices.status', ['Paid', 'Draft', '']);
                 $this->db->where('invoices.view_flag', 0);
                 $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-90 days')));
                 $this->db->where('invoices.due_date <=', date('Y-m-d'));
@@ -54,9 +51,7 @@ class Dashboard_model extends MY_Model
                 $this->db->select('invoices.id AS id, invoices.date_created AS date, invoices.grand_total AS total');
                 $this->db->from('invoices');
                 $this->db->where('invoices.company_id', $company_id);
-                $this->db->where('invoices.status !=', "Paid");
-                $this->db->where('invoices.status !=', "Draft");
-                $this->db->where('invoices.status !=', "");
+                $this->db->where_not_in('invoices.status', ['Paid', 'Draft', '']);
                 $this->db->where('invoices.view_flag', 0);
                 $this->db->where('invoices.due_date <=', date('Y-m-d'));
                 $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >=", $dateFrom);
@@ -68,9 +63,7 @@ class Dashboard_model extends MY_Model
                 $this->db->select('invoices.id AS id, invoices.date_created AS date, invoices.grand_total AS total');
                 $this->db->from('invoices');
                 $this->db->where('invoices.company_id', $company_id);
-                $this->db->where('invoices.status !=', "Paid");
-                $this->db->where('invoices.status !=', "Draft");
-                $this->db->where('invoices.status !=', "");
+                $this->db->where_not_in('invoices.status', ['Paid', 'Draft', '']);
                 $this->db->where('invoices.view_flag', 0);
                 $this->db->where('invoices.due_date <=', date('Y-m-d'));
                 $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >=", $dateFrom);
@@ -103,9 +96,7 @@ class Dashboard_model extends MY_Model
                 $this->db->select('invoices.id AS id, invoices.date_created AS date, invoices.grand_total AS total');
                 $this->db->from('invoices');
                 $this->db->where('invoices.company_id', $company_id);
-                $this->db->where('invoices.status !=', "Paid");
-                $this->db->where('invoices.status !=', "Draft");
-                $this->db->where('invoices.status !=', "");
+                $this->db->where_not_in('invoices.status', ['Paid', 'Draft', '']);
                 $this->db->where('invoices.view_flag', 0);
                 $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-90 days')));
                 $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-5 years')));
@@ -115,20 +106,22 @@ class Dashboard_model extends MY_Model
                 return $query->result();
             break;
             case 'estimates':
-                $this->db->select('
+                $currentDate = date('Y-m-d');
+
+                $this->db->select("
                             estimates.id AS id, 
                             estimates.created_at AS date, 
                             estimates.expiry_date AS expiry_date, 
                             estimates.grand_total AS total,
                             COUNT(CASE 
-                                    WHEN estimates.expiry_date >= CURDATE() THEN 1
+                                    WHEN estimates.expiry_date >= '{$currentDate}' THEN 1
                                     ELSE NULL
                                 END) AS total_open,
                             COUNT(CASE 
-                                    WHEN estimates.expiry_date < CURDATE() THEN 1
+                                    WHEN estimates.expiry_date < '{$currentDate}' THEN 1
                                     ELSE NULL
                                 END) AS total_expired
-                        ');
+                        ");
                 $this->db->from('estimates');
                 $this->db->where('estimates.company_id', $company_id);
                 $this->db->where('estimates.status !=', "Lost");
@@ -167,7 +160,6 @@ class Dashboard_model extends MY_Model
                 $this->db->where('acs_profile.company_id', $company_id);
                 if ($filter3 == "active_only") {
                     $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR', 'Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
-
                 }
                 $this->db->where('customer_groups.title !=', "");
                 $this->db->where("DATE_FORMAT(acs_profile.created_at, '%Y-%m-%d') >=", $dateFrom);
@@ -315,9 +307,7 @@ class Dashboard_model extends MY_Model
             case 'unpaid_invoices_list':
                 $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date, invoices.grand_total AS total');
                 $this->db->from('invoices');
-                $this->db->where('invoices.status !=', "Paid");
-                $this->db->where('invoices.status !=', "Draft");
-                $this->db->where('invoices.status !=', "");
+                $this->db->where_not_in('invoices.status', ['Paid', 'Draft', '']);
                 $this->db->where('invoices.view_flag', 0);
                 $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-90 days')));
                 $this->db->where('invoices.due_date <=', date('Y-m-d'));            
@@ -331,9 +321,7 @@ class Dashboard_model extends MY_Model
             case 'overdue_invoices_list':
                 $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date, invoices.grand_total AS total');
                 $this->db->from('invoices');
-                $this->db->where('invoices.status !=', "Paid");
-                $this->db->where('invoices.status !=', "Draft");
-                $this->db->where('invoices.status !=', "");
+                $this->db->where_not_in('invoices.status', ['Paid', 'Draft', '']);
                 $this->db->where('invoices.view_flag', 0);
                 $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-14 days')));          
                 $this->db->where('invoices.company_id', $company_id);
@@ -359,9 +347,7 @@ class Dashboard_model extends MY_Model
             case 'open_invoices_list':
                 $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date, invoices.grand_total AS total');
                 $this->db->from('invoices');
-                $this->db->where('invoices.status !=', "Paid");
-                $this->db->where('invoices.status !=', "Draft");
-                $this->db->where('invoices.status !=', "");
+                $this->db->where_not_in('invoices.status', ['Paid', 'Draft', '']);
                 $this->db->where('invoices.view_flag', 0);
                 $this->db->where('invoices.due_date <=', date('Y-m-d'));      
                 $this->db->where('invoices.company_id', $company_id);
@@ -454,8 +440,7 @@ class Dashboard_model extends MY_Model
                     SUM(invoices.grand_total) AS total
                     FROM invoices
                     WHERE invoices.company_id = '{$company_id}' 
-                        AND invoices.status != 'Draft'
-                        AND invoices.status != ''
+                        AND invoices.status NOT IN ('Draft', '')
                         AND invoices.view_flag = 0
                         AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >= '{$dateFrom}'
                         AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <= '{$dateTo}'
@@ -496,12 +481,167 @@ class Dashboard_model extends MY_Model
                     SUM(invoices.grand_total) AS total
                     FROM invoices
                     WHERE invoices.company_id = '{$company_id}' 
-                        AND invoices.status != 'Draft'
-                        AND invoices.status != 'Paid'
-                        AND invoices.status != ''
+                        AND invoices.status NOT IN ('Paid', 'Draft', '')
                         AND invoices.view_flag = 0
                         AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >= '{$dateFrom}'
                         AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <= '{$dateTo}';
+                ");
+                $data = $query->result();
+                return $data;
+            break;
+            case 'today_stats':
+                $currentMonthFirstDay = date('Y-m-01');
+                $currentMonthLastDay = date('Y-m-t');
+                
+                $query = $this->db->query("
+                    SELECT
+                        invoices.company_id AS company_id, 
+                        'sales' AS category, 
+                        SUM(invoices.grand_total) AS total
+                    FROM invoices
+                    WHERE invoices.company_id = '{$company_id}' 
+                        AND invoices.status NOT IN ('Draft', '')
+                        AND invoices.view_flag = 0
+                    AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >= '{$currentMonthFirstDay}'
+                    AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <= '{$currentMonthLastDay}'
+                    UNION
+                    SELECT
+                        jobs.company_id AS company_id, 
+                        'jobs_created' AS category, 
+                        COUNT(jobs.id) AS total
+                    FROM jobs
+                    WHERE jobs.company_id = '{$company_id}' 
+                        AND jobs.status = 'Scheduled'
+                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') >= '{$dateFrom}'
+                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') <= '{$dateTo}'
+                    UNION
+                    SELECT
+                        jobs.company_id AS company_id, 
+                        'jobs_done' AS category, 
+                        COUNT(jobs.id) AS total
+                    FROM jobs
+                    WHERE jobs.company_id = '{$company_id}' 
+                        AND jobs.status IN ('Finished', 'Completed')
+                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') >= '{$dateFrom}'
+                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') <= '{$dateTo}'
+                    UNION
+                    SELECT
+                        invoices.company_id AS company_id, 
+                        'collected' AS category, 
+                        SUM(invoices.grand_total) AS total
+                    FROM invoices
+                    WHERE invoices.company_id = '{$company_id}' 
+                        AND invoices.status = 'Paid'
+                        AND invoices.view_flag = 0
+                    AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >= '{$currentMonthFirstDay}'
+                    AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <= '{$currentMonthLastDay}'
+                    UNION
+                    SELECT
+                        jobs.company_id AS company_id, 
+                        'jobs_cancelled' AS category, 
+                        COUNT(jobs.id) AS total
+                    FROM jobs
+                    WHERE jobs.company_id = '{$company_id}' 
+                        AND jobs.status = 'Cancelled'
+                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') >= '{$currentMonthFirstDay}'
+                    AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') <= '{$currentMonthLastDay}'
+                    UNION
+                    SELECT
+                        tickets.company_id AS company_id, 
+                        'service_scheduled' AS category, 
+                        COUNT(tickets.id) AS total
+                    FROM tickets
+                    WHERE tickets.company_id = '{$company_id}' 
+                        AND tickets.ticket_status = 'Scheduled'
+                    AND DATE_FORMAT(tickets.created_at, '%Y-%m-%d') >= '{$dateFrom}'
+                    AND DATE_FORMAT(tickets.created_at, '%Y-%m-%d') <= '{$dateTo}'
+                ");
+                $data = $query->result();
+                return $data;
+            break;
+            case 'earnings':       
+                $overdueDate = date('Y-m-d', strtotime('-14 days'));
+                
+                $query = $this->db->query("
+                    SELECT
+                        invoices.company_id AS company_id, 
+                        'open_invoices' AS category, 
+                        COUNT(invoices.id) AS total
+                    FROM invoices
+                    WHERE invoices.company_id = '{$company_id}' 
+                        AND invoices.status NOT IN ('Paid', 'Draft', '')
+                        AND invoices.view_flag = 0
+                        AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >= '{$dateFrom}'
+                        AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <= '{$dateTo}'
+                    UNION
+                    SELECT
+                        invoices.company_id AS company_id, 
+                        'overdue_invoices' AS category, 
+                        COUNT(invoices.id) AS total
+                    FROM invoices
+                    WHERE invoices.company_id = '{$company_id}' 
+                        AND invoices.status NOT IN ('Paid', 'Draft', '')
+                        AND invoices.due_date < '{$overdueDate}'
+                        AND invoices.view_flag = 0
+                        AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >= '{$dateFrom}'
+                        AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <= '{$dateTo}'
+                    UNION
+                    SELECT
+                        invoices.company_id AS company_id, 
+                        'paid_invoices' AS category, 
+                        SUM(invoices.grand_total) AS total
+                    FROM invoices
+                    WHERE invoices.company_id = '{$company_id}' 
+                        AND invoices.status = 'Paid'
+                        AND invoices.view_flag = 0
+                        AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >= '{$dateFrom}'
+                        AND DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <= '{$dateTo}'
+                    UNION
+                    SELECT
+                        acs_profile.company_id AS company_id, 
+                        'subscription' AS category, 
+                        SUM(acs_billing.mmr) AS total
+                    FROM acs_profile
+                    LEFT JOIN acs_billing ON acs_billing.fk_prof_id = acs_profile.prof_id
+                    WHERE acs_profile.company_id = '{$company_id}' 
+                        AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM')
+                        AND DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') >= '{$dateFrom}'
+                        AND DATE_FORMAT(acs_billing.bill_start_date, '%Y-%m-%d') <= '{$dateTo}'
+                ");
+                $data = $query->result();
+                return $data;
+            break;
+            case 'recurring_service_plans':
+                $currentDate = date('Y-m-d');
+                $next30Days = date('Y-m-d', strtotime('+30 days'));           
+
+                $query = $this->db->query("
+                    SELECT
+                        ac_rateplan.company_id AS company_id, 
+                        'active_service_plans' AS category, 
+                        COUNT(ac_rateplan.id) AS total
+                    FROM ac_rateplan
+                    WHERE ac_rateplan.company_id = '{$company_id}' 
+                    UNION
+                    SELECT
+                        acs_profile.company_id AS company_id,
+                        'agreements_expire_30days' AS category, 
+                        COUNT(acs_profile.prof_id) AS total
+                    FROM acs_profile
+                    LEFT JOIN acs_billing ON acs_billing.fk_prof_id = acs_profile.prof_id
+                    WHERE acs_profile.company_id = '{$company_id}' 
+                        AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM')
+                         AND acs_billing.bill_end_date >= '{$currentDate}'
+                        AND acs_billing.bill_end_date <= '{$next30Days}'
+                    UNION
+                    SELECT
+                        acs_profile.company_id AS company_id, 
+                        'total_recurring_payment' AS category, 
+                        SUM(acs_billing.mmr) AS total
+                    FROM acs_profile
+                    LEFT JOIN acs_billing ON acs_billing.fk_prof_id = acs_profile.prof_id
+                    WHERE acs_profile.company_id = '{$company_id}' 
+                        AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM')
                 ");
                 $data = $query->result();
                 return $data;

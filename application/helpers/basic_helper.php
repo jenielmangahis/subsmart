@@ -5420,6 +5420,7 @@ function getUserPublicIP()
         $lat      = 0;
         $lon      = 0;
         $user_agent = '';
+        $timezone = 'America/New_York';
 
         if( $ipLocation ){
             $country  = $ipLocation->countryCode;
@@ -5427,6 +5428,7 @@ function getUserPublicIP()
             $lat = $ipLocation->lat;
             $lon = $ipLocation->lon;
             $user_agent = $_SERVER['HTTP_USER_AGENT'];
+            $timezone = $ipLocation->timezone;
         }
 
         $return = [
@@ -5435,7 +5437,8 @@ function getUserPublicIP()
             'location' => $location,
             'lat' => $lat,
             'lon' => $lon,
-            'user_agent' => $user_agent
+            'user_agent' => $user_agent,
+            'timezone' => $timezone
         ];
     }else{
         $return = [
