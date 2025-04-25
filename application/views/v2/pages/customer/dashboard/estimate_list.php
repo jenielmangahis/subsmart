@@ -20,6 +20,10 @@
     height: var(--size);
     min-width: var(--size);
 }
+.nsm-badge{
+    font-size:12px;
+    display:block;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
@@ -56,23 +60,25 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button name="button"><i class='bx bx-x'></i></button>
-                            Don't Let Your Service Desk Tickets Make it Harder to Run Your Business Effectively. Start Achieving Service Desk Excellence by tagging all your tickets and tracking them to the closed.
+                            For any business, getting customers is only half the battle. creating a job workflow will help track each scheduled ticket from draft to receiving payment.
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-6 grid-mb">
                         <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="custom-estimate-searchbar" name="search" placeholder="Search" value="">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
                     <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
-                                <i class='bx bx-fw bx-chart'></i> New Estimate
+                                <i class='bx bx-fw bx-plus'></i> New Estimate
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
 
                 <div class="tab-content mt-4">
@@ -81,11 +87,11 @@
                         <thead>
                             <tr>
                                 <td class="table-icon"></td>
-                                <td data-name="EstimateNumber">Estimate Number</td>       
+                                <td data-name="EstimateNumber">Estimate Number</td>                                       
                                 <td data-name="Date" style="width:10%;">Date</td>
                                 <td data-name="Status" style="width:8%;">Status</td>
                                 <td data-name="Amount" style="text-align:right;">Amount</td>
-                                <td data-name="Manage"></td>
+                                <td data-name="Manage" style="width:3%;"></td>
                             </tr>
                         </thead>
                         <tbody>
@@ -233,15 +239,9 @@
 <?php include viewPath('v2/includes/footer'); ?>
 <script>
 $(document).ready(function() {
-    var estimateListTable = $("#estimate-list-table").DataTable({
-        "ordering": false,
-        language: {
-            processing: '<span>Fetching data...</span>'
-        }     
-    });
-
-    $("#custom-estimate-searchbar").keyup(function() {
-        estimateListTable.search($(this).val()).draw()
-    });
+    $(".nsm-table").nsmPagination();
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));        
+    }, 1000));
 });
 </script>
