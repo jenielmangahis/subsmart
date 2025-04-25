@@ -2746,9 +2746,14 @@ class Customer extends MY_Controller
         $this->load->model('taskhub_model');
         $this->load->model('CustomerStatementClaim_model');
         $this->load->model('CustomerSignature_model');
+        $this->load->model('Business_model');
         $this->load->model('Invoice_model', 'invoice_model');
-        $this->load->library('wizardlib');        
-        error_reporting(0);       
+        $this->load->library('wizardlib');                
+        
+        if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
+			show403Error();
+			return false;
+		}
 
         add_footer_js([
 			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
@@ -2920,6 +2925,11 @@ class Customer extends MY_Controller
         $this->load->model('Jobs_model');
         $this->load->model('AcsProfile_model');
 
+        if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
+			show403Error();
+			return false;
+		}
+
         $jobs = $this->Jobs_model->getAllJobsByCustomerId($cid);
         $customer = $this->AcsProfile_model->getByProfId($cid);
         if( $customer && $customer->company_id == $company_id ){
@@ -2996,6 +3006,11 @@ class Customer extends MY_Controller
         $this->load->model('Jobs_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('Users_model');
+
+        if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
+			show403Error();
+			return false;
+		}
 
         $company_id = logged('company_id');
         $jobs     = $this->Jobs_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
@@ -3085,6 +3100,11 @@ class Customer extends MY_Controller
         $this->load->model('Tickets_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('Users_model');
+
+        if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
+			show403Error();
+			return false;
+		}
         
         $company_id  = logged('company_id');
         $filters[]   = ['field' => 'tickets.is_archived', 'value' => 0];
@@ -3123,6 +3143,11 @@ class Customer extends MY_Controller
         $this->load->model('Estimate_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('Users_model');
+
+        if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
+			show403Error();
+			return false;
+		}
         
         $company_id = logged('company_id');
         $estimates  = $this->Estimate_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
@@ -3185,6 +3210,11 @@ class Customer extends MY_Controller
         $this->load->model('Jobs_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('Tickets_model');
+
+        if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
+			show403Error();
+			return false;
+		}
 
         $company_id = logged('company_id');
         $customer   = $this->AcsProfile_model->getByProfId($cid);
@@ -3293,6 +3323,11 @@ class Customer extends MY_Controller
         $this->load->model('CreditBureau_model');
         $this->load->model('CustomerDisputeItem_model');
 
+        if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
+			show403Error();
+			return false;
+		}
+
         $company_id = logged('company_id');
         $customer = $this->AcsProfile_model->getByProfId($cid);
 
@@ -3315,10 +3350,8 @@ class Customer extends MY_Controller
         $this->page_data['cust_active_tab'] = 'credit_industry';
         $this->page_data['cus_id'] = $cid;
         $this->page_data['customer'] = $customer;
-
         $this->page_data['page']->title = 'Credit Industry';
         $this->page_data['page']->parent = 'Customers';
-
         $this->load->view('v2/pages/customer/dashboard/credit_industry', $this->page_data);
     }
 
@@ -4003,10 +4036,19 @@ class Customer extends MY_Controller
 
     public function qrcodeGenerator($profile_id)
     {
+        $this->load->model('Business_model');
         $this->load->library('qrcode/ciqrcode');
-        $SERVERFILEPATH = $_SERVER['DOCUMENT_ROOT'].'/assets/img/customer/qr/'.$profile_id.'.png';
 
-        $params['data'] = 'https://nsmartrac.com/share_link/public_preview_/'.$profile_id;
+        $company_id = logged('company_id');
+        $company = $this->Business_model->getByCompanyId($company_id);
+        if( $company ){
+            $qr_data = base_url('customer_view/'.$company->profile_slug.'/'.$profile_id);
+        }else{
+            $qr_data = base_url('/');
+        }   
+
+        $SERVERFILEPATH = FCPATH .'assets/img/customer/qr/'.$profile_id.'.png';
+        $params['data'] = $qr_data;
         $params['level'] = 'H';
         $params['size'] = 10;
         $params['savename'] = $SERVERFILEPATH;
