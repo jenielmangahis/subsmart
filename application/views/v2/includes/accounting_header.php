@@ -16,6 +16,9 @@ if ($this->session->userdata('usertimezone') == null) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>nSmarTrac</title>
 
+    <!-- Sample Favicon Only -->
+    <link rel="shortcut icon" href="<?php echo base_url('assets/img/favicoTemp.ico'); ?>" type="image/x-icon">
+
     <link rel="stylesheet" type="text/css" href="<?=base_url("assets/css/accounting/accounting-modal-forms.css")?>">
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="<?= base_url("assets/css/v2/main.css") ?>">

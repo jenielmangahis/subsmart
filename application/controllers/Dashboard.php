@@ -2493,7 +2493,51 @@ class Dashboard extends Widgets
                     } else if ($datas->category == "lost_accounts") {
                         $graphData["Lost Accounts"] = intval($datas->total);
                     } else if ($datas->category == "service_projective_income") {
-                        $graphData["Svc Projected Income"] = floatval($datas->total);
+                        $graphData["Service Projective Income"] = floatval($datas->total);
+                    }
+                }
+                echo json_encode($graphData);
+            break;
+            case 'today_stats':
+                foreach ($data as $datas) {
+                    if ($datas->category == "sales") {
+                        $graphData["Sales"] = floatval($datas->total); 
+                    } else if ($datas->category == "jobs_created") {
+                        $graphData["Jobs Created"] = intval($datas->total);
+                    } else if ($datas->category == "jobs_done") {
+                        $graphData["Jobs Done"] = intval($datas->total);
+                    } else if ($datas->category == "collected") {
+                        $graphData["Collected"] = floatval($datas->total);
+                    } else if ($datas->category == "jobs_cancelled") {
+                        $graphData["Jobs Cancelled"] = intval($datas->total);
+                    } else if ($datas->category == "service_scheduled") {
+                        $graphData["Service Scheduled"] = intval($datas->total);
+                    }
+                }
+                echo json_encode($graphData);
+            break;
+            case 'earnings':
+                foreach ($data as $datas) {
+                    if ($datas->category == "open_invoices") {
+                        $graphData["Open Invoices"] = intval($datas->total); 
+                    } else if ($datas->category == "overdue_invoices") {
+                        $graphData["Overdue Invoices"] = intval($datas->total);
+                    } else if ($datas->category == "paid_invoices") {
+                        $graphData["Paid Invoices"] = floatval($datas->total);
+                    } else if ($datas->category == "subscription") {
+                        $graphData["Subscription"] = floatval($datas->total);
+                    }
+                }
+                echo json_encode($graphData);
+            break;
+            case 'recurring_service_plans':
+                foreach ($data as $datas) {
+                    if ($datas->category == "active_service_plans") {
+                        $graphData["Active Service Plans"] = intval($datas->total); 
+                    } else if ($datas->category == "agreements_expire_30days") {
+                        $graphData["Agreements to Expire in 30 days"] = intval($datas->total);
+                    } else if ($datas->category == "total_recurring_payment") {
+                        $graphData["Total & Recurring Payments"] = floatval($datas->total);
                     }
                 }
                 echo json_encode($graphData);

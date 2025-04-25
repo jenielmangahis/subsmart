@@ -31,7 +31,7 @@
                 <span><?php echo $description; ?></span>
             </div>
         </div>
-        <!-- <div class="row mb-2">
+        <div class="row mb-2">
             <div class="col-md-12">
                 <div class="input-group">
                     <select class="form-select <?php echo "widgetFilter1_$id"; ?>">
@@ -47,7 +47,7 @@
                     </select>
                 </div>
             </div>
-        </div> -->
+        </div>
         <div class="row <?php echo "textDatas_$id"; ?>">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center textData">
@@ -133,7 +133,7 @@
                         graphSeries.push(parseInt(value));
                         
                         let displayValue;
-                        if (["Earned", "Invoice Amount", "Service Projective Income"].includes(key)) {
+                        if (["Paid Invoices", "Subscription"].includes(key)) {
                             displayValue = parseFloat(value).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
                         } else {
                             displayValue = value;
@@ -144,7 +144,7 @@
                         $('.<?php echo "textDatas_$id"; ?>').append(`
                             <div class='col-6 col-md-6 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
                                 <div class='text-center textData'>
-                                    <small class='text-muted text-uppercase fw-bold text-wrap'>${key}</small>
+                                    <small class='text-muted text-uppercase fw-bold'>${key}</small>
                                     <h4>${displayValue}</h4>
                                 </div>
                             </div>

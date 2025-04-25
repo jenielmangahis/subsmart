@@ -133,7 +133,7 @@
                         graphSeries.push(parseInt(value));
                         
                         let displayValue;
-                        if (["Earned", "Invoice Amount", "Service Projective Income"].includes(key)) {
+                        if (["Sales", "Collected"].includes(key)) {
                             displayValue = parseFloat(value).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
                         } else {
                             displayValue = value;
@@ -144,7 +144,7 @@
                         $('.<?php echo "textDatas_$id"; ?>').append(`
                             <div class='col-6 col-md-6 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
                                 <div class='text-center textData'>
-                                    <small class='text-muted text-uppercase fw-bold text-wrap'>${key}</small>
+                                    <small class='text-muted text-uppercase fw-bold'>${key}</small>
                                     <h4>${displayValue}</h4>
                                 </div>
                             </div>
@@ -196,8 +196,8 @@
 
     <?php echo "processData_$id"; ?>(
         '<?php echo $category; ?>', 
-        ($('.<?php echo "widgetFilter1_$id"; ?> option:selected').val() == 'all_time') ? '1970-01-01' : new Date(Date.UTC(new Date().getFullYear(), 0, 1)).toISOString().split('T')[0], 
-        new Date().toISOString().split('T')[0], 
+        new Date().toISOString().split('T')[0], // Get Current date data
+        new Date().toISOString().split('T')[0], // Get Current date data
         $('.<?php echo "widgetFilter3_$id"; ?> option:selected').val()
     );
     
