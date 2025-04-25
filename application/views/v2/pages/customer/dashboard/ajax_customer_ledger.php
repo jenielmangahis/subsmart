@@ -39,9 +39,9 @@ table.table-fit tfoot td {
                 <td data-name="Description">Description</td>                                
                 <td data-name="Income" style="text-align:right;">Invoice</td>
                 <td data-name="Payment" style="text-align:right;">Payment</td>                
-                <td data-name="Description">Method</td>                                
-                <td data-name="Description">Record Date</td>                                
-                <td data-name="Description">Entry By</td>  
+                <td data-name="Method">Method</td>                                
+                <td data-name="RecordDate">Record Date</td>                                
+                <td data-name="EntryBy">Entry By</td>  
             </tr>
         </thead>
 

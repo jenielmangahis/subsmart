@@ -130,25 +130,7 @@ endif;
                         <div>
                             <select class="main-search-customer" id="main-search-customer"></select>
                         </div>
-                        <table class="nsm-table" id="nsm-table-customer-ledgers">
-                            <thead style="">
-                                <tr>
-                                    <td data-name="Date" style="width:20%;">Date</td>       
-                                    <td data-name="Description" style="width:40%;">Description</td>                                
-                                    <td data-name="Invoice" style="text-align:right; width:20%;">Invoice</td>
-                                    <td data-name="Payment" style="text-align:right; width:20%;">Payment</td>                                    
-                                </tr>
-                            </thead>
-                            <tbody id="ajax-reload-ledger-container" class="ajax-reload-ledger-container">
-                                <tr>
-                                    <td colspan="4">
-                                        <div class="nsm-empty">
-                                            <span>Please select customer.</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div id="ajax-reload-ledger-container" class="ajax-reload-ledger-container"></div>
                     </div>
                 </div>
             </div>
