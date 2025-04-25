@@ -14,6 +14,12 @@ class Debug extends MY_Controller {
 
     }
 
+    public function phpVersion()
+    {
+        phpinfo();
+        exit;
+    }
+
     public function generateEmployeeNumber()
     {   
         $this->load->helper(array('url', 'hashids_helper'));

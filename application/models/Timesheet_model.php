@@ -439,7 +439,8 @@ class Timesheet_model extends MY_Model
     {
         $data = [];
         if( $attn_id > 0 ){
-            date_default_timezone_set('UTC');
+            //date_default_timezone_set('UTC');
+            date_default_timezone_set($this->session->userdata('usertimezone'));
             $user_id = logged('id');
             $qry = $this->db->get_where('timesheet_attendance', array('id' => $attn_id));
             foreach ($qry->result() as $att) {

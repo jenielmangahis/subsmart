@@ -102,6 +102,12 @@
         background: #ffa7001a;
         cursor: pointer;
     }
+
+    .adCarouselIndicators [data-bs-target] {
+            border-radius: 100%;
+            width: 12px;
+            height: 12px;
+        }
 </style>
 <div class="modal fade" id="dashboardThumbnailWidgetSettingsModal" role="dialog" data-bs-keyboard="true">
     <div class="modal-dialog modal-lg">
@@ -646,6 +652,5 @@
                 horizontalOrder: true,
             });
         });
-
     });
 </script>
