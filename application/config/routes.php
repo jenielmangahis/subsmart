@@ -58,7 +58,6 @@ $route['customer/tickets/(:any)?'] = 'customer/ticket/$1';
 $route['customer/_load_billing_credit_card_details'] = 'customer/ajax_load_company_billing_credit_card_details';
 $route['customer/_update_billing_credit_card_details'] = 'customer/ajax_update_billing_credit_card_details';
 $route['customer/add_data_sheet'] = 'customer/add_data_sheet';
-$route['customer/jobs_list/(:num)'] = 'Customer/job_list/$1';
 $route['customer/estimates_list/(:num)'] = 'Customer/estimates_list/$1';
 $route['customer/esign_list/(:num)'] = 'Customer/esign_list/$1';
 $route['customer/workorders_list/(:num)'] = 'Customer/workorders_list/$1';
@@ -319,6 +318,7 @@ $route['invoice/_restore_archived'] = 'Invoice/ajax_restore_archived';
 $route['invoice/_update_status/(:any)'] = 'Invoice/ajax_update_status/$1';
 $route['invoice/recurring/(:any)'] = 'Invoice/recurring/$1';
 $route['customer_invoice/(:any)/(:any)'] = 'Pages/front_customer_invoice_pay_now_v2/$1/$2';
+$route['customer_view/(:any)/(:any)'] = 'Pages/front_customer_preview/$1/$2';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 
@@ -2117,7 +2117,8 @@ $route['customer/_save_customer_form_settings'] = 'Customer/ajax_save_customer_f
 
 //Customer Dashboard Navs
 $route['customer/estimate_list/(:any)'] = 'Customer/estimate_list/$1';
-$route['customer/jobs_list/(:any)']     = 'Customer/jobs_list/$1';
+//$route['customer/jobs_list/(:any)']     = 'Customer/jobs_list/$1';
+$route['customer/jobs_list/(:num)'] = 'Customer/job_list/$1';
 $route['customer/payment_list/(:any)']  = 'Customer/payment_list/$1';
 $route['customer/service_ticket_list/(:any)'] = 'Customer/service_ticket_list/$1';
 $route['customer/invoice_list/(:any)']  = 'Customer/invoice_list/$1';
