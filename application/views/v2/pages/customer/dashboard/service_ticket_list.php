@@ -38,16 +38,18 @@
                 <div class="row">
                     <div class="col-6 grid-mb">
                         <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="custom-ticket-searchbar" name="search" placeholder="Search" value="">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('service-tickets', 'write')){ ?>
                     <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('tickets/addTicketCust/'.$cus_id); ?>'">
-                                <i class='bx bx-fw bx-briefcase'></i> New Service Ticket
+                                <i class='bx bx-fw bx-plus'></i> New Service Ticket
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
 
                 <div class="tab-content mt-4">
@@ -116,7 +118,9 @@
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li><a class="dropdown-item row-view-ticket" href="javascript:void(0);" data-id="<?= $ticket->id; ?>">View</a></li>                                            
+                                            <?php if(checkRoleCanAccessModule('service-tickets', 'write')){ ?>
                                             <li><a class="dropdown-item" tabindex="-1" href="<?php echo base_url('tickets/editDetails/' . $ticket->id) ?>">Edit</a></li>                                            
+                                            <?php } ?>
                                         </ul>
                                     </div>
                                 </td>
@@ -148,16 +152,10 @@
 <?php include viewPath('v2/includes/footer'); ?>
 <script>
 $(document).ready(function() {
-    var ticketListTable = $("#ticket-list-table").DataTable({
-        "ordering": false,
-        language: {
-            processing: '<span>Fetching data...</span>'
-        }     
-    });
-
-    $("#custom-ticket-searchbar").keyup(function() {
-        ticketListTable.search($(this).val()).draw()
-    });
+    $(".nsm-table").nsmPagination();
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));        
+    }, 1000));
 
     $(document).on('click', '.row-view-ticket', function(){
         var appointment_id = $(this).attr('data-id');
