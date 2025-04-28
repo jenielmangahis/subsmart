@@ -31,7 +31,7 @@ table.table-fit tfoot td {
 </div>
 
 <div class="tab-content mt-4" id="customer-ledger-container" style="overflow: auto;">    
-    <table class="nsm-table table-fit" style="font-size:12px;width:110%; overflow: auto;">
+    <table class="nsm-table table-fit" style="font-size:12px;width:auto; overflow: auto;">
         <thead>
             <tr>
                 <td data-name="No." style="width:5%;">#</td>
