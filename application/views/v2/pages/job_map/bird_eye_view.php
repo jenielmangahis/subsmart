@@ -128,13 +128,13 @@ width: 65px;
                     <div class="col-md-12">
                         <a href="javacript:void(0);" class="nsm nsm-button primary btn-settings-map mb-2"><i class='bx bx-cog'></i></a>
                     </div>
-                    <div class="col-md-8 col-8">
+                    <div class="col-md-8 col-sm-12">
                         <div class="nsm-card primary">
                             <div id="map-loading"></div>
                             <div id="bev-map"></div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-4">
+                    <div class="col-md-4 col-sm-12">
                         <div class="nsm-card primary">
                             <div id="quick-access-calendar-loading"></div>
                             <div id='calendar'></div>

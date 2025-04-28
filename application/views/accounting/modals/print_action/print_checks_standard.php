@@ -10,9 +10,9 @@
     <?php $count = 1; ?>
     <?php foreach($data['checks'] as $checkGroup) : ?>
     <?php if($count < count($data['checks'])) : ?>
-    <div class="container" style="width: 100%;padding-right: <?=$data['right-padding']?>px;padding-left: <?=$data['left-padding']?>px;margin-right: auto;margin-left: auto;max-width: 1140px; page-break-after: always; height: 100%;">
+    <div class="container" style="width: 100%;margin-right: auto;margin-left: auto;max-width: 1140px; page-break-after: always; height: 100%;">
     <?php else : ?>
-    <div class="container" style="width: 100%;padding-right: <?=$data['right-padding']?>px;padding-left: <?=$data['left-padding']?>px;margin-right: auto;margin-left: auto;max-width: 1140px; page-break-after: avoid; height: 100%;">
+    <div class="container" style="width: 100%;margin-right: auto;margin-left: auto;max-width: 1140px; page-break-after: avoid; height: 100%;">
     <?php endif; ?>
         <div class="row" style="display: -ms-flexbox;display: flex;-ms-flex-wrap: wrap;flex-wrap: wrap;margin-right: -15px;margin-left: -15px;">
             <div style="width: 100%">
@@ -38,13 +38,13 @@
                             </td>
                         </tr>
                         <tr>
-                            <td><?=$check['total_in_words']?></td>
-                        </tr>
-                        <tr>
-                            <td style="padding-left: 25px;"><p style="margin: 0"><?=str_replace("<br />", "<br>", $check['mailing_address'])?></p></td>
+                            <td style="padding-left: 25px;"><p style="margin: 0"><?= $check['mailing_address']; ?></p></td>
                         </tr>
                         <tr>
                             <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-left: 25px;"><?=$check['total_in_words']?></td>
                         </tr>
                         <tr>
                             <td>&nbsp;</td>

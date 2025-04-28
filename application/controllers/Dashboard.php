@@ -2028,7 +2028,7 @@ class Dashboard extends Widgets
         return $this->load->view('v2/pages/dashboard/send_download_link_app_template', $this->page_data, true);
     }
 
-    public function ajax_customer_ledgers($customer_id)
+    public function ajax_customer_ledgers_backup($customer_id)
     {
         $this->load->model('Payment_records_model');
         $this->load->model('Invoice_model');
@@ -2042,6 +2042,7 @@ class Dashboard extends Widgets
         $ledger_invoices   = $this->invoice_model->getAllByCustomerIdAndCompanyId($cid, $companyId);
 
         $customer_ledger = [];
+        
         foreach( $ledger_invoices as $ledger_invoice ){
             $date = date("m/d/y", strtotime($ledger_invoice->date_issued));
             $user = $this->Users_model->getUserByID($ledger_invoice->user_id);
@@ -2095,6 +2096,77 @@ class Dashboard extends Widgets
             }
         }
 
+        $this->page_data['ledger'] = $customer_ledger;        
+        $this->load->view('v2/widgets/accounting/ajax_ledger_table_list', $this->page_data);
+    }    
+
+    public function ajax_customer_ledgers($customer_id)
+    {
+        $this->load->model('Payment_records_model');
+        $this->load->model('Invoice_model');
+        $this->load->model('AcsProfile_model');    
+        $this->load->model('Users_model');    
+        $this->load->model('Jobs_model');
+
+        $cid               = $customer_id;
+        $company_id        = logged('company_id');
+        //$ledger_payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $companyId);
+        $ledger_invoices   = $this->invoice_model->getAllByCustomerIdAndCompanyId($cid, $companyId);
+
+        $customer_ledger = [];
+        $g_total_payment = 0;
+        $g_total_income  = 0;
+        foreach( $ledger_invoices as $ledger_invoice ){
+            $date = date("m/d/y", strtotime($ledger_invoice->date_issued));
+            $user = $this->Users_model->getUserByID($ledger_invoice->user_id);
+
+            if( $company_id == 139 || $company_id == 1 ){
+                $description =  date('F', strtotime($ledger_invoice->due_date)) . ' rent';
+                if( $ledger_invoice->job_id > 0 ){
+                    $job = $this->Jobs_model->getByIdAndCompanyId($ledger_invoice->job_id, $ledger_invoice->company_id);
+                    if( $job ){
+                        $description = 'Issued invoice for job number ' . $job->job_number;
+                    }
+                }   
+            }else{
+                $description = 'Issued invoice number ' . $ledger_invoice->invoice_number;
+                if( $ledger_invoice->job_id > 0 ){
+                    $job = $this->Jobs_model->getByIdAndCompanyId($ledger_invoice->job_id, $ledger_invoice->company_id);
+                    if( $job ){
+                        $description = 'Issued invoice for job number ' . $job->job_number;
+                    }
+                }
+            }
+
+            $ledger_payments = $this->Payment_records_model->getAllByInvoiceId($ledger_invoice->id);            
+            $total_payment = 0;
+            $payment_method = '---';
+            foreach( $ledger_payments as $p ){
+                $total_payment += $p->invoice_amount;
+                $payment_method = $p->payment_method == 'cc' ? 'Credit Card' : ucwords($p->payment_method); 
+            }
+
+            $g_total_income  += $ledger_invoice->grand_total;
+            $g_total_payment += $total_payment;
+
+            $customer_ledger[$date][] = [
+                'id' => $ledger_invoice->id,
+                'user' => $user ? $user->FName . ' ' . $user->LName : '---',
+                'payment_method' => $payment_method,                
+                'type' => 'income',                
+                'date' => $date,
+                'description' => $description,
+                'amount' => $ledger_invoice->grand_total,
+                'payment' => $total_payment,
+                'late_fee' => $ledger_invoice->late_fee,
+                'date_created' => $ledger_invoice->date_created
+            ];
+        }
+
+        $balance = $g_total_income - $g_total_payment;
+        $this->page_data['total_income'] = $g_total_income;
+        $this->page_data['total_payment'] = $g_total_payment;
+        $this->page_data['balance'] = $balance;        
         $this->page_data['ledger'] = $customer_ledger;        
         $this->load->view('v2/widgets/accounting/ajax_ledger_table_list', $this->page_data);
     }

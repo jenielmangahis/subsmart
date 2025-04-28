@@ -119,8 +119,10 @@ class CompanyRoleAccessModule_model extends MY_Model
             'taskhub' => 'Taskhub',
             'online-booking' => 'Online Booking',
             'lead-contact-form' => 'Lead Contact Form',
+            'customer-dashboard' => 'Customer Dashboard',
             'customer-groups' => 'Customer Groups',
             'customer-settings' => 'Customer Settings',  
+            'customer-credit-industry' => 'Customer Credit Industry',
             'events' => 'Events',
             'events-settings' => 'Events Settings',
             'jobs' => 'Jobs',
@@ -153,7 +155,7 @@ class CompanyRoleAccessModule_model extends MY_Model
             'my-crm-account-summary' => 'MyCRM Account Summary',
             'monthly-membership' => 'Monthly Membership',
             'cards-on-file' => 'Card on File',
-            'chatbot-settings' => 'Chatbot Settings'
+            'chatbot-settings' => 'Chatbot Settings',
         ];  
 
         return $modules;

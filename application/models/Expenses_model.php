@@ -747,6 +747,7 @@ class Expenses_model extends MY_Model
         $this->db->where('accounting_check.company_id', $filters['company_id']);
         $this->db->where('status !=', 0);
         $this->db->where('recurring', null);
+        // $this->db->order_by('accounting_check.updated_at', 'DESC');
 
         if(isset($filters['start-date'])) {
             $this->db->where('payment_date >=', $filters['start-date']);

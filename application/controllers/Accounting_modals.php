@@ -23002,7 +23002,7 @@ class Accounting_modals extends MY_Controller
             case 'checks' :
                 $transactions = $this->expenses_model->get_company_check_transactions(['company_id' => logged('company_id')]);
                 usort($transactions, function($a, $b) {
-                    return strtotime($b->created_at) > strtotime($a->created_at);
+                    return strtotime($b->updated_at) > strtotime($a->updated_at);
                 });
 
                 foreach($transactions as $check) {
@@ -23022,12 +23022,12 @@ class Accounting_modals extends MY_Controller
                     }
 
                     $amount = '$'.number_format(floatval(str_replace(',', '', $check->total_amount)), 2, '.', ',');
-                    if(count($data) < 10) {
+                    if(count($data) < 15) {
                         $data[] = [
                             'id' => $check->id,
                             'bank_account_id' => $check->bank_account_id,
                             'bank_account' => $check->name,
-                            'type' => !in_array($check->check_no, ['', null, '0']) ? 'Check No.'.$check->check_no : 'Check',
+                            'type' => !in_array($check->check_no, ['', null, '0']) ? 'Check #'.$check->check_no : 'Check',
                             'date' => date("m/d/Y", strtotime($check->payment_date)),
                             'amount' => str_replace('$-', '-$', $amount),
                             'name' => $payeeName
@@ -28190,4 +28190,22 @@ $company->business_name";
         $this->page_data['roles'] = $roles;
         $this->load->view('v2/includes/accounting/modal_forms/employee_modal', $this->page_data);
     }
+
+    public function resetCheckNo() {
+        $data = $this->input->post();
+    
+        if (!isset($data['ids']) || !is_array($data['ids']) || empty($data['ids'])) {
+            echo "No IDs Selected";
+            return;
+        }
+    
+        $this->db->where_in('id', $data['ids']);
+        $this->db->update('accounting_check', [
+            'check_no' => 0,
+            'to_print' => 1
+        ]);
+    
+        echo json_encode(['status' => 'success', 'message' => 'Check numbers reset']);
+    }
+    
 }

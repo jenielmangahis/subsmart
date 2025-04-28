@@ -31,7 +31,7 @@ table.table-fit tfoot td {
 </div>
 
 <div class="tab-content mt-4" id="customer-ledger-container" style="overflow: auto;">    
-    <table class="nsm-table table-fit" style="font-size:12px;width:110%; overflow: auto;">
+    <table class="nsm-table table-fit" style="font-size:12px;width:auto; overflow: auto;">
         <thead>
             <tr>
                 <td data-name="No." style="width:5%;">#</td>
@@ -39,9 +39,9 @@ table.table-fit tfoot td {
                 <td data-name="Description">Description</td>                                
                 <td data-name="Income" style="text-align:right;">Invoice</td>
                 <td data-name="Payment" style="text-align:right;">Payment</td>                
-                <td data-name="Description">Payment Method</td>                                
-                <td data-name="Description">Record Date</td>                                
-                <td data-name="Description">Entry By</td>  
+                <td data-name="Method">Method</td>                                
+                <td data-name="RecordDate">Record Date</td>                                
+                <td data-name="EntryBy">Entry By</td>  
             </tr>
         </thead>
 
@@ -61,18 +61,18 @@ table.table-fit tfoot td {
                         <td class="nsm-text-primary show"><?= $ld['user']; ?></td>
                         
                     </tr>
-                    <?php if($ld['late_fee'] > 0) { ?>
-                        <tr>
+                    <?php //if($ld['late_fee'] > 0) { ?>
+                        <!-- <tr>
                             <td>&nbsp;</td>
                             <td class="fw-bold nsm-text-primary">&nbsp;</td>                            
                             <td class="nsm-text-primary" style="text-align:right;"><strong>Interest Penalty:</strong></td>
-                            <td style="text-align:right;">$<?= number_format($late_fee_income, 2, '.', ','); ?></td>
-                            <td style="text-align:right;">$<?= number_format($late_fee_payment, 2, '.', ','); ?></td>
+                            <td style="text-align:right;">$<?php //echo number_format($late_fee_income, 2, '.', ','); ?></td>
+                            <td style="text-align:right;">$<?php //echo number_format($late_fee_payment, 2, '.', ','); ?></td>
                             <td class="fw-bold nsm-text-primary">&nbsp;</td>
                             <td class="fw-bold nsm-text-primary">&nbsp;</td>
                             <td class="fw-bold nsm-text-primary">&nbsp;</td>
-                        </tr>
-                    <?php } ?>                  
+                        </tr> -->
+                    <?php //} ?>                  
                 <?php $row++; ?>
                 <?php } ?>                            
             <?php } ?>

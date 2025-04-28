@@ -85,13 +85,15 @@ table.dataTable.no-footer {
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('jobs', 'write')){ ?>
                     <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('job/new?cus_id='.$cus_id); ?>'">
-                                <i class='bx bx-fw bx-briefcase'></i> New Job
+                                <i class='bx bx-fw bx-plus'></i> New Job
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
 
                 <div class="tab-content mt-4">
@@ -182,7 +184,9 @@ table.dataTable.no-footer {
                                             <li>
                                                 <a class="dropdown-item view-job-row" href="javascript:void(0);" data-id="<?= $job->id; ?>">View</a>
                                             </li>
+                                            <?php if(checkRoleCanAccessModule('jobs', 'write')){ ?>
                                             <li><a class="dropdown-item" href="<?php echo base_url('job/edit/') . $job->id; ?>">Edit</a></li>
+                                            <?php } ?>
                                         </ul>
                                     </div>
                                 </td>

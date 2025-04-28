@@ -3,7 +3,7 @@
         <tr>
             <td class="table-icon"></td>
             <td data-name="Name">Name</td>
-            <td data-name="Action" style="width:5%;"></td>                
+            <td data-name="Manage" style="width:1%;"></td>                
         </tr>
     </thead>
     <tbody>
@@ -11,13 +11,13 @@
             <?php foreach($customers as $customer){ ?>
                 <tr>
                     <td>
-                        <div class="nsm-profile">
+                        <div class="nsm-text-primary nsm-profile show">
                             <?php $initials = ucwords($customer->first_name[0]).ucwords($customer->last_name[0]); ?>
                             <span><?= $initials; ?></span>
                         </div>
                     </td>
-                    <td class="nsm-text-primary"><?= $customer->first_name . ' ' . $customer->last_name; ?></td>
-                    <td style="width:5%;">
+                    <td class="nsm-text-primary show"><?= $customer->first_name . ' ' . $customer->last_name; ?></td>
+                    <td style="width:5%;" class="show">
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                             <ul class="dropdown-menu dropdown-menu-end">
