@@ -241,8 +241,8 @@ class Accounting extends MY_Controller
          $status_arr = array();
          $status_selection = $this->taskhub_status_model->get();
          foreach ($status_selection as $status_selec) {
-             $task_status = $this->crud->total_record("tasks", "status_id='" . $status_selec->status_id . "'");
-             $status_arr[] = $status_selec->status_text . "@#@" . $task_status;
+             $task_status = $this->crud->total_record("tasks", "status='" . $status_selec->status . "'");
+             $status_arr[] = $status_selec->status . "@#@" . $task_status;
          }
          
          $companyId = logged('company_id');
@@ -541,6 +541,11 @@ class Accounting extends MY_Controller
         $this->load->model('PlaidBankAccount_model');
         $this->load->model('PlaidErrorLogs_model');
 
+        if(!checkRoleCanAccessModule('accounting-link-bank', 'read')){
+			show403Error();
+			return false;
+		}
+
         $is_valid = 1;
         $cid = logged('company_id');
         $uid = logged('id');
@@ -734,6 +739,11 @@ class Accounting extends MY_Controller
 
     public function rules()
     {        
+        if(!checkRoleCanAccessModule('accounting-rules', 'read')){
+			show403Error();
+			return false;
+		}
+
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $rules = $this->rules_model->getRules();        
         foreach($rules as $rule){
