@@ -101,8 +101,12 @@
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'write')){ ?>
                                                 <li><a class="dropdown-item edit-dispute" href="javascript:void(0);" data-id="<?= $cd->id ?>">Edit</a></li>                                            
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
                                                 <li><a class="dropdown-item delete-dispute" href="javascript:void(0);" data-id="<?= $cd->id; ?>">Delete</a></li>                                            
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </td>

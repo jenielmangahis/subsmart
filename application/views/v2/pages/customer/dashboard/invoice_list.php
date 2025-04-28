@@ -82,15 +82,18 @@
                                             <li>
                                                 <a class="dropdown-item" href="<?php echo base_url('invoice/genview/' . $invoice->id) ?>">View Invoice</a>
                                             </li>
-                                            <li>
-                                                <a class="dropdown-item" href="<?php echo base_url('invoice/send/' . $invoice->id) ?>">Send Invoice</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>">Edit</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item recordPaymentBtn" href="javascript:void(0);" data-id="<?php echo $invoice->id ?>">Record Payment</a>
-                                            </li>
+                                            <?php if(checkRoleCanAccessModule('invoices', 'write')){ ?>
+                                                <li>
+                                                    <a class="dropdown-item" href="<?php echo base_url('invoice/send/' . $invoice->id) ?>">Send Invoice</a>
+                                                </li>                                            
+                                                <li>
+                                                    <a class="dropdown-item" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>">Edit</a>
+                                                </li>
+                                            
+                                                <li>
+                                                    <a class="dropdown-item recordPaymentBtn" href="javascript:void(0);" data-id="<?php echo $invoice->id ?>">Record Payment</a>
+                                                </li>
+                                            <?php } ?>
                                         </ul>
                                     </div>
                                 </td>
