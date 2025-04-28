@@ -5494,13 +5494,15 @@ class Job extends MY_Controller
 
         $invoiceNumber = formatInvoiceNumberV2($prefix, $next_number);        
 
-        $monthly_monitoring = $jobPayments->monthly_monitoring;
-        $program_setup      = $jobPayments->program_setup;
-        $installation_cost = $jobPayments->installation_cost;
+        $monthly_monitoring = $job->monthly_monitoring;
+        $program_setup      = $job->program_setup;
+        $installation_cost  = $job->installation_cost;
+        $adjustment_value   = $job->adjustment_value;
+        $job_total = $monthly_monitoring + $program_setup + $installation_cost + $adjustment_value;
 
-        $grand_total = $jobPayments->amount;
-        $sub_total   = $jobPayments->equipment_cost;
-        $tax         = $jobPayments->tax;
+        $grand_total = $job_total;
+        $sub_total   = 0;
+        $tax         = 0;
 
         // $monthly_monitoring = 0;
         // $program_setup = 0;
@@ -5551,7 +5553,7 @@ class Job extends MY_Controller
             'due_date'                  => date("Y-m-d", strtotime("+5 days")),
             'location_scale'            => '',
             'message_to_customer'       => '',
-            'terms_and_conditions'      => !empty($workorder) ? $workorder->terms_and_conditions : '',            
+            'terms_and_conditions'      => !empty($job) ? $job->terms_and_conditions : '',            
             'attachments'               => $job->attachment,
             'status'                    => 'Unpaid',
             'company_id'                => $company_id,
@@ -5563,8 +5565,8 @@ class Job extends MY_Controller
             'payment_methods'           => $job->BILLING_METHOD,
             'sub_total'                 => $sub_total,
             'taxes'                     => $tax,
-            'adjustment_name'           => !empty($workorder) ? $workorder->adjustment_name : '',
-            'adjustment_value'          => !empty($workorder) ? $workorder->adjustment_value : '',
+            'adjustment_name'           => !empty($job) ? $job->adjustment_name : '',
+            'adjustment_value'          => !empty($job) ? $job->adjustment_value : '',
             'grand_total'               => $grand_total,
             'user_id'                   => logged('id'),
             'date_created'              => date("Y-m-d H:i:s"),
@@ -5618,10 +5620,12 @@ class Job extends MY_Controller
         }
 
         //Job Items
-        $jobItems = $this->jobs_model->get_specific_job_items($job->id);
-        $total_amount = 0;
+        $jobItems   = $this->jobs_model->get_specific_job_items($job->id);
+        $total_tax  = 0;
+        $item_total = 0;
         foreach( $jobItems as $item ){
-            $total_amount += $item->total;
+            $item_total += $item->total;
+            $total_tax  += $item->tax;
             $invoice_item_data = [
                 'invoice_id' => $invoice_id,
                 'items_id' => $item->fk_item_id,
@@ -5630,11 +5634,13 @@ class Job extends MY_Controller
                 'tax' => $item->tax,
                 'discount' => $item->discount,
                 'total' => $item->total
-            ];
+            ];            
             $this->Invoice_model->add_invoice_details($invoice_item_data);
         }
 
-        $this->Invoice_model->update($invoice_id, ['grand_total' => $total_amount, 'total' => $total_amount]);
+        $job_total += $item_total;
+        $sub_total = $item_total + $total_tax;
+        $this->Invoice_model->update($invoice_id, ['grand_total' => $job_total, 'total_due' => $job_total, 'balance' => $job_total, 'sub_total' => $sub_total]);
 
         return $invoice_id;
     }
