@@ -5005,10 +5005,7 @@ class Job extends MY_Controller
             //Create hash_id
             $job_hash_id = hashids_encrypt($jobs_id, '', 15);
             $this->jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
-            customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #' . $job_number);
-
-            //Create invoice
-            $this->createInitialInvoice($jobs_id);
+            customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #' . $job_number);            
 
             //Google Calendar
             createSyncToCalendar($jobs_id, 'job', $comp_id);
@@ -5019,15 +5016,20 @@ class Job extends MY_Controller
                 $devices = count($input['item_id']);                
                 for ($xx = 0; $xx < $devices; $xx++) {
                     $total_amount = $total_amount + ($input['item_qty'][$xx] * $input['item_price'][$xx]);
+                    $item_total   = $input['item_qty'][$xx] * $input['item_price'][$xx];
                     $job_items_data = array();
                     $job_items_data['job_id'] = $jobs_id; //from jobs table
                     $job_items_data['items_id'] = $input['item_id'][$xx];
                     $job_items_data['qty'] = $input['item_qty'][$xx];
                     $job_items_data['cost'] = $input['item_price'][$xx];
+                    $job_items_data['total'] = $item_total;
                     $this->general->add_($job_items_data, 'job_items');
                     unset($job_items_data);
                 }
             }
+
+            //Create invoice
+            $this->createInitialInvoice($jobs_id);
 
             // insert data to job settings table
             $jobs_settings_data = array(
@@ -5617,7 +5619,9 @@ class Job extends MY_Controller
 
         //Job Items
         $jobItems = $this->jobs_model->get_specific_job_items($job->id);
+        $total_amount = 0;
         foreach( $jobItems as $item ){
+            $total_amount += $item->total;
             $invoice_item_data = [
                 'invoice_id' => $invoice_id,
                 'items_id' => $item->fk_item_id,
@@ -5627,9 +5631,10 @@ class Job extends MY_Controller
                 'discount' => $item->discount,
                 'total' => $item->total
             ];
-
             $this->Invoice_model->add_invoice_details($invoice_item_data);
         }
+
+        $this->Invoice_model->update($invoice_id, ['grand_total' => $total_amount, 'total' => $total_amount]);
 
         return $invoice_id;
     }
