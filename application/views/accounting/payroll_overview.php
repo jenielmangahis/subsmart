@@ -282,9 +282,9 @@
                                 <div class="bg-white p-4 rounded h-100 bordered-box">
                                     <div class="col">
                                         <h1>It's time to run payroll</h1>
-                                        <button type="button" class="nsm-button primary run-payroll">
+                                        <a href="javascript:void(0);" class="nsm-button primary ajax-modal" id="payroll_Modal" data-view="payroll_modal" data-toggle="modal" data-target="#payrollModal">
                                             Let's go
-                                        </button>
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="row align-items-end mx-0 p-4">
@@ -301,7 +301,7 @@
                                 <h4 class="text-default mt-0">SHORTCUTS</h4>
                                 <div class="row px-2 text-center mt-4 align-items-center">
                                     <div class="col-sm-6">
-                                        <a href="#" class="run-payroll pr-a">
+                                        <a href="javascript:void(0);" data-view="payroll_modal" data-toggle="modal" data-target="#payrollModal" class="ajax-modal pr-a">
                                             <p><i class="fa fa-money h2 icon-hover"></i></p>
                                             <h5 class="text-secondary mt-0">Run Payroll</h5>
                                         </a>
