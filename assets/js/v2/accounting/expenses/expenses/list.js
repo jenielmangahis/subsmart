@@ -942,8 +942,63 @@ $(document).on('submit', '#categorize-selected-form', function(e) {
 });
 
 $('#print-checks').on('click', function(e) {
-    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="print_checks_modal"], li.ajax-modal[data-view="print_checks_modal"]').trigger('click');
+    e.preventDefault();
+
+    const printIDs = $('.check-input-expenses:checked').map((_, el) => el.value).get();
+
+    if (printIDs.length == 0) { 
+        Swal.fire({
+            icon: "error",
+            title: "Unable to Print",
+            html: "Please select check to print first...",
+        });
+    } else {
+        $.ajax({
+            type: "POST",
+            url: `${window.origin}/Accounting_modals/resetCheckNo`,
+            data: { ids: printIDs },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="print_checks_modal"], li.ajax-modal[data-view="print_checks_modal"]').trigger('click');
+
+                    const waitForModal = setInterval(function() {
+                        if ($('#payment_account').length) {
+                            clearInterval(waitForModal);
+
+                            $.ajax({
+                                type: "POST",
+                                url: base_url + "accounting/getDefaultAccount",
+                                dataType: "JSON",
+                                success: function (res) {
+                                    if (res) {
+                                        $('#payment_account').empty();
+                                        const newOption = new Option(res.account_name, res.account_id, true, true);
+                                        $('#payment_account').append(newOption).trigger('change');
+                                    }
+                                }
+                            });
+                        }
+                    }, 500);
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        html: response.message
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Request Failed",
+                    html: "Unable to re-print checks."
+                });
+            }
+        });
+    }
 });
+
 
 $('#pay-bills').on('click', function(e) {
     $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="pay_bills_modal"], li.ajax-modal[data-view="pay_bills_modal"]').trigger('click');
