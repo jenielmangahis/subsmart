@@ -3,13 +3,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('frontcommon/header-home'); ?>
 
-
-
 <style type="text/css">
 .pac-container{
     z-index: 99999 !important;
 }
 </style>
+<?php 
+$iPod    = stripos($_SERVER['HTTP_USER_AGENT'],"iPod");
+$iPhone  = stripos($_SERVER['HTTP_USER_AGENT'],"iPhone");
+$iPad    = stripos($_SERVER['HTTP_USER_AGENT'],"iPad");
+$Android = stripos($_SERVER['HTTP_USER_AGENT'],"Android");
+$webOS   = stripos($_SERVER['HTTP_USER_AGENT'],"webOS");
+if( $iPod || $iPhone || $iPad ){
+    $download_app_url = 'https://apps.apple.com/us/app/nsmartrac/id1517179104?uo=4';
+}else {
+    $download_app_url = 'https://apps.apple.com/us/app/nsmartrac/id1517179104?uo=4';
+}
+?>
 <!-- Hero section  -->
     <section class="hero-section">
         <div class="hero-slider home-slider owl-carousel">
@@ -28,7 +38,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               <img src="<?php echo $url->assets ?>frontend/images/google-download.png" class="card-img card-features img-download">
                             </div>
                             <br style="clear:both;"/>
-                            <a href="#" class="banner-dl">DOWNLOAD</a>
+                            <a href="<?= $download_app_url; ?>" class="banner-dl">DOWNLOAD</a>
                         </div>
                     </div>
                 </div>
