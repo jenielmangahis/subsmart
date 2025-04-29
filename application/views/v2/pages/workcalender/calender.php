@@ -1476,6 +1476,7 @@
                 var order_number     = arg.event._def.extendedProps.eventOrderNum;
                 var esign_id         = arg.event._def.extendedProps.esignId;
                 var status           = arg.event._def.extendedProps.eventStatus;
+                var customer_id      = arg.event._def.extendedProps.customerId;
 
                 //console.log('props', arg.event._def.extendedProps);
                 if ( appointment_type == 'job' ) {
@@ -1513,11 +1514,13 @@
 
                 $('#send-esign').attr('data-type', appointment_type);
                 $('#send-esign').attr('data-id', appointment_id);
+                $('#send-esign').attr('data-customer-id', customer_id);
 
                 $('#view-esign').attr('data-id', esign_id);
 
                 $('#send-ticket-esign').attr('data-type', appointment_type);
                 $('#send-ticket-esign').attr('data-id', appointment_id);
+                $('#send-ticket-esign').attr('data-customer-id', customer_id);
 
                 <?php if( checkRoleCanAccessModule('calendar-schedule', 'delete') ){ ?>  
                     $('#delete-upcoming-schedule').attr('data-type', appointment_type);
@@ -2960,12 +2963,24 @@
         });
     });
 
-    $(document).on('click', '#send-esign', function(){        
+    $(document).on('click', '#send-esign', function(){   
+        var job_id = $(this).attr('data-id');
+        var customer_id = $(this).attr('data-customer-id');
+        
+        $('#esignJobId').val(job_id);
+        $('#customer_id').val(customer_id);
+
         $('#modal-quick-view-upcoming-schedule').modal('hide');
         $('#approveThisJobModal').modal('show');
     });
 
-    $(document).on('click', '#send-ticket-esign', function(){        
+    $(document).on('click', '#send-ticket-esign', function(){     
+        var ticket_id = $(this).attr('data-id');
+        var customer_id = $(this).attr('data-customer-id');
+        
+        $('#esignTicketId').val(ticket_id);
+        $('#ticket_customer_id').val(customer_id);
+
         $('#modal-quick-view-upcoming-schedule').modal('hide');
         $('#approveThisTicketModal').modal('show');
     });

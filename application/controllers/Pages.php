@@ -1567,6 +1567,76 @@ class Pages extends MYF_Controller {
         }
     }
 
+	public function front_customer_preview($slug, $customer_id)
+	{
+		$this->load->model('IndustryType_model');
+		$this->load->model('Customer_advance_model');
+		$this->load->model('General_model');
+		$this->load->model('Jobs_model');
+		$this->load->model('Users_model');
+
+		$userid = $customer_id;
+		$customer = $this->Customer_advance_model->get_data_by_id('prof_id',$userid,"acs_profile");
+		$this->page_data['industryType'] = $this->IndustryType_model->getById($customer->industry_type_id);
+		$this->page_data['profile_info'] = $customer;
+		$this->page_data['access_info'] = $this->Customer_advance_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
+		$this->page_data['office_info'] = $this->Customer_advance_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+		$this->page_data['billing_info'] = $this->Customer_advance_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+		$this->page_data['alarm_info'] = $this->Customer_advance_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+		if($companyId == 58){
+			$this->page_data['solar_info'] = $this->Customer_advance_model->get_data_by_id('fk_prof_id',$userid,"acs_info_solar");
+		}
+		
+		$get_customer_notes = array(
+			'where' => array(
+				'fk_prof_id' => $userid
+			),
+			'table' => 'acs_notes',
+			'select' => '*',
+		);
+		$this->page_data['customer_notes'] = $this->General_model->get_data_with_param($get_customer_notes);
+
+		$get_login_user = array(
+			'where' => array(
+				'id' => $user_id
+			),
+			'table' => 'users',
+			'select' => 'id,FName,LName',
+		);
+		$this->page_data['logged_in_user'] = $this->General_model->get_data_with_param($get_login_user,FALSE);
+		$this->page_data['jobs_data_items'] = $this->Jobs_model->get_customer_job_items($id);
+
+		$customer_papers_query = array(
+			'where' => array(
+				'customer_id' => $userid
+			),
+			'table' => 'acs_papers',
+			'select' => '*',
+		);
+		$this->page_data['papers'] = $this->General_model->get_data_with_param($customer_papers_query);
+		if (count($this->page_data['papers'])) {
+			$this->page_data['papers'] = $this->page_data['papers'][0];
+		}
+
+		$customer_contacts = array(
+			'where' => array(
+				'customer_id' => $userid
+			),
+			'table' => 'contacts',
+			'select' => '*',
+			'order' => array(
+				'order_by' => 'id',
+				'ordering' => 'asc'
+			),
+		);
+		$this->page_data['contacts'] = $this->General_model->get_data_with_param($customer_contacts);
+		$this->page_data['sales_area'] = $this->Customer_advance_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
+        $this->page_data['employees'] = $this->Customer_advance_model->get_all(FALSE,"","ASC","users","id");
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->page_data['companyId'] = logged('company_id');
+        $this->load->view('v2/pages/customer/public_preview', $this->page_data);
+	}
+
 	public function front_customer_invoice_pay_now_v2($slug, $invoice_hash_id)
     {
         include APPPATH . 'libraries/braintree/lib/Braintree.php'; 

@@ -671,6 +671,7 @@ class Workcalender extends MY_Controller
                 $resources_user_events[$inc]['eventOrderNum'] = $event->event_number;
                 $resources_user_events[$inc]['eventStatus'] = $event->status;
                 $resources_user_events[$inc]['esignID'] = '';
+                $resources_user_events[$inc]['customerId'] = '';
                 $resources_user_events[$inc]['resourceIds'] = $resourceIds;
                 $resources_user_events[$inc]['title'] = 'Event : ' . $event_number;
                 $resources_user_events[$inc]['customHtml'] = $custom_html;
@@ -711,6 +712,7 @@ class Workcalender extends MY_Controller
             $resources_user_events[$inc]['eventType'] = 'tc-off';
             $resources_user_events[$inc]['eventOrderNum'] = '';
             $resources_user_events[$inc]['esignID'] = '';
+            $resources_user_events[$inc]['customerId'] = '';
             $resources_user_events[$inc]['resourceIds'] = $resourceIds;
             $resources_user_events[$inc]['title'] = 'Technician Schedule Off';
             $resources_user_events[$inc]['customHtml'] = $custom_html;
@@ -760,6 +762,7 @@ class Workcalender extends MY_Controller
             $resources_user_events[$inc]['eventType'] = 'service_ticket';
             $resources_user_events[$inc]['eventOrderNum'] = $st->ticket_no;
             $resources_user_events[$inc]['esignId'] = $esignId;
+            $resources_user_events[$inc]['customerId'] = $st->customer_id;
             $resources_user_events[$inc]['eventStatus'] = $st->ticket_status;
             $resources_user_events[$inc]['resourceIds'] = $resourceIds;
             $resources_user_events[$inc]['title'] = 'Service Ticket : ' . date('Y-m-d g:i A', strtotime($st->ticket_date));
@@ -827,6 +830,7 @@ class Workcalender extends MY_Controller
             $resources_user_events[$inc]['eventType'] = 'appointment';
             $resources_user_events[$inc]['eventOrderNum'] = $a->appointment_number;
             $resources_user_events[$inc]['esignID'] = '';
+            $resources_user_events[$inc]['customerId'] = '';
             $resources_user_events[$inc]['eventStatus'] = 'NA';
             $resources_user_events[$inc]['title'] = 'Appointment : ' . date('Y-m-d g:i A', strtotime($a->appointment_date . " " . $a->appointment_time));
             $resources_user_events[$inc]['customHtml'] = $custom_html;
@@ -906,6 +910,7 @@ class Workcalender extends MY_Controller
                 $resources_user_events[$inc]['eventType'] = 'job';
                 $resources_user_events[$inc]['eventOrderNum'] = $j->job_number;
                 $resources_user_events[$inc]['esignID'] = $esignId;
+                $resources_user_events[$inc]['customerId'] = $j->customer_id;
                 $resources_user_events[$inc]['eventStatus'] = $j->status;
                 $resources_user_events[$inc]['resourceIds'] = $resourceIds;
                 $resources_user_events[$inc]['title'] = $j->job_description;
@@ -971,6 +976,7 @@ class Workcalender extends MY_Controller
                 $resources_user_events[$inc]['eventType'] = 'workorder';
                 $resources_user_events[$inc]['eventOrderNum'] = $workorder->work_order_number;
                 $resources_user_events[$inc]['esignID'] = '';
+                $resources_user_events[$inc]['customerId'] = $workorder->customer_id;
                 $resources_user_events[$inc]['eventStatus'] = $workorder->status;
                 $resources_user_events[$inc]['resourceIds'] = $resourceIds;
                 $resources_user_events[$inc]['title'] = 'Workorder: ' . $workorder->work_order_number;

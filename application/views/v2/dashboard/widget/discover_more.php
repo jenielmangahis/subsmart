@@ -124,7 +124,8 @@
                 setTimeout(() => {
                     $('.<?php echo "textDataContainer_$id"; ?>').show();
                     $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
-                }, 1000);
+                    widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), { percentPosition: true, horizontalOrder: true, });
+                }, 500);
             },
         });
     });   

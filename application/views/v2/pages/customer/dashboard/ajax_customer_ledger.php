@@ -12,7 +12,8 @@ table.table-fit tfoot td {
 </style>
 <div class="row">
     <div class="col-6">
-        <div class="nsm-page-buttons primary page-button-container w-100">
+        <span class="fw-bold" style="font-size:15px;"><?= $customer_address; ?></span>
+        <div class="nsm-page-buttons primary page-button-container w-100 mt-5">
             <div class="dropdown d-inline-block">
                 <button type="button" class="dropdown-toggle nsm-button primary" data-bs-toggle="dropdown" style="width:122px;">
                     <span>More Action <i class='bx bx-fw bx-chevron-down'></i>
@@ -25,7 +26,7 @@ table.table-fit tfoot td {
             </div>
         </div>
     </div>
-    <div class="col-6 text-end">
+    <div class="col-6 text-end">        
         <span class="fw-bold" style="font-size:15px;">BALANCE : $<?= number_format($balance, 2, '.', ','); ?></span>
     </div>
 </div>

@@ -2984,6 +2984,11 @@ class Customer extends MY_Controller
         $this->load->model('Invoice_model');
         $this->load->model('AcsProfile_model');
 
+        if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
+			show403Error();
+			return false;
+		}
+
         $company_id = logged('company_id');
         $invoices = $this->Invoice_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
         $customer = $this->AcsProfile_model->getByProfId($cid);
@@ -3036,6 +3041,11 @@ class Customer extends MY_Controller
     {
         $this->load->model('Payment_records_model');
         $this->load->model('AcsProfile_model');
+
+        if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
+			show403Error();
+			return false;
+		}
 
         $company_id = logged('company_id');
         $payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
@@ -3168,6 +3178,11 @@ class Customer extends MY_Controller
     {        
         $this->load->model('UserDocfile_model');
         $this->load->model('AcsProfile_model');
+
+        if(!checkRoleCanAccessModule('customer-dashboard', 'read')){
+			show403Error();
+			return false;
+		}
 
         $company_id = logged('company_id');
         $docfiles   = $this->UserDocfile_model->getByCustomerIdAndCompanyId($cid, $company_id);
@@ -12245,7 +12260,8 @@ class Customer extends MY_Controller
         $cid        = isset($post['customer_id']) && $post['customer_id'] > 0 ? $post['customer_id'] : $this->session->userdata('module_customer_id');
         //$payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
         $invoices   = $this->Invoice_model->getAllByCustomerIdAndCompanyId($cid, $company_id);
-
+        $customer   = $this->AcsProfile_model->getByProfId($cid);
+        $customer_address = $customer->mail_add . ' ' . $customer->state . ', ' . $customer->city . ' ' . $customer->zip_code;
         $ledger = [];
         $g_total_payment = 0;
         $g_total_income  = 0;
@@ -12297,7 +12313,8 @@ class Customer extends MY_Controller
         
         $balance = $g_total_income - $g_total_payment;
 
-        $this->page_data['total_income'] = $g_total_income;
+        $this->page_data['customer_address'] = $customer_address;
+        $this->page_data['total_income']  = $g_total_income;
         $this->page_data['total_payment'] = $g_total_payment;
         $this->page_data['balance'] = $balance;
         $this->page_data['default_email'] = logged('email');
