@@ -192,7 +192,6 @@
 
     $(document).on('change', '.<?php echo "widgetFilter3_$id"; ?>', function () {
         const customerID = $(this).val();
-        widgetMasonry.destroy();
         if (customerID != "") {
             $.ajax({
                 url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
