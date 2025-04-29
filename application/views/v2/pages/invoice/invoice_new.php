@@ -264,6 +264,9 @@
                                                     <a class="dropdown-item recordPaymentBtn" href="javascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">Record Payment</a>
                                                 </li>
                                                 <li>
+                                                    <a class="dropdown-item voidPaymentBtn" href="javascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">Void Payments</a>
+                                                </li>
+                                                <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>">Convert to Workorder</a>
                                                 </li>
                                                 <li>
@@ -319,6 +322,25 @@
                             <div class="modal-footer">                    
                                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                                 <button type="submit" id="btn-record-payment" class="nsm-button primary">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal Void Payments -->
+            <div class="modal fade nsm-modal fade" id="modalVoidPaymentForm" tabindex="-1" aria-labelledby="modalVoidPaymentForm_label" aria-hidden="true">
+                <div class="modal-dialog modal-md">
+                    <form id="frm-record-payment" method="POST">
+                        <input type="hidden" name="invoice_id" id="void_payment_invoice_id" value="" />
+                        <div class="modal-content" style="width:560px;">
+                            <div class="modal-header">
+                                <span class="modal-title content-title">Void Payments</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <div class="modal-body"></div>
+                            <div class="modal-footer">                    
+                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                             </div>
                         </div>
                     </form>
@@ -616,6 +638,28 @@
                     },
                 });
             }
+        });
+
+        $(document).on('click touchstart', '.voidPaymentBtn', function(){
+
+            var invoice_id = $(this).attr('data-id');
+            var invoice_status = $(this).attr('data-status');
+
+            $('#modalVoidPaymentForm').modal('show');
+            showLoader($("#modalVoidPaymentForm .modal-body")); 
+            $('#void_payment_invoice_id').val(invoice_id);
+
+            $.ajax({
+                url: base_url + "invoice/_load_void_payment_form",
+                type: "POST",
+                data: {
+                    invoice_id: invoice_id
+                },
+                success: function (response) {
+                    $("#modalVoidPaymentForm .modal-body").html(response);
+                },
+            });
+
         });
 
         $(document).on('submit', '#frm-record-payment', function(e){
