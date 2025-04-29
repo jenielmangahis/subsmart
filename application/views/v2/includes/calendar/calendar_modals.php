@@ -878,6 +878,8 @@
             </div>
             <div class="modal-body">
                 <form id="update_status_to_omw" method="post">
+                    <input type="hidden" id="esignJobId" value="" />
+                    <input type="hidden" id="customer_id" value="" />
                     <div class="row">
                         <div class="col-sm-12 mt-1 mb-1">
                             <label>Electronic signatures, or e-signatures, are transforming the ways companies do business. Not only do they eliminate the hassle of manually routing paper agreements, but they also dramatically speed up the signature and approval process.</label>
@@ -926,6 +928,8 @@
             </div>
             <div class="modal-body">
                 <form id="ticket_update_status_to_omw" method="post">
+                    <input type="hidden" id="esignTicketId" value="" />
+                    <input type="hidden" id="ticket_customer_id" value="" />
                     <div class="row">
                         <div class="col-sm-12 mt-1 mb-1">
                             <label>Electronic signatures, or e-signatures, are transforming the ways companies do business. Not only do they eliminate the hassle of manually routing paper agreements, but they also dramatically speed up the signature and approval process.</label>

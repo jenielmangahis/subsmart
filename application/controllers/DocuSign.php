@@ -2151,6 +2151,18 @@ SQL;
         $records = $this->db->get('user_docfile_templates_recipients')->result();
 
         foreach ($records as $record) {
+            if( $record->name == '' && $record->role_name == 'ESA Rep' ){
+                //Use defaul logged user
+                $name = logged('FName') . ' ' . logged('LName');
+                $record->name = $name;
+            }
+
+            if( $record->email == '' && $record->role_name == 'ESA Rep' ){
+                //Use defaul logged email
+                $email = logged('email');
+                $record->email = $email;
+            }
+            
             $this->db->where('recipients_id', $record->id);
             $record->total_fields = $this->db->get('user_docfile_templates_fields')->num_rows();
         }

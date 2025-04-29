@@ -459,55 +459,13 @@
             ?>
         </div>
         <script>
-        $(document).ready(function() {
-            const graphLoaders = document.querySelectorAll('.graphLoader');
-
-            if (graphLoaders.length === 0) {
-                initMasonry();
-                return;
-            }
-
-            const observer = new MutationObserver(() => {
-                const count = $('.graphLoader').filter(function() {
-                    return $(this).css('display') !== 'none';
-                }).length;
-
-                if (count === 0) {
-                    observer.disconnect();
-                    initMasonry();
-                }
+            $('#thumbnailMasonry').ready(function () {
+                $('.thumbnailLayoutControl').show();
             });
 
-            graphLoaders.forEach(el => {
-                observer.observe(el, {
-                    attributes: true,
-                    attributeFilter: ['style', 'class']
-                });
+            $('#widgetMasonry').ready(function () {
+                $('.widgetLayoutControl').show();
             });
-
-            const initialCount = $('.graphLoader').filter(function() {
-                return $(this).css('display') !== 'none';
-            }).length;
-
-            if (initialCount === 0) {
-                observer.disconnect();
-                initMasonry();
-            }
-        });
-
-        function initMasonry() {
-            thumbnailMasonry = new Masonry(document.getElementById('thumbnailMasonry'), {
-                percentPosition: true,
-                horizontalOrder: true,
-            });
-            $('.thumbnailLayoutControl').show();
-
-            widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), {
-                percentPosition: true,
-                horizontalOrder: true,
-            });
-            $('.widgetLayoutControl').show();
-        }
     </script>
     </div>
     <div class="col-lg-12">
