@@ -79,6 +79,19 @@ class Payment_records_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByInvoiceIdVoid($invoice_id, $is_void = 'all')
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('invoice_id', $invoice_id);
+        if($is_void != 'all') {
+            $this->db->where('is_void', 0);
+        }
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllByUserId($type = '', $status = '', $emp_id = 0, $uid = 0)
     {
 

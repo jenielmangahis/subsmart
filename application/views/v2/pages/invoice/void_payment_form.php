@@ -50,36 +50,47 @@
 
 <script>
     function setAsVoidPayment(payment_id, amount) {
-        $.ajax({
-            type: 'POST',
-            url: base_url + "invoice/_mark_payment_records_as_void",
-            data: {
-                payment_id: payment_id,
-                amount: amount
-            },
-            dataType:"json",
-            success: function(result) {
-                if( result.is_success == 1 ){
-                    Swal.fire({
-                        title: 'Void Payment',
-                        text: "Payment was successfully mark as void",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        if (result.value) {
-                            location.reload();
+        Swal.fire({
+            title: 'Void Payment',
+            html: `Are you sure you want to void this payment?`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "invoice/_mark_payment_records_as_void",
+                    data: {
+                        payment_id: payment_id,
+                        amount: amount
+                    },
+                    dataType:"json",
+                    success: function(result) {
+                        if( result.is_success == 1 ){
+                            Swal.fire({
+                                title: 'Void Payment',
+                                text: "Payment was successfully mark as void",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                if (result.value) {
+                                    location.reload();
+                                }
+                            });
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: result.msg
+                            });
                         }
-                    });
-                }else{
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        html: result.msg
-                    });
-                }
-            },
-        });        
+                    },
+                });  
+            }
+            });        
     }
 
     $(document).ready(function() {
