@@ -2136,3 +2136,6 @@ $route['alarm_api/_validate_import_customer'] = 'AlarmApiPortal/ajax_validate_im
 //Front eSign 
 $route['esign/_import_signature'] = 'DocuSign/ajax_import_signature';
 $route['esign/view_document/(:any)'] = 'DocuSign/viewEsign/$1';
+
+//Customer Deals
+$route['customer_deals'] = 'CustomerDeal/index';
