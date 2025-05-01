@@ -637,8 +637,10 @@
         });
 
         $('#dashboardThumbnailWidgetSettingsModal').on('show.bs.modal', function(e) {
-            thumbnailMasonry.destroy();
-            widgetMasonry.destroy();
+            try {
+                thumbnailMasonry.destroy();
+                widgetMasonry.destroy();
+            } catch (e) {}
         });
 
         $('#dashboardThumbnailWidgetSettingsModal').on('hide.bs.modal', function(e) {

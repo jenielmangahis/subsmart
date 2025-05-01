@@ -136,8 +136,9 @@
                         graphLabels.push(key);
                         graphSeries.push(parseInt(value));
                         labelWithCounts.push(`${key}: ${value}`);
+
                         $('.<?php echo "textDatas_$id"; ?>').append(`
-                            <div class='col text-nowrap <?php echo "textDataContainer_$id"; ?>'>
+                            <div class='col text-nowrap <?php echo "textDataContainer_$id"; ?>' onclick="window.open('${window.origin}/eSign_v2/manager', '_blank')">
                                 <div class='text-center textData'>
                                     <small class='text-muted text-uppercase fw-bold'>${key}</small>
                                     <h4>${value}</h4>
@@ -176,6 +177,7 @@
                     $('.<?php echo "noRecordFoundContainer_$id"; ?>').show();
                     $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
                 }
+                thumbnailMasonry = new Masonry(document.getElementById('thumbnailMasonry'), { percentPosition: true, horizontalOrder: true, });
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 $('.<?php echo "textDataContainer_$id"; ?>').hide();
@@ -184,6 +186,7 @@
                 $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
                 $('.<?php echo "networkErrorContainer_$id"; ?>').show();
                 console.error('Unable to retrieve results due to a network error.');
+                thumbnailMasonry = new Masonry(document.getElementById('thumbnailMasonry'), { percentPosition: true, horizontalOrder: true, });
             }
         });
     }

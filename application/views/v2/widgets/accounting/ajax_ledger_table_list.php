@@ -15,6 +15,15 @@
         </div>
     </div>
     <div class="col-6 text-end">
+        <!-- <span class="fw-bold" style="font-size:15px;">BALANCE : $<?= number_format($balance, 2, '.', ','); ?></span> -->
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        <span class="fw-bold" style="font-size:15px;"><?= $customer_address; ?></span>
+    </div>
+    <div class="col-6 text-end">
         <span class="fw-bold" style="font-size:15px;">BALANCE : $<?= number_format($balance, 2, '.', ','); ?></span>
     </div>
 </div>

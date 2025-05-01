@@ -168,6 +168,7 @@
                     $('.<?php echo "noRecordFoundContainer_$id"; ?>').show();
                     $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
                 }
+                widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), { percentPosition: true, horizontalOrder: true, });
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 $('.<?php echo "textDataContainer_$id"; ?>').hide();
@@ -176,6 +177,7 @@
                 $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
                 $('.<?php echo "networkErrorContainer_$id"; ?>').show();
                 console.error('Unable to retrieve results due to a network error.');
+                widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), { percentPosition: true, horizontalOrder: true, });
             }
         });
     }

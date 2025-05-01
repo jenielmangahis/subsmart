@@ -398,13 +398,13 @@ class Dashboard_model extends MY_Model
                             ']'
                         ) AS technicians,
 
-                        invoices.grand_total AS job_total, 
+                        SUM(job_items.total) AS job_total, 
                         jobs.date_created AS date_created, 
                         jobs.date_updated AS date_updated
 
                     FROM jobs
                     LEFT JOIN acs_profile ON acs_profile.prof_id = jobs.customer_id
-                    LEFT JOIN invoices ON invoices.job_id = jobs.id
+                    LEFT JOIN job_items ON job_items.job_id = jobs.id
 
                     LEFT JOIN users u1 ON u1.id = jobs.employee_id
                     LEFT JOIN users u2 ON u2.id = jobs.employee2_id
@@ -414,8 +414,10 @@ class Dashboard_model extends MY_Model
                     LEFT JOIN users u6 ON u6.id = jobs.employee6_id
 
                     WHERE jobs.company_id = 31
+                    AND jobs.status IN ('Finished', 'Completed')
                     AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') >= '{$dateFrom}'
                     AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') <= '{$dateTo}'
+                    GROUP BY jobs.id
                     ORDER BY jobs.date_created DESC;
                 ");
                 $data = $query->result();
@@ -642,6 +644,51 @@ class Dashboard_model extends MY_Model
                     LEFT JOIN acs_billing ON acs_billing.fk_prof_id = acs_profile.prof_id
                     WHERE acs_profile.company_id = '{$company_id}' 
                         AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM')
+                ");
+                $data = $query->result();
+                return $data;
+            break;
+            case 'customer_list':
+                $this->db->select('acs_profile.prof_id AS id, acs_profile.company_id AS company_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, CONCAT(acs_profile.city, ", ", acs_profile.state, " ", acs_profile.zip_code) AS address,acs_profile.phone_h AS phone, acs_profile.email AS email, COUNT(invoices.id) AS invoice_records');
+                $this->db->from('acs_profile');
+                $this->db->where('acs_profile.company_id', $company_id);
+                $this->db->where('invoices.view_flag', 0);
+                $this->db->join('invoices', 'invoices.customer_id = acs_profile.prof_id', 'left');
+                $this->db->group_by('acs_profile.prof_id, invoices.customer_id');
+                $this->db->order_by('acs_profile.first_name', 'ASC');
+                $query = $this->db->get();
+                return $query->result();
+            break;
+            case 'ledger_lookup':
+                $query = $this->db->query("
+                    SELECT 
+                        invoices.id AS invoice_id, 
+                        invoices.company_id AS company_id, 
+                        jobs.id AS job_id, 
+                        invoices.customer_id AS customer_id, 
+                        CASE 
+                            WHEN invoices.job_id IS NOT NULL AND invoices.job_id != '' THEN CONCAT('Issued job no. ', jobs.job_number) 
+                            ELSE CONCAT('Issued invoice no. ', invoices.invoice_number)
+                        END AS description,
+                        invoices.date_created AS invoice_date, 
+                        CASE 
+                            WHEN invoices.job_id IS NOT NULL AND invoices.job_id != '' THEN 
+                                (SELECT SUM(job_items.total) FROM job_items WHERE job_items.job_id = jobs.id)
+                            ELSE invoices.grand_total
+                        END AS invoice_total,
+                        invoice_payments.payment_method AS payment_method,
+                        SUM(invoice_payments.amount) AS payment_amount,
+                        MAX(invoice_payments.date_updated) AS payment_date,
+                        CONCAT(users.FName, ' ', users.LName) AS entry_by
+                    FROM invoices
+                    LEFT JOIN invoice_payments ON invoice_payments.invoice_id = invoices.id
+                    LEFT JOIN users ON users.id = invoices.user_id
+                    LEFT JOIN jobs ON jobs.id = invoices.job_id
+                    WHERE invoices.company_id = '{$company_id}'
+                    AND invoices.customer_id = {$filter3}
+                    AND invoices.view_flag = 0
+                    GROUP BY invoices.id
+                    ORDER BY invoices.date_created DESC;
                 ");
                 $data = $query->result();
                 return $data;

@@ -2113,6 +2113,9 @@ class Dashboard extends Widgets
         //$ledger_payments   = $this->Payment_records_model->getAllByCustomerIdAndCompanyId($cid, $companyId);
         $ledger_invoices   = $this->invoice_model->getAllByCustomerIdAndCompanyId($cid, $companyId);
 
+        $customer   = $this->AcsProfile_model->getByProfId($cid);
+        $customer_address = $customer->mail_add . ' ' . $customer->state . ', ' . $customer->city . ' ' . $customer->zip_code;
+
         $customer_ledger = [];
         $g_total_payment = 0;
         $g_total_income  = 0;
@@ -2164,10 +2167,11 @@ class Dashboard extends Widgets
         }
 
         $balance = $g_total_income - $g_total_payment;
-        $this->page_data['total_income'] = $g_total_income;
-        $this->page_data['total_payment'] = $g_total_payment;
+        $this->page_data['customer_address'] = $customer_address;
+        $this->page_data['total_income']     = $g_total_income;
+        $this->page_data['total_payment']    = $g_total_payment;
         $this->page_data['balance'] = $balance;        
-        $this->page_data['ledger'] = $customer_ledger;        
+        $this->page_data['ledger']  = $customer_ledger;        
         $this->load->view('v2/widgets/accounting/ajax_ledger_table_list', $this->page_data);
     }
     
@@ -2613,6 +2617,66 @@ class Dashboard extends Widgets
                     }
                 }
                 echo json_encode($graphData);
+            break;
+            case 'customer_list':
+                $graphData = $data;
+                echo json_encode($graphData);    
+            break;
+            case 'ledger_lookup':
+                $result = array();
+                $table_content = "";
+                $total_invoice = 0.0;
+                $total_payment = 0.0;
+                
+                if ($data) {
+                    foreach ($data as $datas) {
+                        $total_invoice += $datas->invoice_total;
+                        $total_payment += $datas->payment_amount;
+
+                        $description = ($datas->description != '') ? $datas->description : 'Not Specified';
+                        $invoice_total = ($datas->invoice_total) ? '$' . number_format($datas->invoice_total, 2, ".", ",") : '$0.00';
+                        $payment_amount = ($datas->payment_amount) ? '$' . number_format($datas->payment_amount, 2, ".", ",") : '$0.00';
+                        $invoice_date = date("m/d/Y", strtotime($datas->invoice_date));
+                        $payment_date = date("m/d/Y", strtotime($datas->payment_date));
+                        $payment_method = ($datas->payment_method != '') ? $datas->payment_method : 'Not Specified';
+                        $entry_by = ($datas->entry_by != '') ? $datas->entry_by : 'Not Specified';
+
+                        $table_content .= "<tr>";
+                            $table_content .= "<td>$invoice_date</td>";
+                            $table_content .= "<td>$description</td>";
+                            $table_content .= "<td>$invoice_total</td>";
+                            $table_content .= "<td>$payment_amount</td>";
+                            $table_content .= "<td>$payment_method</td>";
+                            $table_content .= "<td>$payment_date</td>";
+                            $table_content .= "<td>$entry_by</td>";
+                        $table_content .= "</tr>";
+                    }
+
+                    $raw_balance = $total_invoice - $total_payment;
+                    if (abs($raw_balance) < 0.00001) {
+                        $balance = '$0.00';
+                    } else {
+                        $balance = ($raw_balance < 0 ? '-' : '') . '$' . number_format(abs($raw_balance), 2, '.', ',');
+                    }
+
+
+                    $table_content .= "<tr>";
+                        $table_content .= "<td colspan='2'><strong class='float-end'>TOTAL&emsp;</strong></td>";
+                        $table_content .= "<td class='fw-bold'>$".number_format($total_invoice, 2, '.', ',')."</td>";
+                        $table_content .= "<td class='fw-bold'>$".number_format($total_payment, 2, '.', ',')."</td>";
+                        $table_content .= "<td colspan='3'></td>";
+                    $table_content .= "</tr>";
+                } else {
+                    $table_content .= "<tr>";
+                        $table_content .= "<td colspan='7'>No Records Found.</td>";
+                    $table_content .= "</tr>";
+                    $balance = "$0.00";
+                }
+
+                $result['table_content'] = $table_content;
+                $result['balance_amount'] = $balance;
+
+                echo json_encode($result);
             break;
             default:
                 $graphData = ['error' => 'Invalid category'];
