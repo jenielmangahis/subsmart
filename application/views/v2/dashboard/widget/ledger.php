@@ -61,7 +61,8 @@
                 </div>
             </div>
             <div class="col mt-3 text-nowrap <?php echo "tableDataContainer_$id"; ?>">
-                <div class="table-responsive" style="max-height: 500px;">
+                <strong class="<?php echo "addressData_$id"; ?>"></strong>
+                <div class="table-responsive mt-2" style="max-height: 500px;">
                     <table class="table table-bordered <?php echo "tableData_$id"; ?> table-hover w-100 mb-3">
                         <thead>
                             <tr>
@@ -211,6 +212,7 @@
                 },
                 success: function (response) {
                     const data = JSON.parse(response);
+                    $('.<?php echo "addressData_$id"; ?>').text(data.customer_address);
                     $('.<?php echo "tableData_$id"; ?> > tbody').html("");
                     $('.<?php echo "tableData_$id"; ?> > tbody').append(data.table_content);
                     $('.ledgerCustomerBalance').html(data.balance_amount);
