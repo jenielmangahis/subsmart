@@ -354,9 +354,12 @@
                 let thumbnailGraphState = $(this).find('.thumbnailGraphDisplay').css('display');
                 newLayoutOptionIDs.push({
                     id: id,
-                    width: $(this).find('.card').css("width"),
-                    colWidth: $(this).css("width"),
-                    height: $(this).find('.card').css("height"),
+                    // width: $(this).find('.card').css("width"),
+                    // colWidth: $(this).css("width"),
+                    // height: $(this).find('.card').css("height"),
+                    width: "",
+                    colWidth: "",
+                    height: "",
                     graphDisplayState: thumbnailGraphState
                 });
             });
@@ -543,9 +546,12 @@
                 let widgetGraphState = $(this).find('.widgetGraphDisplay').css('display');
                 newLayoutOptionIDs.push({
                     id: id,
-                    width: $(this).find('.card').css("width"),
-                    colWidth: $(this).css("width"),
-                    height: $(this).find('.card').css("height"),
+                    // width: $(this).find('.card').css("width"),
+                    // colWidth: $(this).css("width"),
+                    // height: $(this).find('.card').css("height"),
+                    width: "",
+                    colWidth: "",
+                    height: "",
                     graphDisplayState: widgetGraphState
                 });
             });
