@@ -2621,6 +2621,7 @@ class Dashboard extends Widgets
             case 'ledger_lookup':
                 $result = array();
                 $table_content = "";
+                $customer_address = "";
                 $total_invoice = 0.0;
                 $total_payment = 0.0;
                 
@@ -2629,6 +2630,7 @@ class Dashboard extends Widgets
                         $total_invoice += $datas->invoice_total;
                         $total_payment += $datas->payment_amount;
 
+                        $customer_address = $description = ($datas->customer_address != '') ? $datas->customer_address : 'Not Specified';
                         $description = ($datas->description != '') ? $datas->description : 'Not Specified';
                         $invoice_total = ($datas->invoice_total) ? '$' . number_format($datas->invoice_total, 2, ".", ",") : '$0.00';
                         $payment_amount = ($datas->payment_amount) ? '$' . number_format($datas->payment_amount, 2, ".", ",") : '$0.00';
@@ -2670,7 +2672,80 @@ class Dashboard extends Widgets
                 }
 
                 $result['table_content'] = $table_content;
+                $result['customer_address'] = $customer_address;
                 $result['balance_amount'] = $balance;
+
+                echo json_encode($result);
+            break;
+            case 'sales_leaderboard':
+                $result = array();
+                $table_content = "";
+                
+                if ($data) {
+                    foreach ($data as $datas) {
+                        $initials = ($datas->sales_rep != '') ? strtoupper(implode('', array_map(fn($v) => $v[0], explode(' ', $datas->sales_rep)))) : 'NA';
+                        $sales_rep = ($datas->sales_rep != '') ? $datas->sales_rep : 'Not Specified';
+                        $total_jobs = ($datas->total_jobs != 0) ? $datas->total_jobs : 0;
+                        $total_sales = ($datas->total_sales) ? '$' . number_format($datas->total_sales, 2, ".", ",") : '$0.00';
+
+                        $table_content .= "<tr>";
+                            $table_content .= "<td>
+                                <div style='display: inline-flex; align-items: center; gap: 5px;'>
+                                    <div class='nsm-profile'><span>$initials</span></div>
+                                    <div>
+                                        $sales_rep<br>
+                                        <small class='text-muted'>Rep #$datas->id</small>
+                                    </div>
+                                </div>
+                            </td>";
+                            $table_content .= "<td>$total_jobs</td>";
+                            $table_content .= "<td>$total_sales</td>";
+                        $table_content .= "</tr>";
+                    }
+                } else {
+                    $table_content .= "<tr>";
+                        $table_content .= "<td colspan='3'>No Records Found.</td>";
+                    $table_content .= "</tr>";
+                }
+
+                $result['table_content'] = $table_content;
+
+                echo json_encode($result);
+            break;
+            case 'tech_leaderboard':
+                $result = array();
+                $table_content = "";
+                
+                if ($data) {
+                    foreach ($data as $datas) {
+                        $initials = ($datas->tech_rep_name != '') ? strtoupper(implode('', array_map(fn($v) => $v[0], explode(' ', $datas->tech_rep_name)))) : 'NA';
+                        $tech_rep_name = ($datas->tech_rep_name != '') ? $datas->tech_rep_name : 'Not Specified';
+                        $job_count = ($datas->job_count != 0) ? $datas->job_count : 0;
+                        $ticket_count = ($datas->ticket_count != 0) ? $datas->ticket_count : 0;
+                        $ticket_amount = ($datas->ticket_amount) ? '$' . number_format($datas->ticket_amount, 2, ".", ",") : '$0.00';
+
+                        $table_content .= "<tr>";
+                            $table_content .= "<td>
+                                <div style='display: inline-flex; align-items: center; gap: 5px;'>
+                                    <div class='nsm-profile'><span>$initials</span></div>
+                                    <div>
+                                        $tech_rep_name<br>
+                                        <small class='text-muted'>Rep #$datas->tech_rep_id</small>
+                                    </div>
+                                </div>
+                            </td>";
+                            $table_content .= "<td>$job_count</td>";
+                            $table_content .= "<td>$ticket_count</td>";
+                            $table_content .= "<td>$ticket_amount</td>";
+                        $table_content .= "</tr>";
+                    }
+                } else {
+                    $table_content .= "<tr>";
+                        $table_content .= "<td colspan='4'>No Records Found.</td>";
+                    $table_content .= "</tr>";
+                }
+
+                $result['table_content'] = $table_content;
 
                 echo json_encode($result);
             break;

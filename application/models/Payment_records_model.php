@@ -73,6 +73,7 @@ class Payment_records_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('invoice_id', $invoice_id);
+        $this->db->where('is_void', 0);
         $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
         return $query->result();
@@ -98,10 +99,8 @@ class Payment_records_model extends MY_Model
         return $query->result();
     }
 
-
     public function getinvoice($invoice_settings_id)
     {
-
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('id', $invoice_settings_id);
@@ -110,6 +109,17 @@ class Payment_records_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function getById($payment_record_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('id', $payment_record_id);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->row();
+    }    
 
     public function filterBy($filters = array(), $company_id = 0)
     {

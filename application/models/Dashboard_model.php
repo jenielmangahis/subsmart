@@ -666,6 +666,7 @@ class Dashboard_model extends MY_Model
                         invoices.company_id AS company_id, 
                         jobs.id AS job_id, 
                         invoices.customer_id AS customer_id, 
+                        CONCAT(acs_profile.mail_add, ' ', acs_profile.state, ', ', acs_profile.city, ' ', acs_profile.zip_code) AS customer_address,
                         CASE 
                             WHEN invoices.job_id IS NOT NULL AND invoices.job_id != '' THEN CONCAT('Issued job no. ', jobs.job_number) 
                             ELSE CONCAT('Issued invoice no. ', invoices.invoice_number)
@@ -684,6 +685,7 @@ class Dashboard_model extends MY_Model
                     LEFT JOIN invoice_payments ON invoice_payments.invoice_id = invoices.id
                     LEFT JOIN users ON users.id = invoices.user_id
                     LEFT JOIN jobs ON jobs.id = invoices.job_id
+                    LEFT JOIN acs_profile ON acs_profile.prof_id = invoices.customer_id
                     WHERE invoices.company_id = '{$company_id}'
                     AND invoices.customer_id = {$filter3}
                     AND invoices.view_flag = 0
@@ -693,6 +695,165 @@ class Dashboard_model extends MY_Model
                 $data = $query->result();
                 return $data;
             break;
+            case 'sales_leaderboard':
+                $this->db->select('users.id AS id, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS sales_rep, COALESCE(invoices.status, "") AS invoice_status, COUNT(jobs.id) AS total_jobs, SUM(invoices.grand_total) AS total_sales, invoices.date_created AS date_created');
+                $this->db->from('users');
+                $this->db->where('users.company_id', $company_id);
+                $this->db->where('invoices.view_flag', 0);
+                $this->db->where('invoices.status !=', 'Draft');
+                $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >=", $dateFrom);
+                $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <=", $dateTo);
+                $this->db->join('jobs', 'jobs.employee_id = users.id', 'left');
+                $this->db->join('invoices', 'invoices.job_id = jobs.id', 'left');
+                $this->db->order_by('total_jobs', 'DESC');
+                $this->db->group_by('users.id');
+                $data = $this->db->get();
+                return $data->result();
+            break;
+            case 'tech_leaderboard':
+                $query = $this->db->query("
+                    SELECT 
+                        company_id,
+                        tech_rep_id,
+                        tech_rep_name,
+                        SUM(job_count) AS job_count,
+                        SUM(job_amount) AS job_amount,
+                        SUM(ticket_count) AS ticket_count,
+                        SUM(ticket_amount) AS ticket_amount,
+                        MIN(date_created) AS date_created,
+                        MAX(date_updated) AS date_updated
+                    FROM (
+                        SELECT 
+                            jobs.company_id AS company_id,
+                            jobs.employee2_id AS tech_rep_id,
+                            CONCAT(users.FName, ' ', users.LName) AS tech_rep_name,
+                            COUNT(jobs.id) AS job_count,
+                            SUM(invoices.grand_total) AS job_amount,
+                            0 AS ticket_count,
+                            0 AS ticket_amount,
+                            MIN(jobs.date_created) AS date_created,
+                            MAX(jobs.date_updated) AS date_updated
+                        FROM jobs
+                        LEFT JOIN invoices ON invoices.job_id = jobs.id
+                        LEFT JOIN users ON users.id = jobs.employee2_id
+                        WHERE 
+                            jobs.company_id = {$company_id}
+                            AND users.company_id = {$company_id}
+                            AND jobs.employee2_id != 0
+                            AND jobs.status IN ('Approved', 'Finished', 'Invoiced', 'Completed')
+                            AND DATE(jobs.date_created) BETWEEN '{$dateFrom}' AND '{$dateTo}'
+                        GROUP BY jobs.employee2_id
+                        UNION ALL
+                        SELECT 
+                            jobs.company_id AS company_id,
+                            jobs.employee3_id AS tech_rep_id,
+                            CONCAT(users.FName, ' ', users.LName) AS tech_rep_name,
+                            COUNT(jobs.id) AS job_count,
+                            SUM(invoices.grand_total) AS job_amount,
+                            0 AS ticket_count,
+                            0 AS ticket_amount,
+                            MIN(jobs.date_created) AS date_created,
+                            MAX(jobs.date_updated) AS date_updated
+                        FROM jobs
+                        LEFT JOIN invoices ON invoices.job_id = jobs.id
+                        LEFT JOIN users ON users.id = jobs.employee3_id
+                        WHERE 
+                            jobs.company_id = {$company_id}
+                            AND users.company_id = {$company_id}
+                            AND jobs.employee3_id != 0
+                            AND jobs.status IN ('Approved', 'Finished', 'Invoiced', 'Completed')
+                            AND DATE(jobs.date_created) BETWEEN '{$dateFrom}' AND '{$dateTo}'
+                        GROUP BY jobs.employee3_id
+                        UNION ALL
+                        SELECT 
+                            jobs.company_id AS company_id,
+                            jobs.employee4_id AS tech_rep_id,
+                            CONCAT(users.FName, ' ', users.LName) AS tech_rep_name,
+                            COUNT(jobs.id) AS job_count,
+                            SUM(invoices.grand_total) AS job_amount,
+                            0 AS ticket_count,
+                            0 AS ticket_amount,
+                            MIN(jobs.date_created) AS date_created,
+                            MAX(jobs.date_updated) AS date_updated
+                        FROM jobs
+                        LEFT JOIN invoices ON invoices.job_id = jobs.id
+                        LEFT JOIN users ON users.id = jobs.employee4_id
+                        WHERE 
+                            jobs.company_id = {$company_id}
+                            AND users.company_id = {$company_id}
+                            AND jobs.employee4_id != 0
+                            AND jobs.status IN ('Approved', 'Finished', 'Invoiced', 'Completed')
+                            AND DATE(jobs.date_created) BETWEEN '{$dateFrom}' AND '{$dateTo}'
+                        GROUP BY jobs.employee4_id
+                        UNION ALL
+                        SELECT 
+                            jobs.company_id AS company_id,
+                            jobs.employee5_id AS tech_rep_id,
+                            CONCAT(users.FName, ' ', users.LName) AS tech_rep_name,
+                            COUNT(jobs.id) AS job_count,
+                            SUM(invoices.grand_total) AS job_amount,
+                            0 AS ticket_count,
+                            0 AS ticket_amount,
+                            MIN(jobs.date_created) AS date_created,
+                            MAX(jobs.date_updated) AS date_updated
+                        FROM jobs
+                        LEFT JOIN invoices ON invoices.job_id = jobs.id
+                        LEFT JOIN users ON users.id = jobs.employee5_id
+                        WHERE 
+                            jobs.company_id = {$company_id}
+                            AND users.company_id = {$company_id}
+                            AND jobs.employee5_id != 0
+                            AND jobs.status IN ('Approved', 'Finished', 'Invoiced', 'Completed')
+                            AND DATE(jobs.date_created) BETWEEN '{$dateFrom}' AND '{$dateTo}'
+                        GROUP BY jobs.employee5_id
+                        UNION ALL
+                        SELECT 
+                            jobs.company_id AS company_id,
+                            jobs.employee6_id AS tech_rep_id,
+                            CONCAT(users.FName, ' ', users.LName) AS tech_rep_name,
+                            COUNT(jobs.id) AS job_count,
+                            SUM(invoices.grand_total) AS job_amount,
+                            0 AS ticket_count,
+                            0 AS ticket_amount,
+                            MIN(jobs.date_created) AS date_created,
+                            MAX(jobs.date_updated) AS date_updated
+                        FROM jobs
+                        LEFT JOIN invoices ON invoices.job_id = jobs.id
+                        LEFT JOIN users ON users.id = jobs.employee6_id
+                        WHERE 
+                            jobs.company_id = {$company_id}
+                            AND users.company_id = {$company_id}
+                            AND jobs.employee6_id != 0
+                            AND jobs.status IN ('Approved', 'Finished', 'Invoiced', 'Completed')
+                            AND DATE(jobs.date_created) BETWEEN '{$dateFrom}' AND '{$dateTo}'
+                        GROUP BY jobs.employee6_id
+                        UNION ALL
+                        SELECT 
+                            users.company_id AS company_id,
+                            users.id AS tech_rep_id,
+                            CONCAT(users.FName, ' ', users.LName) AS tech_rep_name,
+                            0 AS job_count,
+                            0 AS job_amount,
+                            COUNT(tickets.id) AS ticket_count,
+                            SUM(tickets.grandtotal) AS ticket_amount,
+                            MIN(tickets.created_at) AS date_created,
+                            MAX(tickets.updated_at) AS date_updated
+                        FROM users
+                        LEFT JOIN tickets ON 
+                            tickets.technicians LIKE CONCAT('%s:', LENGTH(users.id), ':\"', users.id, '\";%')
+                        WHERE 
+                            tickets.company_id = {$company_id}
+                            AND tickets.ticket_status IN ('Approved', 'Finished', 'Invoiced', 'Completed')
+                            AND DATE(tickets.created_at) BETWEEN '{$dateFrom}' AND '{$dateTo}'
+                        GROUP BY users.company_id, users.id, users.FName, users.LName
+
+                    ) AS combined_data
+                    GROUP BY tech_rep_id
+                    ORDER BY ticket_count DESC;
+                ");
+                $data = $query->result();
+                return $data;
+                break;
         }
     }
 }

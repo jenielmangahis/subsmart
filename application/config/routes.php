@@ -301,6 +301,9 @@ $route['invoice/_mark_as_due'] = 'Invoice/ajax_mark_as_due';
 $route['invoice/_clone_invoice'] = 'Invoice/ajax_clone_invoice';
 $route['invoice/_schedule_email_notification'] = 'Invoice/ajax_schedule_email_notification';
 $route['invoice/_load_record_payment_form'] = 'Invoice/ajax_load_record_payment_form';
+$route['invoice/_load_void_payment_form'] = 'Invoice/ajax_load_void_payment_form';
+$route['invoice/_mark_payment_records_as_void'] = 'Invoice/ajax_mark_payment_records_as_void';
+
 $route['invoice/_create_payment'] = 'Invoice/ajax_create_payment';
 $route['invoice/_load_pay_now_form'] = 'Invoice/ajax_load_pay_now_form';
 $route['invoice/_update_payment_status'] = 'Invoice/ajax_update_payment_status';
@@ -2136,3 +2139,6 @@ $route['alarm_api/_validate_import_customer'] = 'AlarmApiPortal/ajax_validate_im
 //Front eSign 
 $route['esign/_import_signature'] = 'DocuSign/ajax_import_signature';
 $route['esign/view_document/(:any)'] = 'DocuSign/viewEsign/$1';
+
+//Customer Deals
+$route['customer_deals'] = 'CustomerDeal/index';

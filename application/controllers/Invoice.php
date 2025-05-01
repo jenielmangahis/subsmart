@@ -2543,6 +2543,64 @@ class Invoice extends MY_Controller
         $this->load->view('v2/pages/invoice/record_payment_form', $this->page_data);
     }
 
+    public function ajax_load_void_payment_form()
+    {
+        $this->load->model('Customer_advance_model', 'customer_ad_model');
+        $post = $this->input->post();
+        $payment_records = $this->payment_records_model->getAllByInvoiceId($post['invoice_id']);
+        $invoice = get_invoice_by_id($post['invoice_id']);    
+                
+        $this->page_data['invoice']  = $invoice;
+        $this->page_data['payment_records']  = $payment_records;
+        $this->load->view('v2/pages/invoice/void_payment_form', $this->page_data);
+    }
+
+    public function ajax_mark_payment_records_as_void()
+    {
+        $is_success = 0;
+        $msg = "Cannot update payment record.";
+
+        $post = $this->input->post();
+
+
+
+        $payment_id = $post['payment_id'];
+
+        $payment_record = $this->payment_records_model->getById($payment_id);
+        if($payment_record) {
+
+            $invoice_id = $payment_record->invoice_id;
+
+            $invoice = $this->invoice_model->getinvoice($invoice_id);
+
+            if($invoice){
+                
+                $invoice_balance = $invoice->balance + $payment_record->invoice_amount;
+                $invoice_status  = $invoice->status;
+                if($invoice->status == 'Paid') {
+                    $invoice_status = 'Unpaid';
+                }
+
+                $is_balance_update = $this->invoice_model->update($invoice_id, ['balance' => $invoice_balance, 'status' => $invoice_status]);
+                if($is_balance_update) {
+                    $is_void = $this->payment_records_model->update($payment_id, ['is_void' => 1]);
+                    if($is_void) {
+                        $is_success = 1;
+                    }  
+                }
+
+            }
+
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);
+    }
+
     public function ajax_create_payment()
     {
         $this->load->model('AcsCustomerSubscriptionBilling_model');
