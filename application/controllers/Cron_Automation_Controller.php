@@ -1316,9 +1316,36 @@ class Cron_Automation_Controller extends CI_Controller
                             if($trigger_automation == 1) {
                                 if($targetName != "" && $sendSmsNumber != "") {
         
-                                    //Send SMS Here
+                                    //Send SMS Here - start
+                                    /*if( $client->default_sms_api == 'ring_central' ){
+                                        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($client->id);
+                                        if( $ringCentral ){ 
+                                            $smsApi = 'ring_central';
+                                            $is_with_valid_sms_account = true;
+                                        }                
+                                    }elseif( $client->default_sms_api == 'vonage' ){
+                                        $smsApi = 'vonage';
+                                        $is_with_valid_sms_account = true;
+                                    }
+                                    
                                     $sms_body_with_smart_tags = $this->replaceSmartTags($automationData->sms_body, $invoice->id);
-        
+                                    if( $smsApi == 'ring_central' ){
+                                        $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_body_with_smart_tags);                            
+                                        if( $isSent['is_sent'] == 1 ){
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        } 
+                                    }elseif( $smsApi == 'vonage' ){
+                                        $isSent = smsVonage($sms->mobile_number, $sms_body_with_smart_tags);
+                                        if( $isSent['is_success'] == 1 ){        
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        }
+                                    }*/
+                                    //Send SMS Here - end                                 
+
                                 }
                             }
             
@@ -1488,8 +1515,34 @@ class Cron_Automation_Controller extends CI_Controller
                             if($trigger_automation == 1) {
                                 if($targetName != "" && $sendSmsNumber != "") {
         
-                                    //Send SMS Here
+                                    //Send SMS Here - start
+                                    /*if( $client->default_sms_api == 'ring_central' ){
+                                        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($client->id);
+                                        if( $ringCentral ){ 
+                                            $smsApi = 'ring_central';
+                                            $is_with_valid_sms_account = true;
+                                        }                
+                                    }elseif( $client->default_sms_api == 'vonage' ){
+                                        $smsApi = 'vonage';
+                                        $is_with_valid_sms_account = true;
+                                    }
+                                    
                                     $sms_body_with_smart_tags = $this->replaceSmartTags($automationData->sms_body, $invoice->id);
+                                    if( $smsApi == 'ring_central' ){
+                                        $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_body_with_smart_tags);                            
+                                        if( $isSent['is_sent'] == 1 ){
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        } 
+                                    }elseif( $smsApi == 'vonage' ){
+                                        $isSent = smsVonage($sms->mobile_number, $sms_body_with_smart_tags);
+                                        if( $isSent['is_success'] == 1 ){        
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        }
+                                    }*/
         
                                 }
                             }
@@ -1660,8 +1713,34 @@ class Cron_Automation_Controller extends CI_Controller
                             if($trigger_automation == 1) {
                                 if($targetName != "" && $sendSmsNumber != "") {
         
-                                    //Send SMS Here
+                                    //Send SMS Here - start
+                                    /*if( $client->default_sms_api == 'ring_central' ){
+                                        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($client->id);
+                                        if( $ringCentral ){ 
+                                            $smsApi = 'ring_central';
+                                            $is_with_valid_sms_account = true;
+                                        }                
+                                    }elseif( $client->default_sms_api == 'vonage' ){
+                                        $smsApi = 'vonage';
+                                        $is_with_valid_sms_account = true;
+                                    }
+                                    
                                     $sms_body_with_smart_tags = $this->replaceSmartTags($automationData->sms_body, $invoice->id);
+                                    if( $smsApi == 'ring_central' ){
+                                        $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_body_with_smart_tags);                            
+                                        if( $isSent['is_sent'] == 1 ){
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        } 
+                                    }elseif( $smsApi == 'vonage' ){
+                                        $isSent = smsVonage($sms->mobile_number, $sms_body_with_smart_tags);
+                                        if( $isSent['is_success'] == 1 ){        
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        }
+                                    }*/
         
                                 }
                             }
@@ -1832,8 +1911,34 @@ class Cron_Automation_Controller extends CI_Controller
                             if($trigger_automation == 1) {
                                 if($targetName != "" && $sendSmsNumber != "") {
         
-                                    //Send SMS Here
+                                    //Send SMS Here - start
+                                    /*if( $client->default_sms_api == 'ring_central' ){
+                                        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($client->id);
+                                        if( $ringCentral ){ 
+                                            $smsApi = 'ring_central';
+                                            $is_with_valid_sms_account = true;
+                                        }                
+                                    }elseif( $client->default_sms_api == 'vonage' ){
+                                        $smsApi = 'vonage';
+                                        $is_with_valid_sms_account = true;
+                                    }
+                                    
                                     $sms_body_with_smart_tags = $this->replaceSmartTags($automationData->sms_body, $invoice->id);
+                                    if( $smsApi == 'ring_central' ){
+                                        $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_body_with_smart_tags);                            
+                                        if( $isSent['is_sent'] == 1 ){
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        } 
+                                    }elseif( $smsApi == 'vonage' ){
+                                        $isSent = smsVonage($sms->mobile_number, $sms_body_with_smart_tags);
+                                        if( $isSent['is_success'] == 1 ){        
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        }
+                                    }*/
         
                                 }                            
                             }
@@ -2003,8 +2108,34 @@ class Cron_Automation_Controller extends CI_Controller
                             if($trigger_automation == 1) {
                                 if($targetName != "" && $customerEmail != "") {
         
-                                    //Send SMS Here
+                                    //Send SMS Here - start
+                                    /*if( $client->default_sms_api == 'ring_central' ){
+                                        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($client->id);
+                                        if( $ringCentral ){ 
+                                            $smsApi = 'ring_central';
+                                            $is_with_valid_sms_account = true;
+                                        }                
+                                    }elseif( $client->default_sms_api == 'vonage' ){
+                                        $smsApi = 'vonage';
+                                        $is_with_valid_sms_account = true;
+                                    }
+                                    
                                     $sms_body_with_smart_tags = $this->replaceSmartTags($automationData->sms_body, $invoice->id);
+                                    if( $smsApi == 'ring_central' ){
+                                        $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_body_with_smart_tags);                            
+                                        if( $isSent['is_sent'] == 1 ){
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        } 
+                                    }elseif( $smsApi == 'vonage' ){
+                                        $isSent = smsVonage($sms->mobile_number, $sms_body_with_smart_tags);
+                                        if( $isSent['is_success'] == 1 ){        
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        }
+                                    }*/
         
                                 }
                             }
