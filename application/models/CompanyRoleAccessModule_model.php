@@ -143,6 +143,7 @@ class CompanyRoleAccessModule_model extends MY_Model
             'accounting-credit-notes' => 'Accounting Credit Notes',
             'accounting-estimates' => 'Accounting Estimates',
             'accounting-all-sales' => 'Accounting Sales',
+            'accounting-rules' => 'Accounting Rules',
             'api-connectors' => 'API Connectors',
             'esign' => 'eSign',
             'my-library' => 'My Library',
