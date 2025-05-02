@@ -12459,6 +12459,7 @@ class Customer extends MY_Controller
         $this->load->model('Invoice_model');
         $this->load->model('AcsProfile_model');    
         $this->load->model('Users_model');    
+        $this->load->model('Jobs_model');
 
         $company_id = logged('company_id');
         $post       = $this->input->post();
@@ -12480,44 +12481,50 @@ class Customer extends MY_Controller
         $total_income  = 0;
         $total_payment = 0;
         foreach( $invoices as $invoice ){
-
-            if( $company_id == 139 || $company_id == 1 ){
-                $description =  date('F', strtotime($invoice->due_date)) . ' rent';
-            }else{
-                $description = 'Issued invoice number ' . $invoice->invoice_number;
-            }
-
             $date = date("m/d/Y", strtotime($invoice->date_issued));
             $user = $this->Users_model->getUserByID($invoice->user_id);
+            if( $company_id == 139 || $company_id == 1 ){
+                $description =  date('F', strtotime($invoice->due_date)) . ' rent';
+                if( $invoice->job_id > 0 ){
+                    $job = $this->Jobs_model->getByIdAndCompanyId($invoice->job_id, $invoice->company_id);
+                    if( $job ){
+                        $description = 'Issued invoice for job number ' . $job->job_number;
+                    }
+                }  
+            }else{
+                $description = 'Issued invoice number ' . $invoice->invoice_number;
+                if( $invoice->job_id > 0 ){
+                    $job = $this->Jobs_model->getByIdAndCompanyId($invoice->job_id, $invoice->company_id);
+                    if( $job ){
+                        $description = 'Issued invoice for job number ' . $job->job_number;
+                    }
+                }
+            }
+
+            $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            
+            $total_payment = 0;
+            $payment_method = '---';
+            foreach( $payments as $p ){
+                $total_payment += $p->invoice_amount;
+                $payment_method = $p->payment_method == 'cc' ? 'Credit Card' : ucwords($p->payment_method); 
+            }
+
+            $g_total_income += $invoice->grand_total;
+            $g_total_payment += $total_payment;
+
             $encoder  = $user ? $user->FName . ' ' . $user->LName : '---';
             $amount   = $invoice->grand_total;
             $payment  = 0;
-            $ledger   = [$row, $date, $description, '---', $invoice->date_created, $encoder, $amount, $payment];
+            $ledger   = [$row, $date, $description, $payment_method, $invoice->date_created, $encoder, $amount, $total_payment];
             fputcsv($f, $ledger, $delimiter);
 
-            $total_income += $amount;
             $row++;
-
-            $payments = $this->Payment_records_model->getAllByInvoiceId($invoice->id);            
-            foreach( $payments as $p ){
-                $date = date("m/d/Y", strtotime($p->payment_date));
-                $user = $this->Users_model->getUserByID($p->user_id);
-                $encoder  = $user ? $user->FName . ' ' . $user->LName : '---';
-                $amount   = 0;
-                $payment  = $p->invoice_amount;
-                $payment_method = $p->payment_method == 'cc' ? 'Credit Card' : ucwords($p->payment_method); 
-                $ledger   = [$row, $date, $description, $payment_method, $invoice->date_created, $encoder, $amount, $payment];
-                fputcsv($f, $ledger, $delimiter);
-
-                $total_payment += $payment;
-                $row++;
-            }
         }
 
-        $ledger = ['Total', '', '', '', '', '', $total_income, $total_payment];
+        $ledger = ['Total', '', '', '', '', '', $g_total_income, $g_total_payment];
         fputcsv($f, $ledger, $delimiter);
 
-        $total_balance = $total_income - $total_payment;
+        $total_balance = $g_total_income - $g_total_payment;
         $ledger = ['Balance', '', '', '', '', '', '', $total_balance];
         fputcsv($f, $ledger, $delimiter);
         
