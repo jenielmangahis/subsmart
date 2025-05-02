@@ -87,9 +87,13 @@
             </div>
         </div>
     </div>
-    <div class="margin-bottom-ter">
+    <div class="margin-bottom-ter mt-2">
         <label>Comments / Notes</label> <span class="help">(optional)</span>
         <input type="text" name="notes" value="" class="form-control">
+    </div>
+    <div class="margin-bottom-ter mt-2">
+        <label>Attachment</label> <span class="help">(optional)</span>
+        <input type="file" name="attachment" id="payment-attachment" value="" class="form-control">
     </div>
     <!-- <label class="weight-normal">
         <input type="checkbox" name="send_invoice" value="1" checked="checked">
