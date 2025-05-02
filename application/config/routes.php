@@ -2142,3 +2142,8 @@ $route['esign/view_document/(:any)'] = 'DocuSign/viewEsign/$1';
 
 //Customer Deals
 $route['customer_deals'] = 'CustomerDeal/index';
+$route['customer_deals/_create_deal_stage'] = 'CustomerDeal/ajax_create_deal_stage';
+$route['customer_deals/_deal_stages'] = 'CustomerDeal/ajax_deal_stages';
+$route['customer_deals/_edit_deal_stage'] = 'CustomerDeal/ajax_edit_deal_stage';
+$route['customer_deals/_update_deal_stage'] = 'CustomerDeal/ajax_update_deal_stage';
+$route['customer_deals/_delete_deal_stage'] = 'CustomerDeal/ajax_delete_deal_stage';

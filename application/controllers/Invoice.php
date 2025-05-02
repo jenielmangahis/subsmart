@@ -2547,7 +2547,7 @@ class Invoice extends MY_Controller
     {
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $post = $this->input->post();
-        $payment_records = $this->payment_records_model->getAllByInvoiceId($post['invoice_id']);
+        $payment_records = $this->payment_records_model->getAllByInvoiceIdVoid($post['invoice_id'], 'all');
         $invoice = get_invoice_by_id($post['invoice_id']);    
                 
         $this->page_data['invoice']  = $invoice;

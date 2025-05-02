@@ -32,11 +32,10 @@ class Cron_Automation_Controller extends CI_Controller
         ];
 
         $automationsData = $this->automation_model->getAutomationsListByParams($auto_to_user_params); 
-
         if($automationsData) {
 
             foreach($automationsData as $automationData) {
-
+                
                 $current_time    = date('H:i');
                 $sent_start_time = date('H:i', strtotime($automationData->start_time));
                 $sent_end_time   = date('H:i', strtotime($automationData->end_time));
@@ -120,11 +119,46 @@ class Cron_Automation_Controller extends CI_Controller
                                 if ($current_date_time >= $invoice_created_date) {
                                     $trigger_automation = 1;
                                 }
-                            }
+                            }                            
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
                             }
+
+                            //Add custom condition checking - start
+                            $a_conditions       = json_decode($automationData->conditions, true);
+                            $a_conditions_count = count($a_conditions);
+
+                            $is_custom_condition_success_count = 0;
+                            $invoice_grand_total = $invoice->grand_total;
+                
+                            if($a_conditions_count > 0) {
+                                foreach($a_conditions as $a_condition) {
+                                    if($a_condition['property'] == 'amount') {
+
+                                        if($a_condition['operator'] == '>') {
+                                            if($invoice_grand_total > $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '<') {
+                                            if($invoice_grand_total < $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '=') {
+                                            if($invoice_grand_total == $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }
+    
+                                    }
+                                }
+
+                                if($is_custom_condition_success_count != $a_conditions_count) {
+                                    $trigger_automation = 0;
+                                }
+
+                            }
+                            //Add custom condition checking - end                         
                             
                             if($trigger_automation == 1) {
                                 if($targetName != "" && $customerEmail != "") {
@@ -327,6 +361,41 @@ class Cron_Automation_Controller extends CI_Controller
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
                             }
+
+                            //Add custom condition checking - start
+                            $a_conditions       = json_decode($automationData->conditions, true);
+                            $a_conditions_count = count($a_conditions);
+
+                            $is_custom_condition_success_count = 0;
+                            $invoice_grand_total = $invoice->grand_total;
+                
+                            if($a_conditions_count > 0) {
+                                foreach($a_conditions as $a_condition) {
+                                    if($a_condition['property'] == 'amount') {
+
+                                        if($a_condition['operator'] == '>') {
+                                            if($invoice_grand_total > $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '<') {
+                                            if($invoice_grand_total < $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '=') {
+                                            if($invoice_grand_total == $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }
+    
+                                    }
+                                }
+
+                                if($is_custom_condition_success_count != $a_conditions_count) {
+                                    $trigger_automation = 0;
+                                }
+
+                            }
+                            //Add custom condition checking - end 
                             
                             if($trigger_automation == 1) {
                                 if($targetName != "" && $customerEmail != "") {
@@ -523,6 +592,41 @@ class Cron_Automation_Controller extends CI_Controller
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
                             }
+
+                            //Add custom condition checking - start
+                            $a_conditions       = json_decode($automationData->conditions, true);
+                            $a_conditions_count = count($a_conditions);
+
+                            $is_custom_condition_success_count = 0;
+                            $invoice_grand_total = $invoice->grand_total;
+                
+                            if($a_conditions_count > 0) {
+                                foreach($a_conditions as $a_condition) {
+                                    if($a_condition['property'] == 'amount') {
+
+                                        if($a_condition['operator'] == '>') {
+                                            if($invoice_grand_total > $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '<') {
+                                            if($invoice_grand_total < $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '=') {
+                                            if($invoice_grand_total == $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }
+    
+                                    }
+                                }
+
+                                if($is_custom_condition_success_count != $a_conditions_count) {
+                                    $trigger_automation = 0;
+                                }
+
+                            }
+                            //Add custom condition checking - end 
                             
                             if($trigger_automation == 1) {
                                 if($targetName != "" && $customerEmail != "") {
@@ -716,6 +820,41 @@ class Cron_Automation_Controller extends CI_Controller
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
                             }
+
+                            //Add custom condition checking - start
+                            $a_conditions       = json_decode($automationData->conditions, true);
+                            $a_conditions_count = count($a_conditions);
+
+                            $is_custom_condition_success_count = 0;
+                            $invoice_grand_total = $invoice->grand_total;
+                
+                            if($a_conditions_count > 0) {
+                                foreach($a_conditions as $a_condition) {
+                                    if($a_condition['property'] == 'amount') {
+
+                                        if($a_condition['operator'] == '>') {
+                                            if($invoice_grand_total > $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '<') {
+                                            if($invoice_grand_total < $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '=') {
+                                            if($invoice_grand_total == $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }
+    
+                                    }
+                                }
+
+                                if($is_custom_condition_success_count != $a_conditions_count) {
+                                    $trigger_automation = 0;
+                                }
+
+                            }
+                            //Add custom condition checking - end 
                             
                             if($trigger_automation == 1) {
                                 if($targetName != "" && $customerEmail != "") {
@@ -909,6 +1048,41 @@ class Cron_Automation_Controller extends CI_Controller
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
                             }
+
+                            //Add custom condition checking - start
+                            $a_conditions       = json_decode($automationData->conditions, true);
+                            $a_conditions_count = count($a_conditions);
+
+                            $is_custom_condition_success_count = 0;
+                            $invoice_grand_total = $invoice->grand_total;
+                
+                            if($a_conditions_count > 0) {
+                                foreach($a_conditions as $a_condition) {
+                                    if($a_condition['property'] == 'amount') {
+
+                                        if($a_condition['operator'] == '>') {
+                                            if($invoice_grand_total > $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '<') {
+                                            if($invoice_grand_total < $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '=') {
+                                            if($invoice_grand_total == $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }
+    
+                                    }
+                                }
+
+                                if($is_custom_condition_success_count != $a_conditions_count) {
+                                    $trigger_automation = 0;
+                                }
+
+                            }
+                            //Add custom condition checking - end 
                             
                             if($trigger_automation == 1) {
                                 if($targetName != "" && $customerEmail != "") {
@@ -1103,13 +1277,75 @@ class Cron_Automation_Controller extends CI_Controller
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
                             }
+
+                            //Add custom condition checking - start
+                            $a_conditions       = json_decode($automationData->conditions, true);
+                            $a_conditions_count = count($a_conditions);
+
+                            $is_custom_condition_success_count = 0;
+                            $invoice_grand_total = $invoice->grand_total;
+                
+                            if($a_conditions_count > 0) {
+                                foreach($a_conditions as $a_condition) {
+                                    if($a_condition['property'] == 'amount') {
+
+                                        if($a_condition['operator'] == '>') {
+                                            if($invoice_grand_total > $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '<') {
+                                            if($invoice_grand_total < $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '=') {
+                                            if($invoice_grand_total == $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }
+    
+                                    }
+                                }
+
+                                if($is_custom_condition_success_count != $a_conditions_count) {
+                                    $trigger_automation = 0;
+                                }
+
+                            }
+                            //Add custom condition checking - end 
                             
                             if($trigger_automation == 1) {
                                 if($targetName != "" && $sendSmsNumber != "") {
         
-                                    //Send SMS Here
+                                    //Send SMS Here - start
+                                    /*if( $client->default_sms_api == 'ring_central' ){
+                                        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($client->id);
+                                        if( $ringCentral ){ 
+                                            $smsApi = 'ring_central';
+                                            $is_with_valid_sms_account = true;
+                                        }                
+                                    }elseif( $client->default_sms_api == 'vonage' ){
+                                        $smsApi = 'vonage';
+                                        $is_with_valid_sms_account = true;
+                                    }
+                                    
                                     $sms_body_with_smart_tags = $this->replaceSmartTags($automationData->sms_body, $invoice->id);
-        
+                                    if( $smsApi == 'ring_central' ){
+                                        $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_body_with_smart_tags);                            
+                                        if( $isSent['is_sent'] == 1 ){
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        } 
+                                    }elseif( $smsApi == 'vonage' ){
+                                        $isSent = smsVonage($sms->mobile_number, $sms_body_with_smart_tags);
+                                        if( $isSent['is_success'] == 1 ){        
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        }
+                                    }*/
+                                    //Send SMS Here - end                                 
+
                                 }
                             }
             
@@ -1240,12 +1476,73 @@ class Cron_Automation_Controller extends CI_Controller
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
                             }
+
+                            //Add custom condition checking - start
+                            $a_conditions       = json_decode($automationData->conditions, true);
+                            $a_conditions_count = count($a_conditions);
+
+                            $is_custom_condition_success_count = 0;
+                            $invoice_grand_total = $invoice->grand_total;
+                
+                            if($a_conditions_count > 0) {
+                                foreach($a_conditions as $a_condition) {
+                                    if($a_condition['property'] == 'amount') {
+
+                                        if($a_condition['operator'] == '>') {
+                                            if($invoice_grand_total > $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '<') {
+                                            if($invoice_grand_total < $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '=') {
+                                            if($invoice_grand_total == $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }
+    
+                                    }
+                                }
+
+                                if($is_custom_condition_success_count != $a_conditions_count) {
+                                    $trigger_automation = 0;
+                                }
+
+                            }
+                            //Add custom condition checking - end 
                             
                             if($trigger_automation == 1) {
                                 if($targetName != "" && $sendSmsNumber != "") {
         
-                                    //Send SMS Here
+                                    //Send SMS Here - start
+                                    /*if( $client->default_sms_api == 'ring_central' ){
+                                        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($client->id);
+                                        if( $ringCentral ){ 
+                                            $smsApi = 'ring_central';
+                                            $is_with_valid_sms_account = true;
+                                        }                
+                                    }elseif( $client->default_sms_api == 'vonage' ){
+                                        $smsApi = 'vonage';
+                                        $is_with_valid_sms_account = true;
+                                    }
+                                    
                                     $sms_body_with_smart_tags = $this->replaceSmartTags($automationData->sms_body, $invoice->id);
+                                    if( $smsApi == 'ring_central' ){
+                                        $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_body_with_smart_tags);                            
+                                        if( $isSent['is_sent'] == 1 ){
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        } 
+                                    }elseif( $smsApi == 'vonage' ){
+                                        $isSent = smsVonage($sms->mobile_number, $sms_body_with_smart_tags);
+                                        if( $isSent['is_success'] == 1 ){        
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        }
+                                    }*/
         
                                 }
                             }
@@ -1377,12 +1674,73 @@ class Cron_Automation_Controller extends CI_Controller
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
                             }
+
+                            //Add custom condition checking - start
+                            $a_conditions       = json_decode($automationData->conditions, true);
+                            $a_conditions_count = count($a_conditions);
+
+                            $is_custom_condition_success_count = 0;
+                            $invoice_grand_total = $invoice->grand_total;
+                
+                            if($a_conditions_count > 0) {
+                                foreach($a_conditions as $a_condition) {
+                                    if($a_condition['property'] == 'amount') {
+
+                                        if($a_condition['operator'] == '>') {
+                                            if($invoice_grand_total > $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '<') {
+                                            if($invoice_grand_total < $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '=') {
+                                            if($invoice_grand_total == $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }
+    
+                                    }
+                                }
+
+                                if($is_custom_condition_success_count != $a_conditions_count) {
+                                    $trigger_automation = 0;
+                                }
+
+                            }
+                            //Add custom condition checking - end 
                             
                             if($trigger_automation == 1) {
                                 if($targetName != "" && $sendSmsNumber != "") {
         
-                                    //Send SMS Here
+                                    //Send SMS Here - start
+                                    /*if( $client->default_sms_api == 'ring_central' ){
+                                        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($client->id);
+                                        if( $ringCentral ){ 
+                                            $smsApi = 'ring_central';
+                                            $is_with_valid_sms_account = true;
+                                        }                
+                                    }elseif( $client->default_sms_api == 'vonage' ){
+                                        $smsApi = 'vonage';
+                                        $is_with_valid_sms_account = true;
+                                    }
+                                    
                                     $sms_body_with_smart_tags = $this->replaceSmartTags($automationData->sms_body, $invoice->id);
+                                    if( $smsApi == 'ring_central' ){
+                                        $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_body_with_smart_tags);                            
+                                        if( $isSent['is_sent'] == 1 ){
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        } 
+                                    }elseif( $smsApi == 'vonage' ){
+                                        $isSent = smsVonage($sms->mobile_number, $sms_body_with_smart_tags);
+                                        if( $isSent['is_success'] == 1 ){        
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        }
+                                    }*/
         
                                 }
                             }
@@ -1514,12 +1872,73 @@ class Cron_Automation_Controller extends CI_Controller
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
                             }
+
+                            //Add custom condition checking - start
+                            $a_conditions       = json_decode($automationData->conditions, true);
+                            $a_conditions_count = count($a_conditions);
+
+                            $is_custom_condition_success_count = 0;
+                            $invoice_grand_total = $invoice->grand_total;
+                
+                            if($a_conditions_count > 0) {
+                                foreach($a_conditions as $a_condition) {
+                                    if($a_condition['property'] == 'amount') {
+
+                                        if($a_condition['operator'] == '>') {
+                                            if($invoice_grand_total > $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '<') {
+                                            if($invoice_grand_total < $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '=') {
+                                            if($invoice_grand_total == $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }
+    
+                                    }
+                                }
+
+                                if($is_custom_condition_success_count != $a_conditions_count) {
+                                    $trigger_automation = 0;
+                                }
+
+                            }
+                            //Add custom condition checking - end 
                             
                             if($trigger_automation == 1) {
                                 if($targetName != "" && $sendSmsNumber != "") {
         
-                                    //Send SMS Here
+                                    //Send SMS Here - start
+                                    /*if( $client->default_sms_api == 'ring_central' ){
+                                        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($client->id);
+                                        if( $ringCentral ){ 
+                                            $smsApi = 'ring_central';
+                                            $is_with_valid_sms_account = true;
+                                        }                
+                                    }elseif( $client->default_sms_api == 'vonage' ){
+                                        $smsApi = 'vonage';
+                                        $is_with_valid_sms_account = true;
+                                    }
+                                    
                                     $sms_body_with_smart_tags = $this->replaceSmartTags($automationData->sms_body, $invoice->id);
+                                    if( $smsApi == 'ring_central' ){
+                                        $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_body_with_smart_tags);                            
+                                        if( $isSent['is_sent'] == 1 ){
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        } 
+                                    }elseif( $smsApi == 'vonage' ){
+                                        $isSent = smsVonage($sms->mobile_number, $sms_body_with_smart_tags);
+                                        if( $isSent['is_success'] == 1 ){        
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        }
+                                    }*/
         
                                 }                            
                             }
@@ -1650,12 +2069,73 @@ class Cron_Automation_Controller extends CI_Controller
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
                             }
+
+                            //Add custom condition checking - start
+                            $a_conditions       = json_decode($automationData->conditions, true);
+                            $a_conditions_count = count($a_conditions);
+
+                            $is_custom_condition_success_count = 0;
+                            $invoice_grand_total = $invoice->grand_total;
+                
+                            if($a_conditions_count > 0) {
+                                foreach($a_conditions as $a_condition) {
+                                    if($a_condition['property'] == 'amount') {
+
+                                        if($a_condition['operator'] == '>') {
+                                            if($invoice_grand_total > $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '<') {
+                                            if($invoice_grand_total < $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '=') {
+                                            if($invoice_grand_total == $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }
+    
+                                    }
+                                }
+
+                                if($is_custom_condition_success_count != $a_conditions_count) {
+                                    $trigger_automation = 0;
+                                }
+
+                            }
+                            //Add custom condition checking - end 
                             
                             if($trigger_automation == 1) {
                                 if($targetName != "" && $customerEmail != "") {
         
-                                    //Send SMS Here
+                                    //Send SMS Here - start
+                                    /*if( $client->default_sms_api == 'ring_central' ){
+                                        $ringCentral = $this->RingCentralAccounts_model->getByCompanyId($client->id);
+                                        if( $ringCentral ){ 
+                                            $smsApi = 'ring_central';
+                                            $is_with_valid_sms_account = true;
+                                        }                
+                                    }elseif( $client->default_sms_api == 'vonage' ){
+                                        $smsApi = 'vonage';
+                                        $is_with_valid_sms_account = true;
+                                    }
+                                    
                                     $sms_body_with_smart_tags = $this->replaceSmartTags($automationData->sms_body, $invoice->id);
+                                    if( $smsApi == 'ring_central' ){
+                                        $isSent = smsRingCentral($ringCentral, $sms->mobile_number, $sms_body_with_smart_tags);                            
+                                        if( $isSent['is_sent'] == 1 ){
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        } 
+                                    }elseif( $smsApi == 'vonage' ){
+                                        $isSent = smsVonage($sms->mobile_number, $sms_body_with_smart_tags);
+                                        if( $isSent['is_success'] == 1 ){        
+                                            $total_sent++;
+                                        }else{
+                                            $total_error_sent++;
+                                        }
+                                    }*/
         
                                 }
                             }
