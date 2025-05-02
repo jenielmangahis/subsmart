@@ -2531,10 +2531,10 @@ class Invoice extends MY_Controller
             }           
         }
         
-        $balance = $invoice->grand_total;
-        foreach($payments as $p){
-            $balance = $balance - $p->invoice_amount;
-        }
+        $balance = $invoice->balance;
+        // foreach($payments as $p){
+        //     $balance = $balance - $p->invoice_amount;
+        // }
         
         $this->page_data['total_late_fee_days']  = $total_late_fee_days - $deduct_days;
         $this->page_data['invoice']  = $invoice;
@@ -2555,6 +2555,17 @@ class Invoice extends MY_Controller
         $this->load->view('v2/pages/invoice/void_payment_form', $this->page_data);
     }
 
+    public function ajax_load_view_payments_form()
+    {
+        $post = $this->input->post();
+        $payment_records = $this->payment_records_model->getAllByInvoiceIdVoid($post['invoice_id'], 'all');
+        $invoice = get_invoice_by_id($post['invoice_id']);    
+                
+        $this->page_data['invoice']  = $invoice;
+        $this->page_data['payment_records']  = $payment_records;
+        $this->load->view('v2/pages/invoice/ajax_load_view_payments_form', $this->page_data);
+    }
+
     public function ajax_mark_payment_records_as_void()
     {
         $is_success = 0;
@@ -2562,19 +2573,13 @@ class Invoice extends MY_Controller
 
         $post = $this->input->post();
 
-
-
         $payment_id = $post['payment_id'];
 
         $payment_record = $this->payment_records_model->getById($payment_id);
         if($payment_record) {
-
             $invoice_id = $payment_record->invoice_id;
-
             $invoice = $this->invoice_model->getinvoice($invoice_id);
-
             if($invoice){
-                
                 $invoice_balance = $invoice->balance + $payment_record->invoice_amount;
                 $invoice_status  = $invoice->status;
                 if($invoice->status == 'Paid') {
@@ -2622,6 +2627,20 @@ class Invoice extends MY_Controller
 
             // $balance = $invoice->balance;                   
             if( round($invoice->balance) >= round($post['amount']) ){
+                $attachment = '';
+                if(isset($_FILES['attachment']) && $_FILES['attachment']['tmp_name'] != '') {
+
+                    $invoiceAttachmentFolderPath = "./uploads/invoice/attachments/".$cid."/";            
+                    if(!file_exists($invoiceAttachmentFolderPath)) {
+                        mkdir($invoiceAttachmentFolderPath, 0777, true);
+                    }
+
+                    $tmp_name   = $_FILES['attachment']['tmp_name'];
+                    $extension  = strtolower(end(explode('.',$_FILES['attachment']['name'])));
+                    $attachment = "invoice_payment_attachment_".time().'.'.$extension;
+                    move_uploaded_file($tmp_name, $invoiceAttachmentFolderPath.$attachment);
+                }
+
                 $new_balance = $invoice->balance - $post['amount'];
                 $invoice_id = $this->payment_records_model->create([
                     'invoice_id' => $invoice->id,
@@ -2636,6 +2655,7 @@ class Invoice extends MY_Controller
                     'invoice_number' => $invoice->invoice_number,
                     'reference_number' => $post['reference'],
                     'notes' => $post['notes'],
+                    'attachment' => $attachment,
                     'date_created' => date("Y-m-d H:i:s")
                 ]);
 
@@ -3305,6 +3325,69 @@ class Invoice extends MY_Controller
         echo json_encode($return);
     }
 
+    public function ajax_edit_invoice_payment_form()
+    {
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $paymentRecord = $this->payment_records_model->getById($post['payment_id']);
+        if( $paymentRecord && $paymentRecord->company_id == $cid ){
+            $this->page_data['paymentRecord'] = $paymentRecord;
+            $this->load->view("v2/pages/invoice/ajax_edit_invoice_payment_form", $this->page_data);
+        }else{
+            echo '<div class="alert alert-danger" role="alert">Cannot find data</div>';
+        }
+    }
+
+    public function ajax_update_invoice_payment()
+    {
+        
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $invoicePayment = $this->payment_records_model->getById($post['invoice_payment_id']);
+        if( $invoicePayment && $invoicePayment->company_id == $cid ){   
+            $attachment = $invoicePayment->attachment;
+            if(isset($_FILES['attachment']) && $_FILES['attachment']['tmp_name'] != '') {
+
+                $invoiceAttachmentFolderPath = "./uploads/invoice/attachments/".$cid."/";            
+                if(!file_exists($invoiceAttachmentFolderPath)) {
+                    mkdir($invoiceAttachmentFolderPath, 0777, true);
+                }
+
+                $tmp_name   = $_FILES['attachment']['tmp_name'];
+                $extension  = strtolower(end(explode('.',$_FILES['attachment']['name'])));
+                $attachment = "invoice_payment_attachment_".time().'.'.$extension;
+                move_uploaded_file($tmp_name, $invoiceAttachmentFolderPath.$attachment);
+            }
+
+            $data = [
+                'reference_number' => $post['reference'],
+                'notes' => $post['notes'],
+                'attachment' => $attachment
+            ];
+
+            $this->payment_records_model->update($invoicePayment->id, $data);
+
+            //Activity Logs
+            $activity_name = 'Invoice Payment : Updated payment invoice details.'; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+            
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);    
+    }
 }
 
 /* End of file Invoice.php */
