@@ -2152,3 +2152,5 @@ $route['customer_deals/_deal_stages'] = 'CustomerDeal/ajax_deal_stages';
 $route['customer_deals/_edit_deal_stage'] = 'CustomerDeal/ajax_edit_deal_stage';
 $route['customer_deals/_update_deal_stage'] = 'CustomerDeal/ajax_update_deal_stage';
 $route['customer_deals/_delete_deal_stage'] = 'CustomerDeal/ajax_delete_deal_stage';
+$route['customer_deals/_create_deal_label'] = 'CustomerDeal/ajax_create_deal_label';
+$route['customer_deals/_create_deal'] = 'CustomerDeal/ajax_customer_create_deal';
