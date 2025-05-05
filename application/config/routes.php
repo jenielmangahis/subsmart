@@ -303,6 +303,9 @@ $route['invoice/_schedule_email_notification'] = 'Invoice/ajax_schedule_email_no
 $route['invoice/_load_record_payment_form'] = 'Invoice/ajax_load_record_payment_form';
 $route['invoice/_load_void_payment_form'] = 'Invoice/ajax_load_void_payment_form';
 $route['invoice/_mark_payment_records_as_void'] = 'Invoice/ajax_mark_payment_records_as_void';
+$route['invoice/_load_view_payments_form'] = 'Invoice/ajax_load_view_payments_form';
+$route['invoice/_edit_invoice_payment_form'] = 'Invoice/ajax_edit_invoice_payment_form';
+$route['invoice/_update_invoice_payment'] = 'Invoice/ajax_update_invoice_payment';
 
 $route['invoice/_create_payment'] = 'Invoice/ajax_create_payment';
 $route['invoice/_load_pay_now_form'] = 'Invoice/ajax_load_pay_now_form';

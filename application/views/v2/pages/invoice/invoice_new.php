@@ -263,8 +263,11 @@
                                                 <li>
                                                     <a class="dropdown-item recordPaymentBtn" href="javascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">Record Payment</a>
                                                 </li>
-                                                <li>
+                                                <!-- <li>
                                                     <a class="dropdown-item voidPaymentBtn" href="javascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">Void Payments</a>
+                                                </li> -->
+                                                <li>
+                                                    <a class="dropdown-item viewPaymentBtn" href="javascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">View Payments</a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>">Convert to Workorder</a>
@@ -330,7 +333,7 @@
 
             <!-- Modal Void Payments -->
             <div class="modal fade nsm-modal fade" id="modalVoidPaymentForm" tabindex="-1" aria-labelledby="modalVoidPaymentForm_label" aria-hidden="true">
-                <div class="modal-dialog modal-md">
+                <div class="modal-dialog modal-md modal-dialog-centered">
                     <form id="frm-record-payment" method="POST">
                         <input type="hidden" name="invoice_id" id="void_payment_invoice_id" value="" />
                         <div class="modal-content" style="width:560px;">
@@ -342,6 +345,42 @@
                             <div class="modal-footer">                    
                                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                             </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal Edit Payment -->
+            <div class="modal fade nsm-modal fade" id="modalEditPaymentForm" tabindex="-1" aria-labelledby="modalEditPaymentForm_label" aria-hidden="true">
+                <div class="modal-dialog modal-md modal-dialog-centered">
+                    <form id="frm-update-payment" method="POST">
+                        <input type="hidden" name="invoice_payment_id" id="invoice_payment_id" value="" />
+                        <div class="modal-content" style="width:560px;">
+                            <div class="modal-header">
+                                <span class="modal-title content-title">Edit Payment</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <div class="modal-body" id="edit-invoice-payment-container"></div>
+                            <div class="modal-footer">                    
+                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" id="btn-update-invoice-payment" class="nsm-button primary">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal View Payments -->
+            <div class="modal fade nsm-modal fade" id="modalViewPaymentForm" tabindex="-1" aria-labelledby="modalViewPaymentForm_label" aria-hidden="true">
+                <div class="modal-dialog modal-md modal-dialog-centered">
+                    <form id="frm-record-payment" method="POST">
+                        <input type="hidden" name="invoice_id" id="void_payment_invoice_id" value="" />
+                        <div class="modal-content" style="width:560px;">
+                            <div class="modal-header">
+                                <span class="modal-title content-title">Invoice Payments</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <div class="modal-body"></div>
                         </div>
                     </form>
                 </div>
@@ -385,6 +424,27 @@
         $("#search_field").on("input", debounce(function() {
             tableSearch($(this));        
         }, 1000));
+
+        $(document).on('click', '.btn-edit-invoice-payment', function(){
+            let payment_id = $(this).attr('data-id');
+            $('#modalViewPaymentForm').modal('hide');
+            $('#modalEditPaymentForm').modal('show');
+            $('#invoice_payment_id').val(payment_id);
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'invoice/_edit_invoice_payment_form',
+                data: {payment_id:payment_id},
+                success: function(html)
+                {          
+                    $("#edit-invoice-payment-container").html(html);
+                }
+            });
+        });
+
+        $('#modalEditPaymentForm').on('hidden.bs.modal', function () {
+            $('#modalViewPaymentForm').modal('show');
+        });
 
         $('.view-job-row').on('click', function(){
             var appointment_id = $(this).attr('data-id');
@@ -662,15 +722,88 @@
 
         });
 
-        $(document).on('submit', '#frm-record-payment', function(e){
+        $(document).on('click touchstart', '.viewPaymentBtn', function(){
+
+            var invoice_id = $(this).attr('data-id');
+
+            $('#modalViewPaymentForm').modal('show');
+            showLoader($("#modalViewPaymentForm .modal-body")); 
+            $('#void_payment_invoice_id').val(invoice_id);
+
+            $.ajax({
+                url: base_url + "invoice/_load_view_payments_form",
+                type: "POST",
+                data: {
+                    invoice_id: invoice_id
+                },
+                success: function (response) {
+                    $("#modalViewPaymentForm .modal-body").html(response);
+                },
+            });
+
+        });
+
+        $(document).on('submit', '#frm-update-payment', function(e){
             e.preventDefault();
-            var url  = base_url + 'invoice/_create_payment';
+            var url  = base_url + 'invoice/_update_invoice_payment';
+
+            var formData = new FormData($('#frm-update-payment')[0]);
+            formData.append('attachment',$('#edit-payment-attachment').get(0).files[0]);
+
             var form = $(this);
             $.ajax({
                 type: "POST",
                 url: url,
                 dataType:'json',
-                data: form.serialize(), 
+                data: formData, 
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function(data) {
+                    if( data.is_success == 1 ){
+                        $('#modalEditPaymentForm').modal('hide');
+                        
+                        Swal.fire({
+                            text: 'Invoice payment was successfully updated',
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#6a4a86',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            //location.reload();
+                        });    
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: data.msg
+                        });
+                    }
+                    
+                    $("#modalEditPaymentForm #btn-update-invoice-payment").html('Save');
+                }, beforeSend: function() {
+                    $("#modalEditPaymentForm #btn-update-invoice-payment").html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $(document).on('submit', '#frm-record-payment', function(e){
+            e.preventDefault();
+            var url  = base_url + 'invoice/_create_payment';
+
+            var formData = new FormData($('#frm-record-payment')[0]);
+            formData.append('attachment',$('#payment-attachment').get(0).files[0]);
+
+            var form = $(this);
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType:'json',
+                data: formData, 
+                contentType: false,
+                cache: false,
+                processData: false,
                 success: function(data) {
                     if( data.is_success == 1 ){
                         $('#modalRecordPaymentForm').modal('hide');
@@ -693,9 +826,9 @@
                         });
                     }
                     
-                    $("#btn-record-payment").html('Save');
+                    $("#modalRecordPaymentForm #btn-record-payment").html('Save');
                 }, beforeSend: function() {
-                    $("#btn-record-payment").html('<span class="bx bx-loader bx-spin"></span>');
+                    $("#modalRecordPaymentForm #btn-record-payment").html('<span class="bx bx-loader bx-spin"></span>');
                 }
             });
         });
