@@ -150,7 +150,7 @@ img.banner-reg-a {
                            <label>Business Short Description</label><span class="help help-sm help-bold pull-right">characters left: <span class="char-counter-left">1800</span></span>
                         </div>
                         <div class="help help-block help-sm">Give customers more details on what your business actually does. Describe your company's values and goals. Minimum 25 characters.</div>
-                        <textarea name="business_desc" id="business-desc" minlength="25" cols="40" rows="8" class="form-control" autocomplete="off"><?php echo ($profiledata) ? $profiledata->business_desc: ''; ?> </textarea>
+                        <textarea name="business_desc" id="business-desc" minlength="25" maxlength="1800" cols="40" rows="8" class="form-control" autocomplete="off"><?php echo ($profiledata) ? $profiledata->business_desc: ''; ?> </textarea>
                         <span class="validation-error-field" data-formerrors-for-name="about" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>

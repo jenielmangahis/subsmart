@@ -168,7 +168,7 @@ error_reporting(0);
                                  }
                               }
                            ?>
-                           <input type="text" name="business_phone" value="<?php echo $business_phone; ?>"  class="form-control" autocomplete="off" required="">
+                           <input type="text" name="business_phone" value="<?php echo $business_phone; ?>"  class="form-control phone_number" autocomplete="off" required="">
                            <span class="validation-error-field" data-formerrors-for-name="phone" data-formerrors-message="true" style="display: none;"></span>
                         </div>
                         <div>
@@ -194,7 +194,7 @@ error_reporting(0);
                            <div class="col-md-9">
                               <label>Office Phone</label> <span class="help">(optional)</span>
                               <div class="help help-block help-sm">If you want to show the office phone on profile</div>
-                              <input type="text" name="office_phone" value="<?php echo ($profiledata) ? $profiledata->office_phone : '' ?>"  class="form-control" autocomplete="off" placeholder="e.g 123 456 7890">
+                              <input type="text" name="office_phone" value="<?php echo ($profiledata) ? $profiledata->office_phone : '' ?>"  class="form-control phone_number" autocomplete="off" placeholder="e.g 123 456 7890">
                            </div>
                            <div class="col-md-3">
                               <label>Ext</label> <span class="help">(optional)</span>
@@ -344,4 +344,19 @@ var loadFile = function(event) {
    var image = document.getElementById('img_profile');
    image.src = URL.createObjectURL(event.target.files[0]);
 };
+$(function(){
+   $('.phone_number').keydown(function(e) {
+      var key = e.charCode || e.keyCode || 0;
+      $text = $(this);
+      if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+               $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+               $text.val($text.val() + '-');
+            }
+      }
+      return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+   });
+});
 </script>
