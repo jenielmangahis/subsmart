@@ -2092,7 +2092,7 @@ $route['benchmark/test_late_invoice_computation'] = 'Benchmark/test_late_invoice
 $route['benchmark/manual_add_customer_invoice'] = 'Benchmark/manualAddCustomerInvoice';
 $route['benchmark/test_mail_function'] = 'Benchmark/testMailFunction';
 $route['benchmark/test_sms_automation'] = 'Benchmark/testSMSAutomation';
-
+$route['benchmark/test_php_script'] = 'Benchmark/testPhpScript';
 
 //Role Access Modules
 $route['users/role_access_modules'] = 'Users/role_access_modules';
