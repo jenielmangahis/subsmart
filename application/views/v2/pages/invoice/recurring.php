@@ -164,9 +164,11 @@
                                                 <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('invoice/genview/' . $invoice->id) ?>">View</a>
                                                 </li>
-                                                <li>
-                                                    <a class="dropdown-item btn-mark-as-paid" href="javascript:void(0);" href="javascript:void(0);" data-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>">Mark as Paid</a>
-                                                </li>
+                                                <?php if($invoice->status != 'Paid') { ?>
+                                                    <li>
+                                                        <a class="dropdown-item btn-mark-as-paid" href="javascript:void(0);" href="javascript:void(0);" data-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>">Mark as Paid</a>
+                                                    </li>
+                                                <?php } ?>
                                                 <li>
                                                     <a class="dropdown-item recordPaymentBtn" href="javascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">Record Payment</a>
                                                 </li>

@@ -959,7 +959,7 @@
                     </ul>
                 </li>
                 <!-- Only allow company id 1 (NSMART LLC) to access this settings -->
-                <?php if ($company_id == 1 && $user_type == 7): ?>
+                <?php if ($cid == 1 && $role == 7): ?>
                 <li class="li-third-sub-menu">
                     <a href="<?php echo base_url('chatbot/settings'); ?>">
                         <i class='bx bx-bot'></i> Chatbot Settings

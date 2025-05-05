@@ -10,16 +10,17 @@ class AdBanner extends MY_Controller
 
     public function settings() {
         $company_id = logged('company_id');
-        $user_type = logged('user_type');
+        $role = logged('role');
 
         // Only allow company id 1 (NSMART LLC) with Admin user account to access this settings 
-        if ($company_id == 1 && $user_type == 7) {
+        if ($company_id == 1 && $role == 7) {
             $this->page_data['company_id'] = $company_id;
-            $this->page_data['user_type'] = $user_type;
+            $this->page_data['role'] = $role;
             $this->page_data['page']->title = 'Discover More ADS';
             $this->load->view('v2/pages/adbanner/adbanner_settings', $this->page_data);
         } else {
-            redirect('/dashboard');
+            show403Error();
+			return false;
         }
     }
 

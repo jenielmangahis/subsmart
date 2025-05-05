@@ -3479,8 +3479,7 @@ class Cron_Jobs_Controller extends CI_Controller
                     $previous_total_amount      = $totalUnpaidSubscriptions->total_amount;
                 }
                 
-                $total_amount               = $totalUnpaidSubscriptions->total_amount + $as->mmr;	
-            
+                $total_amount    = $totalUnpaidSubscriptions->total_amount + $as->mmr;	
                 $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($customer->company_id);
 
                 $current_date    = date('Y-m-d');
@@ -3710,6 +3709,7 @@ class Cron_Jobs_Controller extends CI_Controller
             if(!$recurr_transaction) {
 
                 $invoiceSettings = $this->invoice_settings_model->getByCompanyId($inv_data->company_id);
+
                 $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($inv_data->customer_id);	
 
                 $current_date            = date('Y-m-d');
@@ -3739,9 +3739,12 @@ class Cron_Jobs_Controller extends CI_Controller
                     $days_activate_late_fee = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
                     if($total_days > $days_activate_late_fee) {
                         $late_fee_percentage = $customer_billing_info->payment_fee != null ? $customer_billing_info->payment_fee : 0; 
-                    
                         if($customer_billing_info->mmr != null && $customer_billing_info->mmr > 0) {
                             $late_fee += ($late_fee_percentage / 100) * $customer_billing_info->mmr;
+                        }
+
+                        if($total_days > $days_activate_late_fee) {
+                            $deduct_days_computation = $days_activate_late_fee;
                         }
 
                         if($total_days > 0) {
@@ -3782,8 +3785,12 @@ class Cron_Jobs_Controller extends CI_Controller
 
                 $new_invoice_grand_total = (int) $customer_billing_info->mmr + $late_fee;
 
+                if(($inv_data->adjustment_name == 'Customer Subscription') && ($new_invoice_grand_total < (int) $inv_data->adjustment_value)) {
+                    $new_invoice_grand_total = (int) $inv_data->adjustment_value + $late_fee;
+                }
+
                 //Update invoice new grand total & late fee
-                //if($inv_data->late_fee < $late_fee && $inv_data->grand_total < $new_invoice_grand_total) {
+                //if($new_invoice_grand_total > $inv_data->grand_total) {
                     $invdata = [
                         'id' => $inv_data->id,
                         'invoice_totals' => $new_invoice_grand_total,

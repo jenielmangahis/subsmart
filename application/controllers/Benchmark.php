@@ -751,5 +751,9 @@ class Benchmark extends MY_Controller {
 
     }
 
+    public function testPhpScript($timezone = null) {
+        echo 'Timezone';
+    }
+
 }
 ?>
