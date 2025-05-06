@@ -271,27 +271,41 @@ class CustomerDeal extends MY_Controller
         $company_id  = logged('company_id');
         $post = $this->input->post();
         
-        if( $post['label_name'] == '' ){
+        if( $post['deal_title'] == '' ){
             $is_success = 0;
-            $msg = 'Please specify name';
+            $msg = 'Please deal title';
         }
 
+        if( $post['customer_id'] == '' ){
+            $is_success = 0;
+            $msg = 'Please select customer';
+        }
+        
         if( $is_success == 1 ){
-
-            $data = [
+            $labels = json_encode($post['deal_label']);
+            $data   = [
                 'company_id' => $company_id,
-                'name' => $post['label_name'],
-                'color' => $post['label_color'],                
+                'owner_id' => $post['owner_id'],
+                'customer_id' => $post['customer_id'],     
+                'customer_deal_stage_id' => $post['deal_stage_id'],
+                'deal_title' => $post['deal_title'],
+                'value' => $post['deal_value'],
+                'labels' => $labels,
+                'probability' => $post['deal_probability'],
+                'expected_close_date' => $post['expected_close_date'],
+                'source_channel' => $post['source_channel'],
+                'source_channel_id' => $post['source_channel_id'],
+                'visible_to' => $post['visible_to'],
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_modified' => date("Y-m-d H:i:s")
             ];
             
-            $id = $this->CustomerDealLabel_model->create($data); 
+            $id = $this->CustomerDeal_model->create($data); 
 
             $label = ['id' =>$id, 'name' => $post['label_name'], 'color' => $post['label_color']];
 
             //Activity Logs
-            $activity_name = 'Customer Deals : Created deal label ' . $post['label_name']; 
+            $activity_name = 'Customer Deals : Created deal ' . $post['deal_title']; 
             createActivityLog($activity_name);
         }     
 
@@ -299,6 +313,74 @@ class CustomerDeal extends MY_Controller
             'is_success' => $is_success,
             'msg' => $msg,
             'label' => $label
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_label()
+    {
+        $this->load->model('CustomerDealLabel_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $customerDealLabel = $this->CustomerDealLabel_model->getById($post['label_id']);
+        if( $customerDealLabel && $customerDealLabel->company_id == $company_id ){
+            $this->CustomerDealLabel_model->delete($customerDealLabel->id);
+
+            $is_success = 1;
+            $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Customer Deals : Deleted customer deal label ' . $customerDealLabel->name; 
+            createActivityLog($activity_name);
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_update_deal_label()
+    {
+        $this->load->model('CustomerDealLabel_model');
+
+        $is_success = 1;
+        $msg    = '';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+        
+        if( $post['label_name'] == '' ){
+            $is_success = 0;
+            $msg = 'Please specify name';
+        }
+
+        $isExists = $this->CustomerDealLabel_model->getById($post['cdlid']);
+        if( $isExists && $isExists->company_id == $company_id && $is_success == 1 ){
+            $data = [
+                'name' => $post['label_name'],
+                'color' => $post['label_color'],   
+                'date_modified' => date("Y-m-d H:i:s")
+            ];
+            
+            $this->CustomerDealLabel_model->update($isExists->id, $data); 
+
+            //Activity Logs
+            $activity_name = 'Customer Deals : Updated deal label ' . $post['label_name']; 
+            createActivityLog($activity_name);
+        }     
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
         ];
 
         echo json_encode($return);

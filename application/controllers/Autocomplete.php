@@ -271,6 +271,26 @@ class Autocomplete extends MY_Controller
         }
         die(json_encode($obj));   
     }
+
+    public function company_customer_deal_labels()
+    {
+        $this->load->model('CustomerDealLabel_model');
+
+        $search   = $this->input->get('q');
+        $filter[] = ['field' => 'name', 'value' => $search];
+        $cid      = logged('company_id');
+        $customerDealLabels  = $this->CustomerDealLabel_model->getAllByCompanyId($cid, $filter); 
+
+        $result = array(); 
+        foreach($customerDealLabels as $label){
+            $result[] = [
+                'id' => $label->id,
+                'name' => $label->name,
+                'color' => $label->color
+            ];            
+        }
+        die(json_encode($result));   
+    }
 }
 
 
