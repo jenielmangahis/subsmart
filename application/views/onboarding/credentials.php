@@ -201,7 +201,7 @@ error_reporting(0);
                         <label>Bond Amount</label>
                         <div class="input-group">
                             <div class="input-group-text">$</div>
-                            <input type="text" name="bonded_amount" value="<?= $profiledata->bond_amount; ?>" class="form-control">
+                            <input type="number" step="any" name="bonded_amount" value="<?= $profiledata->bond_amount; ?>" class="form-control">
                         </div>
                         <span class="validation-error-field" style="display: none;"></span>
                     </div>
@@ -250,7 +250,7 @@ error_reporting(0);
                         <label>Insured Amount</label>
                         <div class="input-group">
                             <div class="input-group-addon">$</div>
-                                <input type="text" name="insured_amount" value="<?= $profiledata->insured_amount; ?>" class="form-control">
+                                <input type="number" step="any" name="insured_amount" value="<?= $profiledata->insured_amount; ?>" class="form-control">
                             </div>
                         <span class="validation-error-field" style="display: none;"></span>
                     </div>

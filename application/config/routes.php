@@ -1538,6 +1538,8 @@ $route['cron/update_late_fee_by_invoice'] = 'Cron_Jobs_Controller/cronUpdateLate
 $route['cron/customer_recurring_subscriptions_by_active_customer'] = 'Cron_Jobs_Controller/cronCustomerSubscriptionByCustomer';
 
 //Cron Automation - Mail
+$route['cron/invoice_mail_automation'] = 'Cron_Automation_Controller/cronInvoiceMailAutomation';
+
 $route['cron/send_created_invoice_mail_automation'] = 'Cron_Automation_Controller/cronCreatedInvoiceMailAutomation';
 $route['cron/send_paid_invoice_mail_automation'] = 'Cron_Automation_Controller/cronPaidInvoiceMailAutomation'; 
 $route['cron/send_set_due_invoice_mail_automation'] = 'Cron_Automation_Controller/cronSetToDueInvoiceMailAutomation'; 
@@ -2090,7 +2092,7 @@ $route['benchmark/test_late_invoice_computation'] = 'Benchmark/test_late_invoice
 $route['benchmark/manual_add_customer_invoice'] = 'Benchmark/manualAddCustomerInvoice';
 $route['benchmark/test_mail_function'] = 'Benchmark/testMailFunction';
 $route['benchmark/test_sms_automation'] = 'Benchmark/testSMSAutomation';
-
+$route['benchmark/test_php_script'] = 'Benchmark/testPhpScript';
 
 //Role Access Modules
 $route['users/role_access_modules'] = 'Users/role_access_modules';
@@ -2150,3 +2152,5 @@ $route['customer_deals/_deal_stages'] = 'CustomerDeal/ajax_deal_stages';
 $route['customer_deals/_edit_deal_stage'] = 'CustomerDeal/ajax_edit_deal_stage';
 $route['customer_deals/_update_deal_stage'] = 'CustomerDeal/ajax_update_deal_stage';
 $route['customer_deals/_delete_deal_stage'] = 'CustomerDeal/ajax_delete_deal_stage';
+$route['customer_deals/_create_deal_label'] = 'CustomerDeal/ajax_create_deal_label';
+$route['customer_deals/_create_deal'] = 'CustomerDeal/ajax_customer_create_deal';

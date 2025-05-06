@@ -13,11 +13,20 @@ class Cron_Automation_Controller extends CI_Controller
         $this->load->model('AcsProfile_model', 'AcsProfile_model');   
     }
 
+    public function cronInvoiceMailAutomation() 
+    {
+        $this->cronCreatedInvoiceMailAutomation();
+        $this->cronPaidInvoiceMailAutomation();
+        $this->cronSetToDueInvoiceMailAutomation();
+        $this->cronSetToPastDueInvoiceMailAutomation();
+        $this->cronSentInvoiceMailAutomation();
+    }
+
     public function cronCreatedInvoiceMailAutomation()
     {
-        $automation_fail = 0; 
+        $automation_fail    = 0; 
         $automation_success = 0;
-
+        $mail_send_limit    = 40;
         $is_live_mail_credentials = isLiveMailSmptCredentials();
 
         /**
@@ -160,7 +169,7 @@ class Cron_Automation_Controller extends CI_Controller
                             }
                             //Add custom condition checking - end                         
                             
-                            if($trigger_automation == 1) {
+                            if($trigger_automation == 1 && ($automation_success <= $mail_send_limit)) {
                                 if($targetName != "" && $customerEmail != "") {
     
                                     if($is_live_mail_credentials) {
@@ -245,16 +254,18 @@ class Cron_Automation_Controller extends CI_Controller
          * Send email automation for creating new invoice - End
          */
 
-         echo 'automation fail: ' . $automation_fail;
+         echo 'Create New Invoice Automation Fail: ' . $automation_fail;
+         echo '<br />';
+         echo 'Create New Invoice Automation Success: ' . $automation_success;
          echo '<hr />';
-         echo 'automation success: ' . $automation_success;
 
     }
 
     public function cronPaidInvoiceMailAutomation()
     {
-        $automation_fail = 0; 
+        $automation_fail    = 0; 
         $automation_success = 0;
+        $mail_send_limit    = 40;
         $is_live_mail_credentials = isLiveMailSmptCredentials();
 
         /**
@@ -397,7 +408,7 @@ class Cron_Automation_Controller extends CI_Controller
                             }
                             //Add custom condition checking - end 
                             
-                            if($trigger_automation == 1) {
+                            if($trigger_automation == 1 && ($automation_success <= $mail_send_limit)) {
                                 if($targetName != "" && $customerEmail != "") {
         
                                     if($is_live_mail_credentials) {
@@ -477,19 +488,21 @@ class Cron_Automation_Controller extends CI_Controller
          * Send email automation for set invoice paid - End
          */
 
-         echo 'automation fail: ' . $automation_fail;
+         echo 'Set Invoice Paid Automation fail: ' . $automation_fail;
+         echo '<br />';
+         echo 'Set Invoice Paid Automation success: ' . $automation_success;
          echo '<hr />';
-         echo 'automation success: ' . $automation_success;
     }
 
     public function cronSetToDueInvoiceMailAutomation()
     {
-        $automation_fail = 0; 
+        $automation_fail    = 0; 
         $automation_success = 0;
+        $mail_send_limit    = 40;
         $is_live_mail_credentials = isLiveMailSmptCredentials();
 
         /**
-         * Send email automation for set invoice paid - Start
+         * Send email automation for set invoice due - Start
          */
         $auto_to_user_params = [
             'entity' => 'invoice',
@@ -628,7 +641,7 @@ class Cron_Automation_Controller extends CI_Controller
                             }
                             //Add custom condition checking - end 
                             
-                            if($trigger_automation == 1) {
+                            if($trigger_automation == 1 && ($automation_success <= $mail_send_limit)) {
                                 if($targetName != "" && $customerEmail != "") {
         
                                     if($is_live_mail_credentials) {
@@ -704,20 +717,25 @@ class Cron_Automation_Controller extends CI_Controller
 
             }
         }
+        /**
+         * Send email automation for set invoice due - End
+         */
 
-        echo 'automation fail: ' . $automation_fail;
-        echo '<hr />';
-        echo 'automation success: ' . $automation_success;        
+        echo 'Set Invoice Due Automation fail: ' . $automation_fail;
+        echo '<br />';
+        echo 'Set Invoice Due Automation success: ' . $automation_success;  
+        echo '<hr />';      
     }
 
     public function cronSetToPastDueInvoiceMailAutomation()
     {
-        $automation_fail = 0; 
+        $automation_fail    = 0; 
         $automation_success = 0;
+        $mail_send_limit    = 40;
         $is_live_mail_credentials = isLiveMailSmptCredentials();
 
         /**
-         * Send email automation for set invoice paid - Start
+         * Send email automation for set invoice past due - Start
          */
         $auto_to_user_params = [
             'entity' => 'invoice',
@@ -856,7 +874,7 @@ class Cron_Automation_Controller extends CI_Controller
                             }
                             //Add custom condition checking - end 
                             
-                            if($trigger_automation == 1) {
+                            if($trigger_automation == 1 && ($automation_success <= $mail_send_limit)) {
                                 if($targetName != "" && $customerEmail != "") {
         
                                     if($is_live_mail_credentials) {
@@ -932,20 +950,25 @@ class Cron_Automation_Controller extends CI_Controller
 
             }
         }
+        /**
+         * Send email automation for set invoice past due - End
+         */
 
-        echo 'automation fail: ' . $automation_fail;
+        echo 'Set Invoice Past Due Automation fail: ' . $automation_fail;
+        echo '<br />';
+        echo 'Set Invoice Past Due Automation success: ' . $automation_success; 
         echo '<hr />';
-        echo 'automation success: ' . $automation_success; 
     }
 
     public function cronSentInvoiceMailAutomation()
     {
-        $automation_fail = 0; 
+        $automation_fail    = 0; 
         $automation_success = 0;
+        $mail_send_limit    = 40;
         $is_live_mail_credentials = isLiveMailSmptCredentials();
 
         /**
-         * Send email automation for set invoice paid - Start
+         * Send email automation for set invoice sent - Start
          */
         $auto_to_user_params = [
             'entity' => 'invoice',
@@ -1084,7 +1107,7 @@ class Cron_Automation_Controller extends CI_Controller
                             }
                             //Add custom condition checking - end 
                             
-                            if($trigger_automation == 1) {
+                            if($trigger_automation == 1 && ($automation_success <= $mail_send_limit)) {
                                 if($targetName != "" && $customerEmail != "") {
         
                                     if($is_live_mail_credentials) {
@@ -1160,17 +1183,21 @@ class Cron_Automation_Controller extends CI_Controller
 
             }
         }
+        /**
+         * Send email automation for set invoice sent - End
+         */
 
-        echo 'automation fail: ' . $automation_fail;
+        echo 'Set Invoice Sent Automation Fail: ' . $automation_fail;
+        echo '<br />';
+        echo 'Set Invoice Sent Atomation Success: ' . $automation_success; 
         echo '<hr />';
-        echo 'automation success: ' . $automation_success; 
     }
 
     public function cronCreatedInvoiceSMSAutomation()
     {
-        $automation_fail = 0; 
+        $automation_fail    = 0; 
         $automation_success = 0;
-
+        $mail_send_limit    = 40;
         /**
          * Send email automation for creating new invoice - Start
          */

@@ -31,12 +31,12 @@
                 <span><?php echo $description; ?></span>
             </div>
         </div>
-        <!-- <div class="row mb-2">
+        <div class="row mb-2 d-none">
             <div class="col-md-12">
                 <div class="input-group">
                     <select class="form-select <?php echo "widgetFilter1_$id"; ?>">
-                        <option value="all_time">All Time</option>
-                        <option value="this_year" selected>This Year</option>
+                        <option value="all_time" selected>All Time</option>
+                        <option value="this_year">This Year</option>
                     </select>
                     <select class="form-select <?php echo "widgetFilter2_$id"; ?>">
                         <option value="recent" selected>Recent</option>
@@ -47,7 +47,7 @@
                     </select>
                 </div>
             </div>
-        </div> -->
+        </div>
         <div class="row <?php echo "textDatas_$id"; ?>">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center textData">
@@ -141,14 +141,29 @@
 
                         labelWithCounts.push(`${key}: ${displayValue}`);
 
-                        $('.<?php echo "textDatas_$id"; ?>').append(`
-                            <div class='col-6 col-md-6 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
-                                <div class='text-center textData'>
-                                    <small class='text-muted text-uppercase fw-bold text-wrap'>${key}</small>
-                                    <h4>${displayValue}</h4>
+                        if (key == "Total & Recurring Payments") {
+                            $('.<?php echo "textDatas_$id"; ?>').append(`
+                                <div class='col-12 col-md-12 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
+                                    <div class='text-center textData'>
+                                        <small class='text-muted text-uppercase fw-bold text-wrap'>${key}</small>
+                                        <br>
+                                        <div class='<?php echo "subscription_container_$id"; ?>' style='display: -webkit-inline-box; align-items: center;'>
+                                            <h4>${displayValue}</h4>
+                                            <span class="badge bg-secondary" style="border-radius: 5px; font-weight: 500; font-size: 11px;">$0.00</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        `);
+                            `);
+                        } else {
+                            $('.<?php echo "textDatas_$id"; ?>').append(`
+                                <div class='col-6 col-md-6 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
+                                    <div class='text-center textData'>
+                                        <small class='text-muted text-uppercase fw-bold text-wrap'>${key}</small>
+                                        <h4>${displayValue}</h4>
+                                    </div>
+                                </div>
+                            `);
+                        }                        
                     });
 
 
@@ -182,6 +197,33 @@
                     $('.<?php echo "noRecordFoundContainer_$id"; ?>').show();
                     $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
                 }
+
+                // get Weekly subscriptions amount
+                $.ajax({
+                    url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
+                    type: "POST",
+                    data: {
+                        category: "weekly_subscription_amount",
+                        dateFrom: null,
+                        dateTo: null,
+                        filter3: null
+                    },
+                    success: function (response) {
+                        const weekly_subscription_amount = JSON.parse(response);
+                        let weeklyValue = (weekly_subscription_amount[0].total) ? parseFloat(weekly_subscription_amount[0].total).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : '$0.00';
+                        console.log(weeklyValue);
+                        let weeklyValueFormat = (weekly_subscription_amount[0].total)
+                            ? `<span class="badge bg-success" style="border-radius: 5px; font-weight: 500; font-size: 11px;">+ ${weeklyValue}</span>`
+                            : `<span class="badge bg-secondary" style="border-radius: 5px; font-weight: 500; font-size: 11px;">$0.00</span>`; 
+
+                        $('.<?php echo "subscription_container_$id > .badge"; ?>').remove();
+                        $('.<?php echo "subscription_container_$id"; ?>').append(weeklyValueFormat);
+                    },
+                    error: function () {
+                        console.error("Failed to fetch weekly subscription amount data.");
+                    }
+                });
+
                 widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), { percentPosition: true, horizontalOrder: true, });
             },
             error: function(jqXHR, textStatus, errorThrown) {

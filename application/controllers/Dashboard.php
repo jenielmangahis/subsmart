@@ -2608,12 +2608,14 @@ class Dashboard extends Widgets
             break;
             case 'recurring_service_plans':
                 foreach ($data as $datas) {
-                    if ($datas->category == "active_service_plans") {
-                        $graphData["Active Service Plans"] = intval($datas->total); 
+                    if ($datas->category == "active_subscribers") {
+                        $graphData["Active Subscribers"] = intval($datas->total); 
                     } else if ($datas->category == "agreements_expire_30days") {
                         $graphData["Agreements to Expire in 30 days"] = intval($datas->total);
                     } else if ($datas->category == "total_recurring_payment") {
                         $graphData["Total & Recurring Payments"] = floatval($datas->total);
+                    } else if ($datas->category == "weekly_total_recurring_payment") {
+                        $graphData["Weekly Total Payments"] = floatval($datas->total);
                     }
                 }
                 echo json_encode($graphData);
@@ -2752,6 +2754,10 @@ class Dashboard extends Widgets
                 $result['table_content'] = $table_content;
 
                 echo json_encode($result);
+            break;
+            case 'weekly_subscription_amount':
+                $graphData = $data;
+                echo json_encode($graphData);
             break;
             default:
                 $graphData = ['error' => 'Invalid category'];
