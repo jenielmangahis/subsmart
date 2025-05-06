@@ -44,8 +44,8 @@
             <div class="col-md-12">
                 <div class="input-group">
                     <select class="form-select <?php echo "thumbnailFilter1_$id"; ?>">
-                        <option value="all_time">All Time</option>
-                        <option value="this_year" selected>This Year</option>
+                        <option value="all_time" selected>All Time</option>
+                        <option value="this_year">This Year</option>
                     </select>
                     <select class="form-select <?php echo "thumbnailFilter2_$id"; ?>">
                         <option value="recent" selected>Recent</option>
@@ -66,10 +66,14 @@
             </div>
         </div>
         <div class="row">
-            <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
+            <div class="col-12 col-md text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center textData">
                     <small class="text-muted text-uppercase fw-bold">TOTAL REVENUE</small>
-                    <h4 class="<?php echo "textData1_$id"; ?>"></h2>
+                    <br>
+                    <div class='<?php echo "subscription_container_$id"; ?>' style='display: -webkit-inline-box; align-items: center;'>
+                        <h4 class="<?php echo "textData1_$id"; ?>"></h2>
+                        <span class="badge bg-secondary" style="border-radius: 5px; font-weight: 500; font-size: 11px;">$0.00</span>
+                    </div>
                 </div>
             </div>
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
@@ -204,6 +208,33 @@
                     $('.<?php echo "noRecordFoundContainer_$id"; ?>').show();
                     $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
                 }
+
+                // get Weekly subscriptions amount
+                $.ajax({
+                    url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
+                    type: "POST",
+                    data: {
+                        category: "weekly_subscription_amount",
+                        dateFrom: null,
+                        dateTo: null,
+                        filter3: null
+                    },
+                    success: function (response) {
+                        const weekly_subscription_amount = JSON.parse(response);
+                        let weeklyValue = (weekly_subscription_amount[0].total) ? parseFloat(weekly_subscription_amount[0].total).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : '$0.00';
+                        console.log(weeklyValue);
+                        let weeklyValueFormat = (weekly_subscription_amount[0].total)
+                            ? `<span class="badge bg-success" style="border-radius: 5px; font-weight: 500; font-size: 11px;">+ ${weeklyValue}</span>`
+                            : `<span class="badge bg-secondary" style="border-radius: 5px; font-weight: 500; font-size: 11px;">$0.00</span>`; 
+
+                        $('.<?php echo "subscription_container_$id > .badge"; ?>').remove();
+                        $('.<?php echo "subscription_container_$id"; ?>').append(weeklyValueFormat);
+                    },
+                    error: function () {
+                        console.error("Failed to fetch weekly subscription amount data.");
+                    }
+                });
+                
                 thumbnailMasonry = new Masonry(document.getElementById('thumbnailMasonry'), { percentPosition: true, horizontalOrder: true, });
             },
             error: function(jqXHR, textStatus, errorThrown) {
