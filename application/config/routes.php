@@ -1700,6 +1700,7 @@ $route['autocomplete/_company_furnishers'] = 'Autocomplete/company_furnishers';
 $route['autocomplete/_company_instructions'] = 'Autocomplete/company_instructions';
 $route['autocomplete/_company_job_tags'] = 'Autocomplete/company_job_tags';
 $route['autocomplete/_company_customer_lead'] = 'Autocomplete/company_customers_leads';
+$route['autocomplete/_company_customer_deal_labels'] = 'Autocomplete/company_customer_deal_labels';
 
 // Quick Add
 $route['quick_add/_add_customer'] = 'Quick_Add/ajax_add_company_customer';
@@ -2154,3 +2155,5 @@ $route['customer_deals/_update_deal_stage'] = 'CustomerDeal/ajax_update_deal_sta
 $route['customer_deals/_delete_deal_stage'] = 'CustomerDeal/ajax_delete_deal_stage';
 $route['customer_deals/_create_deal_label'] = 'CustomerDeal/ajax_create_deal_label';
 $route['customer_deals/_create_deal'] = 'CustomerDeal/ajax_customer_create_deal';
+$route['customer_deals/_delete_label'] = 'CustomerDeal/ajax_delete_label';
+$route['customer_deals/_update_deal_label'] = 'CustomerDeal/ajax_update_deal_label';

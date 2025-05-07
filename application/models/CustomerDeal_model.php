@@ -60,4 +60,12 @@ class CustomerDeal_model extends MY_Model
 
         return $options;
     }
+
+    public function create($data)
+    {
+        $this->db->insert($this->table, $data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
+    }
 }

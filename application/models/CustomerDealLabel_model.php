@@ -11,11 +11,20 @@ class CustomerDealLabel_model extends MY_Model
         parent::__construct();
     }
 
-    public function getAllByCompanyId($company_id)
+    public function getAllByCompanyId($company_id, $filters=array())
     {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
+
+        if ( !empty($filters) ) {
+            $this->db->group_start();
+            foreach( $filters as $filter ){
+                $this->db->like($filter['field'], $filter['value'], 'both');
+            }
+            $this->db->group_end();
+        }
+
         $this->db->order_by('id', 'DESC');
 
         return $this->db->get()->result();
@@ -27,7 +36,7 @@ class CustomerDealLabel_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('id', $id);
-        $this->db->order_by('created_at', 'DESC');
+        $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
         return $query->row();
