@@ -11,6 +11,8 @@ class Cron_Automation_Controller extends CI_Controller
 
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->model('AcsProfile_model', 'AcsProfile_model');   
+        $this->load->model('CalendarSettings_model', 'CalendarSettings_model');
+
     }
 
     public function cronInvoiceMailAutomation() 
@@ -93,18 +95,38 @@ class Cron_Automation_Controller extends CI_Controller
                                 }
                             }
 
-                            //Todo: add condition here for date time sent
                             $trigger_automation   = 0;
                             $invoice_due_date     = null;
                             $invoice_created_date = null;   
-                            $current_date_time    = date('Y-m-d H:i'); 
-
+                            $default_timezone    = 'America/New_York';
                             if($invoice) {
-                                $invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
-                                $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
+
+                                if($invoice->company_id != null) {
+                                    $settings = $this->CalendarSettings_model->getByCompanyId($invoice->company_id);
+                                    if( $settings && $settings->timezone != '' ){
+                                        $default_timezone = $settings->timezone;
+                                    }else{
+                                        $default_timezone = 'America/New_York';
+                                    }
+                                }
+                        
+                                //$invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
+                                //$invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
                             }
 
-                            if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
+                            date_default_timezone_set($default_timezone); 
+                            $current_date_time = date('Y-m-d H:i'); 
+
+                            if($automation_queue->trigger_time != null) {
+                                if(strtotime($current_date_time) >= strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 1;
+                                }elseif(strtotime($current_date_time) < strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 0;
+                                }
+                            }
+
+                            //
+                            /*if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
                                 if($automationData->timing_reference == 'after') {
                                     $add_trigger_minutes = $automationData->trigger_time;
                                     $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
@@ -128,7 +150,9 @@ class Cron_Automation_Controller extends CI_Controller
                                 if ($current_date_time >= $invoice_created_date) {
                                     $trigger_automation = 1;
                                 }
-                            }                            
+                            }*/
+                            
+                            //
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
@@ -336,14 +360,35 @@ class Cron_Automation_Controller extends CI_Controller
                             $trigger_automation   = 0;
                             $invoice_due_date     = null;
                             $invoice_created_date = null;   
-                            $current_date_time    = date('Y-m-d H:i'); 
+                            $default_timezone    = 'America/New_York';
 
                             if($invoice) {
-                                $invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
-                                $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
+
+                                if($invoice->company_id != null) {
+                                    $settings = $this->CalendarSettings_model->getByCompanyId($invoice->company_id);
+                                    if( $settings && $settings->timezone != '' ){
+                                        $default_timezone = $settings->timezone;
+                                    }else{
+                                        $default_timezone = 'America/New_York';
+                                    }
+                                }
+
+                                //$invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
+                                //$invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
                             }
 
-                            if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
+                            date_default_timezone_set($default_timezone); 
+                            $current_date_time = date('Y-m-d H:i'); 
+
+                            if($automation_queue->trigger_time != null) {
+                                if(strtotime($current_date_time) >= strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 1;
+                                }elseif(strtotime($current_date_time) < strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 0;
+                                }
+                            }
+
+                            /*if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
                                 if($automationData->timing_reference == 'after') {
                                     $add_trigger_minutes = $automationData->trigger_time;
                                     $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
@@ -367,7 +412,7 @@ class Cron_Automation_Controller extends CI_Controller
                                 if ($current_date_time >= $invoice_created_date) {
                                     $trigger_automation = 1;
                                 }
-                            }
+                            }*/
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
@@ -568,15 +613,34 @@ class Cron_Automation_Controller extends CI_Controller
                             //Todo: add condition here for date time sent
                             $trigger_automation   = 0;
                             $invoice_due_date     = null;
-                            $invoice_created_date = null;   
-                            $current_date_time    = date('Y-m-d H:i'); 
-
+                            $invoice_created_date = null;  
+                            $default_timezone     = 'America/New_York'; 
                             if($invoice) {
-                                $invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
-                                $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
+                                if($invoice->company_id != null) {
+                                    $settings = $this->CalendarSettings_model->getByCompanyId($invoice->company_id);
+                                    if( $settings && $settings->timezone != '' ){
+                                        $default_timezone = $settings->timezone;
+                                    }else{
+                                        $default_timezone = 'America/New_York';
+                                    }
+                                }
+
+                                //$invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
+                                //$invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
                             }
 
-                            if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
+                            date_default_timezone_set($default_timezone); 
+                            $current_date_time = date('Y-m-d H:i'); 
+
+                            if($automation_queue->trigger_time != null) {
+                                if(strtotime($current_date_time) >= strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 1;
+                                }elseif(strtotime($current_date_time) < strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 0;
+                                }
+                            }
+
+                            /*if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
                                 if($automationData->timing_reference == 'after') {
                                     $add_trigger_minutes = $automationData->trigger_time;
                                     $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
@@ -600,7 +664,7 @@ class Cron_Automation_Controller extends CI_Controller
                                 if ($current_date_time >= $invoice_created_date) {
                                     $trigger_automation = 1;
                                 }
-                            }
+                            }*/
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
@@ -802,14 +866,35 @@ class Cron_Automation_Controller extends CI_Controller
                             $trigger_automation   = 0;
                             $invoice_due_date     = null;
                             $invoice_created_date = null;   
-                            $current_date_time    = date('Y-m-d H:i'); 
+                            $default_timezone    = 'America/New_York';
 
                             if($invoice) {
-                                $invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
-                                $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
+
+                                if($invoice->company_id != null) {
+                                    $settings = $this->CalendarSettings_model->getByCompanyId($invoice->company_id);
+                                    if( $settings && $settings->timezone != '' ){
+                                        $default_timezone = $settings->timezone;
+                                    }else{
+                                        $default_timezone = 'America/New_York';
+                                    }
+                                }
+                                
+                                //$invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
+                                //$invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
                             }
 
-                            if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
+                            date_default_timezone_set($default_timezone); 
+                            $current_date_time = date('Y-m-d H:i'); 
+
+                            if($automation_queue->trigger_time != null) {
+                                if(strtotime($current_date_time) >= strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 1;
+                                }elseif(strtotime($current_date_time) < strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 0;
+                                }
+                            }
+
+                            /*if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
                                 if($automationData->timing_reference == 'after') {
                                     $add_trigger_minutes = $automationData->trigger_time;
                                     $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
@@ -833,7 +918,7 @@ class Cron_Automation_Controller extends CI_Controller
                                 if ($current_date_time >= $invoice_created_date) {
                                     $trigger_automation = 1;
                                 }
-                            }
+                            }*/
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
@@ -1035,14 +1120,34 @@ class Cron_Automation_Controller extends CI_Controller
                             $trigger_automation   = 0;
                             $invoice_due_date     = null;
                             $invoice_created_date = null;   
-                            $current_date_time    = date('Y-m-d H:i'); 
+                            $default_timezone    = 'America/New_York';
 
                             if($invoice) {
-                                $invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
-                                $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
+                                if($invoice->company_id != null) {
+                                    $settings = $this->CalendarSettings_model->getByCompanyId($invoice->company_id);
+                                    if( $settings && $settings->timezone != '' ){
+                                        $default_timezone = $settings->timezone;
+                                    }else{
+                                        $default_timezone = 'America/New_York';
+                                    }
+                                }
+
+                                //$invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
+                                //$invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
                             }
 
-                            if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
+                            date_default_timezone_set($default_timezone); 
+                            $current_date_time = date('Y-m-d H:i'); 
+
+                            if($automation_queue->trigger_time != null) {
+                                if(strtotime($current_date_time) >= strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 1;
+                                }elseif(strtotime($current_date_time) < strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 0;
+                                }
+                            }
+
+                            /*if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
                                 if($automationData->timing_reference == 'after') {
                                     $add_trigger_minutes = $automationData->trigger_time;
                                     $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
@@ -1066,7 +1171,7 @@ class Cron_Automation_Controller extends CI_Controller
                                 if ($current_date_time >= $invoice_created_date) {
                                     $trigger_automation = 1;
                                 }
-                            }
+                            }*/
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
