@@ -4767,8 +4767,14 @@ class Customer extends MY_Controller
 
     public function save_billing_information($input, $id)
     {
-        if( ($input['bill_method'] && $input['bill_method'] != '') && ($input['mmr'] && $input['mmr'] > 0) ){
-            $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($input['mmr'], logged('company_id'));
+        if( ($input['bill_method'] && $input['bill_method'] != '') ){
+            $rate_plan_id = 0;
+            $mmr_amount   = 0;
+            if( $input['mmr'] > 0 ){
+                $ratePlan = $this->RatePlan_model->getByAmountAndCompanyId($input['mmr'], logged('company_id'));
+                $rate_plan_id = $ratePlan->id;
+                $mmr_amount   = $ratePlan->amount;
+            }
 
             $input_billing = [];
             // billing data
@@ -4797,7 +4803,7 @@ class Customer extends MY_Controller
             $next_billing_date  = date('Y-m-d', strtotime($next_billing_date));
 
             $input_billing['fk_prof_id'] = $id;
-            $input_billing['ac_rate_plan_id'] = $ratePlan->id;
+            $input_billing['ac_rate_plan_id'] = $rate_plan_id;
             $input_billing['card_fname'] = $input['card_fname'];
             $input_billing['card_lname'] = $input['card_lname'];
             $input_billing['card_address'] = $input['card_address'];
@@ -4806,7 +4812,7 @@ class Customer extends MY_Controller
             $input_billing['zip'] = $input['billing_zip'];
             $input_billing['equipment'] = $input['equipment'];
             $input_billing['initial_dep'] = $input['initial_dep'];
-            $input_billing['mmr'] = $ratePlan->amount;
+            $input_billing['mmr'] = $mmr_amount;
             $input_billing['bill_freq'] = $input['bill_freq'];
             $input_billing['bill_day'] = $input['bill_day'];
             $input_billing['contract_term'] = $input['contract_term'];
