@@ -39,9 +39,27 @@ class CustomerDeal extends MY_Controller
         $this->load->model('CustomerDealStage_model');
         
         $company_id = logged('company_id');
+
         $sort = ['field' => 'name', 'order' => 'ASC'];
         $customerDealStages = $this->CustomerDealStage_model->getAllByCompanyId($company_id, $sort);
 
+        $dataCustomerDeals = [];
+        foreach($customerDealStages as $stage){
+            $sort = ['field' => 'customer_deals.id', 'order' => 'DESC'];
+            $customerDeals = $this->CustomerDeal_model->getAllByCustomerDealStageId($stage->id, $sort);
+            $sumDeals      = $this->CustomerDeal_model->getSumValueByCustomerDealStageId($stage->id);
+            
+            $total_deals   = 0;
+            if( $customerDeals ){                
+                $total_deals = count($customerDeals);
+                $dataCustomerDeals[$stage->id]['deals'] = $customerDeals;
+            }
+
+            $dataCustomerDeals[$stage->id]['total_deals'] = $total_deals;
+            $dataCustomerDeals[$stage->id]['total_value'] = $sumDeals->total_value;
+        }
+
+        $this->page_data['customerDeals']      = $dataCustomerDeals;
         $this->page_data['customerDealStages'] = $customerDealStages;
         $this->load->view('v2/pages/customer_deals/ajax_deal_stages', $this->page_data);
     }
@@ -232,6 +250,12 @@ class CustomerDeal extends MY_Controller
             $msg = 'Please specify name';
         }
 
+        $isExists = $this->CustomerDealLabel_model->getByName($post['label_name']);
+        if( $isExists && $isExists->company_id == $company_id ){
+            $is_success = 0;
+            $msg = 'Label name ' . $post['label_name'] . ' already exists';
+        }
+
         if( $is_success == 1 ){
 
             $data = [
@@ -282,7 +306,12 @@ class CustomerDeal extends MY_Controller
         }
         
         if( $is_success == 1 ){
-            $labels = json_encode($post['deal_label']);
+            
+            $labels = "";
+            if( count($post['deal_label']) > 0 ){
+                $labels = json_encode($post['deal_label']);
+            }
+            
             $data   = [
                 'company_id' => $company_id,
                 'owner_id' => $post['owner_id'],
@@ -381,6 +410,66 @@ class CustomerDeal extends MY_Controller
         $return = [
             'is_success' => $is_success,
             'msg' => $msg,
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_view_customer_deal()
+    {
+        $this->load->model('CustomerDeal_model');
+        $this->load->model('CustomerDealStage_model');
+        $this->load->model('CustomerDealLabel_model');
+        $this->load->model('Users_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+        $customerDeal = $this->CustomerDeal_model->getById($post['customer_deal_id']);
+        if( $customerDeal && $customerDeal->company_id == $company_id ){
+            $label_ids  = json_decode($customerDeal->labels);
+            $dealLabels = [];
+            if( $label_ids ){                
+                $filters[]  = ['field' => 'id', 'value' => $label_ids];
+                $dealLabels = $this->CustomerDealLabel_model->getAllByCompanyId($company_id, $filters);
+            }
+
+            $owner = $this->Users_model->getUser($customerDeal->owner_id);
+            $customerDealStages  = $this->CustomerDealStage_model->getAllByCompanyId($company_id);
+
+            $this->page_data['customerDeal'] = $customerDeal;
+            $this->page_data['customerDealStages'] = $customerDealStages;
+            $this->page_data['dealLabels']   = $dealLabels; 
+            $this->page_data['owner'] = $owner;
+            $this->load->view('v2/pages/customer_deals/ajax_view_customer_deal', $this->page_data);
+        }else{
+            echo '<div class="alert alert-danger" role="alert">Record not found</div>';
+        }
+    }
+
+    public function ajax_delete_customer_deal()
+    {
+        $this->load->model('CustomerDeal_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $customerDeal = $this->CustomerDeal_model->getById($post['customer_deal_id']);
+        if( $customerDeal && $customerDeal->company_id == $company_id ){
+            $this->CustomerDeal_model->delete($post['customer_deal_id']);
+
+            $is_success = 1;
+            $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Customer Deals : Deleted customer deal ' . $customerDeal->deal_title; 
+            createActivityLog($activity_name);
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
         ];
 
         echo json_encode($return);
