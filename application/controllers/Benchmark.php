@@ -752,7 +752,12 @@ class Benchmark extends MY_Controller {
     }
 
     public function testPhpScript($timezone = null) {
-        echo 'Timezone';
+
+        $cid  = logged('company_id');
+        createAutomationQueue('send_email', 'invoice', 'invoice', 'created', 1531,$cid);
+
+        echo "Default timezone: " . date_default_timezone_get();
+
     }
 
 }

@@ -61,7 +61,7 @@
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="table-responsive" style="max-height: 500px;">
                     <table class="table table-bordered <?php echo "tableData_$id"; ?> table-hover w-100 mb-3">
-                        <thead>
+                        <thead style="background: #00000008;">
                             <tr>
                                 <th>Employee</th>
                                 <th>Job</th>

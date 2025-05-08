@@ -118,14 +118,11 @@ class Taskhub_model extends MY_Model {
 
     public function getAllNotCompletedTasksByCompanyId($company_id)
     {
-        $id = $user_id;
-        $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color');
-        $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','left');
+        $this->db->select('*');
         $this->db->from($this->table);
-
-        $this->db->where('tasks.company_id', $company_id);
-        $this->db->where('tasks.status_id <>', 6); //Refer to task status table. 6 = completed
-        $this->db->order_by('tasks.date_created','DESC');
+        $this->db->where('company_id', $company_id);
+        $this->db->where('status <>', 'Done'); 
+        $this->db->order_by('date_created','DESC');
         $query = $this->db->get();
         return $query->result();
     }

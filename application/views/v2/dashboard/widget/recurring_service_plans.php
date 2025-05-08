@@ -211,7 +211,6 @@
                     success: function (response) {
                         const weekly_subscription_amount = JSON.parse(response);
                         let weeklyValue = (weekly_subscription_amount[0].total) ? parseFloat(weekly_subscription_amount[0].total).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : '$0.00';
-                        console.log(weeklyValue);
                         let weeklyValueFormat = (weekly_subscription_amount[0].total)
                             ? `<span class="badge bg-success" style="border-radius: 5px; font-weight: 500; font-size: 11px;">+ ${weeklyValue}</span>`
                             : `<span class="badge bg-secondary" style="border-radius: 5px; font-weight: 500; font-size: 11px;">$0.00</span>`; 
