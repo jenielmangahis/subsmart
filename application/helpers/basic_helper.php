@@ -5233,6 +5233,107 @@ if(!function_exists('set_expense_graph_data')) {
         return $queue_success_count;
     }
 
+    function createAutomationQueueV2($trigger_action = null, $entity = null, $trigger_event = null, $entity_id = 0) {
+
+        $CI =& get_instance();
+        $CI->load->model('Automation_model');
+        $CI->load->model('Automation_Queue_model');
+        $CI->load->model('CalendarSettings_model');
+        $CI->load->model('Invoice_model');
+        $CI->load->model('Jobs_model');
+
+        $default_timezone    = 'America/New_York';
+        $queue_success_count = 0;
+        $trigger_time        = null;
+
+        $auto_params = [
+            'entity' => $entity,
+            'trigger_action' => $trigger_action,
+            'operation' => 'send',
+            'status' => 'active',
+            'trigger_event' => $trigger_event
+        ];
+
+        $automationsData = $CI->Automation_model->getAutomationsListByParams($auto_params);
+
+        if($automationsData) {
+            foreach($automationsData as $automationData) {
+
+                if(($automationData->timing_reference != "" && $automationData->timing_reference != null) && ($automationData->trigger_time != null && $automationData->trigger_time > 0)) {
+                    if($automationData->entity == 'invoice') {
+                        $invoice = $CI->Invoice_model->getinvoice($entity_id); 
+                        if($invoice) {
+                            if($invoice->company_id != null) {
+                                $settings = $CI->CalendarSettings_model->getByCompanyId($invoice->company_id);
+                                if( $settings && $settings->timezone != '' ){
+                                    $default_timezone = $settings->timezone;
+                                }else{
+                                    $default_timezone = 'America/New_York';
+                                }
+                            }
+                            date_default_timezone_set($default_timezone);                             
+
+                            $invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
+                            $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
+
+                            $add_trigger_minutes = $automationData->trigger_time;
+                            if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {   
+                                if($automationData->timing_reference == 'ahead_of') {
+                                    $trigger_time = date('Y-m-d H:i:s', strtotime($invoice->date_created . ' - ' .$add_trigger_minutes. ' minutes'));
+                                }elseif($automationData->timing_reference == 'after') {
+                                    $trigger_time = date('Y-m-d H:i:s', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
+                                }
+                            }elseif($automationData->date_reference == 'due_date' && $invoice_due_date != null) {
+
+                            }
+                        }
+                    }elseif($automationData->entity == 'job') {
+                        $job = $CI->Jobs_model->get_specific_job($entity_id); 
+                        if($job) {
+                            if($job->company_id != null) {
+                                $settings = $CI->CalendarSettings_model->getByCompanyId($job->company_id);
+                                if( $settings && $settings->timezone != '' ){
+                                    $default_timezone = $settings->timezone;
+                                }else{
+                                    $default_timezone = 'America/New_York';
+                                }
+                            }
+                            date_default_timezone_set($default_timezone);                             
+
+                            $job_created_date = date('Y-m-d H:i', strtotime($job->date_created));
+                            $add_trigger_minutes = $automationData->trigger_time;
+                            if($automationData->date_reference == 'create_date' && $job_created_date != null) {   
+                                if($automationData->timing_reference == 'ahead_of') {
+                                    $trigger_time = date('Y-m-d H:i:s', strtotime($job->date_created . ' - ' .$add_trigger_minutes. ' minutes'));
+                                }elseif($automationData->timing_reference == 'after') {
+                                    $trigger_time = date('Y-m-d H:i:s', strtotime($job->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
+                                }
+                            }elseif($automationData->date_reference == 'due_date' && $invoice_due_date != null) {
+                                
+                            }
+                        }
+                    }
+                }
+
+                $data_queue = [
+                    'automation_id' => $automationData->id,
+                    'target_id' => 0,
+                    'entity_type' => $entity,
+                    'status' => 'new',
+                    'entity_id' => $entity_id,
+                    'trigger_time' => $trigger_time,
+                    'is_triggered' => 0
+                ];
+                $automation_queue = $CI->Automation_Queue_model->saveAutomationQueue($data_queue); 
+                if($automation_queue) {
+                    $queue_success_count++;
+                }
+            }            
+        }
+
+        return $queue_success_count;
+    }
+
     function maskString($string, $length = 5){
         $mask_string =  str_repeat("*", strlen($string)-$length) . substr($string, -$length);
         
