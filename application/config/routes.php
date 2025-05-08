@@ -2159,3 +2159,4 @@ $route['customer_deals/_delete_label'] = 'CustomerDeal/ajax_delete_label';
 $route['customer_deals/_update_deal_label'] = 'CustomerDeal/ajax_update_deal_label';
 $route['customer_deals/_view_customer_deal'] = 'CustomerDeal/ajax_view_customer_deal';
 $route['customer_deals/_delete_customer_deal'] = 'CustomerDeal/ajax_delete_customer_deal';
+$route['customer_deals/_edit_customer_deal_form'] = 'CustomerDeal/ajax_edit_customer_deal_form';
