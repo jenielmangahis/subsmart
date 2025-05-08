@@ -659,6 +659,7 @@ class Dashboard_model extends MY_Model
                 $this->db->select('acs_profile.prof_id AS id, acs_profile.company_id AS company_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, CONCAT(acs_profile.city, ", ", acs_profile.state, " ", acs_profile.zip_code) AS address,acs_profile.phone_h AS phone, acs_profile.email AS email, COUNT(invoices.id) AS invoice_records');
                 $this->db->from('acs_profile');
                 $this->db->where('acs_profile.company_id', $company_id);
+                // $this->db->where('invoices.company_id', $company_id);
                 $this->db->where('invoices.view_flag', 0);
                 $this->db->join('invoices', 'invoices.customer_id = acs_profile.prof_id', 'left');
                 $this->db->group_by('acs_profile.prof_id, invoices.customer_id');
@@ -703,19 +704,48 @@ class Dashboard_model extends MY_Model
                 return $data;
             break;
             case 'sales_leaderboard':
-                $this->db->select('users.id AS id, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS sales_rep, COALESCE(invoices.status, "") AS invoice_status, COUNT(jobs.id) AS total_jobs, SUM(invoices.grand_total) AS total_sales, invoices.date_created AS date_created');
-                $this->db->from('users');
-                $this->db->where('users.company_id', $company_id);
-                $this->db->where('invoices.view_flag', 0);
-                $this->db->where('invoices.status !=', 'Draft');
-                $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >=", $dateFrom);
-                $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <=", $dateTo);
-                $this->db->join('jobs', 'jobs.employee_id = users.id', 'left');
-                $this->db->join('invoices', 'invoices.job_id = jobs.id', 'left');
-                $this->db->order_by('total_jobs', 'DESC');
-                $this->db->group_by('users.id');
-                $data = $this->db->get();
-                return $data->result();
+                $query = $this->db->query("
+                    SELECT
+                        users.id AS id,
+                        users.company_id AS company_id,
+                        CONCAT(users.FName, ' ', users.LName) AS sales_rep,
+                        COALESCE(invoices.status, '') AS invoice_status,
+                        COUNT(jobs.id) AS total_jobs,
+                        SUM(invoices.grand_total) AS total_sales,
+                        MAX(invoices.date_created) AS date_created
+                    FROM users
+                    LEFT JOIN jobs ON jobs.employee_id = users.id
+                    LEFT JOIN invoices ON invoices.job_id = jobs.id
+                    WHERE invoices.view_flag = 0
+                    AND invoices.status != 'Draft'
+                    AND DATE(invoices.date_created) BETWEEN '{$dateFrom}' AND '{$dateTo}'
+                    AND users.company_id = '{$company_id}'
+                    GROUP BY users.id
+                    UNION
+                    SELECT
+                        users.id AS id,
+                        users.company_id AS company_id,
+                        CONCAT(users.FName, ' ', users.LName) AS sales_rep,
+                        '' AS invoice_status,
+                        0 AS total_jobs,
+                        0 AS total_sales,
+                        '' AS date_created
+                    FROM users
+                    WHERE users.company_id = '{$company_id}'
+                    AND users.id NOT IN (
+                        SELECT DISTINCT users.id
+                        FROM users
+                        LEFT JOIN jobs ON jobs.employee_id = users.id
+                        LEFT JOIN invoices ON invoices.job_id = jobs.id
+                        WHERE invoices.view_flag = 0
+                            AND invoices.status != 'Draft'
+                            AND DATE(invoices.date_created) BETWEEN '{$dateFrom}' AND '{$dateTo}'
+                            AND users.company_id = '{$company_id}'
+                    )
+                    ORDER BY total_jobs DESC
+                ");
+                $data = $query->result();
+                return $data;
             break;
             case 'tech_leaderboard':
                 $query = $this->db->query("
@@ -874,6 +904,52 @@ class Dashboard_model extends MY_Model
                     WHERE acs_profile.company_id = '{$company_id}' 
                         AND acs_profile.status IN ('Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM')
                         AND DATE(acs_billing.bill_start_date) BETWEEN '{$firstDayOfThisWeek}' AND '{$lastDayOfThisWeek}'
+                ");
+                $data = $query->result();
+                return $data;
+            break;
+            case 'scorecard':
+                $query = $this->db->query("
+                    SELECT 
+                        users.id AS employee_id,
+                        point_rating_system.company_id AS company_id, 
+                        CONCAT(users.FName, ' ', users.LName) AS employee_name,
+                        SUM(point_rating_system.points) AS total_points,
+                        SUM(CASE WHEN point_rating_system.module = 'job' THEN 1 ELSE 0 END) AS job_count,
+                        SUM(CASE WHEN point_rating_system.module = 'service_ticket' THEN 1 ELSE 0 END) AS ticket_count,
+                    --  IFNULL(attendance_summary.attendance_count, 0) AS attendance_count,
+                        ROUND((IFNULL(attendance_summary.attendance_count, 0) / DAY(LAST_DAY(NOW()))) * 100, 2) AS attendance_percentage,
+                        ROUND((
+                            (
+                                SUM(CASE WHEN point_rating_system.module = 'job' THEN 1 ELSE 0 END) +
+                                SUM(CASE WHEN point_rating_system.module = 'service_ticket' THEN 1 ELSE 0 END) +
+                                IFNULL(attendance_summary.attendance_count, 0)
+                            ) 
+                            / 
+                            (
+                                (
+                                    (SELECT COUNT(DISTINCT id) FROM point_rating_system WHERE company_id = {$company_id} AND status = 1 AND module IN ('job', 'service_ticket'))
+                                ) + DAY(LAST_DAY(NOW()))
+                            )
+                        ) * 100, 2) AS overall_performance,
+                        users.profile_img AS profile_img, 
+                        users.created_at AS date_created
+                    FROM users
+                    LEFT JOIN point_rating_system ON JSON_CONTAINS(point_rating_system.employee_id, JSON_QUOTE(CAST(users.id AS CHAR)))
+                    LEFT JOIN (
+                        SELECT user_id, COUNT(DISTINCT DATE(date_created)) AS attendance_count
+                        FROM timesheet_attendance
+                        WHERE MONTH(date_created) = MONTH(NOW()) AND YEAR(date_created) = YEAR(NOW())
+                        GROUP BY user_id
+                    ) AS attendance_summary ON attendance_summary.user_id = users.id
+                    WHERE users.company_id = {$company_id}
+                        AND point_rating_system.company_id = {$company_id}
+                        AND point_rating_system.status = 1
+                        AND DATE(point_rating_system.date_created) BETWEEN '{$dateFrom}' AND '{$dateTo}'
+                    GROUP BY users.id
+                    ORDER BY total_points DESC
+                    LIMIT 1
+
                 ");
                 $data = $query->result();
                 return $data;

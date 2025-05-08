@@ -2759,6 +2759,10 @@ class Dashboard extends Widgets
                 $graphData = $data;
                 echo json_encode($graphData);
             break;
+            case 'scorecard':
+                $graphData = $data;
+                echo json_encode($graphData);
+            break;
             default:
                 $graphData = ['error' => 'Invalid category'];
             break;
