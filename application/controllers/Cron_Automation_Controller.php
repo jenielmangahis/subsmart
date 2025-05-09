@@ -11,6 +11,230 @@ class Cron_Automation_Controller extends CI_Controller
 
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->model('AcsProfile_model', 'AcsProfile_model');   
+        $this->load->model('CalendarSettings_model', 'CalendarSettings_model');
+        $this->load->model('Jobs_model', 'Jobs_model');
+
+    }
+
+    public function cronJobMailAutomation() 
+    {
+        $this->cronCreatedJobMailAutomation();
+    }
+
+    public function cronCreatedJobMailAutomation() 
+    {
+        $automation_fail    = 0; 
+        $automation_success = 0;
+        $mail_send_limit    = 40;
+        $is_live_mail_credentials = isLiveMailSmptCredentials();       
+        
+        $auto_to_user_params = [
+            'entity' => 'job',
+            'trigger_action' => 'send_email',
+            'operation' => 'send',
+            'status' => 'active',
+            'trigger_event' => 'created'
+        ];
+
+        $automationsData = $this->automation_model->getAutomationsListByParams($auto_to_user_params); 
+        if($automationsData) {
+            foreach($automationsData as $automationData) {
+                
+                $current_time    = date('H:i');
+                $sent_start_time = date('H:i', strtotime($automationData->start_time));
+                $sent_end_time   = date('H:i', strtotime($automationData->end_time));
+
+                $startTimeStamp = strtotime($sent_start_time);
+                $endTimeStamp   = strtotime($sent_end_time);
+                $checkTimeStamp = strtotime($current_time);   
+                
+                //Add condition to check if sending is in between automation start & end time
+                if ($checkTimeStamp >= $startTimeStamp && $checkTimeStamp <= $endTimeStamp) {
+                    $automation_id = $automationData->id;
+                    $filters['automation_id'] = $automation_id;
+                    $filters['is_triggered']  = 0;
+                    $filters['status']        = 'new';          
+
+                    $automation_queues = $this->automation_queue_model->getActiveAutomationQueue($filters);      
+                    if($automation_queues) {
+                        foreach($automation_queues as $automation_queue) {
+                            $queue_entity_id = $automation_queue->entity_id;
+                            if($automation_queue->entity_type == 'invoice') {
+                                $entityData = $this->invoice_model->getinvoice($queue_entity_id); 
+                            }elseif($automation_queue->entity_type == 'job') {
+                                $entityData = $this->Jobs_model->get_specific_job($queue_entity_id); 
+                            }
+
+                            $targetName    = "";
+                            $customerEmail = "";
+    
+                            if($automationData->target == 'user') {
+                                $targetUser = $this->users_model->getCompanyUserById($automationData->target_id);
+                                if($targetUser) {
+                                    $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                    $customerEmail = $targetUser->email;
+                                }
+                            }elseif($automationData->target == 'client') {
+                                if($entityData && $entityData->customer_id) {
+                                    $targetUser = $this->AcsProfile_model->getByProfId($entityData->customer_id);    
+                                    if($targetUser) {
+                                        $targetName    = $targetUser->first_name . ' ' . $targetUser->last_name;
+                                        $customerEmail = $targetUser->email;
+                                    } 
+                                }
+                            }elseif($automationData->target == 'sales_rep') {
+                                if($entityData && $entityData->user_id) {
+                                    $targetUser = $this->users_model->getCompanyUserById($entityData->user_id);
+                                    if($targetUser) {
+                                        $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                        $customerEmail = $targetUser->email;
+                                    }                                   
+                                }
+                            }
+
+                            $trigger_automation   = 0; 
+                            $default_timezone    = 'America/New_York';
+                            if($entityData) {
+                                if($entityData->company_id != null) {
+                                    $settings = $this->CalendarSettings_model->getByCompanyId($entityData->company_id);
+                                    if( $settings && $settings->timezone != '' ){
+                                        $default_timezone = $settings->timezone;
+                                    }else{
+                                        $default_timezone = 'America/New_York';
+                                    }
+                                }
+                            }
+
+                            date_default_timezone_set($default_timezone); 
+                            $current_date_time = date('Y-m-d H:i'); 
+
+                            if($automation_queue->trigger_time != null) {
+                                if(strtotime($current_date_time) >= strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 1;
+                                }elseif(strtotime($current_date_time) < strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 0;
+                                }
+                            }
+
+                            if($automationData->trigger_time == 0) {
+                                $trigger_automation = 1;
+                            }
+
+                            //Add custom condition checking - start
+                            $a_conditions       = json_decode($automationData->conditions, true);
+                            $a_conditions_count = count($a_conditions);
+
+                            $is_custom_condition_success_count = 0;
+                            $invoice_grand_total = $invoice->grand_total;
+                
+                            if($a_conditions_count > 0) {
+                                foreach($a_conditions as $a_condition) {
+                                    if($a_condition['property'] == 'amount') {
+
+                                        if($a_condition['operator'] == '>') {
+                                            if($invoice_grand_total > $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '<') {
+                                            if($invoice_grand_total < $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }elseif($a_condition['operator'] == '=') {
+                                            if($invoice_grand_total == $a_condition['value']) {
+                                                $is_custom_condition_success_count++;
+                                            }
+                                        }
+    
+                                    }
+                                }
+
+                                if($is_custom_condition_success_count != $a_conditions_count) {
+                                    $trigger_automation = 0;
+                                }
+
+                            }
+                            //Add custom condition checking - end                         
+                            
+                            if($trigger_automation == 1 && ($automation_success <= $mail_send_limit)) {
+                                if($targetName != "" && $customerEmail != "") {
+    
+                                    if($is_live_mail_credentials) {
+                                        
+                                        $mail = email__getInstance();
+                                        $mail->FromName = 'nSmarTrac';
+                                        
+                                        $mail->addAddress($customerEmail, $targetName);
+                                        $mail->isHTML(true);
+                                        $mail->Subject = $automationData->email_subject;
+                                        $body_with_smart_tags = $this->replaceSmartTags($automationData->email_body, $invoice->id);
+                                        $mail->Body    = $body_with_smart_tags;
+                                
+                                        if (!$mail->Send()) {
+                                            $automation_fail++;
+                                        } else {
+    
+                                            //Update queue status
+                                            $queue_data['is_triggered'] = 1;
+                                            $queue_data['status']       = 'sent';
+                                            $this->automation_queue_model->updateAutomationQueue($automation_queue->id, $queue_data);  
+    
+                                            $automation_success++;
+                                        }
+                                        
+                                    } else {
+        
+                                        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+        
+                                        $host     = 'smtp.mailtrap.io';
+                                        $port     = 2525;
+                                        $username = 'd7c92e3b5e901d';
+                                        $password = '203aafda110ab7';
+                                        $from     = 'noreply@nsmartrac.com';
+                                        $subject  = $automationData->email_subject;
+                        
+                                        $mail = new PHPMailer;
+                                        $mail->isSMTP();
+                                        $mail->Host = $host;
+                                        $mail->SMTPAuth = true;
+                                        $mail->Username = $username;
+                                        $mail->Password = $password;
+                                        $mail->SMTPSecure = 'tls';
+                                        $mail->Port = $port;
+                        
+                                        // Sender and recipient settings
+                                        $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+                                        $mail->addAddress($customerEmail, $targetName);
+                        
+                                        $mail->IsHTML(true);
+                                        
+                                        $mail->Subject = $subject;
+                                        $body_with_smart_tags = $this->replaceSmartTags($automationData->email_body, $invoice->id);
+                                        $mail->Body    = $body_with_smart_tags;
+                        
+                                        // Send the email
+                                        if(!$mail->send()){
+                                            $automation_fail++; // echo 'mailer error: ' . $mail->ErrorInfo;
+                                        } else {
+        
+                                            //Update queue status
+                                            $queue_data['is_triggered'] = 1;
+                                            $queue_data['status']       = 'sent';
+                                            $this->automation_queue_model->updateAutomationQueue($automation_queue->id, $queue_data);                                    
+        
+                                            $automation_success++;
+                                        }
+        
+                                    }
+        
+                                }
+                            }
+            
+                        }
+                    }
+                }              
+                
+            }
+        }
     }
 
     public function cronInvoiceMailAutomation() 
@@ -93,18 +317,38 @@ class Cron_Automation_Controller extends CI_Controller
                                 }
                             }
 
-                            //Todo: add condition here for date time sent
                             $trigger_automation   = 0;
                             $invoice_due_date     = null;
                             $invoice_created_date = null;   
-                            $current_date_time    = date('Y-m-d H:i'); 
-
+                            $default_timezone    = 'America/New_York';
                             if($invoice) {
-                                $invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
-                                $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
+
+                                if($invoice->company_id != null) {
+                                    $settings = $this->CalendarSettings_model->getByCompanyId($invoice->company_id);
+                                    if( $settings && $settings->timezone != '' ){
+                                        $default_timezone = $settings->timezone;
+                                    }else{
+                                        $default_timezone = 'America/New_York';
+                                    }
+                                }
+                        
+                                //$invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
+                                //$invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
                             }
 
-                            if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
+                            date_default_timezone_set($default_timezone); 
+                            $current_date_time = date('Y-m-d H:i'); 
+
+                            if($automation_queue->trigger_time != null) {
+                                if(strtotime($current_date_time) >= strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 1;
+                                }elseif(strtotime($current_date_time) < strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 0;
+                                }
+                            }
+
+                            //
+                            /*if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
                                 if($automationData->timing_reference == 'after') {
                                     $add_trigger_minutes = $automationData->trigger_time;
                                     $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
@@ -128,7 +372,9 @@ class Cron_Automation_Controller extends CI_Controller
                                 if ($current_date_time >= $invoice_created_date) {
                                     $trigger_automation = 1;
                                 }
-                            }                            
+                            }*/
+                            
+                            //
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
@@ -336,14 +582,35 @@ class Cron_Automation_Controller extends CI_Controller
                             $trigger_automation   = 0;
                             $invoice_due_date     = null;
                             $invoice_created_date = null;   
-                            $current_date_time    = date('Y-m-d H:i'); 
+                            $default_timezone    = 'America/New_York';
 
                             if($invoice) {
-                                $invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
-                                $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
+
+                                if($invoice->company_id != null) {
+                                    $settings = $this->CalendarSettings_model->getByCompanyId($invoice->company_id);
+                                    if( $settings && $settings->timezone != '' ){
+                                        $default_timezone = $settings->timezone;
+                                    }else{
+                                        $default_timezone = 'America/New_York';
+                                    }
+                                }
+
+                                //$invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
+                                //$invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
                             }
 
-                            if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
+                            date_default_timezone_set($default_timezone); 
+                            $current_date_time = date('Y-m-d H:i'); 
+
+                            if($automation_queue->trigger_time != null) {
+                                if(strtotime($current_date_time) >= strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 1;
+                                }elseif(strtotime($current_date_time) < strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 0;
+                                }
+                            }
+
+                            /*if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
                                 if($automationData->timing_reference == 'after') {
                                     $add_trigger_minutes = $automationData->trigger_time;
                                     $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
@@ -367,7 +634,7 @@ class Cron_Automation_Controller extends CI_Controller
                                 if ($current_date_time >= $invoice_created_date) {
                                     $trigger_automation = 1;
                                 }
-                            }
+                            }*/
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
@@ -568,15 +835,34 @@ class Cron_Automation_Controller extends CI_Controller
                             //Todo: add condition here for date time sent
                             $trigger_automation   = 0;
                             $invoice_due_date     = null;
-                            $invoice_created_date = null;   
-                            $current_date_time    = date('Y-m-d H:i'); 
-
+                            $invoice_created_date = null;  
+                            $default_timezone     = 'America/New_York'; 
                             if($invoice) {
-                                $invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
-                                $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
+                                if($invoice->company_id != null) {
+                                    $settings = $this->CalendarSettings_model->getByCompanyId($invoice->company_id);
+                                    if( $settings && $settings->timezone != '' ){
+                                        $default_timezone = $settings->timezone;
+                                    }else{
+                                        $default_timezone = 'America/New_York';
+                                    }
+                                }
+
+                                //$invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
+                                //$invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
                             }
 
-                            if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
+                            date_default_timezone_set($default_timezone); 
+                            $current_date_time = date('Y-m-d H:i'); 
+
+                            if($automation_queue->trigger_time != null) {
+                                if(strtotime($current_date_time) >= strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 1;
+                                }elseif(strtotime($current_date_time) < strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 0;
+                                }
+                            }
+
+                            /*if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
                                 if($automationData->timing_reference == 'after') {
                                     $add_trigger_minutes = $automationData->trigger_time;
                                     $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
@@ -600,7 +886,7 @@ class Cron_Automation_Controller extends CI_Controller
                                 if ($current_date_time >= $invoice_created_date) {
                                     $trigger_automation = 1;
                                 }
-                            }
+                            }*/
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
@@ -802,14 +1088,35 @@ class Cron_Automation_Controller extends CI_Controller
                             $trigger_automation   = 0;
                             $invoice_due_date     = null;
                             $invoice_created_date = null;   
-                            $current_date_time    = date('Y-m-d H:i'); 
+                            $default_timezone    = 'America/New_York';
 
                             if($invoice) {
-                                $invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
-                                $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
+
+                                if($invoice->company_id != null) {
+                                    $settings = $this->CalendarSettings_model->getByCompanyId($invoice->company_id);
+                                    if( $settings && $settings->timezone != '' ){
+                                        $default_timezone = $settings->timezone;
+                                    }else{
+                                        $default_timezone = 'America/New_York';
+                                    }
+                                }
+                                
+                                //$invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
+                                //$invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
                             }
 
-                            if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
+                            date_default_timezone_set($default_timezone); 
+                            $current_date_time = date('Y-m-d H:i'); 
+
+                            if($automation_queue->trigger_time != null) {
+                                if(strtotime($current_date_time) >= strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 1;
+                                }elseif(strtotime($current_date_time) < strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 0;
+                                }
+                            }
+
+                            /*if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
                                 if($automationData->timing_reference == 'after') {
                                     $add_trigger_minutes = $automationData->trigger_time;
                                     $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
@@ -833,7 +1140,7 @@ class Cron_Automation_Controller extends CI_Controller
                                 if ($current_date_time >= $invoice_created_date) {
                                     $trigger_automation = 1;
                                 }
-                            }
+                            }*/
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
@@ -1035,14 +1342,34 @@ class Cron_Automation_Controller extends CI_Controller
                             $trigger_automation   = 0;
                             $invoice_due_date     = null;
                             $invoice_created_date = null;   
-                            $current_date_time    = date('Y-m-d H:i'); 
+                            $default_timezone    = 'America/New_York';
 
                             if($invoice) {
-                                $invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
-                                $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
+                                if($invoice->company_id != null) {
+                                    $settings = $this->CalendarSettings_model->getByCompanyId($invoice->company_id);
+                                    if( $settings && $settings->timezone != '' ){
+                                        $default_timezone = $settings->timezone;
+                                    }else{
+                                        $default_timezone = 'America/New_York';
+                                    }
+                                }
+
+                                //$invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
+                                //$invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
                             }
 
-                            if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
+                            date_default_timezone_set($default_timezone); 
+                            $current_date_time = date('Y-m-d H:i'); 
+
+                            if($automation_queue->trigger_time != null) {
+                                if(strtotime($current_date_time) >= strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 1;
+                                }elseif(strtotime($current_date_time) < strtotime($automation_queue->trigger_time)) {
+                                    $trigger_automation = 0;
+                                }
+                            }
+
+                            /*if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
                                 if($automationData->timing_reference == 'after') {
                                     $add_trigger_minutes = $automationData->trigger_time;
                                     $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
@@ -1066,7 +1393,7 @@ class Cron_Automation_Controller extends CI_Controller
                                 if ($current_date_time >= $invoice_created_date) {
                                     $trigger_automation = 1;
                                 }
-                            }
+                            }*/
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;

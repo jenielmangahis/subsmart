@@ -18,11 +18,18 @@ class CustomerDealLabel_model extends MY_Model
         $this->db->where('company_id', $company_id);
 
         if ( !empty($filters) ) {
-            $this->db->group_start();
+            //$this->db->group_start();
             foreach( $filters as $filter ){
-                $this->db->like($filter['field'], $filter['value'], 'both');
+                if( is_array($filter['value']) ){
+                    $this->db->where_in($filter['field'], $filter['value']);
+                }else{
+                    if( $filter['value'] != '' ){
+                        $this->db->where($filter['field'], $filter['value']);
+                    }   
+                }
+                
             }
-            $this->db->group_end();
+            //$this->db->group_end();
         }
 
         $this->db->order_by('id', 'DESC');
@@ -40,7 +47,18 @@ class CustomerDealLabel_model extends MY_Model
 
         $query = $this->db->get();
         return $query->row();
-    }   
+    } 
+    
+    public function getByName($name)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('name', $name);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->row();
+    } 
 
     public function create($data)
     {
