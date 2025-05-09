@@ -286,7 +286,9 @@ class Autocomplete extends MY_Controller
             $result[] = [
                 'id' => $label->id,
                 'name' => $label->name,
-                'color' => $label->color
+                'text' => $label->name,
+                'color' => $label->color,
+                'title' => $label->color
             ];            
         }
         die(json_encode($result));   

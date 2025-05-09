@@ -284,13 +284,12 @@ class CustomerDeal extends MY_Controller
         echo json_encode($return);
     }
 
-    public function ajax_customer_create_deal()
+    public function ajax_create_deal()
     {
         $this->load->model('CustomerDeal_model');
 
         $is_success = 1;
         $msg    = '';
-        $label  = [];
 
         $company_id  = logged('company_id');
         $post = $this->input->post();
@@ -329,9 +328,7 @@ class CustomerDeal extends MY_Controller
                 'date_modified' => date("Y-m-d H:i:s")
             ];
             
-            $id = $this->CustomerDeal_model->create($data); 
-
-            $label = ['id' =>$id, 'name' => $post['label_name'], 'color' => $post['label_color']];
+            $id = $this->CustomerDeal_model->create($data);
 
             //Activity Logs
             $activity_name = 'Customer Deals : Created deal ' . $post['deal_title']; 
@@ -340,8 +337,7 @@ class CustomerDeal extends MY_Controller
 
         $return = [
             'is_success' => $is_success,
-            'msg' => $msg,
-            'label' => $label
+            'msg' => $msg
         ];
 
         echo json_encode($return);
@@ -432,7 +428,7 @@ class CustomerDeal extends MY_Controller
                 $filters[]  = ['field' => 'id', 'value' => $label_ids];
                 $dealLabels = $this->CustomerDealLabel_model->getAllByCompanyId($company_id, $filters);
             }
-
+            
             $owner = $this->Users_model->getUser($customerDeal->owner_id);
             $customerDealStages  = $this->CustomerDealStage_model->getAllByCompanyId($company_id);
 
@@ -466,6 +462,171 @@ class CustomerDeal extends MY_Controller
             $activity_name = 'Customer Deals : Deleted customer deal ' . $customerDeal->deal_title; 
             createActivityLog($activity_name);
         }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_edit_customer_deal_form()
+    {
+        $this->load->model('CustomerDeal_model');
+        $this->load->model('CustomerDealStage_model');
+        $this->load->model('CustomerDealLabel_model');
+        $this->load->model('Users_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+        $customerDeal = $this->CustomerDeal_model->getById($post['customer_deal_id']);
+        if( $customerDeal && $customerDeal->company_id == $company_id ){
+
+            $customerDealStages  = $this->CustomerDealStage_model->getAllByCompanyId($company_id);
+            $customerDealLables  = $this->CustomerDealLabel_model->getAllByCompanyId($company_id);
+            $optionSourceChannel = $this->CustomerDeal_model->optionSourceChannel();
+            $optionVisibleTo     = $this->CustomerDeal_model->optionVisibleTo();
+            $owner               = $this->Users_model->getUser($customerDeal->owner_id);
+
+            $label_ids  = json_decode($customerDeal->labels);
+            $dealLabels = [];
+            if( $label_ids ){                
+                $filters[]  = ['field' => 'id', 'value' => $label_ids];
+                $dealLabels = $this->CustomerDealLabel_model->getAllByCompanyId($company_id, $filters);
+            }
+
+            $this->page_data['customerDeal'] = $customerDeal;
+            $this->page_data['owner']        = $owner;
+            $this->page_data['dealLabels']   = $dealLabels;
+            $this->page_data['customerDealStages']  = $customerDealStages;
+            $this->page_data['optionSourceChannel'] = $optionSourceChannel;
+            $this->page_data['customerDealLables']  = $customerDealLables;
+            $this->page_data['optionVisibleTo'] = $optionVisibleTo;
+            $this->load->view('v2/pages/customer_deals/ajax_edit_customer_deal_form', $this->page_data);
+        }else{
+            echo '<div class="alert alert-danger" role="alert">Record not found</div>';
+        }
+    }
+
+    public function ajax_update_deal()
+    {
+        $this->load->model('CustomerDeal_model');
+
+        $is_success = 1;
+        $msg    = '';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+        
+        if( $post['deal_title'] == '' ){
+            $is_success = 0;
+            $msg = 'Please deal title';
+        }
+
+        if( $post['customer_id'] == '' ){
+            $is_success = 0;
+            $msg = 'Please select customer';
+        }    
+        
+        if( $is_success == 1 ){
+
+            $customerDeal = $this->CustomerDeal_model->getById($post['customer_deal_id']);
+            if( $customerDeal && $customerDeal->company_id == $company_id ){
+                $labels = "";
+                if( count($post['deal_label']) > 0 ){
+                    $labels = json_encode($post['deal_label']);
+                }
+                
+                $data   = [
+                    'owner_id' => $post['owner_id'],
+                    'customer_id' => $post['customer_id'],     
+                    'customer_deal_stage_id' => $post['deal_stage_id'],
+                    'deal_title' => $post['deal_title'],
+                    'value' => $post['deal_value'],
+                    'labels' => $labels,
+                    'probability' => $post['deal_probability'],
+                    'expected_close_date' => $post['expected_close_date'],
+                    'source_channel' => $post['source_channel'],
+                    'source_channel_id' => $post['source_channel_id'],
+                    'visible_to' => $post['visible_to'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+                
+                $this->CustomerDeal_model->update($customerDeal->id, $data); 
+
+                //Activity Logs
+                $activity_name = 'Customer Deals : Updated deal ' . $post['deal_title']; 
+                createActivityLog($activity_name);
+            }else{
+                $is_success = 0;
+                $msg = 'Cannot find data';
+            }
+        }     
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    // Drag drop update
+    public function ajax_update_customer_deal_stage()
+    {
+        $this->load->model('CustomerDeal_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $deal_id  = trim($post['deal_id']);
+        $stage_id = trim($post['stage_id']);
+        
+        if( $deal_id > 0 && $stage_id > 0 ){
+            $customerDeal = $this->CustomerDeal_model->getById($deal_id);
+            if( $customerDeal && $customerDeal->company_id == $company_id ){
+                
+                $this->CustomerDeal_model->update($customerDeal->id, ['customer_deal_stage_id' => $stage_id]);
+
+                $is_success = 1;
+                $msg = '';
+            }
+        } 
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_update_customer_deal_status()
+    {
+        $this->load->model('CustomerDeal_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $deal_id  = trim($post['deal_id']);
+        
+        if( $deal_id > 0 ){
+            $customerDeal = $this->CustomerDeal_model->getById($deal_id);
+            if( $customerDeal && $customerDeal->company_id == $company_id ){
+                
+                $this->CustomerDeal_model->update($customerDeal->id, ['status' => $post['status']]);
+
+                $is_success = 1;
+                $msg = '';
+            }
+        } 
 
         $return = [
             'is_success' => $is_success,
