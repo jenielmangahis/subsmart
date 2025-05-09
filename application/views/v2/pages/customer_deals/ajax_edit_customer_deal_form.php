@@ -1,3 +1,4 @@
+<input type="hidden" name="customer_deal_id" value="<?= $customerDeal->id; ?>" />
 <div class="row">
     <div class="col-sm-12">
         <label class="mb-2">Customer <?= $customerDeal->customer_first_name . ' ' . $customerDeal->customer_last_name; ?></label>
@@ -85,7 +86,7 @@
 </div>
 <div class="d-flex justify-content-end">                        
     <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
-    <button type="submit" class="nsm-button primary" id="btn-save-customer-deal">Save</button>
+    <button type="submit" class="nsm-button primary" id="btn-update-customer-deal">Save</button>
 </div>
 
 <script>
@@ -147,6 +148,9 @@ $(function(){
                     results: data,
                 };
             },
+            escapeMarkup: function(markup) {
+                return markup;
+            },
             cache: true
         },
         placeholder: 'Select Customer',
@@ -156,6 +160,33 @@ $(function(){
         templateSelection: editFormatRepoCustomerSelection
     });
 
+    $('.edit-company-users').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_users',
+            dataType: 'json',
+            delay: 250,                
+            data: function(params) {
+                return {
+                    q: params.term,
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+
+                return {
+                    results: data,
+                };
+            },
+            cache: true
+        },
+        dropdownParent: $("#modal-edit-deal"),
+        placeholder: 'Select User',
+        minimumInputLength: 0,
+        templateResult: editFormatRepoUser,
+        templateSelection: editFormatRepoSelectionUser
+    });
+    
     function editFormatRepoCustomer(repo) {
         if (repo.loading) {
             return repo.text;
@@ -193,8 +224,9 @@ $(function(){
     }
 
     function editFormatSelectionCustomerDealLabel(data, container){
-        let color  = data.color;
-        let name   = data.name;
+        console.log(data);
+        let color  = data.title;
+        let name   = data.text;
 
         $(container).css("background-color", color);
         if( color == '#ffffff' ){
@@ -203,6 +235,30 @@ $(function(){
             return $(`<span style="color:#ffffff;">${name}</span>`);
         }
     }
+
+    function editFormatRepoUser(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+        
+        var $container = $(
+            '<div>' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
+        );
+
+        return $container;
+    }
+
+    function editFormatRepoSelectionUser(repo) {
+        return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
+    }
+
+    var initialValue = { id: 5, text: 'Orange', color:'red' }; // Example pre-selected value
+    // Create the DOM option and pre-select it
+    <?php foreach( $dealLabels as $label ){ ?>
+        var option = new Option('<?= $label->name; ?>', '<?= $label->id; ?>', true, true);
+        option.setAttribute("title","<?= $label->color; ?>");
+        $('.edit-select-label').append(option).trigger('change');
+    <?php } ?>
 
     $('.edit-select-label').on('select2:selecting', function (e) {        
         if (e.params.args.originalEvent.target.className === 'bx bx-trash-alt') {                  
@@ -249,8 +305,10 @@ $(function(){
             let label_id   = e.params.args.originalEvent.target.getAttribute('data-id');      
             let label_name = e.params.args.originalEvent.target.getAttribute('data-name');      
             let label_color = e.params.args.originalEvent.target.getAttribute('data-color');
+            let modal_name  = 'modal-edit-deal';
             
-            $('#modal-add-new-deal').modal('hide');
+            $('#customer-deal-modal-name').val(modal_name);
+            $('#modal-edit-deal').modal('hide');
             $('#modal-quick-edit-label').modal('show');
             $('#edit-customer-deal-label-name').val(label_name);
             $('#edit-customer-deal-label-color').val(label_color);
