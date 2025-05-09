@@ -1539,12 +1539,15 @@ $route['cron/customer_recurring_subscriptions_by_active_customer'] = 'Cron_Jobs_
 
 //Cron Automation - Mail
 $route['cron/invoice_mail_automation'] = 'Cron_Automation_Controller/cronInvoiceMailAutomation';
+$route['cron/job_mail_automation'] = 'Cron_Automation_Controller/cronJobMailAutomation';
 
 $route['cron/send_created_invoice_mail_automation'] = 'Cron_Automation_Controller/cronCreatedInvoiceMailAutomation';
 $route['cron/send_paid_invoice_mail_automation'] = 'Cron_Automation_Controller/cronPaidInvoiceMailAutomation'; 
 $route['cron/send_set_due_invoice_mail_automation'] = 'Cron_Automation_Controller/cronSetToDueInvoiceMailAutomation'; 
 $route['cron/send_set_past_due_invoice_mail_automation'] = 'Cron_Automation_Controller/cronSetToPastDueInvoiceMailAutomation'; 
 $route['cron/send_sent_invoice_mail_automation'] = 'Cron_Automation_Controller/cronSentInvoiceMailAutomation'; 
+
+$route['cron/send_created_job_mail_automation'] = 'Cron_Automation_Controller/cronCreatedJobMailAutomation';
 
 //Cron Automation - SMS
 $route['cron/send_created_invoice_sms_automation'] = 'Cron_Automation_Controller/cronCreatedInvoiceSMSAutomation';

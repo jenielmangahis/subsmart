@@ -3694,22 +3694,30 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('Invoice_model', 'invoice_model');
         $this->load->model('accounting_recurring_transactions_model');
+        $this->load->model('Payment_records_model', 'Payment_records_model');
 
         /**
          * Update recurring invoice late computation - start
          */
         $invoices_data = $this->invoice_model->getAllActiveInvoice([],1);
+        //$invoices_data = $this->invoice_model->getActiveInvoiceByInvoiceNumber([], 'INV-0000105');
 
         $deduct_days_computation = 0;
         $total_records           = 0;
         $total_pause             = 0;
         foreach($invoices_data as $inv_data) {
 
+            $total_deduction_amount_paid = 0;
+
             $recurr_transaction = $this->accounting_recurring_transactions_model->get_by_type_transaction_id_status('invoice', $inv_data->id, 2); //2 is pause
             if(!$recurr_transaction) {
 
+                $payments_record = $this->Payment_records_model->getTotalPaymentAmountByInvoiceIdVoid($inv_data->id, 0);
+                if($payments_record) {
+                    $total_deduction_amount_paid = $payments_record->total_amount_paid;
+                }
+                
                 $invoiceSettings = $this->invoice_settings_model->getByCompanyId($inv_data->company_id);
-
                 $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($inv_data->customer_id);	
 
                 $current_date            = date('Y-m-d');
@@ -3789,20 +3797,17 @@ class Cron_Jobs_Controller extends CI_Controller
                     $new_invoice_grand_total = (int) $inv_data->adjustment_value + $late_fee;
                 }
 
-                //Update invoice new grand total & late fee
-                //if($new_invoice_grand_total > $inv_data->grand_total) {
-                    $invdata = [
-                        'id' => $inv_data->id,
-                        'invoice_totals' => $new_invoice_grand_total,
-                        'balance' => $new_invoice_grand_total,
-                        'grand_total' => $new_invoice_grand_total,
-                        'total_due' => $new_invoice_grand_total,
-                        'late_fee' => $late_fee
-                    ];         
-                    
-                    $this->customer_ad_model->update_data($invdata, 'invoices', 'id');	
-                    $total_records++;
-                //}                
+                $invdata = [
+                    'id' => $inv_data->id,
+                    'invoice_totals' => $new_invoice_grand_total,
+                    'balance' => $new_invoice_grand_total - $total_deduction_amount_paid,
+                    'grand_total' => $new_invoice_grand_total,
+                    'total_due' => $new_invoice_grand_total,
+                    'late_fee' => $late_fee
+                ];         
+                
+                $this->customer_ad_model->update_data($invdata, 'invoices', 'id');	
+                $total_records++;
 
             } else {
                 $total_pause++;    

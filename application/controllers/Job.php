@@ -3011,6 +3011,10 @@ class Job extends MY_Controller
 
         $alarmInfoDatas = $this->workorder_model->update_alarm_adi_job($alarmInfoData);
 
+        /**
+         * Insert job mail automation here
+         */
+        createAutomationQueueV2('send_email', 'job', 'created', $jobs_id);
 
         $return = [
             'is_success' => $is_success,
