@@ -60,7 +60,7 @@
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center textData">
                     <small class="text-muted text-uppercase fw-bold">TOTAL LEADS</small>
-                    <h4 class="<?php echo "textData1_$id"; ?>"></h2>
+                    <h4 class="<?php echo "textData1_$id"; ?>"></h4>
                 </div>
             </div>
             <div class="col mt-2 <?php echo "graphDataContainer_$id"; ?> thumbnailGraphDisplay display_none">

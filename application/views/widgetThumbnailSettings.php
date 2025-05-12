@@ -91,7 +91,7 @@
 
     .textData {
         background: #00000008;
-        border-radius: 10px;
+        border-radius: 5px;
         border: 1px solid #d9d9d9;
         padding: 5px;
         margin-top: 10px;
