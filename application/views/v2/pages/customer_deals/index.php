@@ -9,6 +9,199 @@
 }
 .btn-edit-deal-stage i, .btn-delete-deal-stage i{
     font-size:25px;
+}   
+.select2-selection--multiple .select2-search__field{
+    width:auto !important;
+}
+.stage-quick-add-deal-btn{
+    display:block;
+    width:100%;   
+    font-size:15px; 
+}
+.stage-create-deal-container{
+    display:block;
+    height:50px;
+    width:100%;
+}
+.stage-deal-name{
+    font-size:16px;
+    font-weight:bold;
+}
+.stage-deal-title-container{
+    display:block;
+    margin-bottom:6px;
+}
+.stage-deals-actions a:hover{
+    cursor:pointer !important;
+}
+.btn-edit-deal-stage, .btn-delete-deal-stage{
+    color:#6a4a86 !important;
+}
+#view-customer-deals-container .bg-primary {
+    background-color: #6a4a86 !important;
+}
+#view-customer-deals-container .card-header {
+    color:#ffffff;
+}
+#view-customer-deals-container .bg-primary .card-body {
+    background-color: #f7f7f9;
+}
+#view-customer-deals-container .details {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+#view-customer-deals-container .details li {
+    font-size: 17px;
+    display: inline-block;
+    width: 49%;
+    margin-bottom: 0px;
+    vertical-align: top;
+}
+.customer-deals-view-details .label{
+    font-weight:bold;
+    font-size:15px;
+}
+.view-customer-deals-actions button{
+    display:inline-block;
+    width:92px;
+}
+.view-customer-deals-actions i{
+    position: relative;
+    top: 1px;
+}
+
+.steps .step {
+    display: block;
+    width: 100%;
+    margin-bottom: 35px;
+    text-align: center
+}
+
+.steps .step .step-icon-wrap {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 40px;
+    text-align: center
+}
+
+.steps .step .step-icon-wrap::before,
+.steps .step .step-icon-wrap::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    width: 50%;
+    height: 3px;
+    margin-top: -1px;
+    background-color: #e1e7ec;
+    content: '';
+    z-index: 1
+}
+
+.steps .step .step-icon-wrap::before {
+    left: 0
+}
+
+.steps .step .step-icon-wrap::after {
+    right: 0
+}
+
+.steps .step .step-icon {
+    display: inline-block;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e1e7ec;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    color: #374250;
+    font-size: 23px;
+    line-height: 40px !important;
+    z-index: 5
+}
+
+.steps .step .step-title {
+    margin-top: 16px;
+    margin-bottom: 0;
+    color: #606975;
+    font-size: 14px;
+    font-weight: 500
+}
+
+.steps .step:first-child .step-icon-wrap::before {
+    display: none
+}
+
+.steps .step:last-child .step-icon-wrap::after {
+    display: none
+}
+
+.steps .step.completed .step-icon-wrap::before,
+.steps .step.completed .step-icon-wrap::after {
+    background-color: #6a4a86
+}
+
+.steps .step.completed .step-icon {
+    border-color: #6a4a86;
+    background-color: #6a4a86;
+    color: #fff
+}
+
+@media (max-width: 576px) {
+    .flex-sm-nowrap .step .step-icon-wrap::before,
+    .flex-sm-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 768px) {
+    .flex-md-nowrap .step .step-icon-wrap::before,
+    .flex-md-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 991px) {
+    .flex-lg-nowrap .step .step-icon-wrap::before,
+    .flex-lg-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 1200px) {
+    .flex-xl-nowrap .step .step-icon-wrap::before,
+    .flex-xl-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+#view-customer-deals-container .card-header i{
+    position:relative;
+    top:2px;
+}
+#customer-deal-lost{
+    display:block;
+    color:#721c24;
+    /* background-color:#f8d7da; */
+    padding:10px;
+    text-align:center;
+    border-style: dashed;
+}
+#customer-deal-won{
+    display:block;
+    color:#155724;
+    /* background-color:#d4edda; */
+    padding:10px;
+    text-align:center;
+    border-style: dashed;
+}
+.lost-container {
+    border-style: solid !important;
+    background-color:#f8d7da;
+}
+.won-container {
+    border-style: solid !important;
+    background-color:#d4edda;
 }
 </style>
 <div class="nsm-fab-container">
@@ -52,7 +245,17 @@
                         </div>
                     </div>
                 </div>                
-                <div class="row" id="deal-stages"></div>            
+                <input type="hidden" id="customer-deal-modal-name" value="" />
+                <div class="row" id="deal-stages"></div> 
+                <div class="row mt-4" id="customer-deal-lost-container" style="display:none;">
+                    <div class="col-md-6">
+                        <div id="customer-deal-lost" ><h3>LOST</h3></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="customer-deal-won" ><h3>WON</h3></div>
+                    </div>
+
+                </div>     
             </div>
         </div>
     </div>

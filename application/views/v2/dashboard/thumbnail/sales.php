@@ -61,7 +61,7 @@
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
                 <div class="text-center textData">
                     <small class="text-muted text-uppercase fw-bold">TOTAL AMOUNT</small>
-                    <h4 class="<?php echo "textData1_$id"; ?>"></h2>
+                    <h4 class="<?php echo "textData1_$id"; ?>"></h4>
                 </div>
             </div>
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">

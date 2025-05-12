@@ -15,7 +15,7 @@ class CustomerDeal_model extends MY_Model
     {
         $this->db->select('customer_deals.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname, acs_profile.business_name AS customer_business_name');
         $this->db->from($this->table);
-        $this->db->join('acs_profile', 'customer_deals.customer_id = acs_profile.customer_id', 'left');
+        $this->db->join('acs_profile', 'customer_deals.customer_id = acs_profile.prof_id', 'left');
         $this->db->where('customer_deals.company_id', $company_id);
         
         if( $sort ){
@@ -55,9 +55,10 @@ class CustomerDeal_model extends MY_Model
 
     public function getById($id)
     {
-        $this->db->select('*');
+        $this->db->select('customer_deals.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname, acs_profile.business_name AS customer_business_name');
         $this->db->from($this->table);
-        $this->db->where('id', $id);        
+        $this->db->join('acs_profile', 'customer_deals.customer_id = acs_profile.prof_id', 'left');
+        $this->db->where('customer_deals.id', $id);        
 
         $query = $this->db->get();
         return $query->row();

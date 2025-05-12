@@ -16,7 +16,7 @@
         </div>
         <div class="card bg-primary mb-3">
             <div class="card-header">
-                <span class="h5">SUMMARY</span>
+                <span class="h5"><i class='bx bx-list-ul'></i> SUMMARY</span>
             </div>
             <div class="card-body">
                 <div class="row customer-deals-view-details">
@@ -46,7 +46,7 @@
     <div class="col-12">
         <div class="card bg-primary mb-3">
             <div class="card-header">
-                <span class="h5">SOURCE</span>
+                <span class="h5"><i class='bx bx-news'></i> SOURCE</span>
                 <span class="float-end"></span>
             </div>
             <div class="card-body">
@@ -71,7 +71,7 @@
     <div class="col-12">
         <div class="card bg-primary mb-3">
             <div class="card-header">
-                <span class="h5">OWNER</span>
+                <span class="h5"><i class='bx bx-user-circle'></i> OWNER</span>
                 <span class="float-end"></span>
             </div>
             <div class="card-body">
@@ -87,6 +87,41 @@
                     <div class="col-md-4 col-12">
                         <div class="label">EMAIL</div>
                         <i class='bx bx-envelope'></i> <?= $owner && $owner->email != '' ? $owner->email : '---'; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card bg-primary mb-3">
+            <div class="card-header">
+                <span class="h5"><i class='bx bx-show-alt'></i> OVERVIEW</span>
+                <span class="float-end"></span>
+            </div>
+            <div class="card-body">
+                <div class="row customer-deals-view-details">
+                    <div class="col-md-4 col-12">
+                        <div class="label">DEAL AGE</div>
+                        <?php 
+                            $datetime_a = new DateTime($customerDeal->date_created);
+                            $datetime_b = new DateTime();
+                            $difference = $datetime_a->diff($datetime_b);
+                        ?>
+                        <?= $difference->d > 1 ? $difference->d . ' days' : $difference->d . ' day'; ?>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <div class="label">INACTIVE DAYS</div>
+                        <?php 
+                            $datetime_a = new DateTime($customerDeal->date_updated);
+                            $datetime_b = new DateTime();
+                            $difference = $datetime_a->diff($datetime_b);
+                        ?>
+                        <?= $difference->d > 1 ? $difference->d . ' days' : $difference->d . ' day'; ?>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <div class="label">CREATED</div>
+                        <?= date("F j, Y", strtotime($customerDeal->date_created)); ?>
                     </div>
                 </div>
             </div>
