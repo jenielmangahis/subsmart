@@ -3014,7 +3014,8 @@ class Job extends MY_Controller
         /**
          * Insert job mail automation here
          */
-        createAutomationQueueV2('send_email', 'job', 'created', $jobs_id);
+        createAutomationQueueV2('send_email', 'job', 'created', '', $jobs_id);
+        createAutomationQueueV2('send_email', 'job', 'has_status', 'Scheduled', $jobs_id);
 
         $return = [
             'is_success' => $is_success,
@@ -6368,6 +6369,9 @@ class Job extends MY_Controller
 
                 //SMS Notification
                 createCronAutoSmsNotification($job->company_id, $job->id, 'job', 'arrival', $job->employee_id); 
+
+                //Add mail automation queue
+                //createAutomationQueueV2('send_email', 'job', 'has_status', $post['job_status'], $job->id);
 
                 $is_success = 1;
                 $msg = '';

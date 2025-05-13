@@ -13,7 +13,6 @@ class Cron_Automation_Controller extends CI_Controller
         $this->load->model('AcsProfile_model', 'AcsProfile_model');   
         $this->load->model('CalendarSettings_model', 'CalendarSettings_model');
         $this->load->model('Jobs_model', 'Jobs_model');
-
     }
 
     public function cronJobMailAutomation() 
@@ -266,9 +265,8 @@ class Cron_Automation_Controller extends CI_Controller
 
         $automationsData = $this->automation_model->getAutomationsListByParams($auto_to_user_params); 
         if($automationsData) {
-
             foreach($automationsData as $automationData) {
-                
+                $trigger_success = 0;
                 $current_time    = date('H:i');
                 $sent_start_time = date('H:i', strtotime($automationData->start_time));
                 $sent_end_time   = date('H:i', strtotime($automationData->end_time));
@@ -332,8 +330,6 @@ class Cron_Automation_Controller extends CI_Controller
                                     }
                                 }
                         
-                                //$invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
-                                //$invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
                             }
 
                             date_default_timezone_set($default_timezone); 
@@ -346,35 +342,6 @@ class Cron_Automation_Controller extends CI_Controller
                                     $trigger_automation = 0;
                                 }
                             }
-
-                            //
-                            /*if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
-                                if($automationData->timing_reference == 'after') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
-                                }elseif($automationData->timing_reference == 'before') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created . ' - ' .$add_trigger_minutes. ' minutes'));
-                                }
-
-                                if ($current_date_time >= $invoice_created_date) {
-                                    $trigger_automation = 1;
-                                }
-                            }elseif($automationData->date_reference == 'due_date' && $invoice_due_date != null) {
-                                if($automationData->timing_reference == 'after') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->due_date. ' + ' .$add_trigger_minutes. ' minutes'));
-                                }elseif($automationData->timing_reference == 'before') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->due_date . ' - ' .$add_trigger_minutes. ' minutes'));
-                                }
-
-                                if ($current_date_time >= $invoice_created_date) {
-                                    $trigger_automation = 1;
-                                }
-                            }*/
-                            
-                            //
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
@@ -439,11 +406,12 @@ class Cron_Automation_Controller extends CI_Controller
                                             $this->automation_queue_model->updateAutomationQueue($automation_queue->id, $queue_data);  
     
                                             $automation_success++;
+                                            $trigger_success++;
                                         }
                                         
                                     } else {
         
-                                        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+                                        //include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
         
                                         $host     = 'smtp.mailtrap.io';
                                         $port     = 2525;
@@ -473,7 +441,7 @@ class Cron_Automation_Controller extends CI_Controller
                         
                                         // Send the email
                                         if(!$mail->send()){
-                                            $automation_fail++; // echo 'mailer error: ' . $mail->ErrorInfo;
+                                            $automation_fail++;
                                         } else {
         
                                             //Update queue status
@@ -482,6 +450,7 @@ class Cron_Automation_Controller extends CI_Controller
                                             $this->automation_queue_model->updateAutomationQueue($automation_queue->id, $queue_data);                                    
         
                                             $automation_success++;
+                                            $trigger_success++;
                                         }
         
                                     }
@@ -491,18 +460,21 @@ class Cron_Automation_Controller extends CI_Controller
             
                         }
                     }
-                }              
-                
-            }
+                }    
 
+                if($trigger_success >= 1) {     
+                    $autData['trigger_count'] = $automationData->trigger_count + 1; 
+                    $this->automation_model->updateAutomation($automationData->id, $autData);	                
+                }                 
+            }          
         }
         /**
          * Send email automation for creating new invoice - End
          */
 
-         echo 'Create New Invoice Automation Fail: ' . $automation_fail;
-         echo '<br />';
          echo 'Create New Invoice Automation Success: ' . $automation_success;
+         echo '<br />';
+         echo 'Create New Invoice Automation Fail: ' . $automation_fail;
          echo '<hr />';
 
     }
@@ -533,6 +505,7 @@ class Cron_Automation_Controller extends CI_Controller
                 $current_time    = date('H:i');
                 $sent_start_time = date('H:i', strtotime($automationData->start_time));
                 $sent_end_time   = date('H:i', strtotime($automationData->end_time));
+                $trigger_success = 0;
 
                 $startTimeStamp = strtotime($sent_start_time);
                 $endTimeStamp   = strtotime($sent_end_time);
@@ -595,8 +568,6 @@ class Cron_Automation_Controller extends CI_Controller
                                     }
                                 }
 
-                                //$invoice_due_date     = date('Y-m-d H:i', strtotime($invoice->due_date));
-                                //$invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created));
                             }
 
                             date_default_timezone_set($default_timezone); 
@@ -609,32 +580,6 @@ class Cron_Automation_Controller extends CI_Controller
                                     $trigger_automation = 0;
                                 }
                             }
-
-                            /*if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
-                                if($automationData->timing_reference == 'after') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
-                                }elseif($automationData->timing_reference == 'before') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created . ' - ' .$add_trigger_minutes. ' minutes'));
-                                }
-
-                                if ($current_date_time >= $invoice_created_date) {
-                                    $trigger_automation = 1;
-                                }
-                            }elseif($automationData->date_reference == 'due_date' && $invoice_due_date != null) {
-                                if($automationData->timing_reference == 'after') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->due_date. ' + ' .$add_trigger_minutes. ' minutes'));
-                                }elseif($automationData->timing_reference == 'before') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->due_date . ' - ' .$add_trigger_minutes. ' minutes'));
-                                }
-
-                                if ($current_date_time >= $invoice_created_date) {
-                                    $trigger_automation = 1;
-                                }
-                            }*/
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
@@ -698,11 +643,12 @@ class Cron_Automation_Controller extends CI_Controller
                                             $this->automation_queue_model->updateAutomationQueue($automation_queue->id, $queue_data);  
     
                                             $automation_success++;
+                                            $trigger_success++;
                                         }
                                         
                                     } else {
         
-                                        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+                                        //include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
                                         $host     = 'smtp.mailtrap.io';
                                         $port     = 2525;
                                         $username = 'd7c92e3b5e901d';
@@ -733,6 +679,7 @@ class Cron_Automation_Controller extends CI_Controller
                                             $automation_fail++;
                                         } else {
                                             $automation_success++;
+                                            $trigger_success++;
         
                                             //Update queue status
                                             $queue_data['is_triggered'] = 1;
@@ -748,6 +695,11 @@ class Cron_Automation_Controller extends CI_Controller
                         }
                     }                    
                 }
+
+                if($trigger_success >= 1) {     
+                    $autData['trigger_count'] = $automationData->trigger_count + 1; 
+                    $this->automation_model->updateAutomation($automationData->id, $autData);	                
+                }                 
 
             }
         }
@@ -787,6 +739,7 @@ class Cron_Automation_Controller extends CI_Controller
                 $current_time    = date('H:i');
                 $sent_start_time = date('H:i', strtotime($automationData->start_time));
                 $sent_end_time   = date('H:i', strtotime($automationData->end_time));
+                $trigger_success = 0;
 
                 $startTimeStamp = strtotime($sent_start_time);
                 $endTimeStamp   = strtotime($sent_end_time);
@@ -861,32 +814,6 @@ class Cron_Automation_Controller extends CI_Controller
                                     $trigger_automation = 0;
                                 }
                             }
-
-                            /*if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
-                                if($automationData->timing_reference == 'after') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
-                                }elseif($automationData->timing_reference == 'before') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created . ' - ' .$add_trigger_minutes. ' minutes'));
-                                }
-
-                                if ($current_date_time >= $invoice_created_date) {
-                                    $trigger_automation = 1;
-                                }
-                            }elseif($automationData->date_reference == 'due_date' && $invoice_due_date != null) {
-                                if($automationData->timing_reference == 'after') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->due_date. ' + ' .$add_trigger_minutes. ' minutes'));
-                                }elseif($automationData->timing_reference == 'before') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->due_date . ' - ' .$add_trigger_minutes. ' minutes'));
-                                }
-
-                                if ($current_date_time >= $invoice_created_date) {
-                                    $trigger_automation = 1;
-                                }
-                            }*/
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
@@ -950,11 +877,12 @@ class Cron_Automation_Controller extends CI_Controller
                                             $this->automation_queue_model->updateAutomationQueue($automation_queue->id, $queue_data);
 
                                             $automation_success++;
+                                            $trigger_success++;
                                         }
                                         
                                     } else {
         
-                                        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+                                        //include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
                                         $host     = 'smtp.mailtrap.io';
                                         $port     = 2525;
                                         $username = 'd7c92e3b5e901d';
@@ -985,6 +913,7 @@ class Cron_Automation_Controller extends CI_Controller
                                             $automation_fail++;
                                         } else {
                                             $automation_success++;
+                                            $trigger_success++;
         
                                             //Update queue status
                                             $queue_data['is_triggered'] = 1;
@@ -1001,6 +930,10 @@ class Cron_Automation_Controller extends CI_Controller
                     }                    
                 }
 
+                if($trigger_success >= 1) {     
+                    $autData['trigger_count'] = $automationData->trigger_count + 1; 
+                    $this->automation_model->updateAutomation($automationData->id, $autData);	                
+                } 
             }
         }
         /**
@@ -1039,6 +972,7 @@ class Cron_Automation_Controller extends CI_Controller
                 $current_time    = date('H:i');
                 $sent_start_time = date('H:i', strtotime($automationData->start_time));
                 $sent_end_time   = date('H:i', strtotime($automationData->end_time));
+                $trigger_success = 0;
 
                 $startTimeStamp = strtotime($sent_start_time);
                 $endTimeStamp   = strtotime($sent_end_time);
@@ -1115,32 +1049,6 @@ class Cron_Automation_Controller extends CI_Controller
                                     $trigger_automation = 0;
                                 }
                             }
-
-                            /*if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
-                                if($automationData->timing_reference == 'after') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
-                                }elseif($automationData->timing_reference == 'before') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created . ' - ' .$add_trigger_minutes. ' minutes'));
-                                }
-
-                                if ($current_date_time >= $invoice_created_date) {
-                                    $trigger_automation = 1;
-                                }
-                            }elseif($automationData->date_reference == 'due_date' && $invoice_due_date != null) {
-                                if($automationData->timing_reference == 'after') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->due_date. ' + ' .$add_trigger_minutes. ' minutes'));
-                                }elseif($automationData->timing_reference == 'before') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->due_date . ' - ' .$add_trigger_minutes. ' minutes'));
-                                }
-
-                                if ($current_date_time >= $invoice_created_date) {
-                                    $trigger_automation = 1;
-                                }
-                            }*/
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
@@ -1204,11 +1112,12 @@ class Cron_Automation_Controller extends CI_Controller
                                             $this->automation_queue_model->updateAutomationQueue($automation_queue->id, $queue_data);
 
                                             $automation_success++;
+                                            $trigger_success++;
                                         }
                                         
                                     } else {
         
-                                        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+                                        //include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
                                         $host     = 'smtp.mailtrap.io';
                                         $port     = 2525;
                                         $username = 'd7c92e3b5e901d';
@@ -1239,6 +1148,7 @@ class Cron_Automation_Controller extends CI_Controller
                                             $automation_fail++;
                                         } else {
                                             $automation_success++;
+                                            $trigger_success++;
         
                                             //Update queue status
                                             $queue_data['is_triggered'] = 1;
@@ -1253,6 +1163,11 @@ class Cron_Automation_Controller extends CI_Controller
             
                         }
                     }                    
+                }
+
+                if($trigger_success >= 1) {     
+                    $autData['trigger_count'] = $automationData->trigger_count + 1; 
+                    $this->automation_model->updateAutomation($automationData->id, $autData);	                
                 }
 
             }
@@ -1293,6 +1208,7 @@ class Cron_Automation_Controller extends CI_Controller
                 $current_time    = date('H:i');
                 $sent_start_time = date('H:i', strtotime($automationData->start_time));
                 $sent_end_time   = date('H:i', strtotime($automationData->end_time));
+                $trigger_success = 0;
 
                 $startTimeStamp = strtotime($sent_start_time);
                 $endTimeStamp   = strtotime($sent_end_time);
@@ -1368,32 +1284,6 @@ class Cron_Automation_Controller extends CI_Controller
                                     $trigger_automation = 0;
                                 }
                             }
-
-                            /*if($automationData->date_reference == 'create_date' && $invoice_created_date != null) {                                
-                                if($automationData->timing_reference == 'after') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created. ' + ' .$add_trigger_minutes. ' minutes'));
-                                }elseif($automationData->timing_reference == 'before') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->date_created . ' - ' .$add_trigger_minutes. ' minutes'));
-                                }
-
-                                if ($current_date_time >= $invoice_created_date) {
-                                    $trigger_automation = 1;
-                                }
-                            }elseif($automationData->date_reference == 'due_date' && $invoice_due_date != null) {
-                                if($automationData->timing_reference == 'after') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->due_date. ' + ' .$add_trigger_minutes. ' minutes'));
-                                }elseif($automationData->timing_reference == 'before') {
-                                    $add_trigger_minutes = $automationData->trigger_time;
-                                    $invoice_created_date = date('Y-m-d H:i', strtotime($invoice->due_date . ' - ' .$add_trigger_minutes. ' minutes'));
-                                }
-
-                                if ($current_date_time >= $invoice_created_date) {
-                                    $trigger_automation = 1;
-                                }
-                            }*/
                     
                             if($automationData->trigger_time == 0) {
                                 $trigger_automation = 1;
@@ -1457,11 +1347,12 @@ class Cron_Automation_Controller extends CI_Controller
                                             $this->automation_queue_model->updateAutomationQueue($automation_queue->id, $queue_data);
                                             
                                             $automation_success++;
+                                            $trigger_success++;
                                         }
                                         
                                     } else {
         
-                                        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+                                        //include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
                                         $host     = 'smtp.mailtrap.io';
                                         $port     = 2525;
                                         $username = 'd7c92e3b5e901d';
@@ -1492,6 +1383,7 @@ class Cron_Automation_Controller extends CI_Controller
                                             $automation_fail++;
                                         } else {
                                             $automation_success++;
+                                            $trigger_success++;
         
                                             //Update queue status
                                             $queue_data['is_triggered'] = 1;
@@ -1507,6 +1399,11 @@ class Cron_Automation_Controller extends CI_Controller
                         }
                     }                    
                 }
+
+                if($trigger_success >= 1) {     
+                    $autData['trigger_count'] = $automationData->trigger_count + 1; 
+                    $this->automation_model->updateAutomation($automationData->id, $autData);	                
+                } 
 
             }
         }

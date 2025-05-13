@@ -98,7 +98,7 @@ include viewPath('v2/includes/header');
                             <div class="d-flex gap-3 small">
                                 <span>Created on <?php echo date('M d, Y', strtotime($automation->created_at)); ?></span>
                                 <span>|</span>
-                                <span>Triggered 0 times</span>
+                                <span>Triggered <?php echo $automation->trigger_count; ?> times</span>
                             </div>
                             <div class="nsm-card-controls px-3">
                                 <div class="dropup">
