@@ -1451,6 +1451,7 @@ class Invoice extends MY_Controller
         $this->load->model('CustomerAuditLog_model');
         $this->load->model('CompanyOnlinePaymentAccount_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
+        $this->load->model('Invoice_settings_model', 'invoice_settings_model');
 
         $invoice = get_invoice_by_id($id);
 
@@ -1470,7 +1471,9 @@ class Invoice extends MY_Controller
             $this->page_data['invoice'] = $invoice;
             $this->page_data['user'] = $user;
 
-            $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($invoice->customer_id);	
+            $customer_billing_info   = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($invoice->customer_id);	
+            $invoiceSettings         = $this->invoice_settings_model->getByCompanyId($invoice->company_id);
+            $days_activate_late_fee  = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
 
             $current_date            = date('Y-m-d');
             $late_fee_activated_date = $invoice->due_date;
@@ -1479,7 +1482,7 @@ class Invoice extends MY_Controller
                 $date1 = new DateTime($current_date);
                 $date2 = new DateTime($late_fee_activated_date);
                 $total_days = $date2->diff($date1)->format("%a");
-                $total_late_days = $total_days;
+                $total_late_days = $total_days - $days_activate_late_fee;
             }
 
         } else {
@@ -1522,6 +1525,7 @@ class Invoice extends MY_Controller
         $this->load->model('AcsProfile_model');
         $this->load->model('CompanyOnlinePaymentAccount_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
+        $this->load->model('Invoice_settings_model', 'invoice_settings_model');
 
         $invoice = get_invoice_by_id($id);
 
@@ -1534,7 +1538,9 @@ class Invoice extends MY_Controller
                 }
             }
 
-            $customer_billing_info = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($invoice->customer_id);	
+            $customer_billing_info   = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($invoice->customer_id);	
+            $invoiceSettings         = $this->invoice_settings_model->getByCompanyId($invoice->company_id);
+            $days_activate_late_fee  = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
 
             $current_date            = date('Y-m-d');
             $late_fee_activated_date = $invoice->due_date;
@@ -1542,7 +1548,7 @@ class Invoice extends MY_Controller
                 $date1 = new DateTime($current_date);
                 $date2 = new DateTime($late_fee_activated_date);
                 $total_days = $date2->diff($date1)->format("%a");
-                $total_late_days = $total_days;
+                $total_late_days = $total_days - $days_activate_late_fee;
             }            
 
             $this->page_data['invoice'] = $invoice;
