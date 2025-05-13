@@ -147,9 +147,22 @@
                                     <div class='text-center textData'>
                                         <small class='text-muted text-uppercase fw-bold text-wrap'>${key}</small>
                                         <br>
-                                        <div class='<?php echo "subscription_container_$id"; ?>' style='display: -webkit-inline-box; align-items: center;'>
+                                        <div class='<?php echo "container1_$id"; ?>' style='display: -webkit-inline-box; align-items: center;'>
                                             <h4>${displayValue}</h4>
                                             <span class="badge bg-secondary" style="border-radius: 5px; font-weight: 500; font-size: 11px;">$0.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        } else if (key == "Active Subscribers") {
+                            $('.<?php echo "textDatas_$id"; ?>').append(`
+                                <div class='col-6 col-md-6 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
+                                    <div class='text-center textData'>
+                                        <small class='text-muted text-uppercase fw-bold text-wrap'>${key}</small>
+                                        <br>
+                                        <div class='<?php echo "container2_$id"; ?>' style='display: -webkit-inline-box; align-items: center;'>
+                                            <h4>${displayValue}</h4>
+                                            <span class="badge bg-secondary" style="border-radius: 5px; font-weight: 500; font-size: 11px;">0</span>
                                         </div>
                                     </div>
                                 </div>
@@ -214,9 +227,13 @@
                         let weeklyValueFormat = (weekly_subscription_amount[0].total)
                             ? `<span class="badge bg-success" style="border-radius: 5px; font-weight: 500; font-size: 11px;">+ ${weeklyValue}</span>`
                             : `<span class="badge bg-secondary" style="border-radius: 5px; font-weight: 500; font-size: 11px;">$0.00</span>`; 
+                        let weeklyCountFormat = (weekly_subscription_amount[0].weekly_subscribers != 0)
+                            ? `<span class="badge bg-success" style="border-radius: 5px; font-weight: 500; font-size: 11px;">+ ${weekly_subscription_amount[0].weekly_subscribers}</span>`
+                            : `<span class="badge bg-secondary" style="border-radius: 5px; font-weight: 500; font-size: 11px;">0</span>`; 
 
-                        $('.<?php echo "subscription_container_$id > .badge"; ?>').remove();
-                        $('.<?php echo "subscription_container_$id"; ?>').append(weeklyValueFormat);
+                        $('.<?php echo "container1_$id > .badge"; ?>, .<?php echo "container2_$id > .badge"; ?>').remove();
+                        $('.<?php echo "container1_$id"; ?>').append(weeklyValueFormat);
+                        $('.<?php echo "container2_$id"; ?>').append(weeklyCountFormat);
                     },
                     error: function () {
                         console.error("Failed to fetch weekly subscription amount data.");

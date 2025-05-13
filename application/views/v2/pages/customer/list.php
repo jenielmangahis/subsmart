@@ -776,7 +776,15 @@
                 //     "searchable": false,
                 // }
             ]
-        }); 
+        }).on('init', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('filter')) {
+                const filter = urlParams.get('filter').replace(/_/g, ' ');
+                setTimeout(() => {
+                    $(`a[data-value="${filter}"]`).click();
+                }, 100);
+            }
+        });
 
         $("#CUSTOMER_SEARCHBAR").keyup(function() {
             CUSTOMER_LIST_TABLE.search($(this).val()).draw()

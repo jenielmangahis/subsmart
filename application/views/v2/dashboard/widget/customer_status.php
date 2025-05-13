@@ -141,8 +141,11 @@
                         graphLabels.push(key);
                         graphSeries.push(parseInt(value));
                         labelWithCounts.push(`${key}: ${value}`);
+                        let key_formatted = key.trim().replace(/\s+/g, '_');
+                        let url_filter = `${window.origin}/customer?filter=${key_formatted}`;
+
                         $('.<?php echo "textDatas_$id"; ?>').append(`
-                            <div class='col-6 col-md-4 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
+                            <div class='col-6 col-md-4 text-nowrap <?php echo "textDataContainer_$id"; ?>' onclick="window.open('${url_filter}', '_blank')">
                                 <div class='text-center textData'>
                                     <small class='text-muted text-uppercase fw-bold'>${key}</small>
                                     <h4>${value}</h4>

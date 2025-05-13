@@ -151,13 +151,6 @@
     </div>
 </div>
 <script>
-    $(document).ready(function () {
-        widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), {
-                percentPosition: true,
-                horizontalOrder: true,
-            });
-    });
-
     $.ajax({
         url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
         type: "POST",
@@ -199,9 +192,11 @@
             $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
             $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
             $('.<?php echo "networkErrorContainer_$id"; ?>').hide();
-        },
 
+            widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), { percentPosition: true, horizontalOrder: true, });
+        },
         error: function () {
+            widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), { percentPosition: true, horizontalOrder: true, });
             console.error("Failed to fetch Tech Rep data.");
         }
     });

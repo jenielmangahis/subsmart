@@ -132,6 +132,9 @@
                         graphLabels.push(key);
                         graphSeries.push(parseInt(value));
                         
+                        let key_formatted = key.trim().replace(/\s+/g, '_');
+                        let url_filter = `${window.origin}/customer?filter=${key_formatted}`;
+
                         let displayValue;
                         if (["Earned", "Invoice Amount", "Service Projective Income"].includes(key)) {
                             displayValue = parseFloat(value).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -141,14 +144,27 @@
 
                         labelWithCounts.push(`${key}: ${displayValue}`);
 
-                        $('.<?php echo "textDatas_$id"; ?>').append(`
-                            <div class='col-6 col-md-6 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
-                                <div class='text-center textData'>
-                                    <small class='text-muted text-uppercase fw-bold text-wrap'>${key}</small>
-                                    <h4>${displayValue}</h4>
+                        if (key == 'Lost Accounts') {
+                            let key_formatted = "Cancelled".trim().replace(/\s+/g, '_');
+                            let url_filter = `${window.origin}/customer?filter=${key_formatted}`;
+                            $('.<?php echo "textDatas_$id"; ?>').append(`
+                                <div class='col-6 col-md-6 text-nowrap <?php echo "textDataContainer_$id"; ?>' onclick="window.open('${url_filter}', '_blank')">
+                                    <div class='text-center textData'>
+                                        <small class='text-muted text-uppercase fw-bold text-wrap'>${key}</small>
+                                        <h4>${displayValue}</h4>
+                                    </div>
                                 </div>
-                            </div>
-                        `);
+                            `);
+                        } else {
+                            $('.<?php echo "textDatas_$id"; ?>').append(`
+                                <div class='col-6 col-md-6 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
+                                    <div class='text-center textData'>
+                                        <small class='text-muted text-uppercase fw-bold text-wrap'>${key}</small>
+                                        <h4>${displayValue}</h4>
+                                    </div>
+                                </div>
+                            `);
+                        }
                     });
 
 
