@@ -2166,3 +2166,5 @@ $route['customer_deals/_edit_customer_deal_form'] = 'CustomerDeal/ajax_edit_cust
 $route['customer_deals/_update_deal'] = 'CustomerDeal/ajax_update_deal';
 $route['customer_deals/_update_customer_deal_stage'] = 'CustomerDeal/ajax_update_customer_deal_stage';
 $route['customer_deals/_update_customer_deal_status'] = 'CustomerDeal/ajax_update_customer_deal_status';
+$route['customer_deals/_deal_stage_summary'] = 'CustomerDeal/ajax_deal_stage_summary';
+$route['customer_deals/_deal_scheduled_activities'] = 'CustomerDeal/ajax_deal_scheduled_activities';
