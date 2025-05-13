@@ -5233,7 +5233,7 @@ if(!function_exists('set_expense_graph_data')) {
         return $queue_success_count;
     }
 
-    function createAutomationQueueV2($trigger_action = null, $entity = null, $trigger_event = null, $entity_id = 0) {
+    function createAutomationQueueV2($trigger_action = null, $entity = null, $trigger_event = null, $trigger_status = '', $entity_id = 0) {
 
         $CI =& get_instance();
         $CI->load->model('Automation_model');
@@ -5246,13 +5246,24 @@ if(!function_exists('set_expense_graph_data')) {
         $queue_success_count = 0;
         $trigger_time        = null;
 
-        $auto_params = [
-            'entity' => $entity,
-            'trigger_action' => $trigger_action,
-            'operation' => 'send',
-            'status' => 'active',
-            'trigger_event' => $trigger_event
-        ];
+        if($trigger_status != null && $trigger_status != '') {
+            $auto_params = [
+                'entity' => $entity,
+                'trigger_action' => $trigger_action,
+                'operation' => 'send',
+                'status' => 'active',
+                'trigger_event' => $trigger_event,
+                'trigger_status' => $trigger_status
+            ];
+        } else {
+            $auto_params = [
+                'entity' => $entity,
+                'trigger_action' => $trigger_action,
+                'operation' => 'send',
+                'status' => 'active',
+                'trigger_event' => $trigger_event
+            ];
+        }
 
         $automationsData = $CI->Automation_model->getAutomationsListByParams($auto_params);
 
