@@ -57,7 +57,8 @@
                     </div>
                 </div>
                 <div class="float-end">
-                    <span class="fw-bold fs-5">Balance: </span><span class="ledgerCustomerBalance fs-5">$0.00</span>
+                    <span class="fw-bold fs-6">🟣 Paid: </span><span class="ledgerCustomerPaid fs-6">$0.00 </span> <small class="ledgerCustomerPaidPercentage text-muted">(0%)</small>
+                    <span class="fw-bold fs-6 ms-2">⚪ Balance: </span><span class="ledgerCustomerBalance fs-6">$0.00</span>
                 </div>
             </div>
             <div class="col mt-3 text-nowrap <?php echo "tableDataContainer_$id"; ?>">
@@ -215,7 +216,9 @@
                     $('.<?php echo "addressData_$id"; ?>').text(data.customer_address);
                     $('.<?php echo "tableData_$id"; ?> > tbody').html("");
                     $('.<?php echo "tableData_$id"; ?> > tbody').append(data.table_content);
-                    $('.ledgerCustomerBalance').html(data.balance_amount);
+                    $('.ledgerCustomerBalance').text(data.balance_amount);
+                    $('.ledgerCustomerPaid').text(data.total_paid);
+                    $('.ledgerCustomerPaidPercentage').text(`(${data.total_paid_percentage})`);
 
                     $('.<?php echo "textDataContainer_$id"; ?>').show();
                     $('.<?php echo "tableDataContainer_$id"; ?>').show();

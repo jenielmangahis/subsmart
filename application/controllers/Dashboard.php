@@ -2630,7 +2630,7 @@ class Dashboard extends Widgets
                 $customer_address = "";
                 $total_invoice = 0.0;
                 $total_payment = 0.0;
-                
+               
                 if ($data) {
                     foreach ($data as $datas) {
                         $total_invoice += $datas->invoice_total;
@@ -2642,7 +2642,28 @@ class Dashboard extends Widgets
                         $payment_amount = ($datas->payment_amount) ? '$' . number_format($datas->payment_amount, 2, ".", ",") : '$0.00';
                         $invoice_date = date("m/d/Y", strtotime($datas->invoice_date));
                         $payment_date = date("m/d/Y", strtotime($datas->payment_date));
-                        $payment_method = ($datas->payment_method != '') ? $datas->payment_method : 'Not Specified';
+
+                        switch ($datas->payment_method) {
+                            case 'cc':
+                                $payment_method = "Credit Card";
+                                break;
+                            case 'paypal':
+                                $payment_method = "PayPal";
+                                break;
+                            case 'check':
+                                $payment_method = "Check";
+                                break;
+                            case 'cash':
+                                $payment_method = "Cash";
+                                break;
+                            case 'deposit':
+                                $payment_method = "Direct Deposit";
+                                break;
+                            case '':
+                                $payment_method = "Not Specified";
+                                break;
+                        }
+
                         $entry_by = ($datas->entry_by != '') ? $datas->entry_by : 'Not Specified';
 
                         $table_content .= "<tr>";
@@ -2657,12 +2678,11 @@ class Dashboard extends Widgets
                     }
 
                     $raw_balance = $total_invoice - $total_payment;
-                    if (abs($raw_balance) < 0.00001) {
+                    if ($raw_balance < 0) {
                         $balance = '$0.00';
                     } else {
                         $balance = ($raw_balance < 0 ? '-' : '') . '$' . number_format(abs($raw_balance), 2, '.', ',');
                     }
-
 
                     $table_content .= "<tr>";
                         $table_content .= "<td colspan='2'><strong class='float-end'>TOTAL&emsp;</strong></td>";
@@ -2677,9 +2697,12 @@ class Dashboard extends Widgets
                     $balance = "$0.00";
                 }
 
+                $paid_percentage = ($total_invoice > 0) ? round(($total_payment / $total_invoice) * 100, 2) : 0;
                 $result['table_content'] = $table_content;
                 $result['customer_address'] = $customer_address;
                 $result['balance_amount'] = $balance;
+                $result['total_paid'] = "$".number_format($total_payment, 2, '.', ',');
+                $result['total_paid_percentage'] = round($paid_percentage)."%";
 
                 echo json_encode($result);
             break;
