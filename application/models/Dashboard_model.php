@@ -659,7 +659,6 @@ class Dashboard_model extends MY_Model
                 $this->db->select('acs_profile.prof_id AS id, acs_profile.company_id AS company_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, CONCAT(acs_profile.city, ", ", acs_profile.state, " ", acs_profile.zip_code) AS address,acs_profile.phone_h AS phone, acs_profile.email AS email, COUNT(invoices.id) AS invoice_records');
                 $this->db->from('acs_profile');
                 $this->db->where('acs_profile.company_id', $company_id);
-                // $this->db->where('invoices.company_id', $company_id);
                 $this->db->where('invoices.view_flag', 0);
                 $this->db->join('invoices', 'invoices.customer_id = acs_profile.prof_id', 'left');
                 $this->db->group_by('acs_profile.prof_id, invoices.customer_id');
@@ -685,12 +684,12 @@ class Dashboard_model extends MY_Model
                                 (SELECT SUM(job_items.total) FROM job_items WHERE job_items.job_id = jobs.id)
                             ELSE invoices.grand_total
                         END AS invoice_total,
-                        invoice_payments.payment_method AS payment_method,
-                        SUM(invoice_payments.amount) AS payment_amount,
-                        MAX(invoice_payments.date_updated) AS payment_date,
+                        payment_records.payment_method AS payment_method,
+                        SUM(payment_records.invoice_amount) AS payment_amount,
+                        MAX(payment_records.date_created) AS payment_date,
                         CONCAT(users.FName, ' ', users.LName) AS entry_by
                     FROM invoices
-                    LEFT JOIN invoice_payments ON invoice_payments.invoice_id = invoices.id
+                    LEFT JOIN payment_records ON payment_records.invoice_id = invoices.id
                     LEFT JOIN users ON users.id = invoices.user_id
                     LEFT JOIN jobs ON jobs.id = invoices.job_id
                     LEFT JOIN acs_profile ON acs_profile.prof_id = invoices.customer_id
