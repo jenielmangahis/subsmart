@@ -162,7 +162,8 @@ $payment_link = base_url('customer_invoice/'.$company_info->profile_slug.'/' . $
                     <td style="text-align: right; padding: 8px; padding-right: 16px;">
                         <b>PLEASE PAY THIS AMOUNT</b>
                     </td>
-                    <td style="border: 1px solid; text-align: center; padding: 8px;">$<?= number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); ?></td>
+                    <!-- <td style="border: 1px solid; text-align: center; padding: 8px;">$<?php // echo number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); ?></td> -->
+                    <td style="border: 1px solid; text-align: center; padding: 8px;">$<?= number_format((float) ($invoice->balance), 2); ?></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -395,11 +396,21 @@ $payment_link = base_url('customer_invoice/'.$company_info->profile_slug.'/' . $
                     <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->deposit_request, 2); ?></td>
                 </tr>
 
+                <?php if($partial_payment_amount > 0) { ?>
+                    <tr>
+                        <td colspan="2" style="padding: 8px; border: 1px solid;">
+                            <b>PARTIAL PAYMENT</b>
+                        </td>
+                        <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $partial_payment_amount, 2); ?></td>
+                    </tr>
+                <?php } ?>
+
                 <tr>
                     <td colspan="2" style="padding: 8px; border: 1px solid; font-size: 20px;">
                         <b>BALANCE DUE</b>
                     </td>
-                    <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); ?></td>
+                    <!-- <td style="padding: 8px; border: 1px solid;">$<?php // echo number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); ?></td>-->$_COOKIE
+                    <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) ($invoice->balance), 2); ?></td>
                 </tr>
             </table>
 

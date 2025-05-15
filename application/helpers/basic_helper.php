@@ -5266,7 +5266,6 @@ if(!function_exists('set_expense_graph_data')) {
         }
 
         $automationsData = $CI->Automation_model->getAutomationsListByParams($auto_params);
-
         if($automationsData) {
             foreach($automationsData as $automationData) {
 
@@ -5335,6 +5334,7 @@ if(!function_exists('set_expense_graph_data')) {
                     'trigger_time' => $trigger_time,
                     'is_triggered' => 0
                 ];
+
                 $automation_queue = $CI->Automation_Queue_model->saveAutomationQueue($data_queue); 
                 if($automation_queue) {
                     $queue_success_count++;

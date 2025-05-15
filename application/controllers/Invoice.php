@@ -1551,7 +1551,15 @@ class Invoice extends MY_Controller
                 $total_late_days = $total_days - $days_activate_late_fee;
             }            
 
+            $partial_payment_amount = 0;
+            $payments = $this->payment_records_model->getTotalInvoiceAmountByInvoiceId($invoice->id);
+
+            if($payments) {
+                $partial_payment_amount = $payments->total_amount_paid;
+            }
+
             $this->page_data['invoice'] = $invoice;
+            $this->page_data['partial_payment_amount'] = $partial_payment_amount;
             $this->page_data['total_late_days'] = $total_late_days - $deduct_days;
         }
 
@@ -1962,6 +1970,15 @@ class Invoice extends MY_Controller
                     $invoice->{$key} = unserialize($value);
                 }
             }
+
+            $partial_payment_amount = 0;
+            $payments = $this->payment_records_model->getTotalInvoiceAmountByInvoiceId($invoice->id);
+
+            if($payments) {
+                $partial_payment_amount = $payments->total_amount_paid;
+            }            
+
+            $this->page_data['partial_payment_amount'] = $partial_payment_amount;
             $this->page_data['invoice'] = $invoice;
             $this->page_data['user'] = $user;
         }
@@ -1992,7 +2009,6 @@ class Invoice extends MY_Controller
             $filename = "nSmarTrac_invoice_".$id;
             $this->load->library('pdf');
             $this->pdf->save_pdf('invoice/pdf/template', $this->page_data, $filename, "P");
-            
         } else {
             $this->page_data['profile'] = (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets;
             $filename = "nSmarTrac_invoice_".$id;

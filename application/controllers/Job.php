@@ -1648,6 +1648,9 @@ class Job extends MY_Controller
                     //SMS Notification
                     createCronAutoSmsNotification($job->company_id, $job->id, 'job', $status, $job->employee_id);    
                 }
+
+                //Add mail automation queue
+                createAutomationQueueV2('send_email', 'job', 'has_status', $status, $job->id);                
                 
                 $data_arr = array("success" => true, "message" => "Updated Successfully", "input" => $input);
             } else {
