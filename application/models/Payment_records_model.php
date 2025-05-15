@@ -79,6 +79,17 @@ class Payment_records_model extends MY_Model
         return $query->result();
     }
 
+    public function getTotalInvoiceAmountByInvoiceId($invoice_id)
+    {
+        $this->db->select('SUM(invoice_amount)AS total_amount_paid');
+        $this->db->from($this->table);
+        $this->db->where('invoice_id', $invoice_id);
+        $this->db->where('is_void', 0);
+        
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getAllByInvoiceIdVoid($invoice_id, $is_void = 'all')
     {
         $this->db->select('*');

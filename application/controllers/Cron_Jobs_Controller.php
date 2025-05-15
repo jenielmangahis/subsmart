@@ -3557,6 +3557,9 @@ class Cron_Jobs_Controller extends CI_Controller
 					];		
 
 					$invoice_id = $this->Invoice_model->create($data_invoice);
+                    
+                    $hash_id    = $this->Invoice_model->generateHashId($invoice_id);
+                    $this->Invoice_model->update($invoice_id, ['hash_id' => $hash_id]);                    
 
                     //Automation add sending email queue - start
                     if($is_automation_activated) {

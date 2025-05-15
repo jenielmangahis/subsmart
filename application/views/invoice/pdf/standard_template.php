@@ -88,7 +88,7 @@
                                         <tr>
                                             <td style="text-align: left;">   
                                                 <?php if($invoice->status !== 'Paid'){
-                                                        echo '$ '.number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); 
+                                                        echo '$ '.number_format((float) ($invoice->grand_total), 2); 
                                                     } else{
                                                     echo "$0.00";
                                                 } ?>
@@ -336,12 +336,21 @@
                             <td colspan="3" style="text-align: right"><b>Deposit</b></td>
                             <td style="text-align: right">$<?php echo number_format($invoice->deposit_request, 2);?></td>
                         </tr>
+
+                        <?php if($partial_payment_amount > 0) { ?>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="3" style="text-align: right"><b>Partial Payment</b></td>
+                                <td style="text-align: right">$<?php echo number_format($partial_payment_amount, 2);?></td>
+                            </tr>
+                        <?php } ?>
+
                         <tr>
                             <td colspan="3"></td>
                             <td colspan="3" style="text-align: right"><b>Balance Due</b></td>
                             <td style="text-align: right">
                                 <b>  
-                                    <?= number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); ?>
+                                    <?= number_format((float) ($invoice->grand_total), 2); ?>
                                 </b>
                             </td>
                         </tr>
