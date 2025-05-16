@@ -20,6 +20,21 @@ class Accounting_credit_memo_model extends MY_Model {
 
 		return  $insert_id;
     }
+	public function getById($id, $conditions = [])
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('id', $id);
+
+        if (!empty($conditions)) {
+            foreach ($conditions as $c) {
+                $this->db->where($c['field'], $c['value']);
+            }
+        }
+
+        $query = $this->db->get();
+        return $query->row();
+    }
 	public function updateCreditMemo($id, $data){
 	    $this->db->where('id', $id);
 		$vendor = $this->db->update('accounting_credit_memo', $data);
