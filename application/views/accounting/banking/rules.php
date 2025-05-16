@@ -45,57 +45,19 @@
                                 <li><a class="dropdown-item dropdown-item-delete-rule disabled" href="javascript:void(0);" id="multiDeleteRules">Delete</a></li>
                             </ul>
                         </div>
-
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" id="importRulesLink">
-                                <i class='bx bx-fw bx-import'></i> Import
-                            </button>
-                            <button type="button" class="nsm-button" id="newRuleButton" data-bs-toggle="modal" data-bs-target="#createRules">
-                                <i class='bx bx-fw bx-list-plus'></i> New Rule
-                            </button>
-                            <button type="button" class="nsm-button" id="exportButton">
-                                <i class='bx bx-fw bx-export'></i> Export
-                            </button>
-                            <!-- <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
-                                <i class="bx bx-fw bx-cog"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
-                                <p class="m-0">Columns</p>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_conditions" id="chk_conditions" class="form-check-input">
-                                    <label for="chk_conditions" class="form-check-label">Conditions</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_settings" id="chk_settings" class="form-check-input">
-                                    <label for="chk_settings" class="form-check-label">Settings</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_status" id="chk_status" class="form-check-input">
-                                    <label for="chk_status" class="form-check-label">Status</label>
-                                </div>
-                                <p class="m-0">Page Size</p>
-                                <div class="form-check">
-                                    <input type="radio" checked="checked" name="page_size" id="page-size-50" class="form-check-input">
-                                    <label for="page-size-50" class="form-check-label">50</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" name="page_size" id="page-size-75" class="form-check-input">
-                                    <label for="page-size-75" class="form-check-label">75</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" name="page_size" id="page-size-100" class="form-check-input">
-                                    <label for="page-size-100" class="form-check-label">100</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" name="page_size" id="page-size-200" class="form-check-input">
-                                    <label for="page-size-200" class="form-check-label">200</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" name="page_size" id="page-size-300" class="form-check-input">
-                                    <label for="page-size-300" class="form-check-label">300</label>
-                                </div>
-                            </ul> -->
-                        </div>
+                        <?php if(checkRoleCanAccessModule('accounting-rules', 'write')){ ?>
+                            <div class="nsm-page-buttons page-button-container">
+                                <button type="button" class="nsm-button" id="importRulesLink">
+                                    <i class='bx bx-fw bx-import'></i> Import
+                                </button>                                
+                                <button type="button" class="nsm-button" id="exportButton">
+                                    <i class='bx bx-fw bx-export'></i> Export
+                                </button>
+                                <button type="button" class="nsm-button primary" id="newRuleButton" data-bs-toggle="modal" data-bs-target="#createRules">
+                                    <i class='bx bx-fw bx-plus' ></i> Add New
+                                </button>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <table class="nsm-table" id="rulesTable">
@@ -159,19 +121,23 @@
                                                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-end">
+                                                    <?php if(checkRoleCanAccessModule('accounting-rules', 'write')){ ?>
                                                     <li>
                                                         <a class="dropdown-item" href="#">Edit</a>
-                                                    </li>
+                                                    </li>                                                    
                                                     <li>
                                                         <a class="dropdown-item dropdown-item-copy-rule copyRule" href="javascript:void(0);" data-rule-name="<?php echo $rule->rules_name; ?>" data-id="<?php echo $rule->id ?>" id="copyRule">Copy</a>
-                                                    </li>
+                                                    </li>                                                    
                                                     <li>
 
                                                         <a class="dropdown-item dropdown-item-disable-rule disableRule" href="javascript:void(0);" data-rule-name="<?php echo $rule->rules_name; ?>" data-id="<?php echo $rule->id ?>" id="disableRule">Disable</a>
                                                     </li>
+                                                    <?php } ?>
+                                                    <?php if(checkRoleCanAccessModule('accounting-rules', 'delete')){ ?>
                                                     <li>
                                                         <a class="dropdown-item dropdown-item-copy-rule deleteSingleRules" href="javascript:void(0);" data-rule-name="<?php echo $rule->rules_name; ?>" data-id="<?php echo $rule->id ?>" id="deleteSingleRules">Delete</a>
                                                     </li>
+                                                    <?php } ?>
                                                 </ul>
                                             </div>
                                         </td>
