@@ -112,16 +112,25 @@ class Credit_notes extends MY_Controller {
 
     public function index()
     {   
+        $this->load->model('Business_model');
         if(!checkRoleCanAccessModule('accounting-credit-notes', 'write')){
             show403Error();
             return false;
         }
-        
 
         add_footer_js(array(
             "assets/js/v2/accounting/sales/credit_notes/list.js",
             "assets/js/v2/printThis.js",
         ));
+
+        $company_id = logged('company_id');
+        $company = $this->Business_model->getByCompanyId($company_id);
+
+        $company_name = 'nSmarTrac';
+        if( $company ){
+            $company_name = $company->business_name;
+        }
+
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "All Sales";
         
@@ -144,7 +153,7 @@ class Credit_notes extends MY_Controller {
                 if(checkRoleCanAccessModule('accounting-credit-notes', 'write')){
                     $action_edit = "<li><a class='dropdown-item view-edit-credit-memo' href='#'>Edit</a></li>";
                     $action_void = "<li><a class='dropdown-item void-credit-memo' href='#'>Void</a></li>";
-                    $action_send = "<li><a class='dropdown-item send-credit-memo' href='#'>Send</a></li>";
+                    $action_send = "<li><a class='dropdown-item send-credit-memo' data-company='".$company_name."' href='#'>Send</a></li>";
                     $action_copy = "<li><a class='dropdown-item copy-transaction' href='#'>Copy</a></li>";
                 }
 
@@ -223,6 +232,7 @@ class Credit_notes extends MY_Controller {
         $this->page_data['page']->title = 'Credit Notes';
         $this->page_data['page']->parent = 'Sales';
         $this->page_data['notes'] = $notes;
+        $this->page_data['company_name'] = $company;
         $this->page_data['dates_filter'] = $dates_filter;
         $this->page_data['customer_filter'] = $customer_filter;
         $this->load->view('accounting/sales/credit_notes', $this->page_data);
@@ -230,13 +240,27 @@ class Credit_notes extends MY_Controller {
 
     public function ajax_delete_selected()
     {
+        $this->load->model('AcsProfile_model');
         $post = $this->input->post();
         $is_success = 0;
         $msg = 'Cannot find data';
 
         foreach ($post['creditNotes'] as $credit_note_id) {
-            $this->accounting_credit_memo_model->delete($credit_note_id);
-            $total_deleted++;
+            $creditNote = $this->accounting_credit_memo_model->getById($credit_note_id);
+            if( $creditNote ){
+                $customer = $this->AcsProfile_model->getByProfId($creditNote->customer_id);
+                $this->accounting_credit_memo_model->delete($credit_note_id);
+
+                //Activity Logs
+                if( $customer ){
+                    $activity_name = 'Credit Notes : Deleted credit note for customer : ' . $customer->first_name . ' ' . $customer->last_name; 
+                }else{
+                    $activity_name = 'Credit Notes : Deleted credit note'; 
+                }
+                createActivityLog($activity_name);
+
+                $total_deleted++;
+            }
         }
 
         if( $total_deleted > 0 ){

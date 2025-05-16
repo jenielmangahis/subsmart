@@ -3034,7 +3034,7 @@ class Debug extends MY_Controller {
         foreach( $invoices as $i ){
             $hash_id = $this->Invoice_model->generateHashId($i->id);
             $this->Invoice_model->update($i->id, ['hash_id' => $hash_id]);
-            
+
             $total_updated++;
         }
 

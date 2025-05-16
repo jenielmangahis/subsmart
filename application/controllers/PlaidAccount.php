@@ -369,6 +369,10 @@ class PlaidAccount extends MY_Controller {
             if( $plaidBankAccount->company_id == $cid ){
                 $this->PlaidBankAccount_model->delete($post['pid']);
 
+                //Activity Logs
+                $activity_name = 'Bank Account : Disconnected linked bank account'; 
+                createActivityLog($activity_name);
+
                 $is_success = 1;
                 $msg = '';
             }
@@ -400,11 +404,10 @@ class PlaidAccount extends MY_Controller {
         $plaidAccount = $this->PlaidAccount_model->getDefaultCredentials();
         $plaidBankAccount = $this->PlaidBankAccount_model->getById($post['pid']);
         if( $plaidAccount && $plaidBankAccount ){            
-            $start_date = '2022-01-01';
-            $end_date   = '2022-08-25';
+            $start_date = date("Y-m-01");
+            $end_date   = date("Y-m-t");
             $apiPlaidTransactions = transactionGet($plaidAccount->client_id, $plaidAccount->client_secret, $plaidBankAccount->access_token, $start_date, $end_date, $plaidBankAccount->account_id);
             $apiPlaidAccount  = authGet($plaidAccount->client_id, $plaidAccount->client_secret, $plaidBankAccount->access_token, $plaidBankAccount->account_id);
-
             if( isset($apiPlaidAccount->error_code) && $apiPlaidAccount->error_code != '' ){
                 $err_data = [
                     'user_id' => $uid,

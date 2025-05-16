@@ -102,7 +102,8 @@
                                             <td style="width: 160px; text-align: right;" class="text-right">
                                                 <b>
                                                 <?php if($invoice->status !== 'Paid'){
-                                                        echo '$ '.number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2);
+                                                        //echo '$ '.number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2);
+                                                        echo '$ '.number_format((float) ($invoice->balance), 2);
                                                     } else{
                                                     echo "$0.00";
                                                 } ?>
@@ -283,12 +284,24 @@
                             <td colspan="3" style="text-align: right; background: #f4f4f4; padding: 8px 0"><b>Grand Total ($)</b></td>
                             <td style="text-align: right; background: #f4f4f4"><b>$<?php echo number_format($invoice->grand_total, 2);?></b></td>
                         </tr>
+                        <?php if($partial_payment_amount > 0) { ?>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="3" style="text-align: right"><b>Partial Payment</b></td>
+                                <td style="text-align: right">
+                                    <b>  
+                                        <?php echo number_format((float) ($partial_payment_amount), 2); ?>
+                                    </b>
+                                </td>
+                            </tr>
+                        <?php } ?>
                         <tr>
                             <td colspan="3"></td>
                             <td colspan="3" style="text-align: right"><b>Balance Due</b></td>
                             <td style="text-align: right">
                                 <b>  
-                                    <?= number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); ?>
+                                    <?php //echo number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); ?>
+                                    <?php echo number_format((float) ($invoice->balance), 2); ?>
                                 </b>
                             </td>
                         </tr>
