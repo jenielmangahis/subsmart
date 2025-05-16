@@ -25563,6 +25563,8 @@ class Accounting_modals extends MY_Controller
 
     private function void_credit_memo($creditMemoId)
     {
+        $this->load->model('Accounting_account_transactions_model');
+        
         $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($creditMemoId);
 
         $creditMemoData = [

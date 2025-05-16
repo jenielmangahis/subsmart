@@ -3032,12 +3032,10 @@ class Debug extends MY_Controller {
 
         $total_updated = 0;
         foreach( $invoices as $i ){
-            if( $i->hash_id == '' ){
-                $hash_id = $this->Invoice_model->generateHashId($i->id);
-                $this->Invoice_model->update($i->id, ['hash_id' => $hash_id]);
+            $hash_id = $this->Invoice_model->generateHashId($i->id);
+            $this->Invoice_model->update($i->id, ['hash_id' => $hash_id]);
 
-                $total_updated++;
-            }            
+            $total_updated++;
         }
 
         echo 'Total updated : ' . $total_updated;

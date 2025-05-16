@@ -23,7 +23,6 @@ class JobMap extends MY_Controller
     public function index()
     {
         $this->load->model('CompanyJobMapSetting_model');
-
 		
         $this->hasAccessModule(25);      
 
