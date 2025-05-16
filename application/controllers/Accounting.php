@@ -3648,8 +3648,17 @@ class Accounting extends MY_Controller
         $count = 0;
         $id = $this->input->post('id');
         if(!empty($id)) {
-            $this->rules_model->deleteSingleRuleData($id);
-            $count = 1;
+            $company_id = logged('company_id');
+            $rule       = $this->rules_model->getById($id);
+            if( $rule && $rule->company_id ){
+                $this->rules_model->deleteSingleRuleData($id);
+
+                //Activity Logs
+                $activity_name = 'Accounting Rules : Deleted rule ' . $rule->rules_name; 
+                createActivityLog($activity_name);
+
+                $count = 1;
+            }            
         }
 
         $output = '';
@@ -3673,11 +3682,18 @@ class Accounting extends MY_Controller
 
     public function disableSingleRuleData() {
         $output = '';
+        $company_id = logged('company_id');
+        
+        $id   = $this->input->post('id');
+        $rule = $this->rules_model->getById($id);
+        if( $rule && $rule->company_id == $company_id){
+            if( $this->rules_model->disableRule($id) ){
+                //Activity Logs
+                $activity_name = 'Accounting Rules : Disabled rule ' . $rule->rules_name; 
+                createActivityLog($activity_name);
 
-        $id = $this->input->post('id');
-        $is_disabled = $this->rules_model->disableRule($id);
-        if($is_disabled) {
-            $output = 'success';
+                $output = 'success';
+            }
         }
 
         echo $output;
@@ -3704,7 +3720,11 @@ class Accounting extends MY_Controller
             );
 
             $rules_id = $this->rules_model->addRule($copy_data);
-            if ($rules_id != null) {   
+            if ($rules_id != null) {  
+                //Activity Logs
+                $activity_name = 'Accounting Rules : Copy rule ' . $rule_data[0]->rules_name; 
+                createActivityLog($activity_name);
+
                 $output = 'success';
             } else {
                 $output = 'already have duplicate';
