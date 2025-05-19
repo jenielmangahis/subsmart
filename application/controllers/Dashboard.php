@@ -2660,7 +2660,8 @@ class Dashboard extends Widgets
                                 $payment_method = "Direct Deposit";
                                 break;
                             case '':
-                                $payment_method = "Not Specified";
+                                $payment_method = "—";
+                                $payment_date = "—";
                                 break;
                         }
 
@@ -2782,9 +2783,26 @@ class Dashboard extends Widgets
                 $graphData = $data;
                 echo json_encode($graphData);
             break;
-            case 'scorecard':
+            case 'scorecard_lookup':
                 $graphData = $data;
                 echo json_encode($graphData);
+            break;
+            case 'tech_employees':
+                $graphData = $data;
+                echo json_encode($graphData);
+            break;
+            case 'user_info':
+                $company_id = logged('company_id');
+                $user_id = logged('id');
+                $user_type = logged('user_type');
+                $role_id = logged('role');
+                $data = array();
+
+                $data['company_id'] = $company_id;
+                $data['user_id'] = $user_id;
+                $data['user_type'] = $user_type;
+                $data['role_id'] = $role_id;
+                echo json_encode($data);
             break;
             default:
                 $graphData = ['error' => 'Invalid category'];
