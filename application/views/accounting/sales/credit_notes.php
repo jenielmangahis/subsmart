@@ -1,5 +1,10 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/accounting/credit_notes_modals'); ?>
+<style>
+#credit-note-print-list td{
+    border:none;
+}
+</style>
 <?php 
     $date = 'today';
     $from_date = date("Y-m-d");
@@ -106,6 +111,11 @@
                         </div>
                         <?php if(checkRoleCanAccessModule('accounting-credit-notes', 'write')){ ?>
                         <div class="dropdown d-inline-block">
+                            <?php if(checkRoleCanAccessModule('accounting-credit-notes', 'write')){ ?>
+                            <button type="button" class="nsm-button export-transactions">
+                                <i class='bx bx-fw bx-export'></i> Export
+                            </button>
+                            <?php } ?>
                             <button type="button" class="dropdown-toggle nsm-button primary" id="new-credit-note">
                                 <i class='bx bx-plus'></i> Add New
                             </button>
@@ -113,12 +123,6 @@
                         <?php } ?>
 
                         <div class="nsm-page-buttons page-button-container">
-                            <?php if(checkRoleCanAccessModule('accounting-credit-notes', 'write')){ ?>
-                            <button type="button" class="nsm-button export-transactions primary">
-                                <i class='bx bx-fw bx-export'></i> Export
-                            </button>
-                            <?php } ?>
-
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_credit_notes_modal">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
@@ -268,7 +272,8 @@ $(function(){
     });
 
     $('#delete-credit-notes').on('click', function(){
-        Swal.fire({            
+        Swal.fire({    
+            title: "Delete Credit Notes",        
             html: "Proceed with deleting selected rows?",
             icon: 'question',
             confirmButtonText: 'Proceed',

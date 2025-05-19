@@ -11,7 +11,6 @@
         background-color: #6a4a8624 !important;
         color: unset !important;
     }
-
 </style>
 <div class='card shadow widgetBorder <?php echo "card_$category$id "; ?>'>
     <div class="card-body">
@@ -38,7 +37,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12 text-nowrap <?php echo "textDataContainer_$id"; ?>">
+            <div class="col-12 text-nowrap ledger_customers">
                 <div class="input-group">
                     <select class="form-select <?php echo "widgetFilter3_$id"; ?>">
                         <option value=""></option>
@@ -84,7 +83,7 @@
                     </table>
                 </div>
             </div>
-            <div class="col mt-2 <?php echo "graphLoaderContainer_$id"; ?> graphLoader display_none">
+            <div class="col mt-2 <?php echo "graphLoaderContainer_$id"; ?> graphLoader">
                 <div class="text-center">
                     <div class="spinner-border text-secondary" role="status">
                         <span class="visually-hidden">Loading...</span>
@@ -108,7 +107,7 @@
     </div>
 </div>
 <script>
-    const selectInput = $(".<?php echo "widgetFilter3_$id"; ?>").selectize({
+    const selectLedgerCustomerInput = $(".<?php echo "widgetFilter3_$id"; ?>").selectize({
         placeholder: "Search and select customer...",
         valueField: 'id',
         labelField: 'customer',
@@ -155,7 +154,7 @@
         }
     });
 
-    const selectizeInstance = selectInput[0].selectize;
+    const selectizeLedgerInstance = selectLedgerCustomerInput[0].selectize;
 
     $.ajax({
         url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
@@ -167,6 +166,7 @@
             filter3: null
         },
         beforeSend: function() {
+            $('.ledger_customers').hide();
             $('.<?php echo "textDataContainer_$id"; ?>').hide();
             $('.<?php echo "tableDataContainer_$id"; ?>').hide();
             $('.<?php echo "graphLoaderContainer_$id"; ?>').show();
@@ -175,14 +175,15 @@
         },
         success: function (response) {
             const customers = JSON.parse(response);
-            selectizeInstance.clearOptions();
+            selectizeLedgerInstance.clearOptions();
             customers.forEach(customer => {
-                selectizeInstance.addOption(customer);
+                selectizeLedgerInstance.addOption(customer);
             });
-            selectizeInstance.refreshOptions(false);
+            selectizeLedgerInstance.refreshOptions(false);
 
-            $('.<?php echo "textDataContainer_$id"; ?>').show();
-            $('.<?php echo "tableDataContainer_$id"; ?>').show();
+            $('.ledger_customers').show();
+            $('.<?php echo "textDataContainer_$id"; ?>').hide();
+            $('.<?php echo "tableDataContainer_$id"; ?>').hide();
             $('.<?php echo "graphLoaderContainer_$id"; ?>').hide();
             $('.<?php echo "noRecordFoundContainer_$id"; ?>').hide();
             $('.<?php echo "networkErrorContainer_$id"; ?>').hide();

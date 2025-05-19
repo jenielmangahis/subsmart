@@ -104,6 +104,15 @@ class Rules_model extends MY_Model
         $qry = $this->db->get('accounting_rules');
         return $qry->result();
     }
+    public function getById($id){
+        $this->db->select('accounting_rules.*, users.FName AS first_name, users.LName AS last_name, users.company_id');
+        $this->db->from('accounting_rules');
+        $this->db->join('users', 'accounting_rules.user_id = users.id', 'left');
+        $this->db->where('accounting_rules.id', $id);        
+
+        $query = $this->db->get();
+        return $query->row();
+    }
     public function getRulesById($id){
         $qry = $this->db->get_where('accounting_rules',array('id'=>$id));
         return $qry->result();

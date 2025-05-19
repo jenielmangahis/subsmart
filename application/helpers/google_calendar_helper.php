@@ -15,7 +15,7 @@ function createSyncToCalendar($object_id, $module_name, $company_id, $is_manual_
     $googleAccount = $CI->GoogleAccounts_model->getByCompanyId($company_id);
     if( $googleAccount ){    
         $settings = $CI->CalendarSettings_model->getByCompanyId($company_id);
-        IF( $settings ){                    
+        if( $settings ){                    
             $is_valid_sync_calendar = false;
 
             if( $module_name == 'appointment' ){                

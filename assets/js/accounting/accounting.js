@@ -208,15 +208,18 @@ $(document).ready(function() {
     $(document).on('click', '.deleteSingleRules', function() {
         //var delete_url = base_url + 'accounting/deleteSingleRuleData';
         var delete_url = base_url + 'accounting/rules/delete_single_rule';
+        var rule_name_text = $(this).attr('data-rule-name');
+
         var id = $(this).attr('data-id');
         Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
+            title: 'Delete Rule',
+            html: `Are you sure you want to delete rule <b>${rule_name_text}</b>?<br />You won't be able to revert this.`,
+            icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#2ca01c',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            //confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Proceed'
         }).then((result) => {
             if (result.value) {
                 $.ajax({
@@ -245,8 +248,8 @@ $(document).ready(function() {
         var id = $(this).attr('data-id');
         var rule_name_text = $(this).attr('data-rule-name');
         Swal.fire({
-            title: 'You are going create a new rule based on rule ' + rule_name_text,
-            text: "Do you wish to proceed with selected action?",
+            title: 'Copy Rule',
+            html: `You are going create a new rule based on <b>${rule_name_text}</b>. <br /><br />Do you wish to proceed with selected action?`,            
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#7367f0',
@@ -290,13 +293,14 @@ $(document).ready(function() {
         var id = $(this).attr('data-id');
         var rule_name_text = $(this).attr('data-rule-name');
         Swal.fire({
-            title: 'Disable Rule?',
-            text: "Are you sure you want to disable " + rule_name_text,
+            title: 'Disable Rule',
+            html: `Are you sure you want to disable rule <b>${rule_name_text}</b>?`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#2ca01c',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, disable it!'
+            //confirmButtonText: 'Yes, disable it!'
+            confirmButtonText: 'Proceed'
         }).then((result) => {
             if (result.value) {
                 $.ajax({
@@ -335,10 +339,10 @@ $(document).ready(function() {
         //var delete_url = base_url + 'accounting/multiDeleteRulesData';
         var delete_url = base_url + 'accounting/rules/delete_multi_rule';
         var frmData = $("#rulesTblFrm").serialize();
-
+        
         Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
+            title: 'Delete Rule',
+            html: `You won't be able to revert this!`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#2ca01c',

@@ -908,11 +908,13 @@ class Dashboard_model extends MY_Model
                 $data = $query->result();
                 return $data;
             break;
-            case 'scorecard':
+            case 'scorecard_lookup':
                 $query = $this->db->query("
                     SELECT 
                         users.id AS employee_id,
-                        point_rating_system.company_id AS company_id, 
+                        users.company_id AS company_id, 
+                        users.role AS role_id, 
+                        users.user_type AS usertype_id, 
                         CONCAT(users.FName, ' ', users.LName) AS employee_name,
                         SUM(point_rating_system.points) AS total_points,
                         SUM(CASE WHEN point_rating_system.module = 'job' THEN 1 ELSE 0 END) AS job_count,
@@ -934,13 +936,48 @@ class Dashboard_model extends MY_Model
                         GROUP BY user_id
                     ) AS attendance_summary 
                         ON attendance_summary.user_id = users.id
-                    WHERE users.company_id = {$company_id}
                         AND point_rating_system.company_id = {$company_id}
                         AND point_rating_system.status = 1
-                        AND DATE(point_rating_system.date_created) BETWEEN '{$dateFrom}' AND '{$dateTo}'
+                    WHERE users.company_id = {$company_id}
+                --        AND DATE(point_rating_system.date_created) BETWEEN '{$dateFrom}' AND '{$dateTo}'
+                        AND users.id = {$filter3}
                     GROUP BY users.id
                     ORDER BY total_points DESC
-                    LIMIT 1
+                ");
+                $data = $query->result();
+                return $data;
+            break;
+            case 'tech_employees':
+                $query = $this->db->query("
+                    SELECT 
+                        users.id AS employee_id,
+                        users.company_id AS company_id, 
+                        users.role AS role_id, 
+                        users.user_type AS usertype_id, 
+                        CONCAT(users.FName, ' ', users.LName) AS employee,
+                        SUM(point_rating_system.points) AS total_points,
+                        users.mobile AS phone_m, 
+                        users.email AS email, 
+                        users.profile_img AS profile_img, 
+                        users.created_at AS date_created
+                    FROM users
+                    LEFT JOIN point_rating_system ON JSON_CONTAINS(point_rating_system.employee_id, JSON_QUOTE(CAST(users.id AS CHAR)))
+                    LEFT JOIN (
+                        SELECT 
+                            user_id, 
+                            COUNT(DISTINCT DATE(date_created)) AS attendance_count
+                        FROM timesheet_attendance
+                        WHERE MONTH(date_created) = MONTH(NOW())
+                        AND YEAR(date_created) = YEAR(NOW())
+                        GROUP BY user_id
+                    ) AS attendance_summary 
+                        ON attendance_summary.user_id = users.id
+                        AND point_rating_system.company_id = {$company_id}
+                        AND point_rating_system.status = 1
+                    WHERE users.company_id = {$company_id}
+                --        AND DATE(point_rating_system.date_created) BETWEEN '{$dateFrom}' AND '{$dateTo}'
+                    GROUP BY users.id
+                    ORDER BY total_points DESC
                 ");
                 $data = $query->result();
                 return $data;
