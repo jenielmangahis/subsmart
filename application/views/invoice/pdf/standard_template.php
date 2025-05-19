@@ -321,7 +321,11 @@
                         <?php if( $invoice->late_fee > 0  ){ ?>
                             <tr>
                                 <td colspan="3"></td>
-                                <td colspan="3" style="text-align: right"><b>Late Fee</b></td>
+                                <?php if($total_late_days > 0) { ?>
+                                    <td colspan="3" style="text-align: right"><b>Late Fee (<?php echo $total_late_days; ?> Days)</b></td>
+                                <?php } else { ?>
+                                    <td colspan="3" style="text-align: right"><b>Late Fee</b></td>
+                                <?php } ?>                                
                                 <td style="text-align: right">$<?php echo number_format($invoice->late_fee, 2);?></td>
 
                             </tr>

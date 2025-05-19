@@ -1548,6 +1548,8 @@ $route['cron/send_set_past_due_invoice_mail_automation'] = 'Cron_Automation_Cont
 $route['cron/send_sent_invoice_mail_automation'] = 'Cron_Automation_Controller/cronSentInvoiceMailAutomation'; 
 
 $route['cron/send_created_job_mail_automation'] = 'Cron_Automation_Controller/cronCreatedJobMailAutomation';
+$route['cron/send_status_job_mail_automation'] = 'Cron_Automation_Controller/cronStatusJobMailAutomation';
+
 
 //Cron Automation - SMS
 $route['cron/send_created_invoice_sms_automation'] = 'Cron_Automation_Controller/cronCreatedInvoiceSMSAutomation';
