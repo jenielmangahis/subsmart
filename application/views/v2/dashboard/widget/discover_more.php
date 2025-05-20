@@ -6,7 +6,12 @@
     $type = trim($thumbnailsWidgetCard->type);
     $category = trim($thumbnailsWidgetCard->category);
 ?>
-
+<style>
+    .contentDescription {
+        white-space: normal;
+        font-size: unset;
+    }
+</style>
 <div class='card shadow widgetBorder <?php echo "card_$category$id "; ?>'>
     <div class="card-body">
         <div class="row">
@@ -90,7 +95,7 @@
 
                             if (['mp4', 'avi', 'mov', 'wmv'].includes(fileExtension)) {
                                 mediaContent = `
-                                    <video class="rounded mx-auto d-block w-100" autoplay muted loop>
+                                    <video class="rounded mx-auto d-block w-100 img-thumbnail" autoplay muted loop>
                                         <source src="${window.origin}/uploads/BusinessBanner/${banner.file}" type="video/${fileExtension}">
                                         Your browser does not support the video tag.
                                     </video>
@@ -98,7 +103,7 @@
                             } else {
                                 mediaContent = `
                                     <img src="${window.origin}/uploads/BusinessBanner/${banner.file}" 
-                                         class="rounded mx-auto d-block w-100" alt="${banner.title}">
+                                         class="rounded mx-auto d-block w-100 img-thumbnail" alt="${banner.title}">
                                 `;
                             }
 
@@ -110,10 +115,10 @@
                                         </div>
                                     </div>
                                     <div class="row h-100 mt-3 mb-3">
-                                        <div class="col-12 col-md-7 order-last order-md-first">
+                                        <div class="col-12 order-last order-md-first">
                                             <span class="content-title mb-2">${banner.title}</span>
-                                            <span class="content-subtitle d-block mb-2">${banner.description}</span>
-                                            <a href="${link}" target="_blank" class="content-subtitle nsm-link d-block">${banner.url_alias}</a>
+                                            <span class="contentDescription lh-base d-block mb-2">${banner.description}</span>
+                                            <a href="${link}" target="_blank" class="contentDescription nsm-link d-block">${banner.url_alias}</a>
                                         </div> 
                                     </div>
                                 </div>
@@ -127,6 +132,10 @@
                     widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), { percentPosition: true, horizontalOrder: true, });
                 }, 500);
             },
+        });
+
+        $('#discover_carousel').on('slid.bs.carousel', function (e) {
+            widgetMasonry = new Masonry(document.getElementById('widgetMasonry'), { percentPosition: true, horizontalOrder: true, });
         });
     });   
 </script>
