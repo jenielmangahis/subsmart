@@ -6374,7 +6374,7 @@ class Job extends MY_Controller
                 createCronAutoSmsNotification($job->company_id, $job->id, 'job', 'arrival', $job->employee_id); 
 
                 //Add mail automation queue
-                //createAutomationQueueV2('send_email', 'job', 'has_status', $post['job_status'], $job->id);
+                createAutomationQueueV2('send_email', 'job', 'has_status', $post['job_status'], $job->id);
 
                 $is_success = 1;
                 $msg = '';

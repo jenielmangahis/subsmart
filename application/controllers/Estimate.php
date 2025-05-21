@@ -122,9 +122,9 @@ class Estimate extends MY_Controller
     {
         $this->load->model('EstimateSettings_model');
 
-        $company_id = getLoggedCompanyID();
-        $user_id = getLoggedUserID();
-        $post = $this->input->post();
+        $company_id = logged('company_id'); 
+        $user_id    = logged('id'); 
+        $post       = $this->input->post();
 
         // Generate Estimate Number
         $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
@@ -422,6 +422,19 @@ class Estimate extends MY_Controller
             ];
 
             $notification = $this->estimate_model->save_notification($notif);
+
+            /**
+             * Add cron automation queue
+             */
+            createAutomationQueueV2('send_email', 'estimate', 'created', '', $addQuery);          
+            
+            if($post['status'] == 'Submitted') { //Is Sent
+                createAutomationQueueV2('send_email', 'estimate', 'sent', '', $addQuery);          
+            }elseif($post['status'] == 'Accepted') { //Is Approved
+                createAutomationQueueV2('send_email', 'estimate', 'approved', '', $addQuery);          
+            }elseif($post['status'] == 'Declined By Customer') { //Declined
+                createAutomationQueueV2('send_email', 'estimate', 'declined', '', $addQuery);          
+            }
 
             if ($this->input->post('status') === 'Submitted') {
                 $this->sendEstimateToCustomer($new_data['customer_id'], $addQuery);
@@ -1534,9 +1547,10 @@ class Estimate extends MY_Controller
 
     public function update($id)
     {
-        $company_id = getLoggedCompanyID();
-        $user_id = getLoggedUserID();
-        $estimate = $this->estimate_model->getById($id);
+        $company_id = logged('company_id');
+        $user_id    = logged('id');
+        $estimate   = $this->estimate_model->getById($id);
+        $post       = $this->input->post();
 
         $attachment_name = $estimate->attachments;
         if (isset($_FILES['est_contract_upload']) && $_FILES['est_contract_upload']['tmp_name'] != '') {
@@ -1625,6 +1639,21 @@ class Estimate extends MY_Controller
             }
         }
 
+        /**
+         * Add cron mail automation queue
+         */
+        if($addQuery) {
+            if($estimate) {
+                if($post['status'] == 'Submitted') { //Is Sent
+                    createAutomationQueueV2('send_email', 'estimate', 'sent', '', $estimate->id);          
+                }elseif($post['status'] == 'Accepted') { //Is Approved
+                    createAutomationQueueV2('send_email', 'estimate', 'approved', '', $estimate->id);          
+                }elseif($post['status'] == 'Declined By Customer') { //Declined
+                    createAutomationQueueV2('send_email', 'estimate', 'declined', '', $estimate->id);          
+                }                
+            }
+        }
+
         // if ($addQuery > 0) {
         // $new_data2 = array(
         //     'item_type' => $this->input->post('type'),
@@ -1691,12 +1720,7 @@ class Estimate extends MY_Controller
             ++$i;
         }
 
-        // }
-
         redirect('estimate');
-        // } else {
-        //     echo json_encode(0);
-        // }
     }
 
     public function updateestimateBundle($id)
