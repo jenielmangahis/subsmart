@@ -27,13 +27,19 @@ class CustomerDeal_model extends MY_Model
         return $this->db->get()->result();
     }
 
-    public function getAllByCustomerDealStageId($customer_deal_stage_id, $sort = [])
+    public function getAllByCustomerDealStageId($customer_deal_stage_id, $sort = [], $filters = [])
     {
         $this->db->select('customer_deals.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname, acs_profile.business_name AS customer_business_name');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'customer_deals.customer_id = acs_profile.prof_id', 'left');
         $this->db->where('customer_deals.customer_deal_stage_id', $customer_deal_stage_id);
 
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+        
         if( $sort ){
             $this->db->order_by($sort['field'], $sort['order']);
         }else{
@@ -43,11 +49,17 @@ class CustomerDeal_model extends MY_Model
         return $this->db->get()->result();
     }
 
-    public function getSumValueByCustomerDealStageId($customer_deal_stage_id)
+    public function getSumValueByCustomerDealStageId($customer_deal_stage_id, $filters = [])
     {
         $this->db->select('COALESCE(SUM(value),0) AS total_value');
         $this->db->from($this->table);
         $this->db->where('customer_deals.customer_deal_stage_id', $customer_deal_stage_id);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
 
         $query = $this->db->get();
         return $query->row();

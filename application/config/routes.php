@@ -2176,3 +2176,5 @@ $route['customer_deals/_deal_scheduled_activities'] = 'CustomerDeal/ajax_deal_sc
 $route['customer_deals/_create_customer_deal_activity_schedule'] = 'CustomerDeal/ajax_create_customer_deal_activity_schedule';
 $route['customer_deals/_activity_is_done'] = 'CustomerDeal/ajax_activity_is_done';
 $route['customer_deals/_edit_activity_schedule_form'] = 'CustomerDeal/ajax_edit_activity_schedule_form';
+$route['customer_deals/_update_customer_deal_activity_schedule'] = 'CustomerDeal/ajax_update_customer_deal_activity_schedule';
+$route['customer_deals/_delete_deal_activity_schedule'] = 'CustomerDeal/ajax_delete_deal_activity_schedule';

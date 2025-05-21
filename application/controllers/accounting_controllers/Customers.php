@@ -121,9 +121,14 @@ class Customers extends MY_Controller {
     }
 
     public function index()
-    {   
+    { 
+        if(!checkRoleCanAccessModule('accounting-customers', 'read')){
+			show403Error();
+			return false;
+		}
+
         add_footer_js(array(
-            "assets/js/customer/lib/bday-picker.js",
+            //"assets/js/customer/lib/bday-picker.js",
             "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/sales/customers/list.js"
         ));
@@ -318,7 +323,8 @@ class Customers extends MY_Controller {
             null,  
             array(
                 'company_id' => $company_id,
-                'status !=' => 'Inactive'
+                'status !=' => 'Inactive',
+                'is_archived' => 0
             ),
         );
 
@@ -336,12 +342,10 @@ class Customers extends MY_Controller {
                 $customer_name = ($getDatas->customer_name != "") ? $getDatas->customer_name : $getDatas->business_name;
                 $customer_address = ($getDatas->customer_address != "") ? $getDatas->customer_address : "Not Specified";
                 $customer_address = str_replace("NA","",$customer_address);
-                if ($getDatas->phone_h == "")  {
-                    $contact = $getDatas->phone_m;
-                } else if ($getDatas->phone_m == "") {
-                    $contact = $getDatas->phone_h;
-                } else {
+               if( $getDatas->phone_m == '' && $getDatas->phone_h == ''){
                     $contact = "Not Specified";
+                }else{
+                    $contact = $getDatas->phone_m != '' ? formatPhoneNumber($getDatas->phone_m) : formatPhoneNumber($getDatas->phone_h) ;
                 }
                 $email = ($getDatas->email != "") ? $getDatas->email : "Not Specified";
                 $customer_type = ($getDatas->customer_type == "Residential") ? "Residential" : "Not Specified";

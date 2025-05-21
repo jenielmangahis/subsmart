@@ -18,18 +18,22 @@ class CustomerDeal extends MY_Controller
         $this->load->model('CustomerDeal_model');
         $this->load->model('CustomerDealStage_model');
         $this->load->model('CustomerDealLabel_model');
+        $this->load->model('CustomerDealActivitySchedule_model');
 
         $company_id = logged('company_id');
         $customerDealStages  = $this->CustomerDealStage_model->getAllByCompanyId($company_id);
         $customerDealLables  = $this->CustomerDealLabel_model->getAllByCompanyId($company_id);
         $optionSourceChannel = $this->CustomerDeal_model->optionSourceChannel();
         $optionVisibleTo     = $this->CustomerDeal_model->optionVisibleTo();
-        
+        $optionActivityTypes = $this->CustomerDealActivitySchedule_model->optionsActivityType();               
+        $optionsPriorities   = $this->CustomerDealActivitySchedule_model->optionsPriority();               
 
         $this->page_data['customerDealStages']  = $customerDealStages;
         $this->page_data['optionSourceChannel'] = $optionSourceChannel;
         $this->page_data['customerDealLables']  = $customerDealLables;
-        $this->page_data['optionVisibleTo'] = $optionVisibleTo;
+        $this->page_data['optionVisibleTo']     = $optionVisibleTo;
+        $this->page_data['optionActivityTypes'] = $optionActivityTypes;
+        $this->page_data['optionsPriorities']   = $optionsPriorities;
         $this->load->view('v2/pages/customer_deals/index', $this->page_data);
     }
 
@@ -37,6 +41,7 @@ class CustomerDeal extends MY_Controller
     {
         $this->load->model('CustomerDeal_model');
         $this->load->model('CustomerDealStage_model');
+        $this->load->model('CustomerDealActivitySchedule_model');
         
         $company_id = logged('company_id');
 
@@ -46,11 +51,22 @@ class CustomerDeal extends MY_Controller
         $dataCustomerDeals = [];
         foreach($customerDealStages as $stage){
             $sort = ['field' => 'customer_deals.id', 'order' => 'DESC'];
-            $customerDeals = $this->CustomerDeal_model->getAllByCustomerDealStageId($stage->id, $sort);
+            $filters[] = ['field' => 'customer_deals.status', 'value' => 'New'];
+            $filters[] = ['field' => 'customer_deals.is_archive', 'value' => 'No'];
+            $customerDeals = $this->CustomerDeal_model->getAllByCustomerDealStageId($stage->id, $sort, $filters);
             $sumDeals      = $this->CustomerDeal_model->getSumValueByCustomerDealStageId($stage->id);
             
             $total_deals   = 0;
-            if( $customerDeals ){                
+            if( $customerDeals ){ 
+                foreach( $customerDeals as $deal ){
+                    $is_with_overdue   = 0;
+                    $overdueActivities = $this->CustomerDealActivitySchedule_model->getOverdueActivitiesByCustomerDealId($deal->id);
+                    if( $overdueActivities ){
+                        $is_with_overdue = 1;
+                    }     
+                    $deal->is_with_overdue = $is_with_overdue;                  
+                }     
+
                 $total_deals = count($customerDeals);
                 $dataCustomerDeals[$stage->id]['deals'] = $customerDeals;
             }
@@ -324,6 +340,7 @@ class CustomerDeal extends MY_Controller
                 'source_channel' => $post['source_channel'],
                 'source_channel_id' => $post['source_channel_id'],
                 'visible_to' => $post['visible_to'],
+                'is_archive' => 'No',
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_modified' => date("Y-m-d H:i:s")
             ];
@@ -453,13 +470,15 @@ class CustomerDeal extends MY_Controller
 
         $customerDeal = $this->CustomerDeal_model->getById($post['customer_deal_id']);
         if( $customerDeal && $customerDeal->company_id == $company_id ){
-            $this->CustomerDeal_model->delete($post['customer_deal_id']);
+            //$this->CustomerDeal_model->delete($post['customer_deal_id']);
+            $data = ['is_archive' => 'Yes'];
+            $this->CustomerDeal_model->update($customerDeal->id, $data);
 
             $is_success = 1;
             $msg = '';
 
             //Activity Logs
-            $activity_name = 'Customer Deals : Deleted customer deal ' . $customerDeal->deal_title; 
+            $activity_name = 'Customer Deals : Sent to archive customer deal ' . $customerDeal->deal_title; 
             createActivityLog($activity_name);
         }
 
@@ -579,6 +598,7 @@ class CustomerDeal extends MY_Controller
 
         $is_success = 0;
         $msg = 'Cannot find data';
+        $previous_stage_id = 0;
 
         $company_id = logged('company_id');
         $post = $this->input->post();
@@ -589,7 +609,7 @@ class CustomerDeal extends MY_Controller
         if( $deal_id > 0 && $stage_id > 0 ){
             $customerDeal = $this->CustomerDeal_model->getById($deal_id);
             if( $customerDeal && $customerDeal->company_id == $company_id ){
-                
+                $previous_stage_id = $customerDeal->customer_deal_stage_id;
                 $this->CustomerDeal_model->update($customerDeal->id, ['customer_deal_stage_id' => $stage_id]);
 
                 $is_success = 1;
@@ -599,7 +619,8 @@ class CustomerDeal extends MY_Controller
 
         $return = [
             'is_success' => $is_success,
-            'msg' => $msg
+            'msg' => $msg,
+            'previous_stage_id' => $previous_stage_id
         ];
 
         echo json_encode($return);
@@ -611,6 +632,7 @@ class CustomerDeal extends MY_Controller
 
         $is_success = 0;
         $msg = 'Cannot find data';
+        $stage_id = 0;
 
         $company_id = logged('company_id');
         $post = $this->input->post();
@@ -623,14 +645,281 @@ class CustomerDeal extends MY_Controller
                 
                 $this->CustomerDeal_model->update($customerDeal->id, ['status' => $post['status']]);
 
+                //Activity Logs
+                $activity_name = 'Customer Deals : Updated deal ' . $customerDeal->deal_title . ' status to ' . $post['status']; 
+                createActivityLog($activity_name);
+
                 $is_success = 1;
                 $msg = '';
+                $stage_id = $customerDeal->customer_deal_stage_id;
             }
         } 
 
         $return = [
             'is_success' => $is_success,
-            'msg' => $msg
+            'msg' => $msg,
+            'stage_id' => $stage_id
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_deal_stage_summary()
+    {
+        $this->load->model('CustomerDeal_model');
+
+        $post = $this->input->post();
+
+        $filters[] = ['field' => 'customer_deals.status', 'value' => 'New'];
+        $totalAmountValue = $this->CustomerDeal_model->getSumValueByCustomerDealStageId($post['stage_id'], $filters);
+        $customerDeals = $this->CustomerDeal_model->getAllByCustomerDealStageId($post['stage_id'], [], $filters);
+
+        $return = [
+            'total_value' => $totalAmountValue->total_value,
+            'total_records' => count($customerDeals)
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_deal_scheduled_activities()
+    {
+        $this->load->model('CustomerDeal_model');
+        $this->load->model('CustomerDealActivitySchedule_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+        $customerDeal = $this->CustomerDeal_model->getById($post['customer_deal_id']);
+        if( $customerDeal && $customerDeal->company_id == $company_id ){
+            $with_overdue = false;
+            $sort = ['field' => 'customer_deal_activity_schedules.date_from', 'order' => 'ASC'];
+            $filters[] = ['field' => 'customer_deal_activity_schedules.is_done', 'value' => 'No'];
+            $activitySchedules = $this->CustomerDealActivitySchedule_model->getAllByCustomerDealId($post['customer_deal_id'], $sort, $filters);
+            if( $activitySchedules ){                
+                foreach($activitySchedules as $activity){
+                    $activity->activity_type_properties = $this->CustomerDealActivitySchedule_model->optionsActivityType($activity->activity_type);
+                    $activity->priority_properties      = $this->CustomerDealActivitySchedule_model->optionsPriority($activity->priority);
+                }
+            }  
+
+            $this->page_data['activitySchedules'] = $activitySchedules;
+            $this->load->view('v2/pages/customer_deals/ajax_deal_scheduled_activities', $this->page_data);
+        }else{
+            echo '<div class="alert alert-danger" role="alert">Record not found</div>';
+        }
+    }
+
+    public function ajax_create_customer_deal_activity_schedule()
+    {
+        $this->load->model('CustomerDealActivitySchedule_model');
+        $this->load->model('CustomerDeal_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['activity_name'] == '' ){
+            $is_success = 0;
+            $msg = 'Please enter activity name';
+        }
+
+        if( $is_success == 1 ){
+            $customerDeal         = $this->CustomerDeal_model->getById($post['cdi']);
+            $isActivityNameExists = $this->CustomerDealActivitySchedule_model->getByActivityName($post['activity_name']);
+            if( $isActivityNameExists && $isActivityNameExists->customer_deal_id == $post['cdi'] ){
+                $is_success = 0;
+                $msg = 'Activity name ' . $post['activity_name'] . ' already exists';
+            }else{
+
+                $is_done = 'No';
+                if( $post['is_done'] ){
+                    $is_done = 'Yes';
+                }
+
+                $data = [
+                    'customer_deal_id' => $post['cdi'],
+                    'owner_id' => $post['owner_id'],
+                    'activity_name' => $post['activity_name'],
+                    'activity_type' => $post['activity_type'],
+                    'date_from' => date("Y-m-d",strtotime($post['date_from'])),
+                    'date_to' => date("Y-m-d",strtotime($post['date_to'])),
+                    'time_from' => date("H:i:s",strtotime($post['time_from'])),
+                    'time_to' => date("H:i:s",strtotime($post['time_to'])),
+                    'priority' => $post['activity_priority'],
+                    'location' => $post['activity_location'],
+                    'notes' => $post['activity_notes'],
+                    'is_done' => $is_done,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+
+                $this->CustomerDealActivitySchedule_model->create($data);
+
+                //Activity Logs                
+                $activity_name = 'Customer Deals : Created activity schedule ' . $post['activity_name'] . ' for customer deal ' . $customerDeal->deal_title; 
+                createActivityLog($activity_name);
+
+                $is_success = 1;
+                $msg = '';
+
+            }
+        }        
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_activity_is_done()
+    {
+        $this->load->model('CustomerDealActivitySchedule_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $activityScheduled = $this->CustomerDealActivitySchedule_model->getById($post['activity_id']);
+        if( $activityScheduled ){
+            $this->CustomerDealActivitySchedule_model->update($activityScheduled->id, ['is_done' => 'Yes']);
+
+            //Activity Logs                
+            $activity_name = 'Customer Deals : Changed activity ' . $activityScheduled->activity_name . ' to done'; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_edit_activity_schedule_form()
+    {
+        $this->load->model('CustomerDealActivitySchedule_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $activitySchedule = $this->CustomerDealActivitySchedule_model->getById($post['activity_id']);
+        if( $activitySchedule && $activitySchedule->company_id == $company_id ){
+            $optionActivityTypes = $this->CustomerDealActivitySchedule_model->optionsActivityType();               
+            $optionsPriorities   = $this->CustomerDealActivitySchedule_model->optionsPriority();               
+
+            $this->page_data['activitySchedule'] = $activitySchedule;
+            $this->page_data['optionActivityTypes'] = $optionActivityTypes;
+            $this->page_data['optionsPriorities'] = $optionsPriorities;
+            $this->load->view('v2/pages/customer_deals/ajax_edit_activity_schedule_form', $this->page_data);
+        }else{
+            echo '<div class="alert alert-danger" role="alert">Record not found</div>';
+        }
+    }
+
+    public function ajax_update_customer_deal_activity_schedule()
+    {
+        $this->load->model('CustomerDealActivitySchedule_model');
+        $this->load->model('CustomerDeal_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['activity_name'] == '' ){
+            $is_success = 0;
+            $msg = 'Please enter activity name';
+        }
+
+        if( $is_success == 1 ){
+            $customerDeal         = $this->CustomerDeal_model->getById($post['cdi']);
+            $isActivityNameExists = $this->CustomerDealActivitySchedule_model->getByActivityName($post['activity_name']);
+            if( ($isActivityNameExists) && ($isActivityNameExists->customer_deal_id == $post['cdi'] && $isActivityNameExists->id != $post['asid']) ){
+                $is_success = 0;
+                $msg = 'Activity name ' . $post['activity_name'] . ' already exists';
+            }else{
+                $activitySchedule = $this->CustomerDealActivitySchedule_model->getById($post['asid']);
+                if( $activitySchedule && $activitySchedule->company_id == $company_id ){
+                    $is_done = $activitySchedule->is_done;
+                    if( $post['is_done'] ){
+                        $is_done = 'Yes';
+                    }
+
+                    $data = [
+                        'owner_id' => $post['owner_id'],
+                        'activity_name' => $post['activity_name'],
+                        'activity_type' => $post['activity_type'],
+                        'date_from' => date("Y-m-d",strtotime($post['date_from'])),
+                        'date_to' => date("Y-m-d",strtotime($post['date_to'])),
+                        'time_from' => date("H:i:s",strtotime($post['time_from'])),
+                        'time_to' => date("H:i:s",strtotime($post['time_to'])),
+                        'priority' => $post['activity_priority'],
+                        'location' => $post['activity_location'],
+                        'notes' => $post['activity_notes'],
+                        'is_done' => $is_done,
+                        'date_modified' => date("Y-m-d H:i:s")
+                    ];
+
+                    $this->CustomerDealActivitySchedule_model->update($activitySchedule->id, $data);
+
+                    //Activity Logs                
+                    $activity_name = 'Customer Deals : Updated activity schedule ' . $post['activity_name'] . ' for customer deal ' . $customerDeal->deal_title; 
+                    createActivityLog($activity_name);
+
+                    $is_success = 1;
+                    $msg = '';
+                }else{
+                    $is_success = 0;
+                    $msg = 'Cannot find data';
+                }
+            }
+        }        
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_deal_activity_schedule()
+    {
+        $this->load->model('CustomerDealActivitySchedule_model');
+        $this->load->model('CustomerDeal_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $activitySchedule = $this->CustomerDealActivitySchedule_model->getById($post['activity_id']);
+        if( $activitySchedule && $activitySchedule->company_id == $company_id ){
+            $this->CustomerDealActivitySchedule_model->delete($activitySchedule->id);
+
+            //Activity Logs                
+            $activity_name = 'Customer Deals : Deleted activity schedule <b>'.$activitySchedule->activity_type.'</b> for deal ' . $activitySchedule->deal_title; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
         ];
 
         echo json_encode($return);
