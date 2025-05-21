@@ -1964,6 +1964,9 @@ class Invoice extends MY_Controller
         $this->page_data['users'] = $this->invoice_model->getInvoiceCustomer($id);
         $this->page_data['customer'] = $this->AcsProfile_model->getByProfId($invoice->customer_id);
 
+        $total_late_days = 0;
+        $total_days = 0;
+
         if (!empty($invoice)) {
             foreach ($invoice as $key => $value) {
                 if (is_serialized($value)) {
@@ -1976,19 +1979,30 @@ class Invoice extends MY_Controller
 
             if($payments) {
                 $partial_payment_amount = $payments->total_amount_paid;
-            }            
+            }          
+            
+            $invoiceSettings         = $this->invoice_settings_model->getByCompanyId($invoice->company_id);
+            $days_activate_late_fee  = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
+
+            $current_date            = date('Y-m-d');
+            $late_fee_activated_date = $invoice->due_date;
+            if(strtotime($current_date) >= strtotime($late_fee_activated_date)) {
+                $date1 = new DateTime($current_date);
+                $date2 = new DateTime($late_fee_activated_date);
+                $total_days = $date2->diff($date1)->format("%a");
+                $total_late_days = $total_days - $days_activate_late_fee;
+            }              
 
             $this->page_data['partial_payment_amount'] = $partial_payment_amount;
             $this->page_data['invoice'] = $invoice;
             $this->page_data['user'] = $user;
         }
+
         $format = $this->input->get('format');
         $this->page_data['company'] = $company;
         $this->page_data['format'] = $format;
-        // print_r($this->page_data['users']);
-        
-        // $this->load->view('invoice/pdf/standard_template', $this->page_data, $filename, "portrait");
-        // $this->load->view('invoice/pdf/template', $this->page_data, $filename, "portrait");
+
+        $this->page_data['total_late_days'] = $total_late_days;
 
         $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
