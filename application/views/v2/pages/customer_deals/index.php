@@ -203,6 +203,80 @@
     border-style: solid !important;
     background-color:#d4edda;
 }
+.deal-stage-summary{
+    font-weight:bold;
+}
+.btn-create-schedule-activity{
+    display: block;
+    border: none;
+    font-size: 16px;
+    padding: 5px;
+    margin: 0px;
+}
+.autocomplete-container {
+    position: relative;
+}
+.activity-card{
+    border-top:1px solid #dee2e6;
+    padding:11px;
+    z-index:8000;
+}
+.activity-name{
+    font-weight:bold;
+}
+.activity-notes{
+    display:block;
+    margin-top:5px;
+    background-color:#e2e3e5 !important;
+    border-color:#d6d8db;
+    color:#383d41;
+    padding:5px;
+    border-radius:6px;
+}
+.activity-overdue-text{
+    color:#f95754;
+}
+.activity-schedule{
+    font-size:12px;
+}
+.activity-today{
+    color:#155724;
+}
+.activity-card:hover{
+    background-color:#005ce6;
+    border-color:#005ce6;
+    color:#ffffff !important;
+    cursor:pointer;
+}
+.activity-card:hover span{
+    color:#ffffff !important;
+}
+.opt-done-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index:9999;
+}
+.opt-done-container #flexRadioDefault1:hover{
+    cursor:pointer;
+}
+.btn-activity-scheduled-with-overdue{
+    background-color:#f95754;
+    border-color:#f95754;
+}
+.btn-activity-scheduled-with-overdue i{
+    color:#ffffff !important;
+}
+.select-label-action-buttons a{
+    color:#ffffff;
+}
+.view-style-container a{
+    margin:0px;
+}
+.view-style-container .btn-active{
+    background-color: #6a4a86 !important;
+    color: #ffffff !important;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer_deals') ?>'">
@@ -225,13 +299,11 @@
                     </div>
                 </div>
                 <div class="row mt-4">
-                    <div class="col-4 grid-mb text-end">
-                        <div class="nsm-field-group search form-group" style="display:block;max-width:600px;">
-                            <form id="frm-list-search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search-list" value="" placeholder="Search List..." style="width:92%; display:inline-block;" required>                            
-                                <button class="nsm-button primary" id="btn-search-list" type="submit"><i class='bx bx-search-alt-2'></i></button>
-                            </form>
-                        </div>                        
+                    <div class="col-4 grid-mb">
+                        <!-- <div class="btn-group view-style-container" role="group" aria-label="Button group with nested dropdown">
+                            <button type="button" class="btn btn-secondary btn-lg btn-active"><i class='bx bx-bar-chart-alt-2'></i></button>
+                            <button type="button" class="btn btn-secondary btn-lg"><i class='bx bx-dollar-circle' ></i></button>
+                        </div> -->
                     </div>
                     <div class="col-8 grid-mb text-end">
                         <div class="btn-group">
@@ -262,4 +334,6 @@
 </div>
 <?php include viewPath('v2/includes/customer_deals/modals'); ?>
 <?php include viewPath('v2/pages/customer_deals/js/customer_deals'); ?>
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/styles/minimal.css" />
+<script src="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/dist/index.min.js"></script>
 <?php include viewPath('v2/includes/footer'); ?>
