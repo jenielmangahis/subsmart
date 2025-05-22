@@ -24,9 +24,6 @@
     .OPT_INPUTS {
         display: none;
     }
-    /*.nsm-table {
-        display: none;
-    }*/
 
     .nsm-badge.primary-enhanced {
         background-color: #6a4a86;
@@ -391,8 +388,6 @@
 
     .loader {
         padding: 136px 0;
-/*        border: 1px solid lightgray; */
-/*        border-radius: 10px;*/
     }
 
     .loader>div {
@@ -932,7 +927,7 @@
                                                     $subtotal = 0.00;
                                                     foreach ($jobs_data_items as $item):
                                                     $item_price = $item->cost / $item->qty;
-                                                    $total = $item->cost * $item->qty;
+                                                    $total = $item->price * $item->qty;
                                                     $hideSelectedItems .= "#ITEMLIST_PRODUCT_$item->id {display: none;}"; 
                                                 ?>
                                                    <tr id=ss>
@@ -955,14 +950,12 @@
                                                         <td class="d-none"><small>Margin</small>
                                                             <input readonly step="any" id='margin<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->margin; ?>'  type="number" name="item_margin[]" class="form-control item-margin" placeholder="Margin">
                                                         </td>
-                                                        <!--<td width="10%"><small>Unit Cost</small><input type="text" name="item_cost[]" class="form-control"></td>-->
-                                                        <!--<td width="25%"><small>Inventory Location</small><input type="text" name="item_loc[]" class="form-control"></td>-->
                                                         <td><small>Item Type</small><input readonly type="text" class="form-control" value='<?= $item->type ?>'></td>
                                                         <td>
                                                             <small>Amount</small><br>
                                                             <b data-subtotal='<?= $total ?>' id='sub_total<?= $item->id ?>' class="total_per_item">$<?= number_format((float)$total,2,'.',',');?></b>
                                                         </td>
-                                                        <td>
+                                                        <td style="padding-top: 20px;">
                                                             <button type="button" class="nsm-button items_remove_btn remove_item_row mt-2" onclick="$('#ITEMLIST_PRODUCT_<?php echo "$item->id"; ?>').show();"><i class="bx bx-trash" aria-hidden="true"></i></button>
                                                         </td>
                                                     </tr>

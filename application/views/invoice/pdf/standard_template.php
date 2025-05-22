@@ -365,7 +365,7 @@
             <br>
             <br>
             <br>
-            <p style="margin: 0;font-size:30px;color:red"><b>THANK YOU FOR YOUR ORDER</b></p>
+            <p style="margin: 0;font-size:30px;color:red"><b>THANK YOU FOR YOUR BUSINESS</b></p>
             <!-- <br> -->
             <p style="margin-top:10px">
                 All claims must be made within 5 days after receipt of goods. Goods returned without our authorized return number on the carton will be

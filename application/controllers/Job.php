@@ -216,19 +216,6 @@ class Job extends MY_Controller
         );
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
 
-        // get items
-        // $get_items = array(
-        //     'where' => array(
-        //         'items.company_id' => $comp_id,
-        //         //'is_active' => 1,
-        //     ),
-        //     'table' => 'items',
-        //     'select' => 'items.id,title,price,type',
-        // );
-        // $items = $this->items_model->getAllItemWithLocation();
-        // echo "<pre>";
-        // print_r($items);
-        // exit;
         $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
         $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
       
@@ -321,7 +308,7 @@ class Job extends MY_Controller
             );
             $created_by = $this->general->get_data_with_param($query, false);            
             $items = $this->jobs_model->get_specific_job_items($id);
-            
+
             $job = $this->jobs_model->get_specific_job($id);
             $defaultJobType = $this->JobType_model->getByTitle($job->job_type);
             $this->page_data['jobs_data'] = $job;
