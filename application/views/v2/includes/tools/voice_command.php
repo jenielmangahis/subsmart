@@ -101,7 +101,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Voice Commands</span>
-                <i class="bx bx-fw bx-x m-0 text-muted exit_finish_modal" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
                 <div class="row">
