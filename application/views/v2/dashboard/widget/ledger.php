@@ -64,7 +64,7 @@
                 <strong class="<?php echo "addressData_$id"; ?>"></strong>
                 <div class="table-responsive mt-2" style="max-height: 500px;">
                     <table class="table table-bordered <?php echo "tableData_$id"; ?> table-hover w-100 mb-3">
-                        <thead>
+                        <thead style="background: #00000008;">
                             <tr>
                                 <th>Date</th>
                                 <th>Description</th>

@@ -13,16 +13,16 @@
     table.dataTable thead th,
     table.dataTable thead td,
     table.dataTable tbody td {
-        padding: 6px;
+        padding: 6px !important;
     }
 
     table.dataTable>thead>tr>th {
         border-bottom: 1px solid lightgray !important;
     }
 
-    table>tbody {
+    /* table>tbody {
         font-size: 16px;
-    }
+    } */
 
     .dataTables_length,
     .dataTables_filter {
@@ -77,7 +77,7 @@
                                     <div class="col-lg-12">
                                         <input id="bannerlist_table_search" class="form-control mt-0 mb-2 w-25" type="text" placeholder="Search...">
                                         <button type="button" class="nsm-button small primary float-end addBannerButton" data-bs-toggle="modal" data-bs-target=".addBannerModal">Add Banner</button>
-                                        <table id="bannerlist_table" class="table table-bordered table-hover table-sm w-100">
+                                        <table id="bannerlist_table" class="table table-bordered table-hover w-100" style="background: #00000008;">
                                             <thead>
                                                 <tr>
                                                     <th>Title</th>
@@ -106,7 +106,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Add Banner</span>
-                <i class="bx bx-fw bx-x m-0 text-muted exit_finish_modal" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
                 <form id="addBannerForm">
@@ -158,7 +158,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Edit Banner</span>
-                <i class="bx bx-fw bx-x m-0 text-muted exit_finish_modal" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
                 <form id="editBannerForm">

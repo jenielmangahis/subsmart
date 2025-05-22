@@ -11,16 +11,20 @@
     <div class="nsm-card nsm-grid">
         <div class="nsm-card-header d-block">
             <div class="nsm-card-title">
-                <span class="d-block">
-                    <?= $stage->name; ?>
+                <div class="d-block h5">
+                    <b><?= $stage->name; ?></b>
                     <span class="float-end">
                         <a class="nsm nsm-link btn-edit-deal-stage" href="javascript:void(0);" data-id="<?= $stage->id; ?>"><i class='bx bxs-edit'></i></a>
                         <a class="nsm nsm-link btn-delete-deal-stage" href="javascript:void(0);" data-name="<?= $stage->name; ?>" data-id="<?= $stage->id; ?>"><i class='bx bx-trash'></i></a>
                     </span>
-                </span><br />
-                <span class="text-muted">$<?= number_format($customerDeals[$stage->id]['total_value'],2) ?> - <?= $customerDeals[$stage->id]['total_deals']; ?> <?= $customerDeals[$stage->id]['total_deals'] > 1 ? 'Deals' : 'Deal'; ?></span>
+                </div>
+                <div class="text-muted deal-stage-summary">
+                    <span id="stage-<?= $stage->id ?>-total-amount">$<?= number_format($customerDeals[$stage->id]['total_value'],2) ?></span> - 
+                    <span id="stage-<?= $stage->id ?>-total-deals"><?= $customerDeals[$stage->id]['total_deals']; ?> <?= $customerDeals[$stage->id]['total_deals'] > 1 ? 'Deals' : 'Deal'; ?></span>
+                </div>
             </div>
         </div>
+        <hr />
         <div class="nsm-card-content">
             <div class="deal-stage-container" id="deal-stage-container-<?= $stage->id; ?>">
                 <?php if( array_key_exists($stage->id, $customerDeals) && $customerDeals[$stage->id]['deals'] ){ ?>
@@ -32,7 +36,7 @@
                                         <span class="stage-deal-name"><?= $deals->deal_title; ?></span>
                                         <div class="float-end stage-deals-actions">
                                             <a class="nsm nsm-button btn-small btn-view-customer-deals" data-id="<?= $deals->id; ?>"><i class='bx bx-search-alt-2'></i></a>
-                                            <a class="nsm nsm-button btn-small btn-view-activity-scheduled"><i class='bx bx-calendar'></i></a>
+                                            <a class="nsm nsm-button btn-small btn-view-activity-scheduled <?= $deals->is_with_overdue == 1 ? 'btn-activity-scheduled-with-overdue' : ''; ?>" data-id="<?= $deals->id; ?>"><i class='bx bx-calendar'></i></a>
                                         </div>
                                     </div>
                                     <span class="text-muted"><?= $deals->customer_firstname . ' ' . $deals->customer_lastname; ?></span><br />
@@ -69,8 +73,10 @@ $(function(){
                         type: "POST",
                         url: base_url + "customer_deals/_update_customer_deal_stage",
                         data:{deal_id:deal_id, stage_id:stage_id},
-                        success: function(html) {    
-                            
+                        dataType:'json',
+                        success: function(data) {    
+                            load_deal_stage_summary(data.previous_stage_id);
+                            load_deal_stage_summary(stage_id);
                         },
                         beforeSend: function() {
                             
@@ -88,7 +94,7 @@ $(function(){
         helper: "clone",
         start: function(event, ui) {
             ui.helper.width($(this).width());
-            $('#customer-deal-lost-container').slideDown();
+            $('#customer-deal-lost-container').slideDown(300);
         },
         stop: function(event, ui) {            
             $('#customer-deal-lost-container').hide();
@@ -110,7 +116,7 @@ $(function(){
         html : true, 
         trigger: "hover focus",
         content: function() {
-            return 'View customer deals';
+            return 'View customer deal';
         }
     });
 
@@ -119,8 +125,30 @@ $(function(){
         html : true, 
         trigger: "hover focus",
         content: function() {
-            return 'View activity scheduled';
+            return 'Schedule an activity';
         }
     });
+
+    function load_deal_stage_summary(stage_id){
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer_deals/_deal_stage_summary",
+            data:{stage_id:stage_id},
+            dataType:'json',
+            success: function(data) {   
+                
+                let total_deals = data.total_records + ' deal';
+                if( data.total_records > 1 ){
+                    total_deals = data.total_records + ' deals';
+                }
+
+                $(`#stage-${stage_id}-total-amount`).text(data.total_value);
+                $(`#stage-${stage_id}-total-deals`).text(total_deals);
+            },
+            beforeSend: function() {
+                
+            }
+        });
+    }
 });
 </script>

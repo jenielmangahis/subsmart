@@ -31,11 +31,11 @@
                 </h5>
             </div>
         </div>
-        <div class="row mb-2">
+        <!-- <div class="row mb-2">
             <div class="col-md-12">
                 <span><?php echo $description; ?></span>
             </div>
-        </div>
+        </div> -->
         <div class="row">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?> display_none">
                 <div class="nsm-card-content adbanner_card">
@@ -95,15 +95,14 @@
 
                             if (['mp4', 'avi', 'mov', 'wmv'].includes(fileExtension)) {
                                 mediaContent = `
-                                    <video class="rounded mx-auto d-block w-100 img-thumbnail" autoplay muted loop>
+                                    <video class="mx-auto d-block w-100" style="border: 1px solid #00000017; border-radius: 10px;" autoplay muted loop>
                                         <source src="${window.origin}/uploads/BusinessBanner/${banner.file}" type="video/${fileExtension}">
                                         Your browser does not support the video tag.
                                     </video>
                                 `;
                             } else {
                                 mediaContent = `
-                                    <img src="${window.origin}/uploads/BusinessBanner/${banner.file}" 
-                                         class="rounded mx-auto d-block w-100 img-thumbnail" alt="${banner.title}">
+                                    <img src="${window.origin}/uploads/BusinessBanner/${banner.file}" class="mx-auto d-block w-100" alt="${banner.title}" style="border: 1px solid #00000017; border-radius: 10px;">
                                 `;
                             }
 
