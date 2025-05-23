@@ -421,8 +421,15 @@ $payment_link = base_url('customer_invoice/'.$company_info->profile_slug.'/' . $
                     </td>
                 </tr>
                 <tr>
-                    <td>All claims must be made within 5 days after receipt of goods. Goods returned without our authorized return number on the carton will be
-                        refused. The purchase of products and services are subject to and governed solely by the Terms and Conditions.</td>
+                    <td>
+                        <?php if($footer_residential_terms_and_conditions != "") { ?>
+                            <?php echo $footer_residential_terms_and_conditions; ?>
+                        <?php } else { ?>
+                            All claims must be made within 5 days after receipt of goods. Goods returned without our authorized return number on the carton will be
+                        refused. The purchase of products and services are subject to and governed solely by the Terms and Conditions.
+                        <?php } ?>
+                    
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -431,7 +438,13 @@ $payment_link = base_url('customer_invoice/'.$company_info->profile_slug.'/' . $
                 </tr>
                 <tr>
                     <td>
-                        <div style="color: red;">Past due balances may be subject to a Late Charge not to exceed 1.5% per month.</div>
+                        <div style="color: red;">\
+                            <?php if($footer_residential_message != "") { ?>
+                                <?php echo $footer_residential_message; ?>
+                            <?php } else { ?>
+                                Past due balances may be subject to a Late Charge not to exceed 1.5% per month.
+                            <?php } ?>
+                        </div>
                     </td>
                 </tr>
             </table>
