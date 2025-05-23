@@ -2182,3 +2182,4 @@ $route['customer_deals/_archive_deals'] = 'CustomerDeal/ajax_archive_deals';
 $route['customer_deals/_restore_deals'] = 'CustomerDeal/ajax_restore_deals';
 $route['customer_deals/forecast'] = 'CustomerDeal/forecast';
 $route['customer_deals/_forecast_view'] = 'CustomerDeal/ajax_forecast_view';
+$route['customer_deals/_create_lost_reason'] = 'CustomerDeal/ajax_create_lost_reason';
