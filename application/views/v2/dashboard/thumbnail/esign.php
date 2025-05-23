@@ -129,6 +129,7 @@
                     let graphLabels = [];
                     let graphSeries = [];
                     let labelWithCounts = [];
+                    let url = "";
 
                     $('.<?php echo "textDataContainer_$id"; ?>').remove();
 
@@ -137,8 +138,20 @@
                         graphSeries.push(parseInt(value));
                         labelWithCounts.push(`${key}: ${value}`);
 
+                        switch (key) {
+                            case 'Waiting for Others':
+                                url = `${window.origin}/eSign_v2/manage?view=action_required`;
+                                break;
+                            case 'Completed':
+                                url = `${window.origin}/eSign_v2/manage?view=completed`;
+                                break;
+                            case 'Draft':
+                                url = `${window.origin}/eSign_v2/manage?view=drafts`;
+                                break;
+                        }
+
                         $('.<?php echo "textDatas_$id"; ?>').append(`
-                            <div class='col text-nowrap <?php echo "textDataContainer_$id"; ?>' onclick="window.open('${window.origin}/eSign_v2/manager', '_blank')">
+                            <div class='col text-nowrap <?php echo "textDataContainer_$id"; ?>' onclick="window.open('${url}', '_blank')">
                                 <div class='text-center textData'>
                                     <small class='text-muted text-uppercase fw-bold'>${key}</small>
                                     <h4>${value}</h4>

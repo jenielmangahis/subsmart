@@ -2662,17 +2662,17 @@ $(function () {
                 case 'vendor':
                     $.get(base_url + 'accounting/get-vendor-details/' + split[1], function (res) {
                         var vendor = JSON.parse(res);
-
                         var vendorName = '';
                         vendorName += vendor.title !== "" && vendor.title !== null ? vendor.title + " " : "";
                         vendorName += vendor.f_name !== "" && vendor.f_name !== null ? vendor.f_name + " " : "";
                         vendorName += vendor.m_name !== "" && vendor.m_name !== null ? vendor.m_name + " " : "";
                         vendorName += vendor.l_name !== "" && vendor.l_name !== null ? vendor.l_name + " " : "";
                         vendorName += vendor.suffix !== "" && vendor.suffix !== null ? vendor.suffix : "";
-                        $('#checkModal #mailing_address').html(vendorName.trim());
-                        if (vendorName.trim() !== '') {
-                            $('#checkModal #mailing_address').append('\n');
-                        }
+                        $('#checkModal #mailing_address').html(''); 
+                        // $('#checkModal #mailing_address').html(vendorName.trim()); 
+                        // if (vendorName.trim() !== '') {
+                        //     $('#checkModal #mailing_address').append('\n');
+                        // }
                         var address = '';
                         address += vendor.street !== "" && vendor.street !== null && vendor.street !== 'Not Specified' ? vendor.street + '\n' : "";
                         address += vendor.city !== "" && vendor.city !== null && vendor.city !== 'Not Specified' ? vendor.city + ', ' : "";
@@ -2685,19 +2685,19 @@ $(function () {
                 case 'customer':
                     $.get(base_url + 'accounting/get-customer-details/' + split[1], function (res) {
                         var customer = JSON.parse(res);
-
                         var customerName = '';
                         customerName += customer.first_name !== "" && customer.first_name !== null ? customer.first_name + " " : "";
                         customerName += customer.middle_name !== "" && customer.middle_name !== null ? customer.middle_name + " " : "";
                         customerName += customer.last_name !== "" && customer.last_name !== null ? customer.last_name : "";
-                        $('#checkModal #mailing_address').html(customerName.trim());
-                        if (customerName.trim() !== '') {
-                            $('#checkModal #mailing_address').append('\n');
-                        }
-                        if (customer.business_name !== "" && customer.business_name !== null) {
-                            $('#checkModal #mailing_address').append(customer.business_name);
-                            $('#checkModal #mailing_address').append('\n');
-                        }
+                        $('#checkModal #mailing_address').html(''); 
+                        // $('#checkModal #mailing_address').html(customerName.trim());
+                        // if (customerName.trim() !== '') {
+                        //     $('#checkModal #mailing_address').append('\n');
+                        // }
+                        // if (customer.business_name !== "" && customer.business_name !== null) {
+                        //     $('#checkModal #mailing_address').append(customer.business_name);
+                        //     $('#checkModal #mailing_address').append('\n');
+                        // }
 
                         var address = '';
                         address += customer.mail_add !== "" && customer.mail_add !== null && customer.mail_add !== "Not Specified" ? customer.mail_add + '\n' : "";
@@ -2712,14 +2712,14 @@ $(function () {
                 case 'employee':
                     $.get(base_url + 'accounting/get-employee-details/' + split[1], function (res) {
                         var employee = JSON.parse(res);
-
                         var employeeName = '';
                         employeeName += employee.FName !== "" && employee.FName !== null ? employee.FName + " " : "";
                         employeeName += employee.LName !== "" && employee.LName !== null ? employee.LName : "";
-                        $('#checkModal #mailing_address').html(employeeName.trim());
-                        if (employeeName.trim() !== '') {
-                            $('#checkModal #mailing_address').append('\n');
-                        }
+                        $('#checkModal #mailing_address').html(''); 
+                        // $('#checkModal #mailing_address').html(employeeName.trim());
+                        // if (employeeName.trim() !== '') {
+                        //     $('#checkModal #mailing_address').append('\n');
+                        // }
                         var address = '';
                         address += employee.address !== "" && employee.address !== null ? employee.address + '\n' : "";
                         address += employee.city !== "" && employee.city !== null ? employee.city + ', ' : "";

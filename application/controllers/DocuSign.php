@@ -3455,9 +3455,9 @@ SQL;
         return $filePath;
     }
 
-    public function debugGeneratePDF(){        
-        //$pdf = $this->debugGeneratePDFMaker(1894);
-        $pdf = $this->generatePDF(1894);
+    public function debugGeneratePDF(){    
+        $pdf = $this->debugGeneratePDFMaker(1927);
+        //$pdf = $this->generatePDF(1909);
         echo 'Finish';
     }
 
@@ -3472,12 +3472,9 @@ SQL;
 
         // if ($document->status !== 'Completed') {
         //     return;
-        // }             
-        error_reporting(E_ALL); ini_set('display_errors', 1);  
+        // }
         require_once(APPPATH . 'libraries/tcpdf/tcpdf.php');
-        require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');  
-        // require_once(APPPATH . 'libraries/fpdi/autoload.php');
-        // require_once(APPPATH . 'libraries/fpdi/Fpdi.php');
+        require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
 
         $this->db->where('docfile_id', $document->id);
         $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
@@ -3490,11 +3487,9 @@ SQL;
                 $pageCount = $pdf->setSourceFile($generatedPDFPath);
 
                 for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-                    //$pageIndex = $pdf->importPage($pageNo, \PageBoundaries::MEDIA_BOX);
                     $pageIndex = $pdf->importPage($pageNo);
                     $pdf->AddPage();
-                    //$pdf->useTemplate($pageIndex, null, null, 0, 0, true);
-                    $pdf->useTemplate($pageIndex);
+                    $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
                 }
 
                 return $pdf->Output(null, 'S');
@@ -3559,15 +3554,14 @@ SQL;
 
             for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
                 $pageIndex = $pdf->importPage($pageNo);
-                //$pageIndex = $pdf->importPage($pageNo, PdfReader\PageBoundaries::MEDIA_BOX);
                 $pdf->AddPage();
                 $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
 
                 if (!is_null($envelopId)) {
                     $pdf->setY(5);
                     $pdf->setX(5);
-                    $pdf->SetFont('Courier', '', 10);
-                    $pdf->SetFillColor(255, 255, 255);
+                    $pdf->SetFont('Arial', '', 10);
+                    //$pdf->SetFillColor(255, 255, 255);
                     $pdf->Cell(360, 10, $envelopId, 0, 0, 'L', 1);
                 }
 
@@ -3601,8 +3595,9 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
-                        // $pdf->SetFont('Courier', '', 10);
-                        // $pdf->Write(0, $value->name);
+                        //$pdf->SetFont('Courier', '', 10);
+                        //$pdf->Write(0, $value->name);
+
                         $pdf->SetFont('Arial', '', 10);
                         $pdf->Cell(0, 0, $value->name, 0, 0, 'L');
                     }
@@ -3622,6 +3617,7 @@ SQL;
 
                         //$pdf->SetFont('Courier', '', 10);
                         //$pdf->Write(0, $value->email);
+
                         $pdf->SetFont('Arial', '', 10);
                         $pdf->Cell(0, 0, $value->email, 0, 0, 'L');
                     }
@@ -3656,8 +3652,11 @@ SQL;
                                     $pdf->setY($myTopAdjusted);
                                     $pdf->setX($myLeftAdjusted);
 
-                                    $pdf->SetFont('Courier', '', 10);
-                                    $pdf->Write(0, 'x');
+                                    //$pdf->SetFont('Courier', '', 10);
+                                    //$pdf->Write(0, 'x');
+
+                                    $pdf->SetFont('Arial', '', 10);
+                                    $pdf->Cell(0, 0, 'x', 0, 0, 'L');
                                 }
                             }
                         }
@@ -3666,8 +3665,11 @@ SQL;
                             $pdf->setY($topAdjusted);
                             $pdf->setX($leftAdjusted);
 
-                            $pdf->SetFont('Courier', '', 10);
-                            $pdf->Write(0, 'x');
+                            //$pdf->SetFont('Courier', '', 10);
+                            //$pdf->Write(0, 'x');
+
+                            $pdf->SetFont('Arial', '', 10);
+                            $pdf->Cell(0, 0, 'x', 0, 0, 'L');
                         }
                     }
 
@@ -3719,44 +3721,62 @@ SQL;
                     if ($field->field_name === 'Text') {
                         $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;                        
-                         if( $left > 790 ){
-                             $left = 774;
-                         }
+                        if( $left > 790 ){
+                            $left = 774;
+                        }
 
                         $topAdjusted = (31.8 / 100) * $top;
                         $topAdjusted = $top - $topAdjusted;
 
                         $leftAdjusted = (30 / 100) * $left;
-                        $leftAdjusted = $left - $leftAdjusted;
-                        
+                        $leftAdjusted = $left - $leftAdjusted;                        
 
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
-
+                        
                         $pdf->SetFont('Arial', '', 10);                        
-                        $field_value = trim($value->value);
+                        $pdf->Cell(0, 0, trim($value->value), 0, 0, 'L');
                         //$pdf->Write(0, $field_value);
-                        $pdf->Cell(0, 0, $field_value, 0, 0, 'L');
                     }
 
-                    /*if ($field->field_name === 'Subscriber Name') {
+                    if ($field->widget_type === 'dynamic-widget') {
                         $top = (int) $coordinates->pageTop;
-                        $left = (int) $coordinates->left;
+                        $left = (int) $coordinates->left;                        
+                        if( $left > 790 ){
+                            $left = 774;
+                        }
 
-                        $topAdjusted = (31.5 / 100) * $top;
+                        $topAdjusted = (31.8 / 100) * $top;
                         $topAdjusted = $top - $topAdjusted;
 
-                        $leftAdjusted = (32 / 100) * $left;
-                        $leftAdjusted = $left - $leftAdjusted;
+                        $leftAdjusted = (30 / 100) * $left;
+                        $leftAdjusted = $left - $leftAdjusted;                        
 
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
+                        
+                        $pdf->SetFont('Arial', '', 10);                        
+                        $pdf->Cell(0, 0, trim($value->value), 0, 0, 'L');
+                    }
 
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->value);
-                    }*/
+                    // if ($field->field_name === 'Subscriber Name') {
+                    //     $top = (int) $coordinates->pageTop;
+                    //     $left = (int) $coordinates->left;
 
-                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Primary Contact Name','Primary Contact Number','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Primary Contact First Name','Primary Contact Last Name','Abort Code','County','Secondary Contact Name','Secondary Contact First Name','Secondary Contact Last Name', 'Secondary Contact Number', 'Date of Birth', 'Social Security Number', 'Equipment', 'kW DC', 'System Size'];
+                    //     $topAdjusted = (31.5 / 100) * $top;
+                    //     $topAdjusted = $top - $topAdjusted;
+
+                    //     $leftAdjusted = (32 / 100) * $left;
+                    //     $leftAdjusted = $left - $leftAdjusted;
+
+                    //     $pdf->setY($topAdjusted);
+                    //     $pdf->setX($leftAdjusted);
+
+                    //     $pdf->SetFont('Courier', '', 10);
+                    //     $pdf->Write(0, $value->value);
+                    // }
+
+                    $custom_fields = ['Name Second Signatory', 'Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Primary Contact Name','Primary Contact Number','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Primary Contact First Name','Primary Contact Last Name','Abort Code','County','Secondary Contact Name','Secondary Contact First Name','Secondary Contact Last Name', 'Secondary Contact Number', 'Date of Birth', 'Social Security Number', 'Equipment', 'kW DC', 'System Size', 'Job Account Number', 'Panel Type', 'date_not_later_b'];
 
                     if ( in_array($field->field_name, $custom_fields) ) {
                         $top = (int) $coordinates->pageTop;
@@ -3767,15 +3787,15 @@ SQL;
 
                         $leftAdjusted = (32 / 100) * $left;
                         $leftAdjusted = $left - $leftAdjusted;
-                        
+
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
                         //$pdf->SetFont('Courier', '', 10);
-                        //$pdf->Write(0, $field->field_name);
+                        //$pdf->Write(0, $value->value);
 
                         $pdf->SetFont('Arial', '', 10);
-                        $pdf->Cell(0, 0, $field->field_name, 0, 0, 'L');
+                        $pdf->Cell(0, 0, $value->value, 0, 0, 'L');
                     }
 
                     if ($field->field_name === 'Date Signed') {
@@ -3793,7 +3813,6 @@ SQL;
 
                         //$pdf->SetFont('Courier', '', 10);
                         //$pdf->Write(0, $value->value);
-                        
 
                         $pdf->SetFont('Arial', '', 10);
                         $pdf->Cell(0, 0, $value->value, 0, 0, 'L');
@@ -3802,8 +3821,8 @@ SQL;
                     if ($field->field_name === 'Formula') {
                         $top = (int) $coordinates->pageTop;
                         $left = (int) $coordinates->left;
-                        if( $left >= 780 ){
-                            $left = 774;
+                        if( $left >= 790 ){
+                             $left = 774;
                         }
 
                         $topAdjusted = (31.8 / 100) * $top;
@@ -3814,12 +3833,12 @@ SQL;
 
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
+                        
+                        //$pdf->SetFont('Courier', '', 10);
+                        //$pdf->Write(0, trim($field_value));
 
-                        $field_value = trim($value->value);
-                        $field_value = $field_value;
                         $pdf->SetFont('Arial', '', 10);
-                        //$pdf->Write(0, $field_value);
-                        $pdf->Cell(0, 0, $field_value, 0, 0, 'L');
+                        $pdf->Cell(0, 0, trim($value->value), 0, 0, 'L');
                     }
 
                     if ($field->field_name === 'Dropdown') {
@@ -3835,8 +3854,11 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
 
-                        $pdf->SetFont('Courier', '', 10);
-                        $pdf->Write(0, $value->value);
+                        //$pdf->SetFont('Courier', '', 10);
+                        //$pdf->Write(0, $value->value);
+
+                        $pdf->SetFont('Arial', '', 10);
+                        $pdf->Cell(0, 0, $value->value, 0, 0, 'L');
                     }
                 }
             }
@@ -3846,20 +3868,54 @@ SQL;
         $fileName = uniqid($document->id . rand(1, 9999999)) . '.pdf';
         $uploadFilePath = $uploadPath . $fileName;
 
-        // $this->db->insert('user_docfile_generated_pdfs', [
-        //     'path' => str_replace(FCPATH, '/', $uploadFilePath),
-        //     'docfile_id' => $document->id,
-        //     'label' => $document->name
-        // ]);
+        $this->db->insert('user_docfile_generated_pdfs', [
+            'path' => str_replace(FCPATH, '/', $uploadFilePath),
+            'docfile_id' => $document->id,
+            'label' => $document->name
+        ]);
 
-        // $docfileGeneratedPdfId = $this->db->insert_id();
-        // $this->db->where('docfile_id', $document->id);
-        // $this->db->update('user_customer_docfile', ['user_docfile_generated_pdfs_id' => $docfileGeneratedPdfId]);
+        $docfileGeneratedPdfId = $this->db->insert_id();
+        $this->db->where('docfile_id', $document->id);
+        $this->db->update('user_customer_docfile', ['user_docfile_generated_pdfs_id' => $docfileGeneratedPdfId]);
 
         // Display in browser
         // $pdf->Output('I');
 
         $pdf->Output($uploadFilePath, 'F');
+
+        //Create customer document
+        $pdf_generated_path = str_replace(FCPATH, '/', $uploadFilePath);
+        $esign_filename = explode('/', $pdf_generated_path);
+        $esign_filename = end(array_values($esign_filename));
+        $customer_id = $document->customer_id;
+
+        $this->db->where('customer_id', $customer_id);
+        $this->db->where('file_name', $esign_filename);
+        $this->db->where('document_type', 'client_agreement');
+        $customerDocument = $this->db->get('acs_customer_documents')->row();
+        $customer_doc_generated = '';
+        if( !$customerDocument ){           
+            $generatedPDFPath = FCPATH . ltrim($pdf_generated_path, '/');
+            $documentFilePath = FCPATH . (implode(DIRECTORY_SEPARATOR, ['uploads', 'customerdocuments', $customer_id]) . DIRECTORY_SEPARATOR);
+            if (!file_exists($documentFilePath)) {
+                mkdir($documentFilePath, 0777, true);
+            }
+
+            $customer_document_location = $documentFilePath.$esign_filename;
+            copy($generatedPDFPath, $customer_document_location);
+            $customer_doc_generated = $customer_document_location;
+
+            $this->db->insert('acs_customer_documents', [
+                'customer_id' => $customer_id,
+                'file_name' => $esign_filename,
+                'document_type' => 'client_agreement',
+                'document_label' => 'pdf',
+                'is_predefined' => 1,
+                'is_active' => 1,
+                'date_created' => date("Y-m-d H:i:s")
+            ]);
+        }
+
         return $pdf->Output(null, 'S');
     }
 
@@ -4180,7 +4236,7 @@ SQL;
                         $pdf->Write(0, $value->value);
                     }*/
 
-                    $custom_fields = ['Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Primary Contact Name','Primary Contact Number','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Primary Contact First Name','Primary Contact Last Name','Abort Code','County','Secondary Contact Name','Secondary Contact First Name','Secondary Contact Last Name', 'Secondary Contact Number', 'Date of Birth', 'Social Security Number', 'Equipment', 'kW DC', 'System Size', 'Job Account Number', 'Panel Type', 'date_not_later_b'];
+                    $custom_fields = ['Name Second Signatory', 'Subscriber Name','City','State','Address','Subscriber Email','ZIP','Primary Contact','Secondary Contact','Access Password','Primary Contact Name','Primary Contact Number','Contact Number','Checking Account Number','Account Number','CS Account Number','ABA','Card Number','Card Holder Name','Card Expiration','Card Security Code','Equipment Cost','Monthly Monitoring Rate','One Time Activation (OTP)','Total Due','Primary Contact First Name','Primary Contact Last Name','Abort Code','County','Secondary Contact Name','Secondary Contact First Name','Secondary Contact Last Name', 'Secondary Contact Number', 'Date of Birth', 'Social Security Number', 'Equipment', 'kW DC', 'System Size', 'Job Account Number', 'Panel Type', 'date_not_later_b'];
 
                     if ( in_array($field->field_name, $custom_fields) ) {
                         $top = (int) $coordinates->pageTop;
