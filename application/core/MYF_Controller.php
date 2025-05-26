@@ -14,10 +14,10 @@ class MYF_Controller extends CI_Controller {
 
 		parent::__construct();
 
-		if( !empty($this->db->username) && !empty($this->db->hostname) && !empty($this->db->database) ){ }else{
-			$this->users_model->logout();
-			die('Database is not configured');
-		}
+		// if( !empty($this->db->username) && !empty($this->db->hostname) && !empty($this->db->database) ){ }else{
+		// 	$this->users_model->logout();
+		// 	die('Database is not configured');
+		// }
 		
 		$this->setNewtimezone();
 
