@@ -54,12 +54,12 @@
     <div class="col-sm-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/adbanner_tabs'); ?>
     </div>
-    <div class="col-lg-12">
+    <!-- <div class="col-lg-12">
         <div class="nsm-callout primary">
             <button><i class="bx bx-x"></i></button>
             Set up and customize the Discover More ADS.
         </div>
-    </div>
+    </div> -->
     <div class="col-lg-12">
         <div class="row g-3">
             <div class="col-lg-12 mb-3">
@@ -76,12 +76,12 @@
                                 <div class="row g-3">
                                     <div class="col-lg-12">
                                         <input id="bannerlist_table_search" class="form-control mt-0 mb-2 w-25" type="text" placeholder="Search...">
-                                        <button type="button" class="nsm-button small primary float-end addBannerButton" data-bs-toggle="modal" data-bs-target=".addBannerModal">Add Banner</button>
+                                        <button type="button" class="nsm-button small primary float-end addBannerButton" data-bs-toggle="modal" data-bs-target=".addBannerModal"><i class="fas fa-plus"></i> Add</button>
                                         <table id="bannerlist_table" class="table table-bordered table-hover w-100" style="background: #00000008;">
                                             <thead>
                                                 <tr>
                                                     <th>Title</th>
-                                                    <th>Description</th>
+                                                    <th style="width: 50%;">Description</th>
                                                     <th>Link</th>
                                                     <th>URL Alias</th>
                                                     <th>Duration</th>
@@ -214,7 +214,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Preview Banner File</span>
-                <i class="bx bx-fw bx-x m-0 text-muted exit_preview_modal" data-bs-dismiss="modal" style="cursor: pointer;"></i>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body">
                 <div id="previewBannerContent" class="text-center">

@@ -102,7 +102,6 @@
                                             <td style="width: 160px; text-align: right;" class="text-right">
                                                 <b>
                                                 <?php if($invoice->status !== 'Paid'){
-                                                        //echo '$ '.number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2);
                                                         echo '$ '.number_format((float) ($invoice->balance), 2);
                                                     } else{
                                                     echo "$0.00";
@@ -305,7 +304,7 @@
                             <td style="text-align: right">
                                 <b>  
                                     <?php //echo number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); ?>
-                                    <?php echo number_format((float) ($invoice->balance), 2); ?>
+                                    <?php echo "$" . number_format((float) ($invoice->balance), 2); ?>
                                 </b>
                             </td>
                         </tr>
@@ -334,12 +333,20 @@
             <br>
             <p style="margin: 0;font-size:30px;color:red"><b>THANK YOU FOR YOUR BUSINESS</b></p>
             <p style="margin-top:10px">
-                All claims must be made within 5 days after receipt of goods. Goods returned without our authorized return number on the carton will be
+                <?php if($footer_residential_terms_and_conditions != "") { ?>
+                    <?php echo $footer_residential_terms_and_conditions; ?>
+                <?php } else { ?>
+                    All claims must be made within 5 days after receipt of goods. Goods returned without our authorized return number on the carton will be
                 refused. The purchase of products and services are subject to and governed solely by the Terms and Conditions.
+                <?php } ?>
             </p>
             <a href="https://nsmartrac.com/terms-and-condition">https://nsmartrac.com/terms-and-condition</a>
             <div style="color: red;margin-top:10px">
-                Past due balances may be subject to a Late Charge not to exceed 1.5% per month.
+                <?php if($footer_residential_message != "") { ?>
+                    <?php echo $footer_residential_message; ?>
+                <?php } else { ?>
+                    Past due balances may be subject to a Late Charge not to exceed 1.5% per month.
+                <?php } ?>                
              </div>
             <br>
             <br>

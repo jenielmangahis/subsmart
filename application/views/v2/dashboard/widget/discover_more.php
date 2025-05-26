@@ -11,10 +11,39 @@
         white-space: normal;
         font-size: unset;
     }
+
+    .adFonts {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .adTitle {
+        font-size: 15px;
+    }
+
+    .adSubTitleIcon {
+        color:#6a4a86 !important
+    }
+
+    .adDescription {
+        white-space: normal;
+    }
+
+    .adFooterDiv {
+        background: #f0f2f5; 
+        padding: 10px;
+    }
+
+    .adLinkAlias {
+        font-size: 15px;
+    }
+
+    .adLearnMoreButton {
+        opacity: 0.5; 
+    }
 </style>
 <div class='card shadow widgetBorder <?php echo "card_$category$id "; ?>'>
     <div class="card-body">
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-12">
                 <h5 class="mt-0 fw-bold">
                     <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
@@ -30,7 +59,7 @@
                     </div>
                 </h5>
             </div>
-        </div>
+        </div> -->
         <!-- <div class="row mb-2">
             <div class="col-md-12">
                 <span><?php echo $description; ?></span>
@@ -39,8 +68,8 @@
         <div class="row">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?> display_none">
                 <div class="nsm-card-content adbanner_card">
-                    <div id="discover_carousel" class="carousel slide h-100 pb-4" data-bs-ride="carousel">
-                        <div class="carousel-indicators adCarouselIndicators d-flex"></div>
+                    <div id="discover_carousel" class="carousel slide h-100" data-bs-ride="carousel">
+                        <!-- <div class="carousel-indicators adCarouselIndicators d-flex"></div> -->
                         <div class="carousel-inner adCarouselContent h-100"></div>
                     </div>
                 </div>
@@ -95,30 +124,45 @@
 
                             if (['mp4', 'avi', 'mov', 'wmv'].includes(fileExtension)) {
                                 mediaContent = `
-                                    <video class="mx-auto d-block w-100" style="border: 1px solid #00000017; border-radius: 10px;" autoplay muted loop>
+                                    <video class="rounded img-fluid" autoplay muted loop>
                                         <source src="${window.origin}/uploads/BusinessBanner/${banner.file}" type="video/${fileExtension}">
                                         Your browser does not support the video tag.
                                     </video>
                                 `;
                             } else {
                                 mediaContent = `
-                                    <img src="${window.origin}/uploads/BusinessBanner/${banner.file}" class="mx-auto d-block w-100" alt="${banner.title}" style="border: 1px solid #00000017; border-radius: 10px;">
+                                    <img class="rounded img-fluid" src="${window.origin}/uploads/BusinessBanner/${banner.file}" alt="${banner.title}">
                                 `;
                             }
 
                             inner.append(`
                                 <div class="carousel-item h-100 ${activeClass}" data-bs-interval="${duration}">
                                     <div class="row">
-                                        <div class="col-12">
-                                            ${mediaContent}
+                                        <div class="container-fluid adFonts">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="fw-normal" style="font-size: 15px;">${banner.title}</label> 
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <label class="text-muted">Feature</label> <i class="fas fa-ad fs-5 adSubTitleIcon"></i> 
+                                                </div>
+                                                <div class="col-md-12 mt-2">
+                                                    <span class="adDescription">${banner.description}</span>
+                                                </div>
+                                                <div class="col-md-12 mt-2">
+                                                    ${mediaContent}
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="d-flex justify-content-between align-items-center adFooterDiv">
+                                                        <div>
+                                                            <small class="text-muted">NO CREDIT CARD REQUIRED. CANCEL ANYTIME.</small><br>
+                                                            <span class="fw-normal adLinkAlias">${banner.url_alias}</span>
+                                                        </div>
+                                                        <a class="btn btn-secondary fw-bold adLearnMoreButton" href="${link}" target="_blank">LEARN MORE</a>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="row h-100 mt-3 mb-3">
-                                        <div class="col-12 order-last order-md-first">
-                                            <span class="content-title mb-2">${banner.title}</span>
-                                            <span class="contentDescription lh-base d-block mb-2">${banner.description}</span>
-                                            <a href="${link}" target="_blank" class="contentDescription nsm-link d-block">${banner.url_alias}</a>
-                                        </div> 
                                     </div>
                                 </div>
                             `);

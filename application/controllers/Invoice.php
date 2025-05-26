@@ -1475,6 +1475,16 @@ class Invoice extends MY_Controller
             $invoiceSettings         = $this->invoice_settings_model->getByCompanyId($invoice->company_id);
             $days_activate_late_fee  = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
 
+            $footer_residential_message = "";
+            if($invoiceSettings->residential_message != null && $invoiceSettings->residential_message != '') {
+                $footer_residential_message = $invoiceSettings->residential_message;
+            }
+
+            $footer_residential_terms_and_conditions = "";
+            if($invoiceSettings->residential_terms_and_conditions != null && $invoiceSettings->residential_terms_and_conditions != '') {
+                $footer_residential_terms_and_conditions = $invoiceSettings->residential_terms_and_conditions;
+            }
+
             $current_date            = date('Y-m-d');
             $late_fee_activated_date = $invoice->due_date;
             $total_late_days         = 0;
@@ -1491,6 +1501,9 @@ class Invoice extends MY_Controller
 
         $invoiceLogs = $this->CustomerAuditLog_model->getAllByObjIdAndModule($id, 'Invoice');
         $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($cid);
+
+        $this->page_data['footer_residential_message'] = $footer_residential_message;
+        $this->page_data['footer_residential_terms_and_conditions'] = $footer_residential_terms_and_conditions;
 
         $this->page_data['total_late_days'] = $total_late_days;
         $this->page_data['default_late_fee'] = $this->invoice_model->defaultLateFee();
@@ -1529,6 +1542,9 @@ class Invoice extends MY_Controller
 
         $invoice = get_invoice_by_id($id);
 
+        $footer_residential_message = "";
+        $footer_residential_terms_and_conditions = "";
+
         $total_late_days = 0;
         $deduct_days = 0;
         if (!empty($invoice)) {
@@ -1541,6 +1557,14 @@ class Invoice extends MY_Controller
             $customer_billing_info   = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($invoice->customer_id);	
             $invoiceSettings         = $this->invoice_settings_model->getByCompanyId($invoice->company_id);
             $days_activate_late_fee  = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
+
+            if($invoiceSettings->residential_message != null && $invoiceSettings->residential_message != '') {
+                $footer_residential_message = $invoiceSettings->residential_message;
+            }
+            
+            if($invoiceSettings->residential_terms_and_conditions != null && $invoiceSettings->residential_terms_and_conditions != '') {
+                $footer_residential_terms_and_conditions = $invoiceSettings->residential_terms_and_conditions;
+            }            
 
             $current_date            = date('Y-m-d');
             $late_fee_activated_date = $invoice->due_date;
@@ -1557,6 +1581,9 @@ class Invoice extends MY_Controller
             if($payments) {
                 $partial_payment_amount = $payments->total_amount_paid;
             }
+
+            $this->page_data['footer_residential_message'] = $footer_residential_message;
+            $this->page_data['footer_residential_terms_and_conditions'] = $footer_residential_terms_and_conditions;            
 
             $this->page_data['invoice'] = $invoice;
             $this->page_data['partial_payment_amount'] = $partial_payment_amount;
@@ -1967,6 +1994,9 @@ class Invoice extends MY_Controller
         $total_late_days = 0;
         $total_days = 0;
 
+        $footer_residential_message = "";
+        $footer_residential_terms_and_conditions = "";
+
         if (!empty($invoice)) {
             foreach ($invoice as $key => $value) {
                 if (is_serialized($value)) {
@@ -1983,6 +2013,15 @@ class Invoice extends MY_Controller
             
             $invoiceSettings         = $this->invoice_settings_model->getByCompanyId($invoice->company_id);
             $days_activate_late_fee  = isset($invoiceSettings->num_days_activate_late_fee) ? $invoiceSettings->num_days_activate_late_fee : 0;
+
+            
+            if($invoiceSettings->residential_message != null && $invoiceSettings->residential_message != '') {
+                $footer_residential_message = $invoiceSettings->residential_message;
+            }
+
+            if($invoiceSettings->residential_terms_and_conditions != null && $invoiceSettings->residential_terms_and_conditions != '') {
+                $footer_residential_terms_and_conditions = $invoiceSettings->residential_terms_and_conditions;
+            }            
 
             $current_date            = date('Y-m-d');
             $late_fee_activated_date = $invoice->due_date;
@@ -2003,6 +2042,9 @@ class Invoice extends MY_Controller
         $this->page_data['format'] = $format;
 
         $this->page_data['total_late_days'] = $total_late_days;
+
+        $this->page_data['footer_residential_message'] = $footer_residential_message;
+        $this->page_data['footer_residential_terms_and_conditions'] = $footer_residential_terms_and_conditions;        
 
         $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 

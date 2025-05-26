@@ -61,10 +61,14 @@ class AdBanner extends MY_Controller
                 $data[] = array(
                     $getDatas->title,
                     $getDatas->description,
-                    $getDatas->link,
+                    "<code>$getDatas->link</code>",
                     $getDatas->url_alias,
                     $duration,
-                    "<div class='btn-group' role='group'><button class='nsm-button small text-nowrap viewBannerFileButton' data-id='$getDatas->id' data-filename='$getDatas->file' data-bs-toggle='modal' data-bs-target='.viewBannerFileModal'>View File</button><button class='nsm-button small editBannerButton' data-id='$getDatas->id' data-bs-toggle='modal' data-bs-target='.editPresetModal'>Edit</button><button class='nsm-button small removeBannerButton' data-id='$getDatas->id' data-title='$getDatas->title'>Remove</button></div>",
+                    "<div class='btn-group' role='group' style='height: 28px;'>
+                        <button style='color: #00000085; font-weight: 600; font-size: smaller; border: 1px solid #00000021 !important;' class='text-nowrap viewBannerFileButton' data-id='$getDatas->id' data-filename='$getDatas->file' data-bs-toggle='modal' data-bs-target='.viewBannerFileModal'><i class='fas fa-eye'></i> VIEW</button>
+                        <button style='color: #0000ff8c; font-weight: 600; font-size: smaller; border: 1px solid #00000021 !important;' class='text-nowrap editBannerButton' data-id='$getDatas->id' data-bs-toggle='modal' data-bs-target='.editPresetModal'><i class='fas fa-edit'></i> EDIT</button>
+                        <button style='color: #ff00008c; font-weight: 600; font-size: smaller; border: 1px solid #00000021 !important;' class='text-nowrap removeBannerButton' data-id='$getDatas->id' data-title='$getDatas->title'><i class='fas fa-trash'></i> REMOVE</button>
+                    </div>",
                 );
                 $i++;
             }
