@@ -27,12 +27,52 @@ class CustomerDeal_model extends MY_Model
         return $this->db->get()->result();
     }
 
+    public function getAllArchivedByCompanyId($company_id, $sort = [])
+    {
+        $this->db->select('customer_deals.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname, acs_profile.business_name AS customer_business_name');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'customer_deals.customer_id = acs_profile.prof_id', 'left');
+        $this->db->where('customer_deals.company_id', $company_id);
+        $this->db->where('is_archive', 'Yes');
+        
+        if( $sort ){
+            $this->db->order_by($sort['field'], $sort['order']);
+        }else{
+            $this->db->order_by('customer_deals.id', 'DESC');
+        }
+
+        return $this->db->get()->result();
+    }
+
     public function getAllByCustomerDealStageId($customer_deal_stage_id, $sort = [], $filters = [])
     {
         $this->db->select('customer_deals.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname, acs_profile.business_name AS customer_business_name');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'customer_deals.customer_id = acs_profile.prof_id', 'left');
         $this->db->where('customer_deals.customer_deal_stage_id', $customer_deal_stage_id);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+        
+        if( $sort ){
+            $this->db->order_by($sort['field'], $sort['order']);
+        }else{
+            $this->db->order_by('customer_deals.id', 'DESC');
+        }
+
+        return $this->db->get()->result();
+    }
+
+    public function getAllByExpectedCloseDate($date_range = [], $sort = [], $filters = [])
+    {
+        $this->db->select('customer_deals.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname, acs_profile.business_name AS customer_business_name');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'customer_deals.customer_id = acs_profile.prof_id', 'left');
+        $this->db->where('customer_deals.expected_close_date >=', $date_range['from']);
+        $this->db->where('customer_deals.expected_close_date <=', $date_range['to']);
 
         if( $filters ){
             foreach( $filters as $filter ){
@@ -65,6 +105,23 @@ class CustomerDeal_model extends MY_Model
         return $query->row();
     }
 
+    public function getSumValueByDateRange($date_range, $filters = [])
+    {
+        $this->db->select('COALESCE(SUM(value),0) AS total_value');
+        $this->db->from($this->table);
+        $this->db->where('customer_deals.expected_close_date >=', $date_range['from']);
+        $this->db->where('customer_deals.expected_close_date <=', $date_range['to']);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getById($id)
     {
         $this->db->select('customer_deals.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname, acs_profile.business_name AS customer_business_name');
@@ -74,7 +131,7 @@ class CustomerDeal_model extends MY_Model
 
         $query = $this->db->get();
         return $query->row();
-    }   
+    }  
 
     public function optionSourceChannel()
     {
