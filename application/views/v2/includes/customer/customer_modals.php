@@ -731,3 +731,38 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="modal-create-address" tabindex="-1" aria-labelledby="create-address-modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Add Address</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <form id="frm-save-other-address">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <input type="text" placeholder="Mail Address" name="mail_add" id="other-address-mail-add" class="nsm-field form-control mb-2" required />
+                    </div>                    
+                </div>
+                <div class="row">
+                    <div class="col-5">
+                        <input type="text" placeholder="City" name="city" id="other-address-city" class="nsm-field form-control mb-2" required />
+                    </div>
+                    <div class="col-4">
+                        <input type="text" placeholder="State" name="city" id="other-address-state" class="nsm-field form-control mb-2" required />
+                    </div>
+                    <div class="col-3">
+                        <input type="text" placeholder="Zip" name="zip" id="other-address-zip" class="nsm-field form-control mb-2" required />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-save-other-address">Add</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
