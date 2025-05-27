@@ -346,7 +346,7 @@
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>
-                                    Batch Actions
+                                    With Selected
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
@@ -358,21 +358,23 @@
                         </div>
 
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#customer-types-modal">
+                            <!-- <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#customer-types-modal">
                                 <i class='bx bx-fw bx-list-ul'></i> Customer Types
-                            </button>
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#import-customers-modal">
-                                <i class='bx bx-fw bx-import'></i> Import
-                            </button>
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add-customer-modal">
-                                <i class='bx bx-fw bx-list-plus'></i> New
-                            </button>
-                            <button type="button" class="nsm-button" onclick="location.href='<?= url('accounting/customers/export') ?>'">
-                                <i class='bx bx-fw bx-export'></i> Export
-                            </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_customers_modal">
-                                <i class='bx bx-fw bx-printer'></i>
-                            </button>
+                            </button> -->
+                            <?php if(checkRoleCanAccessModule('accounting-customers', 'write')){ ?>
+                                <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#import-customers-modal">
+                                    <i class='bx bx-fw bx-import'></i> Import
+                                </button>                            
+                                <button type="button" class="nsm-button" onclick="location.href='<?= url('accounting/customers/export') ?>'">
+                                    <i class='bx bx-fw bx-export'></i> Export
+                                </button>
+                                <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#add-customer-modal">
+                                    <i class='bx bx-fw bx-plus'></i> New
+                                </button>
+                                <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_customers_modal">
+                                    <i class='bx bx-fw bx-printer'></i>
+                                </button>
+                            <?php } ?>
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
                                 <i class="bx bx-fw bx-cog"></i>
                             </button>
@@ -394,11 +396,11 @@
                                     <input type="checkbox" checked="checked" name="col_chk" id="chk_phone" class="form-check-input">
                                     <label for="chk_phone" class="form-check-label">Phone</label>
                                 </div>
-                                <p class="m-0">Other</p>
+                                <!-- <p class="m-0">Other</p>
                                 <div class="form-check">
                                     <input type="checkbox" id="inc_inactive" value="1" class="form-check-input">
                                     <label for="inc_inactive" class="form-check-label">Include inactive</label>
-                                </div>                                
+                                </div>                                 -->
                             </ul>
                         </div>
                     </div>
@@ -450,6 +452,10 @@
             "language": {
                 "infoFiltered": "",
             },
+            "columnDefs": [
+                { width: '50%', targets: 1 },
+                { className: "dt-right", targets: 6 }
+            ],
             // "order": [[0, 'desc'] ],
         });
 

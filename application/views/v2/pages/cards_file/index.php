@@ -36,36 +36,44 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
-                            Listing all your credit cards saved on file.
+                            Manage your credit cards on file.
                         </div>
                     </div>
                 </div>
                 <div class="row">
+                    <?php if(checkRoleCanAccessModule('cards-on-file', 'write')){ ?>
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" name="btn_link" class="nsm-button primary btn-add-cards-file">
-                                <i class='bx bx-fw bx-credit-card'></i> Add New
+                                <i class='bx bx-fw bx-plus'></i> Add New
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
                 <table class="nsm-table">
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
-                            <td data-name="Card">Card</td>
-                            <td data-name="Card Holder">Card Holder</td>
-                            <td data-name="Primary Card">Primary Card</td>
+                            <td data-name="Card" style="width:85%;">Card</td>
+                            <td data-name="Primary Card" class="text-center">Primary Card</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        if (!empty($cardsFile)) :
-                        ?>
-                            <?php
-                            foreach ($cardsFile as $c) :
-                            ?>
+                        <?php if (!empty($cardsFile)) : ?>
+                            <?php foreach ($cardsFile as $c) : ?>
+                                <?php
+                                    $card_number = maskCreditCardNumber($c->card_number);
+
+                                    $today = date("y-m-d");
+                                    $day   = date("d");
+                                    $expires = date("y-m-d", strtotime($c->expiration_year . "-" . $c->expiration_month . "-" . $day));
+                                    $expired = 'expires';
+                                    if (strtotime($expires) < strtotime($today)) {
+                                        $expired = 'expired';
+                                    }
+                                ?>
                                 <tr>
                                     <td>
                                         <?php
@@ -82,25 +90,13 @@
                                             <i class='bx <?= $card_icon ?>'></i>
                                         </div>
                                     </td>
-                                    <td class="nsm-text-primary">
-                                        <?php
-                                        $card_number = maskCreditCardNumber($c->card_number);
-
-                                        $today = date("y-m-d");
-                                        $day   = date("d");
-                                        $expires = date("y-m-d", strtotime($c->expiration_year . "-" . $c->expiration_month . "-" . $day));
-                                        $expired = 'expires';
-                                        if (strtotime($expires) < strtotime($today)) {
-                                            $expired = 'expired';
-                                        }
-                                        ?>
+                                    <td class="nsm-text-primary">                                        
                                         <label class="d-block fw-bold"><?php echo $card_number; ?> (<?= $expired; ?> <?= $c->expiration_month . "/" . $c->expiration_year; ?>)</label>
                                         <?php if ($c->is_primary == 1) : ?>
                                             <label class="content-subtitle fst-italic d-block">This is the card used for membership and purchases.</label>
                                         <?php endif; ?>
                                     </td>
-                                    <td><?= $c->card_owner_first_name . " " . $c->card_owner_last_name; ?></td>
-                                    <td>
+                                    <td class="text-center">
                                         <?php
                                         $is_checked = '';
                                         if ($c->is_primary == 1) {
@@ -115,22 +111,18 @@
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item btn-edit-cards-file" name="dropdown_edit" data-id="<?= $c->id; ?>" href="javascript:void(0);">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item delete-item" name="dropdown_delete" href="javascript:void(0);" data-id="<?= $c->id; ?>">Delete</a>
-                                                </li>
+                                                <?php if(checkRoleCanAccessModule('cards-on-file', 'write')){ ?>
+                                                <li><a class="dropdown-item btn-edit-cards-file" name="dropdown_edit" data-id="<?= $c->id; ?>" href="javascript:void(0);">Edit</a></li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('cards-on-file', 'delete')){ ?>
+                                                <li><a class="dropdown-item delete-item" name="dropdown_delete" data-card="<?= $card_number; ?>" href="javascript:void(0);" data-id="<?= $c->id; ?>">Delete</a></li>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </td>
                                 </tr>
-                            <?php
-                            endforeach;
-                            ?>
-                        <?php
-                        else :
-                        ?>
+                            <?php endforeach; ?>
+                        <?php else :?>
                             <tr>
                                 <td colspan="4">
                                     <div class="nsm-empty">
@@ -138,16 +130,14 @@
                                     </div>
                                 </td>
                             </tr>
-                        <?php
-                        endif;
-                        ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
 
             <!-- Create cards file -->
             <div class="modal fade nsm-modal fade" id="modalCreateCardsFile" aria-labelledby="modalCreateCardsFileLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-md modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
                             <span class="modal-title content-title" id="new_feed_modal_label">Create card on vault</span>
@@ -156,7 +146,7 @@
                         <?= form_open_multipart('', [ 'class' => 'form-validate', 'id' => 'frm-create-card-file', 'autocomplete' => 'off' ]); ?>
                         <div class="modal-body">
                             <div class="row">                                                                
-                                <div class="col-md-12 mt-3">
+                                <div class="col-md-12">
                                     <label for="">Your Name (as it appears on your card)</label><br/>
                                     <input type="text" required="" value="" placeholder="First Name" class="nsm-field form-control" name="card_owner_first_name" id="card_owner_first_name" required="" style="width: 49%;display:inline-block;">
                                     <input type="text" required="" value="" placeholder="Last Name" class="nsm-field form-control" name="card_owner_last_name" id="card_owner_last_name" style="width: 49%;display:inline-block;" required="">
@@ -167,7 +157,7 @@
                                 </div>  
                             </div>
                             <div class="row mt-3">
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <div class="form-group" id="customer_type_group">
                                       <label for="">Expiration</label>
                                       <select name="expiration_month" class="form-control" required="">
@@ -188,7 +178,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <div class="form-group" id="customer_type_group">
                                       <label for=""><br /></label>
                                       <select name="expiration_year" class="nsm-field form-control" required="">
@@ -199,17 +189,13 @@
                                       </select>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <div class="form-group" id="customer_type_group">
-                                      <label for="">Card CVV</label>
-                                      <input type="text" required="" value="" class="nsm-field form-control" name="card_cvv" id="card_cvv" required="">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-5">
-                                    <a href="#" id="help-popover-cvc" style="margin-top: 29px;display: block;color:#259e57;width: 100%;"> Where is CVV</a>
+                                      <label for="">Card CVV <i id="help-popover-cvc" class="bx bx-fw bx-help-circle"></i>
                                     <div class="hide" id="help-popover-cvc-content" style="display: none;margin-bottom: 20px;">
                                       <span class="help"> Please insert your card security number/CVV number. For all cards, except American Express, this is the <b>last 3 digits on the back of your card</b>. For American Express, this is the <b>4 digits printed on the front of your card</b>, above the 15 digit card number.</span><br> <img src="<?= base_url("assets/img/cvv.png"); ?>">
+                                    </div></label>
+                                      <input type="text" required="" maxlength="4" value="" class="nsm-field form-control" name="card_cvv" id="card_cvv" required="">
                                     </div>
                                 </div>
                             </div>                        
@@ -225,7 +211,7 @@
 
             <!-- Edit card file -->
             <div class="modal fade nsm-modal fade" id="modalEditCardsFile" aria-labelledby="modalEditCardsFileLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-md modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
                             <span class="modal-title content-title" id="new_feed_modal_label">Edit card on vault</span>
@@ -286,7 +272,7 @@
                     } else {
                         Swal.fire({
                             title: 'Error',
-                            text: 'An error occured. Try again later.',
+                            text: result.msg,
                             icon: 'error',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -311,8 +297,8 @@
                         if( o.is_success == 1 ){
                             $('#modalCreateCardsFile').modal('hide');
                             Swal.fire({
-                                title: 'Success',
-                                text: 'Card vault was successfully created.',
+                                title: 'Card on Vault',
+                                text: 'Data was successfully created.',
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonColor: '#32243d',
@@ -350,8 +336,8 @@
                         if( o.is_success == 1 ){
                             $('#modalEditCardsFile').modal('hide');
                             Swal.fire({
-                                title: 'Success',
-                                text: 'Card vault was successfully updated.',
+                                title: 'Card on Vault',
+                                text: 'Data was successfully updated.',
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonColor: '#32243d',
@@ -402,10 +388,11 @@
 
     $(document).on("click", ".delete-item", function() {
         let id = $(this).attr('data-id');
+        let card_number = $(this).attr('data-card');
 
         Swal.fire({
             title: 'Delete Card',
-            text: "Are you sure you want to delete this card?",
+            html: `Are you sure you want to delete credit card number <b>${card_number}</b>?`,
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,
@@ -414,7 +401,7 @@
             if (result.value) {
                 $.ajax({
                     type: 'POST',
-                    url: "<?php echo base_url('cards_file/delete_card'); ?>",
+                    url: base_url + "cards_file/_delete_credit_card",
                     data: {
                         cid: id
                     },
@@ -428,9 +415,9 @@
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
                             }).then((result) => {
-                                if (result.value) {
+                                //if (result.value) {
                                     location.reload();
-                                }
+                                //}
                             });
                         } else {
                             Swal.fire({

@@ -9,6 +9,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   padding: 10px;
   margin: 0px;
 }
+.category-grid .product .product__img {
+  height: 280px;
+    display: block;
+    margin: auto;
+    width: auto;
+}
 </style>
 <div>
     <!-- page wrapper start -->
@@ -101,22 +107,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 
 <?php include viewPath('includes/booking_front_modals'); ?>  
-
-<script>
-var base_url = "<?php echo base_url(); ?>";
-</script>
-
-<?php include viewPath('includes/footer_front_booking'); ?>
-
-<script>  
-  function continue_cart(){    
-      var eid = "<?php echo $eid; ?>";
-      window.location.href = base_url + "booking/products_schedule/"+eid;
-  }
-
+<script> 
   $(function(){
+    var base_url = "<?php echo base_url(); ?>";
 
-  });
-
+    function continue_cart(){    
+        var eid = "<?php echo $eid; ?>";
+        window.location.href = base_url + "booking/products_schedule/"+eid;
+    }
+  });  
 </script>
+<?php include viewPath('includes/footer_front_booking'); ?>
 

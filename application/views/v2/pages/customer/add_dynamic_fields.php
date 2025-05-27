@@ -84,6 +84,7 @@
                         ?>
                         <div class="col-md-4 customer-inputs">                                                       
                             <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_profile'); ?> 
+                            <?php include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_address'); ?> 
                             <?php  
                                 if( $formGroups['billing-information'] && $formGroups['billing-information']['total_enabled'] > 0 ){
                                     include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_billing_info');
