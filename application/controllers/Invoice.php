@@ -2230,6 +2230,7 @@ class Invoice extends MY_Controller
     {
         $this->load->model('AcsProfile_model');
 
+        $is_live_credential = true;
         $is_success = 1;
         $msg = '';
 
@@ -2248,21 +2249,60 @@ class Invoice extends MY_Controller
         }
         
         if( $is_success == 1 ){
-            $mail = email__getInstance();
-            $mail->FromName = 'NsmarTrac';
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
-            $mail->addAddress($customer->email, $customerName);
-            //$mail->addAddress('bryann.revina03@gmail.com', $customerName);
-            $mail->isHTML(true);
-            $mail->Subject = "nSmartrac: {$invoice->invoice_number} Invoice";
-            $mail->Body = $this->generateInvoiceHTML($invoice->id);
 
-            if(!$mail->Send()) {
-                $is_success = 0;
-                $msg = 'Cannot send email';
-            }
+            if($is_live_credential) {
 
-            customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Sent invoice '.$invoice->invoice_number.' to customer');
+                $mail = email__getInstance();
+                $mail->FromName = 'NsmarTrac';
+                $customerName = $customer->first_name . ' ' . $customer->last_name;
+                $mail->addAddress($customer->email, $customerName);
+                $mail->isHTML(true);
+                $mail->Subject = "nSmartrac: {$invoice->invoice_number} Invoice";
+                $mail->Body = $this->generateInvoiceHTML($invoice->id);
+
+                if(!$mail->Send()) {
+                    $is_success = 0;
+                    $msg = 'Cannot send email';
+                }
+
+                customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Sent invoice '.$invoice->invoice_number.' to customer');             
+
+            } else {
+
+                //include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+
+                $host     = 'smtp.mailtrap.io';
+                $port     = 2525;
+                $username = 'd7c92e3b5e901d';
+                $password = '203aafda110ab7';
+                $from     = 'noreply@nsmartrac.com';
+
+                $mail = new PHPMailer;
+                $mail->isSMTP();
+                $mail->Host = $host;
+                $mail->SMTPAuth = true;
+                $mail->Username = $username;
+                $mail->Password = $password;
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = $port;
+
+                // Sender and recipient settings
+                $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+                $customerName = $customer->first_name . ' ' . $customer->last_name;
+                $mail->addAddress($customer->email, $customerName);
+
+                $mail->IsHTML(true);
+                
+                $mail->Subject = "nSmartrac: {$invoice->invoice_number} Invoice";
+                $mail->Body    = $this->generateInvoiceHTML($invoice->id);  
+                
+                if(!$mail->send()){
+                    $is_success = 0;
+                    $msg = 'Cannot send email local.';
+                }
+
+            }            
+
         }
 
         $return = [
@@ -2277,6 +2317,7 @@ class Invoice extends MY_Controller
     {
         $this->load->model('AcsProfile_model');
 
+        $is_live_credential = true;
         $is_success = 1;
         $msg = '';
 
@@ -2314,27 +2355,63 @@ class Invoice extends MY_Controller
                 }
             }
 
-            //$total_late_fee = $total_late_fee + $payment_fee;
-
-            $grand_total     = $invoice->grand_total + $total_late_fee + $payment_fee;
+            $grand_total = $invoice->grand_total + $total_late_fee + $payment_fee;
             $data = ['payment_fee' => $payment_fee, 'late_fee' => $post['late_fee'], 'grand_total' => $grand_total];
             $this->invoice_model->update($invoice->id, $data);
 
-            $mail = email__getInstance();
-            $mail->FromName = 'NsmarTrac';
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
-            $mail->addAddress($customer->email, $customerName);
-            //$mail->addAddress('bryann.revina03@gmail.com', $customerName);
-            $mail->isHTML(true);
-            $mail->Subject = "nSmartrac: {$invoice->invoice_number} Invoice";
-            $mail->Body = $this->generateInvoiceHTML($invoice->id);
+            if($is_live_credential) {
 
-            if(!$mail->Send()) {
-                $is_success = 0;
-                $msg = 'Cannot send email';
+                $mail = email__getInstance();
+                $mail->FromName = 'NsmarTrac';
+                $customerName = $customer->first_name . ' ' . $customer->last_name;
+                $mail->addAddress($customer->email, $customerName);
+                $mail->isHTML(true);
+                $mail->Subject = "nSmartrac: {$invoice->invoice_number} Invoice";
+                $mail->Body = $this->generateInvoiceHTML($invoice->id);
+
+                if(!$mail->Send()) {
+                    $is_success = 0;
+                    $msg = 'Cannot send email';
+                }
+
+                customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Sent invoice '.$invoice->invoice_number.' to customer with late fee amounting of ' . $post['late_fee']);                
+
+            } else {
+
+                //include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+
+                $host     = 'smtp.mailtrap.io';
+                $port     = 2525;
+                $username = 'd7c92e3b5e901d';
+                $password = '203aafda110ab7';
+                $from     = 'noreply@nsmartrac.com';
+
+                $mail = new PHPMailer;
+                $mail->isSMTP();
+                $mail->Host = $host;
+                $mail->SMTPAuth = true;
+                $mail->Username = $username;
+                $mail->Password = $password;
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = $port;
+
+                // Sender and recipient settings
+                $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+                $customerName = $customer->first_name . ' ' . $customer->last_name;
+                $mail->addAddress($customer->email, $customerName);
+
+                $mail->IsHTML(true);
+                
+                $mail->Subject = "nSmartrac: {$invoice->invoice_number} Invoice";
+                $mail->Body    = $this->generateInvoiceHTML($invoice->id);  
+                
+                if(!$mail->send()){
+                    $is_success = 0;
+                    $msg = 'Cannot send email local.';
+                }
+
             }
 
-            customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Sent invoice '.$invoice->invoice_number.' to customer with late fee amounting of ' . $post['late_fee']);
         }
 
         $return = [

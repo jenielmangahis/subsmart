@@ -417,7 +417,7 @@ $payment_link = base_url('customer_invoice/'.$company_info->profile_slug.'/' . $
             <table>
                 <tr>
                     <td>
-                        <b style="font-size: 30px; color: red;">THANK YOU FOR YOUR ORDER</b>
+                        <b style="font-size: 30px; color: red;">THANK YOU FOR YOUR BUSINESS</b>
                     </td>
                 </tr>
                 <tr>
