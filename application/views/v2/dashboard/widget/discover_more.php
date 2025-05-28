@@ -38,7 +38,9 @@
     }
 
     .adLearnMoreButton {
-        opacity: 0.5; 
+        /* opacity: 0.5;  */
+        position: absolute;
+        right: 10px;
     }
 </style>
 <div class='card shadow widgetBorder <?php echo "card_$category$id "; ?>'>
@@ -124,14 +126,14 @@
 
                             if (['mp4', 'avi', 'mov', 'wmv'].includes(fileExtension)) {
                                 mediaContent = `
-                                    <video class="rounded img-fluid" autoplay muted loop>
+                                    <video class="rounded img-fluid w-100" autoplay muted loop>
                                         <source src="${window.origin}/uploads/BusinessBanner/${banner.file}" type="video/${fileExtension}">
                                         Your browser does not support the video tag.
                                     </video>
                                 `;
                             } else {
                                 mediaContent = `
-                                    <img class="rounded img-fluid" src="${window.origin}/uploads/BusinessBanner/${banner.file}" alt="${banner.title}">
+                                    <img class="rounded img-fluid w-100" src="${window.origin}/uploads/BusinessBanner/${banner.file}" alt="${banner.title}">
                                 `;
                             }
 
