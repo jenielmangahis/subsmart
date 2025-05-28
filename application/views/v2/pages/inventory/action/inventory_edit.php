@@ -51,22 +51,15 @@
                                         </div>
                                         <div class="col-lg-2 mb-2">
                                             <strong>Retail Price</strong>
-                                            <input value="<?php echo $item->retail; ?>" type="text" class="form-control " name="retail" id="retail" />
+                                            <input value="<?php echo $item->retail; ?>" type="number" step="any" type="text" class="form-control " name="retail" id="retail" />
                                         </div>
                                         <div class="col-lg-2 mb-2">
-                                            <strong>Cost Per</strong>
-                                            <select class="form-select" name="cost_per" id="cost_per" required>
-                                                <option <?php echo (stripos("$item->cost_per", "Each") !== false) ? "selected": ""; ?> value="Each">Each</option>
-                                                <option <?php echo (stripos("$item->cost_per", "Weight") !== false) ? "selected": ""; ?> value="Weight">Weight</option>
-                                                <option <?php echo (stripos("$item->cost_per", "Length") !== false) ? "selected": ""; ?> value="Length">Length</option>
-                                                <option <?php echo (stripos("$item->cost_per", "Area") !== false) ? "selected": ""; ?> value="Area">Area</option>
-                                                <option <?php echo (stripos("$item->cost_per", "Volume") !== false) ? "selected": ""; ?> value="Volume">Volume</option>
-                                                <option <?php echo (stripos("$item->cost_per", "Other") !== false) ? "selected": ""; ?> value="Other">Other</option>
-                                            </select>
+                                            <strong>Unit of measurement</strong>
+                                            <input value="<?php echo $item->units; ?>" type="text" class="form-control " name="units" id="units" />                                            
                                         </div>
                                         <div class="col-lg-2 mb-2">
-                                            <strong>Unit</strong>
-                                            <input value="<?php echo $item->units; ?>" type="text" class="form-control " name="units" id="units" />
+                                            <strong>Cost per unit</strong>
+                                            <input value="<?php echo $item->cost_per; ?>" type="number" step="any" class="form-control " name="cost_per" id="cost_per" />
                                         </div>
                                         <div class="col-lg-3 mb-2">
                                             <strong>Vendor</strong>
@@ -97,7 +90,7 @@
                                         </div>
                                         <div class="col-lg-2 mb-2">
                                             <strong>Costs of Goods</strong>
-                                            <input value="<?php echo $item->COGS; ?>" type="text" class="form-control " name="COGS" id="COGS" />
+                                            <input value="<?php echo $item->COGS; ?>" type="number" step="any" class="form-control " name="COGS" id="COGS" />
                                         </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Model Number</strong>
@@ -109,15 +102,15 @@
                                         </div>
                                         <div class="col-lg-2 mb-2">
                                             <strong>Points</strong>
-                                            <input value="<?php echo $item->points; ?>" type="text" class="form-control " name="points" id="points" />
+                                            <input value="<?php echo $item->points; ?>" type="number" step="any" class="form-control " name="points" id="points" />
                                         </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Quantity Order</strong>
-                                            <input value="<?php echo $item->qty_order; ?>" type="text" class="form-control " name="qty_order" id="qty_order" />
+                                            <input value="<?php echo $item->qty_order; ?>" type="number" step="any" class="form-control " name="qty_order" id="qty_order" />
                                         </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Reorder Point</strong>
-                                            <input value="<?php echo $item->re_order_points; ?>" type="text" class="form-control " name="re_order_points" id="re_order_points" /> 
+                                            <input value="<?php echo $item->re_order_points; ?>" type="number" step="any" class="form-control " name="re_order_points" id="re_order_points" /> 
                                         </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Item Group</strong>

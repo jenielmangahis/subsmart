@@ -37,8 +37,8 @@ class Priority
             return;
         }
 
-
-        $this->app->page_data['priorityList'] = $this->app->priorityList_model->getAll();
+        $cid = logged('company_id');
+        $this->app->page_data['priorityList'] = $this->app->priorityList_model->getAllByCompanyId($cid);
         $this->app->page_data['page']->title = 'Workorder Priority';        
         // $this->app->load->view('workorder/priority-list/list', $this->app->page_data);
         $this->app->load->view('v2/pages/workorder/priority-list/list', $this->app->page_data);

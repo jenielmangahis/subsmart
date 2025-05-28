@@ -11,7 +11,7 @@
     </div>  
 </div>
 <div class="row mt-3">
-    <div class="col-md-2">
+    <div class="col-md-4">
         <div class="form-group" id="customer_type_group">
           <label for="">Expiration</label>
           <select name="expiration_month" class="form-control" required="">
@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-4">
         <div class="form-group" id="customer_type_group">
           <label for=""><br /></label>
           <select name="expiration_year" class="nsm-field form-control" required="">
@@ -43,17 +43,16 @@
           </select>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="form-group" id="customer_type_group">
-          <label for="">Card CVV</label>
-          <input type="text" required="" value="<?= $cardFile->card_cvv; ?>" class="nsm-field form-control" name="card_cvv" id="card_cvv" required="">
-        </div>
-    </div>
-
-    <div class="col-md-5">
-        <a href="#" id="edit-help-popover-cvc" style="margin-top: 29px;display: block;color:#259e57;width: 100%;"> Where is CVV</a>
-        <div class="hide" id="edit-help-popover-cvc-content" style="display: none;margin-bottom: 20px;">
-          <span class="help"> Please insert your card security number/CVV number. For all cards, except American Express, this is the <b>last 3 digits on the back of your card</b>. For American Express, this is the <b>4 digits printed on the front of your card</b>, above the 15 digit card number.</span><br> <img src="<?= base_url("assets/img/cvv.png"); ?>">
+          <label for="">
+            Card CVV
+            <i id="edit-help-popover-cvc" class="bx bx-fw bx-help-circle"></i>
+            <div class="hide" id="edit-help-popover-cvc-content" style="display: none;margin-bottom: 20px;">
+              <span class="help"> Please insert your card security number/CVV number. For all cards, except American Express, this is the <b>last 3 digits on the back of your card</b>. For American Express, this is the <b>4 digits printed on the front of your card</b>, above the 15 digit card number.</span><br> <img src="<?= base_url("assets/img/cvv.png"); ?>">
+            </div>
+          </label>
+          <input type="text" required="" maxlength="4" value="<?= $cardFile->card_cvv; ?>" class="nsm-field form-control" name="card_cvv" id="card_cvv" required="">
         </div>
     </div>
 </div> 

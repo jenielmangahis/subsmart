@@ -3733,6 +3733,7 @@ class Customer extends MY_Controller
         $this->load->model('AcsSolarInfoSystemSize_model');
         $this->load->model('AcsSolarInfoLenderType_model');
         $this->load->model('Clients_model');
+        $this->load->model('CustomerAddress_model');
 
         $this->hasAccessModule(9);
 
@@ -3954,8 +3955,11 @@ class Customer extends MY_Controller
         $client           = $this->Clients_model->getById($company_id);
         $company_industry = $client->industry_template_name;
         
+        $customerAddress  = $this->CustomerAddress_model->getAllByCustomerId($id);
+
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
+        $this->page_data['customerAddress'] = $customerAddress;
         $this->page_data['companyFormSetting'] = $companyFormSetting;
         $this->page_data['formGroups'] = $formGroups;
         $this->page_data['customerProperty'] = $customerProperty;
@@ -4190,6 +4194,7 @@ class Customer extends MY_Controller
                 $save_papers  = $this->save_papers_information($input, $profile_id);
                 $save_contacts = $this->save_contacts($input, $profile_id);
                 $save_property = $this->save_property_information($input, $profile_id);
+                $save_other_address = $this->save_other_address($input, $profile_id);
 
                 if ($companyId == 58 || $companyId == 1) {
                     $this->save_solar_info($input, $profile_id);
@@ -4219,6 +4224,32 @@ class Customer extends MY_Controller
             $data_arr = ['success' => false, 'message' => 'Customer Already Exist!'];
         }
         exit(json_encode($data_arr));
+    }
+
+    public function save_other_address($input, $prof_id)
+    {
+        $this->load->model('CustomerAddress_model');
+
+        $total_save = 0;
+        if( $input['otherMailingAddress'] ){
+            $this->CustomerAddress_model->deleteAllByCustomerId($prof_id);
+            foreach($input['otherMailingAddress'] as $key => $value){
+                $data = [
+                    'customer_id' => $prof_id,
+                    'mail_add' => $input['otherMailingAddress'][$key],
+                    'city' => $input['otherCity'][$key],
+                    'state' => $input['otherState'][$key],
+                    'zip' => $input['otherZip'][$key],
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+
+                $this->CustomerAddress_model->create($data);
+                $$total_records++;
+            }
+        }
+
+        return $total_records;
     }
 
     public function save_property_information($input, $prof_id)
@@ -12700,6 +12731,48 @@ class Customer extends MY_Controller
             $is_success = 1;
             $msg = '';
         }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;
+    }
+
+    public function ajax_other_address()
+    {
+        $this->load->model('CustomerAddress_model');
+
+        $post = $this->input->post();
+        $otherAddress = $this->CustomerAddress_model->getAllByCustomerId($post['prof_id']);
+
+        $this->page_data['prof_id'] = $post['prof_id'];
+        $this->page_data['otherAddress'] = $otherAddress;
+        $this->load->view('v2/pages/customer/ajax_other_address', $this->page_data);
+    }
+
+    public function ajax_quick_add_other_address()
+    {
+        $this->load->model('CustomerAddress_model');
+        
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $data = [
+            'customer_id' => $post['prof_id'],
+            'mail_add' => $post['mail_add'],
+            'city' => $post['city'],
+            'state' => $post['state'],
+            'zip' => $post['zip'],
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_modified' => date("Y-m-d H:i:s")
+        ];
+
+        $this->CustomerAddress_model->create($data);
+
+        $is_success = 1;
+        $msg = '';
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);

@@ -120,17 +120,6 @@
         margin: auto;
     }
 </style>
-<?php
-add_css(array(
-    'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-    'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-    'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-    //'assets/frontend/css/workorder/main.css',
-    // 'assets/css/beforeafter.css',
-));
-?>
-
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/banking'); ?>
@@ -150,38 +139,47 @@ add_css(array(
                         </div>
                     </div>
                 </div>
+                <?php if(checkRoleCanAccessModule('accounting-link-bank', 'write')){ ?>
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-6 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div>
+                    </div>
+                    <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary btn-connect-plaid">
-                                <i class='bx bx-fw bx-cog'></i> Connect Bank Account
+                                <i class='bx bx-link'></i> Connect Bank Account
                             </button>
                         </div>
                     </div>
                 </div>
+                <?php } ?>
                 <table class="nsm-table">
                     <thead>
                         <tr>
-                            <td data-name="Bank">Bank</td>
-                            <td data-name="Account Name">Account Name</td>
+                            <td class="table-icon"></td>
+                            <td data-name="Bank" style="width: 40%;">Bank</td>
+                            <td data-name="Account Name" style="width: 30%;">Account Name</td>
                             <td data-name="Type">Type</td>
-                            <td data-name="Balance" style="width: 20%;">Balance</td>
-                            <td data-name="Manage"></td>
+                            <td data-name="Balance" style="width: 10%;text-align:right;">Balance</td>
+                            <td data-name="Manage" style="width: 5%;"></td>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if ($is_valid == 1) { ?>
                             <?php foreach ($plaidAccounts as $pa){ ?>
                             <tr>
-                                <td><?= $pa->institution_name; ?></td>
+                                <td><div class="table-row-icon"><i class='bx bxs-bank'></i></div></td>
+                                <td class="fw-bold nsm-text-primary show"><?= $pa->institution_name; ?></td>
                                 <td><?= $pa->account_name; ?></td>
                                 <td><?= ucwords($pa->subtype); ?></td>
-                                <td>                                    
+                                <td style="text-align:right;">                                    
                                     <?php 
-                                        if( is_int($pa->balance_current) ){
+                                        if( is_int($pa->balance_current) && $pa->balance_current > 0 ){
                                             echo number_format($pa->balance_current, 2);
                                         }else{
-                                            echo $pa->balance_current;
+                                            echo '0.00';
                                         }   
                                     ?>        
                                 </td>
@@ -196,10 +194,12 @@ add_css(array(
                                             </li>                                       
                                             <li>
                                                 <a class="dropdown-item recurring-transactions" href="javascript:void(0);" data-id="<?= $pa->id; ?>">View Recurring Transactions</a>
-                                            </li>                                       
+                                            </li>     
+                                            <?php if(checkRoleCanAccessModule('accounting-link-bank', 'delete')){ ?>                                  
                                             <li>
                                                 <a class="dropdown-item delete-bank-account" href="javascript:void(0);" data-id="<?= $pa->id; ?>">Delete</a>
                                             </li>
+                                            <?php } ?>
                                         </ul>
                                     </div>
                                 </td>
@@ -218,7 +218,7 @@ add_css(array(
                 </table>
 
                 <div class="modal fade nsm-modal fade" id="modalPlaidTransactionsList" aria-labelledby="modalPlaidTransactionsListLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <span class="modal-title content-title" id="new_feed_modal_label">Bank Transactions</span>
@@ -230,7 +230,7 @@ add_css(array(
                 </div>
 
                 <div class="modal fade nsm-modal fade" id="modalPlaidRecurringTransactionsList" aria-labelledby="modalPlaidRecurringTransactionsListLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <span class="modal-title content-title" id="new_feed_modal_label">Recurring Transactions</span>
@@ -247,8 +247,11 @@ add_css(array(
 </div>
 <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
 <script type="text/javascript">
-$(document).ready(function() {
-    $(".nsm-table").nsmPagination(); 
+$(document).ready(function() {    
+    $(".nsm-table").nsmPagination();
+        $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));        
+        }, 1000));
 
     <?php if( $plaid_handler_open == 1 ){ ?>
         var linkHandler = Plaid.create({
@@ -410,7 +413,7 @@ $(document).on("click", ".delete-bank-account", function(e) {
         var url = base_url + 'plaid_account/_delete_bank_account';
 
         Swal.fire({
-            title: 'Delete Connected Bank Account',
+            title: 'Delete Bank Account',
             html: "Are you sure you want to delete selected bank account?",
             icon: 'question',
             confirmButtonText: 'Proceed',
@@ -426,7 +429,7 @@ $(document).on("click", ".delete-bank-account", function(e) {
                     success: function(o) {
                         if( o.is_success == 1 ){   
                             Swal.fire({
-                                title: 'Delete Successful!',
+                                title: 'Delete Bank Account',
                                 text: "Bank Account was Deleted Successfully!",
                                 icon: 'success',
                                 showCancelButton: false,

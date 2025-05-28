@@ -36,7 +36,7 @@
                                     <div class="row">
                                         <div class="col-lg-4 mb-2">
                                             <strong>Item Name</strong>
-                                            <input type="text" class="form-control" maxlength="25" placeholder="Maximum 25 characters only" name="title" id="title" required/>
+                                            <input type="text" class="form-control" maxlength="50" placeholder="Maximum 50 characters only" name="title" id="title" required/>
                                         </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Brand</strong>
@@ -48,23 +48,16 @@
                                         </div>
                                         <div class="col-lg-2 mb-2">
                                             <strong>Retail Price</strong>
-                                            <input type="text" class="form-control " name="retail" id="retail" />
+                                            <input type="number" step="any" class="form-control " name="retail" id="retail" />
                                         </div>
                                         <div class="col-lg-2 mb-2">
-                                            <strong>Cost Per</strong>
-                                            <select class="form-select" name="cost_per" id="cost_per" required>
-                                                <option value="Each" selected>Each</option>
-                                                <option value="Weight">Weight</option>
-                                                <option value="Length">Length</option>
-                                                <option value="Area">Area</option>
-                                                <option value="Volume">Volume</option>
-                                                <option value="Other">Other</option>
-                                            </select>
+                                            <strong>Unit of measurement</strong>
+                                            <input type="text" class="form-control" name="units" id="units" />
                                         </div>
                                         <div class="col-lg-2 mb-2">
-                                            <strong>Unit</strong>
-                                            <input type="text" class="form-control " name="units" id="units" />
-                                        </div>
+                                            <strong>Cost per unit</strong>
+                                            <input type="number" step="any" class="form-control " name="cost_per" id="units" />
+                                        </div>                                        
                                         <div class="col-lg-3 mb-2">
                                             <strong>Vendor</strong>
                                             <select class="form-select" name="vendor_id" id="vendor_id" required>
@@ -94,7 +87,7 @@
                                         </div>
                                         <div class="col-lg-2 mb-2">
                                             <strong>Costs of Goods</strong>
-                                            <input type="text" class="form-control " name="COGS" id="COGS" />
+                                            <input type="number" step="any" class="form-control " name="COGS" id="COGS" />
                                         </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Model Number</strong>
@@ -106,15 +99,15 @@
                                         </div>
                                         <div class="col-lg-2 mb-2">
                                             <strong>Points</strong>
-                                            <input type="text" class="form-control " name="points" id="points" />
+                                            <input type="number" step="any" class="form-control " name="points" id="points" />
                                         </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Quantity Order</strong>
-                                            <input type="text" class="form-control " name="qty_order" id="qty_order" />
+                                            <input type="number" step="any" class="form-control " name="qty_order" id="qty_order" />
                                         </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Reorder Point</strong>
-                                            <input type="text" class="form-control " name="re_order_points" id="re_order_points" /> 
+                                            <input type="number" step="any" class="form-control " name="re_order_points" id="re_order_points" /> 
                                         </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Item Group</strong>

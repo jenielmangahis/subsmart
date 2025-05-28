@@ -97,37 +97,13 @@
                                     </div>
                                 </li>
                             <?php } ?>
-                            <!-- <li type="button" class="mb-2">
-                                <div class="nsm-card">
-                                    <div class="nsm-card-header mb-0">
-                                        <div class="nsm-card-title">
-                                            <span>Hotmail Account</span>
-                                        </div>
-                                    </div>
-                                    <div class="nsm-card-content">
-                                        <label class="content-subtitle">Hotmail Account</label>
-                                    </div>
-                                </div>
-                            </li>
-                            <li type="button" class="mb-2">
-                                <div class="nsm-card">
-                                    <div class="nsm-card-header mb-0">
-                                        <div class="nsm-card-title">
-                                            <span>Apple</span>
-                                        </div>
-                                    </div>
-                                    <div class="nsm-card-content">
-                                        <label class="content-subtitle">Apple Account</label>
-                                    </div>
-                                </div>
-                            </li> -->
                         </ul>
 
                         <div class="mt-5">
                             <label class="content-title">Calendar Event Color</label>
                             <label class="content-subtitle mb-2" style="display:block;width: 100%;">
                                 Define event color to easily identity an event.
-                                <a class="nsm-button primary btn-add-event-color" href="javascript:void(0);" style="float:right;font-size: 11px;"><i class='bx bx-plus-circle'></i> Add Event Color</a>
+                                <a class="nsm-button primary btn-add-event-color" href="javascript:void(0);" style="float:right;font-size: 11px;"><i class='bx bx-plus'></i> Add Event Color</a>
                             </label>
                             <?php $row_count = 0; ?>
                             <ul class="event-colors">
@@ -327,7 +303,7 @@
                                 </div>
                                 <div class="row g-3 mt-5">
                                     <div class="col-12">
-                                        <button type="submit" class="nsm-button primary" style="float: right;">Save Changes</button>
+                                        <button type="submit" class="nsm-button primary" style="float: right;">Save</button>
                                     </div>                    
                                 </div>
                             </div>
@@ -340,7 +316,7 @@
 
         <!-- Add event color -->
         <div class="modal fade nsm-modal fade" id="modalAddEventColor" aria-labelledby="modalAddEventColorLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
+            <div class="modal-dialog modal-md modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <span class="modal-title content-title" id="new_feed_modal_label">Add Event Color</span>
@@ -352,15 +328,15 @@
                                 <label class="content-subtitle fw-bold d-block mb-2">Name</label>
                                 <input type="text" name="color_name" id="add-color-name" value=""  class="nsm-field form-control" required="" autocomplete="off" />
                             </div>
-                            <div class="col-12 col-md-12">
+                            <div class="col-6 col-md-6">
                                 <label class="content-subtitle fw-bold d-block mb-2">Color</label>
                                 <input type="text" name="color_code" id="add-color-code" class="nsm-field form-control" required="" autocomplete="off">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button name="btn_close_modal" type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                        <button name="btn_add_event_color" type="button" class="nsm-button primary btn-append-event-color">Add</button>
+                        <button name="btn_close_modal" type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button name="btn_add_event_color" type="button" class="nsm-button primary btn-append-event-color">Save</button>
                     </div>
                     </form>                      
                 </div>
@@ -369,7 +345,7 @@
 
         <!-- Add edit color -->
         <div class="modal fade nsm-modal fade" id="modalEditEventColor" aria-labelledby="modalEditEventColorLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
+            <div class="modal-dialog modal-md modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <span class="modal-title content-title" id="new_feed_modal_label">Edit Event Color</span>
@@ -382,15 +358,15 @@
                                 <label class="content-subtitle fw-bold d-block mb-2">Name</label>
                                 <input type="text" name="edit_color_name" id="edit-color-name" value=""  class="nsm-field form-control" required="" autocomplete="off" />
                             </div>
-                            <div class="col-12 col-md-12">
+                            <div class="col-6 col-md-6">
                                 <label class="content-subtitle fw-bold d-block mb-2">Color</label>
                                 <input type="text" name="edit_color_code" id="edit-color-code" class="nsm-field form-control" required="" autocomplete="off">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button name="btn_close_modal" type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                        <button name="btn_add_event_color" type="button" class="nsm-button primary btn-update-event-color">Update</button>
+                        <button name="btn_close_modal" type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button name="btn_add_event_color" type="button" class="nsm-button primary btn-update-event-color">Save</button>
                     </div>
                     </form>                      
                 </div>
@@ -454,13 +430,21 @@
         $('.btn-append-event-color').click(function(){
             var color_name = $('#add-color-name').val();
             var color_code = $('#add-color-code').val();
-            var color_id   = generateRowId(5);
-            var append_color = '<li id="c-row-'+color_id+'"><input type="hidden" name="color_name[]" value="'+color_name+'" /><input type="hidden" name="color_code[]" value="'+color_code+'" /><span class="e-color" style="background-color: '+color_code+';"></span><span class="e-color-name"> '+color_name+'</span><span class="e-color-actions"><a class="nsm-button btn-edit-event-color" data-id="'+color_id+'" data-cname="'+color_name+'" data-ccode="'+color_code+'"><i class=\'bx bx-calendar-edit\'></i></a> <a class="nsm-button btn-delete-event-color" href="javascript:void(0);"><i class=\'bx bx-trash\'></i></a></span></li>';
-            $('.event-colors').append(append_color);
+            if( color_name == '' || color_code == '' ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: 'Please enter event name and color'
+                });
+            }else{
+                var color_id   = generateRowId(5);
+                var append_color = '<li id="c-row-'+color_id+'"><input type="hidden" name="color_name[]" value="'+color_name+'" /><input type="hidden" name="color_code[]" value="'+color_code+'" /><span class="e-color" style="background-color: '+color_code+';"></span><span class="e-color-name"> '+color_name+'</span><span class="e-color-actions"><a class="nsm-button btn-edit-event-color" data-id="'+color_id+'" data-cname="'+color_name+'" data-ccode="'+color_code+'"><i class=\'bx bx-calendar-edit\'></i></a> <a class="nsm-button btn-delete-event-color" href="javascript:void(0);"><i class=\'bx bx-trash\'></i></a></span></li>';
+                $('.event-colors').append(append_color);
 
-            $('#modalAddEventColor').modal('hide');
-            $('#add-color-name').val('');
-            $('#add-color-code').val('');
+                $('#modalAddEventColor').modal('hide');
+                $('#add-color-name').val('');
+                $('#add-color-code').val('');
+            }            
         });
 
         $('.btn-update-event-color').click(function(){

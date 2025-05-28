@@ -17,20 +17,26 @@
                 <div class="row">
                     <div class="col-12 grid-mb">
                         <div class="nsm-callout primary">
-                            <!-- <button><i class='bx bx-x'></i></button> -->
-                            Appointment Types<br />
-                            Make scheduling appointments simple and streamlined with the CRM color setting. Now, with just a few clicks, users can add and assign colors to employees, events, and job types.
+                            <button><i class='bx bx-x'></i></button>
+                            Manage appointment types
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-12 col-md-4 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div>
+                    </div>
+                    <?php if(checkRoleCanAccessModule('calendar-appointment-types', 'write')){ ?>
+                    <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" name="btn_new" class="nsm-button primary btn-create-appointment-type">
                                 <i class='bx bx-fw bx-plus'></i> Add New
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
                 <table class="nsm-table">
                     <thead>
@@ -52,12 +58,12 @@
                                                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-end">
-                                                    <li>
-                                                        <a class="dropdown-item btn-edit-appointment-type" data-id="<?= $a->id; ?>" data-name="<?= $a->name; ?>" name="dropdown_edit" href="javascript:void(0);">Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item btn-delete-appointment-type" name="dropdown_delete" href="javascript:void(0);" data-name="<?= $a->name; ?>" data-id="<?= $a->id; ?>">Delete</a>
-                                                    </li>
+                                                    <?php if(checkRoleCanAccessModule('calendar-appointment-types', 'write')){ ?>
+                                                    <li><a class="dropdown-item btn-edit-appointment-type" data-id="<?= $a->id; ?>" data-name="<?= $a->name; ?>" name="dropdown_edit" href="javascript:void(0);">Edit</a></li>
+                                                    <?php } ?>
+                                                    <?php if(checkRoleCanAccessModule('calendar-appointment-types', 'delete')){ ?>
+                                                    <li><a class="dropdown-item btn-delete-appointment-type" name="dropdown_delete" href="javascript:void(0);" data-name="<?= $a->name; ?>" data-id="<?= $a->id; ?>">Delete</a></li>
+                                                    <?php } ?>
                                                 </ul>
                                             </div>
                                         <?php } ?>
@@ -83,6 +89,9 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
+        $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));        
+        }, 1000)); 
     });
 
     $(document).on('click', '.btn-create-appointment-type', function(){
@@ -121,7 +130,7 @@
                 if( o.is_success == 1 ){   
                     $("#create_appointment_type_modal").modal("hide");         
                     Swal.fire({
-                        title: 'Save Successful!',
+                        title: 'Appointment Types',
                         text: "Appointment type was successfully saved.",
                         icon: 'success',
                         showCancelButton: false,
@@ -167,8 +176,8 @@
                 if( o.is_success == 1 ){   
                     $("#edit_appointment_type_modal").modal("hide");         
                     Swal.fire({
-                        title: 'Save Successful!',
-                        text: "Appointment type was successfully saved.",
+                        title: 'Appointment Types',
+                        text: "Appointment type has been updated successfully.",
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
@@ -196,8 +205,8 @@
         var name = $(this).data("name");
 
         Swal.fire({
-            //title: 'Delete Appointment Type',
-            html: "Delete appointment type <b>"+ name +"</b>?",
+            title: 'Delete Appointment Type',
+            html: `Are you sure you want to delete this appointment type <b>${name}</b>?`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes',
@@ -206,14 +215,14 @@
             if (result.value) {
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url('appointment_types/_delete_appointment_type') ?>",
+                    url: base_url + "appointment_types/_delete_appointment_type",
                     data: {
                         aid: id
                     },
                     success: function(result) {
                         Swal.fire({
-                            title: 'Delete Success!',
-                            text: "Appointment Type has been deleted successfully.",
+                            title: 'Delete Appointment Type',
+                            text: "Appointment type has been deleted successfully.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
