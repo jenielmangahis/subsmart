@@ -19,6 +19,45 @@ $(function(){
         height: '150px',
     });
 
+    $('#modal-view-archive').on('show.bs.modal', function (e) {
+        $('#btn-archive').popover('hide');
+    });
+
+    $('#btn-stage-view').on('click', function(){
+        location.href = base_url + 'customer_deals';
+    });
+
+    $('#btn-forecast-view').on('click', function(){
+        location.href = base_url + 'customer_deals/forecast'
+    });
+
+    $('#btn-stage-view').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Stages';
+        } 
+    });
+
+    $('#btn-forecast-view').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Forecast';
+        } 
+    });
+
+    $('#btn-archive').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Archive';
+        } 
+    });
+
     $('.select-stage').select2({
         dropdownParent: $("#modal-add-new-deal"),
         placeholder: 'Select Stage',
@@ -496,7 +535,7 @@ $(function(){
                         if (result.is_success) {
                             Swal.fire({
                                 title: 'Delete Deal Stage',
-                                html: "Data deleted Successfully!",
+                                html: "Data deleted successfully!",
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
@@ -532,6 +571,13 @@ $(function(){
                 $('#btn-save-customer-deal').html('Save');                  
                 if (data.is_success) {                     
                     $('#modal-add-new-deal').modal('hide');
+                    $('#frm-add-new-deal')[0].reset();
+                    $('.select-customer').val(null).trigger('change');
+                    $('.select-label').val(null).trigger('change');
+                    $('.select-channel').val('None').trigger('change');
+                    $('.company-users').val(null).trigger('change');
+                    $('.select-visible-to').val('Item Owner').trigger('change');
+
                     Swal.fire({
                         title: 'Customer Deal',
                         text: "New customer deal has been created successfully.",
@@ -780,27 +826,70 @@ $(function(){
             let deal_id = item.attr('data-id');
             let status  = 'Lost';
             if( deal_id > 0 ){
-                $.ajax({
-                    type: "POST",
-                    url: base_url + "customer_deals/_update_customer_deal_status",
-                    data:{deal_id:deal_id, status:status},
-                    dataType:'json',
-                    success: function(data) {
-                        load_deal_stage_summary(data.stage_id);
+                let html_content = `
+                    <div class="row mark-lost-form">
+                        <div class="col-sm-12">
+                            <label class="mb-2">Lost Reason</label>
+                            <div class="input-group mb-3">
+                                <select class="form-select select-lost-reason" id="lost-reason">
+                                <?php foreach( $optionLostReasons as $reason ){ ?>
+                                    <option value="<?= $reason; ?>"><?= $reason; ?></option>
+                                <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="mb-2">Comments</label>
+                            <div class="input-group mb-3">
+                                <textarea id="lost-comment" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <p>Manage lost reasons in <a class="nsm nsm-link" href="<?= base_url('customer/customer_deal_lost_reasons') ?>">Customer Settings</a></p>
+                        </div>
+                    </div>
+                `;       
 
-                        Swal.fire({
-                        icon: 'success',
-                        text: 'Customer deals was successfully updated.',
-                        }).then((result) => {                            
-                            //e.params.args.originalEvent.currentTarget.remove();
-                        }); 
-                    },
-                    beforeSend: function() {
-                        
+                Swal.fire({
+                    title: 'Mark as lost',
+                    html: html_content,
+                    icon: false,
+                    confirmButtonColor: '#3085d6',
+                    showCancelButton: true,
+                    confirmButtonText: 'Mark as lost',                    
+                    cancelButtonText: 'Cancel',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let lost_reason  = $('#lost-reason').val();
+                        let lost_comment = $('#lost-comment').val();
+                        $.ajax({
+                            type: "POST",
+                            url: base_url + "customer_deals/_update_customer_deal_status",
+                            data:{deal_id:deal_id, lost_reason:lost_reason, lost_comment:lost_comment, status:status},
+                            dataType:'json',
+                            success: function(result) {                            
+                                if( result.is_success == 1 ) {
+                                    ui.draggable.remove();
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: 'Mark as lost',
+                                    text: 'Customer deal was updated successfully.',
+                                    }).then((result) => {
+                                        load_deal_stages();
+                                    });
+                                } else {
+                                    ui.draggable.draggable('option','revert',true); 
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            }
+                        });
                     }
                 });
             }
-            ui.draggable.remove();
         }
     });
 
@@ -833,6 +922,53 @@ $(function(){
                 });
             }
             ui.draggable.remove();
+        }
+    });
+
+    $("#customer-deal-delete").droppable({
+        accept: ".deal-stage-item",
+        hoverClass: "delete-container",
+        drop: function(event, ui) {
+            let item = $(ui.draggable[0]);            
+            let customer_deal_id = item.attr('data-id');
+            let deal_title = item.attr('data-name');
+
+            Swal.fire({
+                title: 'Delete Customer Deal',
+                html: `Are you sure you want to delete customer deal <b>${deal_title}</b>?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "customer_deals/_delete_customer_deal",
+                        data: {customer_deal_id:customer_deal_id},
+                        dataType:'json',
+                        success: function(result) {                            
+                            if( result.is_success == 1 ) {
+                                ui.draggable.remove();
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Delete Customer Deal',
+                                text: 'Customer deal was successfully deleted.',
+                                }).then((result) => {
+                                    load_deal_stages();
+                                });
+                            } else {
+                                ui.draggable.draggable('option','revert',true); 
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
+                    });
+                }
+            });
         }
     });
 
@@ -1058,6 +1194,118 @@ $(function(){
             }
         });
     }); 
+
+    $('#btn-archive').on('click', function(){
+        $('#modal-view-archive').modal('show');
+
+         $.ajax({
+            type: "POST",
+            url: base_url + "customer_deals/_archive_deals",
+            success: function(html) {    
+                $('#customer-deals-archive-container').html(html);
+            },
+            beforeSend: function() {
+                $('#customer-deals-archive-container').html('<div class="col"><span class="bx bx-loader bx-spin"></span></div>');
+            }
+        });
+    });
+
+    $(document).on('click', '.btn-restore-customer-deal', function(){
+        let deal_id = $(this).attr('data-id');
+        let deal_title = $(this).attr('data-title');
+
+        Swal.fire({
+            title: 'Restore Customer Deal',
+            html: `Are you sure you want to restore customer deal <b>${deal_title}</b>?`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + 'customer_deals/_restore_deals',
+                    data: {
+                        deal_id: deal_id
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-view-archive').modal('hide');
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Restore Customer Deal',
+                                html: "Data updated successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    load_deal_stages();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    });
+
+    $('#btn-add-new-lost-reason').on('click', function(){
+        $('#modal-add-new-lost-reason').modal('show');
+    });
+
+    $('#frm-add-new-lost-reason').on('submit', function(e){
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer_deals/_create_lost_reason",
+            dataType: 'json',
+            data: $('#frm-add-new-lost-reason').serialize(),
+            success: function(data) { 
+                $('#btn-save-lost-reason').html('Save');                  
+                if (data.is_success) {                     
+                    $('#modal-add-new-lost-reason').modal('hide');
+                    $('#frm-add-new-lost-reason')[0].reset();
+
+                    Swal.fire({
+                        title: 'Lost Reason',
+                        text: "New lost reason has been added successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {                            
+                            
+                        //}
+                    });     
+
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-save-lost-reason').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
 
     function load_deal_stages(){        
         $.ajax({
