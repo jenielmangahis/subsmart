@@ -1347,9 +1347,8 @@ class Estimate extends MY_Controller
         }
 
         $company_id = logged('company_id');
-        $user_id = logged('id');
-        $role = logged('role');
-        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+        $user_id    = logged('id');
+        $role       = logged('role');
 
         if ($role == 1 || $role == 2) {
             $this->page_data['users'] = $this->users_model->getAllUsers();
@@ -1361,13 +1360,16 @@ class Estimate extends MY_Controller
 
         $this->load->model('Customer_model', 'customer_model');
 
-        $this->page_data['estimate'] = $this->estimate_model->getById($id);
+        $this->page_data['estimate'] = $est = $this->estimate_model->getById($id);
         if ($this->page_data['estimate']->status === 'Accepted') {
             $this->session->set_flashdata('message', 'Accepted estimate cannot be edited.');
             $this->session->set_flashdata('alert_class', 'alert-danger');
 
             return redirect('/estimate');
         }
+
+        $cust = $this->AcsProfile_model->getByProfId($est->customer_id);
+        $this->page_data['cust'] = $cust;
 
         $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
         $this->page_data['estimate']->customer = $this->customer_model->getCustomer($this->page_data['estimate']->customer_id);
@@ -2485,7 +2487,7 @@ class Estimate extends MY_Controller
                 $firstname = $customer->first_name;
                 $lastname = $customer->last_name;
                 $phone_m = $customer->phone_m;
-                $email = $lead->email;
+                $email = $customer->email;
                 $address = $customer->mail_add;
                 $city = $customer->city;
                 $state = $customer->state;
@@ -2541,8 +2543,15 @@ class Estimate extends MY_Controller
                     <td colspan="2"></td>
                     <td    style="text-align:left;">
                         <h5 style="font-size:12px"><span class="fa fa-user-o"></span><span style="font-weight:400;font-size: 10px"> To :</span>   <br/><span style="font-size:12px;">'.$firstname.' '.$lastname.'</span></h5>
-                        <span class="">'.$address.'<br />'.$city.', '.$state.' '.$zip.'</span><br />
-                        <span class="">EMAIL: '.($email ? $email : '---').'</span><br />
+                        ';
+
+                        if($estimate->job_location != null && $estimate->job_location != "") {
+                            $html .= '<span class="">'.$estimate->job_location.'</span><br />';
+                        } else {
+                            $html .= '<span class="">'.$address.'<br />'.$city.', '.$state.' '.$zip.'</span><br />';
+                        }
+
+                        $html .= '<span class="">EMAIL: '.($email ? $email : '---').'</span><br />
                         <span class="">PHONE: '.formatPhoneNumber($phone_m).'</span>
                     </td>
                 </tr>

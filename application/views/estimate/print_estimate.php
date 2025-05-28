@@ -367,7 +367,11 @@ span.sc-item {
                         <div class="col-xl-6 left">
                           <h5><span class="fa fa-user-o fa-margin-right"></span> To <span class="invoice-txt"> <?= $customer->first_name . ' ' . $customer->last_name; ?></span></h5> 
                           <div class="col-xl-5 ml-0 pl-0">
-                            <span class=""><?= $customer->mail_add . "<br />" . $customer->city . ", " . $customer->state. " " . $customer->zip_code; ?></span><br />
+                            <?php if($estimate->job_location != null && $estimate->job_location != "") { ?>
+                                <span class=""><?php echo $estimate->job_location; ?></span><br />
+                            <?php }else{ ?>
+                                <span class=""><?= $customer->mail_add . "<br />" . $customer->city . ", " . $customer->state. " " . $customer->zip_code; ?></span><br />
+                            <?php } ?>
                             <span class="">EMAIL: <span class=""><?= $customer->email; ?></span></span><br />
                             <span class="">PHONE: <span class=""><?= formatPhoneNumber($customer->phone_m); ?></span></span><br />
                           </div>

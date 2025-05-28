@@ -397,7 +397,7 @@ echo put_header_assets();
                             
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="job_location"><b>Job Location</b> </label>
+                                    <label for="job_location"><b>Job Location</b> </label><a href="" style="float: right;">User Other Address</a>
                                     <!-- <input
                                         id="autocomplete"
                                         placeholder="Enter Location"
@@ -406,7 +406,15 @@ echo put_header_assets();
                                         autocomplete="on" runat="server"
                                     /> -->
                                     <!-- <input type="text" class="form-control" name="job_location" id="job_location" /> -->
-                                    <input type="text" class="form-control" name="job_location" id="job_location" value="<?php echo $estimate->job_location; ?>" />
+                                    <?php 
+                                        $job_location = "";
+                                        if($estimate->job_location != null && $estimate->job_location != '') {
+                                            $job_location = $estimate->job_location;
+                                        } else {
+                                            $job_location = $cust->mail_add . ' ' . $cust->city . ', ' . $cust->state . ' ' . $cust->zip_code;
+                                        }
+                                    ?>
+                                    <input type="text" class="form-control" name="job_location" id="job_location" value="<?php echo $job_location; ?>" />
 
                                     <!-- <input type="hidden" id="city2" name="city2" />
                                     <input type="hidden" id="cityLat" name="cityLat" />
