@@ -230,7 +230,7 @@
                 <div class="form-group">
                     <ul class="container details">
                         <li><p><span class='bx bx-user-circle'></span> <b><?= $jobs_data->first_name .' '. $jobs_data->last_name; ?></b></p></li>
-                        <li><p><span class='bx bx-map'></span><?= $jobs_data->cust_city.', '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code; ?></p></li>
+                        <li><p><span class='bx bx-map'></span><?= $jobs_data->job_location; ?></p></li>
                         <li><p><span class='bx bx-phone'></span> <?= $jobs_data->phone_m !="" || $jobs_data->phone_m !=null ? formatPhoneNumber($jobs_data->phone_m) : 'N/A'; ?></p></li>
                         <li><p><span class='bx bx-envelope'></span><a href="mailto:<?= $jobs_data->cust_email; ?>"><?= $jobs_data->cust_email; ?></a></p></li>
                         <li><p><span class='bx bx-dollar-circle'></span> <?= number_format($job_total_amount,2,'.',','); ?></p>

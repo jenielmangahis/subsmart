@@ -103,34 +103,6 @@ $("#attachment-file").change(function() {
             
     });
 
-    // function get_customers($id=null){
-    //     $.ajax({
-    //         type: "GET",
-    //         url: "<?= base_url() ?>/job/get_customers",
-    //         success: function(data)
-    //         {
-    //             //console.log(data);
-    //             var template_data = JSON.parse(data);
-    //             var toAppend = '';
-    //             $.each(template_data,function(i,o){
-    //                 var selected = '';
-    //                 if(o.prof_id == $id){
-    //                     selected = "selected";
-    //                 }
-    //                 //console.log(cust_id);
-    //                 toAppend += '<option '+selected+' value='+o.prof_id+'>'+o.last_name + ', ' + o.first_name +'</option>';
-    //             });
-    //             $('#customer_id').append(toAppend);
-    //             //console.log(template_data);
-    //         }
-    //     });
-    //     if($id != null){
-    //         load_customer_data($id);
-    //     }
-    // }
-
-    
-
     function loadStreetView(address)
     {
         $.ajax({
@@ -146,51 +118,31 @@ $("#attachment-file").change(function() {
     
 
     $(document).ready(function() {
-        load_customer_data(<?= $customer  ?>);
-        // var id1 = <?php echo $customer  ?>;
-        // var postData1 = new FormData();
-        // postData1.append('id', id1);
+        ini_customer_data(<?= $customer  ?>);
 
-        // fetch('<?= base_url('job/get_customer_selected') ?>', {
-        //     method: 'POST',
-        //     body: postData1
-        // }).then(response => response.json()).then(response => {
-        //     console.log(response);
-        //     var {success, data} = response;
+        $(document).on('click', '.btn-use-other-address', function(){
+            let prof_id = $(this).attr('data-id');
+            let other_address = $(this).attr('data-address');
+            let link_customer_address = `<a class="btn-use-different-address nsm-link" data-id="${prof_id}" href="javascript:void(0);">${other_address}</a>`;
 
-        //     if(success){
-        //         var phone_h = '(xxx) xxx-xxxx';
-        //         $('#cust_fullname').text(data.first_name + ' ' + data.last_name);
-        //         if(data.mail_add !== null){
-        //             $('#cust_address').text(data.mail_add + ' ');
-        //         }
-        //         if(data.phone_h){
-        //             if(data.phone_h.includes('Mobile:')){
-        //             phone_h = ((data.phone_h).slice(0,13))
-        //         }else{
-        //             phone_h = data.phone_h;
-        //         }
-        //         }
-        //         if(data.city || data.state || data.zip_code){
-        //             $('#cust_address2').text(data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
-        //         }else{
-        //             $('#cust_address2').text('-------------');
-        //         }
+            $('#other-address-customer').modal('hide');
+            $('#cust_address').html(link_customer_address);
+            $('#job-location').val(other_address);
 
-        //         if(data.email){
-        //             $('#cust_email').text(data.email);
-        //         }else{
-        //             $('#cust_email').text('xxxxx@xxxxx.xxx');
-        //         }
-        //         $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
-        //         $('#cust_number').text(phone_h);
-        //         $('#mail_to').attr("href","mailto:"+data.email);
-        //         initMap(data.mail_add + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
-        //         loadStreetView(data.mail_add + ' ' + data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
-            
-        //     }
-        // })
-        //JOB
+            let map_source = 'http://maps.google.com/maps?q='+other_address+'&output=embed';
+            let map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="300" width="100%" style=""></iframe>';
+            $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+
+            $('.btn-use-different-address').popover({
+                placement: 'top',
+                html : true, 
+                trigger: "hover focus",
+                content: function() {
+                    return 'User other address';
+                } 
+            }); 
+        });
+
         $("#jobs_form").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             $(".customer_message_input").val(window.CKEDITOR.instances.Message_Editor.getData());
@@ -1360,28 +1312,7 @@ $("#attachment-file").change(function() {
         <?php } ?>
     function load_customer_data($id){
         if ($id) {
-            $('.MAP_LOADER').hide().html("<div class='loader'><div class='spinner-border' role='status'></div><span>Loading Map...</span></div>").fadeIn('slow');
-            // $.ajax({
-            //     type: "POST",
-            //     url: "<?= base_url() ?>/job/get_customer_selected",
-            //     data: {id : $id}, // serializes the form's elements.
-            //     success: function(data)
-            //     {
-            //         console.log(data);
-            //         var customer_data = JSON.parse(data);
-            //         $('#cust_fullname').text(customer_data.first_name + ' ' + customer_data.last_name);
-            //         if(customer_data.mail_add !== null){
-            //             $('#cust_address').text(customer_data.mail_add + ' ');
-            //         }
-            //         $("#customer_preview").attr("href", "/customer/preview/"+customer_data.prof_id);
-            //         $('#cust_address2').text(customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-            //         $('#cust_number').text(customer_data.phone_h);
-            //         $('#cust_email').text(customer_data.email);
-            //         $('#mail_to').attr("href","mailto:"+customer_data.email);
-            //         initMap(customer_data.mail_add + ' ' + customer_data.city + ' ' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-            //         loadStreetView(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
-            //     }
-            // });
+            $('.MAP_LOADER').hide().html("<div class='loader'><div class='spinner-border' role='status'></div><span>Loading Map...</span></div>").fadeIn('slow');            
             var ADDR_1 = "";
             var ADDR_2 = "";
             var postData = new FormData();
@@ -1400,10 +1331,10 @@ $("#attachment-file").change(function() {
                     // }
                     
                     if(data.mail_add != null){
-                        $('#cust_address').text(data.mail_add + ' ');
+                        //$('#cust_address').text(data.mail_add + ' ');
                         ADDR_1 = data.mail_add;
                     } else {
-                        $('#cust_address').text(data.cross_street + ' ');
+                        //$('#cust_address').text(data.cross_street + ' ');
                         ADDR_1 = data.cross_street;
                     }
 
@@ -1416,16 +1347,23 @@ $("#attachment-file").change(function() {
                         }
                     }
                     if(data.city || data.state || data.zip_code){
-                        $('#cust_address2').text(data.city + ', ' + ' ' + data.state + ' ' + data.zip_code);
+                        //$('#cust_address2').text(data.city + ', ' + ' ' + data.state + ' ' + data.zip_code);
                         ADDR_2 = data.city + ', ' + ' ' + data.state + ' ' + data.zip_code;
                     }else{
-                        $('#cust_address2').text('-------------');
+                        //$('#cust_address2').text('-------------');
+                        ADDR_2 = '---';
                     }
                     if(data.email){
                         $('#cust_email').text(data.email);
                     }else{
                         $('#cust_email').text('Email is not available.');
                     }
+
+                    var customer_address = ADDR_1 + ' ' + ADDR_2;
+                    var link_customer_address = `<a class="btn-use-different-address nsm-link" data-id="${data.prof_id}" href="javascript:void(0);">${customer_address}</a>`;
+                    $('#cust_address').html(link_customer_address);
+                    $('#job-location').val(customer_address);
+
                     $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
                     $('#cust_number').text(phone_m);
                     $('#mail_to').attr("href","mailto:"+data.email);
@@ -1433,11 +1371,90 @@ $("#attachment-file").change(function() {
                     var map_source = 'http://maps.google.com/maps?q='+ADDR_1+' '+ADDR_2+'&output=embed';
                     var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="300" width="100%" style=""></iframe>';
                     $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+
+                    $('.btn-use-different-address').popover({
+                        placement: 'top',
+                        html : true, 
+                        trigger: "hover focus",
+                        content: function() {
+                            return 'Use other address';
+                        } 
+                    }); 
                     
                     //$('#TEMPORARY_MAP_VIEW').hide();
                     // console.log(data.cross_street + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
                     // initMap(data.mail_add + ' ' + data.city + ' ' + ' ' + data.state + ' ' + data.zip_code);
                     // loadStreetView(data.mail_add + ' ' + data.city + ',' + ' ' + data.state + ' ' + data.zip_code);
+                }else{                    
+                    var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="http://maps.google.com/maps?output=embed" height="300" width="100%" style=""></iframe>';
+                    $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+                }
+            });
+        }
+    }
+
+    function ini_customer_data($id){
+        if ($id) {
+            $('.MAP_LOADER').hide().html("<div class='loader'><div class='spinner-border' role='status'></div><span>Loading Map...</span></div>").fadeIn('slow');            
+            var ADDR_1 = "";
+            var ADDR_2 = "";
+            var postData = new FormData();
+            postData.append('id', $id);
+            
+            fetch('<?= base_url('job/get_customer_selected') ?>', {
+                method: 'POST',
+                body: postData
+            }).then(response => response.json()).then(response => {
+                var {success, data} = response;                
+                if(success){
+                    var phone_m = '(xxx) xxx-xxxx';
+                    $('#cust_fullname').text(data.first_name + ' ' + data.last_name);
+                    
+                    if(data.mail_add != null){
+                        ADDR_1 = data.mail_add;
+                    } else {
+                        ADDR_1 = data.cross_street;
+                    }
+
+                    if(data.phone_m){
+                        if(data.phone_m.includes('Mobile:')){
+                            phone_m = ((data.phone_m).slice(0,13))
+                        }else{
+                            phone_m = formatPhoneNumber(data.phone_m);
+                        }
+                    }
+                    if(data.city || data.state || data.zip_code){
+                        ADDR_2 = data.city + ', ' + ' ' + data.state + ' ' + data.zip_code;
+                    }else{
+                        ADDR_2 = '---';
+                    }
+                    if(data.email){
+                        $('#cust_email').text(data.email);
+                    }else{
+                        $('#cust_email').text('Email is not available.');
+                    }
+
+                    var customer_address = '<?= $jobs_data->job_location; ?>';
+                    var link_customer_address = `<a class="btn-use-different-address nsm-link" data-id="${data.prof_id}" href="javascript:void(0);">${customer_address}</a>`;
+                    $('#cust_address').html(link_customer_address);
+                    $('#job-location').val(customer_address);
+
+                    $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
+                    $('#cust_number').text(phone_m);
+                    $('#mail_to').attr("href","mailto:"+data.email);
+
+                    var map_source = 'http://maps.google.com/maps?q='+customer_address+'&output=embed';
+                    var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="300" width="100%" style=""></iframe>';
+                    $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+
+                    $('.btn-use-different-address').popover({
+                        placement: 'top',
+                        html : true, 
+                        trigger: "hover focus",
+                        content: function() {
+                            return 'Use other address';
+                        } 
+                    }); 
                 }else{                    
                     var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="http://maps.google.com/maps?output=embed" height="300" width="100%" style=""></iframe>';
                     $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
