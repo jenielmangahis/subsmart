@@ -352,7 +352,7 @@ input:checked + .slider:before {
                             </div>
                             <div class="row" style="background-color:white;margin-top:-2%;">
                                 <div class="col-md-6">
-                                    <label for="job_location"><b>Job Location</b> </label>
+                                    <label for="job_location"><b>Job Location</b></label>
                                     <!-- <input
                                         id="autocomplete"
                                         placeholder="Enter Location"
