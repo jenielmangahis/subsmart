@@ -216,7 +216,7 @@
                                                             <option value="<?= $customer->prof_id; ?>"><?= $customer->first_name . ' ' . $customer->last_name; ?></option>
                                                         </select>
                                                     </div>
-                                                    <div class="col-3">
+                                                    <div class="col-4">
                                                         <button type="button" id="" data-bs-toggle="modal" data-bs-target="#new_customer" class="nsm-button small text-end" ><strong>Add New Customer</strong></button>                                                    
                                                     </div>
                                                 </div>
@@ -243,7 +243,7 @@
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Password</label>
-                                                <input type="text" name="password" id="password" value="<?= $workorder->password; ?>" class="nsm-field form-control" required />
+                                                <input type="password" name="password" id="password" value="<?= $workorder->password; ?>" class="nsm-field form-control" required />
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Business Name (Optional)</label>
@@ -266,6 +266,9 @@
                                                 <label class="content-subtitle fw-bold d-block mb-2">Zip code</label>
                                                 <input type="text" name="zip_code" id="zip" class="nsm-field form-control" value="<?= $customer->zip_code; ?>" required />
                                             </div>    
+                                            <div class="col-12 col-md-2" style="padding-top: 26px;">
+                                                <a class="btn-use-different-address nsm-button small text-end" id="btn-use-different-address" data-id="<?= $customer->prof_id; ?>" href="javascript:void(0);">Use Other Address</a>
+                                            </div> 
 
                                             <?php 
                                             foreach ($custom_fields as $field) { ?>
@@ -1007,6 +1010,7 @@
         </div>
     </div>
 </div>
+<?php include viewPath('v2/includes/customer/other_address'); ?>
 <?php include viewPath('v2/pages/job/modals/new_customer'); ?>
 <?php include viewPath('v2/includes/job/quick_add'); ?>
 <?php //include viewPath('includes/footer'); ?>
@@ -1016,6 +1020,29 @@
 <script src="<?php echo $url->assets;?>js/jquery-input-mask-phone-number.js"></script>
 
 <script>
+
+$(document).ready(function () {
+    $(document).on('click', '.btn-use-other-address', function(){
+        let prof_id = $(this).attr('data-id');
+        let other_address = $(this).attr('data-address');
+        let cross_street  = $(this).attr('data-mailadd');
+
+        let city  = $(this).attr('data-city');
+        let state = $(this).attr('data-state');
+        let zip   = $(this).attr('data-zip');
+        
+        let link_customer_address = `<a class="btn-use-different-address nsm-link" data-id="${prof_id}" href="javascript:void(0);">${other_address}</a>`;
+
+        $('#other-address-customer').modal('hide');
+        $('#job_location').val(other_address);
+        $('#cross_street').val(cross_street);
+        $('#city').val(city);
+        $('#state').val(state);
+        $('#zip').val(zip);
+
+    }); 
+});
+
 $('#security_number').keyup(function() {
         var val = this.value.replace(/\D/g, '');
         val = val.replace(/^(\d{3})/, '$1-');
@@ -2404,29 +2431,29 @@ $(document).ready(function(){
             data: {customer_id : customer_id },
             dataType: 'json',
             success: function(response){               
-            var phone = response.phone_h;            
-            var mobile = response.phone_m;
-                // mobile = normalize(mobile);
+                var phone = response.phone_h;            
+                var mobile = response.phone_m;
 
-            var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
-            var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
-            $("#job_location").val(response.mail_add);
-            $("#email").val(response.email);
-            $("#birthdate").val(response.date_of_birth);
-            $("#phone_no").val(test_p);
-            $("#mobile_no").val(test_m);
-            $('#security_number').val(response.ssn);
-            $("#city").val(response.city);
-            $("#state").val(response.state);
-            $("#zip").val(response.zip_code);
-            $("#cross_street").val(response.cross_street);
-            $("#acs_fullname").val(response.first_name +' '+ response.last_name);
-            $("#business_name").val(response.business_name);
+                if(response.prof_id) {
+                    $(".btn-use-different-address").attr("data-id",response.prof_id);
+                }                
 
-            $("#job_name").val(response.first_name + ' ' + response.last_name);
-
-            $("#primary_account_holder_name").val(response.first_name + ' ' + response.last_name);
-        
+                var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+                var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+                $("#job_location").val(response.mail_add);
+                $("#email").val(response.email);
+                $("#birthdate").val(response.date_of_birth);
+                $("#phone_no").val(test_p);
+                $("#mobile_no").val(test_m);
+                $('#security_number').val(response.ssn);
+                $("#city").val(response.city);
+                $("#state").val(response.state);
+                $("#zip").val(response.zip_code);
+                $("#cross_street").val(response.cross_street);
+                $("#acs_fullname").val(response.first_name +' '+ response.last_name);
+                $("#business_name").val(response.business_name);
+                $("#job_name").val(response.first_name + ' ' + response.last_name);
+                $("#primary_account_holder_name").val(response.first_name + ' ' + response.last_name);
             },
                 error: function(response){
 

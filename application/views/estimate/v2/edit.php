@@ -397,7 +397,7 @@ echo put_header_assets();
                             
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="job_location"><b>Job Location</b> </label><a class="btn-use-different-address" data-id="<?php echo $cust->prof_id; ?>" href="javascript:void(0);" style="float: right;">User Other Address</a>
+                                    <label for="job_location"><b>Job Location</b> </label><a class="btn-use-different-address" data-id="<?php echo $cust->prof_id; ?>" href="javascript:void(0);" style="float: right;">Use Other Address</a>
                                     <!-- <input
                                         id="autocomplete"
                                         placeholder="Enter Location"

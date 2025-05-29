@@ -32,7 +32,7 @@
     <?php foreach($otherAddress as $address){ ?>
         <tr>
             <td><?= $address->mail_add . ' ' . $address->city . ', ' . $address->state . ' ' . $address->zip; ?></td>
-            <td><a class="nsm-button btn-small btn-use-other-address" data-id="<?= $address->customer_id; ?>" data-address="<?= $address->mail_add . ' ' . $address->city . ', ' . $address->state . ' ' . $address->zip; ?>" href="javascript:void(0);"><i class='bx bx-plus'></i></a></td>
+            <td><a class="nsm-button btn-small btn-use-other-address" data-id="<?= $address->customer_id; ?>" data-mailadd="<?= $address->mail_add; ?>" data-city="<?= $address->city; ?>" data-state="<?= $address->state; ?>" data-zip="<?= $address->zip; ?>" data-address="<?= $address->mail_add . ' ' . $address->city . ', ' . $address->state . ' ' . $address->zip; ?>" href="javascript:void(0);"><i class='bx bx-plus'></i></a></td>
         </tr>
     <?php } ?>
     </tbody>

@@ -53,10 +53,14 @@ $(function(){
                 
                 let prof_id = $('#prof-id').val();
                 let other_address = $('#other-address-mail-add').val() + ' ' + $('#other-address-city').val() + ', ' + $('#other-address-state').val() + ' ' + $('#other-address-zip').val();
+                let mail_add = $('#other-address-mail-add').val();
+                let city = $('#other-address-mail-city').val();
+                let state = $('#other-address-mail-state').val();
+                let zip = $('#other-address-mail-zip').val();
                 let row = `
                     <tr>
                         <td>${other_address}</td>
-                        <td><a class="nsm-button btn-small btn-use-other-address" data-id="${prof_id}" data-address="${other_address}" href="javascript:void(0);"><i class='bx bx-plus'></i></a></td>
+                        <td><a class="nsm-button btn-small btn-use-other-address" data-id="${prof_id}" data-mailadd="${mail_add}" data-city="${city}" data-state="${state}" data-zip="${zip}" data-address="${other_address}" href="javascript:void(0);"><i class='bx bx-plus'></i></a></td>
                     </tr>
                 `;
                 $('#tbl-quick-add-other-address tbody').append(row);

@@ -409,7 +409,7 @@ $payment_link = base_url('customer_invoice/'.$company_info->profile_slug.'/' . $
                     <td colspan="2" style="padding: 8px; border: 1px solid; font-size: 20px;">
                         <b>BALANCE DUE</b>
                     </td>
-                    <!-- <td style="padding: 8px; border: 1px solid;">$<?php // echo number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); ?></td>-->$_COOKIE
+                    <!-- <td style="padding: 8px; border: 1px solid;">$<?php // echo number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); ?></td>-->
                     <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) ($invoice->balance), 2); ?></td>
                 </tr>
             </table>
