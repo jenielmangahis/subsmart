@@ -2373,8 +2373,11 @@ class Job extends MY_Controller
             );
             $customer = $this->general->get_data_with_param($get_customer_info, false);
 
-            $job_location = $customer->mail_add;
-
+            if( $input['job_location'] != '' ){
+                $job_location = $input['job_location'];
+            }else{
+                $job_location = $customer->mail_add;
+            }
 
             // Job Type Base Amount Implementation
             $jobtypebase_amount;
@@ -2684,7 +2687,8 @@ class Job extends MY_Controller
                 //'margin' => $input['input_totalEquipmentMargin'],
                 //'amount_collected' => $input['input_totalAmountCollected'],
                 //'gross_profit' => $input['input_totalJobGrossProfit'],
-                'job_account_number' => $job_account_number                
+                'job_account_number' => $job_account_number,
+                'is_archived' => 0          
             );
 
             $commission_history_payload = [

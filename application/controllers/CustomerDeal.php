@@ -10,7 +10,6 @@ class CustomerDeal extends MY_Controller
 
         $this->page_data['page']->title = 'Customer Deals';
         $this->page_data['page']->menu = 'customers';
-
     }
 
     public function index()
@@ -19,10 +18,18 @@ class CustomerDeal extends MY_Controller
         $this->load->model('CustomerDealStage_model');
         $this->load->model('CustomerDealLabel_model');
         $this->load->model('CustomerDealActivitySchedule_model');
+        $this->load->model('CustomerDealLostReason_model');
 
         $company_id = logged('company_id');
         $customerDealStages  = $this->CustomerDealStage_model->getAllByCompanyId($company_id);
         $customerDealLables  = $this->CustomerDealLabel_model->getAllByCompanyId($company_id);
+        $customerDealLostReasons = $this->CustomerDealLostReason_model->getAllByCompanyId($company_id);
+
+        $optionLostReasons = [];
+        foreach( $customerDealLostReasons as $reason ){
+            $optionLostReasons[] = $reason->lost_reason;
+        }
+
         $optionSourceChannel = $this->CustomerDeal_model->optionSourceChannel();
         $optionVisibleTo     = $this->CustomerDeal_model->optionVisibleTo();
         $optionActivityTypes = $this->CustomerDealActivitySchedule_model->optionsActivityType();               
@@ -31,9 +38,11 @@ class CustomerDeal extends MY_Controller
         $this->page_data['customerDealStages']  = $customerDealStages;
         $this->page_data['optionSourceChannel'] = $optionSourceChannel;
         $this->page_data['customerDealLables']  = $customerDealLables;
+        $this->page_data['optionLostReasons'] = $optionLostReasons;
         $this->page_data['optionVisibleTo']     = $optionVisibleTo;
         $this->page_data['optionActivityTypes'] = $optionActivityTypes;
         $this->page_data['optionsPriorities']   = $optionsPriorities;
+        $this->page_data['enable_customer_deals'] = true;
         $this->load->view('v2/pages/customer_deals/index', $this->page_data);
     }
 
@@ -51,7 +60,7 @@ class CustomerDeal extends MY_Controller
         $dataCustomerDeals = [];
         foreach($customerDealStages as $stage){
             $sort = ['field' => 'customer_deals.id', 'order' => 'DESC'];
-            $filters[] = ['field' => 'customer_deals.status', 'value' => 'New'];
+            $filters[] = ['field' => 'customer_deals.status !=', 'value' => 'Lost'];
             $filters[] = ['field' => 'customer_deals.is_archive', 'value' => 'No'];
             $customerDeals = $this->CustomerDeal_model->getAllByCustomerDealStageId($stage->id, $sort, $filters);
             $sumDeals      = $this->CustomerDeal_model->getSumValueByCustomerDealStageId($stage->id);
@@ -323,7 +332,7 @@ class CustomerDeal extends MY_Controller
         if( $is_success == 1 ){
             
             $labels = "";
-            if( count($post['deal_label']) > 0 ){
+            if( isset($post['deal_label']) && count($post['deal_label']) > 0 ){
                 $labels = json_encode($post['deal_label']);
             }
             
@@ -340,6 +349,7 @@ class CustomerDeal extends MY_Controller
                 'source_channel' => $post['source_channel'],
                 'source_channel_id' => $post['source_channel_id'],
                 'visible_to' => $post['visible_to'],
+                'status' => 'New',
                 'is_archive' => 'No',
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_modified' => date("Y-m-d H:i:s")
@@ -643,7 +653,17 @@ class CustomerDeal extends MY_Controller
             $customerDeal = $this->CustomerDeal_model->getById($deal_id);
             if( $customerDeal && $customerDeal->company_id == $company_id ){
                 
-                $this->CustomerDeal_model->update($customerDeal->id, ['status' => $post['status']]);
+                if( $post['status'] == 'Lost' ){
+                    $data = [
+                        'lost_reason' => $post['lost_reason'],
+                        'comments' => $post['lost_comment'],
+                        'status' => $post['status']
+                    ];
+                }else{
+                    $data = ['status' => $post['status']];
+                }
+
+                $this->CustomerDeal_model->update($customerDeal->id, $data);
 
                 //Activity Logs
                 $activity_name = 'Customer Deals : Updated deal ' . $customerDeal->deal_title . ' status to ' . $post['status']; 
@@ -916,6 +936,193 @@ class CustomerDeal extends MY_Controller
             $is_success = 1;
             $msg = '';
         }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_archive_deals()
+    {
+        $this->load->model('CustomerDeal_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $customerDeals = $this->CustomerDeal_model->getAllArchivedByCompanyId($company_id);
+        $this->page_data['customerDeals'] = $customerDeals;
+        $this->load->view('v2/pages/customer_deals/ajax_archive_deals', $this->page_data);
+    }
+
+    public function ajax_restore_deals()
+    {
+        $this->load->model('CustomerDeal_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $customerDeal = $this->CustomerDeal_model->getById($post['deal_id']);
+        if( $customerDeal && $customerDeal->company_id == $company_id ){
+            $this->CustomerDeal_model->update($customerDeal->id, ['is_archive' => 'No']);
+
+            //Activity Logs                
+            $activity_name = 'Customer Deals : Restore archived customer deal <b>'.$customerDeal->deal_title.'</b>'; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function forecast()
+    {   
+        $this->load->model('CustomerDeal_model');
+        $this->load->model('CustomerDealStage_model');
+        $this->load->model('CustomerDealLabel_model');
+        $this->load->model('CustomerDealActivitySchedule_model');
+        $this->load->model('CustomerDealLostReason_model');
+        
+        $company_id = logged('company_id');
+        $customerDealStages  = $this->CustomerDealStage_model->getAllByCompanyId($company_id);
+        $customerDealLables  = $this->CustomerDealLabel_model->getAllByCompanyId($company_id);
+        $optionSourceChannel = $this->CustomerDeal_model->optionSourceChannel();
+        $optionVisibleTo     = $this->CustomerDeal_model->optionVisibleTo();
+        $optionActivityTypes = $this->CustomerDealActivitySchedule_model->optionsActivityType();               
+        $optionsPriorities   = $this->CustomerDealActivitySchedule_model->optionsPriority();     
+        
+        $customerDealLostReasons = $this->CustomerDealLostReason_model->getAllByCompanyId($company_id);
+
+        $optionLostReasons = [];
+        foreach( $customerDealLostReasons as $reason ){
+            $optionLostReasons[] = $reason->lost_reason;
+        }
+
+        $this->page_data['customerDealStages']  = $customerDealStages;
+        $this->page_data['optionSourceChannel'] = $optionSourceChannel;
+        $this->page_data['customerDealLables']  = $customerDealLables;
+        $this->page_data['optionVisibleTo']     = $optionVisibleTo;
+        $this->page_data['optionActivityTypes'] = $optionActivityTypes;
+        $this->page_data['optionsPriorities']   = $optionsPriorities;
+        $this->page_data['enable_customer_deals'] = true;
+        $this->page_data['optionLostReasons'] = $optionLostReasons;
+        $this->load->view('v2/pages/customer_deals/forecast', $this->page_data);
+    }
+
+    public function ajax_forecast_view()
+    {    
+        $this->load->model('CustomerDeal_model');
+
+        $company_id = logged('company_id');
+
+        $customerDeals  = [];
+        $quarter_months = $this->getMonths(2);        
+        foreach( $quarter_months as $key => $value ){
+            $date_from  = $value;
+            $date_to    = date("Y-m-t", strtotime($date_from));
+            $date_range = ['from' => $date_from, 'to' => $date_to];
+            $filters[]  = ['field' => 'customer_deals.company_id', 'value' => $company_id];
+            $deals      = $this->CustomerDeal_model->getAllByExpectedCloseDate($date_range, [], $filters);            
+
+            $filtersWon[] = ['field' => 'customer_deals.company_id', 'value' => $company_id];
+            $filtersWon[] = ['field' => 'customer_deals.status', 'value' => 'Won'];
+            $sumWon       = $this->CustomerDeal_model->getSumValueByDateRange($date_range, $filtersWon);
+            
+            $filtersOthers[] = ['field' => 'customer_deals.company_id', 'value' => $company_id];
+            $filtersOthers[] = ['field' => 'customer_deals.status !=', 'value' => 'Won'];
+            $sumOthers    = $this->CustomerDeal_model->getSumValueByDateRange($date_range, $filtersOthers);
+            $sumTotal     = $sumWon->total_value + $sumOthers->total_value;
+
+            $customerDeals[$key]['deals'] = $deals;    
+            $customerDeals[$key]['sum_value']  = $sumValue;        
+            $customerDeals[$key]['sum_won']    = $sumWon->total_value;
+            $customerDeals[$key]['sum_others'] = $sumOthers->total_value;
+            $customerDeals[$key]['sum_total']   = $sumTotal;
+        }
+
+        $this->page_data['quarter_months'] = $quarter_months;
+        $this->page_data['customerDeals']  = $customerDeals;
+        $this->load->view('v2/pages/customer_deals/ajax_forecast_view', $this->page_data);
+    }
+
+    private function getMonths($quarter)
+    {
+        switch($quarter) {
+            case 1: return [
+                'January' => date("Y-01-01"), 
+                'February' => date("Y-02-01"), 
+                'March' => date("Y-03-01")
+            ];
+            case 2: 
+                return [
+                    'April' => date("Y-04-01"), 
+                    'May' => date("Y-05-01"),
+                    'June' => date("Y-06-01")
+                ];
+            case 3: 
+                return [
+                    'July' => date("Y-07-01"),
+                    'August' => date("Y-08-01"), 
+                    'September' => date("Y-09-01")
+                ];
+            case 4: 
+                return [
+                    'October' => date("Y-10-01"),
+                    'November' => date("Y-11-01"),
+                    'December' => date("Y-12-01")
+                ];
+            
+        }
+    }
+
+    public function ajax_create_lost_reason()
+    {
+        $this->load->model('CustomerDealLostReason_model');
+
+        $is_success = 1;
+        $msg    = '';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+        
+        if( $post['lost_reason'] == '' ){
+            $is_success = 0;
+            $msg = 'Please reason';
+        }
+
+        $isExists = $this->CustomerDealLostReason_model->getByReasonAndCompanyId($post['lost_reason'], $company_id);
+        if( $isExists ){
+            $is_success = 0;
+            $msg = 'Reason ' . $post['lost_reason'] . ' already exists';
+        }
+
+        if( $is_success == 1 ){
+
+            $data = [
+                'company_id' => $company_id,
+                'lost_reason' => $post['lost_reason'],          
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s")
+            ];
+            
+            $this->CustomerDealLostReason_model->create($data); 
+
+            //Activity Logs
+            $activity_name = 'Customer Deals : Created lost reason ' . $post['lost_reason']; 
+            createActivityLog($activity_name);
+        }     
 
         $return = [
             'is_success' => $is_success,

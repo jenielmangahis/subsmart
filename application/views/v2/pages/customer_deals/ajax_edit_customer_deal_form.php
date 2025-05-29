@@ -84,10 +84,6 @@
         </div>
     </div>
 </div>
-<div class="d-flex justify-content-end">                        
-    <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
-    <button type="submit" class="nsm-button primary" id="btn-update-customer-deal">Save</button>
-</div>
 
 <script>
 $(function(){

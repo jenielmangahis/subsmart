@@ -22,26 +22,20 @@
                 <div class="row mt-4">
                     <div class="col-4 grid-mb">
                         <div class="btn-group view-style-container" role="group" aria-label="Button group with nested dropdown">
-                            <button type="button" id="btn-stage-view" class="btn btn-secondary btn-lg btn-active"><i class='bx bx-bar-chart-alt-2 bx-rotate-45'></i></button>
-                            <button type="button" id="btn-forecast-view" class="btn btn-secondary btn-lg"><i class='bx bx-dollar-circle'></i></button>
+                            <button type="button" id="btn-stage-view" class="btn btn-secondary btn-lg"><i class='bx bx-bar-chart-alt-2 bx-rotate-45'></i></button>
+                            <button type="button" id="btn-forecast-view" class="btn btn-secondary btn-active btn-lg"><i class='bx bx-dollar-circle'></i></button>
                             <button type="button" id="btn-archive" class="btn btn-secondary btn-lg"><i class='bx bx-box'></i></button>
                         </div>
                     </div>
                     <div class="col-8 grid-mb text-end">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-nsm" id="btn-new-deal"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Deal</button>
-                            <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class=""><i class='bx bx-chevron-down' ></i></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" id="btn-add-new-stage" href="javascript:void(0);">Add Stages</a></li>                                
-                                <li><a class="dropdown-item" id="btn-add-new-lost-reason" href="javascript:void(0);">Add Lost Reason</a></li>                                
-                            </ul>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-secondary"><i class='bx bx-chevron-left'></i></button>
+                            <button type="button" class="btn btn-secondary btn-nsm">Current Month</button>
+                            <button type="button" class="btn btn-secondary"><i class='bx bx-chevron-right' ></i></button>
                         </div>
                     </div>
-                </div>                
-                <input type="hidden" id="customer-deal-modal-name" value="" />
-                <div class="row" id="deal-stages"></div> 
+                </div>   
+                <div class="row" id="deal-forecast"></div>  
                 <div class="row mt-4" id="customer-deal-lost-container" style="display:none;">
                     <div class="col-md-4">
                         <div id="customer-deal-lost" ><h3>LOST</h3></div>
@@ -52,14 +46,13 @@
                     <div class="col-md-4">
                         <div id="customer-deal-delete" ><h3>DELETE</h3></div>
                     </div>
-
-                </div>     
+                </div>   
             </div>
         </div>
     </div>
 </div>
 <?php include viewPath('v2/includes/customer_deals/modals'); ?>
-<?php include viewPath('v2/pages/customer_deals/js/customer_deals'); ?>
+<?php include viewPath('v2/pages/customer_deals/js/forecast'); ?>
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/styles/minimal.css" />
 <script src="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/dist/index.min.js"></script>
 <?php include viewPath('v2/includes/footer'); ?>

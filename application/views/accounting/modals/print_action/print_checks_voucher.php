@@ -19,15 +19,12 @@
                 <div style="position: absolute; width: 100%; margin-top: <?=$data['top-margin']?>px;">
                     <table style="width: 100%; color: #212529; border-collapse: collapse; position: absolute; margin-top: 32px; z-index: 2">
                         <tr>
-                            <td style="padding-left: 25px;">
+                            <td style="padding-left: 70px;">
                                 <p style="margin-top: 24px; margin-bottom: 8px;"><?=$check['name']?></p>
                             </td>
                         </tr>
                         <tr>
-                            <td style="padding-left: 25px;"><p style="margin: 0"><?= $check['mailing_address']; ?></p></td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
+                            <td style="padding-left: 25px;"><p style="margin: 0; margin-bottom: 10px"></p></td>
                         </tr>
                         <tr>
                             <td style="padding-left: 25px;"><?=$check['total_in_words']?></td>
@@ -39,7 +36,7 @@
                     <div style="position: absolute; width: 123px; float: right; margin-right: -20px; margin-top: 8px z-index: 1;">
                         <p style="margin: 0"><?=$check['date']?></p>
                         <div style="width: 100%; height: 70px;">
-                            <p style="margin-bottom: 0; margin-top: 58px; margin-left: -20px; text-align: left;">**<?=$check['total']?></p>
+                            <p style="margin-bottom: 0; margin-top: 28px; margin-left: -20px; text-align: left;">**<?=$check['total']?></p>
                         </div>
                     </div>
                 </div>

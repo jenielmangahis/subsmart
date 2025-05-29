@@ -434,6 +434,17 @@
     #items_table td:nth-child(5){
     text-align:right !important;
     }
+    .col-icon, .col-info{
+        display:inline-block;
+        margin:5px;
+        font-size:14px;
+    }
+    .col-icon{
+        vertical-align:top;
+    }
+    .address-info{
+        width:90%;
+    }
 </style>
 <?php if(isset($jobs_data)): ?>
     <input type="hidden" value="<?= $jobs_data->id ?>" id="esignJobId" />
@@ -470,6 +481,7 @@
                 <input type="hidden" id="redirect-calendar" value="<?= $redirect_calendar; ?>">
                 <input type="hidden" name="job_number" id="jobNumber" class="form-control" value="<?= isset($jobs_data->job_number) ? $jobs_data->job_number : ''; ?>">
                 <input type="hidden" name="job_hash" id="johHash" class="form-control" value="<?= isset($jobs_data->hash_id) ? $jobs_data->hash_id : ''; ?>">
+                <input type="hidden" name="job_location" id="job-location" value="<?= isset($jobs_data->job_location) ? $jobs_data->job_location : ''; ?>" />
                 <div class="row g-3 align-items-start">
                     <div class="col-12 ">
                         <div class="row g-3">
@@ -809,18 +821,40 @@
                                                         <div class="col-md-12">- First Month Monitoring:&nbsp;&nbsp;<u id="customerMMR"></u></div>  
                                                     </div>
                                                 </div> -->
+                                                <div class="row mt-4">
+                                                    <div class="col-12">
+                                                        <div class="col-icon">
+                                                            <i class='bx bx-map'></i>
+                                                        </div>
+                                                        <div class="col-info address-info">
+                                                            <span id="cust_address">----</span>                                                            
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 mt-2">
+                                                        <div class="col-icon">
+                                                            <i class='bx bx-mobile'></i>
+                                                        </div>
+                                                        <div class="col-info">
+                                                            <span id="cust_number">----</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 mt-2">
+                                                        <div class="col-icon">
+                                                            <i class='bx bx-envelope'></i>
+                                                        </div>
+                                                        <div class="col-info">
+                                                            <span id="cust_email">----</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 
-                                                <table id="customer_info" class="table">
+                                                <!-- <table id="customer_info" class="table">
                                                     <thead>
                                                     <tr>
                                                         <td></td>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <!-- <tr>
-                                                        <td id="cust_fullname">xxxxx xxxxx</td>
-                                                        <td><a target="_blank" href="#" id="customer_preview"><span class="fa fa-user customer_right_icon"></span></a></td>
-                                                    </tr> -->
                                                     <tr>
                                                         <td id="cust_business"></td>
                                                     </tr>
@@ -839,11 +873,8 @@
                                                         <td id="cust_email">xxxxx@xxxxx.xxx</td>
                                                         <td><a id="mail_to" href="#"><span class="fa fa-envelope-o customer_right_icon"></span></a></td>
                                                     </tr>
-                                                   <!--  <tr>
-                                                        <td id="cust_jobaccountnumber">JOB-0000077</td>
-                                                    </tr> -->
                                                     </tbody>
-                                                </table>
+                                                </table> -->
                                             </div>
                                             <div class="col-md-7">
                                                 <div class="col-md-12 MAP_LOADER_CONTAINER">
@@ -1483,6 +1514,7 @@
 
 <!-- Modals -->
 <?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
+<?php include viewPath('v2/includes/customer/other_address'); ?>
 <?php include viewPath('v2/pages/job/modals/inventory_location'); ?>
 <?php include viewPath('v2/pages/job/modals/new_inventory'); ?>
 <?php include viewPath('v2/includes/job/quick_add'); ?>
@@ -1959,7 +1991,7 @@ $('#adjustment_mm, #CUSTOMER_FUNDED_AMOUNT, #CUSTOMER_PASS_THROUGH, #SRBS_1, #TR
     let monitoring_cost = parseFloat($('input[name="monthly_monitoring"]').val());
     let JOB_GROSS_PROFIT = (funded_amount + net_margin) - (rep_pay + tech_pay + fix_cost + pass_through + monitoring_cost);
 
-    console.clear();
+    //console.clear();
     // console.log("==========");
     // console.log("funded_amount: "+funded_amount);
     // console.log("net_margin: "+net_margin);
@@ -2041,6 +2073,7 @@ $('input[name="CHECK_ACCOUNTNUMBER"], input[name="ACH_ACCOUNTNUMBER"]').on('inpu
 });
 
 $(document).ready(function() {
+
     if(employee_id) { getUserInfo(employee_id, "sales_rep"); }
     if($("#EMPLOYEE_SELECT_2").val()) { getUserInfo($("#EMPLOYEE_SELECT_2").val(), "tech_rep_1"); }
     if($("#EMPLOYEE_SELECT_3").val()) { getUserInfo($("#EMPLOYEE_SELECT_3").val(), "tech_rep_2"); }
@@ -2202,8 +2235,9 @@ $(function() {
             $('#emp6_id').val($('#employee6').val());
             $('#emp6_txt').val($('#employee6 :selected').text());
         })
-    })
+    });
     $(function(){
+
         $('#customer_id').select2({
             ajax: {
                 url: '<?= base_url('autocomplete/_company_customer') ?>',

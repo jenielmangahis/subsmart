@@ -397,7 +397,7 @@ echo put_header_assets();
                             
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="job_location"><b>Job Location</b> </label>
+                                    <label for="job_location"><b>Job Location</b> </label><a class="btn-use-different-address" data-id="<?php echo $cust->prof_id; ?>" href="javascript:void(0);" style="float: right;">User Other Address</a>
                                     <!-- <input
                                         id="autocomplete"
                                         placeholder="Enter Location"
@@ -406,7 +406,15 @@ echo put_header_assets();
                                         autocomplete="on" runat="server"
                                     /> -->
                                     <!-- <input type="text" class="form-control" name="job_location" id="job_location" /> -->
-                                    <input type="text" class="form-control" name="job_location" id="job_location" value="<?php echo $estimate->job_location; ?>" />
+                                    <?php 
+                                        $job_location = "";
+                                        if($estimate->job_location != null && $estimate->job_location != '') {
+                                            $job_location = $estimate->job_location;
+                                        } else {
+                                            $job_location = $cust->mail_add . ' ' . $cust->city . ', ' . $cust->state . ' ' . $cust->zip_code;
+                                        }
+                                    ?>
+                                    <input type="text" class="form-control" name="job_location" id="job_location" value="<?php echo $job_location; ?>" />
 
                                     <!-- <input type="hidden" id="city2" name="city2" />
                                     <input type="hidden" id="cityLat" name="cityLat" />
@@ -1071,6 +1079,8 @@ echo put_header_assets();
     <!-- page wrapper end -->
 </div>
 
+<?php include viewPath('v2/includes/customer/other_address'); ?>
+
 <?php echo $file_selection; ?>
 <?php include viewPath('v2/includes/footer'); ?>
 
@@ -1360,6 +1370,15 @@ echo put_header_assets();
 
     $(document).ready(function() {
 
+        $(document).on('click', '.btn-use-other-address', function(){
+            let prof_id = $(this).attr('data-id');
+            let other_address = $(this).attr('data-address');
+            let link_customer_address = `<a class="btn-use-different-address nsm-link" data-id="${prof_id}" href="javascript:void(0);">${other_address}</a>`;
+
+            $('#other-address-customer').modal('hide');
+            $('#job_location').val(other_address);
+        });        
+
         $('#modalQuickAddCustomer').modal({backdrop: 'static', keyboard: false});
 
         $('.btn-quick-add-customer').on('click', function(){
@@ -1433,12 +1452,14 @@ echo put_header_assets();
                 },
                 dataType: 'json',
                 success: function(response) {
-                    // alert('success');
-                    // console.log(response['customer']);
                     $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
-
+                    
                     if (response.customer.email) {
                         $("#estimate-customer-email").val(response.customer.email);
+                    }
+
+                    if(response.customer.prof_id) {
+                        $(".btn-use-different-address").attr("data-id",response.customer.prof_id);
                     }
 
                     if (response.customer.phone_m) {

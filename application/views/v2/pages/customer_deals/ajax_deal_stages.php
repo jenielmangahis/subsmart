@@ -29,8 +29,8 @@
             <div class="deal-stage-container" id="deal-stage-container-<?= $stage->id; ?>">
                 <?php if( array_key_exists($stage->id, $customerDeals) && $customerDeals[$stage->id]['deals'] ){ ?>
                     <?php foreach( $customerDeals[$stage->id]['deals'] as $deals ){ ?>
-                        <div class="col-12 col-md-12 col-sm-12 stage-deal mt-2 deal-stage-item" data-id="<?= $deals->id; ?>">
-                            <div class="nsm-card nsm-grid">
+                        <div class="col-12 col-md-12 col-sm-12 stage-deal mt-2 deal-stage-item" data-name="<?= $deals->deal_title; ?>" data-id="<?= $deals->id; ?>">
+                            <div class="nsm-card nsm-grid <?= $deals->status == 'Won' ? 'nsm-card-won' : ''; ?>">
                                 <div class="nsm-card-title">
                                     <div class="stage-deal-title-container">
                                         <span class="stage-deal-name"><?= $deals->deal_title; ?></span>
@@ -40,8 +40,11 @@
                                         </div>
                                     </div>
                                     <span class="text-muted"><?= $deals->customer_firstname . ' ' . $deals->customer_lastname; ?></span><br />
-                                    <span class="text-muted"><i class='bx bx-user-circle' ></i> $<?= number_format($deals->value,2); ?></span>
-                                    
+                                    <?php if( $deals->status == 'Won' ){ ?>
+                                        <span class="text-muted"><i class='bx bx-user-circle' ></i> <span class="badge badge-success">Won</span> $<?= number_format($deals->value,2); ?></span>
+                                    <?php }else{ ?>
+                                        <span class="text-muted"><i class='bx bx-user-circle' ></i> $<?= number_format($deals->value,2); ?></span>
+                                    <?php } ?>                                    
                                 </div>                                
                             </div>
                         </div>
