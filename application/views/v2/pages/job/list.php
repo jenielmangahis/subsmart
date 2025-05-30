@@ -313,7 +313,12 @@ foreach ($jobs as $job) {
                             </td>
                             <td><?php echo $job->priority; ?></td>
                             <td><?php echo $job->status; ?></td>
-                            <td style="text-align:right;">$<?php echo number_format((float)$job->amount, 2, '.', ',');  ?></td>
+                            <td style="text-align:right;">
+                                <?php 
+                                    $total_job = $job->amount + $job->adjustment_value + $job->program_setup + $job->monthly_monitoring + $job->installation_cost + $job->tax_rate;
+                                ?>
+                                $<?php echo number_format((float)$total_job, 2, '.', ',');  ?>
+                            </td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>

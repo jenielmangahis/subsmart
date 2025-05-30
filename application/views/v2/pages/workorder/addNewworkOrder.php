@@ -8,161 +8,161 @@
 
 <style>
     .signature_mobile
-{
-    display: none;
-}
-
-.show_mobile_view
-{
-    display: none;
-}
-.nsm-signature-button{
-    margin-left: 0px !important;
-    margin-top: 13px;
-    display: block;
-    width: 100%;    
-    text-align: center;
-    font-size: 15px;
-}
-.signature-container{
-    height:400px;
-    border:1px solid #d3d3d3;
-}
-.signature-container img{
-    max-width:95%;
-    margin:0 auto;
-}
-
-@media only screen and (max-device-width: 600px) {
-    .label-element{
-        position:absolute;
-        top:-8px;
-        left:25px;
-        font-size:12px;
-        color:#666;
-        }
-    .input-element{
-        padding:30px 5px 10px 8px;
-        width:100%;
-        height:55px;
-        /* border:1px solid #CCC; */
-        font-weight: bold;
-        margin-top: -15px;
-    }
-
-        .mobile_qty
     {
-        background: transparent !important;
-        border: none !important;
-        outline: none !important;
-        padding: 0px 0px 0px 0px !important;
-        text-align: center;
-    }
-
-    .select-wrap 
-    {
-    border: 2px solid #e0e0e0;
-    /* border-radius: 4px; */
-    margin-top: -10px;
-    /* margin-bottom: 10px; */
-    padding: 0 5px 5px;
-    width:100%;
-    /* background-color:#ebebeb; */
-    }
-
-    .select-wrap label
-    {
-    font-size:10px;
-    text-transform: uppercase;
-    color: #777;
-    padding: 2px 8px 0;
-    }
-
-    .m_select
-    {
-    /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-    .select2 .select2-container .select2-container--default{
-        /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-
-    .select2-container--default .select2-selection--single {
-    background-color: #fff;
-    border: 1px solid #fff !important;
-    border-radius: 4px;
-    }
-
-    .sub_label{
-        font-size:12px !important;
-    }
-
-    .signature_web
-    {
-        display: none;
-    }
-
-    .signature_mobile
-    {
-        display: block;
-    }
-
-    .hidden_mobile_view{
         display: none;
     }
 
     .show_mobile_view
     {
+        display: none;
+    }
+    .nsm-signature-button{
+        margin-left: 0px !important;
+        margin-top: 13px;
         display: block;
+        width: 100%;    
+        text-align: center;
+        font-size: 15px;
+    }
+    .signature-container{
+        height:400px;
+        border:1px solid #d3d3d3;
+    }
+    .signature-container img{
+        max-width:95%;
+        margin:0 auto;
     }
 
-    .table_mobile
-    {
-        font-size:14px;
-    }
+    @media only screen and (max-device-width: 600px) {
+        .label-element{
+            position:absolute;
+            top:-8px;
+            left:25px;
+            font-size:12px;
+            color:#666;
+            }
+        .input-element{
+            padding:30px 5px 10px 8px;
+            width:100%;
+            height:55px;
+            /* border:1px solid #CCC; */
+            font-weight: bold;
+            margin-top: -15px;
+        }
 
-    div.dropdown-wrapper select { 
-    width:115% /* This hides the arrow icon */; 
-    background-color:transparent /* This hides the background */; 
-    background-image:none; 
-    -webkit-appearance: none /* Webkit Fix */; 
-    border:none; 
-    box-shadow:none; 
-    padding:0.3em 0.5em; 
-    font-size:13px;
+            .mobile_qty
+        {
+            background: transparent !important;
+            border: none !important;
+            outline: none !important;
+            padding: 0px 0px 0px 0px !important;
+            text-align: center;
+        }
+
+        .select-wrap 
+        {
+        border: 2px solid #e0e0e0;
+        /* border-radius: 4px; */
+        margin-top: -10px;
+        /* margin-bottom: 10px; */
+        padding: 0 5px 5px;
+        width:100%;
+        /* background-color:#ebebeb; */
+        }
+
+        .select-wrap label
+        {
+        font-size:10px;
+        text-transform: uppercase;
+        color: #777;
+        padding: 2px 8px 0;
+        }
+
+        .m_select
+        {
+        /* background-color: #ebebeb;
+        border:0px; */
+        border-color: white !important;
+        border:0px !important;
+        outline:0px !important;
+        }
+        .select2 .select2-container .select2-container--default{
+            /* background-color: #ebebeb;
+        border:0px; */
+        border-color: white !important;
+        border:0px !important;
+        outline:0px !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+        background-color: #fff;
+        border: 1px solid #fff !important;
+        border-radius: 4px;
+        }
+
+        .sub_label{
+            font-size:12px !important;
+        }
+
+        .signature_web
+        {
+            display: none;
+        }
+
+        .signature_mobile
+        {
+            display: block;
+        }
+
+        .hidden_mobile_view{
+            display: none;
+        }
+
+        .show_mobile_view
+        {
+            display: block;
+        }
+
+        .table_mobile
+        {
+            font-size:14px;
+        }
+
+        div.dropdown-wrapper select { 
+        width:115% /* This hides the arrow icon */; 
+        background-color:transparent /* This hides the background */; 
+        background-image:none; 
+        -webkit-appearance: none /* Webkit Fix */; 
+        border:none; 
+        box-shadow:none; 
+        padding:0.3em 0.5em; 
+        font-size:13px;
+        }
+        .signature-pad-canvas-wrapper {
+        margin: 15px 0 0;
+        border: 1px solid #cbcbcb;
+        border-radius: 3px;
+        overflow: hidden;
+        position: relative;
+        } 
     }
-    .signature-pad-canvas-wrapper {
-    margin: 15px 0 0;
-    border: 1px solid #cbcbcb;
-    border-radius: 3px;
-    overflow: hidden;
-    position: relative;
-    } 
-}
-.selected-checklists{
-    list-style:none;
-    margin:0px;
-    padding:0px;
-}
-.selected-checklists li{
-    width: 50%;
-    padding: 10px;
-    font-size: 17px;
-    background-color: #6a4a86;
-    color: #ffff;
-    margin: 10px 0px;
-}
-.delete-row-checklist i{
-    position: relative;
-    left:4px;
-}
+    .selected-checklists{
+        list-style:none;
+        margin:0px;
+        padding:0px;
+    }
+    .selected-checklists li{
+        width: 50%;
+        padding: 10px;
+        font-size: 17px;
+        background-color: #6a4a86;
+        color: #ffff;
+        margin: 10px 0px;
+    }
+    .delete-row-checklist i{
+        position: relative;
+        left:4px;
+    }
 </style>
 
 <div class="row page-content g-0">
@@ -200,9 +200,9 @@
                                             <button type="button" id="" data-bs-toggle="modal" data-bs-target="#update_header_modal" class="nsm-button primary small text-end" style="float: right;"><strong>Update Header</strong></button>                                            
                                         </div>
                                         <?php
-                                        $dt = new DateTime();
-                                        $timestamp = time();
-                                        $selected_date = date('m-d-Y');
+                                            $dt = new DateTime();
+                                            $timestamp = time();
+                                            $selected_date = date('m-d-Y');
                                         ?>
                                         <input type="hidden" class="nsm-field form-control" id="headerID" name="header" value="<?php echo $headers->content; ?>">
                                         <input type="hidden" class="nsm-field form-control" id="company_name" value="<?php echo $clients->business_name; ?>">
@@ -249,7 +249,7 @@
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Password</label>
-                                                <input type="text" name="password" id="password" class="nsm-field form-control" required />
+                                                <input type="password" name="password" id="password" class="nsm-field form-control" required />
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Business Name (Optional)</label>
@@ -269,9 +269,13 @@
                                                 <input type="text" name="state" id="state" class="nsm-field form-control" required />
                                             </div>                                            
                                             <div class="col-12 col-md-1">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Zip code</label>
+                                                <label class="content-subtitle fw-bold d-block mb-2">Zip Code</label>
                                                 <input type="text" name="zip_code" id="zip" class="nsm-field form-control" required />
-                                            </div>                                                                                  
+                                            </div>     
+                                            <div class="col-12 col-md-2" style="padding-top: 26px;">
+                                                <a class="btn-use-different-address nsm-button small text-end" id="btn-use-different-address" data-id="0" href="javascript:void(0);" style="display:none;">Use Other Address</a>
+                                            </div>            
+                                                                                                             
                                             <div class="col-12">
                                                 <input type="hidden" name="acs_fullname" id="acs_fullname">
                                                 <input type="hidden" name="company_name" id="company_name" value="<?php echo $companyDet->first_name . ' ' . $companyDet->last_name; ?>">
@@ -1035,6 +1039,7 @@
         </div>
     </div>
 </div>
+<?php include viewPath('v2/includes/customer/other_address'); ?>
 <?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
 <?php include viewPath('v2/includes/job/quick_add'); ?>
 <?php //include viewPath('includes/footer'); ?>
@@ -2360,7 +2365,27 @@ $(document).on('click','.save_terms_of_use',function(){
 
 
     $(document).ready(function () {
-        //$('#sel-customer').select2();
+        
+        $(document).on('click', '.btn-use-other-address', function(){
+            let prof_id = $(this).attr('data-id');
+            let other_address = $(this).attr('data-address');
+            let cross_street  = $(this).attr('data-mailadd');
+
+            let city  = $(this).attr('data-city');
+            let state = $(this).attr('data-state');
+            let zip   = $(this).attr('data-zip');
+            
+            let link_customer_address = `<a class="btn-use-different-address nsm-link" data-id="${prof_id}" href="javascript:void(0);">${other_address}</a>`;
+
+            $('#other-address-customer').modal('hide');
+            $('#job_location').val(other_address);
+            $('#cross_street').val(cross_street);
+            $('#city').val(city);
+            $('#state').val(state);
+            $('#zip').val(zip);
+
+        });         
+        
         $('#sel-customer').select2({
             ajax: {
                 url: '<?= base_url('autocomplete/_company_customer') ?>',
@@ -2429,52 +2454,57 @@ $(document).on('click','.save_terms_of_use',function(){
 $(document).ready(function(){
  
     $('#sel-customer').change(function(){
-    var customer_id  = $(this).val();
+        
+        var customer_id  = $(this).val();
         $.ajax({
             type: 'POST',
             url: base_url + "/customer/_get_customer_data",
             data: {customer_id : customer_id },
             dataType: 'json',
-            success: function(response){               
-            var phone = response.phone_h;            
-            var mobile = response.phone_m;
-                // mobile = normalize(mobile);
+            success: function(response){   
+                                    
+                var phone  = response.phone_h;            
+                var mobile = response.phone_m;
 
-            var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
-            var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
-            $("#job_location").val(response.mail_add);
-            $("#email").val(response.email);
-            $("#birthdate").val(response.date_of_birth);
-            $("#phone_no").val(test_p);
-            $("#mobile_no").val(test_m);
-            $('#security_number').val(response.ssn);
-            $("#city").val(response.city);
-            $("#state").val(response.state);
-            $("#zip").val(response.zip_code);
-            $("#cross_street").val(response.cross_street);
-            $("#acs_fullname").val(response.first_name +' '+ response.last_name);
-            $("#business_name").val(response.business_name);
+                var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+                var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+                $("#job_location").val(response.mail_add);
+                $("#email").val(response.email);
+                $("#birthdate").val(response.date_of_birth);
+                $("#phone_no").val(test_p);
+                $("#mobile_no").val(test_m);
+                $('#security_number').val(response.ssn);
+                $("#city").val(response.city);
+                $("#state").val(response.state);
+                $("#zip").val(response.zip_code);
+                $("#cross_street").val(response.mail_add);
+                $("#acs_fullname").val(response.first_name +' '+ response.last_name);
+                $("#business_name").val(response.business_name);
 
-            $("#job_name").val(response.first_name + ' ' + response.last_name);
+                $("#job_name").val(response.first_name + ' ' + response.last_name);
 
-            $("#primary_account_holder_name").val(response.first_name + ' ' + response.last_name);
+                if(response.prof_id) {
+                    $(".btn-use-different-address").attr("data-id",response.prof_id);
+                }
+
+                $("#primary_account_holder_name").val(response.first_name + ' ' + response.last_name);
         
             },
-                error: function(response){
+            error: function(response){
 
-                }
+            }
         });
+
+        $("#btn-use-different-address").show();
 
         function normalize(phone) {
             //normalize string and remove all unnecessary characters
             phone = phone.replace(/[^\d]/g, "");
-
             //check if number length equals to 10
             if (phone.length == 10) {
                 //reformat and return phone number
                 return phone.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
             }
-
             return null;
         }
 
@@ -2482,13 +2512,10 @@ $(document).ready(function(){
 
 
     $(document).on('click','.setmarkup',function(){
-       // alert('yeah');
         var markup_amount = $('#markup_input').val();
-
         $("#markup_input_form").val(markup_amount);
         $("#span_markup_input_form").text(markup_amount);
         $("#span_markup").text(markup_amount);
-
         $('#modalSetMarkup').modal('toggle');
     });
 });
@@ -2504,9 +2531,7 @@ $(document).ready(function(){
     $(document).ready(function(){
 
         $('.add_checklist_items').click(function(){
-            // alert('test');
             $('input[id="checkist_checkbox"]:checked').each(function() {
-            // alert(this.value);
             var id = this.value;
             // $("#checklist_added").html(this.value);
             // $("#checklist_modal").modal('hide')
@@ -2591,7 +2616,6 @@ $(document).ready(function(){
                 //     // $("#pics_Id").append("<div>" + this.id + "</div>");
                 // });
 
-
                 },
                     error: function(response){
                     alert('Error'+response);
@@ -2601,7 +2625,6 @@ $(document).ready(function(){
               });
             });
         });
-
 
     });
 </script>
@@ -2621,6 +2644,7 @@ $(document).ready(function(){
 // // roomOcc.push(label);
 
 // });
+
 $(function () {
     $('#collected_checkbox').click(function() {
         // alert('yes');

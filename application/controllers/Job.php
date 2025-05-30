@@ -49,6 +49,71 @@ class Job extends MY_Controller
             $jobs = $this->jobs_model->get_all_jobs($userId, $leaderBoardType);
         }
 
+        $jobIds = array_map(function ($job) {
+            return $job->id;
+        }, $jobs);
+
+        if (!empty($jobIds)) {
+            // Calculate job amount based on saved job's items.
+
+            $this->db->select('job_items.job_id,items.id,items.title,items.price,job_items.total,job_items.cost,job_items.qty,job_items.tax');
+            $this->db->from('job_items');
+            $this->db->join('items', 'items.id = job_items.items_id', 'left');
+            $this->db->where_in('job_items.job_id', $jobIds);
+            $itemsQuery = $this->db->get();
+            $items = $itemsQuery->result();
+
+            $jobAmounts = [];
+            foreach ($items as $item) {
+                if (!array_key_exists($item->job_id, $jobAmounts)) {
+                    $jobAmounts[$item->job_id] = 0;
+                }
+
+                //$total = (((float) $item->cost) * (float) $item->qty); // include tax? (float) $item->tax
+                $total = (float) $item->total; // include tax? (float) $item->tax
+                $jobAmounts[$item->job_id] = $jobAmounts[$item->job_id] + $total;
+            }
+
+            $jobs = array_map(function ($job) use ($jobAmounts) {
+                if (!array_key_exists($job->id, $jobAmounts)) {
+                    return $job;
+                }
+
+                // make sure to calculate amount from items
+                //$job->amount = ((float) ($job->tax_rate)) + $jobAmounts[$job->id];
+                $job->amount = $jobAmounts[$job->id];
+                return $job;
+            }, $jobs);
+        }
+
+        // $jobs = array_map(function ($job) {
+        //     if (!$job->work_order_id) {
+        //         return $job;
+        //     }
+
+        //     $this->db->select('installation_cost,otp_setup,monthly_monitoring');
+        //     $this->db->where('id', $job->work_order_id);
+        //     $workorderQuery = $this->db->get('work_orders');
+        //     $workorder = $workorderQuery->row();
+
+        //     if (!$workorder) {
+        //         return $job;
+        //     }
+
+        //     // make sure to include adjustment to total
+        //     if ($workorder->installation_cost) {
+        //         $job->amount = (float) $job->amount + (float) $workorder->installation_cost;
+        //     }
+        //     if ($workorder->otp_setup) {
+        //         $job->amount = (float) $job->amount + (float) $workorder->otp_setup;
+        //     }
+        //     if ($workorder->monthly_monitoring) {
+        //         $job->amount = (float) $job->amount + (float) $workorder->monthly_monitoring;
+        //     }
+
+        //     return $job;
+        // }, $jobs);
+
         $companyId = logged('company_id');
         $user_id   = logged('id');
         $user_type = logged('user_type');
@@ -2282,6 +2347,7 @@ class Job extends MY_Controller
         $this->load->helper(array('hashids_helper'));
         $this->load->model('JobTags_model');
         $this->load->model('JobSettings_model');
+        $this->load->model('Invoice_model');
         $user_login = logged('FName') . ' ' . logged('LName');
         $is_success = 1;
         $msg = '';
@@ -2301,10 +2367,10 @@ class Job extends MY_Controller
             $input['employee6_id'],
         ]; 
 
-        if ($input['item_name'] == null) {
-            $is_success = 0;
-            $msg = 'Please select an item';
-        }
+        // if ($input['item_name'] == null) {
+        //     $is_success = 0;
+        //     $msg = 'Please select an item';
+        // }
 
         if ($input['total_amount'] <= 0) {
             $is_success = 0;
@@ -2977,6 +3043,13 @@ class Job extends MY_Controller
 
         // Record Job save and Update to Customer Activities Module in Customer Dashboard
         if ($is_update == 0) {
+            $invoice = $this->Invoice_model->getByJobId($jobs_id);
+            // if( $invoice ){
+            //     $data = [
+            //         'grand_total' => 
+            //     ];
+            //     $this->Invoice_model->update();
+            // }
             $action = "$user_login scheduled a job with you. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$jobs_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>";
         } else {
             $action = "$user_login updated a job. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$jobs_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>";

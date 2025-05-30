@@ -312,7 +312,7 @@ class Accounting extends MY_Controller
  
  
          $invoice_paid_last_30days = array(
-             'where' => array('company_id' => logged('company_id'), 'status' => 'Paid','due_date ' => 'Paid'),
+             'where' => array('company_id' => logged('company_id'), 'status' => 'Paid'),
              'table' => 'invoices',
              'select' => 'count(*) as total',
          );
