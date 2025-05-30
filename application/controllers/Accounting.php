@@ -783,6 +783,11 @@ class Accounting extends MY_Controller
 
     public function receipts()
     {
+        if(!checkRoleCanAccessModule('accounting-receipts', 'read')){
+			show403Error();
+			return false;
+		}
+        
         $company_id = logged('company_id');
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
