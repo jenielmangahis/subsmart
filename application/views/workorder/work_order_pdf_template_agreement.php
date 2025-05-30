@@ -73,10 +73,10 @@
                 </td>
             </tr>
         </table>
-        <br>
+        <br />
         <table>
             <tr>
-                <td>
+                <td style="vertical-align:top;padding:10px;">
                     <table class="pure-table custom-pure-table" style="width:354px;background-color:#ced4e4;font-size:8px;">
                         <tr>
                             <td colspan="4" style="text-align:center;background-color:#4a5594;color:white;width:350px;font-size:8px;padding:2px;">Items</td>
@@ -101,8 +101,8 @@
                     <br>
                     <table style="border: 0px solid white;border-collapse: collapse;font-size:8px;width:350px;">
                         <tr>
-                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php if (empty($installation_date)){ echo '<br>'; } else{ echo $installation_date; } ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Installation Date:</b></td>
-                            <td style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php if (empty($intall_time)){ echo '<br>'; } else{ echo $intall_time; } ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Install Time Date:</b></td>
+                            <td colspan="2" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php if (empty($installation_date)){ echo '<br>'; } else{ echo date("m/d/Y", strtotime($installation_date)); } ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Installation Date:</b></td>
+                            <td style="border: 0px solid white;border-collapse: collapse;font-size:8px;"><?php if (empty($intall_time)){ echo '<br>'; } else{ echo $intall_time; } ?><hr style="margin-top:0px;margin-bottom:0px;"><b>Install Time:</b></td>
                         </tr>
                         <!-- <tr>
                             <td colspan="3" style="border: 0px solid white;border-collapse: collapse;font-size:8px;"> </td>
@@ -387,7 +387,6 @@
                             <td style="margin:;padding:6px;text-align:right;">$<?php echo $total; ?></td>
                         </tr>
                     </table>
-
                 </td>
             </tr>
         </table>
