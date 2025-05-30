@@ -438,9 +438,8 @@ label.bold {
                                         </div>
 
                                         <div class="col-md-12 mb-3">
-                                            <label for="job_location"><b>Job Location</b></label>
-                                            <input type="text" class="form-control" name="job_location"
-                                                id="job_location" />
+                                            <label for="job_location"><b>Job Location</b></label><a class="btn-use-different-address" id="btn-use-different-address" data-id="0" href="javascript:void(0);" style="float: right; display:none;">Use Other Address</a>
+                                            <input type="text" class="form-control" name="job_location" id="job_location" />
                                         </div>
 
                                         <div class="col-md-12 mb-3">
@@ -1061,6 +1060,8 @@ label.bold {
     <!-- page wrapper end -->
 </div>
 
+<?php include viewPath('v2/includes/customer/other_address'); ?>
+
 <?php echo $file_selection; ?>
 <?php include viewPath('v2/pages/job/modals/new_customer'); ?>
 <?php include viewPath('v2/includes/leads/quick_add'); ?>
@@ -1313,6 +1314,16 @@ $(document).ready(function() {
 
 <script>
 $(document).ready(function() {
+
+    $(document).on('click', '.btn-use-other-address', function(){
+        let prof_id = $(this).attr('data-id');
+        let other_address = $(this).attr('data-address');
+        let link_customer_address = `<a class="btn-use-different-address nsm-link" data-id="${prof_id}" href="javascript:void(0);">${other_address}</a>`;
+
+        $('#other-address-customer').modal('hide');
+        $('#job_location').val(other_address);
+    });    
+
     $('#help-popover-adjustment').popover({
         placement: 'top',
         html: true,
@@ -1323,16 +1334,18 @@ $(document).ready(function() {
     });
 
     $('#customer_id').change(function() {
-        var customer_leads = $(this).val();
-        var customerLeads = customer_leads.split("/");
+        var customer_leads     = $(this).val();
+        var customerLeads      = customer_leads.split("/");
         var customer_lead_type = customerLeads[1];
-        var customer_lead_id = customerLeads[0];
+        var customer_lead_id   = customerLeads[0];
 
         if (customer_lead_type == 'Customer') {
             load_customer_data(customer_lead_id);
         } else {
             load_lead_data(customer_lead_id)
         }
+
+        $("#btn-use-different-address").show();
     });
 
     <?php if ($default_customer_id > 0) { ?>
@@ -1425,6 +1438,10 @@ $(document).ready(function() {
 
                     if (customer_mobile == '') {
                         customer_mobile = 'Not Specified';
+                    }
+
+                    if(response.prof_id) {
+                        $(".btn-use-different-address").attr("data-id",response.prof_id);
                     }
 
                     $("#estimate-customer-email").val(customer_email);
