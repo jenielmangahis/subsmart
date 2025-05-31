@@ -35,6 +35,8 @@ class CustomerDeal extends MY_Controller
         $optionActivityTypes = $this->CustomerDealActivitySchedule_model->optionsActivityType();               
         $optionsPriorities   = $this->CustomerDealActivitySchedule_model->optionsPriority();               
 
+        $this->page_data['page']->title = 'Customer Deals';
+        $this->page_data['page']->parent = 'Customers';
         $this->page_data['customerDealStages']  = $customerDealStages;
         $this->page_data['optionSourceChannel'] = $optionSourceChannel;
         $this->page_data['customerDealLables']  = $customerDealLables;
@@ -328,6 +330,11 @@ class CustomerDeal extends MY_Controller
             $is_success = 0;
             $msg = 'Please select customer';
         }
+
+        if( !isset($post['owner_id']) ){
+            $is_success = 0;
+            $msg = 'Please select owner';
+        }
         
         if( $is_success == 1 ){
             
@@ -563,7 +570,7 @@ class CustomerDeal extends MY_Controller
             $customerDeal = $this->CustomerDeal_model->getById($post['customer_deal_id']);
             if( $customerDeal && $customerDeal->company_id == $company_id ){
                 $labels = "";
-                if( count($post['deal_label']) > 0 ){
+                if( isset($post['deal_label']) ){
                     $labels = json_encode($post['deal_label']);
                 }
                 
@@ -1010,6 +1017,9 @@ class CustomerDeal extends MY_Controller
             $optionLostReasons[] = $reason->lost_reason;
         }
 
+        $current_month = date("m", time());
+        $current_quarter = ceil($current_month/3);
+
         $this->page_data['customerDealStages']  = $customerDealStages;
         $this->page_data['optionSourceChannel'] = $optionSourceChannel;
         $this->page_data['customerDealLables']  = $customerDealLables;
@@ -1018,6 +1028,7 @@ class CustomerDeal extends MY_Controller
         $this->page_data['optionsPriorities']   = $optionsPriorities;
         $this->page_data['enable_customer_deals'] = true;
         $this->page_data['optionLostReasons'] = $optionLostReasons;
+        $this->page_data['current_quarter']   = $current_quarter;
         $this->load->view('v2/pages/customer_deals/forecast', $this->page_data);
     }
 
@@ -1027,21 +1038,67 @@ class CustomerDeal extends MY_Controller
 
         $company_id = logged('company_id');
 
-        $customerDeals  = [];
-        $quarter_months = $this->getMonths(2);        
+        $customerDeals   = [];
+        $current_month   = date("m", time());
+        $current_quarter = ceil($current_month/3);
+        $quarter_months  = $this->getMonths($current_quarter);        
         foreach( $quarter_months as $key => $value ){
             $date_from  = $value;
             $date_to    = date("Y-m-t", strtotime($date_from));
             $date_range = ['from' => $date_from, 'to' => $date_to];
             $filters[]  = ['field' => 'customer_deals.company_id', 'value' => $company_id];
+            $filters[]  = ['field' => 'customer_deals.is_archive', 'value' => 'No'];
             $deals      = $this->CustomerDeal_model->getAllByExpectedCloseDate($date_range, [], $filters);            
 
             $filtersWon[] = ['field' => 'customer_deals.company_id', 'value' => $company_id];
             $filtersWon[] = ['field' => 'customer_deals.status', 'value' => 'Won'];
+            $filtersWon[] = ['field' => 'customer_deals.is_archive', 'value' => 'No'];
             $sumWon       = $this->CustomerDeal_model->getSumValueByDateRange($date_range, $filtersWon);
             
             $filtersOthers[] = ['field' => 'customer_deals.company_id', 'value' => $company_id];
             $filtersOthers[] = ['field' => 'customer_deals.status !=', 'value' => 'Won'];
+            $filtersOthers[] = ['field' => 'customer_deals.is_archive', 'value' => 'No'];
+            $sumOthers    = $this->CustomerDeal_model->getSumValueByDateRange($date_range, $filtersOthers);
+            $sumTotal     = $sumWon->total_value + $sumOthers->total_value;
+
+            $customerDeals[$key]['deals'] = $deals;    
+            $customerDeals[$key]['sum_value']  = $sumValue;        
+            $customerDeals[$key]['sum_won']    = $sumWon->total_value;
+            $customerDeals[$key]['sum_others'] = $sumOthers->total_value;
+            $customerDeals[$key]['sum_total']   = $sumTotal;
+        }
+
+        $this->page_data['quarter_months'] = $quarter_months;
+        $this->page_data['customerDeals']  = $customerDeals;
+        $this->load->view('v2/pages/customer_deals/ajax_forecast_view', $this->page_data);
+    }
+
+    public function ajax_forecast_view_by_quarter()
+    {    
+        $this->load->model('CustomerDeal_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $customerDeals    = [];        
+        $selected_quarter = $post['calendar_quarter'];
+        $quarter_months   = $this->getMonths($selected_quarter);        
+        foreach( $quarter_months as $key => $value ){
+            $date_from  = $value;
+            $date_to    = date("Y-m-t", strtotime($date_from));
+            $date_range = ['from' => $date_from, 'to' => $date_to];
+            $filters[]  = ['field' => 'customer_deals.company_id', 'value' => $company_id];
+            $filters[]  = ['field' => 'customer_deals.is_archive', 'value' => 'No'];
+            $deals      = $this->CustomerDeal_model->getAllByExpectedCloseDate($date_range, [], $filters);            
+
+            $filtersWon[] = ['field' => 'customer_deals.company_id', 'value' => $company_id];
+            $filtersWon[] = ['field' => 'customer_deals.status', 'value' => 'Won'];
+            $filtersWon[] = ['field' => 'customer_deals.is_archive', 'value' => 'No'];
+            $sumWon       = $this->CustomerDeal_model->getSumValueByDateRange($date_range, $filtersWon);
+            
+            $filtersOthers[] = ['field' => 'customer_deals.company_id', 'value' => $company_id];
+            $filtersOthers[] = ['field' => 'customer_deals.status !=', 'value' => 'Won'];
+            $filtersOthers[] = ['field' => 'customer_deals.is_archive', 'value' => 'No'];
             $sumOthers    = $this->CustomerDeal_model->getSumValueByDateRange($date_range, $filtersOthers);
             $sumTotal     = $sumWon->total_value + $sumOthers->total_value;
 
@@ -1127,6 +1184,76 @@ class CustomerDeal extends MY_Controller
         $return = [
             'is_success' => $is_success,
             'msg' => $msg,
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_update_expected_close_date()
+    {
+        $this->load->model('CustomerDeal_model');
+
+        $is_success = 0;
+        $msg    = 'Cannot find data';
+        $previous_month = '';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $customerDeal = $this->CustomerDeal_model->getById($post['deal_id']);
+        if( $customerDeal->company_id == $company_id ){
+            $expected_close_date_month = date("F", strtotime($customerDeal->expected_close_date));
+            $data = [
+                'expected_close_date' => $post['expected_close_date'],
+                'date_modified' => date("Y-m-d H:i:s")
+            ];
+            $this->CustomerDeal_model->update($customerDeal->id, $data);
+
+            $is_success = 1;
+            $msg = '';
+            $previous_month = strtolower($expected_close_date_month);
+        }
+        
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'previous_month' => $previous_month
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_deal_month_summary()
+    {
+        $this->load->model('CustomerDeal_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $date_string = $post['month_name'] . ' 01,' . date("Y"); 
+        $date_from  = date("Y-m-d",strtotime($date_string));
+        $date_to    = date("Y-m-t", strtotime($date_from)); 
+
+        $date_range = ['from' => $date_from, 'to' => $date_to];
+        $filters[]  = ['field' => 'customer_deals.company_id', 'value' => $company_id];
+        $filters[]  = ['field' => 'customer_deals.is_archive', 'value' => 'No'];
+        $deals      = $this->CustomerDeal_model->getAllByExpectedCloseDate($date_range, [], $filters);            
+
+        $filtersWon[] = ['field' => 'customer_deals.company_id', 'value' => $company_id];
+        $filtersWon[] = ['field' => 'customer_deals.is_archive', 'value' => 'No'];
+        $filtersWon[] = ['field' => 'customer_deals.status', 'value' => 'Won'];
+        $sumWon       = $this->CustomerDeal_model->getSumValueByDateRange($date_range, $filtersWon);
+        
+        $filtersOthers[] = ['field' => 'customer_deals.company_id', 'value' => $company_id];
+        $filtersOthers[] = ['field' => 'customer_deals.is_archive', 'value' => 'No'];
+        $filtersOthers[] = ['field' => 'customer_deals.status !=', 'value' => 'Won'];
+        $sumOthers    = $this->CustomerDeal_model->getSumValueByDateRange($date_range, $filtersOthers);
+        $sumTotal     = $sumWon->total_value + $sumOthers->total_value;
+
+        $return = [
+            'sum_others' => $sumOthers->total_value,
+            'sum_won' => $sumWon->total_value,
+            'sum_total' => $sumTotal
         ];
 
         echo json_encode($return);
