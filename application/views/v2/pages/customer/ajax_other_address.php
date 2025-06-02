@@ -29,20 +29,39 @@
 <table class="table table-borderless mt-4" id="tbl-quick-add-other-address">
 <?php if( $otherAddress ){ ?>
     <tbody>
+        <tr>
+            <td style="width:3%;"><i id="customer-primary-address" class='bx bx-map'></i></td>
+            <td><?= $primary_address['mail_add'] . ' ' . $primary_address['city'] . ', ' . $primary_address['state'] . ' ' . $primary_address['zip']; ?></td>
+            <td style="width:5%;"><a class="nsm-button btn-small btn-use-other-address" data-id="<?= $address->customer_id; ?>" data-mailadd="<?= $primary_address['mail_add']; ?>" data-city="<?= $primary_address['city']; ?>" data-state="<?= $primary_address['state']; ?>" data-zip="<?= $primary_address['zip']; ?>" data-address="<?= $primary_address['mail_add'] . ' ' . $primary_address['city'] . ', ' . $primary_address['state'] . ' ' . $primary_address['zip']; ?>" href="javascript:void(0);"><i class='bx bx-plus'></i></a></td>
+        </tr>
     <?php foreach($otherAddress as $address){ ?>
         <tr>
+            <td style="width:3%;"></td>
             <td><?= $address->mail_add . ' ' . $address->city . ', ' . $address->state . ' ' . $address->zip; ?></td>
-            <td><a class="nsm-button btn-small btn-use-other-address" data-id="<?= $address->customer_id; ?>" data-mailadd="<?= $address->mail_add; ?>" data-city="<?= $address->city; ?>" data-state="<?= $address->state; ?>" data-zip="<?= $address->zip; ?>" data-address="<?= $address->mail_add . ' ' . $address->city . ', ' . $address->state . ' ' . $address->zip; ?>" href="javascript:void(0);"><i class='bx bx-plus'></i></a></td>
+            <td style="width:5%;"><a class="nsm-button btn-small btn-use-other-address" data-id="<?= $address->customer_id; ?>" data-mailadd="<?= $address->mail_add; ?>" data-city="<?= $address->city; ?>" data-state="<?= $address->state; ?>" data-zip="<?= $address->zip; ?>" data-address="<?= $address->mail_add . ' ' . $address->city . ', ' . $address->state . ' ' . $address->zip; ?>" href="javascript:void(0);"><i class='bx bx-plus'></i></a></td>
         </tr>
     <?php } ?>
     </tbody>
 <?php }else{ ?>
     <tr>
-        <td colspan="5">
-            <div class="nsm-empty">
-                <span>No results found</span>
-            </div>
-        </td>
+        <tr>
+            <td style="width:3%;"><i id="customer-primary-address" class='bx bx-map'></i></td>
+            <td><?= $primary_address['mail_add'] . ' ' . $primary_address['city'] . ', ' . $primary_address['state'] . ' ' . $primary_address['zip']; ?></td>
+            <td style="width:5%;"><a class="nsm-button btn-small btn-use-other-address" data-id="<?= $address->customer_id; ?>" data-mailadd="<?= $primary_address['mail_add']; ?>" data-city="<?= $primary_address['city']; ?>" data-state="<?= $primary_address['state']; ?>" data-zip="<?= $primary_address['zip']; ?>" data-address="<?= $primary_address['mail_add'] . ' ' . $primary_address['city'] . ', ' . $primary_address['state'] . ' ' . $primary_address['zip']; ?>" href="javascript:void(0);"><i class='bx bx-plus'></i></a></td>
+        </tr>
     </tr>
 <?php } ?>
 </table>
+<script>
+$(function(){
+    $('#customer-primary-address').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Primary Address';
+        } 
+    });
+    $('#btn-archive').popover('hide');
+});
+</script>
