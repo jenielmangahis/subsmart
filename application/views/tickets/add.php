@@ -292,6 +292,7 @@ a.btn-primary.btn-md {
                                     </div> -->
                                     <div class="col-md-12 mt-4">
                                         <label for="job_location" class="required"><b>Service Location</b></label>
+                                        <a class="btn-use-different-address nsm-button default btn-small float-end" style="display:none;" id="btn-use-different-address" data-id="" href="javascript:void(0);">Use Other Address</a>
                                         <input type="text" class="form-control" name="service_location" id="service_location"
                                         required placeholder="Enter Location"
                                         onChange="jQuery('#customer_name').text(jQuery(this).val());" value=""/>
@@ -945,6 +946,7 @@ a.btn-primary.btn-md {
 
 <?php //echo $file_selection; ?>
 <?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
+<?php include viewPath('v2/includes/customer/other_address'); ?>
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
 
 <?php include viewPath('v2/includes/footer'); ?>
@@ -1360,6 +1362,27 @@ document.getElementById("payment_method").onchange = function() {
     
 $(document).ready(function(){
 
+    $(document).on('click', '.btn-use-other-address', function(){
+        let prof_id = $(this).attr('data-id');
+        let other_address = $(this).attr('data-address');
+        
+        $('#other-address-customer').modal('hide');        
+        $('#service_location').val(other_address);
+
+        let map_source = 'http://maps.google.com/maps?q='+other_address+'&output=embed';
+        let map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="300" width="100%" style=""></iframe>';
+        $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+
+        $('.btn-use-different-address').popover({
+            placement: 'top',
+            html : true, 
+            trigger: "hover focus",
+            content: function() {
+                return 'User other address';
+            } 
+        }); 
+    });
+
     $("#quick-add-items-list").nsmPagination({itemsPerPage:10});
     $("#search_field").on("input", debounce(function() {
         tableSearch($(this));        
@@ -1563,19 +1586,22 @@ $(document).ready(function(){
                 var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
                 var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
             
-            var service_location = response['customer'].    l_add + ' ' + response['customer'].city + ', ' + response['customer'].state + ' ' + response['customer'].zip_code;
-            $("#service_location").val(service_location);
-            $("#customer_city").val(response['customer'].city);
-            $("#customer_state").val(response['customer'].state);
-            $("#customer_zip").val(response['customer'].zip_code);
-            $("#customer_phone").val(response['customer'].phone_m);
-            $("#business_name").val(response['customer'].business_name);
+                var service_location = response['customer'].    l_add + ' ' + response['customer'].city + ', ' + response['customer'].state + ' ' + response['customer'].zip_code;
+                $("#service_location").val(service_location);
+                $("#customer_city").val(response['customer'].city);
+                $("#customer_state").val(response['customer'].state);
+                $("#customer_zip").val(response['customer'].zip_code);
+                $("#customer_phone").val(response['customer'].phone_m);
+                $("#business_name").val(response['customer'].business_name);
 
-            var map_source = 'http://maps.google.com/maps?q=' + service_location +
-                        '&output=embed';
-            var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
-                '" height="370" width="100%" style=""></iframe>';
-            $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+                var map_source = 'http://maps.google.com/maps?q=' + service_location +
+                            '&output=embed';
+                var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
+                    '" height="370" width="100%" style=""></iframe>';
+                $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+
+                $('#btn-use-different-address').attr('data-id', id);
+                $('#btn-use-different-address').show();
         
             },error: function(response){
         

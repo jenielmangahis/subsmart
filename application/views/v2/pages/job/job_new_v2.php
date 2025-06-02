@@ -53,27 +53,29 @@
                                     <div class="nsm-card-content">                                        
                                         <div class="nsm-progressbar my-4">
                                             <div class="progressbar">
-                                                <ul class="items-8">
+                                                <ul class="items-8 job-progress-bar">
                                                     <li class="active" id="1">
-                                                <a href="">Draft</a></li>
+                                                        <a href=""><i class='bx bx-edit-alt'></i> Draft</a>
+                                                    </li>
                                                     <li class="" id="2">
-                                                <a href="">Scheduled</a></li>
+                                                        <a href=""><i class='bx bxs-calendar-check' ></i> Scheduled</a>
+                                                    </li>
                                                     <li class="" id="3">
-                                                        <a href="#"> Arrived </a>
+                                                        <a href="#"><i class='bx bxs-truck' ></i> Arrived</a>
                                                     </li>
                                                     <li class="" id="4">
-                                                        <a href="#"> Started </a>
+                                                        <a href="#"><i class='bx bxs-watch' ></i> Started </a>
                                                     </li>
                                                     <li class="" id="5">
-                                                        <a href="#" id="approveThisJob" data-status="<?= isset($jobs_data) ? $jobs_data->status : "" ?>" > Approved </a>
+                                                        <a href="#" id="approveThisJob"><i class='bx bxs-check-square' ></i> Approved </a>
                                                     </li>
                                                     <li class="" id="6">
-                                                        <a href="#">Finished</a>
-                                                    <li id="7" class="">
-                                                        <a href="#">Invoiced</a>
+                                                        <a href="#"><i class='bx bxs-flag-checkered' ></i> Finished</a>
+                                                    <li class="" id="7">
+                                                        <a href="#"><i class='bx bx-paper-plane' ></i> Invoiced</a>
                                                     </li>
-                                                    <li id="8" class="">
-                                                        <a href="#">Completed</a>
+                                                    <li class="" id="8">
+                                                        <a href="#"><i class='bx bxs-badge-check' ></i> Completed</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -90,8 +92,6 @@
                                     </div>
                                     <hr>
                                     <div class="nsm-card-content">
-                                        <!-- <h6 class="page-title "><span style="font-size: 20px;"  class="fa fa-calendar"></span>&nbsp; &nbsp;Schedule Job</h6> -->
-                                        <?php if(!isset($jobs_data)): ?>
                                         <div id="import_buttons">
                                             <button type="button" class="nsm-button primary btn-import" id="btn-import-estimate">
                                                 <i class='bx bx-import'></i> Import Estimate
@@ -104,7 +104,6 @@
                                             </button>
                                         </div>
                                         <hr>
-                                        <?php endif; ?>
                                         <div class="form-group">
                                             <div class="row g-3 align-items-center mb-3">
                                               <div class="col-sm-2">
@@ -118,8 +117,7 @@
                                                 ?>
                                                 <input type="date" name="start_date" id="start_date" class="form-control" value="<?= $default_start_date;  ?>" required>
                                               </div>
-                                              <div class="col-sm-5">
-                                                  <?php if( isset($jobs_data) ){ $default_start_time = strtolower($jobs_data->start_time); } ?>
+                                              <div class="col-sm-5">                                                  
                                                     <select id="start_time" name="start_time" class="nsm-field form-select" required>
                                                         <option value="">Start time</option>
                                                         <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
@@ -247,6 +245,7 @@
                                                     <span><i class='bx bx-wrench' ></i>&nbsp;Job Details</span>                                                                                      
                                                 </div>
                                             </div>     
+                                            <hr>
                                             <div class="nsm-card-content">      
                                                 <div class="row">
                                                     <div class="col-md-5">
@@ -640,8 +639,6 @@
 <?php include viewPath('v2/includes/job/quick_add'); ?>
 <?php include viewPath('v2/includes/inventory/quick_add_item_modals'); ?>
 <?php include viewPath('v2/includes/job/import_modals'); ?>
-
-<?php include viewPath('v2/pages/job/modals/invoice_import'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
 <?php include viewPath('v2/pages/job/js/job_new_js_v2'); ?>
 <script>
@@ -1065,7 +1062,7 @@ $(function(){
             var rowcount = parseInt($("#row-service-count").val()) + 1;
             $("#row-service-count").val(rowcount);
 
-            var row_html = "<tr><td><label class='row-item-name'>"+service_name+"</label><input data-row='"+rowcount+"' type='hidden' class='row-service-id' name='serviceIds[]' value='"+service_id+"' /></td><td><input data-row='"+rowcount+"' type='number' name='serviceQty[]' step='1' min='1' max='"+service_onhand+"' value='1' class='form-control row-service-qty row-service-qty-"+rowcount+"' readonly='' /></td><td><input data-row='"+rowcount+"' type='number' name='servicePrice[]' value='"+service_price+"' step='any' class='form-control row-service-price row-service-price-"+rowcount+"' /></td><td><input data-row='"+rowcount+"' type='number' name='serviceDiscount[]' min='0' step='any' value='0' class='form-control row-service-discount row-service-discount-"+rowcount+"' /></td><td><input data-row='"+rowcount+"' type='number' readonly='' name='serviceTax[]' value='"+service_tax+"' class='form-control row-service-tax row-service-tax-"+rowcount+"' /></td><td class='row-item-total'><span class='row-service-total-label-"+rowcount+"'>"+service_total.toFixed(2)+"</span><input type='hidden' name='serviceTotal[]' value='"+service_total+"' class='form-control row-service-total row-service-total-"+rowcount+"' /></td><td><a data-row='"+rowcount+"' class='remove nsm-button btn-delete-item-row'><i class='bx bx-fw bx-trash'></i></a></td></tr>";
+            var row_html = "<tr><td><label class='row-item-name'>"+service_name+"</label><input data-row='"+rowcount+"' type='hidden' class='row-service-id' name='serviceIds[]' value='"+service_id+"' /></td><td><input data-row='"+rowcount+"' type='number' name='serviceQty[]' step='1' min='1' value='1' class='form-control row-service-qty row-service-qty-"+rowcount+"' /></td><td><input data-row='"+rowcount+"' type='number' name='servicePrice[]' value='"+service_price+"' step='any' class='form-control row-service-price row-service-price-"+rowcount+"' /></td><td><input data-row='"+rowcount+"' type='number' name='serviceDiscount[]' min='0' step='any' value='0' class='form-control row-service-discount row-service-discount-"+rowcount+"' /></td><td><input data-row='"+rowcount+"' type='number' readonly='' name='serviceTax[]' value='"+service_tax+"' class='form-control row-service-tax row-service-tax-"+rowcount+"' /></td><td class='row-item-total'><span class='row-service-total-label-"+rowcount+"'>"+service_total.toFixed(2)+"</span><input type='hidden' name='serviceTotal[]' value='"+service_total+"' class='form-control row-service-total row-service-total-"+rowcount+"' /></td><td><a data-row='"+rowcount+"' class='remove nsm-button btn-delete-item-row'><i class='bx bx-fw bx-trash'></i></a></td></tr>";
 
             $("#service-list-table tbody").append(row_html);
 

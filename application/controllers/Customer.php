@@ -12740,12 +12740,22 @@ class Customer extends MY_Controller
     public function ajax_other_address()
     {
         $this->load->model('CustomerAddress_model');
+        $this->load->model('AcsProfile_model');
 
         $post = $this->input->post();
         $otherAddress = $this->CustomerAddress_model->getAllByCustomerId($post['prof_id']);
+        $customer = $this->AcsProfile_model->getByProfId($post['prof_id']);
+
+        $primary_address = [
+            'mail_add' => $customer->mail_add,
+            'city' => $customer->city,
+            'state' => $customer->state,
+            'zip' => $customer->zip_code
+        ];
 
         $this->page_data['prof_id'] = $post['prof_id'];
         $this->page_data['otherAddress'] = $otherAddress;
+        $this->page_data['primary_address'] = $primary_address;
         $this->load->view('v2/pages/customer/ajax_other_address', $this->page_data);
     }
 

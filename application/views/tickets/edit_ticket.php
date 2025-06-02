@@ -255,7 +255,7 @@ a.btn-primary.btn-md {
                             <div class="nsm-card primary">
                                 <div class="nsm-card-content">
                                     <label for="customers" class="required"><b>Customer</b></label>
-                                    <a class="link-modal-open nsm-button btn-small" href="<?= base_url('customer/add_advance'); ?>" style="float:right;">Add New</a>
+                                    <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" style="float:right;">Add New</a>
                                     <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-select searchable-dropdown" placeholder="Select">
                                         <option value="">- Select Customer -</option>
                                         <?php foreach($customers as $c){ ?>
@@ -293,6 +293,7 @@ a.btn-primary.btn-md {
                                         </div>
                                         <div class="col-md-12 mt-4">
                                             <label for="job_location" class="required"><b>Service Location</b></label>
+                                            <a class="btn-use-different-address nsm-button default btn-small float-end" id="btn-use-different-address" data-id="<?= $tickets->customer_id; ?>" href="javascript:void(0);">Use Other Address</a>
                                             <input type="text" class="form-control" name="service_location" id="service_location"
                                             required placeholder="Enter Location"
                                             onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $tickets->service_location; ?>"/>
@@ -938,6 +939,8 @@ a.btn-primary.btn-md {
         </form>
     </div>
 </div>  
+<?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
+<?php include viewPath('v2/includes/customer/other_address'); ?>
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
 <?php include viewPath('v2/includes/footer'); ?>
 <?php //include viewPath('includes/footer'); ?>
@@ -1268,6 +1271,32 @@ document.getElementById("payment_method").onchange = function() {
 </script>
 <script>    
 $(document).ready(function(){
+
+    $('#btn-add-new-customer').on('click', function(){
+        $('#target-id-dropdown').val('sel-customer_t');
+        $('#origin-modal-id').val('');
+    });
+
+    $(document).on('click', '.btn-use-other-address', function(){
+        let prof_id = $(this).attr('data-id');
+        let other_address = $(this).attr('data-address');
+        
+        $('#other-address-customer').modal('hide');        
+        $('#service_location').val(other_address);
+
+        let map_source = 'http://maps.google.com/maps?q='+other_address+'&output=embed';
+        let map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="300" width="100%" style=""></iframe>';
+        $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+
+        $('.btn-use-different-address').popover({
+            placement: 'top',
+            html : true, 
+            trigger: "hover focus",
+            content: function() {
+                return 'User other address';
+            } 
+        }); 
+    });
 
     $('#employee_id').select2({});
     
