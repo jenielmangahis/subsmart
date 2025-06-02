@@ -2374,7 +2374,7 @@ class Invoice extends MY_Controller
                     $msg = 'Cannot send email';
                 }
 
-                customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Sent invoice '.$invoice->invoice_number.' to customer with late fee amounting of ' . $post['late_fee']);                
+                customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Sent invoice '.$invoice->invoice_number.' to customer with late fee amounting of $' . number_format($post['late_fee'],2));                
 
             } else {
 
