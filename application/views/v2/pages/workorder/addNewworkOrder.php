@@ -163,6 +163,14 @@
         position: relative;
         left:4px;
     }
+
+    .custom-workorder-header {
+        background-color: #6a4a86;
+        color: #ffffff;
+        font-size: 15px;
+        padding: 10px;
+        width: 100%;
+    }
 </style>
 
 <div class="row page-content g-0">
@@ -304,8 +312,9 @@
                                             <div class="col-12">
                                                 <hr>
                                             </div>
-                                            <div class="col-12 col-md-6 d-flex align-items-center">
-                                                <label class="content-title">Item Summary</label>
+                                            <div class="col-12 col-md-12 d-flex align-items-center">
+                                                <!-- <label class="content-title">Item Summary</label> -->
+                                                <h6 class="card_header custom-workorder-header">Item Summary</h6>
                                             </div>
                                             <!-- <div class="col-12 col-md-6 text-end">
                                                 <label class="content-subtitle fw-bold me-2">Show as:</label>
@@ -320,13 +329,11 @@
                                                     <tr>
                                                         <th>Name</th>
                                                         <th>Group</th>
-                                                        <!-- <th>Description</th> -->
                                                         <th width="150px">Quantity</th>
-                                                        <!-- <th>Location</th> -->
-                                                        <th width="150px">Price</th>
-                                                        <th class="hidden_mobile_view" width="150px">Discount</th>
-                                                        <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
-                                                        <th class="hidden_mobile_view">Total</th>
+                                                        <th width="150px" style="text-align: right;">Price</th>
+                                                        <th class="hidden_mobile_view" width="150px" style="text-align: right;">Discount</th>
+                                                        <th class="hidden_mobile_view" width="150px" style="text-align: right;">Tax (Change in %)</th>
+                                                        <th class="hidden_mobile_view" style="text-align: center;">Total</th>
                                                         <th class=""></th>
                                                     </tr>
                                                     </thead>

@@ -164,6 +164,13 @@
     position: relative;
     left:4px;
 }
+.custom-workorder-header {
+    background-color: #6a4a86;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 10px;
+    width: 100%;
+}
 </style>
 
 <div class="row page-content g-0">
@@ -286,8 +293,9 @@
                                             <div class="col-12">
                                                 <hr>
                                             </div>
-                                            <div class="col-12 col-md-6 d-flex align-items-center">
-                                                <label class="content-title">Item Summary</label>
+                                            <div class="col-12 col-md-12 d-flex align-items-center">
+                                                <!-- <label class="content-title">Item Summary</label> -->
+                                                <h6 class="custom-workorder-header">Item Summary</h6>
                                             </div>
                                             <div class="col-12">
                                                 <input type="hidden" name="count" id="count" value="<?= count($items_data); ?>">                                                
@@ -297,10 +305,10 @@
                                                         <th>Name</th>
                                                         <th>Group</th>                                                        
                                                         <th width="150px">Quantity</th>                                                        
-                                                        <th width="150px">Price</th>
-                                                        <th class="hidden_mobile_view" width="150px">Discount</th>
-                                                        <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
-                                                        <th class="hidden_mobile_view">Total</th>
+                                                        <th width="150px" style="text-align: right;">Price</th>
+                                                        <th class="hidden_mobile_view" width="150px" style="text-align: right;">Discount</th>
+                                                        <th class="hidden_mobile_view" width="150px" style="text-align: right;">Tax (Change in %)</th>
+                                                        <th class="hidden_mobile_view" style="text-align: center;">Total</th>
                                                         <th class=""></th>
                                                     </tr>
                                                     </thead>
@@ -328,21 +336,21 @@
                                                                     data-counter="<?= $item_row; ?>" id="quantity_<?php echo $item_row; ?>" value="<?php echo $data->qty; ?>"> 
                                                                     
                                                                     </td>
-                                                            <td width="10%"><input type="number" data-itemid="<?php echo $data->items_id; ?>" class="form-control price hidden_mobile_view" name="price[]"
+                                                            <td width="10%"><input type="number" data-itemid="<?php echo $data->items_id; ?>" style="text-align: right;" class="form-control price hidden_mobile_view" name="price[]"
                                                                     data-counter="0" id="price_<?php echo $item_row; ?>" min="0" value="<?php echo $data->costing; ?>"> <input type="hidden" class="priceqty" id="priceqty_<?php echo $item_row; ?>" value="<?php $quantity1 = $data->qty;
                                                                                                     $price1 = $data->costing; 
                                                                                                     $total1 = $quantity1*$price1;
                                                                                                     echo $total1;
                                                                                                                 ?>"> 
                                                                     <!-- <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_<?php echo $data->id; ?>" min="0" value="0"></div> -->
-                                                                    <input id="priceM_qty<?php echo $data->items_id; ?>"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty" value="" /></td>
-                                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
+                                                                    <input id="priceM_qty<?php echo $data->items_id; ?>" type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty" value="" /></td>
+                                                            <td width="10%" class="hidden_mobile_view"><input type="number" style="text-align: right;" class="form-control discount" name="discount[]"
                                                                     data-counter="0" id="discount_<?php echo $item_row; ?>" min="0"  value="0" ></td>
-                                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
+                                                            <td width="10%" class="hidden_mobile_view"><input type="text" style="text-align: right;" class="form-control tax_change" name="tax[]"
                                                                     data-counter="0" id="tax1_<?php echo $item_row; ?>" min="0" value="<?php echo number_format($data->tax,2); ?>">
                                                                     <!-- <span id="span_tax_0">0.0</span> -->
                                                                     </td>
-                                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
+                                                            <td width="10%" class="hidden_mobile_view" style="text-align: center;"><input type="hidden" class="form-control " name="total[]"
                                                                     data-counter="0" id="sub_total_text<?= $item_row; ?>" min="0" value="<?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo $b; ?>">
                                                                     $<span id="span_total_<?php echo $item_row; ?>"><?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo number_format($b,2,".",""); ?></span></td>
                                                             <td>
@@ -987,7 +995,7 @@
                                                         }
                                                     ?>
                                                     </td>                                                    
-                                                    <td><?php echo $item->price; ?></td>                                                    
+                                                    <td>$<?php echo $item->price; ?></td>                                                    
                                                     <td><?php echo $item->type; ?></td>
                                                 </tr>
                                                 
