@@ -3,11 +3,11 @@
     <div class="modal-dialog modal-xxl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="print_credit_notes_modal_label">Print Credit Notes List</span>
+                <span class="modal-title content-title" id="print_credit_notes_modal_label">Print List</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
-                <table class="nsm-table">
+                <table class="nsm-table" id="credit-note-print-list">
                     <thead>
                         <tr>
                             <td data-name="Date">DATE</td>
@@ -76,8 +76,7 @@
                             <td data-name="Memo">MEMO</td>
                             <td data-name="Total">TOTAL</td>
                             <td data-name="Last Delivered">LAST DELIVERED</td>
-                            <td data-name="Email">EMAIL</td>
-                            <td class="table-icon text-center" data-name="Attachments"><i class="bx bx-paperclip"></i></td>
+                            <td data-name="Email">EMAIL</td>                            
                             <td data-name="Status">STATUS</td>
                             <td data-name="P.O. Number">P.O. Number</td>
                             <td data-name="Sales Rep">SALES REP</td>
@@ -87,7 +86,7 @@
                         <?php if(count($notes) > 0) : ?>
                             <?php foreach($notes as $note) : ?>
                             <tr>
-                                <td><?=$note['date']?></td>
+                                <td><?= date("m/d/Y",strtotime($note['date']));?></td>
                                 <td><?=$note['type']?></td>
                                 <td><?=$note['no']?></td>
                                 <td><?=$note['customer']?></td>
@@ -95,7 +94,6 @@
                                 <td><?=$note['total']?></td>
                                 <td><?=$note['last_delivered']?></td>
                                 <td><?=$note['email']?></td>
-                                <td><?=$note['attachments']?></td>
                                 <td><?=$note['status']?></td>
                                 <td><?=$note['po_number']?></td>
                                 <td><?=$note['sales_rep']?></td>
