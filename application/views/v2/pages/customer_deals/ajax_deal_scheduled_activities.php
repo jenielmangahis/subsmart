@@ -3,10 +3,10 @@
     <div class="row activity-card" data-type="<?= $activity->activity_type; ?>" data-id="<?= $activity->id; ?>">
       <div class="col-md-2 col-sm-2 col-2">
         <div class="form-check opt-done-container">
-          <input class="form-check-input opt-is-done" type="radio" name="activity_is_done" data-id="<?= $activity->id; ?>">
+          <input class="form-check-input opt-is-done" type="radio" name="activity_is_done" data-deal-id="<?= $activity->customer_deal_id; ?>" data-id="<?= $activity->id; ?>">
         </div>
       </div>
-      <div class="col-md-10 col-sm-10 col-10 p-0">
+      <div class="col-md-10 col-sm-10 col-10 p-0 activity-info" data-type="<?= $activity->activity_type; ?>" data-id="<?= $activity->id; ?>">
         <div class="activity-name">
           <i class="<?= $activity->activity_type_properties['icon'] ?>"></i> <?= $activity->activity_type; ?>
           <?php if( $activity->priority != 'None' ){ ?>
@@ -45,3 +45,15 @@
   You have no activities scheduled for this deal
 </div>
 <?php } ?>
+<script>
+$(function(){
+  $('.opt-is-done').popover({
+      placement: 'top',
+      html : true, 
+      trigger: "hover focus",
+      content: function() {
+          return 'Mark as done';
+      } 
+  });
+});
+</script>

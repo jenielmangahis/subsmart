@@ -2,8 +2,8 @@
     <thead>
         <tr>
             <td class="table-icon"></td>
-            <td data-name="DealTitle">Deal Title</td>
-            <td data-name="CustomerName">Customer</td>
+            <td data-name="DealTitle" style="width:50%;">Deal Title</td>
+            <td data-name="CustomerName" style="width:20%;">Customer</td>
             <td data-name="ExpectedCloseDate">Expected Close Date</td>
             <td data-name="Action" style="width:5%;"></td>                
         </tr>

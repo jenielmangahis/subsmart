@@ -23,15 +23,27 @@
                     <div class="col-4 grid-mb">
                         <div class="btn-group view-style-container" role="group" aria-label="Button group with nested dropdown">
                             <button type="button" id="btn-stage-view" class="btn btn-secondary btn-lg"><i class='bx bx-bar-chart-alt-2 bx-rotate-45'></i></button>
+                            <button type="button" id="btn-list-view" class="btn btn-secondary btn-lg"><i class='bx bx-list-ul'></i></button>
                             <button type="button" id="btn-forecast-view" class="btn btn-secondary btn-active btn-lg"><i class='bx bx-dollar-circle'></i></button>
                             <button type="button" id="btn-archive" class="btn btn-secondary btn-lg"><i class='bx bx-box'></i></button>
                         </div>
                     </div>
                     <div class="col-8 grid-mb text-end">
+                        <input type="hidden" id="customer-deal-modal-name" value="" />
+                        <input type="hidden" id="forecast-quarter" value="" />                        
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-secondary"><i class='bx bx-chevron-left'></i></button>
-                            <button type="button" class="btn btn-secondary btn-nsm">Current Month</button>
-                            <button type="button" class="btn btn-secondary"><i class='bx bx-chevron-right' ></i></button>
+                            <button type="button" class="btn btn-secondary" data-quarter="<?= $current_quarter == 1 ? 1 : $current_quarter - 1; ?>" id="btn-forecast-prev"><i class='bx bx-chevron-left'></i></button>
+                            <button type="button" class="btn btn-secondary btn-nsm" data-quarter="<?= $current_quarter; ?>" id="btn-forecast-today">Today</button>
+                            <button type="button" class="btn btn-secondary" data-quarter="<?= $current_quarter == 4 ? 4 : $current_quarter + 1; ?>" id="btn-forecast-next"><i class='bx bx-chevron-right' ></i></button>
+                        </div>  
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-nsm" id="btn-new-deal"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Deal</button>
+                            <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class=""><i class='bx bx-chevron-down' ></i></span>
+                            </button>
+                            <ul class="dropdown-menu">                                
+                                <li><a class="dropdown-item" id="btn-add-new-lost-reason" href="javascript:void(0);">Add Lost Reason</a></li>                                
+                            </ul>
                         </div>
                     </div>
                 </div>   
