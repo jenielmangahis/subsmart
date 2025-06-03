@@ -85,7 +85,7 @@
                                                 <p>Dear <?php echo get_customer_by_id($invoice->customer_id)->first_name; ?>,<br></p>
                                                 <p>Thank you for your business! <br>Please find the attached invoice #<?php echo $invoice->invoice_number ?> with this email. <br><br>
                                                     
-                                                    <strong>Amount due: $<?php echo number_format($invoice->grand_total, 2, '.', ',') ?></strong> <br><br>You can click the button below to securely pay this invoice online.
+                                                    <strong>Amount due: $<?php echo number_format($invoice->balance, 2, '.', ',') ?></strong> <br><br>You can click the button below to securely pay this invoice online.
                                                 </p>
                                                 <p><br></p>
                                                 <table class="mce-item-table" width="100%" cellspacing="0" cellpadding="0" border="0">

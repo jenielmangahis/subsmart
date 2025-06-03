@@ -860,7 +860,7 @@ $(".select_item").click(function () {
     "'  min=\"0\" value='" +
     taxes_t +
     "'></td>\n" +
-    '<td style="text-align: center" class="hidden_mobile_view"><span class="span-input" data-subtotal=\'' +
+    '<td style="text-align: center" class="hidden_mobile_view">$<span class="span-input" data-subtotal=\'' +
     total_ +
     "' id='span_total_" +
     count +

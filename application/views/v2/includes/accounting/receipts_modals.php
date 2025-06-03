@@ -339,14 +339,14 @@
 </div> -->
 
 <div class="modal" id="receiptForwardingModal" role="dialog" data-bs-keyboard="true" aria-modal="true">
-   <div class="modal-dialog modal-dialog-centered modal-lg">
+   <div class="modal-dialog modal-dialog-centered modal-md">
       <div class="modal-content">
-         <div class="modal-header">
+        <div class="modal-header">
             <span class="modal-title content-title" style="font-size: 17px;">Let's create your forwarding email</span>
             <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
-         </div>
-         <div class="modal-body" style="padding-top: 10px;">
-            <form>
+        </div>
+        <div class="modal-body" style="padding-top: 10px;">
+            <form id="frm-forwarding-receipt-modal">
                <div class="row">
                   <div class="col-lg-12">
                      <div class="row">
@@ -363,19 +363,12 @@
                      </div>
                   </div>
                </div>
-               <hr class="mt-0">
-               <div class="row">
-                  <div class="col-lg-12">
-                     <div class="float-start">
-                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                     </div>
-                     <div class="float-end">
-                        <button type="submit" class="nsm-button primary receiptsButton">Save</button>
-                     </div>
-                  </div>
-               </div>
             </form>
-         </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="nsm-button primary receiptsButton" id="" form="frm-forwarding-receipt-modal">Save</button>
+        </div>
       </div>
    </div>
 </div>

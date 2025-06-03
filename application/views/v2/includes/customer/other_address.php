@@ -59,6 +59,7 @@ $(function(){
                 let zip = $('#other-address-mail-zip').val();
                 let row = `
                     <tr>
+                        <td></td>                        
                         <td>${other_address}</td>
                         <td><a class="nsm-button btn-small btn-use-other-address" data-id="${prof_id}" data-mailadd="${mail_add}" data-city="${city}" data-state="${state}" data-zip="${zip}" data-address="${other_address}" href="javascript:void(0);"><i class='bx bx-plus'></i></a></td>
                     </tr>

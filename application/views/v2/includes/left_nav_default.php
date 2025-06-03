@@ -515,16 +515,16 @@ echo 'active';
                 <i class='bx bx-fw bx-box'></i> Inventory
             </a>
         </li>
-        <li>
+        <!-- <li>
             <a href="<?php echo base_url('tools/api_connectors'); ?>">
                 <i class='bx bx-fw bx-code-alt'></i> API Connectors
             </a>
-        </li>
-        <li>
+        </li> -->
+        <!-- <li>
             <a href="<?php echo base_url('tools/api_connectors'); ?>">
                 <i class='bx bx-fw bx-mobile-alt'></i> Mobile Tools
             </a>
-        </li>
+        </li> -->
         <!-- <li>
             <a href="<?php echo base_url('trac360'); ?>">
                 <i class='bx bx-fw bx-navigation'></i> Trac 360
@@ -587,7 +587,7 @@ echo 'active';
     <ul class="mt-3">
         <li class="li-third-sub-menu">
             <a href="javascript:void(0);" class="third-sub-menu">
-                <i class='bx bx-fw bx-calendar-edit'></i> Calendar settings <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                <i class='bx bx-fw bx-calendar-edit'></i> Calendar <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
             </a>
             <ul class="mt-3">
                 <li class="third-sub-menu-item">
@@ -636,7 +636,7 @@ echo 'active';
         </li> -->
         <li class="li-third-sub-menu">
             <a href="javascript:void(0);" class="third-sub-menu">
-                <i class='bx bx-fw bx-calendar-event'></i> Event Settings <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                <i class='bx bx-fw bx-calendar-event'></i> Events <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
             </a>
             <ul class="mt-3">
                 <li class="third-sub-menu-item">
@@ -649,58 +649,116 @@ echo 'active';
                         <i class='bx bx-purchase-tag'></i> Event Tags
                     </a>
                 </li>
+                <li class="third-sub-menu-item">
+                    <a href="<?php echo base_url('events/settings'); ?>">
+                        <i class='bx bx-fw bx-cog'></i> Settings
+                    </a>
+                </li>
             </ul>
         </li>
         <li class="li-third-sub-menu">
             <a href="javascript:void(0);" class="third-sub-menu">
-                <i class='bx bx-fw bx-message-square-error'></i> Job Settings <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                <i class='bx bx-fw bx-message-square-error'></i> Job <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
             </a>
-            <ul class="mt-3">
-                <li class="third-sub-menu-item">
-                    <a href="<?php echo base_url('job/settings'); ?>">
-                        <i class='bx bx-fw bx-message-square-error'></i> Job Settings
-                    </a>
-                </li>
+            <ul class="mt-3">                        
                 <li class="third-sub-menu-item">
                     <a href="<?php echo base_url('job/job_tags'); ?>">
                         <i class='bx bx-purchase-tag'></i> Job Tags
                     </a>
                 </li>
+                <li class="third-sub-menu-item">
+                    <a href="<?php echo base_url('job/job_types'); ?>">
+                        <i class='bx bx-fw bx-list-ol'></i> Job Types
+                    </a>
+                </li>
+                <li class="third-sub-menu-item">
+                    <a href="<?php echo base_url('job/settings'); ?>">
+                        <i class='bx bx-fw bx-cog'></i> Settings
+                    </a>
+                </li>
             </ul>
         </li>
         <li class="li-third-sub-menu">
-            <a href="<?php echo base_url('estimate/settings'); ?>">
-                <i class='bx bx-fw bx-chart'></i> Estimate Settings
+            <a href="javascript:void(0);" class="third-sub-menu">
+                <i class='bx bx-fw bx-chart'></i> Estimates <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
             </a>
+            <ul class="mt-3">   
+                <li class="third-sub-menu-item">
+                    <a href="<?php echo base_url('plans'); ?>">
+                        <i class='bx bx-fw bx-list-ul'></i> Plans
+                    </a>
+                </li>
+                <li class="third-sub-menu-item">
+                    <a href="<?php echo base_url('estimate/settings'); ?>">
+                        <i class='bx bx-fw bx-cog'></i> Settings
+                    </a>
+                </li>
+            </ul>
         </li>
         <li class="li-third-sub-menu">
-            <a href="<?php echo base_url('tickets/settings'); ?>">
-                <i class='bx bx-fw bx-chart'></i> Service Tickets Settings
+            <a href="javascript:void(0);" class="third-sub-menu">
+                <i class='bx bx-fw bx-note'></i> Service Tickets <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
             </a>
+            <ul class="mt-3">   
+                <li class="third-sub-menu-item">
+                    <a href="<?php echo base_url('tickets/settings_panel_types'); ?>">
+                        <i class='bx bx-fw bx-server' ></i> Panel Types
+                    </a>
+                </li>
+                <li class="third-sub-menu-item">
+                    <a href="<?php echo base_url('tickets/settings'); ?>">
+                        <i class='bx bx-fw bx-cog'></i> Settings
+                    </a>
+                </li>
+            </ul>
         </li>
         <li class="li-third-sub-menu">
-            <a href="<?php echo base_url('workorder/settings'); ?>">
-                <i class='bx bx-fw bx-task'></i> Workorder Settings
+            <a href="javascript:void(0);" class="third-sub-menu">
+                <i class='bx bx-fw bx-task'></i> Workorders <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
             </a>
+            <ul class="mt-3">   
+                <li class="third-sub-menu-item">
+                    <a href="<?php echo base_url('workorder/checklists'); ?>">
+                        <i class='bx bx-fw bx-list-check'></i> Checklist
+                    </a>
+                </li>
+                <li class="third-sub-menu-item">
+                    <a href="<?php echo base_url('workorder/status'); ?>">
+                        <i class='bx bx-fw bx-list-ul'></i> Status
+                    </a>
+                </li>
+                <li class="third-sub-menu-item">
+                    <a href="<?php echo base_url('workorder/settings'); ?>">
+                        <i class='bx bx-fw bx-cog'></i> Settings
+                    </a>
+                </li>
+            </ul>
         </li>
         <li class="li-third-sub-menu">
-            <a href="<?php echo base_url('tickets/settings'); ?>">
-                <i class='bx bx-fw bx-task'></i> Service Tickets Settings
+            <a href="javascript:void(0);" class="third-sub-menu">
+                <i class='bx bx-fw bx-receipt'></i> Invoices <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
             </a>
-        </li>
-        <li class="li-third-sub-menu">
-            <a href="<?php echo base_url('invoice/settings'); ?>">
-                <i class='bx bx-fw bx-receipt'></i> Invoice Settings
-            </a>
+            <ul class="mt-3">   
+                <li class="third-sub-menu-item">
+                    <a href="<?php echo base_url('settings/tax_rates'); ?>">
+                        <i class='bx bx-fw bx-file'></i> Tax Rates
+                    </a>
+                </li>
+                <li class="third-sub-menu-item">
+                    <a href="<?php echo base_url('invoice/settings'); ?>">
+                        <i class='bx bx-fw bx-cog'></i> Settings
+                    </a>
+                </li>
+            </ul>
         </li>
         <li class="li-third-sub-menu">
             <a href="<?php echo base_url('more/addon/booking/settings'); ?>">
-                <i class='bx bx-desktop'></i> Booking Settings
+                <i class='bx bx-desktop'></i> Booking
             </a>
         </li>
         <li class="li-third-sub-menu">
             <a href="javascript:void(0);" class="third-sub-menu">
-                <i class='bx bx-fw bx-user'></i> Customer Settings <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                <i class='bx bx-fw bx-user'></i> Customers <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
             </a>
             <ul class="mt-3">
                 <li class="third-sub-menu-item">
@@ -740,12 +798,12 @@ echo 'active';
                 </li>
                 <li class="third-sub-menu-item">
                     <a href="<?php echo base_url('customer/settings_import'); ?>">
-                        <i class='bx bx-fw bx-cog'></i> Customer Import Settings
+                        <i class='bx bx-fw bx-cog'></i> Import
                     </a>
                 </li>
                 <li class="third-sub-menu-item">
                     <a href="<?php echo base_url('customer/settings_export'); ?>">
-                        <i class='bx bx-fw bx-cog'></i> Customer Export Settings
+                        <i class='bx bx-fw bx-cog'></i> Export
                     </a>
                 </li>
             </ul>
@@ -757,7 +815,7 @@ echo 'active';
             <ul class="mt-3">
                 <li class="third-sub-menu-item">
                     <a href="<?php echo base_url('users/profilesetting'); ?>">
-                        <i class='bx bx-fw bx-cog'></i> Profile Settings
+                        <i class='bx bx-fw bx-cog'></i> Profile
                     </a>
                 </li>
                 <li class="third-sub-menu-item">
@@ -771,12 +829,12 @@ echo 'active';
         <?php if ($cid == 1 && $role == 7): ?>
         <li class="li-third-sub-menu">
             <a href="<?php echo base_url('chatbot/settings'); ?>">
-                <i class='bx bx-bot'></i> Chatbot Settings
+                <i class='bx bx-bot'></i> Chatbot
             </a>
         </li>
         <li class="li-third-sub-menu">
             <a href="<?php echo base_url('adBanner/settings'); ?>">
-                <i class='bx bx-news' ></i> Ad Banner Settings
+                <i class='bx bx-news' ></i> Ad Banner
             </a>
         </li>
         <li class="li-third-sub-menu">
@@ -784,7 +842,7 @@ echo 'active';
                 <i class='bx bx-news' ></i> Video Binder
             </a>
         </li>
-         <?php endif; ?>
+        <?php endif; ?>
     </ul>
 </li>
 <li>
