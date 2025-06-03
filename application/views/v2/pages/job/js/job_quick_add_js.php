@@ -349,6 +349,29 @@ $(document).ready(function() {
         ITEMS_TABLE.search($(this).val()).draw()
     });
     ITEMS_TABLE_SETTINGS = ITEMS_TABLE.settings();
+
+    $(document).on('click', '.btn-use-other-address', function(){
+        let prof_id = $(this).attr('data-id');
+        let other_address = $(this).attr('data-address');
+        let link_customer_address = `<a class="btn-use-different-address nsm-link" data-id="${prof_id}" href="javascript:void(0);">${other_address}</a>`;
+
+        $('#other-address-customer').modal('hide');
+        $('#cust_address').html(link_customer_address);
+        $('#job-location').val(other_address);
+
+        let map_source = 'http://maps.google.com/maps?q='+other_address+'&output=embed';
+        let map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="300" width="100%" style=""></iframe>';
+        $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+
+        $('.btn-use-different-address').popover({
+            placement: 'top',
+            html : true, 
+            trigger: "hover focus",
+            content: function() {
+                return 'User other address';
+            } 
+        }); 
+    });
 });
     
 function load_customer_data($id){
@@ -371,9 +394,7 @@ function load_customer_data($id){
         if( response.mail_add != '' && response.mail_add != 'NA' ){
             address1 = response.mail_add;
         }
-        $('#cust_fullname').text(response.first_name + ' ' + response.last_name);
-        $('#cust_address').text(address1);
-        $('#cust_address2').text(response.city + ', ' + response.state + ' ' + response.zip_code);
+        $('#cust_fullname').text(response.first_name + ' ' + response.last_name);        
 
         ADDR_2 = response.city + ' ' + ' ' + response.state + ', ' + response.zip_code;
         ADDR_1 = address1;
@@ -383,6 +404,20 @@ function load_customer_data($id){
         }else{
             $('#cust_email').text('Email is not available.');
         }
+
+        var customer_address = ADDR_1 + ' ' + ADDR_2;
+        var link_customer_address = `<a class="btn-use-different-address nsm-link" data-id="${response.prof_id}" href="javascript:void(0);">${customer_address}</a>`;
+        $('#cust_address').text(address1);
+        $('#cust_address2').html(link_customer_address);
+
+        $('.btn-use-different-address').popover({
+            placement: 'top',
+            html : true, 
+            trigger: "hover focus",
+            content: function() {
+                return 'Use other address';
+            } 
+        });
 
         $("#customer_preview").attr("href", "/customer/preview/"+response.prof_id);
         $('#cust_number').text(phone_m);
