@@ -1345,7 +1345,7 @@ class Estimate extends MY_Controller
             show403Error();
             return false;
         }
-
+        
         $company_id = logged('company_id');
         $user_id    = logged('id');
         $role       = logged('role');
