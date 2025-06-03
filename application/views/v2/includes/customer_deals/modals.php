@@ -239,15 +239,21 @@
 </div>
 
 <div class="modal fade" id="modal-edit-deal" data-bs-backdrop="static" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Edit Customer Deal</span>
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+            </div>              
+            <div class="modal-body">
+                <form id="frm-update-deal">   
+                    <div id="edit-deal-form-container"></div>
+                </form>
+            </div>  
+            <div class="modal-footer">
+                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-update-customer-deal" form="frm-update-deal">Save</button>                
             </div>
-            <form id="frm-update-deal">     
-            <div class="modal-body" id="edit-deal-form-container"></div>
-            </form>
         </div>
     </div>
 </div>
@@ -382,6 +388,33 @@
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body" id="customer-deals-archive-container"></div>            
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-add-new-lost-reason" data-bs-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Add New Lost Reason</span>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="frm-add-new-lost-reason">                    
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="mb-2">Reason</label>
+                            <div class="input-group mb-3">
+                                <input type="text" name="lost_reason" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">                        
+                        <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="nsm-button primary" id="btn-save-lost-reason">Save</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
