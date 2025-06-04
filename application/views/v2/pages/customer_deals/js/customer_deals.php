@@ -31,12 +31,25 @@ $(function(){
         location.href = base_url + 'customer_deals/forecast'
     });
 
+    $('#btn-stage-view').on('click', function(){
+        location.href = base_url + 'customer_deals'
+    });
+
     $('#btn-stage-view').popover({
         placement: 'top',
         html : true, 
         trigger: "hover focus",
         content: function() {
             return 'Stages';
+        } 
+    });
+
+    $('#btn-list-view').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'List';
         } 
     });
 
@@ -1055,6 +1068,8 @@ $(function(){
         let activity_id = $(this).attr('data-id');
         let obj = $(this);
 
+        $('.opt-is-done').popover('hide');
+
         if( $(this).prop('checked') ){
             obj.parent().parent().parent().fadeOut(500, function() {
                 $(this).remove();
@@ -1065,7 +1080,7 @@ $(function(){
                     dataType:'json',
                     success: function(data) {    
                         if( data.is_success ){           
-                            
+                            $(this).find('.activity-card').remove();   
                         }
                     },
                     beforeSend: function() {
@@ -1076,7 +1091,7 @@ $(function(){
         }
     });
 
-    $(document).on('click', '.activity-card', function(){
+    $(document).on('click', '.activity-info', function(){
         let activity_id = $(this).attr('data-id');
         let activity_type = $(this).attr('data-type');
 

@@ -23,6 +23,7 @@
                     <div class="col-4 grid-mb">
                         <div class="btn-group view-style-container" role="group" aria-label="Button group with nested dropdown">
                             <button type="button" id="btn-stage-view" class="btn btn-secondary btn-lg btn-active"><i class='bx bx-bar-chart-alt-2 bx-rotate-45'></i></button>
+                            <!-- <button type="button" id="btn-list-view" class="btn btn-secondary btn-lg"><i class='bx bx-list-ul'></i></button> -->
                             <button type="button" id="btn-forecast-view" class="btn btn-secondary btn-lg"><i class='bx bx-dollar-circle'></i></button>
                             <button type="button" id="btn-archive" class="btn btn-secondary btn-lg"><i class='bx bx-box'></i></button>
                         </div>
