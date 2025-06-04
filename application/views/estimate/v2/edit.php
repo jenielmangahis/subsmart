@@ -352,82 +352,108 @@ echo put_header_assets();
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <label for="customers" class="required"><b>Customer</b></label>
-                                    <div id="sel-customerdiv">
-                                        <select name="customer_id" id="sel-customer" class="form-control" required>
-                                            <option value="0">Select a customer</option>
-                                            <?php foreach ($customers as $customer) : ?>
-                                                <option <?php if (isset($estimate)) {
-                                                            if ($estimate->customer_id == $customer->prof_id) {
-                                                                echo "selected";
-                                                            }
-                                                        } ?> value="<?php echo $customer->prof_id; ?>"><?php echo $customer->contact_name . '' . $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
-                                                        } ?> value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . " " . $customer->last_name; ?> </option>
-                                            <?php endforeach; ?>
-                                        </select>
+                                <div class="col-md-5">
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="customers" class="required"><b>Customer</b></label>
+                                            <div class="d-flex" style="float: right;">
+                                                <a class="nsm-link d-flex align-items-center btn-quick-add-customer"
+                                                    style="margin-left:5px;" href="javascript:void(0);">
+                                                    <span class="bx bx-plus"></span>New Customer
+                                                </a>
+                                            </div>
+                                            <div id="sel-customerdiv">
+                                                <select name="customer_id" id="sel-customer" class="form-control" required>
+                                                    <option value="0">Select a customer</option>
+                                                    <?php foreach ($customers as $customer) : ?>
+                                                        <option <?php if (isset($estimate)) {
+                                                                    if ($estimate->customer_id == $customer->prof_id) {
+                                                                        echo "selected";
+                                                                    }
+                                                                } ?> value="<?php echo $customer->prof_id; ?>"><?php echo $customer->contact_name . '' . $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
+                                                                } ?> value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . " " . $customer->last_name; ?> </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- 
+                                        <div class="col-md-6">
+                                            <br><br><a class="link-modal-open nsm-button small btn-quick-add-customer" href="javascript:void(0)"><i class='bx bx-plus-medical'></i> New Customer</a>
+                                        </div>
+                                        -->
                                     </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <br><br><a class="link-modal-open nsm-button small btn-quick-add-customer" href="javascript:void(0)"><i class='bx bx-plus-medical'></i> New Customer</a>
-                                </div>
-                            </div>
 
-                            <?php
-                                $selectedCustomer = null;
-                                foreach ($customers as $customer) {
-                                    if ($customer->prof_id == $estimate->customer_id) {
-                                        $selectedCustomer = $customer;
-                                        break;
-                                    }
-                                }
-                            ?>
-
-                            <div class="row mb-3">
-                                <div class="col-md-3">
-                                    <label for="job_name"><b>Customer Email</b></label>
-                                    <input id="estimate-customer-email" type="text" class="form-control" name="customer_email" value="<?= !is_null($selectedCustomer) ? $estimate->customer->email : ''; ?>" />
-                                </div>
-
-                                <div class="col-md-3">
-                                    <label for="job_name"><b>Customer Mobile</b></label>
-                                    <input id="estimate-customer-mobile" type="text" class="form-control phone_number" name="customer_mobile" maxlength="12" placeholder="xxx-xxx-xxxx" value="<?= !is_null($selectedCustomer) ? $estimate->customer->phone_m : ''; ?>" />
-                                </div>
-                            </div>
-                            
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="job_location"><b>Job Location</b> </label><a class="btn-use-different-address" data-id="<?php echo $cust->prof_id; ?>" href="javascript:void(0);" style="float: right;">Use Other Address</a>
-                                    <!-- <input
-                                        id="autocomplete"
-                                        placeholder="Enter Location"
-                                        type="text"
-                                        class="form-control"
-                                        autocomplete="on" runat="server"
-                                    /> -->
-                                    <!-- <input type="text" class="form-control" name="job_location" id="job_location" /> -->
-                                    <?php 
-                                        $job_location = "";
-                                        if($estimate->job_location != null && $estimate->job_location != '') {
-                                            $job_location = $estimate->job_location;
-                                        } else {
-                                            $job_location = $cust->mail_add . ' ' . $cust->city . ', ' . $cust->state . ' ' . $cust->zip_code;
+                                    <?php
+                                        $selectedCustomer = null;
+                                        foreach ($customers as $customer) {
+                                            if ($customer->prof_id == $estimate->customer_id) {
+                                                $selectedCustomer = $customer;
+                                                break;
+                                            }
                                         }
                                     ?>
-                                    <input type="text" class="form-control" name="job_location" id="job_location" value="<?php echo $job_location; ?>" />
 
-                                    <!-- <input type="hidden" id="city2" name="city2" />
-                                    <input type="hidden" id="cityLat" name="cityLat" />
-                                    <input type="hidden" id="cityLng" name="cityLng" /> -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="job_name"><b>Customer Email</b></label>
+                                            <input id="estimate-customer-email" type="text" class="form-control" name="customer_email" value="<?= !is_null($selectedCustomer) ? $estimate->customer->email : ''; ?>" />
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="job_name"><b>Customer Mobile</b></label>
+                                            <input id="estimate-customer-mobile" type="text" class="form-control phone_number" name="customer_mobile" maxlength="12" placeholder="xxx-xxx-xxxx" value="<?= !is_null($selectedCustomer) ? $estimate->customer->phone_m : ''; ?>" />
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="job_location"><b>Job Location</b> </label><a class="btn-use-different-address" data-id="<?php echo $cust->prof_id; ?>" href="javascript:void(0);" style="float: right;">Use Other Address</a>
+                                            <!-- <input
+                                                id="autocomplete"
+                                                placeholder="Enter Location"
+                                                type="text"
+                                                class="form-control"
+                                                autocomplete="on" runat="server"
+                                            /> -->
+                                            <!-- <input type="text" class="form-control" name="job_location" id="job_location" /> -->
+                                            <?php 
+                                                $job_location = "";
+                                                if($estimate->job_location != null && $estimate->job_location != '') {
+                                                    $job_location = $estimate->job_location;
+                                                } else {
+                                                    $job_location = $cust->mail_add . ' ' . $cust->city . ', ' . $cust->state . ' ' . $cust->zip_code;
+                                                }
+                                            ?>
+                                            <input type="text" class="form-control" name="job_location" id="job_location" value="<?php echo $job_location; ?>" />
+
+                                            <!-- <input type="hidden" id="city2" name="city2" />
+                                            <input type="hidden" id="cityLat" name="cityLat" />
+                                            <input type="hidden" id="cityLng" name="cityLng" /> -->
+                                        </div>
+                                        <!-- <div class="col-md-3">
+                                            <br><br><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Location Address</a> 
+                                        </div> -->
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="job_name"><b>Job Name</b> (optional)</label>
+                                            <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" value="<?php echo $estimate->job_name; ?>" />
+                                        </div>
+                                    </div>                                
+
                                 </div>
-                                <div class="col-md-3">
-                                    <!-- <br><br><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Location Address</a> -->
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="job_name"><b>Job Name</b> (optional)</label>
-                                    <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" value="<?php echo $estimate->job_name; ?>" />
+                                <div class="col-md-7">
+
+                                    <div class="col-md-12 MAP_LOADER_CONTAINER">
+                                        <div class="text-center MAP_LOADER">
+                                            <iframe id="TEMPORARY_MAP_VIEW"
+                                                src="http://maps.google.com/maps?output=embed" height="370" width="100%"
+                                                style=""></iframe>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                             <hr>
@@ -546,8 +572,8 @@ echo put_header_assets();
                                                 <th width="150px">Quantity</th>
                                                 <!-- <th>Location</th> -->
                                                 <th width="150px">Price</th>
-                                                <th  width="150px">Discount</th>
-                                                <th  width="150px">Tax (Change in %)</th>
+                                                <th width="150px">Discount</th>
+                                                <th width="150px">Tax (Change in %)</th>
                                                 <th >Total</th>
                                                 <th ></th>
                                             </tr>
@@ -597,7 +623,7 @@ echo put_header_assets();
                                                         $total_row_price = ($total_item_price + $tax) - $data->discount;
                                                         ?>
                                                         <input type="hidden" class="form-control " name="total[]" data-counter="<?php echo $count; ?>" id="item_total_<?php echo $count; ?>" min="0" value="<?php echo $total_row_price; ?>">
-                                                        <span id="span_total_<?php echo $count; ?>"><?php echo $total_row_price; ?></span>
+                                                        $<span id="span_total_<?php echo $count; ?>"><?php echo $total_row_price; ?></span>
                                                     </td>
                                                     <td><a href="javascript:void(0);" class="remove nsm-button danger"><i class="bx bx-fw bx-trash" aria-hidden="true"></i></a></td>
                                                 </tr>
@@ -645,14 +671,14 @@ echo put_header_assets();
                                         <tr>
                                             <td>Subtotal</td>
                                             <!-- <td></td> -->
-                                            <td colspan="2" align="right">$ <span id="span_sub_total_invoice"><?php echo $estimate->sub_total; ?></span>
+                                            <td colspan="2" align="right">$<span id="span_sub_total_invoice"><?php echo $estimate->sub_total; ?></span>
                                                 <input type="hidden" name="subtotal" id="item_total" value="<?php echo $estimate->sub_total; ?>">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
                                             <!-- <td></td> -->
-                                            <td colspan="2" align="right">$ <span id="total_tax_"><?php echo $estimate->tax1_total; ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $estimate->tax1_total; ?>"></td>
+                                            <td colspan="2" align="right">$<span id="total_tax_"><?php echo $estimate->tax1_total; ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $estimate->tax1_total; ?>"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -722,7 +748,7 @@ echo put_header_assets();
                                         <tr style="color:blue;font-weight:bold;font-size:16px;">
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
-                                            <td><b>$ <span id="grand_total"><?php echo $estimate_grand_total; ?></span>
+                                            <td style="text-align: right;"><b>$<span id="grand_total"><?php echo $estimate_grand_total; ?></span>
                                             <input type="hidden" name="grand_total" id="grand_total_input" value="<?php echo $estimate->grand_total; ?>"></b></td>
                                         </tr>
                                     </table>
@@ -797,7 +823,6 @@ echo put_header_assets();
                                 </div>
 
                             </div>
-
 
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-4">
@@ -1107,6 +1132,66 @@ echo put_header_assets();
     //     alert('yeah');
     //     })
     //   })
+
+    function load_customer_data(customer_id) {
+        $.ajax({
+            type: "POST",
+            url: base_url + 'customer/_get_customer_data',
+            data: {
+                customer_id: customer_id
+            },
+            dataType: 'json',
+            beforeSend: function(response) {
+
+            },
+            success: function(response) {
+                setTimeout(function() {
+                    var customer_business_name = response.business_name;
+                    var customer_name = response.first_name + ' ' + response.last_name;
+                    var customer_email = response.email;
+                    var customer_phone = response.phone_h;
+                    var customer_mobile = response.phone_m;
+                    var customer_address = response.mail_add + ', ' + response.city + ', ' +
+                        ' ' + response.state + ' ' + response.zip_code;
+
+                    if (customer_business_name == '') {
+                        customer_business_name = 'Not Specified';
+                    }
+
+                    if (customer_email == '') {
+                        customer_email = 'Not Specified';
+                    }
+
+                    if (customer_phone == '') {
+                        customer_phone = 'Not Specified';
+                    }
+
+                    if (customer_mobile == '') {
+                        customer_mobile = 'Not Specified';
+                    }
+
+                    if(response.prof_id) {
+                        $(".btn-use-different-address").attr("data-id",response.prof_id);
+                    }
+
+                    $("#estimate-customer-email").val(customer_email);
+                    $("#estimate-customer-mobile").val(customer_mobile);
+                    $("#job_location").val(customer_address);
+                    $('#business_name').val(customer_business_name);
+
+                    var map_source = 'http://maps.google.com/maps?q=' + customer_address +
+                        '&output=embed';
+                    var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
+                        '" height="370" width="100%" style=""></iframe>';
+                    $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+                }, 200);
+            },
+            error: function(e) {
+
+            }
+        });
+    }        
+
     $(document).ready(function() {
         $('#help-popover-adjustment').popover({
             placement: 'top',
@@ -1352,6 +1437,10 @@ echo put_header_assets();
             tableBody.append(markup);
             calculation(count);
         });
+
+        <?php if ($estimate->customer_id > 0) { ?>
+            load_customer_data("<?php echo $estimate->customer_id; ?>");
+        <?php } ?> 
     });
 </script>
 
@@ -1411,7 +1500,7 @@ echo put_header_assets();
 <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script> -->
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
 <script>
-    function initialize() {
+    /*function initialize() {
         var input = document.getElementById('job_location');
         var autocomplete = new google.maps.places.Autocomplete(input);
         google.maps.event.addListener(autocomplete, 'place_changed', function() {
@@ -1421,7 +1510,7 @@ echo put_header_assets();
             document.getElementById('cityLng').value = place.geometry.location.lng();
         });
     }
-    google.maps.event.addDomListener(window, 'load', initialize);
+    google.maps.event.addDomListener(window, 'load', initialize);*/
 </script>
 
 <script>
@@ -1442,8 +1531,6 @@ echo put_header_assets();
 
         $('#sel-customer').change(function() {
             var id = $(this).val();
-            //alert(id);
-
             $.ajax({
                 type: 'POST',
                 url: "<?php echo base_url(); ?>/accounting/addLocationajax",
@@ -1460,6 +1547,7 @@ echo put_header_assets();
 
                     if(response.customer.prof_id) {
                         $(".btn-use-different-address").attr("data-id",response.customer.prof_id);
+                        load_customer_data(response.customer.prof_id); 
                     }
 
                     if (response.customer.phone_m) {
@@ -1467,6 +1555,8 @@ echo put_header_assets();
                     }else{
                         $("#estimate-customer-mobile").val('');
                     }
+
+                                       
                 },
                 error: function(response) {
                     alert('Error' + response);
