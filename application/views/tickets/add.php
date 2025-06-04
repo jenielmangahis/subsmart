@@ -1577,22 +1577,19 @@ $(document).ready(function(){
         var id  = $(this).val();
         $.ajax({
             type: 'POST',
-            url:"<?php echo base_url(); ?>accounting/addLocationajax",
+            url: base_url + "ticket/_get_customer_basic_information",
             data: {id : id },
             dataType: 'json',
             success: function(response){            
-                var phone = response['customer'].phone_h;
-                var mobile = response['customer'].phone_m;
-                var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
-                var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
-            
-                var service_location = response['customer'].    l_add + ' ' + response['customer'].city + ', ' + response['customer'].state + ' ' + response['customer'].zip_code;
+                var phone = response.phone_h;
+                var mobile = response.phone_m;
+                var service_location = response.mail_add + ' ' + response.city + ', ' + response.state + ' ' + response.zip_code;
                 $("#service_location").val(service_location);
-                $("#customer_city").val(response['customer'].city);
-                $("#customer_state").val(response['customer'].state);
-                $("#customer_zip").val(response['customer'].zip_code);
-                $("#customer_phone").val(response['customer'].phone_m);
-                $("#business_name").val(response['customer'].business_name);
+                $("#customer_city").val(response.city);
+                $("#customer_state").val(response.state);
+                $("#customer_zip").val(response.zip_code);
+                $("#customer_phone").val(response.phone_m);
+                $("#business_name").val(response.business_name);
 
                 var map_source = 'http://maps.google.com/maps?q=' + service_location +
                             '&output=embed';

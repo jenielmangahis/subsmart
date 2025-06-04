@@ -1300,9 +1300,50 @@ $(document).ready(function(){
 
     $('#employee_id').select2({});
     
-    $('#sel-customer_t').select2({     
-        minimumInputLength: 0        
+    $('#sel-customer_t').select2({         
+        ajax: {
+            url: base_url + 'autocomplete/_company_customer',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+                return {
+                    results: data,
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Select Customer',        
+        minimumInputLength: 0,
+        templateResult: formatRepoCustomer,
+        templateSelection: formatRepoCustomerSelection
     });
+
+    function formatRepoCustomer(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var $container = $(
+            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.address + ' / ' + repo.email + '</small></div>'
+        );
+
+        return $container;
+    }
+
+    function formatRepoCustomerSelection(repo) {
+        if (repo.first_name != null) {
+            return repo.first_name + ' ' + repo.last_name;
+        } else {
+            return repo.text;
+        }
+    }
 
     $('#btn-quick-add-plan-type').on('click', function(){
         $('#plan-type-name').val('');
@@ -1467,48 +1508,33 @@ $(document).ready(function(){
         var id  = $(this).val();
         $.ajax({
             type: 'POST',
-            url:"<?php echo base_url(); ?>accounting/addLocationajax",
+            url: base_url + "ticket/_get_customer_basic_information",
             data: {id : id },
             dataType: 'json',
             success: function(response){            
-                var phone = response['customer'].phone_h;
-                var mobile = response['customer'].phone_m;
-                var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
-                var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+                var phone = response.phone_h;
+                var mobile = response.phone_m;
             
-            var service_location = response['customer'].mail_add + ' ' + response['customer'].city + ', ' + response['customer'].state + ' ' + response['customer'].zip_code;
-            $("#service_location").val(service_location);
-            $("#customer_city").val(response['customer'].city);
-            $("#customer_state").val(response['customer'].state);
-            $("#customer_zip").val(response['customer'].zip_code);
-            $("#customer_phone").val(response['customer'].phone_m);
-            $("#business_name").val(response['customer'].business_name);
+                var service_location = response.mail_add + ' ' + response.city + ', ' + response.state + ' ' + response.zip_code;
+                $("#service_location").val(service_location);
+                $("#customer_city").val(response.city);
+                $("#customer_state").val(response.state);
+                $("#customer_zip").val(response.zip_code);
+                $("#customer_phone").val(response.phone_m);
+                $("#business_name").val(response.business_name);
 
-            var map_source = 'http://maps.google.com/maps?q=' + service_location +
-                        '&output=embed';
-            var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
-                '" height="370" width="100%" style=""></iframe>';
-            $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
-            
-            //  $("#email").val(response['customer'].email);
-            //  $("#date_of_birth").val(response['customer'].date_of_birth);
-            //  $("#phone_no").val(test_p);
-            //  $("#mobile_no").val(test_m);
-            //  $("#city").val(response['customer'].city);
-            //  $("#state").val(response['customer'].state);
-            //  $("#zip").val(response['customer'].zip_code);
-            //  $("#cross_street").val(response['customer'].cross_street);
-            //  $("#acs_fullname").val(response['customer'].first_name +' '+ response['customer'].last_name);
+                var map_source = 'http://maps.google.com/maps?q=' + service_location +
+                            '&output=embed';
+                var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
+                    '" height="370" width="100%" style=""></iframe>';
+                $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
 
-            //  $("#job_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
-
-            //  $("#primary_account_holder_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+                $('#btn-use-different-address').attr('data-id', id);
         
             },
-                error: function(response){
-                //alert('Error'+response);
+            error: function(response){            
         
-                }
+            }
         });
     });
 
