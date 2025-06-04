@@ -3136,6 +3136,38 @@ class Debug extends MY_Controller {
 
         echo 'Total updated ' . $total_updated;
     }
+
+    public function testGenerateW9()
+    {
+        //echo 'This is test generate w9 pdf file <hr />';
+
+        require_once(APPPATH . 'libraries/tcpdf/tcpdf.php');
+        require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
+
+        $generatedPDF = '/uploads/irsw9/fw9.pdf';
+
+        if ($generatedPDF) {
+            $generatedPDFPath = FCPATH . ltrim($generatedPDF, '/');
+            if (file_exists($generatedPDFPath)) {
+                //echo 'File exist.';
+                $pdf = new FPDI('P', 'px');
+                $pageCount = $pdf->setSourceFile($generatedPDFPath);
+
+                for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                    $pageIndex = $pdf->importPage($pageNo);
+                    $pdf->AddPage();
+                    $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
+                }
+            } else {
+                echo 'File does not exist.';
+            }
+        }
+
+        // Display in browser
+        return $pdf->Output('I');
+        //return $pdf->Output(null, 'S');        
+        
+    }
 }
 /* End of file Debug.php */
 
