@@ -2127,6 +2127,7 @@ $route['client_hub/(:any)?'] = 'ClientHub/index/$1';
 
 //Debug
 $route['debug/ringcentralSmsV2'] = 'Debug/ringcentralSmsV2';
+$route['debug/testGenerateW9'] = 'Debug/testGenerateW9';
 
 //Settings : Customer Advance Form
 $route['customer/form_settings'] = 'Customer/customer_advance_form_settings';
