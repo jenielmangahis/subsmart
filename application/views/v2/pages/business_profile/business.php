@@ -99,6 +99,12 @@
         color: #888;
         margin-right: 8px;
     }
+
+    .w9pdf-filepath {
+        font-weight: 700;
+        font-size: 17px;
+        color: #545454;
+    }
 </style>
 
 <div class="row page-content g-0">
@@ -599,13 +605,16 @@
                                     </div>
                                     <div class="col-12 col-md-6 text-end">
                                         <?php
-                                        $schedules = unserialize($profiledata->working_days);
-                                        $days = [];
-                                        foreach ($schedules as $s) {
-                                            $days[] = date('D', strtotime($s['day']));
-                                        }
+                                            $days = [];
+                                            if(isset($profiledata->working_days)) {
+                                                $schedules = unserialize($profiledata->working_days);
+                                                $days = [];
+                                                foreach ($schedules as $s) {
+                                                    $days[] = date('D', strtotime($s['day']));
+                                                }
+                                            }
                                         ?>
-                                        <label class="content-subtitle d-block"><?= implode(' - ', $days) ?></label>
+                                        <label class="content-subtitle d-block"><?= count($days) ? implode(' - ', $days) : '---'; ?></label>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <label class="content-subtitle fw-bold">Time Off</label>
@@ -624,6 +633,16 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="nsm-card primary mt-4">
+                            <?php 
+                                $w9pdf_filepath = base_url('uploads/irsw9/fw9.pdf');
+                            ?>
+                            <a target="_blank" href="<?= $w9pdf_filepath; ?>" class="">
+                                <div class="shortcuts__text" style="">
+                                    <div class="w9pdf-filepath">Download W-9 Form</div>
+                                </div>
+                            </a>
                         </div>
                         <?php if(checkRoleCanAccessModule('company-link-accounts', 'read')){ ?>    
                         <div class="nsm-card primary mt-4">
