@@ -3160,16 +3160,18 @@ class Users extends MY_Controller
 					
 				}
 
-				foreach( $post['roleWidgets'] as $widget_id ){
-					$data = [
-						'company_id' => $cid,
-						'role_id' => $post['role'],
-						'widget_id' => $widget_id,
-						'date_created' => date("Y-m-d H:i:s"),
-					];
+				if( isset($post['roleWidgets']) ){
+					foreach( $post['roleWidgets'] as $widget_id ){
+						$data = [
+							'company_id' => $cid,
+							'role_id' => $post['role'],
+							'widget_id' => $widget_id,
+							'date_created' => date("Y-m-d H:i:s"),
+						];
 
-					$this->CompanyRoleAccessWidget_model->create($data);
-				}
+						$this->CompanyRoleAccessWidget_model->create($data);
+					}
+				}				
 
 				$is_success = 1;
 				$msg = '';
@@ -3204,6 +3206,11 @@ class Users extends MY_Controller
         ];
 
         echo json_encode($json_data);
+	}
+
+	public function download_company_w9_form()
+	{
+		echo 4;exit;
 	}
 }
 /* End of file Users.php */
