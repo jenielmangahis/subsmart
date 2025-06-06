@@ -12747,6 +12747,7 @@ class Customer extends MY_Controller
         $customer = $this->AcsProfile_model->getByProfId($post['prof_id']);
 
         $primary_address = [
+            'prof_id' => $customer->prof_id,
             'mail_add' => $customer->mail_add,
             'city' => $customer->city,
             'state' => $customer->state,

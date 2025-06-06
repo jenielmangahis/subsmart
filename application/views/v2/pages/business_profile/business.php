@@ -131,6 +131,9 @@
                                                 data-bs-target="#edit_basic_info_modal">
                                                 <i class='bx bx-fw bx-edit'></i> Edit
                                             </button>
+                                            <button type="button" class="nsm-button btn-sm primary" id="btn-w9-form">
+                                                <i class='bx bx-fw bxs-file-pdf'></i> W-9 Form
+                                            </button>
                                         </div>
                                         <?php } ?>
                                     </div>
@@ -634,16 +637,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="nsm-card primary mt-4">
-                            <?php 
-                                $w9pdf_filepath = base_url('uploads/irsw9/fw9.pdf');
-                            ?>
-                            <a target="_blank" href="<?= $w9pdf_filepath; ?>" class="">
-                                <div class="shortcuts__text" style="">
-                                    <div class="w9pdf-filepath">Download W-9 Form</div>
-                                </div>
-                            </a>
-                        </div>
                         <?php if(checkRoleCanAccessModule('company-link-accounts', 'read')){ ?>    
                         <div class="nsm-card primary mt-4">
                             <div class="nsm-card-header">
@@ -735,6 +728,11 @@
 
         let triggerChange = false
 
+        $('#btn-w9-form').on('click', function(){
+            //let url = base_url + 'uploads/irsw9/fw9.pdf';
+            let url = base_url + 'company/download_w9_form';
+            window.open(url, '_blank').focus();
+        });
 
         $('#image-input').on('change', function(e) {
             e.preventDefault();

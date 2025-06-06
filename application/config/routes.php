@@ -1232,6 +1232,7 @@ $route['user/_get_employee_commission_status'] = 'Users/ajax_get_employee_commis
 $route['user/_delete_employee_commission'] = 'Users/ajax_delete_employee_commission';
 $route['user/_update_employee_commission'] = 'Users/ajax_update_employee_commission';
 $route['user/_create_employee'] = 'Users/addNewEmployeeV2';
+$route['company/download_w9_form']  = 'Users/download_company_w9_form';
 
 // Payscale
 $route['payscale/_get_details'] = 'Users/ajax_payscale_get_details';
