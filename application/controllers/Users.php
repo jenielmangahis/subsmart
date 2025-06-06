@@ -3208,10 +3208,98 @@ class Users extends MY_Controller
         echo json_encode($json_data);
 	}
 
+    private function getGeneratedPDFUploadPath()
+    {
+        $filePath = FCPATH . (implode(DIRECTORY_SEPARATOR, ['uploads', 'irsw9']) . DIRECTORY_SEPARATOR);
+        if (!file_exists($filePath)) {
+            mkdir($filePath, 0777, true);
+        }
+
+        return $filePath;
+    } 	
+
 	public function download_company_w9_form()
 	{
-		echo 4;exit;
+        error_reporting(0);
+
+        require_once(APPPATH . 'libraries/tcpdf/tcpdf.php');
+        require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
+        
+        $generatedPDF = '/uploads/irsw9/fw9_v1.4.pdf';
+
+        $business_name1   = "---";
+        $business_name2   = "---";
+        $business_address = "---";
+        $city_state_zip   = "---";
+
+        $this->db->select('*');
+        $this->db->where('company_id', logged('company_id'));
+        $business_profile = $this->db->get('business_profile')->row();
+
+        if($business_profile){        
+            $business_name1 = $business_profile->business_name;
+            $business_name2 = $business_profile->business_name;
+            $business_address = $business_profile->street;
+            $city_state_zip = $business_profile->city . ", " . $business_profile->state . " " . $business_profile->postal_code;
+        }
+
+        if ($generatedPDF) {
+            $generatedPDFPath = FCPATH . ltrim($generatedPDF, '/');
+
+            $pageCount        = 0; 
+            if (file_exists($generatedPDFPath)) {                
+                $pdf       = new FPDI('P', 'px');
+                $pageCount = $pdf->setSourceFile($generatedPDFPath);
+                
+                for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                    $pageIndex = $pdf->importPage($pageNo);
+                    $pdf->AddPage();
+                    $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
+
+                
+                    $pdf->setY(115);
+                    $pdf->setX(100);
+                    $pdf->SetFont('Arial', '', 10);
+                    $pdf->SetFillColor(249,249,249);
+                    $pdf->Cell(300, 10, $business_name1, 0, 0, 'L', 0);   
+
+                    
+                    $pdf->setY(142);
+                    $pdf->setX(100);
+                    $pdf->SetFont('Arial', '', 10);
+                    $pdf->SetFillColor(249,249,249);
+                    $pdf->Cell(300, 10, $business_name2, 0, 0, 'L', 0); 
+
+
+                    $pdf->setY(285);
+                    $pdf->setX(100);
+                    $pdf->SetFont('Arial', '', 10);
+                    $pdf->SetFillColor(249,249,249);
+                    $pdf->Cell(300, 10, $business_address, 0, 0, 'L', 0); 
+
+                    
+                    $pdf->setY(310);
+                    $pdf->setX(100);
+                    $pdf->SetFont('Arial', '', 10);
+                    $pdf->SetFillColor(249,249,249);
+                    $pdf->Cell(300, 10, $city_state_zip, 0, 0, 'L', 0); 
+                                     
+                }
+
+                $uploadPath = $this->getGeneratedPDFUploadPath();
+
+                $uploadFilePath = $uploadPath . 'generatedfW9.pdf';
+
+                //Display in browser
+                $pdf->Output('I');
+
+                //$pdf->Output($uploadFilePath, 'F');
+            }
+        }   
+        
+        return $pdf->Output(null, 'S');
 	}
+
 }
 /* End of file Users.php */
 /* Location: ./application/controllers/Users.php */

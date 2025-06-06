@@ -3139,35 +3139,97 @@ class Debug extends MY_Controller {
 
     public function testGenerateW9()
     {
-        //echo 'This is test generate w9 pdf file <hr />';
+        error_reporting(0);
 
         require_once(APPPATH . 'libraries/tcpdf/tcpdf.php');
         require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
+        
+        $generatedPDF = '/uploads/irsw9/fw9_v1.4.pdf';
+        //$generatedPDF = '/uploads/irsw9/fw9.pdf';
+        //$generatedPDF = '/uploads/irsw9/samplePDFforTesting.pdf';
+        $business_name1   = "---";
+        $business_name2   = "---";
+        $business_address = "---";
+        $city_state_zip   = "---";
 
-        $generatedPDF = '/uploads/irsw9/fw9.pdf';
+        $this->db->select('*');
+        $this->db->where('company_id', logged('company_id'));
+        $business_profile = $this->db->get('business_profile')->row();
+
+        if($business_profile){        
+            $business_name1 = $business_profile->business_name;
+            $business_name2 = $business_profile->business_name;
+            $business_address = $business_profile->street;
+            $city_state_zip = $business_profile->city . ", " . $business_profile->state . " " . $business_profile->postal_code;
+        }
 
         if ($generatedPDF) {
             $generatedPDFPath = FCPATH . ltrim($generatedPDF, '/');
-            if (file_exists($generatedPDFPath)) {
-                //echo 'File exist.';
-                $pdf = new FPDI('P', 'px');
-                $pageCount = $pdf->setSourceFile($generatedPDFPath);
 
+            $pageCount        = 0; 
+            if (file_exists($generatedPDFPath)) {
+                
+                $pdf       = new FPDI('P', 'px');
+                $pageCount = $pdf->setSourceFile($generatedPDFPath);
+                
                 for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
                     $pageIndex = $pdf->importPage($pageNo);
                     $pdf->AddPage();
                     $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
+
+                
+                    $pdf->setY(115);
+                    $pdf->setX(100);
+                    $pdf->SetFont('Arial', '', 10);
+                    $pdf->SetFillColor(249,249,249);
+                    $pdf->Cell(300, 10, $business_name1, 0, 0, 'L', 0);   
+
+                    
+                    $pdf->setY(142);
+                    $pdf->setX(100);
+                    $pdf->SetFont('Arial', '', 10);
+                    $pdf->SetFillColor(249,249,249);
+                    $pdf->Cell(300, 10, $business_name2, 0, 0, 'L', 0); 
+
+
+                    $pdf->setY(285);
+                    $pdf->setX(100);
+                    $pdf->SetFont('Arial', '', 10);
+                    $pdf->SetFillColor(249,249,249);
+                    $pdf->Cell(300, 10, $business_address, 0, 0, 'L', 0); 
+
+                    
+                    $pdf->setY(310);
+                    $pdf->setX(100);
+                    $pdf->SetFont('Arial', '', 10);
+                    $pdf->SetFillColor(249,249,249);
+                    $pdf->Cell(300, 10, $city_state_zip, 0, 0, 'L', 0); 
+                                     
                 }
-            } else {
-                echo 'File does not exist.';
+
+                $uploadPath = $this->getGeneratedPDFUploadPath();
+
+                $uploadFilePath = $uploadPath . 'generatedfW9.pdf';
+
+                //Display in browser
+                $pdf->Output('I');
+
+                //$pdf->Output($uploadFilePath, 'F');
             }
+        }   
+        
+        return $pdf->Output(null, 'S');
+    }
+
+    private function getGeneratedPDFUploadPath()
+    {
+        $filePath = FCPATH . (implode(DIRECTORY_SEPARATOR, ['uploads', 'irsw9']) . DIRECTORY_SEPARATOR);
+        if (!file_exists($filePath)) {
+            mkdir($filePath, 0777, true);
         }
 
-        // Display in browser
-        return $pdf->Output('I');
-        //return $pdf->Output(null, 'S');        
-        
-    }
+        return $filePath;
+    }    
 }
 /* End of file Debug.php */
 
