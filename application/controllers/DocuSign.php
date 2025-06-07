@@ -474,6 +474,42 @@ class DocuSign extends MYF_Controller
 
         $autoPopulateData['client'] = $filteredClient;
 
+        if( $document->ticket_id > 0 ){
+            $this->db->where('id', $document->ticket_id);
+            $service_ticket = $this->db->get('tickets')->row();
+            $filteredJobService = [
+                'job_number' => '',
+                'job_service_ticket_number' => $service_ticket->ticket_no,
+                'job_service_mail_add' => $service_ticket->service_location,
+                'job_service_city' => $service_ticket->acs_city,
+                'job_service_state' => $service_ticket->acs_state,
+                'job_service_zip' => $service_ticket->acs_zip,
+            ];
+        }elseif( $document->job_id > 0 ){
+            $this->db->where('id', $document->job_id);
+            $jobs_data = $this->db->get('jobs')->row();
+            $filteredJobService = [
+                'job_number' => $jobs_data->job_number,
+                'job_service_ticket_number' => '',
+                'job_service_mail_add' => $jobs_data->job_address,
+                'job_service_city' => $jobs_data->job_city,
+                'job_service_state' => $jobs_data->job_state,
+                'job_service_zip' => $jobs_data->job_zip,
+            ];
+        }else{
+            $filteredJobService = [
+                'job_number' => '',
+                'job_service_ticket_number' => '',
+                'job_service_number' => '',
+                'job_service_mail_add' => '',
+                'job_service_city' => '',
+                'job_service_state' => '',
+                'job_service_zip' => ''
+            ];
+        }
+
+        $autoPopulateData['job_service'] = $filteredJobService;
+
         #custom service ticket location
         $this->db->where('id', $document->ticket_id);
         $service_ticket = $this->db->get('tickets')->row();
@@ -3456,8 +3492,8 @@ SQL;
     }
 
     public function debugGeneratePDF(){    
-        $pdf = $this->debugGeneratePDFMaker(11111);
-        //$pdf = $this->generatePDF(11111);
+        $pdf = $this->debugGeneratePDFMaker(1895);
+        //$pdf = $this->generatePDF(1909);
         echo 'Finish';
     }
 
