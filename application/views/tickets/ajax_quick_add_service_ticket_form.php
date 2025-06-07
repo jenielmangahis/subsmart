@@ -53,9 +53,6 @@
 </style>
 <input type="hidden" id="siteurl" value="<?=base_url();?>">
 <input type="hidden" id="redirect-calendar" name="redirect_calendar" value="<?= $redirect_calendar; ?>">
-<input type="hidden" class="form-control" name="customer_city" id="customer_city" required placeholder="" />
-<input type="hidden" class="form-control" name="customer_state" id="customer_state" required placeholder="" />
-<input type="hidden" class="form-control" name="customer_zip" id="customer_zip" required placeholder="" />             
 <div class="row" style="margin-top:0px;">    
     <div class="col-md-6">
         <div class="nsm-card primary">
@@ -82,8 +79,23 @@
                     </select>        
 
                     <label for="service_location" class="required mt-2"><b>Service Location</b></label>
-                    <a class="link-modal-open nsm-button btn-small mt-2" id="btn-use-different-address" href="javascript:void(0)" style="float:right;display:none;"> Use other address</a>
-                    <textarea class="form-control" name="service_location" id="service_location" style="height:80px;" required></textarea>
+                    <a class="btn-use-different-address nsm-button btn-small mt-2" id="btn-use-different-address" href="javascript:void(0)" style="float:right;display:none;"> Use other address</a>
+                    <input type="text" class="form-control" name="service_location" id="service_location" placeholder="Service Location" required />                    
+                    
+                    <div class="row">
+                        <div class="col-md-4 mt-2">
+                            <label for="customer_city" class="required"><b>City</b></label>
+                            <input type="text" class="form-control" name="customer_city" id="customer_city" required placeholder="City" value=""/>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <label for="customer_state" class="required"><b>State</b></label>
+                            <input type="text" class="form-control" name="customer_state" id="customer_state" required placeholder="State" value=""/>
+                        </div>
+                        <div class="col-md-3 mt-2">
+                            <label for="customer_zip" class="required"><b>Zip Code</b></label>
+                            <input type="text" class="form-control" name="customer_zip" id="customer_zip" required placeholder="Zip Code" value=""/>
+                        </div>
+                    </div>
                     
                     <label for="service_description" class="mt-2"><b>Service description</b> (optional)</label>
                     <textarea class="form-control" name="service_description" id="service_description" style="height:50px;"></textarea>
@@ -726,8 +738,6 @@
 <?php include viewPath('v2/includes/customer/other_address'); ?>
 <script>
 $(document).ready(function(){
-
-    alert(4);
     var is_with_esign = 0;
     // $('#esign-templates').select2({
     //     dropdownParent: $("#service-ticket-esign-template"),
@@ -1006,8 +1016,9 @@ $(document).ready(function(){
 
                 if( response.panel_type != '' ){
                     $('#panel_type').val(response.panel_type);
-                }
+                }   
 
+                $('#btn-use-different-address').attr('data-id', response.prof_id);
                 $('#btn-use-different-address').show();
 
                 computeGrandTotal();
@@ -1016,6 +1027,35 @@ $(document).ready(function(){
     
             }
         });
+    });
+
+    $(document).on('click', '.btn-use-other-address', function(){
+        let prof_id = $(this).attr('data-id');
+        let mail_add = $(this).attr('data-mailadd');
+        let city = $(this).attr('data-city');
+        let state = $(this).attr('data-state');
+        let zip   = $(this).attr('data-zip');
+        let other_address = $(this).attr('data-address');
+        
+        $('#other-address-customer').modal('hide');        
+        $('#service_location').val(other_address);
+        $('#customer_address').val(mail_add);
+        $('#customer_city').val(city);
+        $('#customer_state').val(state);
+        $('#customer_zip').val(zip);
+
+        let map_source = 'http://maps.google.com/maps?q='+other_address+'&output=embed';
+        let map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="300" width="100%" style=""></iframe>';
+        $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+
+        $('.btn-use-different-address').popover({
+            placement: 'top',
+            html : true, 
+            trigger: "hover focus",
+            content: function() {
+                return 'Use other address';
+            } 
+        }); 
     });
 
     $("#modal_items_list").nsmPagination({itemsPerPage:10});
