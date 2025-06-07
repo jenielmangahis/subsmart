@@ -53,6 +53,9 @@
 </style>
 <input type="hidden" id="siteurl" value="<?=base_url();?>">
 <input type="hidden" id="redirect-calendar" name="redirect_calendar" value="<?= $redirect_calendar; ?>">
+<input type="hidden" class="form-control" name="customer_city" id="customer_city" required placeholder="" />
+<input type="hidden" class="form-control" name="customer_state" id="customer_state" required placeholder="" />
+<input type="hidden" class="form-control" name="customer_zip" id="customer_zip" required placeholder="" />             
 <div class="row" style="margin-top:0px;">    
     <div class="col-md-6">
         <div class="nsm-card primary">
@@ -71,19 +74,19 @@
                     <label for="ticket_customer_phone" class="required mt-2"><b>Customer Phone Number</b></label>
                     <input type="text" class="form-control phone_number" name="customer_phone" id="ticket_customer_phone" required maxlength="12" placeholder="xxx-xxx-xxxx" />
                     
-                    <label for="customer_city" class="required"><b>City</b></label>
-                    <input type="text" class="form-control" name="customer_city" id="customer_city"
-                            required placeholder="Enter City" 
-                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
-                    <label for="customer_state" class="required mt-2"><b>State</b></label>
-                    <input type="text" class="form-control" name="customer_state" id="customer_state"
-                            required placeholder="Enter State" 
-                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                    <label for="job_tag" class="mt-2"><b>Service Tag</b></label>
+                    <select class="form-control form-select" name="job_tag" id="job_tag">
+                        <?php foreach($tags as $t){ ?>
+                            <option value="<?= $t->name; ?>"><?= $t->name; ?></option>
+                        <?php } ?>
+                    </select>        
 
-                    <label for="customer_zip" class="required mt-2"><b>Zip Code</b></label>
-                    <input type="text" class="form-control" name="customer_zip" id="customer_zip"
-                            required placeholder="Enter Zip Code" 
-                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>             
+                    <label for="service_location" class="required mt-2"><b>Service Location</b></label>
+                    <a class="link-modal-open nsm-button btn-small mt-2" id="btn-use-different-address" href="javascript:void(0)" style="float:right;display:none;"> Use other address</a>
+                    <textarea class="form-control" name="service_location" id="service_location" style="height:80px;" required></textarea>
+                    
+                    <label for="service_description" class="mt-2"><b>Service description</b> (optional)</label>
+                    <textarea class="form-control" name="service_description" id="service_description" style="height:50px;"></textarea>
             </div>
         </div>        
     </div>
@@ -91,17 +94,7 @@
     <div class="col-md-6">
         <div class="nsm-card primary">
             <div class="nsm-card-content">    
-                <label for="job_tag" class="mt-2"><b>Service Tag</b></label>
-                <select class="form-control" name="job_tag" id="job_tag">
-                    <?php foreach($tags as $t){ ?>
-                        <option value="<?= $t->name; ?>"><?= $t->name; ?></option>
-                    <?php } ?>
-                </select>                            
-                <label for="service_location" class="required mt-2"><b>Service Location</b></label>
-                <textarea class="form-control" name="service_location" id="service_location" style="height:160px;" required></textarea>
-                
-                <label for="service_description" class="mt-2"><b>Service description</b> (optional)</label>
-                <textarea class="form-control" name="service_description" id="service_description" style="height:100px;"></textarea>
+                <iframe id="TEMPORARY_MAP_VIEW" src="http://maps.google.com/maps?output=embed" height="100%" width="100%" style=""></iframe>
             </div>
         </div>        
     </div>
@@ -1012,6 +1005,8 @@ $(document).ready(function(){
                 if( response.panel_type != '' ){
                     $('#panel_type').val(response.panel_type);
                 }
+
+                $('#btn-use-different-address').show();
 
                 computeGrandTotal();
             },
