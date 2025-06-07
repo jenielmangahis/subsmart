@@ -1377,7 +1377,7 @@ $(document).ready(function(){
             html : true, 
             trigger: "hover focus",
             content: function() {
-                return 'User other address';
+                return 'Use other address';
             } 
         }); 
     });

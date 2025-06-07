@@ -721,11 +721,13 @@
                     </div>
             </div>
         </div>
-    </div>    
+    </div>        
 </div>
+<?php include viewPath('v2/includes/customer/other_address'); ?>
 <script>
 $(document).ready(function(){
 
+    alert(4);
     var is_with_esign = 0;
     // $('#esign-templates').select2({
     //     dropdownParent: $("#service-ticket-esign-template"),
