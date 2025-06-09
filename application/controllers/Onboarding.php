@@ -412,27 +412,10 @@ class Onboarding extends MY_Controller {
 
 				$pdata['profile_slug'] = createSlug($pdata['business_name'], '-');	
 				$this->business_model->update($bid,$pdata);	
-				redirect('onboarding/about');
+				return redirect('onboarding/about');
 			}
 		}else{
-			$this->business_model->update($bid,$pdata);	
-			$pdata['user_id'] = $user->id;
-			$pdata['company_id'] = $cid;
-			$imbid = $user->id;
-			$bid   = $this->business_model->create($pdata);
-
-			if(!empty($_FILES['image']['name'])){
-				$target_dir = "./uploads/users/business_profile/$bid/";
-				if(!file_exists($target_dir)) {
-					mkdir($target_dir, 0777, true);
-				}
-				$business_image = $this->moveUploadedFile($bid);
-				$this->business_model->update($bid, ['business_image' => $business_image]);
-			}else{
-				copy(FCPATH.'uploads/users/default.png', 'uploads/users/business_profile/'.$user->id.'/default.png');
-			}
-
-			redirect('onboarding/about');
+			redirect('/');
 		}
 
 		/*$this->session->set_flashdata('alert-type', 'success');
