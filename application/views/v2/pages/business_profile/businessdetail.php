@@ -1,7 +1,13 @@
 <?php include viewPath('v2/includes/header'); ?>
 <!-- include viewPath('v2/includes/business/business_modals'); ?> -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
-
+<style>
+.w9pdf-filepath {
+    font-weight: 700;
+    font-size: 17px;
+    color: #545454;
+}
+</style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/business_tabs'); ?>
@@ -77,6 +83,11 @@
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-title">
                                             <span>Basic Info</span>
+                                        </div>
+                                        <div class="nsm-card-controls align-items-baseline">
+                                            <button type="button" class="nsm-button btn-sm primary" id="btn-w9-form">
+                                                <i class='bx bx-fw bxs-file-pdf'></i> W-9 Form
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="nsm-card-content">
@@ -295,6 +306,12 @@
         const cropImageContainer = $("#crop-image-container");
 
         let triggerChange = false
+
+        $('#btn-w9-form').on('click', function(){
+            //let url = base_url + 'uploads/irsw9/fw9.pdf';
+            let url = base_url + 'company/download_w9_form';
+            window.open(url, '_blank').focus();
+        });
 
 
         $(document).on('change','#image-input', function(e) {
