@@ -3256,34 +3256,34 @@ class Users extends MY_Controller
                     $pdf->AddPage();
                     $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
 
-                
-                    $pdf->setY(115);
-                    $pdf->setX(100);
-                    $pdf->SetFont('Arial', '', 10);
-                    $pdf->SetFillColor(249,249,249);
-                    $pdf->Cell(300, 10, $business_name1, 0, 0, 'L', 0);   
+					if( $pageNo == 1 ){
+						$pdf->setY(115);
+						$pdf->setX(100);
+						$pdf->SetFont('Arial', '', 10);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $business_name1, 0, 0, 'L', 0);   
 
-                    
-                    $pdf->setY(142);
-                    $pdf->setX(100);
-                    $pdf->SetFont('Arial', '', 10);
-                    $pdf->SetFillColor(249,249,249);
-                    $pdf->Cell(300, 10, $business_name2, 0, 0, 'L', 0); 
+						
+						$pdf->setY(142);
+						$pdf->setX(100);
+						$pdf->SetFont('Arial', '', 10);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $business_name2, 0, 0, 'L', 0); 
 
 
-                    $pdf->setY(285);
-                    $pdf->setX(100);
-                    $pdf->SetFont('Arial', '', 10);
-                    $pdf->SetFillColor(249,249,249);
-                    $pdf->Cell(300, 10, $business_address, 0, 0, 'L', 0); 
+						$pdf->setY(285);
+						$pdf->setX(100);
+						$pdf->SetFont('Arial', '', 10);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $business_address, 0, 0, 'L', 0); 
 
-                    
-                    $pdf->setY(310);
-                    $pdf->setX(100);
-                    $pdf->SetFont('Arial', '', 10);
-                    $pdf->SetFillColor(249,249,249);
-                    $pdf->Cell(300, 10, $city_state_zip, 0, 0, 'L', 0); 
-                                     
+						
+						$pdf->setY(310);
+						$pdf->setX(100);
+						$pdf->SetFont('Arial', '', 10);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $city_state_zip, 0, 0, 'L', 0); 
+					}                
                 }
 
                 $uploadPath = $this->getGeneratedPDFUploadPath();

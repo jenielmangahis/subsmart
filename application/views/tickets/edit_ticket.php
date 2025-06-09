@@ -1503,8 +1503,8 @@ $(document).ready(function(){
             return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
         }
     });
- 
-    $('#sel-customer_t').change(function(){
+    
+    $('#sel-customer_t').change(function(){        
         var id  = $(this).val();
         $.ajax({
             type: 'POST',
@@ -1516,7 +1516,7 @@ $(document).ready(function(){
                 var mobile = response.phone_m;
             
                 var service_location = response.mail_add + ' ' + response.city + ', ' + response.state + ' ' + response.zip_code;
-                $("#service_location").val(service_location);
+                $("#service_location").val(response.mail_add);
                 $("#customer_city").val(response.city);
                 $("#customer_state").val(response.state);
                 $("#customer_zip").val(response.zip_code);

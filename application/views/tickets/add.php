@@ -293,29 +293,20 @@ a.btn-primary.btn-md {
                                     <div class="col-md-12 mt-4">
                                         <label for="job_location" class="required"><b>Service Location</b></label>
                                         <a class="btn-use-different-address nsm-button default btn-small float-end" style="display:none;" id="btn-use-different-address" data-id="" href="javascript:void(0);">Use Other Address</a>
-                                        <input type="text" class="form-control" name="service_location" id="service_location"
-                                        required placeholder="Enter Location"
-                                        onChange="jQuery('#customer_name').text(jQuery(this).val());" value=""/>
+                                        <input type="text" class="form-control" name="customer_address" id="customer_address" required placeholder="Enter Location" value=""/>
+                                        <input type="hidden" class="form-control" name="service_location" id="service_location" value=""/>
                                     </div>
-                                    <div class="row"> 
-                                        <div class="col-md-4">
-                                            <label for="job_location" class="required"><b>City</b></label>
-                                            <input type="text" class="form-control" name="customer_city" id="customer_city"
-                                                    required placeholder="Enter City" 
-                                                    onChange="jQuery('#customer_name').text(jQuery(this).val());" value=""/>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="job_location" class="required"><b>State</b></label>
-                                            <input type="text" class="form-control" name="customer_state" id="customer_state"
-                                                    required placeholder="Enter State" 
-                                                    onChange="jQuery('#customer_name').text(jQuery(this).val());" value=""/>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label for="job_location" class="required"><b>Zip Code</b></label>
-                                            <input type="text" class="form-control" name="customer_zip" id="customer_zip"
-                                                    required placeholder="Enter Zip Code" 
-                                                    onChange="jQuery('#customer_name').text(jQuery(this).val());" value=""/>
-                                        </div>
+                                    <div class="col-md-4 mt-4">
+                                        <label for="customer_city" class="required"><b>City</b></label>
+                                        <input type="text" class="form-control" name="customer_city" id="customer_city" required placeholder="Enter City" value=""/>
+                                    </div>
+                                    <div class="col-md-4 mt-4">
+                                        <label for="customer_state" class="required"><b>State</b></label>
+                                        <input type="text" class="form-control" name="customer_state" id="customer_state" required placeholder="Enter State" value=""/>
+                                    </div>
+                                    <div class="col-md-3 mt-4">
+                                        <label for="customer_zip" class="required"><b>Zip Code</b></label>
+                                        <input type="text" class="form-control" name="customer_zip" id="customer_zip" required placeholder="Enter Zip Code" value=""/>
                                     </div>
                                     
                                 </div>
@@ -1364,10 +1355,18 @@ $(document).ready(function(){
 
     $(document).on('click', '.btn-use-other-address', function(){
         let prof_id = $(this).attr('data-id');
+        let mail_add = $(this).attr('data-mailadd');
+        let city = $(this).attr('data-city');
+        let state = $(this).attr('data-state');
+        let zip   = $(this).attr('data-zip');
         let other_address = $(this).attr('data-address');
         
         $('#other-address-customer').modal('hide');        
         $('#service_location').val(other_address);
+        $('#customer_address').val(mail_add);
+        $('#customer_city').val(city);
+        $('#customer_state').val(state);
+        $('#customer_zip').val(zip);
 
         let map_source = 'http://maps.google.com/maps?q='+other_address+'&output=embed';
         let map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="300" width="100%" style=""></iframe>';
@@ -1378,7 +1377,7 @@ $(document).ready(function(){
             html : true, 
             trigger: "hover focus",
             content: function() {
-                return 'User other address';
+                return 'Use other address';
             } 
         }); 
     });
@@ -1585,6 +1584,7 @@ $(document).ready(function(){
                 var mobile = response.phone_m;
                 var service_location = response.mail_add + ' ' + response.city + ', ' + response.state + ' ' + response.zip_code;
                 $("#service_location").val(service_location);
+                $("#customer_address").val(response.mail_add);
                 $("#customer_city").val(response.city);
                 $("#customer_state").val(response.state);
                 $("#customer_zip").val(response.zip_code);
@@ -1656,6 +1656,7 @@ $(document).ready(function(){
                 var customer_phone = response.phone_h;
                 var customer_mobile = response.phone_m;
                 var customer_address = response.mail_add;
+                var service_location = response.mail_add + ' ' + response.city + ', ' + response.state + ' ' + response.zip_code; 
 
                 if( customer_business_name == '' ){
                     customer_business_name = 'Not Specified';
@@ -1687,14 +1688,15 @@ $(document).ready(function(){
                 if( response.city == '' ){
                     customer_city = 'Not Specified';
                 }
-
+                
                 $('#business_name').val(customer_business_name);
                 $('#customer_mobile').val(customer_mobile);
                 $('#customer_phone').val(customer_phone);
                 $('#customer_zip').val(response.zip_code)
                 $('#customer_state').val(customer_state);
                 $('#customer_city').val(customer_city);
-                $('#service_location').val(customer_address);               
+                $('#customer_address').val(customer_address);               
+                $('#service_location').val(service_location);
             },
             error: function(e) {
                 

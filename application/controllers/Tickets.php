@@ -98,6 +98,7 @@ class Tickets extends MY_Controller
             'business_name'             => $this->input->post('business_name'),
             'service_location'          => $this->input->post('service_location'),
             'service_description'       => '',
+            'acs_address'               => $this->input->post('customer_address'),
             'acs_city'                  => $this->input->post('customer_city'),
             'acs_state'                 => $this->input->post('customer_state'),
             'acs_zip'                   => $this->input->post('customer_zip'),

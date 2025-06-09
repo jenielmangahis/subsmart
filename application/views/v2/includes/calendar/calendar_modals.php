@@ -534,42 +534,46 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="modal-quick-add-job" aria-labelledby="modal-quick-add-job-label" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <form method="post" id="quick-add-job-form">   
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Create Job</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body" id="quick-add-job-form-container"></div>
-                <div class="modal-footer" style="display:block;">                    
-                    <div style="float:right;">
-                        <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="nsm-button primary" id="btn-job-submit">Schedule</button>
-                    </div>
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">        
+        <div class="modal-content">            
+            <div class="modal-header">
+                <span class="modal-title content-title">Create Job</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="quick-add-job-form">   
+                    <div id="quick-add-job-form-container"></div>
+                </form>
+            </div>
+            <div class="modal-footer" style="display:block;">                    
+                <div style="float:right;">
+                    <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary" id="btn-job-submit" form="quick-add-job-form">Schedule</button>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
 <div class="modal fade nsm-modal fade" id="modal-quick-add-service-ticket" aria-labelledby="modal-quick-add-service-ticket-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form method="post" id="quick-add-service-ticket-form">   
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Create Service Ticket</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body" id="quick-add-service-ticket-form-container"  style="max-height: 680px; overflow: auto;"></div>
-                <div class="modal-footer" style="display:block;">                    
-                    <div style="float:right;">
-                        <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="nsm-button primary" id="btn-service-ticket-submit">Schedule</button>
-                    </div>
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">        
+        <div class="modal-content">             
+            <div class="modal-header">
+                <span class="modal-title content-title">Create Service Ticket</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="quick-add-service-ticket-form">  
+                    <div id="quick-add-service-ticket-form-container"></div>
+                </form>                 
+            </div>
+            <div class="modal-footer" style="display:block;">                    
+                <div style="float:right;">
+                    <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary" id="btn-service-ticket-submit" form="quick-add-service-ticket-form">Schedule</button>
                 </div>
             </div>
-        </form>
+        </div>       
     </div>
 </div>
 
