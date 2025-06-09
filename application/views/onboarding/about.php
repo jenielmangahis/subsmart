@@ -130,10 +130,17 @@ img.banner-reg-a {
                <div class="row">
                   <div class="col-md-6">
                      <div class="form-group">
-                        <label>Business Number (EIN #)</label>
-                        <div class="help help-block help-sm">If entered it will appear on invoices.</div>
-                        <input type="text" name="business_number" value="<?php echo $profiledata->business_number; ?>"  class="form-control" autocomplete="off">
-                        <span class="validation-error-field" data-formerrors-for-name="employee_count" data-formerrors-message="true" style="display: none;"></span>
+                        <label>Employer Identification Number</label>
+                        <!-- <div class="help help-block help-sm">If entered it will appear on invoices.</div> -->
+                        <input type="text" name="EIN" id="ein" value="<?php echo $profiledata->EIN; ?>" placeholder="XX-XXXXXXX"  class="form-control" autocomplete="off">
+                     </div>
+                  </div>
+
+                  <div class="col-md-6">
+                     <div class="form-group">
+                        <label>Social Security Number</label>
+                        <!-- <div class="help help-block help-sm">If entered it will appear on invoices.</div> -->
+                        <input type="text" name="ssn" id="ssn" value="<?php echo $profiledata->ssn; ?>" placeholder="XXX-XX-XXXX" class="form-control" autocomplete="off">
                      </div>
                   </div>
                </div>
@@ -168,9 +175,13 @@ img.banner-reg-a {
 </div>
 </div>
 <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
+<script src="<?php echo $url->assets ?>js/jquery.maskedinput.js"></script>
 <?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
+  $("#ssn").mask("999-99-9999");
+  $("#ein").mask("99-9999999");
+
   function bussinessDescriptionCharCounter(){
       var chars_max   = 1800;
       var chars_total = $("#business-desc").val().length;
