@@ -242,13 +242,18 @@
                                                     <label for="is_subcontract_allowed_2"><span>No</span></label>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-md-6 mt-5">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Business Number
-                                                    (EIN #) <small class="text-muted">(optional)</small></label>
-                                                <input type="text" name="business_number"
-                                                    value="<?php echo $profiledata->business_number; ?>" class="nsm-field form-control"
-                                                    autocomplete="off">
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-12 col-md-3 mt-5">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Employer Identification Number <small class="text-muted">(optional)</small></label>
+                                                <input type="text" name="EIN" id="ein" value="<?php echo $profiledata->EIN; ?>" class="nsm-field form-control" autocomplete="off">
                                             </div>
+                                            <div class="col-12 col-md-3 mt-5">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Social Security Number <small class="text-muted">(optional)</small></label>
+                                                <input type="text" name="ssn" id="ssn" value="<?php echo $profiledata->ssn; ?>" class="nsm-field form-control" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
                                             <div class="col-12 col-md-6 mt-5">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Service Location
                                                     <small class="text-muted">(optional)</small></label>
@@ -285,7 +290,7 @@
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-
+<script src="<?php echo $url->assets ?>js/jquery.maskedinput.js"></script>
 
 <?php include viewPath('v2/includes/footer'); ?>
 <script type="text/javascript">
@@ -304,6 +309,9 @@
         const applyCropButton = $("#apply-crop");
         const basicContainer = $("#basic-image-container");
         const cropImageContainer = $("#crop-image-container");
+
+        $("#ssn").mask("999-99-9999");
+        $("#ein").mask("99-9999999");
 
         let triggerChange = false
 
