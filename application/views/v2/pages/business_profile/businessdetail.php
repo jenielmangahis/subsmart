@@ -208,21 +208,17 @@
                                         <div class="row g-3">
                                             <div class="col-12 col-md-3">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Year of
-                                                    Establishment <span class="nsm-text-error">*</span></label>
+                                                    Establishment <span class="nsm-text-error">*</span> <span id="help-popover-year-establishment" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span></label>
                                                 <input type="text" class="nsm-field form-control" name="year_est"
                                                     value="<?= $profiledata ? $profiledata->year_est : '' ?>"
                                                     id="yrMybus">
-                                                <label class="content-subtitle text-muted">Enter the year of company
-                                                    establishment.</label>
                                             </div>
                                             <div class="col-12 col-md-2">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Number of
-                                                    Employees <span class="nsm-text-error">*</span></label>
+                                                    Employees <span class="nsm-text-error">*</span><span id="help-popover-num-employees" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span></label>
                                                 <input type="text" name="employee_count"
                                                     value="<?php echo $profiledata ? $profiledata->employee_count : ''; ?>" class="nsm-field form-control"
-                                                    autocomplete="off" placeholder="e.g. 5" required="">
-                                                <label class="content-subtitle text-muted">Enter the number of people
-                                                    working for you.</label>
+                                                    autocomplete="off" placeholder="e.g. 5" required="">                                                
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Do you work with
@@ -242,32 +238,32 @@
                                                     <label for="is_subcontract_allowed_2"><span>No</span></label>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-md-6 mt-5">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Business Number
-                                                    (EIN #) <small class="text-muted">(optional)</small></label>
-                                                <input type="text" name="business_number"
-                                                    value="<?php echo $profiledata->business_number; ?>" class="nsm-field form-control"
-                                                    autocomplete="off">
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-12 col-md-3 mt-5">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Employer Identification Number <small class="text-muted">(optional)</small></label>
+                                                <input type="text" name="EIN" id="ein" value="<?php echo $profiledata->EIN; ?>" class="nsm-field form-control" autocomplete="off">
                                             </div>
+                                            <div class="col-12 col-md-3 mt-5">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Social Security Number <small class="text-muted">(optional)</small></label>
+                                                <input type="text" name="ssn" id="ssn" value="<?php echo $profiledata->ssn; ?>" class="nsm-field form-control" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
                                             <div class="col-12 col-md-6 mt-5">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Service Location
-                                                    <small class="text-muted">(optional)</small></label>
+                                                    <small class="text-muted">(optional)</small> <span id="help-popover-service-location" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span></label>
                                                 <input type="text" name="service_location" class="form-control"
                                                     value="<?php echo $profiledata->service_location; ?>" class="nsm-field form-control"
                                                     id="service_locations" data-role="tagsinput">
-                                                <label class="content-subtitle text-muted">Enter the areas or
-                                                    neighborhoods where you provide your services.</label>
                                             </div>
                                             <div class="col-12 col-md-12 mt-5">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Business Short
-                                                    Description <span
+                                                    Description <span id="help-popover-business-description" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span> <span
                                                         class="help help-sm help-bold pull-right">characters left:
                                                         <span class="char-counter-left">1962</span></span></label>
                                                 <textarea name="business_desc" cols="40" rows="8" class="nsm-field form-control businessdetail-desc"
                                                     autocomplete="off"><?php echo $profiledata ? $profiledata->business_desc : ''; ?> </textarea>
-                                                <label class="content-subtitle text-muted">Give customers more details
-                                                    on what your business actually does. Describe your company's values
-                                                    and goals. Minimum 25 characters.</label>
                                             </div>
                                             <div class="col-12 col-md-12 mt-5 text-end">
                                                 <button class="nsm-button primary" type="submit">Save</button>
@@ -285,7 +281,7 @@
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-
+<script src="<?php echo $url->assets ?>js/jquery.maskedinput.js"></script>
 
 <?php include viewPath('v2/includes/footer'); ?>
 <script type="text/javascript">
@@ -304,6 +300,45 @@
         const applyCropButton = $("#apply-crop");
         const basicContainer = $("#basic-image-container");
         const cropImageContainer = $("#crop-image-container");
+
+        $("#ssn").mask("999-99-9999");
+        $("#ein").mask("99-9999999");
+
+        $('#help-popover-year-establishment').popover({
+            placement: 'top',
+            html: true,
+            trigger: "hover focus",
+            content: function() {
+                return 'How long your business has been operating since its founding.';
+            }
+        });
+
+        $('#help-popover-num-employees').popover({
+            placement: 'top',
+            html: true,
+            trigger: "hover focus",
+            content: function() {
+                return 'Number of people working for you.';
+            }
+        });
+
+        $('#help-popover-service-location').popover({
+            placement: 'top',
+            html: true,
+            trigger: "hover focus",
+            content: function() {
+                return 'Areas or neighborhoods where you provide your services.';
+            }
+        });
+
+        $('#help-popover-business-description').popover({
+            placement: 'top',
+            html: true,
+            trigger: "hover focus",
+            content: function() {
+                return `Give customers more details on what your business actually does. Describe your company's values and goals. Minimum 25 characters.`;
+            }
+        });
 
         let triggerChange = false
 
