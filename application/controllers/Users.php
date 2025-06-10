@@ -137,6 +137,7 @@ class Users extends MY_Controller
 		// $this->load->view('business_profile/business', $this->page_data);
 		$this->load->view('v2/pages/business_profile/business', $this->page_data);
 	}
+	
 	public function businessdetail()
 	{
 		if(!checkRoleCanAccessModule('company-my-business', 'write')){
@@ -151,9 +152,11 @@ class Users extends MY_Controller
 		$cid  = logged('id');
 		$comp_id = logged('company_id');
 		$profiledata = $this->business_model->getByCompanyId($comp_id);
+		$optionBusinessType = $this->business_model->optionBusinessTypes();
 		//dd($profiledata);die;
 		$this->page_data['userid'] = $cid;
 		$this->page_data['profiledata'] = $profiledata;
+		$this->page_data['optionBusinessType'] = $optionBusinessType;
 		///$this->load->view('business_profile/businessdetail', $this->page_data);
 		$this->load->view('v2/pages/business_profile/businessdetail', $this->page_data);
 	}
