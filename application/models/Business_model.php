@@ -265,6 +265,19 @@ class Business_model extends MY_Model
         }
     }
 
+    public function optionBusinessTypes()
+    {
+        $options = [
+            'Individual / Sole Proprietor' => 'Individual / Sole Proprietor', 
+            'C Corporation' =>'C Corporation',
+            'S Corporation' => 'S Corporation',
+            'Partnership' => 'Partnership',
+            'Trust / Estate' => 'Trust / Estate'
+        ];
+
+        return $options;
+    }
+
 }
 
 /* End of file Business_model.php */
