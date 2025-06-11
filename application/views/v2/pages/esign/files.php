@@ -1104,6 +1104,68 @@ echo put_header_assets();
                                                 </div>
                                             <?php } ?>
 
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="widgetDefault10">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#widgetCollapseDefault10" aria-expanded="true" aria-controls="widgetCollapseDefault10">
+                                                    <i class='bx bx-wrench'></i> JOB / SERVICE
+                                                </button>
+                                                </h2>
+                                                <div id="widgetCollapseDefault10" class="accordion-collapse collapse" aria-labelledby="widgetDefault10" data-bs-parent="#esignWidgetAccordion">
+                                                    <div class="accordion-body">
+                                                        <div class="menu-fields">
+                                                            <ul class="menu_list">
+                                                                <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Job Number">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-equipment_cost"></i></span>
+                                                                        <i class='box-icon bx bx-hash' ></i>
+                                                                        <span class="u-ellipsis ng-binding">Job Number</span>
+                                                                    </div>
+                                                                </li>
+                                                                <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Service Ticket Number">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-equipment_cost"></i></span>
+                                                                        <i class='box-icon bx bx-hash'></i>
+                                                                        <span class="u-ellipsis ng-binding">Service Ticket Number</span>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Job Address">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-one_time_activation"></i></span>
+                                                                        <i class='box-icon bx bx-map' ></i>
+                                                                        <span class="u-ellipsis ng-binding">Job Address</span>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Job City">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-installation_cost"></i></span>
+                                                                        <i class='box-icon bx bx-map' ></i>
+                                                                        <span class="u-ellipsis ng-binding">Job City</span>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Job State">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-total_due"></i></span>
+                                                                        <i class='box-icon bx bx-map' ></i>
+                                                                        <span class="u-ellipsis ng-binding">Job State</span>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Job Zip">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-total_due"></i></span>
+                                                                        <i class='box-icon bx bx-map' ></i>
+                                                                        <span class="u-ellipsis ng-binding">Job Zip</span>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <?php foreach( $tagWidgets as $key => $widget ){ ?>
                                                 <div class="accordion-item">                                                    
                                                     <h2 class="accordion-header" id="widget<?= $key; ?>">
