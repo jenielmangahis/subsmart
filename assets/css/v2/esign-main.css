@@ -2,7 +2,7 @@
     height: 90vh !important;
 }
 
-.menu_listItem .esign-fa {
+.menu_listItem .esign-fa, .menu_listItem .box-icon {
     position: relative;
     left: -25px;
     z-index: 2;
