@@ -145,6 +145,12 @@ class Users extends MY_Controller
 			return false;
 		}
 
+		add_footer_js([
+			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
+            'assets/js/profile/signature.js',
+			'assets/js/jquery.signaturepad.js'
+        ]);
+
         $this->page_data['page']->title = 'Business Details';
         $this->page_data['page']->parent = 'Company';
 
@@ -2604,8 +2610,7 @@ class Users extends MY_Controller
 	{
 		$post = $this->input->post();
 		$uid  = logged('id');
-		echo "<pre>";
-		print_r($post);
+
 		if (!empty($post['user_approval_signature1aM_web'])) {
 
 			$folderPath = "./uploads/Signatures/user/$uid/";
@@ -3441,6 +3446,38 @@ class Users extends MY_Controller
         }   
         
         return $pdf->Output(null, 'S');
+	}
+
+	public function ajax_update_company_signature()
+	{
+		$this->load->model('Business_model');
+
+		$post = $this->input->post();
+		$cid  = logged('company_id');
+
+		$business = $this->Business_model->getByCompanyId($cid);
+		if (!empty($post['user_approval_signature1aM_web'])) {
+
+			$folderPath = "./uploads/Signatures/company/$cid/";
+			if (!file_exists($folderPath)) {
+				mkdir($folderPath, 0777, true);
+			}
+
+			$rand1  = rand(10, 10000000);
+			$datasig            = $post['user_approval_signature1aM_web'];
+			$image_parts        = explode(";base64,", $datasig);
+			$image_type_aux     = explode("image/", $image_parts[0]);
+			$image_type         = $image_type_aux[1];
+			$image_base64       = base64_decode($image_parts[1]);
+			$filename           = $rand1 . $wo_id . '_user' . '.' . $image_type;
+			$file               = $folderPath . $filename;
+			file_put_contents($file, $image_base64);
+
+			$data = ['img_signature' => $filename];
+			$this->Business_model->update($business->id, $data);
+		}
+
+		echo $filename;
 	}
 
 }
