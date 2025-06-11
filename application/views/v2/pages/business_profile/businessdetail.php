@@ -206,7 +206,7 @@
                                     </div>
                                     <div class="nsm-card-content">
                                         <div class="row g-3">
-                                            <div class="col-12 col-md-3">
+                                            <div class="col-12 col-md-2">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Year of
                                                     Establishment <span class="nsm-text-error">*</span> <span id="help-popover-year-establishment" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span></label>
                                                 <input type="text" class="nsm-field form-control" name="year_est"
@@ -219,8 +219,35 @@
                                                 <input type="text" name="employee_count"
                                                     value="<?php echo $profiledata ? $profiledata->employee_count : ''; ?>" class="nsm-field form-control"
                                                     autocomplete="off" placeholder="e.g. 5" required="">                                                
+                                            </div>                                            
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-12 col-md-2 mt-5">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Business Type</label>
+                                                <select class="form-control form-select" id="business_type" name="business_type" required="">
+                                                    <?php foreach($optionBusinessType as $type){ ?>
+                                                        <option <?= $profiledata && $profiledata->business_type == $type ? 'selected="selected"' : ''; ?> value="<?= $type; ?>"><?= $type; ?></option>
+                                                    <?php } ?>
+                                                </select>
                                             </div>
-                                            <div class="col-12 col-md-4">
+                                            <div class="col-12 col-md-2 mt-5">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Employer Identification Number <small class="text-muted">(optional)</small></label>
+                                                <input type="text" name="EIN" id="ein" value="<?php echo $profiledata->EIN; ?>" class="nsm-field form-control" autocomplete="off">
+                                            </div>
+                                            <div class="col-12 col-md-2 mt-5">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Social Security Number <small class="text-muted">(optional)</small></label>
+                                                <input type="text" name="ssn" id="ssn" value="<?php echo $profiledata->ssn; ?>" class="nsm-field form-control" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-12 col-md-6 mt-5">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Service Location
+                                                    <small class="text-muted">(optional)</small> <span id="help-popover-service-location" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span></label>
+                                                <input type="text" name="service_location" class="form-control"
+                                                    value="<?php echo $profiledata->service_location; ?>" class="nsm-field form-control"
+                                                    id="service_locations" data-role="tagsinput">
+                                            </div>
+                                            <div class="col-12 col-md-12">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Do you work with
                                                     other Business or Sub Contract?</label>
                                                 <div style="display:inline-block;width: 100px; margin-right: 10px;">
@@ -238,25 +265,6 @@
                                                     <label for="is_subcontract_allowed_2"><span>No</span></label>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row g-3">
-                                            <div class="col-12 col-md-3 mt-5">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Employer Identification Number <small class="text-muted">(optional)</small></label>
-                                                <input type="text" name="EIN" id="ein" value="<?php echo $profiledata->EIN; ?>" class="nsm-field form-control" autocomplete="off">
-                                            </div>
-                                            <div class="col-12 col-md-3 mt-5">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Social Security Number <small class="text-muted">(optional)</small></label>
-                                                <input type="text" name="ssn" id="ssn" value="<?php echo $profiledata->ssn; ?>" class="nsm-field form-control" autocomplete="off">
-                                            </div>
-                                        </div>
-                                        <div class="row g-3">
-                                            <div class="col-12 col-md-6 mt-5">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Service Location
-                                                    <small class="text-muted">(optional)</small> <span id="help-popover-service-location" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span></label>
-                                                <input type="text" name="service_location" class="form-control"
-                                                    value="<?php echo $profiledata->service_location; ?>" class="nsm-field form-control"
-                                                    id="service_locations" data-role="tagsinput">
-                                            </div>
                                             <div class="col-12 col-md-12 mt-5">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Business Short
                                                     Description <span id="help-popover-business-description" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span> <span
@@ -268,7 +276,7 @@
                                             <div class="col-12 col-md-12 mt-5 text-end">
                                                 <button class="nsm-button primary" type="submit">Save</button>
                                             </div>
-                                        </div>
+                                        </div>                                        
                                     </div>
                                 </div>
                             </div>

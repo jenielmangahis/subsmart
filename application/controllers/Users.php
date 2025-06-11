@@ -137,6 +137,7 @@ class Users extends MY_Controller
 		// $this->load->view('business_profile/business', $this->page_data);
 		$this->load->view('v2/pages/business_profile/business', $this->page_data);
 	}
+	
 	public function businessdetail()
 	{
 		if(!checkRoleCanAccessModule('company-my-business', 'write')){
@@ -151,9 +152,11 @@ class Users extends MY_Controller
 		$cid  = logged('id');
 		$comp_id = logged('company_id');
 		$profiledata = $this->business_model->getByCompanyId($comp_id);
+		$optionBusinessType = $this->business_model->optionBusinessTypes();
 		//dd($profiledata);die;
 		$this->page_data['userid'] = $cid;
 		$this->page_data['profiledata'] = $profiledata;
+		$this->page_data['optionBusinessType'] = $optionBusinessType;
 		///$this->load->view('business_profile/businessdetail', $this->page_data);
 		$this->load->view('v2/pages/business_profile/businessdetail', $this->page_data);
 	}
@@ -3232,19 +3235,35 @@ class Users extends MY_Controller
         $business_address = "---";
         $city_state_zip   = "---";
 
-		$ssn_box_data1[0]    = '2';
-		$ssn_box_data1[1]    = '9';
-		$ssn_box_data1[2]   = '7';
+		$is_add_ssn = false;
+		$is_add_ein = false;
+		$is_add_business_type = false;
 
         $this->db->select('*');
         $this->db->where('company_id', logged('company_id'));
         $business_profile = $this->db->get('business_profile')->row();
 
         if($business_profile){        
+
             $business_name1 = $business_profile->business_name;
             $business_name2 = $business_profile->business_name;
             $business_address = $business_profile->street;
             $city_state_zip = $business_profile->city . ", " . $business_profile->state . " " . $business_profile->postal_code;
+
+			if($business_profile->ssn != null && $business_profile->ssn != "") {
+				$is_add_ssn = true;
+				$ssn_data = $business_profile->ssn;
+			}
+
+			if($business_profile->EIN != null && $business_profile->EIN != "") {
+				$is_add_ein = true;
+				$ein_data = $business_profile->EIN;
+			}
+
+			if($business_profile->business_type != null && $business_profile->business_type != "") {
+				$is_add_business_type = true;
+				$business_type = $business_profile->business_type;
+			}
         }
 
         if ($generatedPDF) {
@@ -3288,139 +3307,188 @@ class Users extends MY_Controller
 						$pdf->SetFillColor(249,249,249);
 						$pdf->Cell(300, 10, $city_state_zip, 0, 0, 'L', 0); 
 
+						/**
+						 * This is for checkbox - start
+						 */
+						if($is_add_business_type) {
+							//This is for 'Individual/Sole Proprietor'
+							if($business_type == "Individual / Sole Proprietor") {
+								$pdf->SetFillColor(0, 0, 0);
+								$pdf->Rect(73, 180, 8, 8, 'F');
+							}
+
+							//This is for 'C corporation'
+							if($business_type == "C Corporation") {
+								$pdf->SetFillColor(0, 0, 0);
+								$pdf->Rect(180, 180, 8, 8, 'F');
+							}
+							
+							//This is for 'S corporation'
+							if($business_type == "S Corporation") {
+								$pdf->SetFillColor(0, 0, 0);
+								$pdf->Rect(251, 180, 8, 8, 'F');
+							}
+
+							//This is for 'Partnership'
+							if($business_type == "Partnership") {
+								$pdf->SetFillColor(0, 0, 0);
+								$pdf->Rect(324, 180, 8, 8, 'F');
+							}
+
+							//This is for 'Trust Estate'
+							if($business_type == "Trust / Estate") {
+								$pdf->SetFillColor(0, 0, 0);
+								$pdf->Rect(389, 180, 8, 8, 'F');
+							}
+
+							//This is for 'LLC. Enter the...'
+							if($business_type == "LLC") {
+								$pdf->SetFillColor(0, 0, 0);
+								$pdf->Rect(73, 194, 8, 8, 'F');
+							}
+
+							//This is for 'Other'
+							if($business_type == "Others") {
+								$pdf->SetFillColor(0, 0, 0);
+								$pdf->Rect(73, 230, 8, 8, 'F');
+							}
+						}
+						/**
+						 * This is for checkbox - end
+						 */
 
 						//SSN - Start
-						$pdf->setY(374);
-						$pdf->setX(417);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[0], 0, 0, 'L', 0); 
+						if($is_add_ssn) {
+							$pdf->setY(374);
+							$pdf->setX(418);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ssn_data[0]) ? $ssn_data[0] : '', 0, 0, 'L', 0); 
 
-						$pdf->setY(374);
-						$pdf->setX(431);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[1], 0, 0, 'L', 0); 
+							$pdf->setY(374);
+							$pdf->setX(432);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ssn_data[1]) ? $ssn_data[1] : '', 0, 0, 'L', 0); 
 
-						$pdf->setY(374);
-						$pdf->setX(445);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[2], 0, 0, 'L', 0); 
+							$pdf->setY(374);
+							$pdf->setX(446);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ssn_data[2]) ? $ssn_data[2] : '', 0, 0, 'L', 0); 
 
-						$pdf->setY(374);
-						$pdf->setX(474);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[2], 0, 0, 'L', 0); 
+							$pdf->setY(374);
+							$pdf->setX(475);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ssn_data[3]) ? $ssn_data[3] : '', 0, 0, 'L', 0); 
 
-						$pdf->setY(374);
-						$pdf->setX(488);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[2], 0, 0, 'L', 0); 
+							$pdf->setY(374);
+							$pdf->setX(489);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ssn_data[4]) ? $ssn_data[4] : '', 0, 0, 'L', 0); 
 
-						$pdf->setY(374);
-						$pdf->setX(518);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[2], 0, 0, 'L', 0); 
+							$pdf->setY(374);
+							$pdf->setX(519);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ssn_data[5]) ? $ssn_data[5] : '', 0, 0, 'L', 0); 
 
-						$pdf->setY(374);
-						$pdf->setX(532);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[2], 0, 0, 'L', 0); 
+							$pdf->setY(374);
+							$pdf->setX(533);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ssn_data[6]) ? $ssn_data[6] : '', 0, 0, 'L', 0); 
 
-						$pdf->setY(374);
-						$pdf->setX(546);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[2], 0, 0, 'L', 0);
+							$pdf->setY(374);
+							$pdf->setX(547);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ssn_data[7]) ? $ssn_data[7] : '', 0, 0, 'L', 0);
 
-						$pdf->setY(374);
-						$pdf->setX(561);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[2], 0, 0, 'L', 0);
+							$pdf->setY(374);
+							$pdf->setX(562);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ssn_data[8]) ? $ssn_data[8] : '', 0, 0, 'L', 0);
+						}
 						//SSN - End
 
-
 						//EIN - Start
-						$pdf->setY(423);
-						$pdf->setX(417);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[2], 0, 0, 'L', 0);
+						if($is_add_ein) {
+							$pdf->setY(423);
+							$pdf->setX(418);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ein_data[0]) ? $ein_data[0] : '', 0, 0, 'L', 0);
 
-						$pdf->setY(423);
-						$pdf->setX(431);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[2], 0, 0, 'L', 0);
+							$pdf->setY(423);
+							$pdf->setX(432);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ein_data[1]) ? $ein_data[1] : '', 0, 0, 'L', 0);
 
-						$pdf->setY(423);
-						$pdf->setX(460);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[2], 0, 0, 'L', 0);
+							$pdf->setY(423);
+							$pdf->setX(461);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ein_data[2]) ? $ein_data[2] : '', 0, 0, 'L', 0);
 
+							$pdf->setY(423);
+							$pdf->setX(475);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ein_data[3]) ? $ein_data[3] : '', 0, 0, 'L', 0);
 
+							$pdf->setY(423);
+							$pdf->setX(489);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ein_data[4]) ? $ein_data[4] : '', 0, 0, 'L', 0);
 
-						$pdf->setY(423);
-						$pdf->setX(474);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[2], 0, 0, 'L', 0);
+							$pdf->setY(423);
+							$pdf->setX(503);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ein_data[5]) ? $ein_data[5] : '', 0, 0, 'L', 0);
 
-						$pdf->setY(423);
-						$pdf->setX(488);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[2], 0, 0, 'L', 0);
+							$pdf->setY(423);
+							$pdf->setX(517);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ein_data[6]) ? $ein_data[6] : '', 0, 0, 'L', 0);
 
-						$pdf->setY(423);
-						$pdf->setX(502);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[2], 0, 0, 'L', 0);
+							$pdf->setY(423);
+							$pdf->setX(531);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ein_data[7]) ? $ein_data[7] : '', 0, 0, 'L', 0);
 
-						$pdf->setY(423);
-						$pdf->setX(516);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[2], 0, 0, 'L', 0);
-
-						$pdf->setY(423);
-						$pdf->setX(530);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, $ssn_box_data1[2], 0, 0, 'L', 0);
-
-						$pdf->setY(423);
-						$pdf->setX(544);
-						$pdf->SetFont('Arial', '', 15);
-						$pdf->SetFillColor(249,249,249);
-						$pdf->setFontStretching(130);
-						$pdf->Cell(300, 10, 1, 0, 0, 'L', 0);
-
+							$pdf->setY(423);
+							$pdf->setX(546);
+							$pdf->SetFont('Arial', '', 12);
+							$pdf->SetFillColor(249,249,249);
+							$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, isset($ein_data[8]) ? $ein_data[8] : '', 0, 0, 'L', 0);							
+						}
 						//EIN - End
 						
 					}                

@@ -108,6 +108,16 @@ img.banner-reg-a {
                         <span class="validation-error-field" data-formerrors-for-name="employee_count" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>
+                  <div class="col-md-6">
+                     <div class="form-group">
+                        <label>Business Type</label> <span class="form-required">*</span>
+                        <select class="form-control form-select" id="business_type" name="business_type" required="">
+                           <?php foreach($optionBusinessType as $type){ ?>
+                              <option <?= $profiledata && $profiledata->business_type == $type ? 'selected="selected"' : ''; ?> value="<?= $type; ?>"><?= $type; ?></option>
+                           <?php } ?>
+                        </select>
+                     </div>
+                  </div>
                </div>
                <div class="row">
                   <div class="col-md-6">

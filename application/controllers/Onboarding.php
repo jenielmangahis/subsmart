@@ -181,6 +181,7 @@ class Onboarding extends MY_Controller {
 		$profiledata = $this->business_model->getByWhere(array('company_id'=>$cid));	
 		$client      = $this->Clients_model->getById($cid);
 		$num_emp     = $client->number_of_employee;
+		$optionBusinessType = $this->business_model->optionBusinessTypes();
 		if( $profiledata ){
 			if( $profiledata[0]->employee_count != '' ){
 				$num_emp = $profiledata[0]->employee_count;
@@ -189,6 +190,7 @@ class Onboarding extends MY_Controller {
 		
 		$this->page_data['num_emp'] = $num_emp;
 		$this->page_data['userid']  = $user_id;
+		$this->page_data['optionBusinessType'] = $optionBusinessType;
 		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
 		$this->load->view('onboarding/about', $this->page_data);
 	}
