@@ -7,6 +7,9 @@
     font-size: 17px;
     color: #545454;
 }
+#profile_signature{
+    height:300px;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -261,8 +264,8 @@
                                             </div>
                                             <div class="col-12 col-md-4 col-sm-12">
                                                 <div class="d-flex justify-content-evenly align-items-center flex-column h-100">
-                                                    <img src="" id="profile_signature" alt="Signature">
-                                                    <label class="content-subtitle mt-3 d-block">This is the electronic representation of owner signature, update any time.</label>
+                                                    <img src="<?= companySignature($profiledata->id); ?>" id="profile_signature" alt="Signature">
+                                                    <label class="content-subtitle mt-3 mb-3 d-block">This is the electronic representation of company signature, update any time.</label>
                                                     <button name="btn_create_signature" type="button" class="nsm-button custom-prof-btn primary" data-bs-toggle="modal" data-bs-target="#register_signature_modal">
                                                         <i class='bx bx-fw bx-pen'></i> Digital Signature
                                                     </button>
