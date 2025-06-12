@@ -2195,6 +2195,7 @@ $route['customer_deals/_deal_month_summary'] = 'CustomerDeal/ajax_deal_month_sum
 $route['customer_deals/_forecast_view_by_quarter'] = 'CustomerDeal/ajax_forecast_view_by_quarter';
 $route['customer_deals/list'] = 'CustomerDeal/list';
 $route['customer_deals/_update_status_customer_deal'] = 'CustomerDeal/ajax_update_status_customer_deal';
+$route['customer_deals/_delete_selected_deals'] = 'CustomerDeal/ajax_delete_selected_deals';
 
 
 //Customer Other Address
