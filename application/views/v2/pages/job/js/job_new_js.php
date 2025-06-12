@@ -123,11 +123,19 @@ $("#attachment-file").change(function() {
         $(document).on('click', '.btn-use-other-address', function(){
             let prof_id = $(this).attr('data-id');
             let other_address = $(this).attr('data-address');
+            let mail_add = $(this).attr('data-mailadd');
+            let city = $(this).attr('data-city');
+            let state = $(this).attr('data-state');
+            let zip = $(this).attr('data-zip');
             let link_customer_address = `<a class="btn-use-different-address nsm-link" data-id="${prof_id}" href="javascript:void(0);">${other_address}</a>`;
 
             $('#other-address-customer').modal('hide');
             $('#cust_address').html(link_customer_address);
             $('#job-location').val(other_address);
+            $('#job-address').val(mail_add);
+            $('#job-city').val(city);
+            $('#job-state').val(state);
+            $('#job-zip').val(zip);
 
             let map_source = 'http://maps.google.com/maps?q='+other_address+'&output=embed';
             let map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="300" width="100%" style=""></iframe>';
@@ -1330,13 +1338,6 @@ $("#attachment-file").change(function() {
                     //     $('#cust_address').text(data.mail_add + ' ');
                     // }
                     
-                    if(data.mail_add != null){
-                        //$('#cust_address').text(data.mail_add + ' ');
-                        ADDR_1 = data.mail_add;
-                    } else {
-                        //$('#cust_address').text(data.cross_street + ' ');
-                        ADDR_1 = data.cross_street;
-                    }
 
                     if(data.phone_m){
                         if(data.phone_m.includes('Mobile:')){
@@ -1346,6 +1347,8 @@ $("#attachment-file").change(function() {
                             phone_m = formatPhoneNumber(data.phone_m);
                         }
                     }
+
+                    ADDR_1 = data.mail_add;
                     if(data.city || data.state || data.zip_code){
                         //$('#cust_address2').text(data.city + ', ' + ' ' + data.state + ' ' + data.zip_code);
                         ADDR_2 = data.city + ', ' + ' ' + data.state + ' ' + data.zip_code;
@@ -1363,6 +1366,10 @@ $("#attachment-file").change(function() {
                     var link_customer_address = `<a class="btn-use-different-address nsm-link" data-id="${data.prof_id}" href="javascript:void(0);">${customer_address}</a>`;
                     $('#cust_address').html(link_customer_address);
                     $('#job-location').val(customer_address);
+                    $('#job-address').val(data.mail_add);
+                    $('#job-city').val(data.city);
+                    $('#job-state').val(data.state);
+                    $('#job-zip').val(data.zip_code);
 
                     $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
                     $('#cust_number').text(phone_m);
