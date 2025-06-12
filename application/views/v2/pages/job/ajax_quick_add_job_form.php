@@ -1046,7 +1046,6 @@
     </div>
 </div>
 <?php include viewPath('v2/pages/job/js/job_quick_add_js'); ?>
-<?php include viewPath('v2/includes/customer/other_address'); ?>
 
 <!-- Modals -->
 <script>
