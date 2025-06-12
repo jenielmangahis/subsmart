@@ -2194,6 +2194,7 @@ $route['customer_deals/_update_expected_close_date'] = 'CustomerDeal/ajax_update
 $route['customer_deals/_deal_month_summary'] = 'CustomerDeal/ajax_deal_month_summary';
 $route['customer_deals/_forecast_view_by_quarter'] = 'CustomerDeal/ajax_forecast_view_by_quarter';
 $route['customer_deals/list'] = 'CustomerDeal/list';
+$route['customer_deals/_update_status_customer_deal'] = 'CustomerDeal/ajax_update_status_customer_deal';
 
 
 //Customer Other Address
