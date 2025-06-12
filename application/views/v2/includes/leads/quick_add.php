@@ -3,7 +3,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="width:580px;">
             <div class="modal-header mb-0">
-                <span id="newcustomerLabel" class="modal-title content-title"><i class='bx bx-plus-medical' ></i> Add New Lead</span>
+                <span id="newcustomerLabel" class="modal-title content-title">Add New Lead</span>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
             </div>
             <form id="frm-quick-add-lead">

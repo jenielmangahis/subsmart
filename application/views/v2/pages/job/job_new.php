@@ -482,6 +482,10 @@
                 <input type="hidden" name="job_number" id="jobNumber" class="form-control" value="<?= isset($jobs_data->job_number) ? $jobs_data->job_number : ''; ?>">
                 <input type="hidden" name="job_hash" id="johHash" class="form-control" value="<?= isset($jobs_data->hash_id) ? $jobs_data->hash_id : ''; ?>">
                 <input type="hidden" name="job_location" id="job-location" value="<?= isset($jobs_data->job_location) ? $jobs_data->job_location : ''; ?>" />
+                <input type="hidden" name="job_address" id="job-address" value="<?= isset($jobs_data->job_address) ? $jobs_data->job_address : ''; ?>" />
+                <input type="hidden" name="job_city" id="job-city" value="<?= isset($jobs_data->job_city) ? $jobs_data->job_city : ''; ?>" />
+                <input type="hidden" name="job_state" id="job-state" value="<?= isset($jobs_data->job_state) ? $jobs_data->job_state : ''; ?>" />
+                <input type="hidden" name="job_zip" id="job-zip" value="<?= isset($jobs_data->job_zip) ? $jobs_data->job_zip : ''; ?>" />
                 <div class="row g-3 align-items-start">
                     <div class="col-12 ">
                         <div class="row g-3">

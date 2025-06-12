@@ -11,7 +11,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header mb-0">
-                <span id="newcustomerLabel" class="modal-title content-title"><i class='bx bx-plus-medical' ></i> Add New Customer</span>
+                <span id="newcustomerLabel" class="modal-title content-title">Add New Customer</span>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
             </div>
             <form id="new_customer_form">

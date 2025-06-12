@@ -373,7 +373,15 @@
         position:relative;
         top:10px;
     }
+    .btn-use-different-address{
+        padding:0px !important;
+    }
 </style>
+<input type="hidden" name="job_location" id="job-location" value="" />
+<input type="hidden" name="job_address" id="job-address" value="" />
+<input type="hidden" name="job_city" id="job-city" value="" />
+<input type="hidden" name="job_state" id="job-state" value="" />
+<input type="hidden" name="job_zip" id="job-zip" value="" />
 <div class="row page-content g-0">    
     <div class="col-12">
         <div class="nsm-page">
@@ -607,30 +615,30 @@
                                             </thead>
                                             <tbody>
                                             <tr>
-                                                <td id="cust_fullname">xxxxx xxxxx</td>
-                                                <td><a target="_blank" href="#" id="customer_preview"><span class="customer_right_icon"><i class='bx bxs-user-rectangle'></i></span></a></td>
+                                                <td><div id="cust_fullname">xxxxx xxxxx</div></td>
+                                                <td style="vertical-align:top;"><a target="_blank" style="display:block;" href="#" id="customer_preview"><span class="customer_right_icon"><i class='bx bxs-user-rectangle'></i></span></a></td>
                                             </tr>
                                             <tr>
                                                 <td >
-                                                    <div id="cust_address">-------------</div>
+                                                    <!-- <div id="cust_address">-------------</div> -->
                                                     <div id="cust_address2">-------------</div>
                                                 </td>
-                                                <td><a href=""><span class="customer_right_icon"><i class='bx bx-map' ></i></span></a></td>
+                                                <td style="vertical-align:top;"><span class="customer_right_icon" style="color:#6a4a86 !important;"><i class='bx bx-map' ></i></span></td>
                                             </tr>
                                             <tr>
-                                                <td id="cust_number">(xxx) xxx-xxxx</td>
-                                                <td><a href=""><span class="customer_right_icon"><i class='bx bxs-phone' ></i></span></a></td>
+                                                <td><div id="cust_number">(xxx) xxx-xxxx</div></td>
+                                                <td style="vertical-align:top;"><span class="customer_right_icon" style="color:#6a4a86 !important;"><i class='bx bxs-phone' ></i></span></td>
                                             </tr>
                                             <tr>
                                                 <td id="cust_email">xxxxx@xxxxx.xxx</td>
-                                                <td><a id="mail_to" href="#"><span class="customer_right_icon"><i class='bx bx-envelope' ></i></span></a></td>
+                                                <td style="vertical-align:top;"><a id="mail_to" href="#" style="display:block;"><span class="customer_right_icon"><i class='bx bx-envelope' ></i></span></a></td>
                                             </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="col-md-7">
                                         <div class="col-md-12">
-                                            <iframe id="TEMPORARY_MAP_VIEW" height="200" width="100%"></iframe>
+                                            <iframe id="TEMPORARY_MAP_VIEW" src="http://maps.google.com/maps?output=embed" height="300" width="100%" style=""></iframe>
                                         </div>
                                     </div>
                                 </div>
@@ -1038,6 +1046,7 @@
     </div>
 </div>
 <?php include viewPath('v2/pages/job/js/job_quick_add_js'); ?>
+<?php include viewPath('v2/includes/customer/other_address'); ?>
 
 <!-- Modals -->
 <script>
@@ -1278,6 +1287,36 @@ $(function() {
         $("#inputState").select2({
             dropdownParent: $("#modal-quick-add-job"),
             placeholder: "Select Timezone..."
+        });
+
+        $(document).on('click', '.btn-use-other-address', function(){
+            let prof_id = $(this).attr('data-id');
+            let other_address = $(this).attr('data-address');
+            let mail_add = $(this).attr('data-mailadd');
+            let city = $(this).attr('data-city');
+            let state = $(this).attr('data-state');
+            let zip = $(this).attr('data-zip');
+            let link_customer_address = `<a class="btn-use-different-address nsm-link" data-id="${prof_id}" href="javascript:void(0);">${other_address}</a>`;
+
+            $('#other-address-customer').modal('hide');
+            $('#cust_address2').html(link_customer_address);
+            $('#job-location').val(other_address);
+            $('#job-address').val(mail_add);
+            $('#job-city').val(city);
+            $('#job-state').val(state);
+            $('#job-zip').val(zip);
+
+            let map_source = 'http://maps.google.com/maps?q='+other_address+'&output=embed';
+            $("#TEMPORARY_MAP_VIEW").attr('src', 'http://maps.google.com/maps?q='+other_address+'&output=embed');
+
+            $('.btn-use-different-address').popover({
+                placement: 'top',
+                html : true, 
+                trigger: "hover focus",
+                content: function() {
+                    return 'User other address';
+                } 
+            }); 
         });
     });
 

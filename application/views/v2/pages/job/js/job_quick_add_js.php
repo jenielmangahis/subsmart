@@ -349,29 +349,6 @@ $(document).ready(function() {
         ITEMS_TABLE.search($(this).val()).draw()
     });
     ITEMS_TABLE_SETTINGS = ITEMS_TABLE.settings();
-
-    $(document).on('click', '.btn-use-other-address', function(){
-        let prof_id = $(this).attr('data-id');
-        let other_address = $(this).attr('data-address');
-        let link_customer_address = `<a class="btn-use-different-address nsm-link" data-id="${prof_id}" href="javascript:void(0);">${other_address}</a>`;
-
-        $('#other-address-customer').modal('hide');
-        $('#cust_address').html(link_customer_address);
-        $('#job-location').val(other_address);
-
-        let map_source = 'http://maps.google.com/maps?q='+other_address+'&output=embed';
-        let map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="300" width="100%" style=""></iframe>';
-        $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
-
-        $('.btn-use-different-address').popover({
-            placement: 'top',
-            html : true, 
-            trigger: "hover focus",
-            content: function() {
-                return 'User other address';
-            } 
-        }); 
-    });
 });
     
 function load_customer_data($id){
@@ -424,6 +401,12 @@ function load_customer_data($id){
         $('#mail_to').attr("href","mailto:"+response.email);
         $("#TEMPORARY_MAP_VIEW").attr('src', 'http://maps.google.com/maps?q='+ADDR_1+' '+ADDR_2+'&output=embed');
         $('.MAP_LOADER').fadeIn();
+
+        $('#job-location').val(customer_address);
+        $('#job-address').val(response.mail_add);
+        $('#job-city').val(response.city);
+        $('#job-state').val(response.state);
+        $('#job-zip').val(response.zip_code);
 
         $("#customer_cc_num").val(response.cc_num);
         $("#customer_cc_expiry_date_month").val(response.cc_exp_month);

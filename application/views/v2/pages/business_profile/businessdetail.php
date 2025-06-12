@@ -191,103 +191,118 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-12">
-                                <div class="nsm-card primary">
-                                    <div class="nsm-card-header">
-                                        <div class="nsm-card-title">
-                                            <span>About</span>
-                                        </div>
-                                    </div>
-                                    <div class="nsm-card-content">
-                                        <div class="row">
-                                            <div class="col-12 col-md-8 col-sm-12">
-                                                <div class="row g-3">
-                                                    <div class="col-12 col-md-3">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Year of
-                                                            Establishment <span class="nsm-text-error">*</span> <span id="help-popover-year-establishment" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span></label>
-                                                        <input type="text" class="nsm-field form-control" name="year_est"
-                                                            value="<?= $profiledata ? $profiledata->year_est : '' ?>"
-                                                            id="yrMybus">
+                                <div class="row">
+                                    <div class="row g-3">
+                                        <div class="col-12 col-md-4">
+                                            <div class="nsm-card primary">
+                                                <div class="nsm-card-header">
+                                                    <div class="nsm-card-title">
+                                                        <span>Digital Signature <span id="help-popover-digital-signature" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span></span>
                                                     </div>
-                                                    <div class="col-12 col-md-3">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Number of
-                                                            Employees <span class="nsm-text-error">*</span><span id="help-popover-num-employees" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span></label>
-                                                        <input type="text" name="employee_count"
-                                                            value="<?php echo $profiledata ? $profiledata->employee_count : ''; ?>" class="nsm-field form-control"
-                                                            autocomplete="off" placeholder="e.g. 5" required="">                                                
-                                                    </div>           
-                                                    <div class="col-12 col-md-4">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Business Type</label>
-                                                        <select class="form-control form-select" id="business_type" name="business_type" required="">
-                                                            <?php foreach($optionBusinessType as $type){ ?>
-                                                                <option <?= $profiledata && $profiledata->business_type == $type ? 'selected="selected"' : ''; ?> value="<?= $type; ?>"><?= $type; ?></option>
-                                                            <?php } ?>
-                                                        </select>
-                                                    </div>                                 
-                                                </div>
-                                                <div class="row g-3">                                                    
-                                                    <div class="col-12 col-md-3 mt-5">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Employer Identification Number <small class="text-muted">(optional)</small></label>
-                                                        <input type="text" name="EIN" id="ein" value="<?php echo $profiledata->EIN; ?>" class="nsm-field form-control" autocomplete="off">
-                                                    </div>
-                                                    <div class="col-12 col-md-3 mt-5">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Social Security Number <small class="text-muted">(optional)</small></label>
-                                                        <input type="text" name="ssn" id="ssn" value="<?php echo $profiledata->ssn; ?>" class="nsm-field form-control" autocomplete="off">
+                                                    <div class="nsm-card-controls align-items-baseline">
+                                                        <button type="button" class="nsm-button btn-sm primary" data-bs-toggle="modal" data-bs-target="#register_signature_modal">
+                                                            <i class='bx bx-fw bx-pencil'></i> Edit
+                                                        </button>
                                                     </div>
                                                 </div>
-                                                <div class="row g-3">
-                                                    <div class="col-12 col-md-6 mt-5">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Service Location
-                                                            <small class="text-muted">(optional)</small> <span id="help-popover-service-location" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span></label>
-                                                        <input type="text" name="service_location" class="form-control"
-                                                            value="<?php echo $profiledata->service_location; ?>" class="nsm-field form-control"
-                                                            id="service_locations" data-role="tagsinput">
+                                                <div class="nsm-card-content">
+                                                    <div class="d-flex justify-content-evenly align-items-center flex-column h-100">
+                                                        <img src="<?= companySignature($profiledata->company_id); ?>" id="profile_signature" alt="Signature">      
                                                     </div>
-                                                    <div class="col-12 col-md-12">
-                                                        <label class="content-subtitle fw-bold d-block mb-2">Do you work with
-                                                            other Business or Sub Contract?</label>
-                                                        <div style="display:inline-block;width: 100px; margin-right: 10px;">
-                                                            <input type="radio" class=""
-                                                                name="is_subcontract_allowed" value="1"
-                                                                <?php if($profiledata->is_subcontract_allowed==1){ ?> checked="checked" <?php } ?>
-                                                                id="is_subcontract_allowed_1">
-                                                            <label for="is_subcontract_allowed_1"><span>Yes</span></label>
-                                                        </div>
-                                                        <div style="display:inline-block;width: 100px; margin-right: 10px;">
-                                                            <input type="radio" class=""
-                                                                name="is_subcontract_allowed" value="0"
-                                                                <?php if($profiledata->is_subcontract_allowed==0){ ?> checked="checked" <?php } ?>
-                                                                id="is_subcontract_allowed_2">
-                                                            <label for="is_subcontract_allowed_2"><span>No</span></label>
-                                                        </div>
-                                                    </div>                                                    
-                                                </div>   
-                                            </div>
-                                            <div class="col-12 col-md-4 col-sm-12">
-                                                <div class="d-flex justify-content-evenly align-items-center flex-column h-100">
-                                                    <img src="<?= companySignature($profiledata->id); ?>" id="profile_signature" alt="Signature">
-                                                    <label class="content-subtitle mt-3 mb-3 d-block">This is the electronic representation of company signature, update any time.</label>
-                                                    <button name="btn_create_signature" type="button" class="nsm-button custom-prof-btn primary" data-bs-toggle="modal" data-bs-target="#register_signature_modal">
-                                                        <i class='bx bx-fw bx-pen'></i> Digital Signature
-                                                    </button>
                                                 </div>
-                                            </div>
-                                        </div>                                        
-                                        <div class="row g-3 mt-4">
-                                            <div class="col-12 col-md-12 mt-5">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Business Short
-                                                    Description <span id="help-popover-business-description" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span> <span
-                                                        class="help help-sm help-bold pull-right">characters left:
-                                                        <span class="char-counter-left">1962</span></span></label>
-                                                <textarea name="business_desc" cols="40" rows="8" class="nsm-field form-control businessdetail-desc"
-                                                    autocomplete="off"><?php echo $profiledata ? $profiledata->business_desc : ''; ?> </textarea>
-                                            </div>
-                                            <div class="col-12 col-md-12 mt-5 text-end">
-                                                <button class="nsm-button primary" type="submit">Save</button>
                                             </div>
                                         </div>
-                                                                             
+
+                                        <div class="col-12 col-md-8">
+                                            <div class="nsm-card primary">
+                                                <div class="nsm-card-header">
+                                                    <div class="nsm-card-title">
+                                                        <span>About</span>
+                                                    </div>
+                                                </div>
+                                                <div class="nsm-card-content">
+
+                                                    <div class="row g-3">
+                                                        <div class="col-12 col-md-3">
+                                                            <label class="content-subtitle fw-bold d-block mb-2">Year of
+                                                                Establishment <span class="nsm-text-error">*</span> <span id="help-popover-year-establishment" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span></label>
+                                                            <input type="text" class="nsm-field form-control" name="year_est"
+                                                                value="<?= $profiledata ? $profiledata->year_est : '' ?>"
+                                                                id="yrMybus">
+                                                        </div>
+                                                        <div class="col-12 col-md-3">
+                                                            <label class="content-subtitle fw-bold d-block mb-2">Number of
+                                                                Employees <span class="nsm-text-error">*</span><span id="help-popover-num-employees" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span></label>
+                                                            <input type="text" name="employee_count"
+                                                                value="<?php echo $profiledata ? $profiledata->employee_count : ''; ?>" class="nsm-field form-control"
+                                                                autocomplete="off" placeholder="e.g. 5" required="">                                                
+                                                        </div>           
+                                                        <div class="col-12 col-md-4">
+                                                            <label class="content-subtitle fw-bold d-block mb-2">Business Type</label>
+                                                            <select class="form-control form-select" id="business_type" name="business_type" required="">
+                                                                <?php foreach($optionBusinessType as $type){ ?>
+                                                                    <option <?= $profiledata && $profiledata->business_type == $type ? 'selected="selected"' : ''; ?> value="<?= $type; ?>"><?= $type; ?></option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>                                 
+                                                    </div>
+                                                    <div class="row g-3">                                                    
+                                                        <div class="col-12 col-md-3 mt-5">
+                                                            <label class="content-subtitle fw-bold d-block mb-2">Employer Identification Number <small class="text-muted">(optional)</small></label>
+                                                            <input type="text" name="EIN" id="ein" value="<?php echo $profiledata->EIN; ?>" class="nsm-field form-control" autocomplete="off">
+                                                        </div>
+                                                        <div class="col-12 col-md-3 mt-5">
+                                                            <label class="content-subtitle fw-bold d-block mb-2">Social Security Number <small class="text-muted">(optional)</small></label>
+                                                            <input type="text" name="ssn" id="ssn" value="<?php echo $profiledata->ssn; ?>" class="nsm-field form-control" autocomplete="off">
+                                                        </div>
+                                                        <div class="col-12 col-md-6 mt-5">
+                                                            <label class="content-subtitle fw-bold d-block mb-2">Service Location
+                                                                <small class="text-muted">(optional)</small> <span id="help-popover-service-location" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span></label>
+                                                            <input type="text" name="service_location" class="form-control"
+                                                                value="<?php echo $profiledata->service_location; ?>" class="nsm-field form-control"
+                                                                id="service_locations" data-role="tagsinput">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row g-3 mt-4">                                                        
+                                                        <div class="col-12 col-md-12">
+                                                            <label class="content-subtitle fw-bold d-block mb-2">Do you work with
+                                                                other Business or Sub Contract?</label>
+                                                            <div style="display:inline-block;width: 100px; margin-right: 10px;">
+                                                                <input type="radio" class=""
+                                                                    name="is_subcontract_allowed" value="1"
+                                                                    <?php if($profiledata->is_subcontract_allowed==1){ ?> checked="checked" <?php } ?>
+                                                                    id="is_subcontract_allowed_1">
+                                                                <label for="is_subcontract_allowed_1"><span>Yes</span></label>
+                                                            </div>
+                                                            <div style="display:inline-block;width: 100px; margin-right: 10px;">
+                                                                <input type="radio" class=""
+                                                                    name="is_subcontract_allowed" value="0"
+                                                                    <?php if($profiledata->is_subcontract_allowed==0){ ?> checked="checked" <?php } ?>
+                                                                    id="is_subcontract_allowed_2">
+                                                                <label for="is_subcontract_allowed_2"><span>No</span></label>
+                                                            </div>
+                                                        </div>                                                    
+                                                    </div>  
+                                                    <div class="row g-3 mt-4">
+                                                        <div class="col-12 col-md-12 mt-5">
+                                                            <label class="content-subtitle fw-bold d-block mb-2">Business Short
+                                                                Description <span id="help-popover-business-description" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span> <span
+                                                                    class="help help-sm help-bold pull-right">characters left:
+                                                                    <span class="char-counter-left">1962</span></span></label>
+                                                            <textarea name="business_desc" cols="40" rows="8" class="nsm-field form-control businessdetail-desc"
+                                                                autocomplete="off"><?php echo $profiledata ? $profiledata->business_desc : ''; ?> </textarea>
+                                                        </div>
+                                                        <div class="col-12 col-md-12 mt-5 text-end">
+                                                            <button class="nsm-button primary" type="submit">Save</button>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                </div>                                
                             </div>
                         </div>
                     </div>
@@ -394,6 +409,15 @@
             trigger: "hover focus",
             content: function() {
                 return `Give customers more details on what your business actually does. Describe your company's values and goals. Minimum 25 characters.`;
+            }
+        });
+
+        $('#help-popover-digital-signature').popover({
+            placement: 'top',
+            html: true,
+            trigger: "hover focus",
+            content: function() {
+                return 'This is the electronic representation of company signature, update any time.';
             }
         });
 

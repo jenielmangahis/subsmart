@@ -399,6 +399,7 @@ $route['accounting/send-email-form']['post'] = 'accounting_modals/showEmailModal
 
 // Accounting Sales Tax
 $route['accounting/download_sales_tax_returns'] = 'accounting/download_sales_tax_returns';
+$route['accounting/download_sales_tax_returnsV2'] = 'accounting/download_sales_tax_returnsV2';
 
 // Workers Comp
 $route['accounting/_create_workers_comp'] = 'accounting/ajax_create_workers_comp_quote';
@@ -1232,6 +1233,7 @@ $route['user/_get_employee_commission_status'] = 'Users/ajax_get_employee_commis
 $route['user/_delete_employee_commission'] = 'Users/ajax_delete_employee_commission';
 $route['user/_update_employee_commission'] = 'Users/ajax_update_employee_commission';
 $route['user/_create_employee'] = 'Users/addNewEmployeeV2';
+
 $route['company/download_w9_form']  = 'Users/download_company_w9_form';
 
 //Business

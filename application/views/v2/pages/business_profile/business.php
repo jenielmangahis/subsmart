@@ -190,7 +190,7 @@
                                                         <label class="content-title fw-normal d-block"><span
                                                                 class="fw-bold">State/Province :</span>
                                                             <?= $profiledata->license_state ?><br><span
-                                                            class="fw-bold">Expires on :</span>
+                                                            class="fw-bold mt-2">Expires on :</span>
                                                             <?= date('m/d/Y', strtotime($profiledata->license_expiry_date)) ?></label>
                                                         <label class="content-title fw-normal d-block"><span
                                                                 class="fw-bold">Class :</span>
@@ -300,46 +300,39 @@
                                                     <div class="credential-cnt col-md-8">
                                                         <div class="row credential-verification">
                                                             <div class="col-md-6">
-                                                                <span
-                                                                    class="<?= $profiledata->sm_facebook ? 'fa fa-check active' : 'fa fa-circle-o' ?>"></span>
+                                                                <span class="<?= $profiledata->sm_facebook ? 'bx bx-check-circle active' : 'bx bx-circle' ?>"></span>
                                                                 Facebook
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <span
-                                                                    class="<?= $profiledata->sm_twitter ? 'fa fa-check active' : 'fa fa-circle-o' ?>"></span>
+                                                                <span class="<?= $profiledata->sm_twitter ? 'bx bx-check-circle active' : 'bx bx-circle' ?>"></span>
                                                                 Twitter
                                                             </div>
                                                         </div>
 
                                                         <div class="row credential-verification">
                                                             <div class="col-md-6">
-                                                                <span
-                                                                    class="<?= $profiledata->sm_google ? 'fa fa-check active' : 'fa fa-circle-o' ?>"></span>
+                                                                <span class="<?= $profiledata->sm_google ? 'bx bx-check-circle active' : 'bx bx-circle' ?>"></span>
                                                                 Google
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <span
-                                                                    class="<?= $profiledata->sm_youtube ? 'fa fa-check active' : 'fa fa-circle-o' ?>"></span>
+                                                                <span class="<?= $profiledata->sm_youtube ? 'bx bx-check-circle active' : 'bx bx-circle' ?>"></span>
                                                                 Youtube
                                                             </div>
                                                         </div>
 
                                                         <div class="row credential-verification">
                                                             <div class="col-md-6">
-                                                                <span
-                                                                    class="<?= $profiledata->sm_instagram ? 'fa fa-check active' : 'fa fa-circle-o' ?>"></span>
+                                                                <span class="<?= $profiledata->sm_instagram ? 'bx bx-check-circle active' : 'bx bx-circle' ?>"></span>
                                                                 Instagram
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <span
-                                                                    class="<?= $profiledata->sm_pinterest ? 'fa fa-check active' : 'fa fa-circle-o' ?>"></span>
+                                                                <span class="<?= $profiledata->sm_pinterest ? 'bx bx-check-circle active' : 'bx bx-circle' ?>"></span>
                                                                 Pinterest
                                                             </div>
                                                         </div>
                                                         <div class="row credential-verification">
                                                             <div class="col-md-6">
-                                                                <span
-                                                                    class="<?= $profiledata->sm_linkedin ? 'fa fa-check active' : 'fa fa-circle-o' ?>"></span>
+                                                                <span class="<?= $profiledata->sm_linkedin ? 'bx bx-check-circle active' : 'bx bx-circle' ?>"></span>
                                                                 LinkedIn
                                                             </div>
                                                         </div>
@@ -586,8 +579,7 @@
                                     <div class="col-12 col-md-6 text-end">
                                         <label class="content-subtitle d-block">Business since
                                             <b><?php echo $profiledata->year_est; ?></b></label>
-                                        <label class="content-subtitle d-block mt-1"><b><?php echo $profiledata->employee_count; ?></b>
-                                            employees</label>
+                                        <label class="content-subtitle d-block mt-1"><?php echo $profiledata->employee_count > 1 ? '<b>' . $profiledata->employee_count . '</b> employees': '<b>' . $profiledata->employee_count . '</b> employee' ; ?></label>
                                         <label class="content-subtitle d-block mt-1">Works with other businesses or
                                             sub-contractors</label>
                                     </div>
