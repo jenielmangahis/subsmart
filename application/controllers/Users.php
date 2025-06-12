@@ -3229,6 +3229,8 @@ class Users extends MY_Controller
 	public function download_company_w9_form()
 	{
         error_reporting(0);
+		
+		$this->load->model('Business_model');
 
         require_once(APPPATH . 'libraries/tcpdf/tcpdf.php');
         require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
@@ -3243,10 +3245,9 @@ class Users extends MY_Controller
 		$is_add_ssn = false;
 		$is_add_ein = false;
 		$is_add_business_type = false;
-
-        $this->db->select('*');
-        $this->db->where('company_id', logged('company_id'));
-        $business_profile = $this->db->get('business_profile')->row();
+        
+		$company_id = logged('company_id');
+        $business_profile = $this->Business_model->getByCompanyId($company_id);
 
         if($business_profile){        
 
@@ -3495,7 +3496,23 @@ class Users extends MY_Controller
 							$pdf->Cell(300, 10, isset($ein_data[8]) ? $ein_data[8] : '', 0, 0, 'L', 0);							
 						}
 						//EIN - End
-						
+
+						//Signature
+						if( $business_profile->img_signature != '' ){
+							$signatureHeight = 30;
+							$signatureImage  = base_url('uploads/Signatures/company/'.$company_id.'/'.$business_profile->img_signature);
+							$pdf->setY(570);
+							$pdf->setX(130);
+							$pdf->Image($signatureImage, null, null, null,  $signatureHeight);
+							
+							$date = date("m/d/Y");
+							$pdf->setY(585);
+							$pdf->setX(400);
+							$pdf->SetFont('Arial', '', 9);
+							$pdf->SetFillColor(249,249,249);
+							//$pdf->setFontStretching(130);
+							$pdf->Cell(300, 10, $date, 0, 0, 'L', 0);		
+						}
 					}                
                 }
 
