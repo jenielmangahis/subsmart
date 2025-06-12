@@ -1234,6 +1234,9 @@ $route['user/_update_employee_commission'] = 'Users/ajax_update_employee_commiss
 $route['user/_create_employee'] = 'Users/addNewEmployeeV2';
 $route['company/download_w9_form']  = 'Users/download_company_w9_form';
 
+//Business
+$route['company/_update_company_signature'] = 'Users/ajax_update_company_signature';
+
 // Payscale
 $route['payscale/_get_details'] = 'Users/ajax_payscale_get_details';
 

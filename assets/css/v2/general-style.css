@@ -244,7 +244,10 @@
 }
 
 .nsm-callout.primary{
-	border-left-color: #6a4a86 !important;
+	border-left-color: 1px solid rgba(0,0,0,.2) !important;
+	border-top-color: 1px solid rgba(0,0,0,.2) !important;
+	background-color:#ffffff;
+
 }
 
 .nsm-callout.error{

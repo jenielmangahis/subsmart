@@ -272,7 +272,9 @@ class Business_model extends MY_Model
             'C Corporation' =>'C Corporation',
             'S Corporation' => 'S Corporation',
             'Partnership' => 'Partnership',
-            'Trust / Estate' => 'Trust / Estate'
+            'Trust / Estate' => 'Trust / Estate',
+            'LLC' => 'LLC',
+            'Others' => 'Others' 
         ];
 
         return $options;

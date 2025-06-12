@@ -126,6 +126,9 @@ function Signing(hash) {
     const {  job_account_number, job_number, job_name, job_type } = window.__esigndata.auto_populate_data.jobs;
 
     const {  second_recipient_name, second_recipient_email } = window.__esigndata.auto_populate_data.second_recipient;
+
+    const { job_service_ticket_number, job_service_mail_add, job_service_city, job_service_state, job_service_zip } = window.__esigndata.auto_populate_data.job_service;
+
     
     let text = recipient[field_name.toLowerCase()];
     let { pageTop: top, left } = JSON.parse(coordinates);
@@ -134,6 +137,26 @@ function Signing(hash) {
 
     const container = document.querySelector(".signing__documentContainer");    
     const a_field_name = field_name;
+
+    if( field_name === 'Service Ticket Number' ) {
+      return job_service_ticket_number;
+    }
+
+    if( field_name === "Job Address" ) {
+      return job_service_mail_add;
+    }
+
+    if( field_name === "Job City" ) {
+      return job_service_city;
+    }
+
+    if( field_name === "Job State" ) {
+      return job_service_state;
+    }
+
+    if( field_name === "Job Zip" ) {
+      return job_service_zip;
+    }
     
     if ( field_name === "Total Due" ) {
       return total_due;
@@ -933,6 +956,31 @@ function Signing(hash) {
 
       if( widget_autopopulate_field_name == 'Job Type' ){
         return job_type;  
+      }
+
+      //Job Service
+      if( widget_autopopulate_field_name === 'Service Ticket Number' ) {
+        return job_service_ticket_number;
+      }
+
+      if( widget_autopopulate_field_name === "Job Address" ) {
+        return job_service_mail_add;
+      }
+
+      if( widget_autopopulate_field_name === "Job City" ) {
+        return job_service_city;
+      }
+
+      if( widget_autopopulate_field_name === "Job State" ) {
+        return job_service_state;
+      }
+
+      if( widget_autopopulate_field_name === "Job Zip" ) {
+        return job_service_zip;
+      }
+
+      if( widget_autopopulate_field_name == 'Job Name' ){
+        return job_name;  
       }
     }
     // Dynamic widget end

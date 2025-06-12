@@ -115,6 +115,25 @@ if (!function_exists('userSignature')) {
     }
 }
 
+if (!function_exists('companySignature')) {
+
+    function companySignature($cid)
+    {
+        $CI  = &get_instance();
+        $url = base_url('uploads/image/noimage.jpg');        
+        if ($cid > 0){          
+            $bussiness = $CI->Business_model->getByCompanyId($cid);
+            if( $bussiness ){
+                $signature_image = $bussiness->img_signature;
+                if( file_exists(FCPATH."uploads/Signatures/company/$cid/" . $signature_image) ){
+                    $url = base_url('uploads/Signatures/company/'.$cid.'/'.$signature_image);
+                }
+            }            
+        }
+        return $url;
+    }
+}
+
 
 
 if (!function_exists('userProfileImage')) {
