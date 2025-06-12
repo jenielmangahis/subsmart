@@ -42,7 +42,7 @@ $(function(){
 
     $(document).on('submit', '#frm-quick-add-other-address', function(e){
         e.preventDefault();
-
+        
         $.ajax({
             type: "POST",
             url: base_url + "customer/_quick_add_other_address",
