@@ -35,6 +35,10 @@ $(function(){
         location.href = base_url + 'customer_deals'
     });
 
+    $('#btn-list-view').on('click', function(){
+        location.href = base_url + 'customer_deals/list'
+    });
+
     $('#btn-stage-view').popover({
         placement: 'top',
         html : true, 
