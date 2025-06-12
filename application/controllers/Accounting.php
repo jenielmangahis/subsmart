@@ -17755,6 +17755,49 @@ class Accounting extends MY_Controller
         $this->pdf->load_view('accounting/sales/pdf/sales_and_use_tax_return', $this->page_data, $filename, "p");
         
     }
+
+    public function download_sales_tax_returnsV2()
+    {
+        error_reporting(0);
+		
+        require_once(APPPATH . 'libraries/tcpdf/tcpdf.php');
+        require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
+        
+        $generatedPDF = '/uploads/dr15/dr15.pdf';
+        //$generatedPDF = '/uploads/dr15/fw9_v1.4.pdf';
+		
+        if ($generatedPDF) {
+            $generatedPDFPath = FCPATH . ltrim($generatedPDF, '/');
+            $pageCount        = 0; 
+            if (file_exists($generatedPDFPath)) {   
+                $pdf       = new FPDI('P', 'px');
+                $pageCount = $pdf->setSourceFile($generatedPDFPath);
+
+                for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                    $pageIndex = $pdf->importPage($pageNo);
+                    $pdf->AddPage();
+                    $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
+
+					if( $pageNo == 1 ){
+                        $pdf->setY(293);
+						$pdf->setX(175);
+						$pdf->SetFont('Arial', '', 9);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, 'Jen', 0, 0, 'L', 0);
+					}      
+                }
+
+                //$uploadPath = $this->getGeneratedPDFUploadPath();
+                //$uploadFilePath = $uploadPath . 'generatedSalesTax.pdf';
+
+                //Display in browser
+                $pdf->Output('I');
+
+                //$pdf->Output($uploadFilePath, 'F');
+            }          
+        }    
+        return $pdf->Output(null, 'S');   
+    }
 }
 
 // date_plan: date_plan, merchant_name:merchant_name, plan_amount:plan_amount, plan_type:plan_type, plan_repeat:plan_repeat

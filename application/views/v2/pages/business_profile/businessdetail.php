@@ -207,7 +207,7 @@
                                                 </div>
                                                 <div class="nsm-card-content">
                                                     <div class="d-flex justify-content-evenly align-items-center flex-column h-100">
-                                                        <img src="<?= companySignature($profiledata->id); ?>" id="profile_signature" alt="Signature">      
+                                                        <img src="<?= companySignature($profiledata->company_id); ?>" id="profile_signature" alt="Signature">      
                                                     </div>
                                                 </div>
                                             </div>
