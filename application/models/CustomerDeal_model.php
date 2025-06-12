@@ -11,12 +11,18 @@ class CustomerDeal_model extends MY_Model
         parent::__construct();
     }
 
-    public function getAllByCompanyId($company_id, $sort = [])
+    public function getAllByCompanyId($company_id, $sort = [], $filters = [])
     {
         $this->db->select('customer_deals.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname, acs_profile.business_name AS customer_business_name');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'customer_deals.customer_id = acs_profile.prof_id', 'left');
         $this->db->where('customer_deals.company_id', $company_id);
+        
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
         
         if( $sort ){
             $this->db->order_by($sort['field'], $sort['order']);
@@ -111,6 +117,38 @@ class CustomerDeal_model extends MY_Model
         $this->db->from($this->table);
         $this->db->where('customer_deals.expected_close_date >=', $date_range['from']);
         $this->db->where('customer_deals.expected_close_date <=', $date_range['to']);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getSumValueByStatus($status, $filters = [])
+    {
+        $this->db->select('COALESCE(SUM(value),0) AS total_value');
+        $this->db->from($this->table);
+        $this->db->where('customer_deals.status', $status);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getSumValueByCompanyId($company_id, $filters = [])
+    {
+        $this->db->select('COALESCE(SUM(value),0) AS total_value');
+        $this->db->from($this->table);
+        $this->db->where('customer_deals.company_id', $company_id);
 
         if( $filters ){
             foreach( $filters as $filter ){
