@@ -2814,6 +2814,9 @@ class Users extends MY_Controller
 		} else {
 			copy(FCPATH . 'uploads/users/default.png', 'uploads/users/business_profile/' . $bid . '/default.png');
 		}
+
+		$pdata['EIN'] = str_replace("-","", $pdata['EIN']);
+		$pdata['ssn'] = str_replace("-","", $pdata['ssn']);
 		$this->business_model->update($bid, $pdata);
 
 		//redirect('users/businessdetail');
