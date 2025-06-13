@@ -217,6 +217,7 @@
         </div>
     </div>
     <?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
+    <?php include viewPath('v2/includes/customer/other_address'); ?>
 </div>
 <?php if ($onlinePaymentAccount) { ?>
     <?php if ($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != '') { ?>

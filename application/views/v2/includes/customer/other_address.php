@@ -42,7 +42,7 @@ $(function(){
 
     $(document).on('submit', '#frm-quick-add-other-address', function(e){
         e.preventDefault();
-
+        
         $.ajax({
             type: "POST",
             url: base_url + "customer/_quick_add_other_address",
@@ -54,9 +54,9 @@ $(function(){
                 let prof_id = $('#prof-id').val();
                 let other_address = $('#other-address-mail-add').val() + ' ' + $('#other-address-city').val() + ', ' + $('#other-address-state').val() + ' ' + $('#other-address-zip').val();
                 let mail_add = $('#other-address-mail-add').val();
-                let city = $('#other-address-mail-city').val();
-                let state = $('#other-address-mail-state').val();
-                let zip = $('#other-address-mail-zip').val();
+                let city = $('#other-address-city').val();
+                let state = $('#other-address-state').val();
+                let zip = $('#other-address-zip').val();
                 let row = `
                     <tr>
                         <td></td>                        

@@ -228,10 +228,9 @@
                                 </button>
                             <?php } ?>
                             <?php if (isset($estimates) && count($estimates) > 0) { ?>
-                            <button type="button" class="nsm-button primary"
-                                onclick="window.open('<?php echo base_url('estimate/print'); ?>','_blank')">
-                                <i class='bx bx-fw bx-printer'></i>
-                            </button>
+                                <!-- <button type="button" class="nsm-button primary" onclick="window.open('<?php echo base_url('estimate/print'); ?>','_blank')">
+                                    <i class='bx bx-fw bx-printer'></i>
+                                </button> -->
                             <?php } ?>
                         </div>
                     </div>

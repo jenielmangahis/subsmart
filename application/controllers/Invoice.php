@@ -1452,6 +1452,8 @@ class Invoice extends MY_Controller
         $this->load->model('CompanyOnlinePaymentAccount_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('Invoice_settings_model', 'invoice_settings_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('Tickets_model');
 
         $invoice = get_invoice_by_id($id);
 
@@ -1553,6 +1555,29 @@ class Invoice extends MY_Controller
                     $invoice->{$key} = unserialize($value);
                 }
             }
+
+            $customer = $this->AcsProfile_model->getByProfId($invoice->customer_id);
+            $invoice_address_a = strtoupper($customer->mail_add);
+            $invoice_address_b = strtoupper($customer->city . ' ' . $customer->state . ' ' . $customer->zip_code);
+
+            if( $invoice->job_id > 0 ){
+                $job = $this->Jobs_model->getByIdAndCompanyId($invoice->job_id, $invoice->company_id);
+                if( $job && $job->job_address != '' ){
+                    $invoice_address_a = strtoupper($job->job_address);
+                    $invoice_address_b = strtoupper($job->job_city . ' ' . $job->job_state . ' ' . $job->job_zip);
+                }
+            }
+
+            if( $invoice->ticket_id > 0 ){
+                $ticket = $this->Tickets_model->getByIdAndCompanyId($invoice->ticket_id, $invoice->company_id);
+                if( $ticket && $ticket->acs_address != '' ){
+                    $invoice_address_a = strtoupper($ticket->acs_address);
+                    $invoice_address_b = strtoupper($ticket->acs_city . ' ' . $ticket->acs_state . ' ' . $ticket->acs_zip);
+                }
+            }
+
+            $this->page_data['invoice_address_a'] = $invoice_address_a;
+            $this->page_data['invoice_address_b'] = $invoice_address_b;
 
             $customer_billing_info   = $this->customer_ad_model->getActiveSubscriptionsByCustomerId($invoice->customer_id);	
             $invoiceSettings         = $this->invoice_settings_model->getByCompanyId($invoice->company_id);
