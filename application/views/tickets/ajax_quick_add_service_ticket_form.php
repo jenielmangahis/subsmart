@@ -106,7 +106,8 @@
     <div class="col-md-6">
         <div class="nsm-card primary">
             <div class="nsm-card-content">    
-                <iframe id="TEMPORARY_MAP_VIEW" src="http://maps.google.com/maps?output=embed" height="100%" width="100%" style=""></iframe>
+                <div class="text-center MAP_LOADER">
+                    <iframe id="TEMPORARY_MAP_VIEW" src="http://maps.google.com/maps?output=embed" height="470" width="100%" style=""></iframe>
             </div>
         </div>        
     </div>
@@ -735,7 +736,6 @@
         </div>
     </div>        
 </div>
-<?php include viewPath('v2/includes/customer/other_address'); ?>
 <script>
 $(document).ready(function(){
     var is_with_esign = 0;
@@ -874,6 +874,10 @@ $(document).ready(function(){
                 }
                 
                 var service_location = response.mail_add + ' ' + response.city + ', ' + response.state + ' ' + response.zip_code;
+                var map_source = 'http://maps.google.com/maps?q='+service_location+'&output=embed';
+                var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="470" width="100%" style=""></iframe>';
+                $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+
                 //var service_location = response.mail_add;
                 $("#service_location").val(service_location);
                 $("#customer_city").val(response.city);
@@ -1045,7 +1049,7 @@ $(document).ready(function(){
         $('#customer_zip').val(zip);
 
         let map_source = 'http://maps.google.com/maps?q='+other_address+'&output=embed';
-        let map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="300" width="100%" style=""></iframe>';
+        let map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="470" width="100%"></iframe>';
         $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
 
         $('.btn-use-different-address').popover({
