@@ -128,6 +128,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <div class="col-md-12 mt-4">
                                 <label class="bold" for="job_location">Job Location <small class="help help-sm">(optional)</small></label>
+                                <a class="btn-use-different-address nsm-button default btn-small float-end" id="btn-use-different-address" data-id="<?= $invoice->customer_id; ?>" href="javascript:void(0);">Use Other Address</a>
                                 <textarea class="form-control" name="jobs_location" id="invoice_jobs_location" style="height:100px;"><?php echo $invoice->job_location; ?></textarea>
                             </div>
                         </div>
@@ -978,6 +979,31 @@ $(document).ready(function(){
         
             }
         });
+    });
+
+    $(document).on('click', '.btn-use-other-address', function(){
+        let prof_id = $(this).attr('data-id');
+        let mail_add = $(this).attr('data-mailadd');
+        let city = $(this).attr('data-city');
+        let state = $(this).attr('data-state');
+        let zip   = $(this).attr('data-zip');
+        let other_address = $(this).attr('data-address');
+        
+        $('#other-address-customer').modal('hide');        
+        $('#invoice_jobs_location').val(other_address);
+
+        let map_source = 'http://maps.google.com/maps?q='+other_address+'&output=embed';
+        let map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="470" width="100%" style=""></iframe>';
+        $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+
+        $('.btn-use-different-address').popover({
+            placement: 'top',
+            html : true, 
+            trigger: "hover focus",
+            content: function() {
+                return 'Use other address';
+            } 
+        }); 
     });
 });
 </script>
