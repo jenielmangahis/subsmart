@@ -1541,6 +1541,8 @@ class Invoice extends MY_Controller
         $this->load->model('CompanyOnlinePaymentAccount_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('Invoice_settings_model', 'invoice_settings_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('Tickets_model');
 
         $invoice = get_invoice_by_id($id);
 

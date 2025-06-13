@@ -1687,6 +1687,8 @@ class Pages extends MYF_Controller {
         $this->load->model('general_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('CompanyOnlinePaymentAccount_model');
+		$this->load->model('Jobs_model');
+        $this->load->model('Tickets_model');
 
         $invoice = get_invoice_by_id($id);
 
@@ -1696,43 +1698,66 @@ class Pages extends MYF_Controller {
                     $invoice->{$key} = unserialize($value);
                 }
             }
+
             $this->page_data['invoice'] = $invoice;
-        }
 
-        $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
+			$this->page_data['items'] = $this->invoice_model->getItemsInv($id);
+			$get_company_info = array(
+				'where' => array(
+					'company_id' => $invoice->company_id,
+				),
+				'table' => 'business_profile',
+				'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+			);
 
-        $get_company_info = array(
-            'where' => array(
-                'company_id' => $invoice->company_id,
-            ),
-            'table' => 'business_profile',
-            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
-        );
+			$this->page_data['company_info'] = $this->general_model->get_data_with_param($get_company_info, false);
+			$this->page_data['customer'] = $this->AcsProfile_model->getByProfId($invoice->customer_id);
 
-        $this->page_data['company_info'] = $this->general_model->get_data_with_param($get_company_info, false);
-        $this->page_data['customer'] = $this->AcsProfile_model->getByProfId($invoice->customer_id);
+			$customer = $this->AcsProfile_model->getByProfId($invoice->customer_id);
+			$invoice_address_a = strtoupper($customer->mail_add);
+			$invoice_address_b = strtoupper($customer->city . ' ' . $customer->state . ' ' . $customer->zip_code);
 
-        if( $type == 1 ){
-            return $this->load->view('v2/pages/invoice/back-invoice-template', $this->page_data, true);
-        }else{
-            $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($invoice->company_id);                
-            if( $companyOnlinePaymentAccount && ($companyOnlinePaymentAccount->braintree_merchant_id != '' && $companyOnlinePaymentAccount->braintree_public_key != '' && $companyOnlinePaymentAccount->braintree_private_key != '') ){
-                $gateway = new Braintree\Gateway([
-                    'environment' => BRAINTREE_ENVIRONMENT,
-                    'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
-                    'publicKey' => $companyOnlinePaymentAccount->braintree_public_key,
-                    'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
-                ]);
+			if( $invoice->job_id > 0 ){
+				$job = $this->Jobs_model->getByIdAndCompanyId($invoice->job_id, $invoice->company_id);
+				if( $job && $job->job_address != '' ){
+					$invoice_address_a = strtoupper($job->job_address);
+					$invoice_address_b = strtoupper($job->job_city . ' ' . $job->job_state . ' ' . $job->job_zip);
+				}
+			}
 
-                try {
-                    $braintree_token = $gateway->ClientToken()->generate();	
-                } catch (Exception $e) {
-                    $braintree_token = '';
-                }
-            }   
-            $this->page_data['braintree_token'] = $braintree_token;
-            return $this->load->view('v2/pages/invoice/front-invoice-template', $this->page_data, true);
-        }        
+			if( $invoice->ticket_id > 0 ){
+				$ticket = $this->Tickets_model->getByIdAndCompanyId($invoice->ticket_id, $invoice->company_id);
+				if( $ticket && $ticket->acs_address != '' ){
+					$invoice_address_a = strtoupper($ticket->acs_address);
+					$invoice_address_b = strtoupper($ticket->acs_city . ' ' . $ticket->acs_state . ' ' . $ticket->acs_zip);
+				}
+			}
+
+			$this->page_data['invoice_address_a'] = $invoice_address_a;
+			$this->page_data['invoice_address_b'] = $invoice_address_b;
+
+			if( $type == 1 ){
+				return $this->load->view('v2/pages/invoice/back-invoice-template', $this->page_data, true);
+			}else{
+				$companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($invoice->company_id);                
+				if( $companyOnlinePaymentAccount && ($companyOnlinePaymentAccount->braintree_merchant_id != '' && $companyOnlinePaymentAccount->braintree_public_key != '' && $companyOnlinePaymentAccount->braintree_private_key != '') ){
+					$gateway = new Braintree\Gateway([
+						'environment' => BRAINTREE_ENVIRONMENT,
+						'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
+						'publicKey' => $companyOnlinePaymentAccount->braintree_public_key,
+						'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
+					]);
+
+					try {
+						$braintree_token = $gateway->ClientToken()->generate();	
+					} catch (Exception $e) {
+						$braintree_token = '';
+					}
+				}   
+				$this->page_data['braintree_token'] = $braintree_token;
+				return $this->load->view('v2/pages/invoice/front-invoice-template', $this->page_data, true);
+			} 
+        }      
     }
 
 	public function viewTicketDetails($cid, $id)
