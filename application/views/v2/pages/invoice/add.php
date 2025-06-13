@@ -91,7 +91,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="nsm-card-content row">
                             <div class="col-md-12">
                                 <label for="invoice_customer" class="bold">Customer</label>
-                                <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#new_customer" style="float:right;">Add New</a>
+                                <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" style="float:right;">Add New</a>
                                 <select name="customer_id" id="customer_id" class="form-select" required>
                                     <option value="">- Select Customer -</option>
                                     <?php foreach ($customers as $customer): ?>
@@ -118,8 +118,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <input type="text" class="form-control" name="job_name" id="job_name" value="" />
                             </div>
                             <div class="col-md-12 mt-4">
-                                <label class="bold" for="job_location">Job Location <small class="help help-sm">(optional)</small></label>
-                                <textarea class="form-control" name="jobs_location" id="invoice_jobs_location" style="height:100px;"></textarea>
+                                <label class="bold" for="job_location">Job Location</label>
+                                <a class="btn-use-different-address nsm-button default btn-small float-end" style="display:none;" id="btn-use-different-address" data-id="" href="javascript:void(0);">Use Other Address</a>
+                                <textarea class="form-control" name="jobs_location" id="invoice_jobs_location" style="height:100px;" required=""></textarea>
                             </div>
                         </div>
                     </div>
@@ -602,10 +603,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
         </div>
     </div>
-    <?php include viewPath('v2/pages/job/modals/new_customer'); ?>
+    <?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
+    <?php include viewPath('v2/includes/customer/other_address'); ?>
     <?php include viewPath('v2/includes/footer'); ?>
     <script>
         $(document).ready(function() {
+
+            $('#btn-add-new-customer').on('click', function(){
+                $('#target-id-dropdown').val('customer_id');
+                $('#origin-modal-id').val('');
+            });
+
             $('#popover-po').popover({
                 placement: 'top',
                 html: true,
@@ -881,13 +889,41 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         var map_source = 'http://maps.google.com/maps?q=' + service_location +
                             '&output=embed';
                         var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
-                            '" height="370" width="100%" style=""></iframe>';
+                            '" height="470" width="100%" style=""></iframe>';
                         $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+
+                        $('#btn-use-different-address').attr('data-id', id);
+                        $('#btn-use-different-address').show();
                     },
                     error: function(response) {
 
                     }
                 });
+            });
+
+            $(document).on('click', '.btn-use-other-address', function(){
+                let prof_id = $(this).attr('data-id');
+                let mail_add = $(this).attr('data-mailadd');
+                let city = $(this).attr('data-city');
+                let state = $(this).attr('data-state');
+                let zip   = $(this).attr('data-zip');
+                let other_address = $(this).attr('data-address');
+                
+                $('#other-address-customer').modal('hide');        
+                $('#invoice_jobs_location').val(other_address);
+
+                let map_source = 'http://maps.google.com/maps?q='+other_address+'&output=embed';
+                let map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="470" width="100%" style=""></iframe>';
+                $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+
+                $('.btn-use-different-address').popover({
+                    placement: 'top',
+                    html : true, 
+                    trigger: "hover focus",
+                    content: function() {
+                        return 'Use other address';
+                    } 
+                }); 
             });
         });
     </script>

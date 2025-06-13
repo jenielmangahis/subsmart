@@ -18,8 +18,8 @@ if ($invoice->due_date > date('Y-m-d')) {
                 <tr>
                     <div><b>TO:</b></div>                    
                     <div><?= strtoupper($customer->first_name . ' ' . $customer->last_name); ?></div>
-                    <div><?= strtoupper($customer->mail_add); ?></div>
-                    <div><?= strtoupper($customer->city . ' ' . $customer->state . ' ' . $customer->zip_code); ?></div>
+                    <div><?= $invoice_address_a; ?></div>
+                    <div><?= $invoice_address_b; ?></div>
                     <div>TEL: <?= $customer->phone_m; ?></div>
                 </tr>
             </table>

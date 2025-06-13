@@ -85,7 +85,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="col-md-12">
                                 <input type="hidden" value="<?php echo $invoice->id; ?>" name="invoiceDataID">
                                 <label for="invoice_customer" class="bold">Customer</label>
-                                <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#new_customer" style="float:right;">Add New</a>
+                                <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" style="float:right;">Add New</a>
                                 <select name="customer_id" id="customer_id" class="form-select" required>
                                 <?php foreach ($customers as $customer):?>
                                 <option <?php if(isset($customers)){ if($customer->prof_id == $invoice->customer_id){echo "selected";} } ?>  value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
@@ -689,11 +689,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div>
     </div>
 </div>
-<?php include viewPath('v2/pages/job/modals/new_customer'); ?>
+<?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
+<?php include viewPath('v2/includes/customer/other_address'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
 <script>
 
 $(document).ready(function(){
+    $('#btn-add-new-customer').on('click', function(){
+        $('#target-id-dropdown').val('customer_id');
+        $('#origin-modal-id').val('');
+    });
+
     $('#popover-po').popover({
         placement: 'top',
         html: true,
