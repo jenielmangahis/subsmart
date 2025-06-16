@@ -17764,7 +17764,6 @@ class Accounting extends MY_Controller
         require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
         
         $generatedPDF = '/uploads/dr15/dr15.pdf';
-        //$generatedPDF = '/uploads/dr15/fw9_v1.4.pdf';
 		
         if ($generatedPDF) {
             $generatedPDFPath = FCPATH . ltrim($generatedPDF, '/');
@@ -17778,12 +17777,211 @@ class Accounting extends MY_Controller
                     $pdf->AddPage();
                     $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
 
+                    $gross_sales_a = number_format(0,2);
+                    $gross_sales_b = number_format(0,2);
+                    $gross_sales_c = number_format(0,2);
+                    $gross_sales_d = number_format(0,2);
+                    $gross_sales_e = number_format(0,2);
+
+                    $exemp_sales_a = number_format(0,2);
+                    $exemp_sales_b = number_format(0,2);
+                    $exemp_sales_c = number_format(0,2);
+                    $exemp_sales_d = number_format(0,2);
+                    $exemp_sales_e = number_format(0,2);
+
+                    $taxable_amount_a = number_format(0,2);
+                    $taxable_amount_b = number_format(0,2);
+                    $taxable_amount_c = number_format(0,2);
+                    $taxable_amount_d = number_format(0,2);
+                    $taxable_amount_e = number_format(0,2);
+
+                    $tax_due_a = number_format(0,2);
+                    $tax_due_b = number_format(0,2);
+                    $tax_due_c = number_format(0,2);
+                    $tax_due_d = number_format(0,2);
+                    $tax_due_e = number_format(0,2);
+
+                    $total_amount_of_tax_due = number_format(0,2);
+                    $less_lawful_deductions  = number_format(0,2);
+                    $net_tax_due             = number_format(0,2);
+                    $let_est_tax_pd_memo     = number_format(0,2);
+                    $plus_est_tax_due_current_month = number_format(0,2);
+                    $amount_due              = number_format(0,2);
+                    $plus_penalty            = number_format(0,2);
+                    $plus_interest           = number_format(0,2);
+                    $amount_due_with_return  = number_format(0,2);
+
 					if( $pageNo == 1 ){
-                        $pdf->setY(293);
-						$pdf->setX(175);
-						$pdf->SetFont('Arial', '', 9);
+                        $pdf->setY(294);
+						$pdf->setX(160);
+						$pdf->SetFont('Arial', '', 8);
 						$pdf->SetFillColor(249,249,249);
-						$pdf->Cell(300, 10, 'Jen', 0, 0, 'L', 0);
+						$pdf->Cell(300, 10, $gross_sales_a, 0, 0, 'L', 0);
+
+                        $pdf->setY(318);
+						$pdf->setX(160);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $gross_sales_c, 0, 0, 'L', 0);
+
+                        $pdf->setY(330);
+						$pdf->setX(160);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $gross_sales_d, 0, 0, 'L', 0);
+
+                        $pdf->setY(342);
+						$pdf->setX(160);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $gross_sales_e, 0, 0, 'L', 0);
+
+                        //---------
+
+                        $pdf->setY(294);
+						$pdf->setX(256);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $exemp_sales_a, 0, 0, 'L', 0);
+
+                        $pdf->setY(318);
+						$pdf->setX(256);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $exemp_sales_c, 0, 0, 'L', 0);
+
+                        $pdf->setY(330);
+						$pdf->setX(256);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $exemp_sales_d, 0, 0, 'L', 0);
+
+                        $pdf->setY(342);
+						$pdf->setX(256);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $exemp_sales_e, 0, 0, 'L', 0);
+
+                        //------------
+
+                        $pdf->setY(294);
+						$pdf->setX(358);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $taxable_amount_a, 0, 0, 'L', 0);
+
+                        $pdf->setY(306);
+						$pdf->setX(358);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $taxable_amount_b, 0, 0, 'L', 0);
+
+                        $pdf->setY(318);
+						$pdf->setX(358);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $taxable_amount_c, 0, 0, 'L', 0);
+
+                        $pdf->setY(330);
+						$pdf->setX(358);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $taxable_amount_d, 0, 0, 'L', 0);
+
+                        $pdf->setY(342);
+						$pdf->setX(358);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $taxable_amount_e, 0, 0, 'L', 0);
+
+                        //------------
+
+                        $pdf->setY(294);
+						$pdf->setX(484);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $tax_due_a, 0, 0, 'L', 0);
+
+                        $pdf->setY(306);
+						$pdf->setX(484);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $tax_due_b, 0, 0, 'L', 0);
+
+                        $pdf->setY(318);
+						$pdf->setX(484);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $tax_due_c, 0, 0, 'L', 0);
+
+                        $pdf->setY(330);
+						$pdf->setX(484);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $tax_due_d, 0, 0, 'L', 0);
+
+                        $pdf->setY(342);
+						$pdf->setX(484);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $tax_due_e, 0, 0, 'L', 0);
+
+                        //------------
+
+                        $pdf->setY(354);
+						$pdf->setX(484);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $total_amount_of_tax_due, 0, 0, 'L', 0);
+
+                        $pdf->setY(366);
+						$pdf->setX(484);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $less_lawful_deductions, 0, 0, 'L', 0);
+
+                        $pdf->setY(378);
+						$pdf->setX(484);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $net_tax_due, 0, 0, 'L', 0);
+
+                        $pdf->setY(390);
+						$pdf->setX(484);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $let_est_tax_pd_memo, 0, 0, 'L', 0);
+
+                        $pdf->setY(402);
+						$pdf->setX(484);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $plus_est_tax_due_current_month, 0, 0, 'L', 0);
+
+                        $pdf->setY(414);
+						$pdf->setX(484);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $amount_due, 0, 0, 'L', 0);
+
+                        $pdf->setY(437);
+						$pdf->setX(484);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $plus_penalty, 0, 0, 'L', 0);
+
+                        $pdf->setY(449);
+						$pdf->setX(484);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $plus_interest, 0, 0, 'L', 0);
+
+                        $pdf->setY(461);
+						$pdf->setX(484);
+						$pdf->SetFont('Arial', '', 8);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $amount_due_with_return, 0, 0, 'L', 0);
+
 					}      
                 }
 
