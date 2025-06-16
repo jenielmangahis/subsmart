@@ -1722,11 +1722,6 @@ class Users extends MY_Controller
 			'action' => 'Break Out',
 			'timestamp' => $this->input->post('current_time_in'),
 			'entry_type' => 'Normal'
-			/*'user_id' => $this->input->post('clockin_user_id'),
-			'company_id' => $this->input->post('clockin_company_id'),
-			'clock_in' => $this->input->post('current_time_in'),
-			'session_key' => $this->input->post('clockin_sess'),
-			'status' => $this->input->post('clockin_status')*/
 		);
 		$this->timesheet_model->clockIn($data);
 	}
@@ -2814,6 +2809,9 @@ class Users extends MY_Controller
 		} else {
 			copy(FCPATH . 'uploads/users/default.png', 'uploads/users/business_profile/' . $bid . '/default.png');
 		}
+
+		$pdata['EIN'] = str_replace("-","", $pdata['EIN']);
+		$pdata['ssn'] = str_replace("-","", $pdata['ssn']);
 		$this->business_model->update($bid, $pdata);
 
 		//redirect('users/businessdetail');
@@ -3258,12 +3256,14 @@ class Users extends MY_Controller
 
 			if($business_profile->ssn != null && $business_profile->ssn != "") {
 				$is_add_ssn = true;
-				$ssn_data = $business_profile->ssn;
+				//$ssn_data = $business_profile->ssn;
+				$ssn_data = str_replace("-","", $business_profile->ssn);
 			}
 
 			if($business_profile->EIN != null && $business_profile->EIN != "") {
 				$is_add_ein = true;
-				$ein_data = $business_profile->EIN;
+				//$ein_data = $business_profile->EIN;
+				$ein_data = str_replace("-","", $business_profile->EIN);
 			}
 
 			if($business_profile->business_type != null && $business_profile->business_type != "") {
