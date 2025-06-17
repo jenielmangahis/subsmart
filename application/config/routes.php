@@ -2199,6 +2199,7 @@ $route['customer_deals/_archive_selected_deals'] = 'CustomerDeal/ajax_archive_se
 $route['customer_deals/_restore_selected_deals'] = 'CustomerDeal/ajax_restore_selected_deals';
 $route['customer_deals/_won_selected_deals'] = 'CustomerDeal/ajax_won_selected_deals';
 $route['customer_deals/_lost_selected_deals'] = 'CustomerDeal/ajax_lost_selected_deals';
+$route['customer_deals/export'] = 'CustomerDeal/exportData';
 
 
 //Customer Other Address
