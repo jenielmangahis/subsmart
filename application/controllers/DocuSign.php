@@ -480,10 +480,10 @@ class DocuSign extends MYF_Controller
             $filteredJobService = [
                 'job_number' => '',
                 'job_service_ticket_number' => $service_ticket->ticket_no,
-                'job_service_mail_add' => $service_ticket->service_location,
-                'job_service_city' => $service_ticket->acs_city,
-                'job_service_state' => $service_ticket->acs_state,
-                'job_service_zip' => $service_ticket->acs_zip,
+                'job_service_mail_add' => $service_ticket->acs_address != '' ? $service_ticket->acs_address : $acs_client->mail_add,
+                'job_service_city' => $service_ticket->acs_city != '' ? $service_ticket->acs_city : $acs_client->city,
+                'job_service_state' => $service_ticket->acs_state != '' ? $service_ticket->acs_state : $acs_client->state,
+                'job_service_zip' => $service_ticket->acs_zip != '' ? $service_ticket->acs_zip : $acs_client->zip_code,
             ];
         }elseif( $document->job_id > 0 ){
             $this->db->where('id', $document->job_id);
@@ -491,10 +491,10 @@ class DocuSign extends MYF_Controller
             $filteredJobService = [
                 'job_number' => $jobs_data->job_number,
                 'job_service_ticket_number' => '',
-                'job_service_mail_add' => $jobs_data->job_address,
-                'job_service_city' => $jobs_data->job_city,
-                'job_service_state' => $jobs_data->job_state,
-                'job_service_zip' => $jobs_data->job_zip,
+                'job_service_mail_add' => $jobs_data->job_address != '' ? $jobs_data->job_address : $acs_client->mail_add,
+                'job_service_city' => $jobs_data->job_city != '' ? $jobs_data->job_city : $acs_client->city,
+                'job_service_state' => $jobs_data->job_state != '' ? $jobs_data->job_state : $acs_client->state,
+                'job_service_zip' => $jobs_data->job_zip != '' ? $jobs_data->job_zip : $acs_client->zip_code,
             ];
         }else{
             $filteredJobService = [
