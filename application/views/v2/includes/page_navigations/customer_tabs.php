@@ -44,6 +44,12 @@
                 <span>Commercial</span>
             </a>
         </li>
+        <li class="<?php if($page->title == 'Customer Deals'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('customer_deals') ?>">
+                <i class='bx bx-fw bx-briefcase-alt'></i>
+                <span>Customer Deals</span>
+            </a>
+        </li>
         <li class="<?php if($page->title == 'Customer Groups'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('customer/group') ?>">
                 <i class='bx bx-fw bx-group'></i>
