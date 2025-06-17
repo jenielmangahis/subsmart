@@ -2181,6 +2181,7 @@ $route['customer_deals/_update_customer_deal_status'] = 'CustomerDeal/ajax_updat
 $route['customer_deals/_deal_stage_summary'] = 'CustomerDeal/ajax_deal_stage_summary';
 $route['customer_deals/_deal_scheduled_activities'] = 'CustomerDeal/ajax_deal_scheduled_activities';
 $route['customer_deals/_create_customer_deal_activity_schedule'] = 'CustomerDeal/ajax_create_customer_deal_activity_schedule';
+$route['customer_deals/_with_selected_create_customer_deal_activity_schedule'] = 'CustomerDeal/ajax_with_selected_create_customer_deal_activity_schedule';
 $route['customer_deals/_activity_is_done'] = 'CustomerDeal/ajax_activity_is_done';
 $route['customer_deals/_edit_activity_schedule_form'] = 'CustomerDeal/ajax_edit_activity_schedule_form';
 $route['customer_deals/_update_customer_deal_activity_schedule'] = 'CustomerDeal/ajax_update_customer_deal_activity_schedule';
@@ -2194,8 +2195,10 @@ $route['customer_deals/_update_expected_close_date'] = 'CustomerDeal/ajax_update
 $route['customer_deals/_deal_month_summary'] = 'CustomerDeal/ajax_deal_month_summary';
 $route['customer_deals/_forecast_view_by_quarter'] = 'CustomerDeal/ajax_forecast_view_by_quarter';
 $route['customer_deals/list'] = 'CustomerDeal/list';
-$route['customer_deals/_update_status_customer_deal'] = 'CustomerDeal/ajax_update_status_customer_deal';
-$route['customer_deals/_delete_selected_deals'] = 'CustomerDeal/ajax_delete_selected_deals';
+$route['customer_deals/_archive_selected_deals'] = 'CustomerDeal/ajax_archive_selected_deals';
+$route['customer_deals/_restore_selected_deals'] = 'CustomerDeal/ajax_restore_selected_deals';
+$route['customer_deals/_won_selected_deals'] = 'CustomerDeal/ajax_won_selected_deals';
+$route['customer_deals/_lost_selected_deals'] = 'CustomerDeal/ajax_lost_selected_deals';
 
 
 //Customer Other Address
