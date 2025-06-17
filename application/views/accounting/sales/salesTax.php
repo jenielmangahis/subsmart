@@ -563,7 +563,7 @@ include viewPath('v2/includes/header');
                                             </li>
 
                                             <li class="shortcuts__item">
-                                                <a href="<?= base_url('accounting/download_sales_tax_returns') ?>" class="shortcuts__itemMain">
+                                                <a href="<?= base_url('accounting/download_sales_tax_returnsV2') ?>" target="_blank" class="shortcuts__itemMain">
                                                     <div class="shortcuts__logo">
                                                         <img src="<?php echo $url->assets ?>img/taxlogo/l5.png">
                                                     </div>
