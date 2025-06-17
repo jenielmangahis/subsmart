@@ -312,7 +312,7 @@
                                 <?php
                                                 $total1 = ((float) $estimate->option1_total) + ((float) $estimate->option2_total);
                                     $total2 = ((float) $estimate->bundle1_total) + ((float) $estimate->bundle2_total);
-                                    echo '$ '.number_format(floatval($estimate->grand_total), 2);
+                                    echo '$'.number_format(floatval($estimate->grand_total), 2);
 
                                     ?>
                             </td>
