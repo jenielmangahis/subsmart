@@ -13,9 +13,10 @@ class CustomerDeal_model extends MY_Model
 
     public function getAllByCompanyId($company_id, $sort = [], $filters = [])
     {
-        $this->db->select('customer_deals.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname, acs_profile.business_name AS customer_business_name');
+        $this->db->select('customer_deals.*, acs_profile.first_name AS customer_firstname, acs_profile.last_name AS customer_lastname, acs_profile.business_name AS customer_business_name, users.FName, users.LName');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'customer_deals.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('users', 'customer_deals.owner_id = users.id', 'left');
         $this->db->where('customer_deals.company_id', $company_id);
         
         if( $filters ){
@@ -170,6 +171,32 @@ class CustomerDeal_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }  
+
+    public function bulkDelete($ids = [], $filters = [])
+    {
+        $this->db->where_in('id', $ids);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->delete($this->table);
+    }
+
+    public function bulkUpdate($ids = [], $data = [], $filters = [])
+    {
+        $this->db->where_in('id', $ids);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->update($this->table, $data);
+    }
 
     public function optionSourceChannel()
     {
