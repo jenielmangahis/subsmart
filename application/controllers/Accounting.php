@@ -17739,7 +17739,7 @@ class Accounting extends MY_Controller
         exit;
     }
 
-    public function download_sales_tax_returns()
+    public function download_sales_tax_returnsV1()
     {
         $this->load->library('pdf');
         //$this->load->model('Business_model');
@@ -17756,7 +17756,7 @@ class Accounting extends MY_Controller
         
     }
 
-    public function download_sales_tax_returnsV2()
+    public function download_sales_tax_returns()
     {
         error_reporting(0);
 		
@@ -17764,6 +17764,9 @@ class Accounting extends MY_Controller
         require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
         
         $generatedPDF = '/uploads/dr15/dr15.pdf';
+
+		$company_id       = logged('company_id');
+        $business_profile = $this->Business_model->getByCompanyId($company_id);
 		
         if ($generatedPDF) {
             $generatedPDFPath = FCPATH . ltrim($generatedPDF, '/');
@@ -17777,41 +17780,48 @@ class Accounting extends MY_Controller
                     $pdf->AddPage();
                     $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
 
-                    $gross_sales_a = number_format(0,2);
-                    $gross_sales_b = number_format(0,2);
-                    $gross_sales_c = number_format(0,2);
-                    $gross_sales_d = number_format(0,2);
-                    $gross_sales_e = number_format(0,2);
-
-                    $exemp_sales_a = number_format(0,2);
-                    $exemp_sales_b = number_format(0,2);
-                    $exemp_sales_c = number_format(0,2);
-                    $exemp_sales_d = number_format(0,2);
-                    $exemp_sales_e = number_format(0,2);
-
-                    $taxable_amount_a = number_format(0,2);
-                    $taxable_amount_b = number_format(0,2);
-                    $taxable_amount_c = number_format(0,2);
-                    $taxable_amount_d = number_format(0,2);
-                    $taxable_amount_e = number_format(0,2);
-
-                    $tax_due_a = number_format(0,2);
-                    $tax_due_b = number_format(0,2);
-                    $tax_due_c = number_format(0,2);
-                    $tax_due_d = number_format(0,2);
-                    $tax_due_e = number_format(0,2);
-
-                    $total_amount_of_tax_due = number_format(0,2);
-                    $less_lawful_deductions  = number_format(0,2);
-                    $net_tax_due             = number_format(0,2);
-                    $let_est_tax_pd_memo     = number_format(0,2);
-                    $plus_est_tax_due_current_month = number_format(0,2);
-                    $amount_due              = number_format(0,2);
-                    $plus_penalty            = number_format(0,2);
-                    $plus_interest           = number_format(0,2);
-                    $amount_due_with_return  = number_format(0,2);
-
 					if( $pageNo == 1 ){
+
+                        $gross_sales_a = ''; //number_format(0,2);
+                        $gross_sales_b = ''; //number_format(0,2);
+                        $gross_sales_c = ''; //number_format(0,2);
+                        $gross_sales_d = ''; //number_format(0,2);
+                        $gross_sales_e = ''; //number_format(0,2);
+
+                        $exemp_sales_a = ''; //number_format(0,2);
+                        $exemp_sales_b = ''; //number_format(0,2);
+                        $exemp_sales_c = ''; //number_format(0,2);
+                        $exemp_sales_d = ''; //number_format(0,2);
+                        $exemp_sales_e = ''; //number_format(0,2);
+
+                        $taxable_amount_a = ''; //number_format(0,2);
+                        $taxable_amount_b = ''; //number_format(0,2);
+                        $taxable_amount_c = ''; //number_format(0,2);
+                        $taxable_amount_d = ''; //number_format(0,2);
+                        $taxable_amount_e = ''; //number_format(0,2);
+
+                        $tax_due_a = ''; //number_format(0,2);
+                        $tax_due_b = ''; //number_format(0,2);
+                        $tax_due_c = ''; //number_format(0,2);
+                        $tax_due_d = ''; //number_format(0,2);
+                        $tax_due_e = ''; //number_format(0,2);
+
+                        $total_amount_of_tax_due = ''; //number_format(0,2);
+                        $less_lawful_deductions  = ''; //number_format(0,2);
+                        $net_tax_due             = ''; //number_format(0,2);
+                        $let_est_tax_pd_memo     = ''; //number_format(0,2);
+                        $plus_est_tax_due_current_month = ''; //number_format(0,2);
+                        $amount_due              = ''; //number_format(0,2);
+                        $plus_penalty            = ''; //number_format(0,2);
+                        $plus_interest           = ''; //number_format(0,2);
+                        $amount_due_with_return  = ''; //number_format(0,2);
+
+                        $due_a        = ''; //date("m/d/Y");
+                        $late_after_a = ''; //date("m/d/Y");
+
+                        $due_b        = ''; //date("m/d/Y");
+                        $late_after_b = ''; //date("m/d/Y");
+
                         $pdf->setY(294);
 						$pdf->setX(160);
 						$pdf->SetFont('Arial', '', 8);
@@ -17981,8 +17991,115 @@ class Accounting extends MY_Controller
 						$pdf->SetFont('Arial', '', 8);
 						$pdf->SetFillColor(249,249,249);
 						$pdf->Cell(300, 10, $amount_due_with_return, 0, 0, 'L', 0);
+ 
+                        $pdf->setY(479);
+						$pdf->setX(122);
+						$pdf->SetFont('Arial', '', 7);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $due_a, 0, 0, 'L', 0);             
+                        
+                        $pdf->setY(489);
+						$pdf->setX(142);
+						$pdf->SetFont('Arial', '', 7);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $late_after_a, 0, 0, 'L', 0);     
 
-					}      
+                        /*
+                        $pdf->setY(720);
+						$pdf->setX(122);
+						$pdf->SetFont('Arial', '', 7);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $due_b, 0, 0, 'L', 0);             
+                        
+                        $pdf->setY(725);
+						$pdf->setX(142);
+						$pdf->SetFont('Arial', '', 7);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10, $late_after_b, 0, 0, 'L', 0); 
+                        */
+
+					}elseif($pageNo == 2) {
+
+                        $tell_no_tax_payer   = "";
+                        $tell_tax_payer_date = date("m/d/Y");;
+
+                        $tell_no_preparer       = "";
+                        $tell_tax_preparer_date = date("m/d/Y");;
+
+                        $pdf->setY(290);
+						$pdf->setX(218);
+						$pdf->SetFont('Arial', '', 7);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10,$tell_tax_payer_date, 0, 0, 'L', 0);
+
+                        $pdf->setY(560);
+						$pdf->setX(218);
+						$pdf->SetFont('Arial', '', 7);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10,$tell_tax_payer_date, 0, 0, 'L', 0);
+
+                        $pdf->setY(290);
+						$pdf->setX(472);
+						$pdf->SetFont('Arial', '', 7);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10,$tell_tax_preparer_date, 0, 0, 'L', 0);
+
+                        $pdf->setY(560);
+						$pdf->setX(469);
+						$pdf->SetFont('Arial', '', 7);
+						$pdf->SetFillColor(249,249,249);
+						$pdf->Cell(300, 10,$tell_tax_preparer_date, 0, 0, 'L', 0);
+
+                        //Signature for Taxpayer
+						if($business_profile->img_signature != null && $business_profile->img_signature != ''){
+
+                            $signatureImage  = base_url('uploads/Signatures/company/'.$company_id.'/'.$business_profile->img_signature);
+                            //$signatureImage  = base_url('uploads/Signatures/company/1/7242352_user.png');
+                        
+							$signatureHeight = 30;
+							$pdf->setY(275);
+							$pdf->setX(75);
+							$pdf->Image($signatureImage, null, null, null,  $signatureHeight);	
+
+                            $pdf->setY(540);
+							$pdf->setX(75);
+							$pdf->Image($signatureImage, null, null, null,  $signatureHeight);	
+                    
+						}
+
+                        //For telephone number for tax payer
+                        if($business_profile->business_phone != null && $business_profile->business_phone != '') {
+
+                            $pdf->setY(317);
+                            $pdf->setX(75);
+                            $pdf->SetFont('Arial', '', 7);
+                            $pdf->SetFillColor(249,249,249);
+                            $pdf->Cell(300, 10,$business_profile->business_phone, 0, 0, 'L', 0);
+
+                            $pdf->setY(586);
+                            $pdf->setX(75);
+                            $pdf->SetFont('Arial', '', 7);
+                            $pdf->SetFillColor(249,249,249);
+                            $pdf->Cell(300, 10,$business_profile->business_phone, 0, 0, 'L', 0);
+
+                        }
+
+                        //Signature for Preparer
+                        /*$signatureHeight = 30;
+                        $signatureImage  = base_url('uploads/Signatures/company/1/7242352_user.png');
+                        $pdf->setY(275);
+                        $pdf->setX(340);
+                        $pdf->Image($signatureImage, null, null, null,  $signatureHeight);*/  
+
+                        //For telephone number for preparer
+                        /*$pdf->setY(317);
+                        $pdf->setX(325);
+                        $pdf->SetFont('Arial', '', 7);
+                        $pdf->SetFillColor(249,249,249);
+                        $pdf->Cell(300, 10,$business_profile->business_phone, 0, 0, 'L', 0);*/         
+
+
+                    }
                 }
 
                 //$uploadPath = $this->getGeneratedPDFUploadPath();
