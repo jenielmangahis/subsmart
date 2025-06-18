@@ -1,6 +1,23 @@
+<div class="row">
+    <div class="col-12 grid-mb text-end">
+        <input type="hidden" id="customer-deal-modal-name" value="" />   
+        <div class="dropdown d-inline-block">
+            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                <span id="customer-deals-archive-num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end select-filter">                 
+                <li><a class="dropdown-item btn-with-selected" id="with-selected-restore" href="javascript:void(0);">Restore</a></li>                                
+            </ul>
+        </div>
+    </div>
+</div>
+<form id="frm-archive-with-selected">
 <table class="nsm-table" id="archived-jobs">
     <thead>
         <tr>
+            <td class="table-icon text-center sorting_disabled">
+                <input class="form-check-input table-select" type="checkbox" name="" value="0" id="customer-deals-archive-select-all">
+            </td>
             <td class="table-icon"></td>
             <td data-name="DealTitle" style="width:40%;">Deal Title</td>
             <td data-name="CustomerName" style="width:20%;">Customer</td>
@@ -12,6 +29,9 @@
         <?php if ($customerDeals) { ?>
             <?php foreach($customerDeals as $deal){ ?>
                 <tr>
+                    <td>
+                        <input class="form-check-input customer-deals-archive-row-select table-select" name="customerDeals[]" type="checkbox" value="<?= $deal->id; ?>">
+                    </td>
                     <td><div class="table-row-icon"><i class="bx bx-box"></i></div></td>
                     <td class="nsm-text-primary"><?= $deal->deal_title; ?></td>
                     <td class="nsm-text-primary"><?= $deal->customer_firstname . ' ' . $deal->customer_lastname; ?></td>
@@ -37,8 +57,28 @@
         <?php } ?>
     </tbody>
 </table>
+</form>
 <script>
 $(function(){
     $("#archived-jobs").nsmPagination();
+
+    $(document).on('change', '#customer-deals-archive-select-all', function(){
+        $('.customer-deals-archive-row-select:checkbox').prop('checked', this.checked);  
+        let total= $('input[name="customerDeals[]"]:checked').length;
+        if( total > 0 ){
+            $('#customer-deals-archive-num-checked').text(`(${total})`);
+        }else{
+            $('#customer-deals-archive-num-checked').text('');
+        }
+    });
+
+    $(document).on('change', '.customer-deals-archive-row-select', function(){
+        let total= $('input[name="customerDeals[]"]:checked').length;
+        if( total > 0 ){
+            $('#customer-deals-archive-num-checked').text(`(${total})`);
+        }else{
+            $('#customer-deals-archive-num-checked').text('');
+        }
+    });
 });
 </script>
