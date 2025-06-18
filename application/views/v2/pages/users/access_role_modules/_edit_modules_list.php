@@ -1,4 +1,4 @@
-<div class="row edit-container-modules mt-4" style="<?= array_key_exists('access-all', $groupRoleAccessModules) ? 'display:none;' : ''; ?>">
+<div class="row edit-container-modules mt-4" style="<?= array_key_exists('access-all', $groupRoleAccessModules) ? '' : ''; ?>">
     <div class="col-md-6">
         <input type="text" id="edit-search-module" placeholder="Search Module" class="form-control" />
     </div>
@@ -28,6 +28,10 @@
                 }
             }
 
+            if( array_key_exists('access-all', $groupRoleAccessModules) ){
+                $is_read_allowed = 'checked="checked"';
+            }
+
             $is_write_allowed = '';
             if( array_key_exists($key, $groupRoleAccessModules) ){
                 if( $groupRoleAccessModules[$key]->allow_write == 1 ){
@@ -35,11 +39,19 @@
                 }
             }
 
+            if( array_key_exists('access-all', $groupRoleAccessModules) ){
+                $is_write_allowed = 'checked="checked"';
+            }
+
             $is_delete_allowed = '';
             if( array_key_exists($key, $groupRoleAccessModules) ){
                 if( $groupRoleAccessModules[$key]->allow_delete == 1 ){
                     $is_delete_allowed = 'checked="checked"';
                 }
+            }
+
+            if( array_key_exists('access-all', $groupRoleAccessModules) ){
+                $is_delete_allowed = 'checked="checked"';
             }
         ?>
         <ul class="module-permissions">
