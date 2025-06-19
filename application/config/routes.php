@@ -2095,6 +2095,7 @@ $route['customers/_delete_system_size'] = 'Customer/ajax_delete_system_size';
 $route['customers/_create_proposed_module'] = 'Customer/ajax_create_proposed_module';
 $route['customers/_update_proposed_module'] = 'Customer/ajax_update_proposed_module';
 $route['customers/_delete_proposed_module'] = 'Customer/ajax_delete_proposed_module';
+$route['customers/settings_lost_reasons'] = 'Customer/settings_lost_reasons';
 
 $route['customers/_create_proposed_inverter'] = 'Customer/ajax_create_proposed_inverter';
 $route['customers/_update_proposed_inverter'] = 'Customer/ajax_update_proposed_inverter';
