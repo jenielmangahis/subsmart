@@ -118,7 +118,7 @@
                                     </td>
                                     <td><?= $lead->FName ? $lead->FName . ' ' . $lead->LName : 'Not Specified';  ?></td>
                                     <td><?= $lead->lead_name ? $lead->lead_name : 'Not Specified'; ?></td>
-                                    <td><span class="nsm-badge row-lead-status <?= $badge ?>"><?= $lead->status; ?></span></td>
+                                    <td><span class="nsm-badge row-lead-status <?= $badge ?>"><?= $lead->status != '' ? $lead->status : 'Lead'; ?></span></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
