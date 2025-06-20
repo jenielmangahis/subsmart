@@ -1547,8 +1547,10 @@ $route['cron/customer_recurring_subscriptions_by_active_customer'] = 'Cron_Jobs_
 $route['cron/invoice_mail_automation'] = 'Cron_Automation_Controller/cronInvoiceMailAutomation';
 $route['cron/job_mail_automation'] = 'Cron_Automation_Controller/cronJobMailAutomation';
 $route['cron/estimate_mail_automation'] = 'Cron_Automation_Controller/cronEstimateMailAutomation';
+$route['cron/lead_mail_automation'] = 'Cron_Automation_Controller/cronLeadMailAutomation';
 
 $route['cron/send_estimate_via_trigger_event_mail_automation'] = 'Cron_Automation_Controller/cronEstimateViaTriggerEventMailAutomation';
+$route['cron/send_lead_via_trigger_event_mail_automation'] = 'Cron_Automation_Controller/cronLeadViaTriggerEventMailAutomation';
 
 $route['cron/send_created_invoice_mail_automation'] = 'Cron_Automation_Controller/cronCreatedInvoiceMailAutomation';
 $route['cron/send_paid_invoice_mail_automation'] = 'Cron_Automation_Controller/cronPaidInvoiceMailAutomation'; 

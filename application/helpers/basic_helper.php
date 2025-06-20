@@ -5341,6 +5341,8 @@ if(!function_exists('set_expense_graph_data')) {
                                 
                             }
                         }
+                    }elseif($automationData->entity == 'lead') {
+
                     }
                 }
 
