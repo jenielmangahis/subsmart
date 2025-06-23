@@ -541,10 +541,10 @@
                                     </div>
                                     <hr>
                                     <div class="nsm-card-content">
-                                        <!-- <h6 class="page-title "><span style="font-size: 20px;"  class="fa fa-calendar"></span>&nbsp; &nbsp;Schedule Job</h6> -->
-                                        <?php if(!isset($jobs_data)): ?>
-                                        <p>Import Data from Wordorder/Invoice/Estimates</p>
-                                        <div id="import_buttons">
+                                        <!-- <h6 class="page-title "><span style="font-size: 20px;"  class="fa fa-calendar"></span>&nbsp; &nbsp;Schedule Job</h6> -->                                        
+                                        <?php if(!isset($jobs_data)): ?>                                                                                                                        
+                                        <!-- <div id="import_buttons">
+                                            <p>Import Data from Wordorder/Invoice/Estimates</p>
                                             <button type="button" data-bs-toggle="modal" data-bs-target="#estimates_import" class="nsm-button primary">
                                                 <span class="fa fa-upload"></span> Estimates
                                             </button> &nbsp;&nbsp;
@@ -555,7 +555,7 @@
                                                 <span class="fa fa-upload"></span> Invoice
                                             </button>
                                         </div>
-                                        <hr>
+                                        <hr> -->
                                         <?php endif; ?>
                                         <div class="form-group">
                                             <div class="row g-3 align-items-center mb-3">

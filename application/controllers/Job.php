@@ -1051,7 +1051,7 @@ class Job extends MY_Controller
     public function job_preview($id = null)
     {
         $this->load->helper('functions');
-        $comp_id = logged('company_id');
+        $company_id = logged('company_id');
         $user_id = logged('id');
         // get all employees
         // get all job tags
@@ -1066,7 +1066,7 @@ class Job extends MY_Controller
 
         $get_company_info = array(
             'where' => array(
-                'company_id' => logged('company_id'),
+                'company_id' => $company_id,
             ),
             'table' => 'business_profile',
             'select' => 'id,business_phone,business_name,business_email,street,city,postal_code,state,business_image',
@@ -1074,12 +1074,41 @@ class Job extends MY_Controller
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
 
         if (!$id == null) {
-            $this->page_data['cid'] = $comp_id;
-            $this->page_data['latest_job_payment'] = $this->jobs_model->get_latest_job_payment_by_job_id($id);  
-            $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
-            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+            $jobs_data = $this->jobs_model->get_specific_job($id);
+            if( $jobs_data && $jobs_data->company_id == $company_id ){
+                $default_lat = '';
+                $default_lon = '';
+                $address_line2 = '';
+                $param    = [
+                    'text' => $jobs_data->mail_add.', '.$jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code.' '.$jobs_data->cust_country,
+                    'format' => 'json',
+                    'apiKey' => GEOAPIKEY
+                ];            
+
+                $url = 'https://api.geoapify.com/v1/geocode/search?'.http_build_query($param);
+                $data = file_get_contents($url);            
+                $data = json_decode($data);
+
+                if( $data && isset($data->results[0] )){ 
+                    $default_lat = $data->results[0]->lat;   
+                    $default_lon = $data->results[0]->lon;            
+                    $address_line2 = $data->results[0]->address_line2;            
+                } 
+                $this->page_data['cid'] = $comp_id;
+                $this->page_data['latest_job_payment'] = $this->jobs_model->get_latest_job_payment_by_job_id($id);  
+                $this->page_data['jobs_data'] = $jobs_data;
+                $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+                $this->page_data['default_lat']   = $default_lat;
+                $this->page_data['default_lon']   = $default_lon;
+                $this->page_data['address_line2'] = $address_line2;
+
+                $this->load->view('v2/pages/job/job_preview', $this->page_data);
+            }else{
+                redirect('job'); 
+            }
+        }else{
+            redirect('job'); 
         }
-        $this->load->view('v2/pages/job/job_preview', $this->page_data);
     }
 
     public function billing($id = null)
@@ -5609,9 +5638,14 @@ class Job extends MY_Controller
         //     $tax         = $jobPayments->tax;
         // }
 
+        $job_location = $job->job_address . ' ' . $job->job_city . ', ' . $job->job_state . ' ' . $job->job_zip;
         $new_data = array(
             'customer_id'               => $job->customer_id,
-            'job_location'              => $job->job_location,
+            'job_location'              => $job_location,
+            'job_address'               => $job->job_address,
+            'job_city'                  => $job->job_city,
+            'job_state'                 => $job->job_state,
+            'job_zip'                   => $job->job_zip,
             'job_name'                  => $job->job_name,
             'job_id'                    => $job->id,
             'job_number'                => $job->job_number,
