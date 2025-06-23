@@ -3123,7 +3123,6 @@ class Users extends MY_Controller
 
 		if( $is_success == 1 ){
 			$this->CompanyRoleAccessModule_model->deleteAllByCompanyIdAndRoleId($cid, $post['role']);
-			$this->CompanyRoleAccessWidget_model->deleteAllByCompanyIdAndRoleId($cid, $post['role']);
 
 			if( $post['access_type'] == 'access-all' ){
 				$data = [
