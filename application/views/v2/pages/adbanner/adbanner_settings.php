@@ -77,8 +77,8 @@
                                     <div class="col-lg-12">
                                         <input id="bannerlist_table_search" class="form-control mt-0 mb-2 w-25" type="text" placeholder="Search...">
                                         <button type="button" class="nsm-button small primary float-end addBannerButton" data-bs-toggle="modal" data-bs-target=".addBannerModal"><i class="fas fa-plus"></i> Add</button>
-                                        <table id="bannerlist_table" class="table table-bordered table-hover w-100" style="background: #00000008;">
-                                            <thead>
+                                        <table id="bannerlist_table" class="table table-bordered table-hover w-100">
+                                            <thead style="background: #00000008;">
                                                 <tr>
                                                     <th>Title</th>
                                                     <th style="width: 50%;">Description</th>

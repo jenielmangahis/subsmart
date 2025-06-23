@@ -1,3 +1,49 @@
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+<script src="https://cdn.datatables.net/2.0.6/js/dataTables.js"></script>
+<style>
+    table.dataTable.no-footer {
+        border-bottom: 0px solid #dee2e6 !important;
+    }
+
+    table.dataTable thead th,
+    table.dataTable thead td,
+    table.dataTable tbody td {
+        padding: 6px !important;
+    }
+
+    table.dataTable>thead>tr>th {
+        border-bottom: 1px solid lightgray !important;
+    }
+
+    .dataTables_length,
+    .dataTables_filter {
+        display: none;
+    }
+
+    .display_none {
+        display: none;
+    }
+
+    .fw-normal {
+        font-weight: 500 !important;
+    }
+
+    .addCommissionOption {
+        margin-top: -12px;
+    }
+
+    .hideInput {
+        color: #ffffff00;
+        background: #ffffff00;
+        border: none;
+    }
+
+    .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+        color: #fff;
+        background-color: #6a4a86;
+    }
+</style>
+
 <div class="modal fade nsm-modal fade" id="edit_employee_modal" tabindex="-1"
     aria-labelledby="edit_employee_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -158,11 +204,6 @@
     </div>
 </div>
 
-<?php 
-    /**
-     * Note: modal employee details
-     */
-?>
 <div class="modal fade nsm-modal" id="edit-employment-details-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <!-- <form method="POST" id="edit-employment-details-form" action="<?php echo base_url(); ?>accounting/employees/update/employment-details/<?= $employee->id ?>"> -->
@@ -364,7 +405,6 @@
         </form>
     </div>
 </div>
-
 
 <div class="modal fade nsm-modal" id="edit-tax-withholdings-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -579,8 +619,6 @@
     </div>
 </div>
 
-
-
 <div class="modal fade nsm-modal" id="edit-payment-method-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <form method="POST" id="edit-payment-method-form"
@@ -618,6 +656,167 @@
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="modal fade" id="employeePayTypesModal" data-bs-backdrop="static" role="dialog" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Pay scale settings</span>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+            </div>
+            <div class="modal-body pt-3">
+                <form class="payscale_form">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h6>Setup pay scale for employee <u class="fw-bold"><?php echo "$employee->FName $employee->LName"; ?></u></h6>
+                        </div>
+                        <div class="col-md-12 d-none">
+                            <input type="text" name="employee_id" class="form-control hideInput" value="<?php echo $employee->id; ?>">
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <label class="mb-1" for="">Pay scale</label>
+                            <select class="form-select payscale_select" name="payscale_option" required>
+                                <option value="none">Not Specified</option>
+                                <option value="commission_only">Commission Only</option>
+                                <option value="base_hourly_rate">Base Hourly Rate</option>
+                                <option value="base_daily_rate">Base Daily Rate</option>
+                                <option value="base_weekly_rate">Base Weekly Rate</option>
+                                <option value="yearly_salary">Yearly Salary</option>
+                                <option value="monthly_salary">Monthly Salary</option>
+
+                                <!-- removed: redundancy -->
+                                <!-- <option value="compensation_hourly_rate">Compensation Hourly Rate</option> -->
+                                <!-- <option value="compensation_flat_amount">Compensation Flat Amount</option> -->
+
+                                <option value="part_time_hourly">Part Time Hourly</option>
+                                <option value="temp_services">Temp Services</option>
+                                
+                                <!-- removed: Needs 3rd party to Pay which is difficult to implement for now-->
+                                <!-- <option value="outside_source_payroll">Outside Source Payroll</option> -->
+
+                                <option value="job_type_base_install">Job Type Base Install</option>
+                                <option value="job_type_base_service">Job Type Base Service</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mt-2 payscaleValueContainer display_none">
+                            <label class="mb-1" for="">Amount</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="dollarSign">$</span>
+                                <input class="form-control payscale_value" type="number" step="any" placeholder="0.00" name="payscale_amount">
+                            </div>
+                        </div>
+                        <div class="col-md-12 mt-4 commissionSettingsContainer display_none">
+                            <label class="mb-1" for="">Commission Settings</label>
+                            <button type="button" class="btn btn-sm btn-primary addCommissionOption fw-bold float-end"><i class="fas fa-plus"></i>&nbsp;Add</button>
+                            <table class="commissionTable table table-hover table-bordered w-100">
+                                <thead style="background: #00000008;">
+                                    <tr>
+                                        <th class="fw-normal">Name</th>
+                                        <th class="fw-normal">Type</th>
+                                        <th class="fw-normal">Value</th>
+                                        <th style="width: 0;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="unspecified_commission">
+                                        <td colspan="4"><i>No commission setup available...</i></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="float-end">
+                                <button type="submit" class="nsm-button primary">Save Settings</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<div class="modal fade" id="payCommissionSummary" data-bs-backdrop="static" role="dialog" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Earnings Summary</span>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+            </div>
+            <div class="modal-body pt-3">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul class="nav nav-pills" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="payscale_tab" data-bs-toggle="tab" data-bs-target="#payscale_container" type="button" role="tab" aria-controls="home" aria-selected="true">Pay scale</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="commission_tab" data-bs-toggle="tab" data-bs-target="#commission_container" type="button" role="tab" aria-controls="profile" aria-selected="false">Commission</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="payroll_tab" data-bs-toggle="tab" data-bs-target="#payroll_container" type="button" role="tab" aria-controls="profile" aria-selected="false">Payroll</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content mt-3" id="myTabContent">
+                            <div class="tab-pane fade show active" id="payscale_container" role="tabpanel" aria-labelledby="payscale_tab">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table table-hover table-bordered w-100 mb-0 payscaleSummaryTable">
+                                            <thead style="background: #00000008;">
+                                                <tr>
+                                                    <th class="fw-normal">Pay scale</th>
+                                                    <th class="fw-normal">Amount</th>
+                                                    <th class="fw-normal">Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="commission_container" role="tabpanel" aria-labelledby="commission_tab">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table table-hover table-bordered w-100 mb-0 commissionSummaryTable">
+                                            <thead style="background: #00000008;">
+                                                <tr>
+                                                    <th class="fw-normal">Commission</th>
+                                                    <th class="fw-normal">Reference No.</th>
+                                                    <th class="fw-normal">Status</th>
+                                                    <th class="fw-normal">Amount</th>
+                                                    <th class="fw-normal">Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="payroll_container" role="tabpanel" aria-labelledby="commission_tab">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table table-hover table-bordered w-100 mb-0 payrollSummaryTable">
+                                            <thead style="background: #00000008;">
+                                                <tr>
+                                                    <th class="fw-normal">Period</th>
+                                                    <th class="fw-normal">Total Amount</th>
+                                                    <th class="fw-normal">Status</th>
+                                                    <th class="fw-normal">Check ID</th>
+                                                    <th class="fw-normal">Last Updated</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -717,7 +916,6 @@
         </form>
     </div>
 </div>
-
 
 <div class="modal fade nsm-modal" id="deduction_contributions_lists" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -1024,7 +1222,6 @@
         </form>
     </div>
 </div>
-
 
 <div class="modal fade nsm-modal" id="edit-deductions-and-contributions" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -1371,26 +1568,330 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+        const payscale_with_value = [
+            "base_hourly_rate",
+            "base_daily_rate",
+            "base_weekly_rate",
+            "yearly_salary",
+            "monthly_salary",
+            // "compensation_hourly_rate", removed bcoz of redundancy
+            // "compensation_flat_amount", removed bcoz of redundancy
+            "part_time_hourly",
+            "temp_services",
+            "outside_source_payroll",
+            "job_type_base_install",
+            "job_type_base_service",
+        ];
+
+        const commissionNameOptions = `
+            <option value="per_job_install">Per Job Install</option>
+            <option value="per_job_service">Per Job Service</option>
+        `;
+
+        const commissionTypeOptions = `
+            <option value="net_percentage">Net Percentage</option>
+            <option value="gross_percentage">Gross Percentage</option>
+            <option value="fixed_amount">Fixed Amount</option>
+        `;
+
+        function fetchSettings() {
+            $.ajax({
+                type: 'POST',
+                url: `${window.origin}/payscale/getPayscaleCommissionSettings`,
+                data: { employee_id: <?php echo $employee->id; ?> },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status) {
+                        const payscale = response.payscale || {};
+                        const payscaleName = payscale.payscale_name || 'none';
+                        $('.payscale_select').val(payscaleName).trigger('change');
+
+                        if (payscale_with_value.includes(payscaleName)) {
+                            const amount = payscale.payscale_amount ?? '';
+                            $('input[name="payscale_amount"]').val(amount);
+                        } else {
+                            $('input[name="payscale_amount"]').val('');
+                        }
+
+                        let payRateText = "";
+                        if (payscaleName === "none") {
+                            payRateText = "<i class='text-muted'>Not Specified</i>";
+                        } else if (payscaleName === "commission_only") {
+                            payRateText = "Commission Only";
+                        } else {
+                            const formattedName = ucwords(payscaleName.replace(/_/g, ' '));
+                            const amount = payscale.payscale_amount ?? '0.00';
+                            payRateText = `${formattedName} <small class='text-muted'>(\$${amount})</small>`;
+                        }
+                        $('#emp-pay-rate').html(payRateText);
+
+                        const commissions = Array.isArray(response.commissions) ? response.commissions : [];
+                        const tbody = $('.commissionTable tbody');
+                        const commissionListContainer = $('#employee_commission_list_data');
+
+                        tbody.empty();
+                        commissionListContainer.empty();
+
+                        if (commissions.length > 0) {
+                            commissions.forEach(function(item) {
+                                const commissionName = item.commission_name || 'per_job_install';
+                                const commissionType = item.commission_type || 'net_percentage';
+                                const commissionValue = item.commission_value ?? '';
+
+                                const row = `
+                                    <tr>
+                                        <td>
+                                            <select class="form-select border-0" name="commission_name[]" required>
+                                                ${commissionNameOptions}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-select border-0" name="commission_type[]" required>
+                                                ${commissionTypeOptions}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input class="form-control border-0" type="number" step="any" placeholder="0.00" name="commission_amount[]" value="${commissionValue}" required>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-outline-danger border-0 removeCommissionOption"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                `;
+                                tbody.append(row);
+                                tbody.find('tr:last select[name="commission_name[]"]').val(commissionName);
+                                tbody.find('tr:last select[name="commission_type[]"]').val(commissionType);
+
+                                let commissionTypeText = commissionType.replace(/_/g, ' ');
+                                commissionTypeText = ucwords(commissionTypeText);
+
+                                let commissionValueText = commissionType.includes('percentage') 
+                                    ? `${commissionValue}%` 
+                                    : `\$${commissionValue}`;
+
+                                const commissionNameText = ucwords(commissionName.replace(/_/g, ' '));
+
+                                const listItem = `
+                                    <div class="col-12">
+                                        <p class="text_value mb-1">${commissionNameText} — ${commissionTypeText}: ${commissionValueText}</p>
+                                    </div>
+                                `;
+                                commissionListContainer.append(listItem);
+                            });
+                        } else {
+                            tbody.append(`
+                                <tr class="unspecified_commission">
+                                    <td colspan="4"><i>No commission setup available...</i></td>
+                                </tr>
+                            `);
+                            commissionListContainer.html("<i class='text-muted'>No commissions set</i>");
+                        }
+
+                    } else {
+                        console.log('No data found.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error:', error);
+                }
+            });
+        } 
+        fetchSettings();
+
+        function ucwords(str) {
+            return str.replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+        }
+
+        function formDisabler(selector, state) {
+            const element = $(selector);
+            const submitButton = element.find('button[type="submit"]');
+            element.find("input, button, textarea, select").prop('disabled', state);
+
+            if (state) {
+                element.find('a').hide();
+                if (!submitButton.data('original-content')) {
+                    submitButton.data('original-content', submitButton.html());
+                }
+                submitButton.prop('disabled', true).html('Processing...');
+            } else {
+                element.find('a').show();
+                const originalContent = submitButton.data('original-content');
+                if (originalContent) {
+                    submitButton.prop('disabled', false).html(originalContent);
+                }
+            }
+        }
+
+        $(document).on('change', '.payscale_select', function() {
+            const payscale = $(this).val();
+
+            if (payscale_with_value.includes(payscale)) {
+                $('.payscale_value').attr('required', '');
+                $('.payscaleValueContainer').fadeIn('fast');
+            } else {
+                $('.payscale_value').removeAttr('required');
+                $('.payscaleValueContainer').hide();
+            }
+
+            if (payscale === "none") {
+                $('.commissionSettingsContainer').hide();
+            } else {
+                $('.commissionSettingsContainer').fadeIn('fast');
+            }
+        });
+
+        $(document).on('click', '.addCommissionOption', function() {
+            const unspecified_commission = $('.unspecified_commission').length;
+            const optionContent = `
+                <tr>
+                    <td>
+                        <select class="form-select border-0" name="commission_name[]" required>
+                            ${commissionNameOptions}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-select border-0" name="commission_type[]" required>
+                            ${commissionTypeOptions}
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control border-0" type="number" step="any" placeholder="0.00" name="commission_amount[]" required>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-danger border-0 removeCommissionOption"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `;
+
+            if (unspecified_commission == 1) {
+                $('.unspecified_commission').remove();
+                $('.commissionTable > tbody').append(optionContent);
+            } else {
+                $('.commissionTable > tbody').append(optionContent);
+            }
+        });
+
+        $(document).on('click', '.removeCommissionOption', function() {
+            $(this).closest('tr').remove();
+
+            const commissionTableLength = $('.commissionTable > tbody > tr').length;
+            if (commissionTableLength == 0) {
+                $('.commissionTable > tbody').append(`
+                    <tr class="unspecified_commission">
+                        <td colspan="4"><i>No commission setup available...</i></td>
+                    </tr>
+                `);
+            }
+        });
+
+        $(document).on('submit', '.payscale_form', function(e) {
+            e.preventDefault();
+            const data = $(this).serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: base_url + 'payscale/setPayscaleCommissionSettings',
+                data: data,
+                dataType: 'json',
+                beforeSend: function () {
+                    formDisabler('.payscale_form', true); 
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Settings Saved!",
+                            html: "Payscale & Commission settings have been saved successfully.",
+                            showConfirmButton: true,
+                            confirmButtonText: "Okay",
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Failed to Save!",
+                            html: "An error occurred while saving the settings.",
+                            showConfirmButton: true,
+                            confirmButtonText: "Okay",
+                        });
+                    }
+                    formDisabler('.payscale_form', false);
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Failed to Save!",
+                        html: "An error occurred while saving the settings.",
+                        showConfirmButton: true,
+                        confirmButtonText: "Okay",
+                    });
+                    formDisabler('.payscale_form', false);
+                }
+            });
+        });
+
+        const payscaleSummaryTable = $('.payscaleSummaryTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ordering": false,
+            "ajax": {
+                "url": `${window.origin}/Payscale/getPayscaleSummaryServerside/<?php echo $employee->id; ?>`,
+                "type": "POST",
+            },
+            "language": {
+                "infoFiltered": "",
+            },
+        });
+
+        const commissionSummaryTable = $('.commissionSummaryTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ordering": false,
+            "ajax": {
+                "url": `${window.origin}/Payscale/getCommissionSummaryServerside/<?php echo $employee->id; ?>`,
+                "type": "POST",
+            },
+            "language": {
+                "infoFiltered": "",
+            },
+        });
+
+        const payrollSummaryTable = $('.payrollSummaryTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ordering": false,
+            "ajax": {
+                "url": `${window.origin}/Payscale/getPayrollSummaryServerside/<?php echo $employee->id; ?>`,
+                "type": "POST",
+            },
+            "language": {
+                "infoFiltered": "",
+            },
+        });
+
+        $(document).on('click', '#payscale_tab', function () {
+            payscaleSummaryTable.ajax.reload(null, false);
+        });
+
+        $(document).on('click', '#commission_tab', function () {
+            commissionSummaryTable.ajax.reload(null, false);
+        });
+
+        $(document).on('click', '#payroll_tab', function () {
+            payrollSummaryTable.ajax.reload(null, false);
+        });
+
+        $('#payCommissionSummary').on('shown.bs.modal', function () {
+            payscaleSummaryTable.ajax.reload(null, false);
+            commissionSummaryTable.ajax.reload(null, false);
+            payrollSummaryTable.ajax.reload(null, false);
+        });
+    });
+
+// =================================
+
 $('select > option[data-custom="form_2019"], .form_2019_input').hide();
 $('.form_2019_input > input').hide().attr('disabled', '');
-
-function formDisabler(selector, state) {
-    const element = $(selector);
-    const submitButton = element.find('button[type="submit"]');
-
-    if (state) {
-        if (!submitButton.data('original-content')) {
-            submitButton.data('original-content', submitButton.html());
-        }
-        submitButton.prop('disabled', true);
-        submitButton.text('Processing...');
-    } else {
-        const originalContent = submitButton.data('original-content');
-        if (originalContent) {
-            submitButton.prop('disabled', false).html(originalContent);
-        }
-    }
-}
 
 $(function() {
     $('input[name="withholding_certificate"]').change(function(e) {

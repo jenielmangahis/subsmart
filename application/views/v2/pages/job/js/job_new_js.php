@@ -447,6 +447,7 @@ $("#attachment-file").change(function() {
             var withCommas = Number(total).toLocaleString('en');
             //if(tax_total < 1){                
                 $('#invoice_sub_total').html('$' + formatNumber(parseFloat(subtotal).toFixed(2)));
+                $('#sub_total_form_input').val(formatNumber(parseFloat(subtotal).toFixed(2)));
             //}
             if(discount > 0){
                 $('#invoice_discount_total').html('$' + formatNumber(parseFloat(discount).toFixed(2)));
