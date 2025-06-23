@@ -4030,6 +4030,15 @@ class Accounting_modals extends MY_Controller
             $checkId = $this->expenses_model->addCheck($checkData);
     
             if ($checkId) {
+
+                // Payroll Summary updater
+                $this->db->where('employee_id', $payee[1]);
+                $this->db->where('DATE(date_created)', date("Y-m-d", strtotime($data['checkPayrollDate'])));
+                $this->db->update('employee_payroll_summary', [
+                    'status' => "Paid",
+                    'check_no' => $checkId
+                ]);
+
                 if(!isset($data['template_name'])) {
                     $bankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
                     $newBalance = floatval(str_replace(',', '', $bankAcc->balance)) - floatval(str_replace(',', '', $data['total_amount']));

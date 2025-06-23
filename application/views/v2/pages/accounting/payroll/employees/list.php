@@ -43,7 +43,7 @@
                             <select id="status_filter" class="form-select w-auto">
                                 <option value="">All Employees</option>
                                 <option value="Active">Active</option>
-                                <option value="Disabled">Inactive</option>
+                                <option value="Inactive">Inactive</option>
                             </select>
                         </div>
                         <div class="d-inline-block me-2">
@@ -69,7 +69,7 @@
                                 <i class='bx bx-fw bx-list-plus'></i> Add an employee
                             </button>
                         </div>
-                        <div class="d-inline-block">
+                        <!-- <div class="d-inline-block">
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
                                 <i class="bx bx-fw bx-cog"></i>
                             </button>
@@ -95,12 +95,12 @@
                                     <input type="checkbox" checked id="showHidePhoneNum" name="col_chk" class="form-check-input">
                                     <label for="showHidePhoneNum" class="form-check-label">Phone number</label>
                                 </div>
-                                <!-- <div class="form-check form-switch nsm-switch">
+                                <div class="form-check form-switch nsm-switch">
                                     <label for="privacy" class="form-check-label">Privacy </label>
                                     <input type="checkbox" name="privacy" id="privacy" class="form-check-input">
-                                </div> -->
+                                </div>
                             </ul>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="container-fluid">
@@ -110,7 +110,7 @@
                                 <thead>
                                     <tr>
                                         <th>NAME</th>
-                                        <th>PAY RATE</th>
+                                        <th>PAY SCALE</th>
                                         <th>PAY METHOD</th>
                                         <th>STATUS</th>
                                         <th>EMAIL</th>
@@ -149,7 +149,7 @@
     });
 
     $(document).on('change', '#status_filter', function() {
-        employee_table.column(4).search($(this).val()).draw();
+        employee_table.column(6).search($(this).val()).draw();
     });
 
     $(document).on('change', '#pay_method_filter', function() {

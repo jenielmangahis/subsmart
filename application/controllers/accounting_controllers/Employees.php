@@ -2875,31 +2875,22 @@ class Employees extends MY_Controller
             if ($getDatas->company_id == $company_id) {
 
                 $employee_id = $getDatas->employee_id;
-                $employee = (!empty($getDatas->employee)) ? $getDatas->employee : "<i class='text-muted'>Not Specified</i>";
-
-                if (empty($getDatas->pay_type)) {
-                    $pay_rate = "$".number_format(0, 2, ".", ",");
-                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Daily") {
-                    $pay_rate = "$".number_format(0, 2, ".", ",")."/<small class='text-muted'>daily</small>";
-                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Hourly") {
-                    $pay_rate = "$".number_format($getDatas->base_hourly, 2, ".", ",")."/<small class='text-muted'>hour</small>";
-                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Weekly") {
-                    $pay_rate = "$".number_format($getDatas->base_weekly, 2, ".", ",")."/<small class='text-muted'>week</small>";
-                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Monthly") {
-                    $pay_rate = "$".number_format($getDatas->base_monthly, 2, ".", ",")."/<small class='text-muted'>month</small>";
-                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Yearly") {
-                    $pay_rate = "$".number_format($getDatas->base_yearly, 2, ".", ",")."/<small class='text-muted'>year</small>";
-                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Commission Only") {
-                    $pay_rate = "Commission Only";
-                }
-                $pay_method = (!empty($getDatas->pay_method)) ? $getDatas->pay_method : "Missing";
-                $status = ($getDatas->status == "Active") ? "Active" : "Inactive";
-                $email = (!empty($getDatas->email)) ? $getDatas->email : "<i class='text-muted'>Not Specified</i>";
-                $phone = (!empty($getDatas->phone)) ? $getDatas->phone : "<i class='text-muted'>Not Specified</i>";
+                $employee = (!empty($getDatas->employee)) ? $getDatas->employee : "<small class='text-muted fst-italic'>Not Specified</small>";
+                $payscale_name = !empty($getDatas->payscale_name) ? ucwords(str_replace('_', ' ', $getDatas->payscale_name)) : "Not Specified";
+                $payscale_amount = !empty($getDatas->payscale_amount) ? $getDatas->payscale_amount : null;
+                $payscale_formatted = ($payscale_name != "Not Specified")
+                    ? ($getDatas->payscale_name == "commission_only"
+                        ? "{$payscale_name}"
+                        : "{$payscale_name} <small class='text-muted'>(\${$payscale_amount})</small>")
+                    : "<small class='text-muted fst-italic'>Not Specified</small>";
+                $pay_method = (!empty($getDatas->pay_method)) ? $getDatas->pay_method : "<small class='text-muted fst-italic'>Not Specified</small>";
+                $status = ($getDatas->status == "Active") ? "<span class='badge bg-success'>Active</span>" : "<span class='badge bg-danger'>Inactive</span>";
+                $email = (!empty($getDatas->email)) ? $getDatas->email : "<small class='text-muted fst-italic'>Not Specified</small>";
+                $phone = (!empty($getDatas->phone)) ? $getDatas->phone : "<small class='text-muted fst-italic'>Not Specified</small>";
 
                 $data[] = array(
                     "<strong class='fw-bold nsm-text-primary nsm-link' onclick='location.href=`".base_url('accounting/employees/view/').$employee_id."`'>$employee</strong>",
-                    "$pay_rate",
+                    "$payscale_formatted",
                     "$pay_method",
                     "$status",
                     "$email",

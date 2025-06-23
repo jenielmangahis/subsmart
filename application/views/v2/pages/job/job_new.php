@@ -920,6 +920,13 @@
                                                                     <option  value="<?= $defaultJobType->id; ?>" data-image="<?= $defaultJobType->icon_marker; ?>" selected="selected"><?= $defaultJobType->title; ?></option>
                                                                 <?php } ?>
                                                             </select>
+                                                            <script>
+                                                                $(document).on('change', '#job_type', function() {
+                                                                    var selectedLabel = $(this).find('option:selected').text();
+                                                                    $('input[name="job_type_label"]').val(selectedLabel);
+                                                                });
+                                                            </script>
+                                                            <input type="hidden" name="job_type_label" value="<?= $defaultJobType->title; ?>">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">

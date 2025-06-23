@@ -864,6 +864,12 @@
                                         <input type="text" id="checkMemoInput" class="form-control" placeholder="Specify notes...">
                                     </div>
                                 </div>
+                                <div class="payrollDate_Section position-absolute">
+                                    <div class="d-flex align-items-center">
+                                        <strong for="checkPayrollDate" class="me-2 text-nowrap">Payroll Date</strong>
+                                        <input type="text" id="checkPayrollDate" name="checkPayrollDate" class="form-control" placeholder="">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <script>

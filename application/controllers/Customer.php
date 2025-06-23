@@ -5365,9 +5365,11 @@ class Customer extends MY_Controller
 
     public function save_new_lead()
     {
-        $input = $this->input->post();
-        $uid = logged('id');
+        $input      = $this->input->post();
+        $uid        = logged('id');
         $company_id = logged('company_id');
+
+        $is_automation_activated  = enableAutomationActivated();
 
         if ($input) {
             unset($input['credit_report']);
@@ -5386,6 +5388,13 @@ class Customer extends MY_Controller
 
                     // SMS Notification
                     createCronAutoSmsNotification($company_id, $input['leads_id'], 'lead', $input['status'], $uid, $input['fk_assign_id']);
+
+                    //Add automation queue - start
+                    if($is_automation_activated) {
+                        createAutomationQueueV2('send_email', 'lead', 'has_status', $input['status'], $input['leads_id']);
+                    }
+                    //Add automation queue - end
+
                     echo 'Saved';
                 } else {
                     echo 'Error';
@@ -5400,6 +5409,14 @@ class Customer extends MY_Controller
 
                     // SMS Notification
                     createCronAutoSmsNotification($company_id, $lastid, 'lead', $input['status'], $uid, $input['fk_assign_id']);
+
+                    //Add automation queue - start
+                    if($is_automation_activated) {
+                        createAutomationQueueV2('send_email', 'lead', 'created', '', $lastid);  
+                        createAutomationQueueV2('send_email', 'lead', 'has_status', $input['status'], $lastid);
+                    }
+                    //Add automation queue - end
+
                     echo 'Saved';
                 } else {
                     echo 'Error';
