@@ -64,7 +64,7 @@
                                 <i class='bx bx-fw bx-export'></i> Export
                             </button>
                             <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
-                            <button type="button" name="btn_link" class="nsm-button primary add-employee" data-bs-toggle="modal" data-bs-target="#add_employee_modal">
+                            <button type="button" name="btn_link" class="nsm-button primary" id="btn-add-employee">
                                 <i class='bx bx-fw bx-user-plus'></i> Add Employee
                             </button>
                             <?php } ?>
@@ -315,83 +315,101 @@
             let _this = $(this);
             e.preventDefault();
 
-            var formData = new FormData($("#add_employee_form")[0]);
+            let num_license = "<?= $num_license ?>";
+            if( num_license > 0 ){
+                var formData = new FormData($("#add_employee_form")[0]);
+                var url = base_url + "user/_create_employee";
+                _this.find("button[type=submit]").html("Saving");
+                _this.find("button[type=submit]").prop("disabled", true);
 
-            var url = base_url + "user/_create_employee";
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    dataType: "json",
+                    success: function(result) {
+                        if (result == 1) {
+                            $('#add_employee_modal').modal('hide');
+                            Swal.fire({
+                                title: 'Create Employee',
+                                text: "Data has been created successfully.",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        } else if (result == 3) {
+                            Swal.fire({
+                                title: 'Failed',
+                                text: "Insufficient license. Please purchase license to continue adding user.",
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Purchase License'
+                            }).then((result) => {
+                                window.location.href = base_url + 'mycrm/membership';
+                            });
+                        } else if (result == 4) {
+                            Swal.fire({
+                                title: 'Failed',
+                                text: "ADT Sales App password not same",
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        } else if (result == 5) {
+                            Swal.fire({
+                                title: 'Failed',
+                                text: "ADT Sales App account already exists",
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        } else if (result == 6) {
+                            Swal.fire({
+                                title: 'Failed',
+                                text: "Username already exists",
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });                        
+                        } else {
+                            Swal.fire({
+                                title: 'Failed',
+                                text: "Cannot create employee",
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
 
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: formData,
-                contentType: false,
-                cache: false,
-                processData: false,
-                dataType: "json",
-                success: function(result) {
-                    if (result == 1) {
-                        $('#add_employee_modal').modal('hide');
-                        Swal.fire({
-                            title: 'Create Employee',
-                            text: "Data has been created successfully.",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            location.reload();
-                        });
-                    } else if (result == 3) {
-                        Swal.fire({
-                            title: 'Failed',
-                            text: "Insufficient license. Please purchase license to continue adding user.",
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Purchase License'
-                        }).then((result) => {
-                            window.location.href = base_url + 'mycrm/membership';
-                        });
-                    } else if (result == 4) {
-                        Swal.fire({
-                            title: 'Failed',
-                            text: "ADT Sales App password not same",
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        });
-                    } else if (result == 5) {
-                        Swal.fire({
-                            title: 'Failed',
-                            text: "ADT Sales App account already exists",
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        });
-                    } else if (result == 6) {
-                        Swal.fire({
-                            title: 'Failed',
-                            text: "Username already exists",
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        });                        
-                    } else {
-                        Swal.fire({
-                            title: 'Failed',
-                            text: "Cannot create employee",
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        });
-                    }
+                        //$("#add_employee_modal").modal('hide');
+                        //_this.trigger("reset");
 
-                    //$("#add_employee_modal").modal('hide');
-                    //_this.trigger("reset");
+                        _this.find("button[type=submit]").html("Save");
+                        _this.find("button[type=submit]").prop("disabled", false);
+                    },
+                });
+            }else{
+                let membership_url = base_url + 'mycrm/membership';
+                let html_content = `
+                    <p>You do not have enough license to add new user.</p>
+                    <p>You can buy more license in your <a href="${membership_url}" target="_">crm monthly membership</a>.</p>
+                `;  
 
-                    _this.find("button[type=submit]").html("Save");
-                    _this.find("button[type=submit]").prop("disabled", false);
-                },
-            });
+                Swal.fire({
+                    title: 'Insufficient License',
+                    html: html_content,
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+                    
+                });
+            }
         });
 
         $(document).on("click", ".edit-item", function() {
@@ -759,8 +777,29 @@
             });
         });
 
-        $(document).on("click", ".add-employee", function(){
-            $('#commission-settings tbody').html('');
+        $(document).on("click", "#btn-add-employee", function(){
+            let num_license = "<?= $num_license; ?>";
+
+            if( num_license > 0 ){
+                $('#commission-settings tbody').html('');
+                $('#add_employee_modal').modal('show');
+            }else{
+                let membership_url = base_url + 'mycrm/membership';
+                let html_content = `
+                    <p>You do not have enough license to add new user.</p>
+                    <p>You can buy more license in your <a href="${membership_url}" target="_">crm monthly membership</a>.</p>
+                `;  
+
+                Swal.fire({
+                    title: 'Insufficient License',
+                    html: html_content,
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+                    
+                });
+            }
         });
 
         $(document).on("click", ".update-profile-item", function(){
