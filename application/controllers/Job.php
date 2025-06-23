@@ -22,6 +22,7 @@ class Job extends MY_Controller
         $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Users_model', 'users_model');
         $this->load->model('PointRatingSystem_model', 'PointRatingSystemModel');
+        $this->load->model('Payscale', 'payscale_model');
     }
 
     public function loadStreetView($address = null)
@@ -1650,6 +1651,9 @@ class Job extends MY_Controller
 
         // customer_ad_model
         if ($input) {
+            
+            $this->payscale_model->updateCommissionStatus($input['id'], $input['status']);
+            
             $id = $input['id'];
             $input['company_id'] = logged('company_id');
             $status = $input['status'];
@@ -1708,6 +1712,8 @@ class Job extends MY_Controller
             } else {
                 $data_arr = array("success" => false, "message" => "Something went wrong");
             }
+            
+
             die(json_encode($data_arr));
         }
     }
@@ -3099,6 +3105,46 @@ class Job extends MY_Controller
             'is_update' => $is_update,
             'work_order_id' => $input['work_order_id']
         ];
+
+        $employee_fields = [
+            // 'employee_id', Disable, only tech ids 
+            'employee2_id',
+            'employee3_id',
+            'employee4_id',
+            'employee5_id',
+            'employee6_id'
+        ];
+
+        if (stripos($input['job_type_label'], 'install') !== false) {
+            foreach ($employee_fields as $field) {
+                if (!empty($input[$field])) {
+                    $this->payscale_model->calculateCommission(
+                        $input[$field],              
+                        $jobs_id,                    
+                        $job_number,        
+                        "Scheduled",         
+                        $input['sub_total'],        
+                        $input['total_amount'],
+                        "install"   
+                    );
+                }
+            }            
+        } else if (stripos($input['job_type_label'], 'service') !== false) {
+            foreach ($employee_fields as $field) {
+                if (!empty($input[$field])) {
+                    $this->payscale_model->calculateCommission(
+                        $input[$field],              
+                        $jobs_id,                    
+                        $job_number,        
+                        "Scheduled",         
+                        $input['sub_total'],        
+                        $input['total_amount'],
+                        "service"   
+                    );
+                }
+            }     
+        }
+
         echo json_encode($return);
     }
 
@@ -6452,6 +6498,8 @@ class Job extends MY_Controller
                 $is_success = 1;
                 $msg = '';
             }
+
+            $this->payscale_model->updateCommissionStatus($post['job_id'], $post['job_status']);
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];

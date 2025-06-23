@@ -356,12 +356,59 @@
 <?php include viewPath('v2/includes/footer'); ?>
 
 <script>
-    // if user wants to access the check UI using URL eg. nsmartrac.com/check
+    // If user wants to access the check UI using URL eg. nsmartrac.com/check
     $(document).ready(function () {
         const currentPath = window.location.href;
-        const origin =  window.location.origin;
+        const origin = window.location.origin;
+
         if (currentPath.includes(origin + "/check")) {
-            $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="check_modal"], li.ajax-modal[data-view="check_modal"]').trigger('click');
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const viewID = urlParams.get('view_check_id');
+            const createID = urlParams.get('create_check_id_for');
+            const checkAmount = urlParams.get('amount');
+            const checkMemo = urlParams.get('memo');
+            const checkPayrollDate = urlParams.get('payroll_date');
+
+            if (viewID) {
+                setTimeout(() => {
+                    $.get('/accounting/view-transaction/check/' + viewID, function(res) {
+                        if ($('div#modal-container').length > 0) {
+                            $('div#modal-container').html(res);
+                        } else {
+                            $('body').append(`
+                                <div id="modal-container"> 
+                                    ${res}
+                                </div>
+                            `);
+                        }
+
+                        modalName = '#checkModal';
+                        initModalFields('checkModal');
+                        $('#checkModal').modal('show');
+                    });
+                }, 500);
+            } else if (createID) {
+                $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="check_modal"], li.ajax-modal[data-view="check_modal"]').trigger('click');
+
+                const observer = new MutationObserver(function(mutationsList, observer) {
+                    if ($('#checkModal').length > 0) {
+                        setTimeout(() => {
+                            $('#virtualCheck_toggle').click();
+                            // $('#checkPrintLater').prop('checked', true).change();
+                            $('#checkAmountInput').val(checkAmount).change();
+                            $('#checkMemoInput').val(checkMemo).change();
+                            $('#checkPayrollDate').val(checkPayrollDate).change();
+                        }, 500);
+
+                        observer.disconnect();
+                    }
+                });
+
+                observer.observe(document.body, { childList: true, subtree: true });
+            } else {
+                $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="check_modal"], li.ajax-modal[data-view="check_modal"]').trigger('click');
+            }
         }
     });
 </script>

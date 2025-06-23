@@ -97,15 +97,15 @@
                                     data-bs-target="#edit_employee_modal">Edit</a>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Name</strong>
+                                <strong class="text-muted">NAME</strong>
                                 <p class="text_value name_text"><?php echo "$employee->FName $employee->LName"; ?></p>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Email</strong>
+                                <strong class="text-muted">EMAIL</strong>
                                 <p class="text_value email_text"><?php echo !in_array($employee->email, ['', null]) ? $employee->email : '<i>Not specified</i>'; ?></p>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Birthdate</strong>
+                                <strong class="text-muted">BIRTHDATE</strong>
                                 <?php 
                                     $birth_date = 'Not Specified';
                                     if( strtotime($employee->birthdate) > 0 ){
@@ -115,15 +115,15 @@
                                 <p class="text_value birthdate_text"><?php echo $birth_date; ?></p>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Home Address</strong>
+                                <strong class="text-muted">HOME ADDRESS</strong>
                                 <p class="text_value address_text"><?php echo ($employee->complete_address) ? $employee->complete_address : '<i>Not specified</i>'; ?></p>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Phone Number</strong>
+                                <strong class="text-muted">PHONE NO.</strong>
                                 <p class="text_value phone_text"><?php echo ($employee->phone) ? $employee->phone : '<i>Not specified</i>'; ?></p>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Social Security number</strong>
+                                <strong class="text-muted">SOCIAL SECURITY NO.</strong>
                                 <p class="text_value phone_text"><?php echo ($employee->ssn) ? $employee->ssn : '<i>Not specified</i>'; ?></p>
                             </div>
                         </div>
@@ -136,23 +136,23 @@
                                     data-bs-target="#edit-employment-details-modal">Edit</a>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Status</strong>
+                                <strong class="text-muted">STATUS</strong>
                                 <p class="text_value status_text"><span id="emp-details-status"><?php echo $employee->status_text; ?></span></p>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Hire date</strong>
+                                <strong class="text-muted">HIRE DATE</strong>
                                 <p class="text_value">
                                     <span id="emp-hire-date"><?php echo date("m/d/Y", strtotime($employee->date_hired)); ?></span>
                                 </p>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Employee Number</strong>
+                                <strong class="text-muted">EMPLOYEE NO.</strong>
                                 <p class="text_value">
                                     <span id="emp-details-employee-number"><?php echo !in_array($employee->employee_number, ['', null]) ? $employee->employee_number : '<i>Not specified</i>'; ?></span>
                                 </p>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Work location</strong>
+                                <strong class="text-muted">WORK LOCATION</strong>
                                 <?php 
                                     foreach( $workLocations as $workLocation ) {
                                         echo "<p class='text_value' style='margin-bottom: 0px !important'><i class='bx bx-buildings'></i>" . $workLocation->street . ' ' . $workLocation->city . ', ' . $workLocation->state . ' ' . $workLocation->zipcode . "</p>";
@@ -160,13 +160,13 @@
                                 ?>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Title</strong>
+                                <strong class="text-muted">TITLE</strong>
                                 <p class="text_value">
                                     <span id="emp-details-employee-title"><?php echo ($employee->title && $employee->title != "-") ? $employee->title : '<i>Not specified</i>'; ?></span>
                                 </p>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Worker's company class</strong>
+                                <strong class="text-muted">WORKER'S COMPANY CLASS</strong>
                                 <p class="text_value">
                                     <?php 
                                         $emp_details = isset($employmentDetails[0]) ? $employmentDetails[0] : $employmentDetails; 
@@ -183,13 +183,13 @@
                                 <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal" data-bs-target="#edit-tax-withholdings-modal">Edit</a>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Federal Filling Status</strong>
+                                <strong class="text-muted">FEDERAL FILLING STATUS</strong>
                                 <p class="text_value filing_status_text">
                                     <?php echo ($taxWithholdingData->filing_status) ? $taxWithholdingData->filing_status : "<i>Not specified</i>"; ?>
                                 </p>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Tax exemptions</strong>
+                                <strong class="text-muted">TAX EXEMPTIONS</strong>
                                 <?php
                                     if (!empty($taxWithholdingData->futa_status) || !empty($taxWithholdingData->ssmedi_status) || !empty($taxWithholdingData->flsui_status)) {
                                         echo "<p class='text_value tax_exemptions_text'>";
@@ -208,24 +208,16 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="float-start fw-bold">Pay Types</h4>
-                                <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal"
-                                    data-bs-target="#edit-pay-types-modal">Edit</a>
+                                <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal" data-bs-target="#employeePayTypesModal">Edit</a>
+                                <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal" data-bs-target="#payCommissionSummary">Summary</a>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Salary</strong>
-                                <p class="text_value" id="emp-pay-rate"><?php echo $employee->pay_rate; ?></p>
+                                <strong class="text-muted">SALARY</strong>
+                                <p class="text_value" id="emp-pay-rate"></p>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">Commission</strong>
-                                <div class="row" id="employee_commission_list_data">
-                                    <?php foreach($employeeCommissionSettings as $ecs) { ?>
-                                        <div class="col-md-4">
-                                            <strong class="text-muted"><?= $ecs->name; ?></strong>
-                                            <p class="text_value">
-                                                $<?= number_format($ecs->commission_value,2,".","") ?> (<?= ucfirst($ecs->commission_type) ?>)</p>
-                                        </div>
-                                    <?php } ?>
-                                </div>
+                                <strong class="text-muted">COMMISSION</strong>
+                                <div class="row" id="employee_commission_list_data"></div>
                             </div>
                         </div>
                     </div>
@@ -240,7 +232,7 @@
                                 <div class="row">
                                     <?php foreach( $employeeLeaveCredits as $key => $value ){ ?>
                                     <div class="col-md-3 mt-4">
-                                        <strong class="text-muted"><?= $value['leave_type']; ?></strong>
+                                        <strong class="text-muted text-uppercase"><?= $value['leave_type']; ?></strong>
                                         <p class="text_value"><span
                                                 id="leave-credits-<?= $key; ?>"><?= $value['leave_credits']; ?></span>
                                             credits</p>
@@ -261,7 +253,7 @@
                                 <div class="row deductions_contributions_list_data" >
                                     <?php foreach($dc_data as $dc){ ?>
                                     <div class="col-md-4">
-                                        <strong class="text-muted"><?= $dc->type.'- '.$dc->description ?></strong>
+                                        <strong class="text-muted text-uppercase"><?= $dc->type.'- '.$dc->description ?></strong>
                                         <p class="text_value">
                                             $<?= number_format($dc->deductions_amount,0) ?>/paycheck(Deduction)</p>
                                     </div>
