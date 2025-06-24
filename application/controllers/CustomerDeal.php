@@ -1161,12 +1161,12 @@ class CustomerDeal extends MY_Controller
         $is_success = 1;
         $msg    = '';
 
-        $company_id  = logged('company_id');
+        $company_id = logged('company_id');
         $post = $this->input->post();
         
         if( $post['lost_reason'] == '' ){
             $is_success = 0;
-            $msg = 'Please reason';
+            $msg = 'Please enter reason';
         }
 
         $isExists = $this->CustomerDealLostReason_model->getByReasonAndCompanyId($post['lost_reason'], $company_id);
@@ -1203,38 +1203,68 @@ class CustomerDeal extends MY_Controller
     {
         $this->load->model('CustomerDealLostReason_model');
 
-        $is_success = 1;
-        $msg    = '';
+        $is_success = 0;
+        $msg = 'Cannot find data';
 
         $company_id  = logged('company_id');
         $post = $this->input->post();
         
         if( $post['lost_reason'] == '' ){
             $is_success = 0;
-            $msg = 'Please reason';
+            $msg = 'Please specify reason';
         }
 
-        $isExists = $this->CustomerDealLostReason_model->getByReasonAndCompanyId($post['lost_reason'], $company_id);
-        if( $isExists ){
-            $is_success = 0;
-            $msg = 'Reason ' . $post['lost_reason'] . ' already exists';
+        $lostReason = $this->CustomerDealLostReason_model->getById($post['lrid']);
+        if( $lostReason ){
+            $isExists = $this->CustomerDealLostReason_model->getByReasonAndCompanyId($post['lost_reason'], $company_id);
+            if( $isExists  && $isExists->id != $post['lrid']){
+                $msg = 'Reason ' . $post['lost_reason'] . ' already exists';
+            }else{
+                $data = [
+                    'lost_reason' => $post['lost_reason'],   
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+
+                $this->CustomerDealLostReason_model->update($lostReason->id, $data); 
+
+                $is_success = 1;
+                $msg = '';
+
+                //Activity Logs
+                $activity_name = 'Customer Deals : Updated lost reason ' . $post['lost_reason']; 
+                createActivityLog($activity_name);
+            }
         }
 
-        if( $is_success == 1 ){
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
 
-            $data = [
-                'company_id' => $company_id,
-                'lost_reason' => $post['lost_reason'],          
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_modified' => date("Y-m-d H:i:s")
-            ];
-            
-            $this->CustomerDealLostReason_model->create($data); 
+        echo json_encode($return);
+    }    
+
+    public function ajax_delete_lost_reason()
+    {
+        $this->load->model('CustomerDealLostReason_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $lostReason = $this->CustomerDealLostReason_model->getById($post['lrid']);
+        if( $lostReason ){
+            $this->CustomerDealLostReason_model->delete($lostReason->id); 
+
+            $is_success = 1;
+            $msg = '';
 
             //Activity Logs
-            $activity_name = 'Customer Deals : Created lost reason ' . $post['lost_reason']; 
+            $activity_name = 'Customer Deals : Deleted lost reason ' . $lostReason->lost_reason; 
             createActivityLog($activity_name);
-        }     
+        }
 
         $return = [
             'is_success' => $is_success,

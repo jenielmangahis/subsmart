@@ -3997,10 +3997,12 @@ class Customer extends MY_Controller
 
             $filter = ucwords($filter);
             $filters[] = ['field_name' => 'status', 'field_value' => $filter];
+            $filters[] = ['field_name' => 'is_archive', 'field_value' => 'No'];
             $leads = $this->Lead_model->getAllByCompanyId($cid, $filters);
 
         }else{
-            $leads = $this->Lead_model->getAllByCompanyId($cid, []);
+            $filters[] = ['field_name' => 'is_archive', 'field_value' => 'No'];
+            $leads = $this->Lead_model->getAllByCompanyId($cid, $filters);
         }
 
         $this->page_data['filter'] = $filter;
@@ -5217,7 +5219,7 @@ class Customer extends MY_Controller
             $this->customer_ad_model->delete($input);
 
             //Activity Logs
-            $activity_name = 'Deleted Lead ' . $lead->firstname . ' ' . $lead->lastname; 
+            $activity_name = 'Leads : Deleted lead ' . $lead->firstname . ' ' . $lead->lastname; 
             createActivityLog($activity_name);
             
             echo 'Done';
@@ -6216,6 +6218,39 @@ class Customer extends MY_Controller
 
             //Activity Logs
             $activity_name = 'Lead Source : Deleted lead source ' . $name; 
+            createActivityLog($activity_name);
+            
+        } 
+        
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_lead_type()
+    {
+        $this->load->model('LeadType_model');
+
+        if(!checkRoleCanAccessModule('customer-settings', 'delete')){
+			show403Error();
+			return false;
+		}
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $leadType = $this->LeadType_model->getByIdAndCompanyId($post['ltid'], $cid);
+        if( $leadType ){
+            $name = $leadType->lead_name;
+            $this->LeadType_model->deleteById($leadType->lead_id);
+
+            $is_success = 1;
+            $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Lead Type : Deleted lead type ' . $name; 
             createActivityLog($activity_name);
             
         } 
@@ -12818,5 +12853,66 @@ class Customer extends MY_Controller
         $this->page_data['page']->title = 'Lost Reasons';
         $this->page_data['page']->parent = 'Sales';
         $this->load->view('v2/pages/customer/settings_lost_reasons', $this->page_data);
+    }
+
+    public function ajax_archive_selected_leads()
+    {
+        $this->load->model('Lead_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['leads'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archive' => 'Yes', 'date_updated' => date("Y-m-d H:i:s")];
+            $this->Lead_model->bulkUpdate($post['leads'], $data, $filter);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_archive_lead()
+    {
+        $this->load->model('Lead_model');
+
+        $is_success = 0;
+        $msg    = 'Cannot find data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['lead_id'] > 0 ){
+            $filter[] = ['field_name' => 'company_id', 'field_value' => $company_id];
+            $lead     = $this->Lead_model->getById($post['lead_id'], $filter);
+            if( $lead ){
+                $data = ['is_archive' => 'Yes', 'date_updated' => date("Y-m-d H:i:s")];
+                $this->Lead_model->updateLead($lead->leads_id, $data, []);
+
+                $is_success = 1;
+                $msg    = '';
+
+                //Activity Logs
+                $activity_name = 'Leads : Deleted lead ' . $lead->firstname . ' ' . $lead->lastname; 
+                createActivityLog($activity_name);
+            }
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
     }
 }
