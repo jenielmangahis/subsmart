@@ -105,8 +105,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
               <div id="printableArea" style="">
                   <div class="row">
-                    <div class="col-md-2 col-sm-12">                       
-                        <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 300px;" />
+                    <div class="col-md-2 col-sm-12">           
+                        <?php $file_headers = @get_headers(getCompanyBusinessProfileImage()); ?>
+                        <?php if(($file_headers[0] == 'HTTP/1.1 404 Not Found') || ($file_headers[0] == 'HTTP/1.0 404 Not Found')) { ?>       
+                          <img class="presenter-print-logo" style="max-width: 300px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png">
+                        <?php } else { ?>
+                          <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 300px;" />
+                        <?php } ?>
                     </div>
                     <div class="col-md-7 col-sm-12"></div>
                     <div class="col-md-3 col-sm-12">

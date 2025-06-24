@@ -56,12 +56,8 @@ if (!function_exists('assets_url')) {
  */
 
 if (!function_exists('urlUpload')) {
-
-
     function urlUpload($url = '', $time = false)
-
     {
-
         return base_url('uploads/' . $url) . ($time ? '?' . time() : '');
     }
 }
@@ -251,7 +247,6 @@ if (!function_exists('getCompanyBusinessProfileImage')) {
 
     function getCompanyBusinessProfileImage()
     {
-
         $CI         = &get_instance();
         $company_id = logged('company_id');
         $res = $CI->business_model->getByCompanyProfileImage($company_id);
