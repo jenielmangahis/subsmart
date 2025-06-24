@@ -232,6 +232,11 @@ class Clients_model extends MY_Model
     public function solarIndustryId(){
         return $this->solar_industry_id;
     }
+
+    public function defaultNumLincense()
+    {
+        return 20;
+    }
 }
 
 /* End of file Clients_model.php */

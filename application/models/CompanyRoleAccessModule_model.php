@@ -123,6 +123,7 @@ class CompanyRoleAccessModule_model extends MY_Model
             'customer-groups' => 'Customer Groups',
             'customer-settings' => 'Customer Settings',  
             'customer-credit-industry' => 'Customer Credit Industry',
+            'customer-deals' => 'Customer Deals',
             'events' => 'Events',
             'events-settings' => 'Events Settings',
             'jobs' => 'Jobs',
