@@ -1199,6 +1199,51 @@ class CustomerDeal extends MY_Controller
         echo json_encode($return);
     }
 
+    public function ajax_update_lost_reason()
+    {
+        $this->load->model('CustomerDealLostReason_model');
+
+        $is_success = 1;
+        $msg    = '';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+        
+        if( $post['lost_reason'] == '' ){
+            $is_success = 0;
+            $msg = 'Please reason';
+        }
+
+        $isExists = $this->CustomerDealLostReason_model->getByReasonAndCompanyId($post['lost_reason'], $company_id);
+        if( $isExists ){
+            $is_success = 0;
+            $msg = 'Reason ' . $post['lost_reason'] . ' already exists';
+        }
+
+        if( $is_success == 1 ){
+
+            $data = [
+                'company_id' => $company_id,
+                'lost_reason' => $post['lost_reason'],          
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s")
+            ];
+            
+            $this->CustomerDealLostReason_model->create($data); 
+
+            //Activity Logs
+            $activity_name = 'Customer Deals : Created lost reason ' . $post['lost_reason']; 
+            createActivityLog($activity_name);
+        }     
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);
+    }
+
     public function ajax_update_expected_close_date()
     {
         $this->load->model('CustomerDeal_model');
