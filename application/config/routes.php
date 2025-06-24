@@ -112,6 +112,9 @@ $route['customer/_ledger'] = 'Customer/ajax_customer_ledger';
 $route['customer/_delete_reason'] = 'Customer/ajax_delete_company_reason';
 $route['customer/_print_ledger'] = 'Customer/ajax_print_customer_ledger';
 $route['customer/_send_email_ledger'] = 'Customer/ajax_send_email_ledger';
+$route['customer/_delete_lead_type'] = 'Customer/ajax_delete_lead_type';
+$route['customer/_archive_selected_leads'] = 'Customer/ajax_archive_selected_leads';
+$route['customer/_archive_lead'] = 'Customer/ajax_archive_lead';
 
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
