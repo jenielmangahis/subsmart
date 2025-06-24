@@ -12806,4 +12806,17 @@ class Customer extends MY_Controller
         echo json_encode($return);
         exit;
     }
+
+    public function settings_lost_reasons()
+    {
+        $this->load->model('CustomerDealLostReason_model');
+
+        $company_id = logged('company_id');
+        $lostReasons = $this->CustomerDealLostReason_model->getAllByCompanyId($company_id);
+
+        $this->page_data['lostReasons'] = $lostReasons;
+        $this->page_data['page']->title = 'Lost Reasons';
+        $this->page_data['page']->parent = 'Sales';
+        $this->load->view('v2/pages/customer/settings_lost_reasons', $this->page_data);
+    }
 }

@@ -896,11 +896,12 @@ class Users extends MY_Controller
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
 
 		$cid = logged('company_id');
-
 		$eid = hashids_encrypt($cid, '', 15);
-
+		$company = $this->Clients_model->getById($cid);
+		$num_license = $company->number_of_license;
+		
 		$this->page_data['eid'] = $eid;
-
+		$this->page_data['num_license'] = $num_license;
 		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
 		$this->page_data['roles']  = $this->users_model->userRolesList();
 		$this->page_data['show_pass'] = 1;
@@ -1179,7 +1180,7 @@ class Users extends MY_Controller
 		        }
 
 		        //Deduct num license
-		        $new_num_license = $company->number_of_license;
+		        $new_num_license = $company->number_of_license - 1;
 		        $company_data = ['number_of_license' => $new_num_license];
 		        $this->Clients_model->updateClient($cid, $company_data);
 
@@ -3123,7 +3124,6 @@ class Users extends MY_Controller
 
 		if( $is_success == 1 ){
 			$this->CompanyRoleAccessModule_model->deleteAllByCompanyIdAndRoleId($cid, $post['role']);
-			$this->CompanyRoleAccessWidget_model->deleteAllByCompanyIdAndRoleId($cid, $post['role']);
 
 			if( $post['access_type'] == 'access-all' ){
 				$data = [

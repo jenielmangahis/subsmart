@@ -20,6 +20,11 @@ class CustomerDeal extends MY_Controller
         $this->load->model('CustomerDealActivitySchedule_model');
         $this->load->model('CustomerDealLostReason_model');
 
+        if(!checkRoleCanAccessModule('customer-deals', 'read')){
+			show403Error();
+			return false;
+		}
+
         $company_id = logged('company_id');
         $customerDealStages  = $this->CustomerDealStage_model->getAllByCompanyId($company_id);
         $customerDealLables  = $this->CustomerDealLabel_model->getAllByCompanyId($company_id);
@@ -1001,6 +1006,11 @@ class CustomerDeal extends MY_Controller
         $this->load->model('CustomerDealLabel_model');
         $this->load->model('CustomerDealActivitySchedule_model');
         $this->load->model('CustomerDealLostReason_model');
+
+        if(!checkRoleCanAccessModule('customer-deals', 'read')){
+			show403Error();
+			return false;
+		}
         
         $company_id = logged('company_id');
         $customerDealStages  = $this->CustomerDealStage_model->getAllByCompanyId($company_id);
@@ -1267,6 +1277,11 @@ class CustomerDeal extends MY_Controller
         $this->load->model('CustomerDealActivitySchedule_model');
         $this->load->model('CustomerDealLostReason_model');
 
+        if(!checkRoleCanAccessModule('customer-deals', 'read')){
+			show403Error();
+			return false;
+		}
+
         $company_id = logged('company_id');
 
         $filters[] = ['field' => 'is_archive', 'value' => 'No'];
@@ -1310,30 +1325,214 @@ class CustomerDeal extends MY_Controller
         $this->load->view('v2/pages/customer_deals/list', $this->page_data);
     }
 
-    public function ajax_update_status_customer_deal()
+    public function ajax_archive_selected_deals()
     {
         $this->load->model('CustomerDeal_model');
 
         $is_success = 0;
-        $msg    = 'Cannot find data';
+        $msg    = 'Please select data';
 
         $company_id  = logged('company_id');
         $post = $this->input->post();
 
-        $customerDeal = $this->CustomerDeal_model->getById($post['customer_deal_id']);
-        if( $customerDeal->company_id == $company_id ){
-            $this->CustomerDeal_model->update($customerDeal->id, ['status' => $post['status']]);
+        if( $post['customerDeals'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archive' => 'Yes'];
+            $this->CustomerDeal_model->bulkUpdate($post['customerDeals'], $data, $filter);
 
             $is_success = 1;
-            $msg = '';
+            $msg    = '';
         }
 
         $return = [
             'is_success' => $is_success,
-            'msg' => $msg,
-            'previous_month' => $previous_month
+            'msg' => $msg
         ];
 
         echo json_encode($return);
+    }
+
+    public function ajax_restore_selected_deals()
+    {
+        $this->load->model('CustomerDeal_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['customerDeals'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archive' => 'No'];
+            $this->CustomerDeal_model->bulkUpdate($post['customerDeals'], $data, $filter);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_won_selected_deals()
+    {
+        $this->load->model('CustomerDeal_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['customerDeals'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['status' => 'Won'];
+            $this->CustomerDeal_model->bulkUpdate($post['customerDeals'], $data, $filter);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_lost_selected_deals()
+    {
+        $this->load->model('CustomerDeal_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['customerDeals'] ){                                    
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['status' => 'Lost', 'lost_reason' => $post['lost_reason'], 'comments' => $post['lost_comment']];
+            $this->CustomerDeal_model->bulkUpdate($post['customerDeals'], $data, $filter);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_with_selected_create_customer_deal_activity_schedule()
+    {
+        $this->load->model('CustomerDealActivitySchedule_model');
+        $this->load->model('CustomerDeal_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['activity_name'] == '' ){
+            $is_success = 0;
+            $msg = 'Please enter activity name';
+        }
+
+        if( $is_success == 1 ){
+            $total_created = 0;
+            foreach( $post['customerDeals'] as $deal_id ){                
+                $is_done = 'No';
+                if( $post['is_done'] ){
+                    $is_done = 'Yes';
+                }
+
+                $data = [
+                    'customer_deal_id' => $deal_id,
+                    'owner_id' => $post['owner_id'],
+                    'activity_name' => $post['activity_name'],
+                    'activity_type' => $post['activity_type'],
+                    'date_from' => date("Y-m-d",strtotime($post['date_from'])),
+                    'date_to' => date("Y-m-d",strtotime($post['date_to'])),
+                    'time_from' => date("H:i:s",strtotime($post['time_from'])),
+                    'time_to' => date("H:i:s",strtotime($post['time_to'])),
+                    'priority' => $post['activity_priority'],
+                    'location' => $post['activity_location'],
+                    'notes' => $post['activity_notes'],
+                    'is_done' => $is_done,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+
+                $this->CustomerDealActivitySchedule_model->create($data);
+
+                //Activity Logs   
+                $customerDeal  = $this->CustomerDeal_model->getById($deal_id);             
+                $activity_name = 'Customer Deals : Created activity schedule ' . $post['activity_name'] . ' for customer deal ' . $customerDeal->deal_title; 
+                createActivityLog($activity_name);    
+                
+                $total_created++;
+            }
+
+            if( $total_created > 0 ){
+                $is_success = 1;
+                $msg = '';
+            }else{
+                $is_success = 0;
+                $msg = 'No data created';
+            }
+            
+        }        
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function exportData()
+    {
+        $this->load->model('CustomerDeal_model');
+
+        $delimiter = ",";
+        $filename  = 'customer_deals_'.time().".csv";
+        $f = fopen('php://memory', 'w');
+
+        $fields = ['Deal Title', 'Probability', 'Expected Close Date', 'Source Channel', 'Owner', 'Status'];
+        fputcsv($f, $fields, $delimiter);
+
+        $company_id = logged('company_id');
+        $filters[]  = ['field' => 'is_archive', 'value' => 'No'];
+        $customerDeals  = $this->CustomerDeal_model->getAllByCompanyId($company_id,[],$filters);
+        foreach( $customerDeals as $deal ){
+            $csvData = [
+                $deal->deal_title,
+                $deal->probability,
+                date("m/d/Y",strtotime($deal->expected_close_date)),
+                $deal->source_channel, 
+                $deal->FName . ' ' . $deal->LName,
+                $deal->status
+            ];
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
     }
 }

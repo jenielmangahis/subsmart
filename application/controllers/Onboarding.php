@@ -322,86 +322,109 @@ class Onboarding extends MY_Controller {
 		$cid    = logged('company_id');
 		$business = $this->business_model->getByCompanyId($cid);
 		unset($pdata['action']);
-		if($business){
-			$bid = $business->id;
-			$target_dir = "./uploads/users/business_profile/$bid/";
-			if(!file_exists($target_dir)) {
-				mkdir($target_dir, 0777, true);
-			}
-			if( $action == 'credentials' ){
-				$is_licensed = 0;
-				if( isset($pdata['is_licensed']) ){
-					$is_licensed = 1;
+		if( $cid > 0 ){
+			if($business){
+				$bid = $business->id;
+				$target_dir = "./uploads/users/business_profile/$bid/";
+				if(!file_exists($target_dir)) {
+					mkdir($target_dir, 0777, true);
 				}
+				if( $action == 'credentials' ){
+					$is_licensed = 0;
+					if( isset($pdata['is_licensed']) ){
+						$is_licensed = 1;
+					}
 
-				$is_bonded = 0;
-				if( isset($pdata['is_bonded']) ){
-					$is_bonded = 1;
+					$is_bonded = 0;
+					if( isset($pdata['is_bonded']) ){
+						$is_bonded = 1;
+					}
+
+					$is_insured = 0;
+					if( isset($pdata['is_insured']) ){
+						$is_insured = 1;
+					}
+
+					$is_bbb = 0;
+					if( isset($pdata['is_bbb']) ){
+						$is_bbb = 1;
+					}
+
+					$license_image_name = $business->license_image;
+					if(isset($_FILES['license_image']) && $_FILES['license_image']['tmp_name'] != '') {
+						$tmp_name = $_FILES['license_image']['tmp_name'];
+						$extension = strtolower(end(explode('.',$_FILES['license_image']['name'])));
+						$license_image_name = "license_" . basename($_FILES["license_image"]["name"]);
+						move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$license_image_name");
+					}
+
+					$bond_image_name = $business->bond_image;
+					if(isset($_FILES['bond_image']) && $_FILES['bond_image']['tmp_name'] != '') {
+						$tmp_name = $_FILES['bond_image']['tmp_name'];
+						$extension = strtolower(end(explode('.',$_FILES['bond_image']['name'])));
+						$bond_image_name = "bond_" . basename($_FILES["bond_image"]["name"]);
+						move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$bond_image_name");
+					}
+
+					$insurance_image_name = $business->insurance_image;
+					if(isset($_FILES['insurance_image']) && $_FILES['insurance_image']['tmp_name'] != '') {
+						$tmp_name = $_FILES['insurance_image']['tmp_name'];
+						$extension = strtolower(end(explode('.',$_FILES['insurance_image']['name'])));
+						$insurance_image_name = "bond_" . basename($_FILES["insurance_image"]["name"]);
+						move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$insurance_image_name");
+					}
+
+					$data_availability = [
+						'is_bonded' => $is_bonded,
+						'is_licensed' => $is_licensed,
+						'is_bbb_accredited' => $is_bbb,
+						'is_business_insured' => $is_insured,
+						'insured_amount' => $pdata['insured_amount'],
+						'insurance_expiry_date' => date("Y-m-d",strtotime(str_replace("-","/",$pdata['insured_exp_date']))),
+						'bond_amount' => $pdata['bonded_amount'],
+						'bond_expiry_date' => date("Y-m-d",strtotime(str_replace("-","/",$pdata['bonded_exp_date']))),
+						'license_class' => $pdata['license_class'],
+						'license_number' => $pdata['license_number'],
+						'license_state' => $pdata['license_state'],
+						'license_expiry_date' => date("Y-m-d",strtotime(str_replace("-","/",$pdata['license_exp_date']))),
+						'bbb_link' => $pdata['bbb_url'],
+						'license_image' => $license_image_name,
+						'bond_image' => $bond_image_name,
+						'insurance_image' => $insurance_image_name
+					];
+
+					$this->business_model->update($bid,$data_availability);	
+					//redirect('onboarding/booking_online_demo');
+					$this->ajax_complete_onboarding();
+					redirect('dashboard');
+					
+				}elseif( $action == 'about' ){
+					$this->business_model->update($bid,$pdata);	
+					redirect('onboarding/industry_type');
+				}else{
+					if (!empty($_FILES['image']['name'])){
+						$target_dir = "./uploads/users/business_profile/$bid/";
+						if(!file_exists($target_dir)) {
+							mkdir($target_dir, 0777, true);
+						}
+						$business_image = $this->moveUploadedFile($bid);
+						$this->business_model->update($bid, ['business_image' => $business_image]);
+					}else{
+						copy(FCPATH.'uploads/users/default.png', 'uploads/users/business_profile/'.$bid.'/default.png');
+					}
+
+					$pdata['profile_slug'] = createSlug($pdata['business_name'], '-');	
+					$this->business_model->update($bid,$pdata);	
+					return redirect('onboarding/about');
 				}
+			}else{				
+				$pdata['user_id'] = $user->id;
+				$pdata['company_id'] = $cid;
+				$pdata['profile_slug'] = createSlug($pdata['business_name'], '-');	
+				$imbid = $user->id;
+				$bid   = $this->business_model->create($pdata);
 
-				$is_insured = 0;
-				if( isset($pdata['is_insured']) ){
-					$is_insured = 1;
-				}
-
-				$is_bbb = 0;
-				if( isset($pdata['is_bbb']) ){
-					$is_bbb = 1;
-				}
-
-				$license_image_name = $business->license_image;
-				if(isset($_FILES['license_image']) && $_FILES['license_image']['tmp_name'] != '') {
-					$tmp_name = $_FILES['license_image']['tmp_name'];
-					$extension = strtolower(end(explode('.',$_FILES['license_image']['name'])));
-					$license_image_name = "license_" . basename($_FILES["license_image"]["name"]);
-					move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$license_image_name");
-				}
-
-				$bond_image_name = $business->bond_image;
-				if(isset($_FILES['bond_image']) && $_FILES['bond_image']['tmp_name'] != '') {
-					$tmp_name = $_FILES['bond_image']['tmp_name'];
-					$extension = strtolower(end(explode('.',$_FILES['bond_image']['name'])));
-					$bond_image_name = "bond_" . basename($_FILES["bond_image"]["name"]);
-					move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$bond_image_name");
-				}
-
-				$insurance_image_name = $business->insurance_image;
-				if(isset($_FILES['insurance_image']) && $_FILES['insurance_image']['tmp_name'] != '') {
-					$tmp_name = $_FILES['insurance_image']['tmp_name'];
-					$extension = strtolower(end(explode('.',$_FILES['insurance_image']['name'])));
-					$insurance_image_name = "bond_" . basename($_FILES["insurance_image"]["name"]);
-					move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$insurance_image_name");
-				}
-
-				$data_availability = [
-					'is_bonded' => $is_bonded,
-					'is_licensed' => $is_licensed,
-					'is_bbb_accredited' => $is_bbb,
-					'is_business_insured' => $is_insured,
-					'insured_amount' => $pdata['insured_amount'],
-					'insurance_expiry_date' => date("Y-m-d",strtotime(str_replace("-","/",$pdata['insured_exp_date']))),
-					'bond_amount' => $pdata['bonded_amount'],
-					'bond_expiry_date' => date("Y-m-d",strtotime(str_replace("-","/",$pdata['bonded_exp_date']))),
-					'license_class' => $pdata['license_class'],
-					'license_number' => $pdata['license_number'],
-					'license_state' => $pdata['license_state'],
-					'license_expiry_date' => date("Y-m-d",strtotime(str_replace("-","/",$pdata['license_exp_date']))),
-					'bbb_link' => $pdata['bbb_url'],
-					'license_image' => $license_image_name,
-					'bond_image' => $bond_image_name,
-					'insurance_image' => $insurance_image_name
-				];
-
-				$this->business_model->update($bid,$data_availability);	
-				//redirect('onboarding/booking_online_demo');
-				$this->ajax_complete_onboarding();
-				redirect('dashboard');
-				
-			}elseif( $action == 'about' ){
-				$this->business_model->update($bid,$pdata);	
-				redirect('onboarding/industry_type');
-			}else{
-				if (!empty($_FILES['image']['name'])){
+				if(!empty($_FILES['image']['name'])){
 					$target_dir = "./uploads/users/business_profile/$bid/";
 					if(!file_exists($target_dir)) {
 						mkdir($target_dir, 0777, true);
@@ -409,16 +432,14 @@ class Onboarding extends MY_Controller {
 					$business_image = $this->moveUploadedFile($bid);
 					$this->business_model->update($bid, ['business_image' => $business_image]);
 				}else{
-					copy(FCPATH.'uploads/users/default.png', 'uploads/users/business_profile/'.$bid.'/default.png');
+					copy(FCPATH.'uploads/users/default.png', 'uploads/users/business_profile/'.$user->id.'/default.png');
 				}
 
-				$pdata['profile_slug'] = createSlug($pdata['business_name'], '-');	
-				$this->business_model->update($bid,$pdata);	
-				return redirect('onboarding/about');
+				redirect('onboarding/about');
 			}
 		}else{
 			redirect('/');
-		}
+		}		
 
 		/*$this->session->set_flashdata('alert-type', 'success');
 		$this->session->set_flashdata('alert', 'Business detail updated Successfully');	*/
