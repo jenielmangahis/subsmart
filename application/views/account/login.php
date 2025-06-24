@@ -91,7 +91,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       <!-- /.col -->
     </div>
     <?php echo form_close(); ?>
-    <div class="row mr-bottom-10">
+    <!-- <div class="row mr-bottom-10">
       <div class="col-xs-6">
         <a href="#" class="login-social fb-color"><i class="fa fa-facebook"></i> Sign In Facebook</a>
       </div>
@@ -99,9 +99,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <img
           src="<?php echo base_url() ?>assets/dashboard/images/google/google.png"
           width="160" style="cursor:pointer;" alt="">
-        <!-- <a href="#" class="login-social google-color"><i class="fa fa-google"></i>Sign In Gmail</a> -->
       </div>
-    </div>
+    </div> -->
     <a href="<?php echo url('login/forget'); ?>">Forgot
       your password ?</a><br>
     <!-- <a href="register.html" class="text-center">Register a new membership</a> -->
