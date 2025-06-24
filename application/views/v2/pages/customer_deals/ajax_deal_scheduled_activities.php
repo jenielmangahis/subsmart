@@ -1,11 +1,13 @@
 <?php if( $activitySchedules ){ ?>  
   <?php foreach($activitySchedules as $activity){ ?>
     <div class="row activity-card" data-type="<?= $activity->activity_type; ?>" data-id="<?= $activity->id; ?>">
+      <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
       <div class="col-md-2 col-sm-2 col-2">
         <div class="form-check opt-done-container">
           <input class="form-check-input opt-is-done" type="radio" name="activity_is_done" data-deal-id="<?= $activity->customer_deal_id; ?>" data-id="<?= $activity->id; ?>">
         </div>
       </div>
+      <?php } ?>
       <div class="col-md-10 col-sm-10 col-10 p-0 activity-info" data-type="<?= $activity->activity_type; ?>" data-id="<?= $activity->id; ?>">
         <div class="activity-name">
           <i class="<?= $activity->activity_type_properties['icon'] ?>"></i> <?= $activity->activity_type; ?>
@@ -34,7 +36,7 @@
         <div class="activity-schedule"><?= $date; ?> &#9679; <?= $activity->owner_firstname . " " . $activity->owner_lastname; ?></div>        
       </div>
       <?php if( $activity->notes != '' ){ ?>
-        <div class="col-md-12 col-sm-12 col-12">
+        <div class="col-md-12 col-sm-12 col-12 p-0">
           <span class="activity-notes"><?= $activity->notes; ?></span>
         <?php } ?>
         </div>

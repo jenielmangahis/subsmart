@@ -130,6 +130,10 @@
 </div>
 <div class="d-flex justify-content-end mt-2 view-customer-deals-actions">                        
     <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
-    <button type="button" class="nsm-button btn-danger" data-id="<?= $customerDeal->id; ?>" data-name="<?= $customerDeal->deal_title; ?>" id="btn-delete-customer-deals">Delete</button>
-    <button type="button" class="nsm-button primary" id="btn-edit-customer-deals" data-id="<?= $customerDeal->id; ?>">Edit</button>    
+    <?php if(checkRoleCanAccessModule('customer-deals', 'delete')){ ?>
+        <button type="button" class="nsm-button btn-danger" data-id="<?= $customerDeal->id; ?>" data-name="<?= $customerDeal->deal_title; ?>" id="btn-delete-customer-deals">Delete</button>
+    <?php } ?>
+    <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
+        <button type="button" class="nsm-button primary" id="btn-edit-customer-deals" data-id="<?= $customerDeal->id; ?>">Edit</button>    
+    <?php } ?>
 </div>       

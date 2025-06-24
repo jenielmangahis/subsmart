@@ -25,7 +25,9 @@
                             <button type="button" id="btn-stage-view" class="btn btn-secondary btn-lg"><i class='bx bx-bar-chart-alt-2 bx-rotate-45'></i></button>
                             <button type="button" id="btn-list-view" class="btn btn-secondary btn-lg"><i class='bx bx-list-ul'></i></button>
                             <button type="button" id="btn-forecast-view" class="btn btn-secondary btn-active btn-lg"><i class='bx bx-dollar-circle'></i></button>
+                            <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
                             <button type="button" id="btn-archive" class="btn btn-secondary btn-lg"><i class='bx bx-box'></i></button>
+                            <?php } ?>
                         </div>
                     </div>
                     <div class="col-8 grid-mb text-end">
@@ -36,6 +38,7 @@
                             <button type="button" class="btn btn-secondary btn-nsm" data-quarter="<?= $current_quarter; ?>" id="btn-forecast-today">Today</button>
                             <button type="button" class="btn btn-secondary" data-quarter="<?= $current_quarter == 4 ? 4 : $current_quarter + 1; ?>" id="btn-forecast-next"><i class='bx bx-chevron-right' ></i></button>
                         </div>  
+                        <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
                         <div class="btn-group">
                             <button type="button" class="btn btn-nsm" id="btn-new-deal"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Deal</button>
                             <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
@@ -45,19 +48,24 @@
                                 <li><a class="dropdown-item" id="btn-add-new-lost-reason" href="javascript:void(0);">Add Lost Reason</a></li>                                
                             </ul>
                         </div>
+                        <?php } ?>
                     </div>
                 </div>   
                 <div class="row" id="deal-forecast"></div>  
                 <div class="row mt-4" id="customer-deal-lost-container" style="display:none;">
+                    <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
                     <div class="col-md-4">
                         <div id="customer-deal-lost" ><h3>LOST</h3></div>
                     </div>
                     <div class="col-md-4">
                         <div id="customer-deal-won" ><h3>WON</h3></div>
                     </div>
+                    <?php } ?>
+                    <?php if(checkRoleCanAccessModule('customer-deals', 'delete')){ ?>
                     <div class="col-md-4">
                         <div id="customer-deal-delete" ><h3>DELETE</h3></div>
                     </div>
+                    <?php } ?>
                 </div>   
             </div>
         </div>

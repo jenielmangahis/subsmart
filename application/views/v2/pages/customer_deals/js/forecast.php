@@ -709,7 +709,7 @@ $(function(){
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <p>Manage lost reasons in <a class="nsm nsm-link" href="<?= base_url('customer/customer_deal_lost_reasons') ?>">Customer Settings</a></p>
+                            <p>Manage lost reasons in <a class="nsm nsm-link" href="<?= base_url('customer/settings_lost_reasons') ?>">Customer Settings</a></p>
                         </div>
                     </div>
                 `;       

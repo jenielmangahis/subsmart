@@ -25,9 +25,12 @@
                             <button type="button" id="btn-stage-view" class="btn btn-secondary btn-lg btn-active"><i class='bx bx-bar-chart-alt-2 bx-rotate-45'></i></button>
                             <button type="button" id="btn-list-view" class="btn btn-secondary btn-lg"><i class='bx bx-list-ul'></i></button>
                             <button type="button" id="btn-forecast-view" class="btn btn-secondary btn-lg"><i class='bx bx-dollar-circle'></i></button>
+                            <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
                             <button type="button" id="btn-archive" class="btn btn-secondary btn-lg"><i class='bx bx-box'></i></button>
+                            <?php } ?>
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
                     <div class="col-8 grid-mb text-end">
                         <div class="btn-group">
                             <button type="button" class="btn btn-nsm" id="btn-new-deal"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Deal</button>
@@ -40,20 +43,24 @@
                             </ul>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>                
                 <input type="hidden" id="customer-deal-modal-name" value="" />
                 <div class="row" id="deal-stages"></div> 
                 <div class="row mt-4" id="customer-deal-lost-container" style="display:none;">
+                    <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
                     <div class="col-md-4">
                         <div id="customer-deal-lost" ><h3>LOST</h3></div>
                     </div>
                     <div class="col-md-4">
                         <div id="customer-deal-won" ><h3>WON</h3></div>
                     </div>
+                    <?php } ?>
+                    <?php if(checkRoleCanAccessModule('customer-deals', 'delete')){ ?>
                     <div class="col-md-4">
                         <div id="customer-deal-delete" ><h3>DELETE</h3></div>
                     </div>
-
+                    <?php } ?>
                 </div>     
             </div>
         </div>
