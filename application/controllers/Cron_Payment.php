@@ -2,9 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Cron_Payment extends MY_Controller {
-
-
+class Cron_Payment extends MYF_Controller {
 
 	public function __construct()
 	{
@@ -30,18 +28,12 @@ class Cron_Payment extends MY_Controller {
             'demo' => false,
         ]);
 
-        $date = date("Y-m-d");
-        $get_subscription = array(
-            'where' => array(
-                'next_billing_date' => $date,
-                'is_auto_renew' => 1,
-                'is_with_payment_error' => 0
-            ),
-            'table' => 'clients',
-            'select' => 'clients.*',
-            'limit' => 50
-        );
-        $clients = $this->general->get_data_with_param($get_subscription, true);
+        $total_renewed = 0;
+        $total_deactivated = 0;
+
+        $exempted_company_ids = exempted_company_ids();
+        $clients = $this->Clients_model->getAllAutoRenewSubscriptions($exempted_company_ids, [], 50);
+
         foreach( $clients as $client ){
             $primaryCard = $this->CardsFile_model->getCompanyPrimaryCard($client->id);
             if( $primaryCard ){
@@ -127,6 +119,8 @@ class Cron_Payment extends MY_Controller {
                         //Request remove addon
                         $this->SubscriberNsmartUpgrade_model->deleteAllRequestRemovalByClientId($client->id);
 
+                        $total_renewed++;
+
                     }else{
                         $data = [           
                             //'payment_method' => 'converge',     
@@ -138,45 +132,40 @@ class Cron_Payment extends MY_Controller {
                             'is_with_payment_error' => 1
                         ];
                         $this->Clients_model->update($client->id, $data);
+
+                        $total_deactivated++;
                     }
+                }else{
+                    $data = [     
+                        'recurring_subscription_payment_error' => 'No plan detected',               
+                        'date_modified' => date("Y-m-d H:i:s"),
+                        'is_auto_renew' => 0,
+                        'is_plan_active' => 0,
+                        'is_with_payment_error' => 1
+                    ];
+                    $this->Clients_model->update($client->id, $data);
+
+                    $total_deactivated++;
                 }
+            }else{
+                $data = [     
+                    'recurring_subscription_payment_error' => 'No primary card detected',               
+                    'date_modified' => date("Y-m-d H:i:s"),
+                    'is_auto_renew' => 0,
+                    'is_plan_active' => 0,
+                    'is_with_payment_error' => 1
+                ];
+                $this->Clients_model->update($client->id, $data);
+
+                $total_deactivated++;
             }
         }
 
-        //echo "Done";
-    }
-
-    public function deactivate_unpaid_nsmart_subscription(){
-        $this->load->model('Clients_model');
-        $this->load->model('General_model', 'general');
-
-        ini_set('max_execution_time', 0);
-
-        $date = date("Y-m-d");
-        $get_subscription = array(
-            'where' => array(
-                'id <>' => 1,
-                'next_billing_date <' => $date,
-                'is_auto_renew' => 0,
-                'is_plan_active' => 1
-            ),
-            'table' => 'clients',
-            'select' => 'clients.*',
-            'limit' => 50
-        );
-        $clients = $this->general->get_data_with_param($get_subscription, true);
-        $total_deactivated = 0;
-        foreach( $clients as $client ){            
-            $data = ['is_plan_active' => 0];
-            $this->Clients_model->update($client->id, $data);
-            $total_deactivated++;
-        }
-
-        if( $total_deactivated > 0 ){
+        if( $total_deactivated > 0 || $total_renewed > 0 ){
             //Send email notification
-            $subject = 'nSmarTrac: Cron Daily Deactivated Accounts';
-            $to      = 'bryann.revina03@gmail.com';
-            $body    = "Today's Total deactivated account is " . $total_deactivated;
+            $subject = 'nSmarTrac: Cron Daily Subscription Renewal';
+            $to      = 'bryannrevina@nsmartrac.com';
+            $body    = "Today's Total deactivated subscription is " . $total_deactivated . " and total renewed subscription is " . $total_renewed;
 
             $data = [
                 'to' => $to, 
@@ -186,10 +175,48 @@ class Cron_Payment extends MY_Controller {
                 'bcc' => '',
                 'attachment' => ''
             ];
-
-            //$isSent = sendEmail($data);
+            sendEmail($data);
         }
         
+
+        echo "Today's Total deactivated subscription is " . $total_deactivated . " and total renewed subscription is " . $total_renewed;
+    }
+
+    // Deactivate expired nsmart subcription
+    public function deactivate_unpaid_nsmart_subscription()
+    {
+        $this->load->model('Clients_model');
+
+        ini_set('max_execution_time', 0);
+
+        $exempted_company_ids = exempted_company_ids();
+        $clients = $this->Clients_model->getAllExpiredSubscriptions($exempted_company_ids,[],50);
+
+        $total_deactivated = 0;
+        foreach( $clients as $client ){            
+            $data = ['is_plan_active' => 0, 'date_modified' => date("Y-m-d H:i:s")];
+            $this->Clients_model->update($client->id, $data);
+            $total_deactivated++;
+        }
+
+        if( $total_deactivated > 0 ){
+            //Send email notification
+            $subject = 'nSmarTrac: Cron Daily Deactivated Subscriptions';
+            $to      = 'bryannrevina@nsmartrac.com';
+            $body    = "Today's Total deactivated subscription is " . $total_deactivated;
+
+            $data = [
+                'to' => $to, 
+                'subject' => $subject, 
+                'body' => $body,
+                'cc' => '',
+                'bcc' => '',
+                'attachment' => ''
+            ];
+            sendEmail($data);
+        }
+
+        echo "Today's Total deactivated subscription is " . $total_deactivated;
         exit;
     }
 
@@ -275,7 +302,6 @@ class Cron_Payment extends MY_Controller {
                             $num_months_discounted = $client->num_months_discounted - 1;    
                         }
 
-                        
                         $data = [           
                             'payment_method' => 'converge',     
                             //'plan_date_registered' => date("Y-m-d"),
@@ -309,8 +335,35 @@ class Cron_Payment extends MY_Controller {
 
                         //Request remove addon
                         $this->SubscriberNsmartUpgrade_model->deleteAllRequestRemovalByClientId($client->id);
+                    }else{
+                        $data = [     
+                            'recurring_subscription_payment_error' => 'Payment error',               
+                            'date_modified' => date("Y-m-d H:i:s"),
+                            'is_auto_renew' => 0,
+                            'is_plan_active' => 0,
+                            'is_with_payment_error' => 1
+                        ];
+                        $this->Clients_model->update($client->id, $data);
                     }
+                }else{
+                    $data = [     
+                        'recurring_subscription_payment_error' => 'No plan detected',               
+                        'date_modified' => date("Y-m-d H:i:s"),
+                        'is_auto_renew' => 0,
+                        'is_plan_active' => 0,
+                        'is_with_payment_error' => 1
+                    ];
+                    $this->Clients_model->update($client->id, $data);
                 }
+            }else{
+                $data = [     
+                    'recurring_subscription_payment_error' => 'No primary card detected',               
+                    'date_modified' => date("Y-m-d H:i:s"),
+                    'is_auto_renew' => 0,
+                    'is_plan_active' => 0,
+                    'is_with_payment_error' => 1
+                ];
+                $this->Clients_model->update($client->id, $data);
             }
         }
 

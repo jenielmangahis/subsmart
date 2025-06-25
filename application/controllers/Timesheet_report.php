@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Timesheet_report extends MY_Controller
+class Timesheet_report extends MYF_Controller
 {
     public function timesheetWeeklyReport(){
         $page = array(
@@ -23,8 +23,8 @@ class Timesheet_report extends MY_Controller
         $this->email->set_newline("\r\n");
 
         $this->email->from('no-reply@nsmartrac.com','nSmartrac');
-        $this->email->to('support@nsmartrac.com');
-        //$this->email->to('rarecandy05@gmail.com');
+        //$this->email->to('support@nsmartrac.com');
+        $this->email->to('bryannrevina@nsmartrac.com');
         $this->email->subject('Timesheet Weekly Report');
         $message = $this->load->view('users/email_template',$page,TRUE);
         $this->email->message($message);

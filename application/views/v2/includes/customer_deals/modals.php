@@ -266,9 +266,11 @@
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body" id="activity-schedules-container"></div>
+            <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
             <div class="modal-footer" style="display:block;justify-content:normal !important;">
                 <a class="nsm nsm-button btn-create-schedule-activity" data-id="" href="javascript:void(0);"><i class='bx bx-plus'></i> Schedule an activity</a>
             </div>
+            <?php } ?>
         </div>
     </div>
 </div>
@@ -414,6 +416,91 @@
                         <button type="submit" class="nsm-button primary" id="btn-save-lost-reason">Save</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-with-selected-create-deal-scheduled-activity" data-bs-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Add New Activity Schedule</span>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+            </div>            
+            <div class="modal-body">                
+                <form id="frm-with-selected-save-activity-schedule">     
+                <input type="hidden" id="cdi" name="cdi" value="" />
+                <div class="row">                        
+                    <div class="col-sm-12">
+                        <label class="mb-2">Activity Subject</label>
+                        <div class="input-group mb-3">
+                            <input type="text" name="activity_name" value="" class="form-control" required="" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <label class="mb-2">Activity Type</label>
+                        <div class="input-group mb-3">
+                            <select class="form-select with-selected-select-activity-type" name="activity_type">
+                                <?php foreach($optionActivityTypes as $key => $value){ ?>
+                                    <option data-icon="<?= $value['icon']; ?>" value="<?= $key; ?>"><?= $value['name']; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <label class="mb-2">From</label>
+                        <div class="input-group mb-3" style="width:65%;">
+                            <input type="date" class="form-control" name="date_from" value="<?= date("Y-m-d"); ?>" style="margin-right:2px;" />
+                            <input type="time" class="form-control" name="time_from" value="<?= date("H:i"); ?>" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <label class="mb-2">To</label>
+                        <div class="input-group mb-3" style="width:65%;">
+                            <input type="date" class="form-control" name="date_to" value="<?= date("Y-m-d"); ?>" style="margin-right:2px;" />
+                            <input type="time" class="form-control" name="time_to" value="<?= date("H:i"); ?>" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <label class="mb-2">Priority</label>
+                        <div class="input-group mb-3">
+                            <select class="form-select with-selected-select-activity-priority" name="activity_priority">
+                                <?php foreach($optionsPriorities as $key => $value){ ?>
+                                    <option data-icon="<?= $value['icon']; ?>" data-color="<?= $value['color']; ?>" value="<?= $key; ?>"><?= $value['name']; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <label class="mb-2">Owner</label>
+                        <div class="input-group mb-3">
+                            <select class="form-select with-selected-activity-company-users" name="owner_id"></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mb-2">
+                        <label class="mb-2">Location</label>
+                        <div class="autocomplete-panel">
+                            <div id="autocomplete-with-selected" class="autocomplete-container"></div>
+                            <input type="hidden" name="activity_location" id="autocomplete-with-selected-map-address" value="" class="form-control" />
+                        </div>                     
+                    </div>
+                    <div class="col-sm-12">
+                        <label class="mb-2">Notes</label>
+                        <textarea name="activity_notes" id="ck-with-selected-activity-notes" class="form-control"></textarea>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="is_done" value="1" id="activity-is-done">
+                            <label class="form-check-label" for="activity-is-done">
+                                Mark as Done
+                            </label>
+                        </div>
+                    </div>                    
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-with-selected-save-schedule-activity" form="frm-with-selected-save-activity-schedule">Save</button>
             </div>
         </div>
     </div>

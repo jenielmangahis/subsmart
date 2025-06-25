@@ -159,7 +159,7 @@ table.dataTable.no-footer {
                         </div>
                     </div>
                 </div>
-                <table id="documentsTable" class="nsm-table">
+                <table id="documentsTable" class="">
                     <thead>
                       <tr>
                         <th style="width:2%;"></th>

@@ -369,6 +369,8 @@ class Mycrm extends MY_Controller
         $this->load->model('Clients_model');
         $this->load->model('CompanySubscriptionPayments_model');
         $this->load->model('SubscriberNsmartUpgrade_model');
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplateModules_model');
 
         $is_success = 0;
         $message = '';
@@ -378,7 +380,7 @@ class Mycrm extends MY_Controller
         $client = $this->Clients_model->getById($company_id);
         $plan = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
         if ($plan) {
-            if ($client->num_months_discounted > 0) {
+            if ($client->num_months_discounted <= 0) {
                 $amount = $plan->price;
             } else {
                 $amount = $plan->discount;
@@ -391,15 +393,15 @@ class Mycrm extends MY_Controller
             }
 
             $amount += $total_addon_price;
-
+            $date = date("Y-m-d");
             if ($client->recurring_payment_type == 'monthly') {
                 $amount = $amount;
-                $next_billing_date    = date('Y-m-d', strtotime('+1 month', strtotime($client->next_billing_date)));
-                $plan_date_expiration = date('Y-m-d', strtotime('+1 month', strtotime($client->plan_date_expiration)));
+                $next_billing_date    = date('Y-m-d', strtotime('+1 month', strtotime($date)));
+                $plan_date_expiration = date('Y-m-d', strtotime('+1 month', strtotime($date)));
             } else {
                 $amount = $plan->price * 12;
-                $next_billing_date    = date('Y-m-d', strtotime('+1 year', strtotime($client->next_billing_date)));
-                $plan_date_expiration = date('Y-m-d', strtotime('+1 year', strtotime($client->plan_date_expiration)));
+                $next_billing_date    = date('Y-m-d', strtotime('+1 month', strtotime($date)));
+                $plan_date_expiration = date('Y-m-d', strtotime('+1 year', strtotime($date)));
             }
 
             $company = $this->Business_model->getByCompanyId($company_id);
@@ -432,6 +434,7 @@ class Mycrm extends MY_Controller
                     'num_months_discounted' => $num_months_discounted,
                 ];
                 $this->Clients_model->update($company_id, $data);
+                $this->session->set_userdata('is_plan_active', 1);
 
                 // Update access modules
                 $industryType = $this->IndustryType_model->getById($client->industry_type_id);
@@ -441,8 +444,7 @@ class Mycrm extends MY_Controller
                         $access_modules[] = $im->industry_module_id;
                     }
 
-                    $this->session->set_userdata('userAccessModules', $access_modules);
-                    $this->session->set_userdata('is_plan_active', 1);
+                    $this->session->set_userdata('userAccessModules', $access_modules);                    
                 }
 
                 // Record payment
@@ -849,6 +851,8 @@ class Mycrm extends MY_Controller
 
     public function renew_plan()
     {
+        redirect('mycrm/membership'); 	
+
         $this->load->model('Clients_model');
         $this->load->model('NsmartPlan_model');
         $this->load->model('SubscriberNsmartUpgrade_model');
@@ -914,6 +918,9 @@ class Mycrm extends MY_Controller
 
     public function plan_select()
     {
+
+        redirect('mycrm/membership'); 	
+
         $this->load->model('Clients_model');
         $this->load->model('NsmartPlan_model');
         $this->load->model('SubscriberNsmartUpgrade_model');
@@ -1122,10 +1129,10 @@ class Mycrm extends MY_Controller
         $attachment = $this->create_attachment_invoice($payment_id);
 
         $subject = 'nSmarTrac: Order# '.$payment->order_number;
-        $to = 'webtestcustomer@nsmartrac.com';
+        $to = 'bryannrevina@nsmartrac.com';
 
         $data = [
-            'to' => 'webtestcustomer@nsmartrac.com',
+            'to' => 'bryannrevina@nsmartrac.com',
             'subject' => $subject,
             'body' => $body,
             'cc' => '',
@@ -1144,7 +1151,13 @@ class Mycrm extends MY_Controller
         $this->load->model('Business_model');
 
         $company_id = logged('company_id');
-        $payment = $this->CompanySubscriptionPayments_model->getById($id);
+
+        $target_dir = "./uploads/subscription_invoice/" . $company_id . "/";
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+
+        $payment = $this->CompanySubscriptionPayments_model->getById($payment_id);
         $company = $this->Business_model->getByCompanyId($payment->company_id);
         $this->page_data['payment'] = $payment;
         $this->page_data['company'] = $company;
@@ -1174,7 +1187,7 @@ class Mycrm extends MY_Controller
         $obj_pdf->lastPage();
         // $obj_pdf->Output($title, 'I');
         $filename = strtolower($payment->order_number).'.pdf';
-        $file = dirname(__DIR__, 2).'/uploads/subscription_invoice/'.$filename;
+        $file = dirname(__DIR__, 2).'/uploads/subscription_invoice/' .$company_id . '/' .$filename;
         $obj_pdf->Output($file, 'F');
 
         // $obj_pdf->Output($file, 'F');

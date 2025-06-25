@@ -54,27 +54,36 @@ class BookingForms_model extends MY_Model
 
     public function getAllByUserId($user_id)
     {
-        $id = $user_id;
         $this->db->select('*');
         $this->db->from($this->table);
-
-        $this->db->where('user_id', $id);
+        $this->db->where('user_id', $user_id);
         $this->db->order_by('sort', 'ASC');
+
         $query = $this->db->get();
         return $query->result();
     }     
 
     public function getAllByCompanyId($company_id)
     {
-        $id = $user_id;
         $this->db->select('*');
         $this->db->from($this->table);
-
         $this->db->where('company_id', $company_id);
         $this->db->order_by('sort', 'ASC');
+        
         $query = $this->db->get();
         return $query->result();
-    }     
+    }   
+    
+    public function getLastSortNumberByCompanyId($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('sort', 'DESC');
+
+        $query = $this->db->get()->row();
+        return $query;
+    }   
 
     public function getById($id)
     {
@@ -82,9 +91,18 @@ class BookingForms_model extends MY_Model
 
         $this->db->select('*');
         $this->db->from($this->table);
-
         $this->db->where('user_id', $user_id);
         $this->db->where('id', $id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getByFieldName($field_name)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('field_name', $field_name);
 
         $query = $this->db->get()->row();
         return $query;
@@ -210,6 +228,27 @@ class BookingForms_model extends MY_Model
 
     public function isClosed(){
         return $this->status_closed;
+    }
+
+    public function createFieldName($label){
+        $field_name = str_replace(" ", "_", $label);
+        $field_name = str_replace("-", "", $field_name);
+        return preg_replace('/[^A-Za-z0-9\-]/', '', $field_name);
+    }
+
+    public function defaultFormFields()
+    {
+        $default_form_fields = array(
+			'Full Name' => 'full_name',
+			'Contact Number' => 'contact_number',
+			'Email' => 'email',
+			'Address' => 'address',
+			'Message' => 'message',
+			'Preferred Time To Contact' => 'preferred_time_to_contact',
+			'How Did You Hear About Us' => 'how_did_you_hear_about_us',
+		);
+
+        return $default_form_fields;
     }
 }
 

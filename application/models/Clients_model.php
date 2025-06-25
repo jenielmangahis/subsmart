@@ -237,6 +237,63 @@ class Clients_model extends MY_Model
     {
         return 20;
     }
+
+    public function getAllExpiredSubscriptions($exempted_ids = [], $filters = [], $limit = 0)
+    {
+        $date = date("Y-m-d");
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('is_auto_renew', 0);
+        $this->db->where('plan_date_expiration <', $date);
+        $this->db->where('is_plan_active', 1);
+
+        if( $exempted_ids ){
+            $this->db->where_not_in('id', $exempted_ids);
+        }
+
+        if( $filter ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field_name'], $field['value']);
+            }
+        }
+
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllAutoRenewSubscriptions($exempted_ids = [], $filters = [], $limit = 0)
+    {
+        $date = date("Y-m-d");
+
+        $this->db->select('*');
+        $this->db->from($this->table);        
+        $this->db->where('next_billing_date <=', $date);        
+        $this->db->where('is_auto_renew', 1);
+        $this->db->where('is_plan_active', 1);
+        $this->db->where('is_with_payment_error', 0);
+
+        if( $exempted_ids ){
+            $this->db->where_not_in('id', $exempted_ids);
+        }
+
+        if( $filter ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field_name'], $field['value']);
+            }
+        }
+
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 /* End of file Clients_model.php */
