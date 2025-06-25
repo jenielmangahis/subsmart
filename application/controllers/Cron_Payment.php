@@ -2,9 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Cron_Payment extends MY_Controller {
-
-
+class Cron_Payment extends MYF_Controller {
 
 	public function __construct()
 	{
@@ -181,7 +179,7 @@ class Cron_Payment extends MY_Controller {
         }
         
 
-        echo "Done";
+        echo "Today's Total deactivated subscription is " . $total_deactivated . " and total renewed subscription is " . $total_renewed;
     }
 
     // Deactivate expired nsmart subcription
