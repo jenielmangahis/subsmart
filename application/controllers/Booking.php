@@ -262,15 +262,15 @@ class Booking extends MY_Controller {
 		$filters[] = [
 			'field' => 'company_id', 'value' => $company_id
 		];
-
+		
 		if( $param == 'active' ){
 			$coupons = $this->BookingCoupon_model->getAllActive($filters);
 		}elseif( $param == 'closed' ){
 			$coupons = $this->BookingCoupon_model->getAllClosed($filters);
-		}else{			
+		}else{		
 			$coupons = $this->BookingCoupon_model->getAllByCompanyId($company_id);
 		}
-		
+				
 		$total_active = $this->BookingCoupon_model->totalActive($filters);
 		$total_closed = $this->BookingCoupon_model->totalClosed($filters);
 
