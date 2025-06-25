@@ -849,6 +849,8 @@ class Mycrm extends MY_Controller
 
     public function renew_plan()
     {
+        redirect('mycrm/membership'); 	
+
         $this->load->model('Clients_model');
         $this->load->model('NsmartPlan_model');
         $this->load->model('SubscriberNsmartUpgrade_model');
@@ -914,6 +916,9 @@ class Mycrm extends MY_Controller
 
     public function plan_select()
     {
+
+        redirect('mycrm/membership'); 	
+        
         $this->load->model('Clients_model');
         $this->load->model('NsmartPlan_model');
         $this->load->model('SubscriberNsmartUpgrade_model');
