@@ -203,9 +203,9 @@ class Cron_Payment extends MY_Controller {
 
         if( $total_deactivated > 0 ){
             //Send email notification
-            $subject = 'nSmarTrac: Cron Daily Deactivated Accounts';
+            $subject = 'nSmarTrac: Cron Daily Deactivated Subscriptions';
             $to      = 'bryann.revina03@gmail.com';
-            $body    = "Today's Total deactivated account is " . $total_deactivated;
+            $body    = "Today's Total deactivated subscription is " . $total_deactivated;
 
             $data = [
                 'to' => $to, 
@@ -217,7 +217,8 @@ class Cron_Payment extends MY_Controller {
             ];
             sendEmail($data);
         }
-        
+
+        echo "Today's Total deactivated subscription is " . $total_deactivated;
         exit;
     }
 
