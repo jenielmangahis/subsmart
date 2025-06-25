@@ -391,15 +391,15 @@ class Mycrm extends MY_Controller
             }
 
             $amount += $total_addon_price;
-
+            $date = date("Y-m-d");
             if ($client->recurring_payment_type == 'monthly') {
                 $amount = $amount;
-                $next_billing_date    = date('Y-m-d', strtotime('+1 month', strtotime($client->next_billing_date)));
-                $plan_date_expiration = date('Y-m-d', strtotime('+1 month', strtotime($client->plan_date_expiration)));
+                $next_billing_date    = date('Y-m-d', strtotime('+1 month', strtotime($date)));
+                $plan_date_expiration = date('Y-m-d', strtotime('+1 month', strtotime($date)));
             } else {
                 $amount = $plan->price * 12;
-                $next_billing_date    = date('Y-m-d', strtotime('+1 year', strtotime($client->next_billing_date)));
-                $plan_date_expiration = date('Y-m-d', strtotime('+1 year', strtotime($client->plan_date_expiration)));
+                $next_billing_date    = date('Y-m-d', strtotime('+1 month', strtotime($date)));
+                $plan_date_expiration = date('Y-m-d', strtotime('+1 year', strtotime($date)));
             }
 
             $company = $this->Business_model->getByCompanyId($company_id);
@@ -432,6 +432,7 @@ class Mycrm extends MY_Controller
                     'num_months_discounted' => $num_months_discounted,
                 ];
                 $this->Clients_model->update($company_id, $data);
+                $this->session->set_userdata('is_plan_active', 1);
 
                 // Update access modules
                 $industryType = $this->IndustryType_model->getById($client->industry_type_id);
@@ -441,8 +442,7 @@ class Mycrm extends MY_Controller
                         $access_modules[] = $im->industry_module_id;
                     }
 
-                    $this->session->set_userdata('userAccessModules', $access_modules);
-                    $this->session->set_userdata('is_plan_active', 1);
+                    $this->session->set_userdata('userAccessModules', $access_modules);                    
                 }
 
                 // Record payment
@@ -918,7 +918,7 @@ class Mycrm extends MY_Controller
     {
 
         redirect('mycrm/membership'); 	
-        
+
         $this->load->model('Clients_model');
         $this->load->model('NsmartPlan_model');
         $this->load->model('SubscriberNsmartUpgrade_model');

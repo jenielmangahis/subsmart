@@ -161,22 +161,22 @@ class Cron_Payment extends MYF_Controller {
             }
         }
 
-        // if( $total_deactivated > 0 || $total_renewed > 0 ){
-        //     //Send email notification
-        //     $subject = 'nSmarTrac: Cron Daily Subscription Renewal';
-        //     $to      = 'bryann.revina03@gmail.com';
-        //     $body    = "Today's Total deactivated subscription is " . $total_deactivated . " and total renewed subscription is " . $total_renewed;
+        if( $total_deactivated > 0 || $total_renewed > 0 ){
+            //Send email notification
+            $subject = 'nSmarTrac: Cron Daily Subscription Renewal';
+            $to      = 'bryannrevina@nsmartrac.com';
+            $body    = "Today's Total deactivated subscription is " . $total_deactivated . " and total renewed subscription is " . $total_renewed;
 
-        //     $data = [
-        //         'to' => $to, 
-        //         'subject' => $subject, 
-        //         'body' => $body,
-        //         'cc' => '',
-        //         'bcc' => '',
-        //         'attachment' => ''
-        //     ];
-        //     sendEmail($data);
-        // }
+            $data = [
+                'to' => $to, 
+                'subject' => $subject, 
+                'body' => $body,
+                'cc' => '',
+                'bcc' => '',
+                'attachment' => ''
+            ];
+            sendEmail($data);
+        }
         
 
         echo "Today's Total deactivated subscription is " . $total_deactivated . " and total renewed subscription is " . $total_renewed;
@@ -199,22 +199,22 @@ class Cron_Payment extends MYF_Controller {
             $total_deactivated++;
         }
 
-        // if( $total_deactivated > 0 ){
-        //     //Send email notification
-        //     $subject = 'nSmarTrac: Cron Daily Deactivated Subscriptions';
-        //     $to      = 'bryann.revina03@gmail.com';
-        //     $body    = "Today's Total deactivated subscription is " . $total_deactivated;
+        if( $total_deactivated > 0 ){
+            //Send email notification
+            $subject = 'nSmarTrac: Cron Daily Deactivated Subscriptions';
+            $to      = 'bryannrevina@nsmartrac.com';
+            $body    = "Today's Total deactivated subscription is " . $total_deactivated;
 
-        //     $data = [
-        //         'to' => $to, 
-        //         'subject' => $subject, 
-        //         'body' => $body,
-        //         'cc' => '',
-        //         'bcc' => '',
-        //         'attachment' => ''
-        //     ];
-        //     sendEmail($data);
-        // }
+            $data = [
+                'to' => $to, 
+                'subject' => $subject, 
+                'body' => $body,
+                'cc' => '',
+                'bcc' => '',
+                'attachment' => ''
+            ];
+            sendEmail($data);
+        }
 
         echo "Today's Total deactivated subscription is " . $total_deactivated;
         exit;
