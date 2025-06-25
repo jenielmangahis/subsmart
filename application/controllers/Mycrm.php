@@ -380,7 +380,7 @@ class Mycrm extends MY_Controller
         $client = $this->Clients_model->getById($company_id);
         $plan = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
         if ($plan) {
-            if ($client->num_months_discounted > 0) {
+            if ($client->num_months_discounted <= 0) {
                 $amount = $plan->price;
             } else {
                 $amount = $plan->discount;
