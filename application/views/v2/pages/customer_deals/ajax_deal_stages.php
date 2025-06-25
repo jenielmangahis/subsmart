@@ -6,69 +6,98 @@
     z-index: 9999 !important;
 }
 </style>
-<?php foreach($customerDealStages as $stage){ ?>
-<div class="col">
-    <div class="nsm-card nsm-grid">
-        <div class="nsm-card-header d-block">
-            <div class="nsm-card-title">
-                <div class="d-block h5">
-                    <b><?= $stage->name; ?></b>
-                    <span class="float-end">
-                        <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
-                        <a class="nsm nsm-link btn-edit-deal-stage" href="javascript:void(0);" data-id="<?= $stage->id; ?>"><i class='bx bxs-edit'></i></a>
-                        <?php } ?>
-                        <?php if(checkRoleCanAccessModule('customer-deals', 'delete')){ ?>
-                        <a class="nsm nsm-link btn-delete-deal-stage" href="javascript:void(0);" data-name="<?= $stage->name; ?>" data-id="<?= $stage->id; ?>"><i class='bx 
-                        bx-trash'></i></a>
-                        <?php } ?>
-                    </span>
+<?php if( $customerDealStages ){ ?>
+    <?php foreach($customerDealStages as $stage){ ?>
+    <div class="col">
+        <div class="nsm-card nsm-grid">
+            <div class="nsm-card-header d-block">
+                <div class="nsm-card-title">
+                    <div class="d-block h5">
+                        <b><?= $stage->name; ?></b>
+                        <span class="float-end">
+                            <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
+                            <a class="nsm nsm-link btn-edit-deal-stage" href="javascript:void(0);" data-id="<?= $stage->id; ?>"><i class='bx bxs-edit'></i></a>
+                            <?php } ?>
+                            <?php if(checkRoleCanAccessModule('customer-deals', 'delete')){ ?>
+                            <a class="nsm nsm-link btn-delete-deal-stage" href="javascript:void(0);" data-name="<?= $stage->name; ?>" data-id="<?= $stage->id; ?>"><i class='bx 
+                            bx-trash'></i></a>
+                            <?php } ?>
+                        </span>
+                    </div>
+                    <div class="text-muted deal-stage-summary">
+                        <span id="stage-<?= $stage->id ?>-total-amount">$<?= number_format($customerDeals[$stage->id]['total_value'],2) ?></span> - 
+                        <span id="stage-<?= $stage->id ?>-total-deals"><?= $customerDeals[$stage->id]['total_deals']; ?> <?= $customerDeals[$stage->id]['total_deals'] > 1 ? 'Deals' : 'Deal'; ?></span>
+                    </div>
                 </div>
-                <div class="text-muted deal-stage-summary">
-                    <span id="stage-<?= $stage->id ?>-total-amount">$<?= number_format($customerDeals[$stage->id]['total_value'],2) ?></span> - 
-                    <span id="stage-<?= $stage->id ?>-total-deals"><?= $customerDeals[$stage->id]['total_deals']; ?> <?= $customerDeals[$stage->id]['total_deals'] > 1 ? 'Deals' : 'Deal'; ?></span>
+            </div>
+            <hr />
+            <div class="nsm-card-content">
+                <div class="deal-stage-container" id="deal-stage-container-<?= $stage->id; ?>">
+                    <?php if( array_key_exists($stage->id, $customerDeals) && $customerDeals[$stage->id]['deals'] ){ ?>
+                        <?php foreach( $customerDeals[$stage->id]['deals'] as $deals ){ ?>
+                            <div class="col-12 col-md-12 col-sm-12 stage-deal mt-2 deal-stage-item" data-name="<?= $deals->deal_title; ?>" data-id="<?= $deals->id; ?>">
+                                <div class="nsm-card nsm-grid <?= $deals->status == 'Won' ? 'nsm-card-won' : ''; ?>">
+                                    <div class="nsm-card-title">
+                                        <div class="stage-deal-title-container">
+                                            <span class="stage-deal-name"><?= $deals->deal_title; ?></span>
+                                            <div class="float-end stage-deals-actions">
+                                                <a class="nsm nsm-button btn-small btn-view-customer-deals" data-id="<?= $deals->id; ?>"><i class='bx bx-search-alt-2'></i></a>
+                                                <a class="nsm nsm-button btn-small btn-view-activity-scheduled <?= $deals->is_with_overdue == 1 ? 'btn-activity-scheduled-with-overdue' : ''; ?>" data-id="<?= $deals->id; ?>"><i class='bx bx-calendar'></i></a>
+                                            </div>
+                                        </div>
+                                        <span class="text-muted"><?= $deals->customer_firstname . ' ' . $deals->customer_lastname; ?></span><br />
+                                        <?php if( $deals->status == 'Won' ){ ?>
+                                            <span class="text-muted"><i class='bx bx-user-circle' ></i> <span class="badge badge-success">Won</span> $<?= number_format($deals->value,2); ?></span>
+                                        <?php }else{ ?>
+                                            <span class="text-muted"><i class='bx bx-user-circle' ></i> $<?= number_format($deals->value,2); ?></span>
+                                        <?php } ?>                                    
+                                    </div>                                
+                                </div>
+                            </div>
+                        <?php } ?>
+                    <?php } ?>  
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-12 col-sm-12 mt-2">
+                        <div class="nsm-grid stage-create-deal-container">
+                            <a class="nsm nsm-button stage-quick-add-deal-btn text-center" href="javascript:void(0);" data-id="<?= $stage->id; ?>" style="display:none;"><i class='bx bx-plus'></i></a>
+                        </div>
+                    </div>
+                </div>       
+            </div>        
+        </div>
+    </div>
+    <?php } ?>
+<?php }else{ ?>
+    <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
+        <div class="col-12">
+            <div class="nsm-empty">
+                <a class="nsm-link btn-add-new-stage text-center" href="javascript:void(0);">
+                    <i class='bx bxs-plus-circle'></i>
+                    <label class="content-title mb-2">Create Stages</label>
+                </a>
+            </div>
+        </div>
+        
+    <?php }else{ ?>
+        <div class="col-12">
+            <div class="nsm-page">
+                <div class="nsm-page-content">
+                    <div class="nsm-empty page-empty">                                                        
+                        <label class="content-subtitle d-block mb-2">No results found.</label>
+                    </div>
                 </div>
             </div>
         </div>
-        <hr />
-        <div class="nsm-card-content">
-            <div class="deal-stage-container" id="deal-stage-container-<?= $stage->id; ?>">
-                <?php if( array_key_exists($stage->id, $customerDeals) && $customerDeals[$stage->id]['deals'] ){ ?>
-                    <?php foreach( $customerDeals[$stage->id]['deals'] as $deals ){ ?>
-                        <div class="col-12 col-md-12 col-sm-12 stage-deal mt-2 deal-stage-item" data-name="<?= $deals->deal_title; ?>" data-id="<?= $deals->id; ?>">
-                            <div class="nsm-card nsm-grid <?= $deals->status == 'Won' ? 'nsm-card-won' : ''; ?>">
-                                <div class="nsm-card-title">
-                                    <div class="stage-deal-title-container">
-                                        <span class="stage-deal-name"><?= $deals->deal_title; ?></span>
-                                        <div class="float-end stage-deals-actions">
-                                            <a class="nsm nsm-button btn-small btn-view-customer-deals" data-id="<?= $deals->id; ?>"><i class='bx bx-search-alt-2'></i></a>
-                                            <a class="nsm nsm-button btn-small btn-view-activity-scheduled <?= $deals->is_with_overdue == 1 ? 'btn-activity-scheduled-with-overdue' : ''; ?>" data-id="<?= $deals->id; ?>"><i class='bx bx-calendar'></i></a>
-                                        </div>
-                                    </div>
-                                    <span class="text-muted"><?= $deals->customer_firstname . ' ' . $deals->customer_lastname; ?></span><br />
-                                    <?php if( $deals->status == 'Won' ){ ?>
-                                        <span class="text-muted"><i class='bx bx-user-circle' ></i> <span class="badge badge-success">Won</span> $<?= number_format($deals->value,2); ?></span>
-                                    <?php }else{ ?>
-                                        <span class="text-muted"><i class='bx bx-user-circle' ></i> $<?= number_format($deals->value,2); ?></span>
-                                    <?php } ?>                                    
-                                </div>                                
-                            </div>
-                        </div>
-                    <?php } ?>
-                <?php } ?>  
-            </div>
-            <div class="row">
-                <div class="col-12 col-md-12 col-sm-12 mt-2">
-                    <div class="nsm-grid stage-create-deal-container">
-                        <a class="nsm nsm-button stage-quick-add-deal-btn text-center" href="javascript:void(0);" data-id="<?= $stage->id; ?>" style="display:none;"><i class='bx bx-plus'></i></a>
-                    </div>
-                </div>
-            </div>       
-        </div>        
-    </div>
-</div>
+    <?php } ?>
 <?php } ?>
 <script>
 $(function(){
+
+    $('.btn-add-new-stage').on('click', function(){
+        $('#modal-add-new-deal-stage').modal('show');
+    });
+
     <?php foreach($customerDealStages as $stage){ ?>
         $("#deal-stage-container-<?= $stage->id; ?>").droppable({
             accept: ".deal-stage-item",
