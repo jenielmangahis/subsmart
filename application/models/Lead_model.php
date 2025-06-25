@@ -16,7 +16,7 @@ class Lead_model extends MY_Model
             }
         }
 
-        $this->db->order_by('id', 'ASC');
+        $this->db->order_by('leads_id', 'ASC');
 
         $query = $this->db->get();
         return $query->result();
@@ -39,14 +39,46 @@ class Lead_model extends MY_Model
         return $query->result();
     }
 
-    public function getById($id)
+    public function getById($id, $filters = [])
     {
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('id', $id);
+        $this->db->where('leads_id', $id);
+
+        if ( !empty($filters) ) {
+            foreach($filters as $f){
+                $this->db->where($f['field_name'], $f['field_value']);
+            }
+        }
 
         $query = $this->db->get()->row();
         return $query;
+    }
+
+    public function bulkUpdate($ids = [], $data = [], $filters = [])
+    {
+        $this->db->where_in('leads_id', $ids);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->update($this->table, $data);
+    }
+
+    public function updateLead($lead_id, $data = [], $filters = [])
+    {
+        $this->db->where('leads_id', $lead_id);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->update($this->table, $data);
     }
 }
 /* End of file Lead_model.php */

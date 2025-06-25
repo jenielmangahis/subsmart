@@ -2261,18 +2261,18 @@ class Estimate extends MY_Controller
             <table  style="width: 100% ">
             <tr style="">
             <td style="background-color: #6a4a86;line-height: 30px; color: #fff; width:5%;"><b> #</b></td>
-            <td style=" background-color: #6a4a86;line-height: 30px; color: #fff; width:35%; text-align: start;"><b  style="padding: 10px;">Items</b></td>
-            <td style=" background-color: #6a4a86;line-height: 30px;  color: #fff; width:12%; text-align: start;"><b   style="padding: 10px;">Item Type</b></td>
-            <td style=" background-color: #6a4a86;line-height: 30px;  color: #fff; width:12%; text-align: start;"><b   style="padding: 10px;">Qty</b></td>
-            <td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:12%; text-align: start;"><b   style="padding: 10px;">Price</b></td>
+            <td style=" background-color: #6a4a86;line-height: 30px; color: #fff; width:35%; text-align: start;"><b style="padding: 10px;">Items</b></td>
+            <td style=" background-color: #6a4a86;line-height: 30px;  color: #fff; width:12%; text-align: start;"><b style="padding: 10px;">Item Type</b></td>
+            <td style=" background-color: #6a4a86;line-height: 30px;  color: #fff; width:12%; text-align: start;"><b style="padding: 10px;">Qty</b></td>
+            <td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:12%; text-align: start;"><b style="padding: 10px;">Price</b></td>
             ';
 
             if ($showDiscountColumn) {
                 $html .= '<td style="background-color: #6a4a86;line-height: 30px; color: #fff; width:12%; text-align: start;"><b style="padding: 10px;">Discount</b></td>
-                <td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:12%; text-align: end;"><b   style="padding: 10px;">Total</b></td>
+                <td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:12%; text-align: end;"><b style="padding: 10px;">Total</b></td>
              </tr><tbody >';
             } else {
-                $html .= '<td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:24%; font-weight:bold; text-align: right;">Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                $html .= '<td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:24%; font-weight:bold; text-align: right;">Total</td>
                 </tr>
                <tbody >';
             }
@@ -2286,13 +2286,13 @@ class Estimate extends MY_Controller
                     <td valign="top" style="line-height: 15px;  black;width:35%;">'.$item->title.'</td>
                     <td valign="top" style="line-height: 15px;  black;width:12%;">'.$item->type.'</td>
                     <td valign="top" style=" line-height: 15px; black;width:12%;">'.$item->qty.'</td>
-                    <td valign="top" style="line-height: 15px;  black;width:12%;">$ '.number_format($item->iCost, 2).'</td>';
+                    <td valign="top" style="line-height: 15px;  black;width:12%;">$'.number_format($item->iCost, 2).'</td>';
                 if ($showDiscountColumn) {
-                    $html .= ' <td valign="top" style="line-height: 15px;  black;width:12%;">$ '.number_format($item->discount, 2).'</td>
-                    <td valign="top" style="line-height: 15px; text-align: right;  black;width:12%;">$ '.number_format($item->iTotal, 2).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    $html .= ' <td valign="top" style="line-height: 15px;  black;width:12%;">$'.number_format($item->discount, 2).'</td>
+                    <td valign="top" style="line-height: 15px; text-align: right;  black;width:12%;">$'.number_format($item->iTotal, 2).'</td>
                     </tr>';
                 } else {
-                    $html .= '<td valign="top" style="line-height: 15px; text-align: right; black;width:24%;">$ '.number_format($item->iTotal, 2).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    $html .= '<td valign="top" style="line-height: 15px; text-align: right; black;width:24%;">$'.number_format($item->iTotal, 2).'</td>
                     </tr>
                   ';
                 }
@@ -2338,24 +2338,24 @@ class Estimate extends MY_Controller
                     <table>
                         <tr>
                             <td  colspan="2" style="line-height: 20px; black;text-align: start;"><b>Subtotal</b></td>
-                            <td  style="line-height: 20px; black;text-align: center;"><b>$'.number_format($estimate->sub_total, 2).'</b></td>
+                            <td  style="line-height: 20px; black;text-align: right;"><b>$'.number_format($estimate->sub_total, 2).'</b></td>
                         </tr>
                         <tr>
                             <td  colspan="2"  style="line-height: 20px; black;text-align: start;">Taxes</td>
-                            <td  style="line-height: 20px; black;text-align: center;">$'.number_format($estimate->tax1_total, 2).'</td>
+                            <td  style="line-height: 20px; black;text-align: right;">$'.number_format($estimate->tax1_total, 2).'</td>
                         </tr>
                         '.$no_tax.'
                         <tr>
                             <td   colspan="2" style="line-height: 20px; black;text-align: start;">Discount</td>
-                            <td  style="line-height: 20px; black;text-align: center;">$'.number_format($estimate->adjustment_value, 2).'</td>
+                            <td  style="line-height: 20px; black;text-align: right;">$'.number_format($estimate->adjustment_value, 2).'</td>
                         </tr>
                         <tr>
                             <td  colspan="2" style="background-color: #dad1e0; line-height: 20px; black;text-align: start;"><b>Grand Total</b></td>
-                            <td   style="background-color: #dad1e0; line-height: 20px; black;text-align: center;"><b>$'.number_format($grand_total, 2).'</b></td>
+                            <td   style="background-color: #dad1e0; line-height: 20px; black;text-align: right;"><b>$'.number_format($grand_total, 2).'</b></td>
                         </tr>
                         <tr>
                             <td  colspan="2"  style="line-height: 20px; black;text-align: start;">Deposit Amount Requested</td>
-                            <td   style="line-height: 20px; black;text-align: center;">$'.number_format($deposit_amount, 2).'</td>
+                            <td   style="line-height: 20px; black;text-align: right;">$'.number_format($deposit_amount, 2).'</td>
                         </tr>
                   <br><br>
                     <tr style="text-align:center">

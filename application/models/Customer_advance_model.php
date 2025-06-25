@@ -1151,8 +1151,17 @@ class Customer_advance_model extends MY_Model
 
     public function getLeadByLeadId($lead_id)
     {
-        $this->db->select('*');
+        /*$this->db->select('*');
         $this->db->from('ac_leads');
+        $this->db->where('leads_id', $lead_id);
+
+        $query = $this->db->get();
+
+        return $query->row();*/
+
+        $this->db->select('ac_leads.*, business_profile.business_name as company_name');
+        $this->db->from('ac_leads');
+        $this->db->join('business_profile', 'business_profile.company_id = ac_leads.company_id', 'left');
         $this->db->where('leads_id', $lead_id);
 
         $query = $this->db->get();

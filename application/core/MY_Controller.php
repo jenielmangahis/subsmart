@@ -59,9 +59,10 @@ class MY_Controller extends CI_Controller {
 				redirect('mycrm/renew_plan'); 
 			}*/
 			if( $is_plan_active == 0 && $controller != 'mycrm'){	
-				if( $method != 'renew_plan' && $method != 'plan_select' && $method != '_renew_membership_plan' ){
-					redirect('mycrm/renew_plan'); 	
-				}
+				redirect('mycrm/membership'); 	
+				// if( $method != 'renew_plan' && $method != 'plan_select' && $method != '_renew_membership_plan' ){
+				// 	redirect('mycrm/renew_plan'); 	
+				// }
 			}
 		}		
 	}

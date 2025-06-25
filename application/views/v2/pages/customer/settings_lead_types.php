@@ -78,7 +78,7 @@
                                                 <?php } ?>
                                                 <?php if(checkRoleCanAccessModule('customer-settings', 'delete')){ ?>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $lead_type->lead_id; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $lead_type->lead_id; ?>" data-value="<?= $lead_type->lead_name; ?>">Delete</a>
                                                 </li>
                                                 <?php } ?>
                                             </ul>
@@ -206,11 +206,12 @@
         });
 
         $(document).on("click", ".delete-item", function() {
-            let id = $(this).attr("data-id");
+            let ltid = $(this).attr("data-id");
+            let lead_type = $(this).attr('data-value');
 
             Swal.fire({
                 title: 'Delete Lead Type',
-                text: "Are you sure you want to delete this Lead Type?",
+                html: `Are you sure you want to delete lead type <b>${lead_type}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -219,22 +220,29 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: "<?php echo base_url(); ?>customer/delete_lead_type",
-                        data: {
-                            id: id
-                        },
+                        url: base_url + "customer/_delete_lead_type",
+                        data: {ltid: ltid},
+                        dataType: "JSON",
                         success: function(result) {
-                            if (result === '1') {
+                            if (result.is_success) {
                                 Swal.fire({
-                                    title: 'Good job!',
+                                    title: 'Delete Lead Type',
                                     text: "Data Deleted Successfully!",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
-                                    if (result.value) {
+                                    //if (result.value) {
                                         location.reload();
-                                    }
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
                                 });
                             }
                         },

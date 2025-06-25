@@ -112,6 +112,9 @@ $route['customer/_ledger'] = 'Customer/ajax_customer_ledger';
 $route['customer/_delete_reason'] = 'Customer/ajax_delete_company_reason';
 $route['customer/_print_ledger'] = 'Customer/ajax_print_customer_ledger';
 $route['customer/_send_email_ledger'] = 'Customer/ajax_send_email_ledger';
+$route['customer/_delete_lead_type'] = 'Customer/ajax_delete_lead_type';
+$route['customer/_archive_selected_leads'] = 'Customer/ajax_archive_selected_leads';
+$route['customer/_archive_lead'] = 'Customer/ajax_archive_lead';
 
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -2194,6 +2197,8 @@ $route['customer_deals/_restore_deals'] = 'CustomerDeal/ajax_restore_deals';
 $route['customer_deals/forecast'] = 'CustomerDeal/forecast';
 $route['customer_deals/_forecast_view'] = 'CustomerDeal/ajax_forecast_view';
 $route['customer_deals/_create_lost_reason'] = 'CustomerDeal/ajax_create_lost_reason';
+$route['customer_deals/_update_lost_reason'] = 'CustomerDeal/ajax_update_lost_reason';
+$route['customer_deals/_delete_lost_reason'] = 'CustomerDeal/ajax_delete_lost_reason';
 $route['customer_deals/_update_expected_close_date'] = 'CustomerDeal/ajax_update_expected_close_date';
 $route['customer_deals/_deal_month_summary'] = 'CustomerDeal/ajax_deal_month_summary';
 $route['customer_deals/_forecast_view_by_quarter'] = 'CustomerDeal/ajax_forecast_view_by_quarter';

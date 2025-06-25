@@ -14,8 +14,13 @@
                 <div class="d-block h5">
                     <b><?= $stage->name; ?></b>
                     <span class="float-end">
+                        <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
                         <a class="nsm nsm-link btn-edit-deal-stage" href="javascript:void(0);" data-id="<?= $stage->id; ?>"><i class='bx bxs-edit'></i></a>
-                        <a class="nsm nsm-link btn-delete-deal-stage" href="javascript:void(0);" data-name="<?= $stage->name; ?>" data-id="<?= $stage->id; ?>"><i class='bx bx-trash'></i></a>
+                        <?php } ?>
+                        <?php if(checkRoleCanAccessModule('customer-deals', 'delete')){ ?>
+                        <a class="nsm nsm-link btn-delete-deal-stage" href="javascript:void(0);" data-name="<?= $stage->name; ?>" data-id="<?= $stage->id; ?>"><i class='bx 
+                        bx-trash'></i></a>
+                        <?php } ?>
                     </span>
                 </div>
                 <div class="text-muted deal-stage-summary">

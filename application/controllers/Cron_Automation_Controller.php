@@ -25,10 +25,10 @@ class Cron_Automation_Controller extends CI_Controller
 
     public function cronLeadViaTriggerEventMailAutomation($trigger_event = null)
     {
-        $automation_fail    = 0; 
-        $automation_success = 0;
-        $mail_send_limit    = 200;
-        $is_live_mail_credentials = false; //isLiveMailSmptCredentials();       
+        $automation_fail          = 0; 
+        $automation_success       = 0;
+        $mail_send_limit          = 200;
+        $is_live_mail_credentials = isLiveMailSmptCredentials();       
         
         $auto_to_user_params = [
             'entity' => 'lead',
@@ -257,9 +257,9 @@ class Cron_Automation_Controller extends CI_Controller
             }
         }
 
-         echo $trigger_event . ' Estimate Automation Success: ' . $automation_success;
+         echo $trigger_event . ' Lead Automation Success: ' . $automation_success;
          echo '<br />';
-         echo $trigger_event . ' Estimate Automation Fail: ' . $automation_fail;
+         echo $trigger_event . ' Lead Automation Fail: ' . $automation_fail;
          echo '<hr />';     
     }
 
@@ -3215,7 +3215,9 @@ class Cron_Automation_Controller extends CI_Controller
                 $message = str_replace("{middle_name}", $entityData->middlename, $message);
                 $message = str_replace("{last_name}", $entityData->lastname, $message);
                 $message = str_replace("{email}", $entityData->email, $message);   
-                $message = str_replace("{mail_add}", $entityData->address, $message);   
+                $message = str_replace("{mail_add}", $entityData->address . ', ' . $entityData->city . ', ' . $entityData->state . ' ' . $entityData->zip, $message);  
+                $message = str_replace("{phone_h}", $entityData->phone_home, $message); 
+                $message = str_replace("{company_name}", $entityData->company_name, $message);     
             }             
         }
 

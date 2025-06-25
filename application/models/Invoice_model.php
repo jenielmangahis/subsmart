@@ -62,6 +62,10 @@ class Invoice_model extends MY_Model
         $this->db->update('invoices', array(
             'customer_id'               => $customer_id,
             'job_location'              => $job_location, //
+            'job_address'               => $job_address, //
+            'job_city'                  => $job_city, //
+            'job_state'                 => $job_state, //
+            'job_zip'                   => $job_zip, //
             'user_id'                   => $user_id,
             'job_name'                  => $job_name,//
             'invoice_type'              => $invoice_type,//
@@ -234,9 +238,11 @@ class Invoice_model extends MY_Model
 
     public function getinvoice($invoice_id)
     {
-        $this->db->select('invoices.*, acs_profile.first_name, acs_profile.last_name');
+        $this->db->select('invoices.*, acs_profile.first_name, acs_profile.last_name, jobs.job_number, tickets.ticket_no');
         $this->db->from($this->table);       
-        $this->db->join('acs_profile', 'invoices.customer_id  = acs_profile.prof_id'); 
+        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id'); 
+        $this->db->join('jobs', 'invoices.job_id = jobs.id', 'left'); 
+        $this->db->join('tickets', 'invoices.ticket_id = tickets.id', 'left'); 
         $this->db->where('invoices.id', $invoice_id);
 
         $query = $this->db->get();

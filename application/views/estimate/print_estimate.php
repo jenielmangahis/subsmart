@@ -329,7 +329,12 @@ span.sc-item {
             <div class="row" id="printableES">    
                         <div style="margin-bottom: 20px;margin-left: 5% !important;">
                             <!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
-                            <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;margin-left: 5% !important;" />
+                            <?php $file_headers = @get_headers(getCompanyBusinessProfileImage()); ?>
+                            <?php if(($file_headers[0] == 'HTTP/1.1 404 Not Found') || ($file_headers[0] == 'HTTP/1.0 404 Not Found')) { ?>
+                              <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png">
+                            <?php } else { ?>
+                              <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;margin-left: 5% !important;" />
+                            <?php } ?>
                           </div>
                           
                             <div class="col-xl-12 right" style="float: right">
@@ -397,9 +402,9 @@ span.sc-item {
                             <td valign="top" style="width:45%;"><?= $item->title; ?></td>
                             <td valign="top" style="width:20%;"><?= $item->type; ?></td>
                             <td valign="top" style="width: 50px; text-align: right;"><?= $item->qty; ?></td>
-                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item->iCost,2); ?></td>
-                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item->discount,2); ?></td>
-                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item->iTotal,2); ?></td>
+                            <td valign="top" style="width: 80px; text-align: right;">$<?= number_format($item->iCost,2); ?></td>
+                            <td valign="top" style="width: 80px; text-align: right;">$<?= number_format($item->discount,2); ?></td>
+                            <td valign="top" style="width: 80px; text-align: right;">$<?= number_format($item->iTotal,2); ?></td>
                           </tr>
                         <?php 
                           $total_amount += $item->iTotal;
@@ -409,15 +414,15 @@ span.sc-item {
                         <tr><td colspan="7"><hr/></td></tr>
                             <tr>
                               <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total, 2); ?></p></td>
+                              <td colspan="2" style="text-align: right;"><p>$<?= number_format($estimate->sub_total, 2); ?></p></td>
                             </tr>
                             <tr>
                               <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->tax1_total, 2); ?></p></td>
+                              <td colspan="2" style="text-align: right;"><p>$<?= number_format($estimate->tax1_total, 2); ?></p></td>
                             </tr>
                             <tr>
                               <td colspan="5" style="text-align: right;"><p><?= $estimate->adjustment_name; ?></p></td>
-                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->adjustment_value, 2); ?></p></td>
+                              <td colspan="2" style="text-align: right;"><p>$<?= number_format($estimate->adjustment_value, 2); ?></p></td>
                             </tr>
                             <tr>
                               <td colspan="5" style="text-align: right;"><p>Markup</p></td>
@@ -427,11 +432,11 @@ span.sc-item {
                                   $markup_amount = $estimate->markup_amount;
                                 }
                               ?>
-                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($markup_amount, 2); ?></p></td>
+                              <td colspan="2" style="text-align: right;"><p>$<?= number_format($markup_amount, 2); ?></p></td>
                             </tr>
                             <tr>
                               <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                              <td colspan="2" style="text-align: right;"><b>$ <?= number_format($estimate->grand_total, 2); ?></b></td>
+                              <td colspan="2" style="text-align: right;"><b>$<?= number_format($estimate->grand_total, 2); ?></b></td>
                             </tr>
                       </tbody>
                       </table>
