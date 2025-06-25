@@ -369,6 +369,8 @@ class Mycrm extends MY_Controller
         $this->load->model('Clients_model');
         $this->load->model('CompanySubscriptionPayments_model');
         $this->load->model('SubscriberNsmartUpgrade_model');
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplateModules_model');
 
         $is_success = 0;
         $message = '';
@@ -1127,10 +1129,10 @@ class Mycrm extends MY_Controller
         $attachment = $this->create_attachment_invoice($payment_id);
 
         $subject = 'nSmarTrac: Order# '.$payment->order_number;
-        $to = 'webtestcustomer@nsmartrac.com';
+        $to = 'bryannrevina@nsmartrac.com';
 
         $data = [
-            'to' => 'webtestcustomer@nsmartrac.com',
+            'to' => 'bryannrevina@nsmartrac.com',
             'subject' => $subject,
             'body' => $body,
             'cc' => '',
@@ -1149,7 +1151,13 @@ class Mycrm extends MY_Controller
         $this->load->model('Business_model');
 
         $company_id = logged('company_id');
-        $payment = $this->CompanySubscriptionPayments_model->getById($id);
+
+        $target_dir = "./uploads/subscription_invoice/" . $company_id . "/";
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+
+        $payment = $this->CompanySubscriptionPayments_model->getById($payment_id);
         $company = $this->Business_model->getByCompanyId($payment->company_id);
         $this->page_data['payment'] = $payment;
         $this->page_data['company'] = $company;
@@ -1179,7 +1187,7 @@ class Mycrm extends MY_Controller
         $obj_pdf->lastPage();
         // $obj_pdf->Output($title, 'I');
         $filename = strtolower($payment->order_number).'.pdf';
-        $file = dirname(__DIR__, 2).'/uploads/subscription_invoice/'.$filename;
+        $file = dirname(__DIR__, 2).'/uploads/subscription_invoice/' .$company_id . '/' .$filename;
         $obj_pdf->Output($file, 'F');
 
         // $obj_pdf->Output($file, 'F');
