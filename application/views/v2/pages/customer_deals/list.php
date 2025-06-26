@@ -133,41 +133,49 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($customerDeals as $deal){ ?>
-                                <tr>
-                                    <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
-                                    <td>
-                                        <input class="form-check-input row-select table-select" name="customerDeals[]" type="checkbox" value="<?= $deal->id; ?>">
-                                    </td>
-                                    <?php } ?>
-                                    <td><i class="bx bx-list-ul"></i></td>
-                                    <td><?= $deal->deal_title; ?></td>
-                                    <td><?= $deal->FName . ' ' . $deal->LName; ?></td>
-                                    <td><?= date("m/d/Y",strtotime($deal->expected_close_date)); ?></td>                                
-                                    <td><?= $deal->status; ?></td>
-                                    <td style="text-align:right">$<?= $deal->value; ?></td>
-                                    <td>
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
-                                            <ul class="dropdown-menu dropdown-menu-end">                                            
-                                                <li><a class="dropdown-item btn-view-customer-deals" href="javascript:void(0);" data-id="<?= $deal->id; ?>">View</a></li>
-                                                <li><a class="dropdown-item btn-view-activity-scheduled" href="javascript:void(0);" data-id="<?= $deal->id; ?>">Scheduled Activities</a></li>
-                                                <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
-                                                    <li><a class="dropdown-item btn-edit-customer-deals" href="javascript:void(0);" data-id="<?= $deal->id; ?>">Edit</a></li>
-                                                    <?php if( $deal->status == 'New' ) { ?>
-                                                        <li><a class="dropdown-item btn-won-customer-deals" href="javascript:void(0);" data-name="<?= $deal->deal_title; ?>" data-id="<?= $deal->id; ?>">Won</a></li>
-                                                        <li><a class="dropdown-item btn-lost-customer-deals" href="javascript:void(0);" data-name="<?= $deal->deal_title; ?>" data-id="<?= $deal->id; ?>">Lost</a></li>
-                                                    <?php }elseif( $deal->status == 'Won' ){ ?>                                                
-                                                        <li><a class="dropdown-item btn-lost-customer-deals" href="javascript:void(0);" data-name="<?= $deal->deal_title; ?>" data-id="<?= $deal->id; ?>">Lost</a></li>
-                                                    <?php }elseif( $deal->status == 'Lost' ){ ?>
-                                                        <li><a class="dropdown-item btn-won-customer-deals" href="javascript:void(0);" data-name="<?= $deal->deal_title; ?>" data-id="<?= $deal->id; ?>">Won</a></li>
+                            <?php if( $customerDeals ){ ?>
+                                <?php foreach($customerDeals as $deal){ ?>
+                                    <tr>
+                                        <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
+                                        <td>
+                                            <input class="form-check-input row-select table-select" name="customerDeals[]" type="checkbox" value="<?= $deal->id; ?>">
+                                        </td>
+                                        <?php } ?>
+                                        <td><i class="bx bx-list-ul"></i></td>
+                                        <td><?= $deal->deal_title; ?></td>
+                                        <td><?= $deal->FName . ' ' . $deal->LName; ?></td>
+                                        <td><?= date("m/d/Y",strtotime($deal->expected_close_date)); ?></td>                                
+                                        <td><?= $deal->status; ?></td>
+                                        <td style="text-align:right">$<?= $deal->value; ?></td>
+                                        <td>
+                                            <div class="dropdown table-management">
+                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
+                                                <ul class="dropdown-menu dropdown-menu-end">                                            
+                                                    <li><a class="dropdown-item btn-view-customer-deals" href="javascript:void(0);" data-id="<?= $deal->id; ?>">View</a></li>
+                                                    <li><a class="dropdown-item btn-view-activity-scheduled" href="javascript:void(0);" data-id="<?= $deal->id; ?>">Scheduled Activities</a></li>
+                                                    <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
+                                                        <li><a class="dropdown-item btn-edit-customer-deals" href="javascript:void(0);" data-id="<?= $deal->id; ?>">Edit</a></li>
+                                                        <?php if( $deal->status == 'New' ) { ?>
+                                                            <li><a class="dropdown-item btn-won-customer-deals" href="javascript:void(0);" data-name="<?= $deal->deal_title; ?>" data-id="<?= $deal->id; ?>">Won</a></li>
+                                                            <li><a class="dropdown-item btn-lost-customer-deals" href="javascript:void(0);" data-name="<?= $deal->deal_title; ?>" data-id="<?= $deal->id; ?>">Lost</a></li>
+                                                        <?php }elseif( $deal->status == 'Won' ){ ?>                                                
+                                                            <li><a class="dropdown-item btn-lost-customer-deals" href="javascript:void(0);" data-name="<?= $deal->deal_title; ?>" data-id="<?= $deal->id; ?>">Lost</a></li>
+                                                        <?php }elseif( $deal->status == 'Lost' ){ ?>
+                                                            <li><a class="dropdown-item btn-won-customer-deals" href="javascript:void(0);" data-name="<?= $deal->deal_title; ?>" data-id="<?= $deal->id; ?>">Won</a></li>
+                                                        <?php } ?>
                                                     <?php } ?>
-                                                <?php } ?>
-                                                <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
-                                                    <li><a class="dropdown-item btn-delete-customer-deals" href="javascript:void(0);" data-name="<?= $deal->deal_title; ?>" data-id="<?= $deal->id; ?>">Delete</a></li>
-                                                <?php } ?>
-                                            </ul>
-                                        </div>
+                                                    <?php if(checkRoleCanAccessModule('customer-deals', 'write')){ ?>
+                                                        <li><a class="dropdown-item btn-delete-customer-deals" href="javascript:void(0);" data-name="<?= $deal->deal_title; ?>" data-id="<?= $deal->id; ?>">Delete</a></li>
+                                                    <?php } ?>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            <?php }else{ ?>
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        <span>No results found.</span>
                                     </td>
                                 </tr>
                             <?php } ?>

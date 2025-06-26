@@ -142,7 +142,7 @@
                         graphSeries.push(parseInt(value));
                         labelWithCounts.push(`${key}: ${value}`);
                         $('.<?php echo "textDatas_$id"; ?>').append(`
-                            <div class='col-6 col-md-3 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
+                            <div class='col-6 col-md-3 text-nowrap <?php echo "textDataContainer_$id"; ?>' onclick="window.open('${window.origin}/taskhub', '_blank')">
                                 <div class='text-center textData'>
                                     <small class='text-muted text-uppercase fw-bold'>${key}</small>
                                     <h4>${value}</h4>

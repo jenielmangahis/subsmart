@@ -327,6 +327,9 @@
     color:#1e7b34;
     font-weight:bold;
 }
-.forecast-month-summary{
-    
+.nsm-empty{
+    color: #383d41;
+    background-color: #e2e3e5;
+    border-color: #d6d8db;
+    padding: 28px;
 }
