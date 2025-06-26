@@ -211,3 +211,8 @@ define('VONAGE_BRANDING', 'Nsmart');
 define('VONAGE_NUMBER', '13078777301');
 
 define('GEOAPIKEY', '41ddeb87ff654af488b283ba54ba576f');
+
+define('PUSHER_KEY', '2886684a3add673926fa');
+define('PUSHER_SECRET', '6fa4fb338642abbc6936');
+define('PUSHER_APPID', '2013824');
+define('PUSHER_CLUSTER', 'us2');
