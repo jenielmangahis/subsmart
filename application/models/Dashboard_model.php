@@ -40,6 +40,7 @@ class Dashboard_model extends MY_Model
                 $this->db->where('invoices.company_id', $company_id);
                 $this->db->where_not_in('invoices.status', ['Paid', 'Draft', '']);
                 $this->db->where('invoices.view_flag', 0);
+                $this->db->where('invoices.grand_total !=', 0.0);
                 $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-90 days')));
                 $this->db->where('invoices.due_date <=', date('Y-m-d'));
                 $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >=", $dateFrom);
@@ -53,6 +54,7 @@ class Dashboard_model extends MY_Model
                 $this->db->where('invoices.company_id', $company_id);
                 $this->db->where_not_in('invoices.status', ['Paid', 'Draft', '']);
                 $this->db->where('invoices.view_flag', 0);
+                $this->db->where('invoices.grand_total !=', 0.0);
                 $this->db->where('invoices.due_date <=', date('Y-m-d'));
                 $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >=", $dateFrom);
                 $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <=", $dateTo);
@@ -65,6 +67,7 @@ class Dashboard_model extends MY_Model
                 $this->db->where('invoices.company_id', $company_id);
                 $this->db->where_not_in('invoices.status', ['Paid', 'Draft', '']);
                 $this->db->where('invoices.view_flag', 0);
+                $this->db->where('invoices.grand_total !=', 0.0);
                 $this->db->where('invoices.due_date <=', date('Y-m-d'));
                 $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >=", $dateFrom);
                 $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <=", $dateTo);
@@ -309,6 +312,7 @@ class Dashboard_model extends MY_Model
                 $this->db->from('invoices');
                 $this->db->where_not_in('invoices.status', ['Paid', 'Draft', '']);
                 $this->db->where('invoices.view_flag', 0);
+                $this->db->where('invoices.grand_total !=', 0.0);
                 $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-90 days')));
                 $this->db->where('invoices.due_date <=', date('Y-m-d'));            
                 $this->db->where('invoices.company_id', $company_id);
@@ -323,6 +327,7 @@ class Dashboard_model extends MY_Model
                 $this->db->from('invoices');
                 $this->db->where_not_in('invoices.status', ['Paid', 'Draft', '']);
                 $this->db->where('invoices.view_flag', 0);
+                $this->db->where('invoices.grand_total !=', 0.0);
                 $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-14 days')));          
                 $this->db->where('invoices.company_id', $company_id);
                 $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
@@ -336,6 +341,7 @@ class Dashboard_model extends MY_Model
                 $this->db->from('invoices');
                 $this->db->where('invoices.status =', "Paid");
                 $this->db->where('invoices.view_flag', 0);
+                $this->db->where('invoices.grand_total !=', 0.0);
                 $this->db->where('invoices.company_id', $company_id);
                 $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') >=", $dateFrom);
                 $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m-%d') <=", $dateTo);
@@ -349,6 +355,7 @@ class Dashboard_model extends MY_Model
                 $this->db->from('invoices');
                 $this->db->where_not_in('invoices.status', ['Paid', 'Draft', '']);
                 $this->db->where('invoices.view_flag', 0);
+                $this->db->where('invoices.grand_total !=', 0.0);
                 $this->db->where('invoices.due_date <=', date('Y-m-d'));      
                 $this->db->where('invoices.company_id', $company_id);
                 $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
@@ -720,28 +727,6 @@ class Dashboard_model extends MY_Model
                     AND DATE(invoices.date_created) BETWEEN '{$dateFrom}' AND '{$dateTo}'
                     AND users.company_id = '{$company_id}'
                     GROUP BY users.id
-                    UNION
-                    SELECT
-                        users.id AS id,
-                        users.company_id AS company_id,
-                        CONCAT(users.FName, ' ', users.LName) AS sales_rep,
-                        '' AS invoice_status,
-                        0 AS total_jobs,
-                        0 AS total_sales,
-                        '' AS date_created
-                    FROM users
-                    WHERE users.company_id = '{$company_id}'
-                    AND users.id NOT IN (
-                        SELECT DISTINCT users.id
-                        FROM users
-                        LEFT JOIN jobs ON jobs.employee_id = users.id
-                        LEFT JOIN invoices ON invoices.job_id = jobs.id
-                        WHERE invoices.view_flag = 0
-                            AND invoices.status != 'Draft'
-                            AND DATE(invoices.date_created) BETWEEN '{$dateFrom}' AND '{$dateTo}'
-                            AND users.company_id = '{$company_id}'
-                    )
-                    ORDER BY total_jobs DESC
                 ");
                 $data = $query->result();
                 return $data;
