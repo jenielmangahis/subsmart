@@ -1555,6 +1555,8 @@ $route['cron/lead_mail_automation'] = 'Cron_Automation_Controller/cronLeadMailAu
 $route['cron/send_estimate_via_trigger_event_mail_automation'] = 'Cron_Automation_Controller/cronEstimateViaTriggerEventMailAutomation';
 $route['cron/send_lead_via_trigger_event_mail_automation'] = 'Cron_Automation_Controller/cronLeadViaTriggerEventMailAutomation';
 
+$route['cron/send_status_lead_mail_function'] = 'Cron_Automation_Controller/cronStatusLeadMailAutomation';
+
 $route['cron/send_created_invoice_mail_automation'] = 'Cron_Automation_Controller/cronCreatedInvoiceMailAutomation';
 $route['cron/send_paid_invoice_mail_automation'] = 'Cron_Automation_Controller/cronPaidInvoiceMailAutomation'; 
 $route['cron/send_set_due_invoice_mail_automation'] = 'Cron_Automation_Controller/cronSetToDueInvoiceMailAutomation'; 

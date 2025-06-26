@@ -76,10 +76,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <div class="col-auto">
                             <div class="h1-spacer">
                                  <?php if (isset($estimates) && count($estimates)>0) { ?>
-                                                    <a class="btn btn-primary btn-md btn-mobile" href="<?php echo base_url('estimate/print') ?>">
-                                                        <span class="fa fa-print "></span> Print
-                                                    </a>
-                                                <?php } ?>
+                                    <a class="btn btn-primary btn-md btn-mobile" href="<?php echo base_url('estimate/print') ?>">
+                                        <span class="fa fa-print "></span> Print
+                                    </a>
+                                <?php } ?>
 
                                 <a class="btn btn-primary btn-md btn-mobile" data-toggle="modal" data-target="#newJobModal" href="<?php echo url('job/new_job') ?>">
                                     <span class="fa fa-plus"></span> New Estimate

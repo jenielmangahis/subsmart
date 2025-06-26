@@ -1456,7 +1456,6 @@ echo put_header_assets();
         }
     }
 
-
     $(document).ready(function() {
 
         $(document).on('click', '.btn-use-other-address', function(){
@@ -1466,6 +1465,12 @@ echo put_header_assets();
 
             $('#other-address-customer').modal('hide');
             $('#job_location').val(other_address);
+
+            var map_source = 'http://maps.google.com/maps?q=' + other_address +
+                '&output=embed';
+            var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
+                '" height="370" width="100%" style=""></iframe>';
+            $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');               
         });        
 
         $('#modalQuickAddCustomer').modal({backdrop: 'static', keyboard: false});
@@ -1516,18 +1521,18 @@ echo put_header_assets();
 <script>
     $(document).ready(function() {
         $('.phone_number').keydown(function(e) {
-        var key = e.charCode || e.keyCode || 0;
-        $text = $(this);
-        if (key !== 8 && key !== 9) {
-            if ($text.val().length === 3) {
-                $text.val($text.val() + '-');
+            var key = e.charCode || e.keyCode || 0;
+            $text = $(this);
+            if (key !== 8 && key !== 9) {
+                if ($text.val().length === 3) {
+                    $text.val($text.val() + '-');
+                }
+                if ($text.val().length === 7) {
+                    $text.val($text.val() + '-');
+                }
             }
-            if ($text.val().length === 7) {
-                $text.val($text.val() + '-');
-            }
-        }
-        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
-    });
+            return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+        });
 
         $('#sel-customer').change(function() {
             var id = $(this).val();
@@ -1594,6 +1599,7 @@ echo put_header_assets();
             format: 'M dd, yyyy'
         });
     });
+
     $('#ssn').keyup(function() {
         var foo = $(this).val().split("-").join(""); // remove hyphens
         if (foo.length > 0) {
@@ -1625,6 +1631,7 @@ echo put_header_assets();
         }
         $(this).val(foo);
     });
+
     $('#spouse_contact_ssn').keyup(function() {
         var foo = $(this).val().split("-").join(""); // remove hyphens
         if (foo.length > 0) {
@@ -1632,6 +1639,7 @@ echo put_header_assets();
         }
         $(this).val(foo);
     });
+
     $(".select_package").click(function() {
         var idd = this.id;
         console.log(idd);

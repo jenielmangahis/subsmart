@@ -21,13 +21,20 @@ class Cron_Automation_Controller extends CI_Controller
     public function cronLeadMailAutomation()
     {
         $this->cronLeadViaTriggerEventMailAutomation('created');
+        $this->cronLeadViaTriggerEventMailAutomation('scheduled');
+        
+        $this->cronStatusLeadMailAutomation('Follow Up');
+        $this->cronStatusLeadMailAutomation('Contacted');
+        $this->cronStatusLeadMailAutomation('Converted');
+        $this->cronStatusLeadMailAutomation('New');
+        $this->cronStatusLeadMailAutomation('Closed');
     }
 
     public function cronLeadViaTriggerEventMailAutomation($trigger_event = null)
     {
         $automation_fail          = 0; 
         $automation_success       = 0;
-        $mail_send_limit          = 200;
+        $mail_send_limit          = 50;
         $is_live_mail_credentials = isLiveMailSmptCredentials();       
         
         $auto_to_user_params = [
@@ -39,7 +46,6 @@ class Cron_Automation_Controller extends CI_Controller
         ];
 
         $automationsData = $this->automation_model->getAutomationsListByParams($auto_to_user_params); 
-
         if($automationsData) {
             foreach($automationsData as $automationData) {
                 
@@ -261,6 +267,239 @@ class Cron_Automation_Controller extends CI_Controller
          echo '<br />';
          echo $trigger_event . ' Lead Automation Fail: ' . $automation_fail;
          echo '<hr />';     
+    }
+
+    public function cronStatusLeadMailAutomation($status = null)
+    {
+        $automation_fail    = 0; 
+        $automation_success = 0;
+        $mail_send_limit    = 20;
+        $is_live_mail_credentials = isLiveMailSmptCredentials();
+
+        if($status != null) {
+            $trigger_status = $status;
+
+            $auto_to_user_params = [
+                'entity' => 'lead',
+                'trigger_action' => 'send_email',
+                'operation' => 'send',
+                'status' => 'active',
+                'trigger_event' => 'has_status',
+                'trigger_status' => $trigger_status
+            ];
+
+            $automationsData = $this->automation_model->getAutomationsListByParams($auto_to_user_params); 
+            if($automationsData) {
+                foreach($automationsData as $automationData) {
+                    
+                    $trigger_success = 0;
+                    $current_time    = date('H:i');
+                    $sent_start_time = date('H:i', strtotime($automationData->start_time));
+                    $sent_end_time   = date('H:i', strtotime($automationData->end_time));
+
+                    $startTimeStamp = strtotime($sent_start_time);
+                    $endTimeStamp   = strtotime($sent_end_time);
+                    $checkTimeStamp = strtotime($current_time);   
+                    
+                    //Add condition to check if sending is in between automation start & end time
+                    if ($checkTimeStamp >= $startTimeStamp && $checkTimeStamp <= $endTimeStamp) {
+                        $automation_id = $automationData->id;
+                        $filters['automation_id'] = $automation_id;
+                        $filters['is_triggered']  = 0;
+                        $filters['status']        = 'new';          
+
+                        $automation_queues = $this->automation_queue_model->getActiveAutomationQueue($filters);                          
+                        if($automation_queues) {
+                            foreach($automation_queues as $automation_queue) {
+                                $queue_entity_id = $automation_queue->entity_id;
+                                if($automation_queue->entity_type == 'invoice') {
+                                    $entityData = $this->invoice_model->getinvoice($queue_entity_id); 
+                                }elseif($automation_queue->entity_type == 'job') {
+                                    $entityData = $this->Jobs_model->get_specific_job($queue_entity_id); 
+                                }
+
+                                $targetName    = "";
+                                $customerEmail = "";
+        
+                                if($automationData->target == 'user') {
+                                    $targetUser = $this->users_model->getCompanyUserById($automationData->target_id);
+                                    if($targetUser) {
+                                        $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                        $customerEmail = $targetUser->email;
+                                    }
+                                }elseif($automationData->target == 'client') {
+                                    if($entityData && $entityData->customer_id) {
+                                        $targetUser = $this->AcsProfile_model->getByProfId($entityData->customer_id);    
+                                        if($targetUser) {
+                                            $targetName    = $targetUser->first_name . ' ' . $targetUser->last_name;
+                                            $customerEmail = $targetUser->email;
+                                        } 
+                                    }
+                                }elseif($automationData->target == 'sales_rep') {
+                                    if($entityData && $entityData->user_id) {
+                                        $targetUser = $this->users_model->getCompanyUserById($entityData->user_id);
+                                        if($targetUser) {
+                                            $targetName    = $targetUser->FName . ' ' . $targetUser->LName;
+                                            $customerEmail = $targetUser->email;
+                                        }                                   
+                                    }
+                                }
+
+                                $trigger_automation   = 0; 
+                                $default_timezone    = 'America/New_York';
+                                if($entityData) {
+                                    if($entityData->company_id != null) {
+                                        $settings = $this->CalendarSettings_model->getByCompanyId($entityData->company_id);
+                                        if( $settings && $settings->timezone != '' ){
+                                            $default_timezone = $settings->timezone;
+                                        }else{
+                                            $default_timezone = 'America/New_York';
+                                        }
+                                    }
+                                }
+
+                                date_default_timezone_set($default_timezone); 
+                                $current_date_time = date('Y-m-d H:i'); 
+
+                                if($automation_queue->trigger_time != null) {
+                                    if(strtotime($current_date_time) >= strtotime($automation_queue->trigger_time)) {
+                                        $trigger_automation = 1;
+                                    }elseif(strtotime($current_date_time) < strtotime($automation_queue->trigger_time)) {
+                                        $trigger_automation = 0;
+                                    }
+                                }
+
+                                if($automationData->trigger_time == 0) {
+                                    $trigger_automation = 1;
+                                }
+
+                                //Add custom condition checking - start
+                                $a_conditions       = json_decode($automationData->conditions, true);
+                                $a_conditions_count = count($a_conditions);
+
+                                $is_custom_condition_success_count = 0;
+                                $invoice_grand_total = $invoice->grand_total;
+                    
+                                if($a_conditions_count > 0) {
+                                    foreach($a_conditions as $a_condition) {
+                                        if($a_condition['property'] == 'amount') {
+
+                                            if($a_condition['operator'] == '>') {
+                                                if($invoice_grand_total > $a_condition['value']) {
+                                                    $is_custom_condition_success_count++;
+                                                }
+                                            }elseif($a_condition['operator'] == '<') {
+                                                if($invoice_grand_total < $a_condition['value']) {
+                                                    $is_custom_condition_success_count++;
+                                                }
+                                            }elseif($a_condition['operator'] == '=') {
+                                                if($invoice_grand_total == $a_condition['value']) {
+                                                    $is_custom_condition_success_count++;
+                                                }
+                                            }
+        
+                                        }
+                                    }
+
+                                    if($is_custom_condition_success_count != $a_conditions_count) {
+                                        $trigger_automation = 0;
+                                    }
+
+                                }
+                                //Add custom condition checking - end                         
+                                
+                                if($trigger_automation == 1 && ($automation_success <= $mail_send_limit)) {
+                                    if($targetName != "" && $customerEmail != "") {
+        
+                                        if($is_live_mail_credentials) {
+                                            
+                                            $mail = email__getInstance();
+                                            $mail->FromName = 'nSmarTrac';
+                                            
+                                            $mail->addAddress($customerEmail, $targetName);
+                                            $mail->isHTML(true);
+                                            $mail->Subject = $automationData->email_subject;
+                                            $data_type     = 'job';
+                                            $body_with_smart_tags = $this->replaceSmartTagsV2($automationData->email_body, $entityData->id, $data_type);
+                                            $mail->Body    = $body_with_smart_tags;
+                                    
+                                            if (!$mail->Send()) {
+                                                $automation_fail++;
+                                            } else {
+        
+                                                //Update queue status
+                                                $queue_data['is_triggered'] = 1;
+                                                $queue_data['status']       = 'sent';
+                                                $this->automation_queue_model->updateAutomationQueue($automation_queue->id, $queue_data);  
+        
+                                                $automation_success++;
+                                            }
+                                            
+                                        } else {
+            
+                                            $host     = 'smtp.mailtrap.io';
+                                            $port     = 2525;
+                                            $username = 'd7c92e3b5e901d';
+                                            $password = '203aafda110ab7';
+                                            $from     = 'noreply@nsmartrac.com';
+                                            $subject  = $automationData->email_subject;
+                            
+                                            $mail = new PHPMailer;
+                                            $mail->isSMTP();
+                                            $mail->Host = $host;
+                                            $mail->SMTPAuth = true;
+                                            $mail->Username = $username;
+                                            $mail->Password = $password;
+                                            $mail->SMTPSecure = 'tls';
+                                            $mail->Port = $port;
+                            
+                                            // Sender and recipient settings
+                                            $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+                                            $mail->addAddress($customerEmail, $targetName);
+                            
+                                            $mail->IsHTML(true);
+                                            
+                                            $mail->Subject = $subject;
+                                            $data_type     = 'job';
+                                            $body_with_smart_tags = $this->replaceSmartTagsV2($automationData->email_body, $entityData->id, $data_type);
+                                            $mail->Body    = $body_with_smart_tags;
+                            
+                                            // Send the email
+                                            if(!$mail->send()){
+                                                $automation_fail++;
+                                            } else {
+            
+                                                //Update queue status
+                                                $queue_data['is_triggered'] = 1;
+                                                $queue_data['status']       = 'sent';
+                                                $this->automation_queue_model->updateAutomationQueue($automation_queue->id, $queue_data);                                    
+            
+                                                $automation_success++;
+                                                $trigger_success++;
+                                            }
+            
+                                        }
+            
+                                    }
+                                }
+                
+                            }
+                        }
+                    }       
+                    
+                    if($trigger_success >= 1) {     
+                        $autData['trigger_count'] = $automationData->trigger_count + 1; 
+                        $this->automation_model->updateAutomation($automationData->id, $autData);	                
+                    }                     
+                    
+                }
+            }
+
+            echo 'Lead (' . $status . ' Update) Automation Success: ' . $automation_success;
+            echo '<br />';
+            echo 'Lead (' . $status. ' Update) Automation Fail: ' . $automation_fail;
+            echo '<hr />';             
+        }
     }
 
     public function cronEstimateMailAutomation()
@@ -752,7 +991,7 @@ class Cron_Automation_Controller extends CI_Controller
         $automation_fail    = 0; 
         $automation_success = 0;
         $mail_send_limit    = 160;
-        $is_live_mail_credentials = sLiveMailSmptCredentials();    
+        $is_live_mail_credentials = isLiveMailSmptCredentials();    
 
         if($status != null) {
             $trigger_status = $status;
