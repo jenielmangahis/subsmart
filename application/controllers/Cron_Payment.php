@@ -145,6 +145,10 @@ class Cron_Payment extends MYF_Controller {
                     ];
                     $this->Clients_model->update($client->id, $data);
 
+                    $options = array('cluster' => PUSHER_CLUSTER, 'useTLS' => true);
+                    $pusher = new Pusher\Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_APPID, $options);
+                    $pusher->trigger('nsmart-company', 'force-logout', ['company_id' => $client->id]);
+
                     $total_deactivated++;
                 }
             }else{
@@ -156,6 +160,10 @@ class Cron_Payment extends MYF_Controller {
                     'is_with_payment_error' => 1
                 ];
                 $this->Clients_model->update($client->id, $data);
+
+                $options = array('cluster' => PUSHER_CLUSTER, 'useTLS' => true);
+                $pusher = new Pusher\Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_APPID, $options);
+                $pusher->trigger('nsmart-company', 'force-logout', ['company_id' => $client->id]);
 
                 $total_deactivated++;
             }
@@ -196,6 +204,11 @@ class Cron_Payment extends MYF_Controller {
         foreach( $clients as $client ){            
             $data = ['is_plan_active' => 0, 'date_modified' => date("Y-m-d H:i:s")];
             $this->Clients_model->update($client->id, $data);
+
+            $options = array('cluster' => PUSHER_CLUSTER, 'useTLS' => true);
+            $pusher = new Pusher\Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_APPID, $options);
+            $pusher->trigger('nsmart-company', 'force-logout', ['company_id' => $client->id]);
+
             $total_deactivated++;
         }
 

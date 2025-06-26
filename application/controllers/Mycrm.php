@@ -275,6 +275,8 @@ class Mycrm extends MY_Controller
         $this->load->model('NsmartPlan_model');
         $this->load->model('Clients_model');
         $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplateModules_model');
 
         $is_success = 0;
         $message = '';
