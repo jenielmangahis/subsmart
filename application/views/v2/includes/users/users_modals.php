@@ -159,7 +159,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
+                    <button type="submit" name="btn_modal_save" id="btn-save-employee" class="nsm-button primary">Save</button>
                 </div>
             </div>
         </form>
@@ -178,7 +178,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" name="btn_modal_save" class="nsm-button primary" disabled>Save</button>
+                    <button type="submit" name="btn_modal_save" id="btn-update-employee" class="nsm-button primary" disabled>Save</button>
                 </div>
             </div>
         </form>
@@ -265,8 +265,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row g-3">
-                        <div class="col-12">
-                            <label class="content-title">Profile Picture</label>
+                        <div class="col-12">                            
                             <div class="nsm-img-upload">
                                 <span class="nsm-upload-label disable-select">Drop or click image to upload</span>
                                 <input type="file" name="userfile" class="nsm-upload" accept="image/*" required>
