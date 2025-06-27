@@ -10220,6 +10220,8 @@ class Customer extends MY_Controller
         $msg      = '';      
         $customer = [];  
 
+        $is_automation_activated  = enableAutomationActivated();
+
         $cid  = logged('company_id');
         $post = $this->input->post();
 
@@ -10257,6 +10259,14 @@ class Customer extends MY_Controller
                 'id' => $lead_id,
                 'name' => $post['first_name'] . ' ' . $post['last_name']
             ];
+
+            //Add automation queue - start
+            if($is_automation_activated) {
+                createAutomationQueueV2('send_email', 'lead', 'created', '', $lead_id);  
+                createAutomationQueueV2('send_email', 'lead', 'scheduled', '', $lead_id);  
+            }
+            //Add automation queue - end
+
         }
 
         $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'customer' => $customer];
