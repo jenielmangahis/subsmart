@@ -291,7 +291,9 @@
                                     <?php } ?>
                                 </div>
                             </td>
-                            <td class="fw-bold nsm-text-primary"><?php echo $estimate->estimate_number; ?></td>                            
+                            <td class="fw-bold nsm-text-primary">
+                                <a target="_blank" class="nsm-link" href="<?php echo base_url('estimate/view/'.$estimate->id);?>" ><?php echo $estimate->estimate_number; ?></a>
+                            </td>                        
                             <td>
                                 <?php if ($estimate->customer_id > 0) { ?>
                                 <a class="nsm-link"
