@@ -1248,11 +1248,16 @@ class Invoice extends MY_Controller
             move_uploaded_file($tmp_name, $file);
         }
 
+        $job_location = $post['jobs_location'] . ' ' . $post['jobs_city'] . ', ' . $post['jobs_state'] . ' ' . $post['jobs_zip'];
         $update_data = array(
             'id'                        => $this->input->post('invoiceDataID'),//
             'customer_id'               => $this->input->post('customer_id'),//
             'user_id'                   => $this->input->post('user_id'),
-            'job_location'              => $this->input->post('jobs_location'), //
+            'job_location'              => $job_location,
+            'job_address'               => $this->input->post('jobs_location'),
+            'job_city'                  => $this->input->post('jobs_city'),
+            'job_state'                 => $this->input->post('jobs_state'),
+            'job_zip'                   => $this->input->post('jobs_zip'),
             'job_name'                  => $this->input->post('job_name'),//
             'invoice_type'              => $this->input->post('invoice_type'),//
             'purchase_order'            => $this->input->post('purchase_order'),//
@@ -1560,13 +1565,13 @@ class Invoice extends MY_Controller
 
             $customer = $this->AcsProfile_model->getByProfId($invoice->customer_id);
             $invoice_address_a = strtoupper($customer->mail_add);
-            $invoice_address_b = strtoupper($customer->city . ' ' . $customer->state . ' ' . $customer->zip_code);
+            $invoice_address_b = strtoupper($customer->city . ', ' . $customer->state . ' ' . $customer->zip_code);
 
             if( $invoice->job_id > 0 ){
                 $job = $this->Jobs_model->getByIdAndCompanyId($invoice->job_id, $invoice->company_id);
                 if( $job && $job->job_address != '' ){
                     $invoice_address_a = strtoupper($job->job_address);
-                    $invoice_address_b = strtoupper($job->job_city . ' ' . $job->job_state . ' ' . $job->job_zip);
+                    $invoice_address_b = strtoupper($job->job_city . ', ' . $job->job_state . ' ' . $job->job_zip);
                 }
             }
 
@@ -1574,8 +1579,13 @@ class Invoice extends MY_Controller
                 $ticket = $this->Tickets_model->getByIdAndCompanyId($invoice->ticket_id, $invoice->company_id);
                 if( $ticket && $ticket->acs_address != '' ){
                     $invoice_address_a = strtoupper($ticket->acs_address);
-                    $invoice_address_b = strtoupper($ticket->acs_city . ' ' . $ticket->acs_state . ' ' . $ticket->acs_zip);
+                    $invoice_address_b = strtoupper($ticket->acs_city . ', ' . $ticket->acs_state . ' ' . $ticket->acs_zip);
                 }
+            }
+
+            if( $invoice->job_address != '' ){
+                $invoice_address_a = strtoupper($invoice->job_address);
+                $invoice_address_b = strtoupper($invoice->job_city . ', ' . $invoice->job_state . ' ' . $invoice->job_zip);
             }
 
             $this->page_data['invoice_address_a'] = $invoice_address_a;
@@ -1999,6 +2009,9 @@ class Invoice extends MY_Controller
     {
         $this->load->model('general_model');
         $this->load->model('AcsProfile_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('Tickets_model');
+
         $invoice = get_invoice_by_id($id);
         $user = get_user_by_id(logged('id'));
         $get_company_info = array(
@@ -2007,16 +2020,44 @@ class Invoice extends MY_Controller
             ),
             'table' => 'business_profile',
             'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
-        );
+        );        
+        $company  = $this->general_model->get_data_with_param($get_company_info, false);
+        $customer = $this->AcsProfile_model->getByProfId($invoice->customer_id);
 
-        $company = $this->general_model->get_data_with_param($get_company_info, false);
+        $invoice_address_a = strtoupper($customer->mail_add);
+        $invoice_address_b = strtoupper($customer->city . ', ' . $customer->state . ' ' . $customer->zip_code);
+        
+        if( $invoice->job_id > 0 ){
+            $job = $this->Jobs_model->getByIdAndCompanyId($invoice->job_id, $invoice->company_id);
+            if( $job && $job->job_address != '' ){
+                $invoice_address_a = strtoupper($job->job_address);
+                $invoice_address_b = strtoupper($job->job_city . ', ' . $job->job_state . ' ' . $job->job_zip);
+            }
+        }
+
+        if( $invoice->ticket_id > 0 ){
+            $ticket = $this->Tickets_model->getByIdAndCompanyId($invoice->ticket_id, $invoice->company_id);
+            if( $ticket && $ticket->acs_address != '' ){
+                $invoice_address_a = strtoupper($ticket->acs_address);
+                $invoice_address_b = strtoupper($ticket->acs_city . ', ' . $ticket->acs_state . ' ' . $ticket->acs_zip);
+            }
+        }
+
+        if( $invoice->job_address != '' ){
+            $invoice_address_a = strtoupper($invoice->job_address);
+            $invoice_address_b = strtoupper($invoice->job_city . ', ' . $invoice->job_state . ' ' . $invoice->job_zip);
+        }
+
+        $this->page_data['invoice_address_a'] = $invoice_address_a;
+        $this->page_data['invoice_address_b'] = $invoice_address_b;
+
         // $company = get_company_by_id(logged('company_id'));
         $this->page_data['invoice'] = $invoice;
         $this->page_data['user'] = $user;
         // $this->page_data['items'] = $user;
         $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
         $this->page_data['users'] = $this->invoice_model->getInvoiceCustomer($id);
-        $this->page_data['customer'] = $this->AcsProfile_model->getByProfId($invoice->customer_id);
+        $this->page_data['customer'] = $customer;
 
         $total_late_days = 0;
         $total_days = 0;
@@ -2085,7 +2126,7 @@ class Invoice extends MY_Controller
             }
             if($setting[0]->invoice_template == 3){
                 $this->pdf->load_view('invoice/pdf/template', $this->page_data, $filename, "portrait");
-              }
+            }
         }elseif($format === "save_pdf"){
             $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
             $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
@@ -3238,9 +3279,14 @@ class Invoice extends MY_Controller
                 move_uploaded_file($tmp_name, $attachmentFolderPath.$attachment_file);
             }
 
+            $job_location = $post['jobs_location'] . ' ' . $post['jobs_city'] . ', ' . $post['jobs_state'] . ' ' . $post['jobs_zip'];
             $new_data = array(
                 'customer_id'               => $post['customer_id'],
-                'job_location'              => $post['jobs_location'],
+                'job_location'              => $job_location,
+                'job_address'               => $post['jobs_location'],
+                'job_city'                  => $post['jobs_city'],
+                'job_state'                 => $post['jobs_state'],
+                'job_zip'                   => $post['jobs_zip'],
                 'job_name'                  => $post['job_name'],
                 'job_id'                    => 0,
                 'job_number'                => '',
