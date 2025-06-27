@@ -31,14 +31,20 @@ class CompanySubscriptionPayments_model extends MY_Model
         return $query;
     }
 
-    public function getCompanyLastPayment($company_id)
+    public function getCompanyLastPayment($company_id, $filters = [])
     {
         $user_id = logged('id');
 
         $this->db->select('*');
         $this->db->from($this->table);
-
         $this->db->where('company_id', $company_id);
+
+        if( $filters ){
+            foreach($filters as $f){                
+                $this->db->where($f['field_name'], $f['field_value']);
+            }
+        }
+        
         $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get()->row();
