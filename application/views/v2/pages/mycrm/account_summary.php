@@ -46,10 +46,14 @@
                     </div>
                 </div>
                 <div class="row mb-3">
+                    <?php if( $lastPayment ){ ?>
                     <div class="col-12 view_pdf_container">
-                        <a class="view_pdf" href="<?php echo url('mycrm/pdf_statement/'.$lastPayment->id); ?>" target="_new" style="margin-right: 10px;">View PDF Statement</a>
-                        <a class="view_pdf" href="<?php echo url('mycrm/orders/'.$lastPayment->id); ?>" target="_new" style="margin-right: 10px;">View Previous Statement</a>
+                        <a class="view_pdf" href="<?php echo url('mycrm/pdf_statement/'.$lastPayment->id); ?>" target="_new" style="margin-right: 10px;">View Current Statement</a>
+                        <?php if( $previousStatement ){ ?>
+                        <a class="view_pdf" href="<?php echo url('mycrm/pdf_statement/'.$previousStatement->id); ?>" target="_new" style="margin-right: 10px;">View Previous Statement</a>
+                        <?php } ?>
                     </div>
+                    <?php } ?>
                 </div>
                 <div class="row g-3 mb-3">
                     <div class="col-12">

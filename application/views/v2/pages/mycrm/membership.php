@@ -143,9 +143,11 @@
                                             <div class="col-12 col-md-6">
                                                 1 <?= $client->recurring_payment_type == 'month' ? 'Monthly' : 'year'; ?>
                                             </div>
+                                            <?php if( $client->recurring_payment_type == 'monthly' ){ ?>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-title">Current Billing Period</label>
                                             </div>
+                                            <?php } ?>
                                             <div class="col-12 col-md-6">
                                                 <?= $start_billing_period; ?> to <?= $end_billing_period; ?>
                                             </div>
@@ -190,7 +192,7 @@
                                                 if ($client->is_trial == 1) :
                                                     echo "---";
                                                 else :
-                                                    echo date("d-M-Y", strtotime($firstPayment->payment_date));
+                                                    echo date("m/d/Y", strtotime($firstPayment->payment_date));
                                                 endif;
                                                 ?>
                                             </div>
@@ -202,7 +204,7 @@
                                                     ---
                                                 <?php else : ?>
                                                     $<?= number_format($lastPayment->total_amount, 2); ?>
-                                                    on <?= date("d-M-Y", strtotime($lastPayment->payment_date)); ?>
+                                                    on <?= date("m/d/Y", strtotime($lastPayment->payment_date)); ?>
                                                     <button class="nsm-button btn-sm ms-3" onclick="location.href='<?= base_url('mycrm/view_payment/' . $lastPayment->id); ?>'">View</button>
                                                 <?php endif; ?>
                                             </div>
