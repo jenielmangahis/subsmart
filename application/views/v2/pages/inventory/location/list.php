@@ -71,9 +71,6 @@
                             <button type="button" class="nsm-button btn-share-url">
                                 <i class='bx bx-fw bx-share-alt'></i>
                             </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_inventory_modal">
-                                <i class='bx bx-fw bx-printer'></i>
-                            </button>
                         </div>
                     </div>
                 </div>
