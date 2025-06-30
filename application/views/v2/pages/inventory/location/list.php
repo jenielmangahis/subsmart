@@ -48,19 +48,29 @@
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         
-                        <div class="nsm-page-buttons page-button-container">                            
-                            <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('inventory/addInventoryLocation') ?>'">
+                        <div class="nsm-page-buttons page-button-container">    
+
+                            <!-- <button type="button" class="nsm-button btn-danger" id="delete_selected">
+                                <i class='bx bx-select-multiple text-white'></i> Delete Selected
+                            </button> -->   
+                            
+                            <div class="dropdown d-inline-block">
+                                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                    <span>
+                                        Batch Actions
+                                    </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end batch-actions">
+                                    <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete_selected">Delete Selected</a></li>
+                                </ul>
+                            </div>                            
+                            
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('inventory/addInventoryLocation') ?>'">
                                 <i class='bx bx-fw bx-list-plus'></i> New Location
                             </button>
-                            <button type="button" class="nsm-button btn-danger" id="delete_selected">
-                            <i class='bx bx-select-multiple text-white'></i> Delete Selected
-                            </button>
-                            <button type="button" class="nsm-button btn-share-url">
+                            <!-- <button type="button" class="nsm-button btn-share-url">
                                 <i class='bx bx-fw bx-share-alt'></i>
-                            </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_inventory_modal">
-                                <i class='bx bx-fw bx-printer'></i>
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                 </div>
@@ -69,7 +79,7 @@
                     <table id="INV_LOCATION_TBL" class="nsm-table">
                         <thead>
                             <tr>
-                                <td class="table-icon text-center">
+                                <td class="table-icon">
                                     <input class="form-check-input select-all table-select" type="checkbox">
                                 </td>
                                 <td class="table-icon"></td>
@@ -95,9 +105,13 @@
                                 <td><b><?php echo $locations->location_name ?></b></td>
                                 <td>
                                     <?php if( $locations->default == "true" ){ ?>
-                                        <span class="nsm-badge nsm-badge-primary" style="width:100%;display:block;text-align:center;"><i class='bx bx-check text-white' style="font-size:20px;"></i></span>
+                                        <span class="nsm-badge nsm-badge-primary" style="display:block;text-align:center;">
+                                            <!-- <i class='bx bx-check text-white' style="font-size:20px;"></i>-->Yes
+                                        </span>
                                     <?php }else { ?>
-                                        <span class="nsm-badge nsm-badge-danger" style="width:100%;display:block;text-align:center;"><i class='bx bx-x text-white' style="font-size:20px;"></i></span>
+                                        <span class="nsm-badge nsm-badge-danger" style="display:block;text-align:center;">
+                                            <!-- <i class='bx bx-x text-white' style="font-size:20px;"></i>-->No
+                                        </span>
                                     <?php } ?>                                
                                 </td>
                                 <td>
@@ -110,7 +124,7 @@
                                                 <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/editInventoryLocation/' . $locations->loc_id); ?>" data-id="<?php echo $locations->loc_id  ?>">Edit</a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $locations->loc_id?>">Delete</a>
+                                                <a class="dropdown-item delete-item" href="javascript:void(0);" data-location-name="<?php echo $locations->location_name; ?>" data-id="<?php echo $locations->loc_id?>">Delete</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -137,10 +151,10 @@ $(document).ready(function() {
             processing: '<span>Fetching data...</span>'
         },
         "columns": [
-            { "width": "1%" },
-            { "width": "1%" },
-            { "width": "85%" },
-            { "width": "6%" },
+            { "width": "3%" },
+            { "width": "3%" },
+            { "width": "84%" },
+            { "width": "10%" },
             null        
         ]
     });
@@ -236,7 +250,7 @@ $(document).ready(function() {
     $("#delete_selected").on("click", function() {
         Swal.fire({
             title: 'Delete Selected Items',
-            text: "Are you sure you want to delete the selected items?",
+            text: "Are you sure you want to delete the selected locations?",
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,
@@ -275,10 +289,12 @@ $(document).ready(function() {
 
     $(document).on("click", ".delete-item", function() {
         let id = $(this).attr('data-id');
+        let location_name = $(this).attr('data-location-name');
 
         Swal.fire({
             title: 'Delete Storage Location',
-            text: "Are you sure you want to delete this item?",
+            //text: "Are you sure you want to delete this storage location " + location_name + "?",
+            html: `Are you sure you want to delete this storage location <b>${location_name}</b>?`,
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,

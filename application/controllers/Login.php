@@ -72,6 +72,7 @@ class Login extends CI_Controller
         $this->load->model('CompanyDeactivatedModule_model');
         $this->load->model('Customer_advance_model');
         $this->load->model('CalendarSettings_model');
+        $this->load->model('SubscriberNsmartUpgrade_model');
                 
         $this->load->library('form_validation');
 
@@ -152,11 +153,18 @@ class Login extends CI_Controller
                     //Get company deactivated modules
                     $deactivatedModules  = $this->CompanyDeactivatedModule_model->getAllByCompanyId($client->id);
                     $deactivated_modules = array();
-
                     foreach( $deactivatedModules as $dm ){
                         $deactivated_modules[$dm->industry_module_id] = $dm->industry_module_id;
                     } 
 
+                    //Get company plan upgrades / addons
+                    $addons = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
+                    $active_addons = array();
+                    foreach( $addons as $a ){
+                        $active_addons[$a->plan_upgrade_id] = $a->plan_upgrade_id;
+                    }
+
+                    $this->session->set_userdata('plan_active_addons', $active_addons);
                     $this->session->set_userdata('deactivated_modules', $deactivated_modules);
                     $this->session->set_userdata('userAccessModules', $access_modules);
                     $this->session->set_userdata('is_plan_active', $client->is_plan_active);

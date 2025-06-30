@@ -1643,7 +1643,12 @@ class Inventory extends MY_Controller
         $post = $this->input->post();
         $cid  = logged('company_id');
 
-        $isExists = $this->ItemCategory_model->getByNameAndCompanyId($post['category_name'], $cid);
+        if($post['default_category_name'] == $post['category_name']) {
+            $isExists = false;
+        } else {
+            $isExists = $this->ItemCategory_model->getByNameAndCompanyId($post['category_name'], $cid);
+        }
+
         if( $isExists && $isExists->id != $post['icid'] ){
             $msg = 'Category name ' . $post['category_name'] . ' already exists';
         }else{
