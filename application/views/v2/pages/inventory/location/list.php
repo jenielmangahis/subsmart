@@ -68,9 +68,9 @@
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('inventory/addInventoryLocation') ?>'">
                                 <i class='bx bx-fw bx-list-plus'></i> New Location
                             </button>
-                            <button type="button" class="nsm-button btn-share-url">
+                            <!-- <button type="button" class="nsm-button btn-share-url">
                                 <i class='bx bx-fw bx-share-alt'></i>
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
                                                 <a class="dropdown-item edit-item" href="<?php echo base_url('inventory/editInventoryLocation/' . $locations->loc_id); ?>" data-id="<?php echo $locations->loc_id  ?>">Edit</a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $locations->loc_id?>">Delete</a>
+                                                <a class="dropdown-item delete-item" href="javascript:void(0);" data-location-name="<?php echo $locations->location_name; ?>" data-id="<?php echo $locations->loc_id?>">Delete</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -250,7 +250,7 @@ $(document).ready(function() {
     $("#delete_selected").on("click", function() {
         Swal.fire({
             title: 'Delete Selected Items',
-            text: "Are you sure you want to delete the selected items?",
+            text: "Are you sure you want to delete the selected locations?",
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,
@@ -289,10 +289,12 @@ $(document).ready(function() {
 
     $(document).on("click", ".delete-item", function() {
         let id = $(this).attr('data-id');
+        let location_name = $(this).attr('data-location-name');
 
         Swal.fire({
             title: 'Delete Storage Location',
-            text: "Are you sure you want to delete this item?",
+            //text: "Are you sure you want to delete this storage location " + location_name + "?",
+            html: `Are you sure you want to delete this storage location <b>${location_name}</b>?`,
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,
