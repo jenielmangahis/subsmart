@@ -77,7 +77,8 @@ table.dataTable.no-footer {
                                         <input class="form-check-input select-all table-select" type="checkbox">
                                 </td>
                                 <td class="table-icon"></td>
-                                <td data-name="Name">Name1</td>
+                                <td data-name="Name">Name</td>
+                                <!-- <td data-name="Description">Description</td> -->
                                 <td data-name="Manage"></td>
                             </tr>
                         </thead>
@@ -98,6 +99,7 @@ table.dataTable.no-footer {
                                         <label class="d-block fw-bold"><?= $item->name; ?></label>
                                         <span class="text-mute row-item-description"><?= $item->description; ?></span>
                                     </td>
+                                    <!-- <td><?= $item->description; ?></td> -->
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
