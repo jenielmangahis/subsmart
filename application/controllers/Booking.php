@@ -28,7 +28,7 @@ class Booking extends MY_Controller {
 
 	public function index() 
 	{
-		if(!checkRoleCanAccessModule('online-booking', 'write')){
+		if(!checkRoleCanAccessModule('online-booking', 'read')){
 			show403Error();
 			return false;
 		}

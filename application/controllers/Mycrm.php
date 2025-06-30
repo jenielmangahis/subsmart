@@ -60,6 +60,13 @@ class Mycrm extends MY_Controller
         $nsPlans = $this->NsmartPlan_model->getAll();
         $addons = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
         $lastPayment = $this->CompanySubscriptionPayments_model->getCompanyLastPayment($client->id);
+        
+        $previousStatement = [];
+        if( $lastPayment ){            
+            $filters[] = ['field_name' => 'id !=', 'field_value' => $lastPayment->id]; 
+            $previousStatement = $this->CompanySubscriptionPayments_model->getCompanyLastPayment($client->id, $filters);
+        }        
+        
         $firstPayment = $this->CompanySubscriptionPayments_model->getCompanyFirstPayment($client->id);
         $primaryCard = $this->CardsFile_model->getCompanyPrimaryCard($client->id);
         $offerCode = $this->OfferCodes_model->getByClientId($company_id);
@@ -106,6 +113,7 @@ class Mycrm extends MY_Controller
         $this->page_data['plan_features'] = $plan_default_features;
         $this->page_data['lastPayment'] = $lastPayment;
         $this->page_data['firstPayment'] = $firstPayment;
+        $this->page_data['previousStatement'] = $previousStatement;
         $this->page_data['nsPlans'] = $nsPlans;
         $this->page_data['start_billing_period'] = $start_billing_period;
         $this->page_data['end_billing_period'] = $end_billing_period;
@@ -157,13 +165,13 @@ class Mycrm extends MY_Controller
         }
 
         if ($client->renewal_date != '') {
-            $start_billing_period = date('d-M-Y', strtotime($client->renewal_date));
-            $end_billing_period = date('d-M-Y', strtotime($client->plan_date_expiration));
+            $start_billing_period = date('m/d/Y', strtotime($client->renewal_date));
+            $end_billing_period = date('m/d/Y', strtotime($client->plan_date_expiration));
         } else {
             $day = date('d', strtotime($client->plan_date_registered));
             $date_start = date('Y-m-'.$day);
-            $start_billing_period = date('d-M-Y', strtotime($date_start));
-            $end_billing_period = date('d-M-Y', strtotime('+1 months ', strtotime($start_billing_period)));
+            $start_billing_period = date('m/d/Y', strtotime($date_start));
+            $end_billing_period = date('m/d/Y', strtotime('+1 months ', strtotime($start_billing_period)));
         }
 
         $default_plan_feature = plan_default_features();

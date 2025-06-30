@@ -198,6 +198,10 @@ class Users_model extends MY_Model
             if( $filters['eids'] != '' ){
                 $this->db->where_in('users.id', $filters['eids']);                
             }
+
+            if( $filters['is_archived'] ){  
+                $this->db->where('users.is_archived', $filters['is_archived']);                
+            }
         }
         if( $limit > 0 ){
             $this->db->limit($limit);
@@ -1066,7 +1070,20 @@ class Users_model extends MY_Model
         $this->db->where('status', 1);
         $update = $this->db->update('users', ['role' => $role_id]);
         return $update;
-    }    
+    } 
+    
+    public function bulkUpdate($ids = [], $data = [], $filters = [])
+    {
+        $this->db->where_in('id', $ids);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->update($this->table, $data);
+    }
 }
 
 

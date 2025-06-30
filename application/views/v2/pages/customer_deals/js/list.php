@@ -1639,6 +1639,7 @@ $(function(){
             cancelButtonText: "Cancel"
         }).then((result) => {
             if (result.value) {
+                $('#modal-view-archive').modal('hide');
                 $.ajax({
                     method: 'POST',
                     url: base_url + 'customer_deals/_restore_selected_deals',

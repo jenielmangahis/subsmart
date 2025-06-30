@@ -1412,7 +1412,7 @@ class CustomerDeal extends MY_Controller
 
         if( $post['customerDeals'] ){
             $filter[] = ['field' => 'company_id', 'value' => $company_id];
-            $data     = ['is_archive' => 'Yes'];
+            $data     = ['is_archive' => 'Yes', 'date_modified' => date("Y-m-d H:i:s")];
             $this->CustomerDeal_model->bulkUpdate($post['customerDeals'], $data, $filter);
 
             $is_success = 1;

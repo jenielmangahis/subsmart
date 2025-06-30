@@ -81,55 +81,67 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="nsm-card-header d-block">
                             <div class="nsm-card-title"><span><i class='bx bx-user-circle'></i>&nbsp;Customer Details</span></div>
                         </div>
-                        <div class="nsm-card-content row">
-                            <div class="col-md-12">
-                                <input type="hidden" value="<?php echo $invoice->id; ?>" name="invoiceDataID">
-                                <label for="invoice_customer" class="bold">Customer</label>
-                                <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" style="float:right;">Add New</a>
-                                <select name="customer_id" id="customer_id" class="form-select" required>
-                                <?php foreach ($customers as $customer):?>
-                                <option <?php if(isset($customers)){ if($customer->prof_id == $invoice->customer_id){echo "selected";} } ?>  value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
-                                <?php endforeach; ?>
-                            </select>
-                            </div>
-                            <div class="col-md-12 mt-4">
-                                <label class="bold">Customer email</label><br />
-                                <input type="email" class="form-control" name="customer_email" id="customer_email" value="<?php echo $invoice->customer_email; ?>" />
-                            </div>  
-                            <div class="col-md-12 mt-4">
-                                <label class="bold" for="status">Status</label><br/>
-                                <select name="status" class="form-select">
-                                    <option <?php if(isset($invoice)){ if($invoice->status == "Draft"){echo "selected";} } ?>  value="Draft">Draft</option>
-                                    <option <?php if(isset($invoice)){ if($invoice->status == "Partially Paid"){echo "selected";} } ?> value="Partially Paid">Partially Paid</option>
-                                    <option <?php if(isset($invoice)){ if($invoice->status == "Paid"){echo "selected";} } ?> value="Paid">Paid</option>
-                                    <option <?php if(isset($invoice)){ if($invoice->status == "Due"){echo "selected";} } ?> value="Due">Due</option>
-                                    <option <?php if(isset($invoice)){ if($invoice->status == "Overdue"){echo "selected";} } ?> value="Overdue">Overdue</option>
+                        <div class="nsm-card-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input type="hidden" value="<?php echo $invoice->id; ?>" name="invoiceDataID">
+                                    <label for="invoice_customer" class="bold">Customer</label>
+                                    <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" style="float:right;">Add New</a>
+                                    <select name="customer_id" id="customer_id" class="form-select" required>
+                                        <option value="<?= $customer->prof_id; ?>" selected=""><?= $customer->first_name . ' ' . $customer->last_name; ?></option>                                    
                                 </select>
-                            </div>   
-                            <?php if( $job_number != '' ){ ?>
-                            <div class="col-md-12 mt-4">
-                                <label class="bold" for="work_order">Job Number</label>                                    
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="job_number" name="job_number" value="<?= $job_number; ?>" readonly="" disabled="">
                                 </div>
-                            </div>                      
-                            <?php } ?>
-                            <?php if( $ticket_number != '' ){ ?>
-                            <div class="col-md-12 mt-4">
-                                <label class="bold" for="work_order">Service Ticket Number</label>                                    
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="ticket_number" name="ticket_number" value="<?= $ticket_number; ?>" readonly="" disabled="">
+                                <div class="col-md-12 mt-4">
+                                    <label class="bold">Customer email</label><br />
+                                    <input type="email" class="form-control" name="customer_email" id="customer_email" value="<?php echo $invoice->customer_email; ?>" />
+                                </div>  
+                                <div class="col-md-12 mt-4">
+                                    <label class="bold" for="status">Status</label><br/>
+                                    <select name="status" class="form-select">
+                                        <option <?php if(isset($invoice)){ if($invoice->status == "Draft"){echo "selected";} } ?>  value="Draft">Draft</option>
+                                        <option <?php if(isset($invoice)){ if($invoice->status == "Partially Paid"){echo "selected";} } ?> value="Partially Paid">Partially Paid</option>
+                                        <option <?php if(isset($invoice)){ if($invoice->status == "Paid"){echo "selected";} } ?> value="Paid">Paid</option>
+                                        <option <?php if(isset($invoice)){ if($invoice->status == "Due"){echo "selected";} } ?> value="Due">Due</option>
+                                        <option <?php if(isset($invoice)){ if($invoice->status == "Overdue"){echo "selected";} } ?> value="Overdue">Overdue</option>
+                                    </select>
+                                </div>   
+                                <?php if( $job_number != '' ){ ?>
+                                <div class="col-md-12 mt-4">
+                                    <label class="bold" for="work_order">Job Number</label>                                    
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="job_number" name="job_number" value="<?= $job_number; ?>" readonly="" disabled="">
+                                    </div>
+                                </div>                      
+                                <?php } ?>
+                                <?php if( $ticket_number != '' ){ ?>
+                                <div class="col-md-12 mt-4">
+                                    <label class="bold" for="work_order">Service Ticket Number</label>                                    
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="ticket_number" name="ticket_number" value="<?= $ticket_number; ?>" readonly="" disabled="">
+                                    </div>
+                                </div>                      
+                                <?php } ?>
+                                <div class="col-md-12 mt-4">                            
+                                    <label class="bold" for="job_name">Job Name <small class="help help-sm">(optional)</small></label>
+                                    <input type="text" class="form-control" name="job_name" id="job_name"  value="<?php echo $invoice->job_name; ?>"/>
                                 </div>
-                            </div>                      
-                            <?php } ?>
-                            <div class="col-md-12 mt-4">                            
-                                <label class="bold" for="job_name">Job Name <small class="help help-sm">(optional)</small></label>
-                                <input type="text" class="form-control" name="job_name" id="job_name"  value="<?php echo $invoice->job_name; ?>"/>
-                            </div>
-                            <div class="col-md-12 mt-4">
-                                <label class="bold" for="job_location">Job Location <small class="help help-sm">(optional)</small></label>
-                                <a class="btn-use-different-address nsm-button default btn-small float-end" id="btn-use-different-address" data-id="<?= $invoice->customer_id; ?>" href="javascript:void(0);">Use Other Address</a>
-                                <textarea class="form-control" name="jobs_location" id="invoice_jobs_location" style="height:100px;"><?php echo $invoice->job_location; ?></textarea>
+                                <div class="col-md-12 mt-4">
+                                    <label class="bold" for="job_location">Address</label>
+                                    <a class="btn-use-different-address nsm-button default btn-small float-end" id="btn-use-different-address" data-id="<?= $invoice->customer_id; ?>" href="javascript:void(0);">Use Other Address</a>
+                                    <textarea class="form-control" name="jobs_location" id="invoice_jobs_location" style="height:100px;"><?php echo $invoice->job_address; ?></textarea>
+                                </div>
+                                <div class="col-md-5 mt-4">
+                                    <label for="customer_city" class="required"><b>City</b></label>
+                                    <input type="text" class="form-control" name="jobs_city" id="jobs_city" required value="<?= $invoice->job_city; ?>"/>
+                                </div>
+                                <div class="col-md-4 mt-4">
+                                    <label for="customer_state" class="required"><b>State</b></label>
+                                    <input type="text" class="form-control" name="jobs_state" id="jobs_state" required value="<?= $invoice->job_state; ?>"/>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <label for="customer_zip" class="required"><b>Zip Code</b></label>
+                                    <input type="text" class="form-control" name="jobs_zip" id="jobs_zip" required value="<?= $invoice->job_zip; ?>"/>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -852,8 +864,49 @@ $(document).ready(function(){
     }, 1000));
 
     $('#customer_id').select2({     
-        minimumInputLength: 0        
+        ajax: {
+            url: base_url + 'autocomplete/_company_customer',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+                return {
+                    results: data,
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Select Customer',        
+        minimumInputLength: 0,
+        templateResult: formatRepoCustomer,
+        templateSelection: formatRepoCustomerSelection    
     });
+
+    function formatRepoCustomer(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+
+        var $container = $(
+            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.address + ' / ' + repo.email + '</small></div>'
+        );
+
+        return $container;
+    }
+
+    function formatRepoCustomerSelection(repo) {
+        if (repo.first_name != null) {
+            return repo.first_name + ' ' + repo.last_name;
+        } else {
+            return repo.text;
+        }
+    }
 
     $('#user_id').select2({});
 
@@ -965,6 +1018,10 @@ $(document).ready(function(){
                 var service_location = response['customer'].mail_add + ' ' + response['customer'].city + ', ' + response['customer'].state + ' ' + response['customer'].zip_code;
 
                 $("#invoice_jobs_location").val(response['customer'].mail_add);
+                $("#jobs_city").val(response['customer'].city);
+                $("#jobs_state").val(response['customer'].state);
+                $("#jobs_zip").val(response['customer'].zip_code);
+
                 $("#customer_email").val(response['customer'].email);
                 $("#shipping_address").val(response['customer'].mail_add);
                 $("#billing_address").val(response['customer'].mail_add);
@@ -990,7 +1047,10 @@ $(document).ready(function(){
         let other_address = $(this).attr('data-address');
         
         $('#other-address-customer').modal('hide');        
-        $('#invoice_jobs_location').val(other_address);
+        $('#invoice_jobs_location').val(mail_add);
+        $("#jobs_city").val(city);
+        $("#jobs_state").val(state);
+        $("#jobs_zip").val(zip);
 
         let map_source = 'http://maps.google.com/maps?q='+other_address+'&output=embed';
         let map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="470" width="100%" style=""></iframe>';

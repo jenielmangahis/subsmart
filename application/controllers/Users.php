@@ -2,19 +2,13 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-
-
 class Users extends MY_Controller
 {
-
-
-
 	public function __construct()
-
 	{
-
 		parent::__construct();
 		$this->checkLogin();
+
 		add_css(array(
 			"assets/css/timesheet.css",
 		));
@@ -24,7 +18,6 @@ class Users extends MY_Controller
 		));
 
 		$this->page_data['page']->title = 'Users Management';
-
 		$this->page_data['page']->menu = 'users';
 
 		add_css(array(
@@ -882,7 +875,7 @@ class Users extends MY_Controller
 	}
 
 	public function index()
-	{			
+	{	
 		if(!checkRoleCanAccessModule('users', 'read')){
 			show403Error();
 			return false;
@@ -899,13 +892,18 @@ class Users extends MY_Controller
 		$eid = hashids_encrypt($cid, '', 15);
 		$company = $this->Clients_model->getById($cid);
 		$num_license = $company->number_of_license;
+
+		$show_pass = 0;
+		if( in_array($cid, exempted_company_ids()) ){
+			$show_pass = 1;
+		}		
 		
 		$this->page_data['eid'] = $eid;
 		$this->page_data['num_license'] = $num_license;
 		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
 		$this->page_data['roles']  = $this->users_model->userRolesList();
-		$this->page_data['show_pass'] = 1;
-		$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
+		$this->page_data['show_pass'] = $show_pass;
+		$this->page_data['users'] = $this->users_model->getCompanyUsers($cid,['is_archived' => 'No']);
 		$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 
 
@@ -1162,7 +1160,10 @@ class Users extends MY_Controller
 		            'payscale_id' => 0,
 		            'employee_number' => $this->input->post('emp_number'),
 		            'has_web_access' => $web_access,
-		            'has_app_access' => $app_access
+		            'has_app_access' => $app_access,
+					'is_archived' => 'No',
+					'date_created' => date("Y-m-d H:i:s"),
+					'date_modified' => date("Y-m-d H:i:s")
 		        );
 		        $last_id = $this->users_model->addNewEmployee($add);
 				
@@ -1442,7 +1443,8 @@ class Users extends MY_Controller
 	public function view($id)
 	{
 		if(!checkRoleCanAccessModule('users', 'read')){
-			redirect('dashboard');
+			show403Error();
+			return false;
 		}
 
 		//ifPermissions('users_view');
@@ -1455,7 +1457,8 @@ class Users extends MY_Controller
 			'user_id' => $id
 		], ['order' => ['id', 'desc']]);
 		
-
+		$this->page_data['page']->title = 'Employees';
+        $this->page_data['page']->parent = 'Company';
 		$this->page_data['commission_info'] = $this->users_model->getCommissionHistory($id);
 		//this->page_data['hourly_pay_info'] = $this->users_model->getHourlyPayHistory($id);
 		$this->page_data['hourly_pay_info'] = [];
@@ -1895,9 +1898,10 @@ class Users extends MY_Controller
 		$msg = '';
 
 		$post = $this->input->post();
+		$company_id = logged('company_id');
 		$user = $this->Users_model->getUserByID($post['user_id']);
 		
-		if( $user ){
+		if( $user && $user->company_id == $company_id ){
 			if( $post['firstname'] == '' || $post['lastname'] == '' ){
 				$msg = 'Please enter employee name';
 				$is_success = 0;
@@ -1971,7 +1975,8 @@ class Users extends MY_Controller
 					'has_app_access' => $has_app_access,
 					'postal_code' => $post['postal_code'],
 					'user_type' => $post['user_type'],
-					'employee_number' => $post['emp_number']
+					'employee_number' => $post['emp_number'],
+					'date_modified' => date("Y-m-d H:i:s")
 				);
 
 				$this->Users_model->update($user->id,$data);
@@ -3562,6 +3567,30 @@ class Users extends MY_Controller
 		echo $filename;
 	}
 
+	public function ajax_archive_selected_users()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['users'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archived' => 'Yes', 'date_modified' => date("Y-m-d H:i:s")];
+            $this->Users_model->bulkUpdate($post['users'], $data, $filter);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
 }
 /* End of file Users.php */
 /* Location: ./application/controllers/Users.php */

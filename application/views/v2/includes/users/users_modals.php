@@ -159,7 +159,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
+                    <button type="submit" name="btn_modal_save" id="btn-save-employee" class="nsm-button primary">Save</button>
                 </div>
             </div>
         </form>
@@ -178,7 +178,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" name="btn_modal_save" class="nsm-button primary" disabled>Save</button>
+                    <button type="submit" name="btn_modal_save" id="btn-update-employee" class="nsm-button primary" disabled>Save</button>
                 </div>
             </div>
         </form>
@@ -186,14 +186,14 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="change_password_modal" tabindex="-1" aria-labelledby="change_password_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form method="POST" id="change_password_form">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Change Password</span>
-                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body">
+    <div class="modal-dialog modal-dialog-centered modal-md">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Change Password</span>
+                <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="change_password_form">
                     <div class="row gy-3 mb-4">
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Employee Name</label>
@@ -215,13 +215,13 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
-                </div>
+                </form>
             </div>
-        </form>
+            <div class="modal-footer">
+                <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" name="btn_modal_save" class="nsm-button primary" id="btn-change-password" form="change_password_form">Save</button>
+            </div>
+        </div>        
     </div>
 </div>
 
@@ -265,8 +265,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row g-3">
-                        <div class="col-12">
-                            <label class="content-title">Profile Picture</label>
+                        <div class="col-12">                            
                             <div class="nsm-img-upload">
                                 <span class="nsm-upload-label disable-select">Drop or click image to upload</span>
                                 <input type="file" name="userfile" class="nsm-upload" accept="image/*" required>
@@ -280,6 +279,18 @@
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-view-archive" data-bs-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Archived</span>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+            </div>
+            <div class="modal-body" id="users-archived-container"></div>            
+        </div>
     </div>
 </div>
 
@@ -435,7 +446,6 @@
     });
 
     $(function () {
-
         $('.phone_number').keydown(function (e) {
             var key = e.charCode || e.keyCode || 0;
             $text = $(this);

@@ -88,39 +88,48 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="nsm-card-header d-block">
                             <div class="nsm-card-title"><span><i class='bx bx-user-circle'></i>&nbsp;Customer Details</span></div>
                         </div>
-                        <div class="nsm-card-content row">
-                            <div class="col-md-12">
-                                <label for="invoice_customer" class="bold">Customer</label>
-                                <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" style="float:right;">Add New</a>
-                                <select name="customer_id" id="customer_id" class="form-select" required>
-                                    <option value="">- Select Customer -</option>
-                                    <?php foreach ($customers as $customer): ?>
-                                        <option value="<?php echo $customer->prof_id ?>"><?php echo $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="col-md-12 mt-4">
-                                <label class="bold">Customer email</label><br />
-                                <input type="email" class="form-control" name="customer_email" id="customer_email" value="" />
-                            </div>
-                            <div class="col-md-12 mt-4">
-                                <label class="bold" for="status">Status</label><br />
-                                <select name="status" class="form-select">
-                                    <option value="Draft">Draft</option>
-                                    <!-- <option value="Partially Paid">Partially Paid</option> -->
-                                    <option value="Paid">Paid</option>
-                                    <option value="Due">Due</option>
-                                    <option value="Overdue">Overdue</option>
-                                </select>
-                            </div>
-                            <div class="col-md-12 mt-4">
-                                <label class="bold" for="job_name">Job Name <small class="help help-sm">(optional)</small></label>
-                                <input type="text" class="form-control" name="job_name" id="job_name" value="" />
-                            </div>
-                            <div class="col-md-12 mt-4">
-                                <label class="bold" for="job_location">Job Location</label>
-                                <a class="btn-use-different-address nsm-button default btn-small float-end" style="display:none;" id="btn-use-different-address" data-id="" href="javascript:void(0);">Use Other Address</a>
-                                <textarea class="form-control" name="jobs_location" id="invoice_jobs_location" style="height:100px;" required=""></textarea>
+                        <div class="nsm-card-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="invoice_customer" class="bold">Customer</label>
+                                    <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" style="float:right;">Add New</a>
+                                    <select name="customer_id" id="customer_id" class="form-select" required></select>
+                                </div>
+                                <div class="col-md-12 mt-4">
+                                    <label class="bold">Customer email</label><br />
+                                    <input type="email" class="form-control" name="customer_email" id="customer_email" value="" />
+                                </div>
+                                <div class="col-md-12 mt-4">
+                                    <label class="bold" for="status">Status</label><br />
+                                    <select name="status" class="form-select">
+                                        <option value="Draft">Draft</option>
+                                        <!-- <option value="Partially Paid">Partially Paid</option> -->
+                                        <option value="Paid">Paid</option>
+                                        <option value="Due">Due</option>
+                                        <option value="Overdue">Overdue</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-12 mt-4">
+                                    <label class="bold" for="job_name">Job Name <small class="help help-sm">(optional)</small></label>
+                                    <input type="text" class="form-control" name="job_name" id="job_name" value="" />
+                                </div>
+                                <div class="col-md-12 mt-4">
+                                    <label class="bold" for="job_location">Address</label>
+                                    <a class="btn-use-different-address nsm-button default btn-small float-end" style="display:none;" id="btn-use-different-address" data-id="" href="javascript:void(0);">Use Other Address</a>
+                                    <textarea class="form-control" name="jobs_location" id="invoice_jobs_location" style="height:100px;" required=""></textarea>
+                                </div>
+                                <div class="col-md-5 mt-4">
+                                    <label for="customer_city" class="required"><b>City</b></label>
+                                    <input type="text" class="form-control" name="jobs_city" id="jobs_city" required value=""/>
+                                </div>
+                                <div class="col-md-4 mt-4">
+                                    <label for="customer_state" class="required"><b>State</b></label>
+                                    <input type="text" class="form-control" name="jobs_state" id="jobs_state" required value=""/>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <label for="customer_zip" class="required"><b>Zip Code</b></label>
+                                    <input type="text" class="form-control" name="jobs_zip" id="jobs_zip" required value=""/>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -767,8 +776,49 @@ defined('BASEPATH') or exit('No direct script access allowed');
             }, 1000));
 
             $('#customer_id').select2({
-                minimumInputLength: 0
+                ajax: {
+                    url: base_url + 'autocomplete/_company_customer',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data,
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: 'Select Customer',        
+                minimumInputLength: 0,
+                templateResult: formatRepoCustomer,
+                templateSelection: formatRepoCustomerSelection
             });
+
+            function formatRepoCustomer(repo) {
+                if (repo.loading) {
+                    return repo.text;
+                }
+
+                var $container = $(
+                    '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.address + ' / ' + repo.email + '</small></div>'
+                );
+
+                return $container;
+            }
+
+            function formatRepoCustomerSelection(repo) {
+                if (repo.first_name != null) {
+                    return repo.first_name + ' ' + repo.last_name;
+                } else {
+                    return repo.text;
+                }
+            }
 
             $('#user_id').select2({});
 
@@ -882,6 +932,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         var service_location = response['customer'].mail_add + ' ' + response['customer'].city + ', ' + response['customer'].state + ' ' + response['customer'].zip_code;
 
                         $("#invoice_jobs_location").val(response['customer'].mail_add);
+                        $("#jobs_city").val(response['customer'].city);
+                        $("#jobs_state").val(response['customer'].state);
+                        $("#jobs_zip").val(response['customer'].zip_code);
+
                         $("#customer_email").val(response['customer'].email);
                         $("#shipping_address").val(response['customer'].mail_add);
                         $("#billing_address").val(response['customer'].mail_add);
@@ -910,7 +964,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 let other_address = $(this).attr('data-address');
                 
                 $('#other-address-customer').modal('hide');        
-                $('#invoice_jobs_location').val(other_address);
+                $('#invoice_jobs_location').val(mail_add);
+                $("#jobs_city").val(city);
+                $("#jobs_state").val(state);
+                $("#jobs_zip").val(zip);
 
                 let map_source = 'http://maps.google.com/maps?q='+other_address+'&output=embed';
                 let map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="'+map_source+'" height="470" width="100%" style=""></iframe>';
