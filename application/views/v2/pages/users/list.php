@@ -1,5 +1,4 @@
 <?php include viewPath('v2/includes/header'); ?>
-<?php include viewPath('v2/includes/users/users_modals'); ?>
 <style>
 #add_employee_modal .custom-header, #edit_employee_modal .custom-header{
     background-color: #6a4a86;
@@ -7,6 +6,22 @@
     font-size: 15px;
     padding: 10px;
     display:block;
+}
+.swal2-html-container{
+    overflow:hidden;
+}
+.user-change-status{
+    text-align:left;
+}
+.btn-nsm, .btn-nsm:hover {
+    background-color: #6a4a86;
+    color: #ffffff;
+}
+#tbl-users-list .nsm-badge{
+    font-size: 12px;
+    display: block;
+    width: 100%;
+    text-align: center;
 }
 </style>
 <div class="nsm-fab-container">
@@ -59,27 +74,46 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
+                        <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-change-status" href="javascript:void(0);" data-action="change-status">Change Status</a></li>   
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
+                        </div>
+                        <?php } ?>
                         <div class="nsm-page-buttons page-button-container">                            
-                            <button type="button" name="btn_link" class="nsm-button primary btn-export-list">
-                                <i class='bx bx-fw bx-export'></i> Export
-                            </button>
                             <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
-                            <button type="button" name="btn_link" class="nsm-button primary" id="btn-add-employee">
-                                <i class='bx bx-fw bx-user-plus'></i> Add Employee
-                            </button>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-nsm" id="btn-add-employee"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Add Employee</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                
+                                    <li><a class="dropdown-item" id="btn-share-url" href="javascript:void(0);"><i class='bx bx-fw bx-share-alt'></i> Shareable link</a></li>        
+                                    <li><a class="dropdown-item" id="btn-export-list" href="javascript:void(0);"><i class="bx bx-fw bx-export"></i> Export</a></li>                               
+                                    <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);"><i class="bx bx-fw bx-trash"></i> Archived</a></li>                               
+                                </ul>
+                            </div>
                             <?php } ?>
-                            <button type="button" name="btn_link" class="nsm-button primary btn-share-url">
-                                <i class='bx bx-fw bx-share-alt'></i>
-                            </button>
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <form id="frm-with-selected">
+                <table class="nsm-table" id="tbl-users-list">
                     <thead>
                         <tr>
+                            <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
+                            <td class="table-icon text-center sorting_disabled">
+                                <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                            </td>
+                            <?php } ?>
                             <td class="table-icon"></td>
                             <td data-name="User">User</td>
-                            <td data-name="Email">Email</td>
+                            <td data-name="Email">Employee Number</td>
                             <td data-name="Mobile">Mobile</td>
                             <?php if ($show_pass == 1) : ?>
                                 <td data-name="Password">Password</td>
@@ -87,10 +121,10 @@
                             <td data-name="Title">Title</td>
                             <td data-name="Rights">Role</td>
                             <td data-name="Last Login">Last Login</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="App Access">App Access</td>
-                            <td data-name="Web Access">Web Access</td>
-                            <td data-name="Manage"></td>
+                            <td data-name="Status" style="width:5%;">Status</td>
+                            <td data-name="App Access" style="width:6%;">App Access</td>
+                            <td data-name="Web Access" style="width:6%;">Web Access</td>
+                            <td data-name="Manage" style="width:2%;"></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -101,6 +135,11 @@
                             foreach ($users as $cnt => $row) :
                             ?>
                                 <tr>
+                                    <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
+                                    <td>
+                                        <input class="form-check-input row-select table-select" name="users[]" type="checkbox" value="<?= $row->id; ?>">
+                                    </td>
+                                    <?php } ?>
                                     <td>
                                         <?php
                                         if ($row->profile_img != '') {
@@ -113,23 +152,26 @@
                                     </td>
                                     <td class="nsm-text-primary">
                                         <label class="d-block fw-bold"><?php echo ucwords(strtolower($row->FName)) . ' ' . ucwords(strtolower($row->LName)); ?></label>
+                                        
+                                        <label class="content-subtitle d-block"><i class='bx bx-envelope' style="position:relative;top:1px;"></i><?php echo $row->email ?></label>
+                                    </td>
+                                    <td>
                                         <?php
-                                        if ($row->employee_number) {
+                                        if ($row->employee_number != '' && $row->employee_number != '-') {
                                             $employee_number = $row->employee_number;
                                         } else {
                                             $employee_number = '---';
                                         }
                                         ?>
-                                        <label class="content-subtitle fst-italic d-block">Employee ID: <?php echo $employee_number; ?></label>
+                                        <?= $employee_number; ?>
                                     </td>
-                                    <td><?php echo $row->email ?></td>
                                     <td><?php echo $row->mobile != '' ? formatPhoneNumber($row->mobile) : '---'; ?></td>
                                     <?php if ($show_pass == 1) : ?>
                                         <td><?php echo $row->password_plain ?></td>
                                     <?php endif; ?>
                                     <td><?php echo ($row->role) ? ucfirst($this->roles_model->getById($row->role)->title) : '' ?></td>
                                     <td><?php echo getUserType($row->user_type); ?></td>
-                                    <td><?php echo date('M d,Y', strtotime($row->last_login)); ?></td>
+                                    <td><?php echo date('m/d/Y', strtotime($row->last_login)); ?></td>
                                     <td>
                                         <?php
                                         if ($row->status == 1) :
@@ -223,748 +265,11 @@
                         ?>
                     </tbody>
                 </table>
+                </form>
             </div>
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $(document).ready(function() {
-
-        $('#add_employee_modal').modal({backdrop: 'static', keyboard: false});
-        $('#edit_employee_modal').modal({backdrop: 'static', keyboard: false});
-
-        populateEmployeeRoles();
-        $(".nsm-table").nsmPagination();
-
-        $("#search_field").on("input", debounce(function() {
-            tableSearch($(this));
-        }, 1000));
-
-        $(".btn-export-list").on("click", function() {
-            location.href = "<?php echo base_url('users/export_list'); ?>";
-        });
-
-        $("#employee_username").on("input", debounce(function() {
-            let _this = $(this);
-            let url = "<?php echo base_url('users/checkUsername'); ?>";
-            let username = _this.val();
-
-            _this.closest(".nsm-field-group").removeClass("error x check success");
-            _this.next("small").remove();
-            _this.removeClass("error");
-
-            if (username != "") {
-                $.ajax({
-                    type: "GET",
-                    url: url,
-                    dataType: "json",
-                    data: {
-                        username: username
-                    },
-                    success: function(result) {
-                        if (result > 0) {
-                            _this.closest(".nsm-field-group").addClass("error x");
-                            _this.after("<small class='nsm-text-error'>Username already exist</small>");
-                            _this.addClass("error");
-                        } else {
-                            _this.closest(".nsm-field-group").addClass("check success");
-                        }
-                    }
-                });
-            }
-        }, 1000));
-
-        $(".password-field").on("click", function(e) {
-            let _this = $(this);
-            let _container = _this.closest(".nsm-field-group");
-            let shown = _container.hasClass("show");
-
-            if (e.offsetX > 345) {
-                if (shown) {
-                    _container.removeClass("show").addClass("hide");
-                    _this.attr("type", "text");
-                } else {
-                    _container.removeClass("hide").addClass("show");
-                    _this.attr("type", "password");
-                }
-            }
-        });
-
-        $('#add_employee_modal .form-select').select2({
-            dropdownParent: $("#add_employee_modal")
-        });
-
-        $(".btn-share-url").on("click", function() {
-            var _shareableLink = $("<input>");
-            $("body").append(_shareableLink);
-            _shareableLink.val("<?php echo base_url('/add_company_employee/' . $eid); ?>").select();
-            document.execCommand('copy');
-            _shareableLink.remove();
-
-            Swal.fire({
-                title: 'Success',
-                text: "Shareable link has been copied to clipboard.",
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonText: 'Okay'
-            });
-        });
-
-        $("#add_employee_form").on("submit", function(e) {
-            let _this = $(this);
-            e.preventDefault();
-
-            let num_license = "<?= $num_license ?>";
-            if( num_license > 0 ){
-                var formData = new FormData($("#add_employee_form")[0]);
-                var url = base_url + "user/_create_employee";
-                _this.find("button[type=submit]").html("Saving");
-                _this.find("button[type=submit]").prop("disabled", true);
-
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: formData,
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    dataType: "json",
-                    success: function(result) {
-                        if (result == 1) {
-                            $('#add_employee_modal').modal('hide');
-                            Swal.fire({
-                                title: 'Create Employee',
-                                text: "Data has been created successfully.",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            }).then((result) => {
-                                location.reload();
-                            });
-                        } else if (result == 3) {
-                            Swal.fire({
-                                title: 'Failed',
-                                text: "Insufficient license. Please purchase license to continue adding user.",
-                                icon: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Purchase License'
-                            }).then((result) => {
-                                window.location.href = base_url + 'mycrm/membership';
-                            });
-                        } else if (result == 4) {
-                            Swal.fire({
-                                title: 'Failed',
-                                text: "ADT Sales App password not same",
-                                icon: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            });
-                        } else if (result == 5) {
-                            Swal.fire({
-                                title: 'Failed',
-                                text: "ADT Sales App account already exists",
-                                icon: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            });
-                        } else if (result == 6) {
-                            Swal.fire({
-                                title: 'Failed',
-                                text: "Username already exists",
-                                icon: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            });                        
-                        } else {
-                            Swal.fire({
-                                title: 'Failed',
-                                text: "Cannot create employee",
-                                icon: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            });
-                        }
-
-                        //$("#add_employee_modal").modal('hide');
-                        //_this.trigger("reset");
-
-                        _this.find("button[type=submit]").html("Save");
-                        _this.find("button[type=submit]").prop("disabled", false);
-                    },
-                });
-            }else{
-                let membership_url = base_url + 'mycrm/membership';
-                let html_content = `
-                    <p>You do not have enough license to add new user.</p>
-                    <p>You can buy more license in your <a href="${membership_url}" target="_">crm monthly membership</a>.</p>
-                `;  
-
-                Swal.fire({
-                    title: 'Insufficient License',
-                    html: html_content,
-                    icon: 'warning',
-                    showCancelButton: false,
-                    confirmButtonText: 'Okay'
-                }).then((result) => {
-                    
-                });
-            }
-        });
-
-        $(document).on("click", ".edit-item", function() {
-            let id = $(this).attr("data-id");
-            let _container = $("#edit_employee_container");
-            let _form = $("#edit_employee_form");
-            let url = "<?php echo base_url('users/_edit_employee'); ?>";
-            showLoader(_container);
-
-            $.ajax({
-                url: url,
-                type: "POST",
-                dataType: "html",
-                data: {
-                    user_id: id
-                },
-                success: function(result) {
-                    _container.html(result);
-                    _form.find("button[type=submit]").prop("disabled", false);
-                    $("#edit_employee_modal").modal("show");
-                }
-            });
-        });
-
-        $(document).on("click", ".btn-delete-commission-setting-row", function(e){  
-            var tableRow = $(this).closest('tr'); 
-            tableRow.find('td').fadeOut('fast', 
-                function(){ 
-                    tableRow.remove();                    
-                }
-            );
-        });
-
-        function modalShowLoader(_elem) {
-            let loader = '<div class="row">' +
-                '<div class="col-12">' +
-                '<div class="nsm-loader">' +
-                '<i class="bx bx-loader-alt bx-spin"></i>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
-            _elem.html(loader);
-        }
-
-        $(document).on('click', '.view-job-row', function(){
-            var appointment_id = $(this).attr('data-id');
-            var url = base_url + "job/_quick_view_details";  
-
-            $('#modal-quick-view-job').modal('show');
-            modalShowLoader($(".view-schedule-container")); 
-
-            setTimeout(function () {
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: {appointment_id:appointment_id},
-                success: function(o)
-                {          
-                    $(".view-schedule-container").html(o);
-                }
-            });
-            }, 500);
-        });
-
-        $(document).on('click', '.delete-employee-commission-item', function(){
-            let cid = $(this).attr('data-id');
-            let url = base_url + "user/_get_employee_commission_status";  
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: {cid:cid},
-                dataType:'json',
-                success: function(result)
-                {          
-                    if( result.msg != '' ){
-                        Swal.fire({
-                            title: 'Failed',
-                            text: result.msg,
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        });
-                    }else{
-                        if( result.is_paid == 1 ){
-                            Swal.fire({
-                                title: 'Failed',
-                                text: 'Cannot delete already processed commission',
-                                icon: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            });
-                        }else{
-                            Swal.fire({
-                                title: 'Delete Employee Commission',
-                                text: "Are you sure you want to delete the selected employee commission?",
-                                icon: 'question',
-                                confirmButtonText: 'Proceed',
-                                showCancelButton: true,
-                                cancelButtonText: "Cancel"
-                            }).then((result) => {
-                                if (result.value) {
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: base_url + "user/_delete_employee_commission",
-                                        data: {
-                                            cid: cid
-                                        },
-                                        dataType: "json",
-                                        success: function(aresult) {
-                                            if (aresult.is_success) {
-                                                Swal.fire({
-                                                    title: 'Success',
-                                                    text: "Data was successfully deleted.",
-                                                    icon: 'success',
-                                                    showCancelButton: false,
-                                                    confirmButtonText: 'Okay'
-                                                }).then((result) => {
-                                                    load_employee_commissions_list(aresult.employee_id);
-                                                });
-                                            } else {
-                                                Swal.fire({
-                                                    title: 'Failed',
-                                                    text: aresult.msg,
-                                                    icon: 'error',
-                                                    showCancelButton: false,
-                                                    confirmButtonText: 'Okay'
-                                                });
-                                            }
-                                        },
-                                    });
-                                }
-                            });    
-                        }    
-                    }
-                }
-            });
-        });
-
-        $(document).on('click', '.commissions-list', function(){
-            var eid = $(this).attr('data-id');
-            $('#employee_commissions_list_modal').modal('show'); 
-            load_employee_commissions_list(eid);            
-        });
-
-        function load_employee_commissions_list(eid){
-            var url = base_url + 'user/_commission_list';
-            $.ajax({
-              url: url,
-                type: "POST",
-                data: {eid:eid},
-                success: function(o) {
-                    $('#employee-commissions-list-container').html(o);
-                }
-            });
-        }
-
-        $(document).on('click', '.edit-employee-commission-item', function(){
-            var rowcid = $(this).attr('data-id');
-            var amount = $('.row-commission-amount-'+rowcid).text();
-            
-            $('#row-employee-commission-'+rowcid).val(amount);
-            $('.row-commission-amount-'+rowcid).hide();
-            $('.row-commission-form-group-'+rowcid).show();
-        });
-
-        $(document).on('click', '.row-employee-commission-cancel', function(){
-            var rowid = $(this).attr('data-id');
-            $('.row-commission-amount-'+rowid).show();            
-            $('.row-commission-form-group-'+rowid).hide();
-        });
-
-        $(document).on('click', '.row-employee-commission-update', function(){
-            var rowid = $(this).attr('data-id');
-            var com_amount = $('#row-employee-commission-'+rowid).val();
-            if( com_amount > 0 ){                
-                $.ajax({
-                    url: base_url + 'user/_update_employee_commission',
-                    type: "POST",
-                    dataType: "json",
-                    data: {cid:rowid, amount:com_amount},
-                    success: function(data) {
-                        if (data.is_success == 1) {                  
-                            Swal.fire({
-                                title: 'Success',
-                                text: "Employee commission was successfully updated.",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonColor: '#32243d',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ok'
-                            }).then((result) => {
-                                $('.row-commission-amount-'+rowid).show();
-                                $('.row-commission-amount-'+rowid).text(data.commission_amount);
-                                $('.row-commission-form-group-'+rowid).hide();
-                                $('#row-employee-commission-'+rowid).val(data.commission_amount);
-                                $('.row-commission-total').text(data.total_commission);
-                            });
-                        } else {
-                            Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Failed',
-                                text: data.msg,
-                                icon: 'warning'
-                            });
-                        }
-                    }
-                });
-            }else{
-                Swal.fire({
-                    showConfirmButton: false,
-                    title: 'Failed',
-                    text: 'Please enter commission amount',
-                    icon: 'warning'
-                });
-            }
-        });
-
-        $(document).on('submit', '#edit_employee_form', function(e){
-            e.preventDefault();
-
-            var _this = $(this);
-            var formData = new FormData(this);
-            $.ajax({
-              url: base_url + 'users/_update_employee',
-                type: "POST",
-                dataType: "json",
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false, 
-                success: function(data) {
-                    if (data.is_success == 1) {                  
-                      Swal.fire({
-                        title: 'Edit Employee',
-                        text: "Data was successfully updated.",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonColor: '#32243d',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ok'
-                      }).then((result) => {
-                        //if (result.value) {
-                          location.reload()
-                        //}
-                      });
-                    } else {
-                      Swal.fire({
-                        showConfirmButton: false,
-                        timer: 2000,
-                        title: 'Failed',
-                        text: data.msg,
-                        icon: 'warning'
-                      });
-                    }
-
-                    $("#edit_employee_modal").modal('hide');
-                    _this.trigger("reset");
-
-                    _this.find("button[type=submit]").html("Save");
-                    _this.find("button[type=submit]").prop("disabled", false);
-                }
-            });
-        });
-
-        $(document).on("click", ".change-password-item", function() {
-            let id = $(this).attr("data-id");
-            let name = $(this).attr("data-name");
-
-            $("#changePasswordUserId").val(id);
-            $("#changePasswordEmployeeName").val(name);
-            $("#change_password_modal").modal("show");
-        });
-
-        $("#change_password_form").on("submit", function(e) {
-            let _this = $(this);
-            e.preventDefault();
-
-            var url = "<?php echo base_url(); ?>users/ajaxUpdateEmployeePasswordV2";
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
-
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: _this.serialize(),
-                dataType: "json",
-                success: function(result) {
-                    if (result.is_success) {
-                        $("#change_password_modal").modal('hide');
-                        Swal.fire({
-                            title: 'Save Successful!',
-                            text: "Employee password has been updated successfully.",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            if (result.value) {
-                                location.reload();
-                            }
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Failed',
-                            text: result.msg,
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        });
-                    }
-                    
-                    _this.trigger("reset");
-
-                    _this.find("button[type=submit]").html("Save");
-                    _this.find("button[type=submit]").prop("disabled", false);
-                },
-            });
-        });
-
-        $(document).on("click", ".delete-item", function() {
-            let id = $(this).attr('data-id');
-            let name = $(this).attr('data-name');
-
-            Swal.fire({
-                title: 'Delete User',
-                html: `Are you sure you want to delete employee <b>${name}</b>?`,
-                icon: 'question',
-                confirmButtonText: 'Proceed',
-                showCancelButton: true,
-                cancelButtonText: "Cancel"
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        type: 'POST',
-                        url: base_url + "users/_delete_user",
-                        data: {
-                            eid: id
-                        },
-                        dataType: "json",
-                        success: function(result) {
-                            if (result.is_success) {
-                                Swal.fire({
-                                    title: 'Delete Employee',
-                                    text: "Data was successfully deleted.",
-                                    icon: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Okay'
-                                }).then((result) => {
-                                    //if (result.value) {
-                                        location.reload();
-                                    //}
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Failed',
-                                    text: result.msg,
-                                    icon: 'error',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Okay'
-                                });
-                            }
-                        },
-                    });
-                }
-            });
-        });
-
-        $(document).on("click", "#btn-add-employee", function(){
-            let num_license = "<?= $num_license; ?>";
-
-            if( num_license > 0 ){
-                $('#commission-settings tbody').html('');
-                $('#add_employee_modal').modal('show');
-            }else{
-                let membership_url = base_url + 'mycrm/membership';
-                let html_content = `
-                    <p>You do not have enough license to add new user.</p>
-                    <p>You can buy more license in your <a href="${membership_url}" target="_">crm monthly membership</a>.</p>
-                `;  
-
-                Swal.fire({
-                    title: 'Insufficient License',
-                    html: html_content,
-                    icon: 'warning',
-                    showCancelButton: false,
-                    confirmButtonText: 'Okay'
-                }).then((result) => {
-                    
-                });
-            }
-        });
-
-        $(document).on("click", ".update-profile-item", function(){
-            let id = $(this).attr("data-id");
-            let img = $(this).attr("data-img");
-            let _form = $("#change_profile_form");
-
-            _form.find(".nsm-img-upload").css("background-image", "url('<?= base_url('/uploads/users/user-profile/') ?>" + img + "')");         
-            _form.find("#user_id_prof").val(id);
-            $("#change_profile_modal").modal("show");
-        });
-
-        $("#change_profile_form").on("submit", function(e) {
-            let _this = $(this);
-            e.preventDefault();
-
-            let url = "<?php echo base_url(); ?>users/ajaxUpdateEmployeeProfilePhoto";
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
-            let formData = new FormData(_this[0]);   
-
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: _this.serialize(),
-                dataType: "json",
-                contentType: false,
-                cache: false,
-                processData:false,
-                data: formData,
-                success: function(result) {
-                    if (result == 1) {
-                        Swal.fire({
-                            title: 'Save Successful!',
-                            text: "Employee photo has been updated successfully.",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            if (result.value) {
-                                location.reload();
-                            }
-                        });
-
-                        $("#change_profile_modal").modal('hide');
-                        _this.trigger("reset");
-                    } else {
-                        Swal.fire({
-                            title: 'Failed',
-                            text: "Please select a valid image.",
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        });
-                    }
-
-                    _this.find("button[type=submit]").html("Save");
-                    _this.find("button[type=submit]").prop("disabled", false);
-                },
-            });
-        });
-    });
-
-    function populateEmployeeRoles() {
-        let _container = $("#employee_role");
-        let url = "<?php echo base_url('users/getRoles'); ?>";
-
-        $.ajax({
-            type: "GET",
-            url: url,
-            dataType: "json",
-            success: function(result) {
-                $.each(result, function(i, obj) {
-                    _container.append("<option value=" + obj.id + ">" + obj.text + "</option>");
-                });
-            }
-        });
-    }
-
-    $(document).on('click', '.change-adt-portal-access', function(){
-        let uid = $(this).attr("data-id");
-        let _container = $("#adt-portal-access-container");
-        let url = "<?php echo base_url('user/_load_edit_adt_portal_login_details'); ?>";
-        $("#change_adt_portal_access_modal").modal("show");
-        showLoader(_container);
-
-        $.ajax({
-            url: url,
-            type: "POST",
-            data: {uid:uid},
-            success: function(result) {
-                _container.html(result);
-               // _form.find("button[type=submit]").prop("disabled", false);                
-            }
-        });
-    });
-
-    $(document).on('click', '.btn-add-new-commision', function(e){
-        let url = base_url + "user/_add_commission_form";
-        $.ajax({
-            type: 'POST',
-            url: url,
-            success: function(o) {
-                $("#commission-settings tbody").append(o).children(':last').hide().fadeIn(400);                
-            },
-        });
-    });
-
-    $(document).on('click', '.btn-edit-add-new-commision', function(e){
-        let url = base_url + "user/_add_commission_form";
-        $.ajax({
-            type: 'POST',
-            url: url,
-            success: function(o) {
-                $("#edit-commission-settings tbody").append(o).children(':last').hide().fadeIn(400);                
-            },
-        });
-    });
-
-    $(document).on('submit', '#change-adt-portal-login', function(e){
-        let _this = $(this);
-        e.preventDefault();
-
-        let url = "<?php echo base_url(); ?>user/_update_adt_portal_login_details";
-        _this.find("button[type=submit]").html("Saving");
-        _this.find("button[type=submit]").prop("disabled", true);
-        let formData = new FormData(_this[0]);   
-
-        $.ajax({
-            type: 'POST',
-            url: url,
-            data: _this.serialize(),
-            dataType: "json",
-            contentType: false,
-            cache: false,
-            processData:false,
-            data: formData,
-            success: function(result) {
-                if (result.is_success == 1) {
-                    $("#change_adt_portal_access_modal").modal("hide");
-                    Swal.fire({
-                        title: 'Save Successful!',
-                        text: "Employee ADT Sales Portal Access was successfully updated.",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {                        
-                        /*if (result.value) {
-                            location.reload();
-                        }*/
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Failed',
-                        text: result.msg,
-                        icon: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    });
-                }
-
-                _this.find("button[type=submit]").html("Save");
-                _this.find("button[type=submit]").prop("disabled", false);
-            },
-        });
-    });
-</script>
+<?php include viewPath('v2/includes/users/users_modals'); ?>
+<?php include viewPath('v2/pages/users/js/list'); ?>
 <?php include viewPath('v2/includes/footer'); ?>

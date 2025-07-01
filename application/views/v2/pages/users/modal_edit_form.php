@@ -22,12 +22,12 @@
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold d-block mb-2">Mobile Number</label>
                 <!-- <input type="text" name="mobile" class="nsm-field form-control" value="" /> -->
-                <input type="text" class="form-control phone_number" maxlength="12" value="<?= $user->mobile; ?>" placeholder="xxx-xxx-xxxx" name="mobile" id="mobile" />
+                <input type="text" class="form-control edit_phone_number" maxlength="12" value="<?= $user->mobile; ?>" placeholder="xxx-xxx-xxxx" name="mobile" id="mobile" />
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
                 <!-- <input type="text" name="phone" class="nsm-field form-control" value="" /> -->
-                <input type="text" class="form-control phone_number" maxlength="12" value="<?= $user->phone; ?>" placeholder="xxx-xxx-xxxx" name="phone" id="phone" />
+                <input type="text" class="form-control edit_phone_number" maxlength="12" value="<?= $user->phone; ?>" placeholder="xxx-xxx-xxxx" name="phone" id="phone" />
             </div>   
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold d-block mb-2">Title</label>
