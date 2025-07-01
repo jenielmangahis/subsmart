@@ -179,6 +179,21 @@ class MY_Controller extends CI_Controller {
 		            $this->session->set_flashdata('message', 'You have no access to this module');
 		            redirect('mycrm/membership');
 		        }
+
+				$plan_addons = $ci->session->userdata('plan_active_addons');
+				$add_on_id   = 0;
+				if( $module_id == 7 ){ //Online Booking
+					$add_on_id = 3;					
+				}elseif( $module_id == 14 ){ //Leads
+					$add_on_id = 4;
+				}
+
+				if( $add_on_id > 0 && !in_array($add_on_id, $deactivated_modules) ){
+					$this->session->set_flashdata('alert_class', 'alert-danger');
+					$this->session->set_flashdata('message', 'You have no access to this module');
+					redirect('mycrm/membership');
+				}
+		          
 			//}        
 		}		
     }
