@@ -49,7 +49,7 @@
                                         <div class="col-lg-3 mb-2">
                                             <strong>Estimated Time / Duration</strong>
                                             <div class="input-group" style="width:43%;">            
-                                                <input type="number" step="any" class="form-control" name="estimated_time" id="" required/>                                                                                    
+                                                <input type="number" step="any" class="form-control" name="estimated_time" id="" min="0" required/>                                                                                    
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">HRS</div>
                                                 </div>

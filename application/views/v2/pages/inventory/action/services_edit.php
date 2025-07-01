@@ -51,7 +51,7 @@
                                         <div class="col-lg-3 mb-2">
                                             <strong>Time Estimate</strong>
                                             <div class="input-group">            
-                                                <input type="number" step="any" class="form-control" name="estimated_time" id="" value="<?= $item->estimated_time; ?>" required/>                                                                                    
+                                                <input type="number" step="any" class="form-control" name="estimated_time" id="" min="0" value="<?= $item->estimated_time; ?>" required/>                                                                                    
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">HRS</div>
                                                 </div>
@@ -89,27 +89,35 @@ $(function(){
     });
 
     $("#service_form").submit(function(e) {
-        e.preventDefault(); // avoid to execute the actual submit of the form.
+        e.preventDefault();
         var form = $(this);
-        // console.log(form);
-        //var url = form.attr('action');
         $.ajax({
             type: "POST",
-            url: "<?= base_url() ?>/inventory/update_service_item",
-            data: form.serialize(), // serializes the form's elements.
-            // success: function(data) {
-            //     console.log(data);
-            // }
-        });
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Service was updated successfully!',
-        }).then((result) => {
-            //if (result.isConfirmed) {
-                window.location.href = base_url + "inventory/services";
-            //}
-        });
+            url: base_url + "inventory/update_service_item",
+            data: form.serialize(), 
+            dataType:'json',
+            success: function(data) {
+                if (data.is_success) {
+                    Swal.fire({
+                        title: 'Update Service',
+                        text: data.msg,
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        location.href = base_url + "inventory/services";
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
+                }
+            }
+        });        
     });
 
     $('#TIME_ESTIMATE').change(function(event) {

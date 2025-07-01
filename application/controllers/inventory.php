@@ -139,7 +139,7 @@ class Inventory extends MY_Controller
     {
         $this->page_data['page']->title = 'Services';
         $comp_id = logged('company_id');        
-        $arg     = array('company_id'=>$comp_id, 'id' => $id, 'is_active'=>1);
+        $arg     = array('company_id' => $comp_id, 'id' => $id, 'is_active' => 1);
         $item    = $this->items_model->getCompanyItemById($comp_id, $id);
 
         $this->page_data['item'] = $item;
@@ -679,23 +679,29 @@ class Inventory extends MY_Controller
         echo "1";
     }
 
-    // public function testMethod() {
-    //     echo "<pre>";
-    //     print_r ($this->items_model->recordItemTransaction(1, 4, 3, "deduct"));
-    //     echo "</pre>";
-    // }
-
     public function  update_service_item()
     {
         $data = $this->input->post();
-        $id   = $data['sid'];
-        unset($data['sid']);        
-        $company_id =  logged('company_id');
-        if ( $this->items_model->update($data, array("id" => $id, 'company_id' => $company_id)) ) {
-            echo "1";
+
+        $is_success = 0;
+        $msg        = 'Cannot save data';
+
+        if($data['estimated_time'] >= 0) {
+            $id = $data['sid'];
+            unset($data['sid']);        
+            $company_id = logged('company_id');
+            if ( $this->items_model->update($data, array("id" => $id, 'company_id' => $company_id)) ) {
+                $is_success = 1;
+                $msg        = "Service was updated successfully!";
+            } else {
+                $is_success = 0;
+            }
         } else {
-            echo "0";
+            $is_success = 0;
         }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
     }
 
     public function  save_new_service()
