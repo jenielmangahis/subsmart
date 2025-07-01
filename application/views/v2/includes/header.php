@@ -147,8 +147,23 @@ if ($this->session->userdata('usertimezone') == null) {
             font-size:19px;
         }
     </style>
+    <!-- Pusher JS -->
+    <script src="https://js.pusher.com/8.3.0/pusher.min.js"></script>
     <script>
         var baseURL = '<?php echo base_url(); ?>';
+
+        var pusher = new Pusher('2886684a3add673926fa', {
+            cluster: 'us2'
+        });
+
+        var channelCompany = pusher.subscribe('nsmart-company');
+        channelCompany.bind('force-logout', function(data) {
+            let company_id = '<?= logged('company_id'); ?>';
+            if( data.company_id == company_id ){
+                location.href = base_url + 'logout';  
+            }
+        });
+
     </script>
 </head>
 <body>

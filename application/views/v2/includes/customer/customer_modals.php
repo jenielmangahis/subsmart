@@ -766,3 +766,52 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="modal-create-lost-reason" tabindex="-1" aria-labelledby="modal-create-lost-reason_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Add Lost Reason</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <form id="frm-add-new-lost-reason">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <input type="text" placeholder="Reason" name="lost_reason" id="lost-reason" class="nsm-field form-control mb-2" required />
+                    </div>                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-save-lost-reason">Save</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-edit-lost-reason" tabindex="-1" aria-labelledby="modal-edit-lost-reason_label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Edit Lost Reason</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <form id="frm-update-lost-reason">
+            <input type="hidden" name="lrid" id="edit-lrid" value="" />
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <input type="text" placeholder="Reason" name="lost_reason" id="edit-lost-reason" class="nsm-field form-control mb-2" required />
+                    </div>                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="btn-update-lost-reason">Save</button>
+            </div>
+            </form>                
+        </div>
+    </div>
+</div>
