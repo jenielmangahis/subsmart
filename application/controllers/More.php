@@ -52,7 +52,7 @@ class More extends MY_Controller {
 
 		$active_addons_id = array();
 		foreach($activeAddons as $a){
-			$active_addons_id[$a->plan_upgrade_id] = $a->plan_upgrade_id;
+			$active_addons_id[$a->plan_upgrade_id] = $a->with_request_removal;
 		}
 
 		$this->page_data['active_addons_id'] = $active_addons_id;
@@ -100,11 +100,9 @@ class More extends MY_Controller {
 		$this->load->view('v2/pages/more/ajax_load_plugin_details', $this->page_data);
 	}
 
-	public function add_plugin(){
-		postAllowed();
-
+	public function add_plugin()
+	{
 		$post = $this->input->post();
-		$user = $this->session->userdata('logged');
 		$cid  = logged('company_id');
 
 		if( $post['pid'] > 0 ){
@@ -131,6 +129,104 @@ class More extends MY_Controller {
 		}
 
 		redirect('more/upgrades');
+	}
+
+	public function ajax_subscription_activate_addon()
+	{
+		$is_success = 0;
+        $msg        = 'Addon not found';
+
+		$cid  = logged('company_id');
+		$post = $this->input->post();
+
+		if( $post['plugin_id'] > 0 ){
+			$upgrade = $this->SubscriberNsmartUpgrade_model->getByClientIdAndNsmartUpgradeId($cid, $post['plugin_id']);
+			if( $upgrade ){
+				$msg = 'Plugin already availed';
+			}else{
+				$data = [
+	    			'client_id' => $cid,
+	    			'plan_upgrade_id' => $post['plugin_id'],
+					'with_request_removal' => 0,
+	    			'date_created' => date("Y-m-d H:i:s"),
+	    			'date_modified' => date("Y-m-d H:i:s")
+	    		];
+
+	    		$subscriberAddon = $this->SubscriberNsmartUpgrade_model->create($data);
+
+				$is_success = 1;
+				$msg = '';
+
+				//Update session
+				$addons = $this->SubscriberNsmartUpgrade_model->getAllByClientId($cid);
+				$active_addons = array();
+				foreach( $addons as $a ){
+					$active_addons[$a->plan_upgrade_id] = $a->plan_upgrade_id;
+				}
+				$this->session->set_userdata('plan_active_addons', $active_addons);
+			}
+		}
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+	public function ajax_subscription_remove_addon()
+	{
+		$is_success = 0;
+        $msg        = 'Addon not found';
+
+		$cid  = logged('company_id');
+		$post = $this->input->post();
+
+		if( $post['plugin_id'] > 0 ){
+			$upgrade = $this->SubscriberNsmartUpgrade_model->getByClientIdAndNsmartUpgradeId($cid, $post['plugin_id']);
+			if( $upgrade ){
+				$data = ['with_request_removal' => 1, 'date_modified' => date("Y-m-d H:i:s")];
+				$this->SubscriberNsmartUpgrade_model->update($upgrade->id, $data);
+
+				$is_success = 1;
+				$msg = '';
+			}
+		}
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+	public function ajax_subscription_cancel_request_remove_addon()
+	{
+		$is_success = 0;
+        $msg        = 'Addon not found';
+
+		$cid  = logged('company_id');
+		$post = $this->input->post();
+
+		if( $post['plugin_id'] > 0 ){
+			$upgrade = $this->SubscriberNsmartUpgrade_model->getByClientIdAndNsmartUpgradeId($cid, $post['plugin_id']);
+			if( $upgrade ){
+				$data = ['with_request_removal' => 0, 'date_modified' => date("Y-m-d H:i:s")];
+				$this->SubscriberNsmartUpgrade_model->update($upgrade->id, $data);
+				
+				$is_success = 1;
+				$msg = '';
+			}
+		}
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
 	}
 }
 

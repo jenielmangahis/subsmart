@@ -1162,8 +1162,8 @@ class Users extends MY_Controller
 		            'has_web_access' => $web_access,
 		            'has_app_access' => $app_access,
 					'is_archived' => 'No',
-					'date_created' => date("Y-m-d H:i:s"),
-					'date_modified' => date("Y-m-d H:i:s")
+					'created_at' => date("Y-m-d H:i:s"),
+					'updated_at' => date("Y-m-d H:i:s")
 		        );
 		        $last_id = $this->users_model->addNewEmployee($add);
 				
@@ -2549,17 +2549,18 @@ class Users extends MY_Controller
 
 		$user = $this->Users_model->getUser($id);
 		if( $user && $user->company_id == $cid ){
-			$this->users_model->delete($id);
+			$data = ['is_archived' => 'Yes', 'updated_at' => date("Y-m-d H:i:s")];
+			$this->Users_model->update($user->id, $data);
 
 			//Delete Timesheet 
-			$this->load->model('TimesheetTeamMember_model');
-			$this->TimesheetTeamMember_model->deleteByUserId($id);
+			//$this->load->model('TimesheetTeamMember_model');
+			//$this->TimesheetTeamMember_model->deleteByUserId($id);
 			//Delete Tract360
-			$this->load->model('Trac360_model');
-			$this->Trac360_model->deleteUser('trac360_people', $id);
+			//$this->load->model('Trac360_model');
+			//$this->Trac360_model->deleteUser('trac360_people', $id);
 
 			//Activity Logs
-			$activity_name = 'Deleted User ' . $user->FName . ' ' . $user->LName; 
+			$activity_name = 'User : Deleted user ' . $user->FName . ' ' . $user->LName; 
 			createActivityLog($activity_name);
 
 			$is_success = true;
@@ -3577,7 +3578,7 @@ class Users extends MY_Controller
 
         if( $post['users'] ){
             $filter[] = ['field' => 'company_id', 'value' => $company_id];
-            $data     = ['is_archived' => 'Yes', 'date_modified' => date("Y-m-d H:i:s")];
+            $data     = ['is_archived' => 'Yes', 'updated_at' => date("Y-m-d H:i:s")];
             $this->Users_model->bulkUpdate($post['users'], $data, $filter);
 
             $is_success = 1;
@@ -3591,6 +3592,67 @@ class Users extends MY_Controller
 
         echo json_encode($return);
     }
+
+	public function ajax_change_status_selected_users()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['users'] ){                                    
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['status' => $post['status'], 'updated_at' => date("Y-m-d H:i:s")];
+            $this->Users_model->bulkUpdate($post['users'], $data, $filter);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+	public function ajax_archived_list()
+	{
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+		$filters = ['is_archived' => 'Yes'];
+        $users = $this->Users_model->getCompanyUsers($company_id,$filters);
+        $this->page_data['users'] = $users;
+        $this->load->view('v2/pages/users/ajax_archive_users', $this->page_data);
+	}
+
+	public function ajax_restore_selected_users()
+	{
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['users'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archived' => 'No', 'updated_at' => date("Y-m-d H:i:s")];
+            $this->Users_model->bulkUpdate($post['users'], $data, $filter);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 }
 /* End of file Users.php */
 /* Location: ./application/controllers/Users.php */
