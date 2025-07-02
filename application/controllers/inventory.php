@@ -1868,15 +1868,26 @@ class Inventory extends MY_Controller
         $post       = $this->input->post();
 
         if( $post['custom_field_name'] != '' ){
-            $data = [
-                'name' => $post['custom_field_name'],
-                'company_id' => $company_id
-            ];
-    
-            $customFieldId = $this->items_model->add_custom_field($data);
-            
-            $is_success = 1;
-            $msg = '';
+
+            $isCustomFieldExists = $this->items_model->getCustomFieldByNameAndCompanyId($post['custom_field_name'], $company_id);
+            if( !$isCustomFieldExists ){
+
+                $data = [
+                    'name' => $post['custom_field_name'],
+                    'company_id' => $company_id
+                ];
+        
+                $customFieldId = $this->items_model->add_custom_field($data);
+                
+                $is_success = 1;
+                $msg = '';                
+
+            } else {
+
+                $is_success = 0;
+                $msg = 'Custom Field Name <b>' . $post['custom_field_name'] . '</b> already exists.';  
+
+            }            
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
@@ -1893,16 +1904,29 @@ class Inventory extends MY_Controller
         $post       = $this->input->post();
 
         if( $post['custom_field_name'] != '' ){
-            $customField = $this->items_model->get_custom_field_by_id($post['cfid']);
-            if( $customField ){
-                $data = ['name' => $post['custom_field_name']];
-                $this->items_model->update_custom_field_name($post['cfid'], $data);
-                
-                $is_success = 1;
-                $msg = '';
-            }else{
-                $msg = 'Cannot find data';
+
+            if( $post['custom_field_name'] == $post['default_custom_field_name'] ) {
+                $isCustomFieldExists = false;
+            } else {
+                $isCustomFieldExists = $this->items_model->getCustomFieldByNameAndCompanyId($post['custom_field_name'], $company_id);
             }
+
+            if( !$isCustomFieldExists ){
+                $customField = $this->items_model->get_custom_field_by_id($post['cfid']);
+                if( $customField ){
+                    $data = ['name' => $post['custom_field_name']];
+                    $this->items_model->update_custom_field_name($post['cfid'], $data);
+                    
+                    $is_success = 1;
+                    $msg = '';
+                }else{
+                    $msg = 'Cannot find data';
+                }                    
+            } else {
+                $is_success = 0;
+                $msg = 'Custom Field Name <b>' . $post['custom_field_name'] . '</b> already exists.';                      
+            }            
+            
         }else{
             $msg = 'Please specify custom field name';
         }

@@ -72,7 +72,7 @@ table.dataTable.no-footer {
                                                     <a class="dropdown-item update-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit-custom-field-modal" data-id="<?=$field->id?>" data-name="<?=$field->name?>">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $field->id?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-name="<?php echo $field->name ?>" data-id="<?php echo $field->id?>">Delete</a>
                                                 </li>
                                             </ul>
                                         </div>                                    
@@ -204,10 +204,11 @@ table.dataTable.no-footer {
 
         $(document).on("click", ".delete-item", function() {
             let cfid = $(this).attr("data-id");
-
+            let name = $(this).attr("data-name");
             Swal.fire({
                 title: 'Delete Custom Field',
-                text: "Are you sure you want to delete selected item?",
+                //text: "Are you sure you want to delete selected item?",
+                html: `Are you sure you want to delete <b>${name}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -225,8 +226,8 @@ table.dataTable.no-footer {
                             console.log(result);
                             if (result.is_success === 1) {
                                 Swal.fire({
-                                    //title: 'Good job!',
-                                    text: "Data Deleted Successfully!",
+                                    title: 'Delete Custom Field',
+                                    text: "Custom field has been deleted successfully!",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
@@ -253,6 +254,7 @@ table.dataTable.no-footer {
             let name = $(this).attr('data-name');
             $('#cfid').val(id);
             $('#edit-custom-field-name').val(name);
+            $('#default-custom-field_name').val(name);
         });
     });
 </script>
