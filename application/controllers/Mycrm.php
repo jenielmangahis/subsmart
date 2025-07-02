@@ -388,7 +388,7 @@ class Mycrm extends MY_Controller
         $post = $this->input->post();
 
         $client = $this->Clients_model->getById($company_id);
-        $plan = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
+        $plan   = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
         if ($plan) {
             if ($client->num_months_discounted <= 0) {
                 $amount = $plan->price;
@@ -402,20 +402,33 @@ class Mycrm extends MY_Controller
                 $total_addon_price += $a->service_fee;
             }
 
-            $amount += $total_addon_price;
+            $amount = 0;
             $date = date("Y-m-d");
+            $num_months_discounted = 0;
             if ($client->recurring_payment_type == 'monthly') {
-                $amount = $amount;
+                if ($client->num_months_discounted <= 0) {
+                    $amount = $plan->price;
+                } else {
+                    $amount = $plan->discount;
+                    $num_months_discounted = $client->num_months_discounted - 1;
+                }
                 $next_billing_date    = date('Y-m-d', strtotime('+1 month', strtotime($date)));
                 $plan_date_expiration = date('Y-m-d', strtotime('+1 month', strtotime($date)));
             } else {
-                $amount = $plan->price * 12;
-                $next_billing_date    = date('Y-m-d', strtotime('+1 month', strtotime($date)));
+                if ($client->num_months_discounted <= 0) {
+                    $amount = $plan->price * 12;
+                } else {
+                    $amount = $plan->discount * 12;
+                    $num_months_discounted = max($client->num_months_discounted - 12,0);
+                }
+                $next_billing_date    = date('Y-m-d', strtotime('+1 year', strtotime($date)));
                 $plan_date_expiration = date('Y-m-d', strtotime('+1 year', strtotime($date)));
             }
 
-            $company = $this->Business_model->getByCompanyId($company_id);
-            $address = $company->street.' '.$company->city.' '.$company->state;
+            $amount   = $amount + $total_addon_price;
+
+            $company  = $this->Business_model->getByCompanyId($company_id);
+            $address  = $company->street.' '.$company->city.' '.$company->state;
             $zip_code = $company->postal_code;
             $converge_data = [
                 'company_id' => $company->company_id,
@@ -429,11 +442,6 @@ class Mycrm extends MY_Controller
             ];
             $result = $this->converge_send_sale($converge_data);
             if ($result['is_success']) {
-                $num_months_discounted = 0;
-                if ($client->num_months_discounted > 0) {
-                    $num_months_discounted = $client->num_months_discounted - 1;
-                }
-
                 $data = [
                     'payment_method' => 'converge',
                     'plan_date_expiration' => $plan_date_expiration,
@@ -445,6 +453,17 @@ class Mycrm extends MY_Controller
                 ];
                 $this->Clients_model->update($company_id, $data);
                 $this->session->set_userdata('is_plan_active', 1);
+
+                //Delete addons if requested to remove
+                $this->SubscriberNsmartUpgrade_model->deleteAllRequestRemovalByClientId($client->id);
+
+                //Update session active addons
+                $addons = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
+                $active_addons = array();
+                foreach( $addons as $a ){
+                    $active_addons[$a->plan_upgrade_id] = $a->plan_upgrade_id;
+                }
+                $this->session->set_userdata('plan_active_addons', $active_addons);
 
                 // Update access modules
                 $industryType = $this->IndustryType_model->getById($client->industry_type_id);
