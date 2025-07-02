@@ -976,15 +976,22 @@ if (!function_exists('isCompanyPlanActive')) {
 
 
     function isCompanyPlanActive()
-    {
+    {        
+        $CI =& get_instance();
+        $CI->load->model('Clients_model');
 
-        $ci = &get_instance();
-        $ci->load->library('session');
-        $is_plan_active = $ci->session->userdata('is_plan_active');
+        $is_plan_active = 0;
+		$client_id      = logged('company_id');
+		$client         = $CI->Clients_model->getById($client_id);		
+		if( $client ){
+			if( $client->is_plan_active == 1 ){
+				$is_plan_active = 1;
+			}			
+		}
+        
         return $is_plan_active;
     }
 }
-
 
 /**
  * Redirects with error if user doesnt have the permission to passed key/module
@@ -5660,7 +5667,7 @@ function checkRoleCanAccessModule($module, $action){
     $allow_access = false;
 
     $hasAccessAll = $CI->CompanyRoleAccessModule_model->isRoleHasAccessAll($cid, $rid);
-    if( $hasAccessAll || $rid == 7 ){     
+    if( $hasAccessAll || $rid == 7 ){             
         $allow_access = true;   
     }else{
         $permission   = $CI->CompanyRoleAccessModule_model->getCompanyRoleModulePermission($cid, $rid, $module);
