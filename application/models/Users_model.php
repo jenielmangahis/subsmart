@@ -40,20 +40,13 @@ class Users_model extends MY_Model
     public function attempt($data, $admin = false)
     {
         $this->db->where('username', $data['username']);
-
         $this->db->or_where('email', $data['username']);
-
-
 
         $query = $this->db->get($this->table);
 
-
-
         // validate user
-
         if (!empty($query) && $query->num_rows() > 0) {
             // checks the password
-
             if( $admin == true ){
                 return 'valid';
             }else{
@@ -68,12 +61,8 @@ class Users_model extends MY_Model
                 } else {
                     return 'invalid_password';
                 } // if invalid password
-            }
-            
+            }            
         }
-
-
-
         return false;
     }
 
