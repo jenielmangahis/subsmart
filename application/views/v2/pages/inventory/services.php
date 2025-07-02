@@ -104,7 +104,7 @@ table.dataTable.no-footer {
                                     <label class="nsm-link default d-block fw-bold"><?php echo $item[0]; ?></label>
                                     <label class="nsm-link default content-subtitle"><?php echo $item[1]; ?></label>
                                 </td>
-                                <td><?php echo $item[4]; ?></td>
+                                <td>$<?php echo $item[4]; ?></td>
                                 <td><?php echo $item[6]; ?> HRS</td>
                                 <td><?php echo $item[5]; ?></td>
                                 <td>
@@ -199,8 +199,8 @@ $(document).ready(function() {
 
     $("#delete_selected").on("click", function() {
         Swal.fire({
-            title: 'Delete Selected Items',
-            text: "Are you sure you want to delete the selected items?",
+            title: 'Delete Selected Services',
+            text: "Are you sure you want to delete the selected services?",
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,
@@ -246,7 +246,7 @@ $(document).ready(function() {
 
         Swal.fire({
             title: 'Delete Service Item',
-            html: `Are you sure you want to delete service name <b>${name}</b> item?`,
+            html: `Are you sure you want to delete service name <b>${name}</b>?`,
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,

@@ -7,7 +7,7 @@ class CustomerDeal extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-
+        $this->hasAccessModule(8); 
         $this->page_data['page']->title = 'Customer Deals';
         $this->page_data['page']->menu = 'customers';
     }

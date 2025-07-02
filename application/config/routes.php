@@ -1175,6 +1175,9 @@ $route['workstatus/_delete_workorder_status'] = 'Workstatus/ajax_delete_workorde
 // Addon Upgrades
 $route['more/_load_plugin_details'] = 'More/ajax_load_plugin_details';
 $route['more/add_plugin'] = 'More/add_plugin';
+$route['more/_subscription_activate_addon'] = 'More/ajax_subscription_activate_addon';
+$route['more/_subscription_remove_addon'] = 'More/ajax_subscription_remove_addon';
+$route['more/_subscription_cancel_request_remove_addon'] = 'More/ajax_subscription_cancel_request_remove_addon';
 
 $route['page/no_access'] = 'page/no_access';
 

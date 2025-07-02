@@ -57,34 +57,195 @@
             loaddActiveAddOns();
         });
 
-        $(document).on("click", ".btn-addon", function(){
-            let _this = $(this);
-            let aid = $(this).attr("data-id");
-            let url = "<?php echo base_url('more/_load_plugin_details'); ?>";
-            let _modal = $("#addon_modal");
-            showLoader($("#addon_details"));
+        $(document).on('click', '.btn-open-addon', function(){
+            let plugin_id = $(this).attr('data-id');
+            if( plugin_id == 3 ){ //Online booking
+                location.href = base_url + 'more/addon/booking';
+            }else if( plugin_id == 4 ) { //Leads 
+                location.href = base_url + 'customer/leads';
+            }else if( plugin_id == 8 ) { //Customer Deals
+                location.href = base_url + 'customer_deals';
+            }else if( plugin_id == 11  ) { //Credit Report
 
-            _modal.find("#pid").val(aid);
+            }else if( plugin_id == 13 ) { //Payroll
 
-            if(_this.hasClass("availed")){
-                _modal.find(".modal-footer").hide();
-                _modal.find(".modal-title").html("Addon Details");
             }
-            else{
-                _modal.find(".modal-footer").show();
-                _modal.find(".modal-title").html("Avail Addon");
-            }
+        });
 
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: {aid:aid},
-                success: function(result) {
-                    $("#addon_details").html(result);
-                    _modal.modal("show");
+        $(document).on('click', '.btn-remove-add-on', function(){
+            let plugin_id   = $(this).attr('data-id');
+            let plugin_name = $(this).attr('data-name');
+
+            Swal.fire({
+                title: 'Remove Addon',
+                html: `Are you sure you want to remove addon <b>${plugin_name}</b>? <br /><br />Note : Addon will be removed after current billing.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + 'more/_subscription_remove_addon',
+                        data: {plugin_id: plugin_id},
+                        dataType: "JSON",
+                        success: function(result) {
+                            if (result.is_success) {
+                                Swal.fire({
+                                    html: `Company addon list was successfully updated. You can cancel your request removal anytime.`,
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                       loadAddOnsList();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        },
+                    });
                 }
             });
         });
+
+        $(document).on('click', '.btn-cancel-request-removal', function(){
+            let plugin_id   = $(this).attr('data-id');
+            let plugin_name = $(this).attr('data-name');
+
+            Swal.fire({
+                title: 'Cancel Request Removal',
+                html: `Are you sure you want to cancel request removal for addon <b>${plugin_name}</b>?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + 'more/_subscription_cancel_request_remove_addon',
+                        data: {plugin_id: plugin_id},
+                        dataType: "JSON",
+                        success: function(result) {
+                            if (result.is_success) {
+                                Swal.fire({
+                                    html: `Request for addon removal was successfully removed.`,
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                       loadAddOnsList();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '.btn-subscribe-now', function(){            
+            let plugin_id   = $(this).attr('data-id');
+            let plugin_name = $(this).attr('data-name');
+            let sms_fee     = $(this).attr('data-smsfee');
+            let service_fee = $(this).attr('data-servicefee');
+
+            let msg = '';
+            if( sms_fee > 0 ){
+                // let msg = `Are you sure you want to activate add-on <b>${plugin_name}</b>? Activating add-on will cost additional <b>${service_fee}</b> to your subscription fee and an SMS fee of <b>${sms_fee}</b>`;
+                msg = `Are you sure you want to activate add-on <b>${plugin_name}</b>?<br /><br /> Activating add-on will cost additional <b>$${service_fee}</b> to your subscription fee.`;
+            }else{
+                msg = `Are you sure you want to activate add-on <b>${plugin_name}</b>?<br /><br /> Activating add-on will cost additional <b>$${service_fee}</b> to your subscription fee.`;
+            }
+
+            Swal.fire({
+                title: 'Avail Addon',
+                html: msg,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + 'more/_subscription_activate_addon',
+                        data: {plugin_id: plugin_id},
+                        dataType: "JSON",
+                        success: function(result) {
+                            if (result.is_success) {
+                                Swal.fire({
+                                    html: `Addon ${plugin_name} was successfully activated`,
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                       loadAddOnsList();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+
+        });
+
+        // $(document).on("click", ".btn-addon", function(){
+        //     let _this = $(this);
+        //     let aid = $(this).attr("data-id");
+        //     let url = "<?php echo base_url('more/_load_plugin_details'); ?>";
+        //     let _modal = $("#addon_modal");
+        //     showLoader($("#addon_details"));
+
+        //     _modal.find("#pid").val(aid);
+
+        //     if(_this.hasClass("availed")){
+        //         _modal.find(".modal-footer").hide();
+        //         _modal.find(".modal-title").html("Addon Details");
+        //     }
+        //     else{
+        //         _modal.find(".modal-footer").show();
+        //         _modal.find(".modal-title").html("Avail Addon");
+        //     }
+
+        //     $.ajax({
+        //         type: "POST",
+        //         url: url,
+        //         data: {aid:aid},
+        //         success: function(result) {
+        //             $("#addon_details").html(result);
+        //             _modal.modal("show");
+        //         }
+        //     });
+        // });
     });
 
     function loadAddOnsList(){

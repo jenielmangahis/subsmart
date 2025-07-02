@@ -19,6 +19,7 @@ class MY_Controller extends CI_Controller {
 			die('Database is not configured');
 		}
 		
+		$this->sessionExpires();
 		$this->setNewtimezone();
 		$this->companyLeftNavMenuSetting();
 
@@ -69,6 +70,13 @@ class MY_Controller extends CI_Controller {
 
 	public function gtMyIpGlobal(){
 		return $ipaddress = $this->timesheet_model->gtMyIpGlobal();
+	}
+
+	public function sessionExpires()
+	{
+		if( !$this->session->userdata('plan_active_addons') || !$this->session->userdata('userAccessModules') || !$this->session->userdata('is_plan_active') ){
+			redirect('logout'); 	
+		}
 	}
 
 	public function companyLeftNavMenuSetting(){
@@ -168,29 +176,34 @@ class MY_Controller extends CI_Controller {
 
 		        $allowed_modules = $ci->session->userdata('userAccessModules');
 		        if( !in_array($module_id, $allowed_modules) ){
-		            $this->session->set_flashdata('alert_class', 'alert-danger');
-		            $this->session->set_flashdata('message', 'You have no access to this module');
+					$this->session->set_flashdata('susbscription-no-access-module', 1);
 		            redirect('mycrm/membership');
 		        }
 
 		        $deactivated_modules = $ci->session->userdata('deactivated_modules');
 		        if( in_array($module_id, $deactivated_modules) ){
-		            $this->session->set_flashdata('alert_class', 'alert-danger');
-		            $this->session->set_flashdata('message', 'You have no access to this module');
+		            $this->session->set_flashdata('susbscription-no-access-module', 1);
 		            redirect('mycrm/membership');
 		        }
 
 				$plan_addons = $ci->session->userdata('plan_active_addons');
 				$add_on_id   = 0;
+				$add_on_name = '';
 				if( $module_id == 7 ){ //Online Booking
-					$add_on_id = 3;					
+					$add_on_name = 'Online Booking';
+					$add_on_id   = 3;					
 				}elseif( $module_id == 14 ){ //Leads
+					$add_on_name = 'Leads';
 					$add_on_id = 4;
+					//$add_on_id = 0;
+				}elseif( $module_id == 8 ){
+					$add_on_name = 'Customer Deals';
+					$add_on_id = 8;
 				}
 
-				if( $add_on_id > 0 && !in_array($add_on_id, $deactivated_modules) ){
-					$this->session->set_flashdata('alert_class', 'alert-danger');
-					$this->session->set_flashdata('message', 'You have no access to this module');
+				if( $add_on_id > 0 && !in_array($add_on_id, $plan_addons) ){
+					$this->session->set_flashdata('susbscription-addon-name', $add_on_name);
+					$this->session->set_flashdata('susbscription-addon-no-access', 1);
 					redirect('mycrm/membership');
 				}
 		          

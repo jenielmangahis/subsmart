@@ -52,9 +52,7 @@
           <!-- Custom JS -->
           <script src="<?php echo base_url('assets/js/custom.js'); ?>"></script>
           <!-- Sweetalert JS -->
-          <script src="<?php echo base_url('assets/js/v2/sweetalert2.min.js'); ?>"></script>
-          <!-- Pusher JS -->
-          <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+          <script src="<?php echo base_url('assets/js/v2/sweetalert2.min.js'); ?>"></script>          
           <!-- Datepicker -->
           <script type="text/javascript" src="<?php echo base_url('assets/js/v2/bootstrap-datepicker.min.js'); ?>">
           </script>
