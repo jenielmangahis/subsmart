@@ -319,6 +319,7 @@ class Mycrm extends MY_Controller
             if ($result['is_success']) {
                 //$next_billing_date = date('Y-m-d', strtotime('+1 month'));
                 $data = [
+                    'payment_method' => 'converge',   
                     'plan_date_registered' => date("Y-m-d"),
                     'plan_date_expiration' => $next_billing_date,
                     'date_modified' => date('Y-m-d H:i:s'),
