@@ -26,6 +26,7 @@
     <div class="modal-dialog">
         <?php echo form_open_multipart(null, ['id' => 'form-update-custom-field', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
         <input type="hidden" name="cfid" value="" id="cfid" />
+        <input type="hidden" name="default_custom_field_name" value="" id="default-custom-field_name" />
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="custom_field_modal_label">Custom Field</span>
