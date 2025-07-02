@@ -194,8 +194,8 @@ class MY_Controller extends CI_Controller {
 					$add_on_id   = 3;					
 				}elseif( $module_id == 14 ){ //Leads
 					$add_on_name = 'Leads';
-					//$add_on_id = 4;
-					$add_on_id = 0;
+					$add_on_id = 4;
+					//$add_on_id = 0;
 				}elseif( $module_id == 8 ){
 					$add_on_name = 'Customer Deals';
 					$add_on_id = 8;
