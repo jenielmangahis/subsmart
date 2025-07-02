@@ -165,7 +165,7 @@
                                                 <?php if( in_array($client->id, $exempted_company_ids) ){ ?>
                                                     <span><b>Included in Exempted Companies - No renewal</b></span>
                                                 <?php }else{ ?>
-                                                    <?= date("d-M-Y", strtotime($client->next_billing_date)); ?>
+                                                    <?= date("m/d/Y", strtotime($client->next_billing_date)); ?>
                                                 <?php } ?>
                                                 
                                             </div>
@@ -327,6 +327,21 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        <?php if( $this->session->flashdata('susbscription-addon-no-access') == 1 ){ ?>
+            let no_access_add_on_name = '<?= $this->session->flashdata('susbscription-addon-name'); ?>';
+            let add_more_add_on_url   = base_url + 'more/upgrades';
+            Swal.fire({
+                icon: 'error',
+                html: `You have no access to <b>${no_access_add_on_name}</b>. To gain access, please activate module via <a class="nsm-link" href="${add_more_add_on_url}"><b>Add More Add-ons</b></a>`,
+            });
+        <?php } ?>
+
+        <?php if( $this->session->flashdata('susbscription-no-access-module') == 1 ){ ?>
+            Swal.fire({
+                icon: 'error',
+                html: `You have no access to that module.`,
+            });
+        <?php } ?>
 
         $(".nsm-table").nsmPagination();
         
@@ -378,11 +393,11 @@
                             }
                         });
                     }else{
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Cannot process payment',
-                        text: o.message
-                    });
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Cannot process payment',
+                            text: o.message
+                        });
                     }
 
                     $("#btn-buy-license").html('Buy');
