@@ -1018,11 +1018,16 @@ $route['settings/_update_email_branding'] = 'Settings/ajax_update_email_branding
 $route['chatbot/settings'] = 'ChatbotSettings/settings';
 
 //Lead Contact Form
-$route['lead_contact_form/_update_settings'] = 'LeadContactForm/ajax_update_settings';
 $route['lead_contact_form'] = 'LeadContactForm/index';
+$route['lead_contact_form/_update_settings'] = 'LeadContactForm/ajax_update_settings';
+$route['lead_contact_form/_form_preview'] = 'LeadContactForm/ajax_form_preview';
+
+//Public Lead Contact Form
+$route['online-leads/(:any)'] = 'Pages/front_lead_contact_form/$1';
+$route['online-leads/(:any)/_save'] = 'Pages/front_lead_contact_save/$1';
 
 // leads
-//$route['online_leads'] = 'Inquiries/online_lead';
+$route['online_leads'] = 'Inquiries/online_lead';
 $route['video_estimate'] = 'Inquiries/video_estimate';
 $route['leads/_lead_send_email'] = 'Customer/ajax_lead_send_email';
 
