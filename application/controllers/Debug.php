@@ -3229,7 +3229,14 @@ class Debug extends MY_Controller {
         }
 
         return $filePath;
-    }    
+    }   
+    
+    public function testPusherForceLogout()
+    {
+        $options = array('cluster' => PUSHER_CLUSTER, 'useTLS' => true);
+        $pusher = new Pusher\Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_APPID, $options);
+        $pusher->trigger('nsmart-company', 'force-logout', ['company_id' => logged('company_id')]);
+    }
 }
 /* End of file Debug.php */
 
