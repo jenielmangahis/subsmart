@@ -1733,7 +1733,8 @@ class Inventory extends MY_Controller
     {
         $this->page_data['page']->title = 'Inventory Settings';
 		$this->page_data['page']->parent = 'Tools';        
-        $this->page_data['inventoryCustomFields'] = $this->items_model->get_custom_fields_by_company_id(logged('company_id'));
+        $this->page_data['inventoryCustomFields'] = $inventoryCustomFields = $this->items_model->get_custom_fields_by_company_id(logged('company_id'));
+
         $this->load->view('v2/pages/inventory/settings', $this->page_data);
     }
 
