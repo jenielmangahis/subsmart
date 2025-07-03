@@ -70,7 +70,6 @@ class SubscriberNsmartUpgrade_model extends MY_Model
     }
 
     public function deleteAllRequestRemovalByClientId($client_id){
-        $user_id = logged('id');
         $this->db->delete($this->table, array('client_id' => $client_id, 'with_request_removal' => 1));
     }
 
