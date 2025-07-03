@@ -47,11 +47,11 @@
                                         </div>
                                         <div class="col-lg-2 mb-2">
                                             <strong>Price/Cost</strong>
-                                            <input value="<?php echo $item->price; ?>" type="number" step="any" class="form-control " name="price" id="price" required/>
+                                            <input value="<?php echo $item->price; ?>" type="number" step="any" min="0" class="form-control" name="price" id="price" required/>
                                         </div>
                                         <div class="col-lg-2 mb-2">
                                             <strong>Retail Price</strong>
-                                            <input value="<?php echo $item->retail; ?>" type="number" step="any" type="text" class="form-control " name="retail" id="retail" />
+                                            <input value="<?php echo $item->retail; ?>" type="number" step="any" min="0" type="text" class="form-control " name="retail" id="retail" />
                                         </div>
                                         <div class="col-lg-2 mb-2">
                                             <strong>Unit of measurement</strong>
@@ -106,7 +106,7 @@
                                         </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Quantity Order</strong>
-                                            <input value="<?php echo $item->qty_order; ?>" type="number" step="any" class="form-control " name="qty_order" id="qty_order" />
+                                            <input value="<?php echo $item->qty_order; ?>" type="number" step="any" min="0" class="form-control " name="qty_order" id="qty_order" />
                                         </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Reorder Point</strong>
@@ -138,7 +138,7 @@
                                             <strong>Attach Image</strong>
                                             <input value="<?php echo $item->attached_image; ?>" type="file" onchange="readURL(this);" name="attached_image" class="form-control" id="attached_image">
                                         </div>
-                                        <!-- <div class="col-lg-6 mb-2">
+                                        <div class="col-lg-9 mb-2">
                                             <strong>Location</strong>
                                             <select id="locations" name="loc_id[]" class="form-select" placeholder="Select" multiple="multiple" required>
                                                 <option value='0' onselect="alert('test');">All Locations</option>
@@ -151,7 +151,18 @@
                                                     }
                                                     ?>
                                             </select>
-                                        </div> -->
+                                        </div>
+                                        <div class="col-lg-3 mb-2">
+                                            <strong>Initial Quantity</strong>
+                                            <input type="number" class="form-control " name="initial_quantity" step="any" min="0" id="initial_quantity" required />
+                                        </div>
+                                        <?php foreach($custom_fields as $field) : ?>
+                                            <div style="position: relative;" class="col-lg-6 mt-2">
+                                                <strong class="content-subtitle fw-bold d-block mb-2"><?=$field->name; ?></strong>
+                                                <a style="position: absolute; top: 1px; right: 15px;" href="javascript:void(0);" class="content-subtitle d-block mb-2 nsm-link btn-edit-field" data-id="<?=$field->id; ?>" data-name="<?=$field->name; ?>">Edit</a>
+                                                <input type="text" name="custom_field[<?=$field->id?>]" class="nsm-field form-control" />
+                                            </div>
+                                        <?php endforeach; ?>
                                         <div class="col-lg-12 mt-2">
                                             <div class="float-end">
                                                 <input type="hidden" name="id" value="<?php echo $item->id; ?>">
@@ -222,13 +233,59 @@ $(document).ready(function() {
         let _this = $(this);
         let id = _this.attr("data-id");
         let name = _this.attr("data-name");
-        let _modal = $("#custom-field-modal");
+        let _modal = $("#edit-custom-field-modal");
 
         _modal.find(".modal-title").html("Update " + name);
         _modal.find('form').attr('action', `${base_url}inventory/update-custom-field/${id}`);
         _modal.find('#custom-field-name').val(name);
+        _modal.find('#edit-custom-field-name').val(name);
+        _modal.find('#default-custom-field_name').val(name);
+        _modal.find('#cfid').val(id);
         _modal.modal("show");
     });
+
+    $('#form-update-custom-field').on('submit', function(e){            
+        let _this = $(this);
+        e.preventDefault();
+
+        var url = base_url + "inventory/_update_custom_field";
+        _this.find("button[type=submit]").html("Saving");
+        _this.find("button[type=submit]").prop("disabled", true);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: _this.serialize(),
+            dataType:'json',
+            success: function(result) {
+                if (result.is_success === 1) {
+                    $("#edit-custom-field-modal").modal('hide');
+                    _this.trigger("reset");
+                    
+                    Swal.fire({
+                        title: 'Save Successful!',
+                        text: "Custom field has been upated successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.reload();
+                        //}
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: result.msg
+                    });
+                }
+                
+                _this.find("button[type=submit]").html("Save");
+                _this.find("button[type=submit]").prop("disabled", false);
+            },
+        });
+    });   
 });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

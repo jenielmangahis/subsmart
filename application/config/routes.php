@@ -1704,7 +1704,7 @@ $route['inventory/_create_service'] = 'inventory/ajax_create_service';
 $route['inventory/_delete_selected'] = 'inventory/ajax_delete_selected';
 $route['inventory/_create_inventory_fee'] = 'inventory/ajax_create_inventory_fee';
 $route['inventory/_edit_inventory_fee'] = 'inventory/ajax_edit_inventory_fee';
-$route['inventory/_update_inventory_fee'] = 'inventory/ajax_update_inventory_fee';
+$route['inventory/_update_inventory_fee'] = 'inventory/ajax_update_inventory_fee';  
 
 // Inventory Fees
 $route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';
