@@ -46,20 +46,24 @@ class Cron_Payment extends MYF_Controller {
                         $total_addon_price += $a->service_fee;
                     }
 
+                    $amount = 0;
+                    $num_months_discounted = 0;
                     if( $client->num_months_discounted > 0 ){
                         $amount   = $plan->price;
                     }else{
                         $amount   = $plan->discount;    
                     }
 
+
                     if( $client->recurring_payment_type == 'monthly' ){
                         $amount = $amount + $total_addon_price;
                         $next_billing_date = date("Y-m-d", strtotime("+1 month", strtotime($client->next_billing_date)));
+                        $num_months_discounted = $client->num_months_discounted - 1; 
                     }else{
-                        $amount = ($amount + $total_addon_price) * 12;
+                        $amount = ($amount * 12) + $total_addon_price;
                         $next_billing_date = date("Y-m-d", strtotime("+1 year", strtotime($client->next_billing_date)));
+                        $num_months_discounted = max($client->num_months_discounted - 12,0); 
                     }
-                    
 
                     $businessProfile  = $this->Business_model->getByCompanyId($client->id);
                     $address  = $businessProfile->street . " " . $businessProfile->city . " " . $businessProfile->state;
@@ -81,16 +85,10 @@ class Cron_Payment extends MYF_Controller {
                         'ssl_avs_zip' => $zip_code,
                     ]);
                     if( $createSale['success'] == 1 ){
-                        $num_months_discounted = 0;
-                        if( $client->num_months_discounted > 0 ){
-                            $num_months_discounted = $client->num_months_discounted - 1;    
-                        }
-
-                        
                         $data = [           
                             'payment_method' => 'converge',     
                             //'plan_date_registered' => date("Y-m-d"),
-                            //'plan_date_expiration' => date("Y-m-d", strtotime("+1 month")),                
+                            'plan_date_expiration' => $next_billing_date,                
                             'date_modified' => date("Y-m-d H:i:s"),
                             'is_plan_active' => 1,
                             'nsmart_plan_id' => $plan->nsmart_plans_id,
@@ -234,6 +232,7 @@ class Cron_Payment extends MYF_Controller {
     }
 
     //For checking recurring payments with error - need to set in cron once a day checking
+    //Needs update. Removed from cpanel cron jobs.
     public function company_recurring_nsmart_subscription_with_payment_errors(){
         include APPPATH . 'libraries/Converge/src/Converge.php';
         $this->load->model('Clients_model');

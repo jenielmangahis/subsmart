@@ -150,19 +150,24 @@ class Inquiries extends MY_Controller {
 
     public function online_lead() 
     {
-        $this->hasAccessModule(68);
+        //$this->hasAccessModule(68);
 
-        if(!checkRoleCanAccessModule('lead-contact-form', 'read')){
-			show403Error();
-			return false;
-		}
+        // if(!checkRoleCanAccessModule('lead-contact-form', 'read')){
+		// 	show403Error();
+		// 	return false;
+		// }
         
         $company_id = logged('company_id');
-        $this->page_data['lead_forms'] = $this->inquiry_model->getAllLeadFormByCompany($company_id);
-        $this->page_data['customize_lead_forms'] = $this->inquiry_model->getAllCustomizeLeadFormByCompany($company_id, 'lead_form');
-        $this->page_data['customize_lead_forms_default'] = $this->inquiry_model->getAllCustomizeLeadFormByDefault();
+        $lead_forms = $this->inquiry_model->getAllLeadFormByCompany($company_id);
+        $customize_lead_forms = $this->inquiry_model->getAllCustomizeLeadFormByCompany($company_id, 'lead_form');
+        $customize_lead_forms_default = $this->inquiry_model->getAllCustomizeLeadFormByDefault();
+
+        $this->page_data['lead_forms'] = $lead_forms;
+        $this->page_data['customize_lead_forms'] = $customize_lead_forms;
+        $this->page_data['customize_lead_forms_default'] = $customize_lead_forms_default;
         $this->page_data['page']->title = 'Lead Contact Form';
         $this->load->view('v2/pages/inquiry/online_lead', $this->page_data);
+        //$this->load->view('inquiry/online_lead_v1', $this->page_data);
     }
 
     public function video_estimate() {

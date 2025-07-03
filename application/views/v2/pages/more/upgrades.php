@@ -75,6 +75,7 @@
         $(document).on('click', '.btn-remove-add-on', function(){
             let plugin_id   = $(this).attr('data-id');
             let plugin_name = $(this).attr('data-name');
+            let active_tab  = $(this).attr('data-tab');
 
             Swal.fire({
                 title: 'Remove Addon',
@@ -99,7 +100,11 @@
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
                                     //if (result.value) {
-                                       loadAddOnsList();
+                                       if( active_tab == 'active-addons' ){
+                                            loaddActiveAddOns();
+                                        }else{
+                                            loadAddOnsList();
+                                        }
                                     //}
                                 });
                             } else {
@@ -120,6 +125,7 @@
         $(document).on('click', '.btn-cancel-request-removal', function(){
             let plugin_id   = $(this).attr('data-id');
             let plugin_name = $(this).attr('data-name');
+            let active_tab  = $(this).attr('data-tab');
 
             Swal.fire({
                 title: 'Cancel Request Removal',
@@ -144,7 +150,12 @@
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
                                     //if (result.value) {
-                                       loadAddOnsList();
+                                        if( active_tab == 'active-addons' ){
+                                            loaddActiveAddOns();
+                                        }else{
+                                            loadAddOnsList();
+                                        }
+                                       
                                     //}
                                 });
                             } else {

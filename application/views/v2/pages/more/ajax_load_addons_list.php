@@ -37,11 +37,11 @@
                         <?php if( !array_key_exists($nu->id, $active_addons_id) ){ ?>
                             <button type="button" class="nsm-button primary btn-subscribe-now" data-name="<?= $nu->name; ?>" data-servicefee="<?= number_format($nu->service_fee,2,".",","); ?>" data-id="<?= $nu->id; ?>" data-smsfee="<?= number_format($nu->sms_fee,2,".",","); ?>">Subscribe Now</button>
                         <?php }else{ ?>
-                            <button type="button" class="nsm-button primary btn-open-addon" data-id="<?= $nu->id; ?>" data-name="<?= $nu->name; ?>">Open Module</button>
+                            <button type="button" class="nsm-button primary btn-open-addon"  data-id="<?= $nu->id; ?>" data-name="<?= $nu->name; ?>">Open Module</button>
                             <?php if( $active_addons_id[$nu->id] == 1 ){ ?>
-                                <button type="button" class="nsm-button btn-cancel-request-removal" data-id="<?= $nu->id; ?>" data-name="<?= $nu->name; ?>">Cancel Request Removal</button>
+                                <button type="button" class="nsm-button btn-cancel-request-removal" data-tab="addons-list" data-id="<?= $nu->id; ?>" data-name="<?= $nu->name; ?>">Cancel Request Removal</button>
                             <?php }else{ ?>
-                                <button type="button" class="nsm-button btn-remove-add-on" data-id="<?= $nu->id; ?>" data-name="<?= $nu->name; ?>">Remove Addon</button>
+                                <button type="button" class="nsm-button btn-remove-add-on" data-tab="addons-list" data-id="<?= $nu->id; ?>" data-name="<?= $nu->name; ?>">Remove Addon</button>
                             <?php } ?>
                         <?php } ?>
                     </div>

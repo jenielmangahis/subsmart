@@ -114,6 +114,12 @@ class Login extends CI_Controller
 
                 $this->index();
                 return;
+            }elseif( $user->is_archived == 'Yes' ){
+                $this->data['message'] = 'Invalid username / password';
+                $this->data['message_type'] = 'danger';
+
+                $this->index();
+                return;
             }else{
                 $calendarSettings = $this->CalendarSettings_model->getByCompanyId($user->company_id);
                 $default_timezone = '';

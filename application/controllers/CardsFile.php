@@ -290,7 +290,7 @@ class CardsFile extends MY_Controller {
             'merchant_id' => CONVERGE_MERCHANTID,
             'user_id' => CONVERGE_MERCHANTUSERID,
             'pin' => CONVERGE_MERCHANTPIN,
-            'demo' => false,
+            'demo' => true,
         ]);
 
         $verify = $converge->request('ccverify', [
@@ -360,6 +360,8 @@ class CardsFile extends MY_Controller {
 					$is_success = 1;
 					$msg = '';
 				}
+			}else{
+				$msg = $is_valid['msg'];
 			}
         	
         }else{

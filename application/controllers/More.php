@@ -70,7 +70,7 @@ class More extends MY_Controller {
 
 		$active_addons_id = array();
 		foreach($activeAddons as $a){
-			$active_addons_id[$a->plan_upgrade_id] = $a->plan_upgrade_id;
+			$active_addons_id[$a->plan_upgrade_id] = $a->with_request_removal;
 		}
 
 		$this->page_data['active_addons_id'] = $active_addons_id;

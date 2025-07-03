@@ -143,9 +143,11 @@
                                             <div class="col-12 col-md-6">
                                                 1 <?= $client->recurring_payment_type == 'month' ? 'Monthly' : 'year'; ?>
                                             </div>
+                                            <?php if( $client->recurring_payment_type == 'monthly' ){ ?>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-title">Current Billing Period</label>
                                             </div>
+                                            <?php } ?>
                                             <div class="col-12 col-md-6">
                                                 <?= $start_billing_period; ?> to <?= $end_billing_period; ?>
                                             </div>
@@ -163,7 +165,7 @@
                                                 <?php if( in_array($client->id, $exempted_company_ids) ){ ?>
                                                     <span><b>Included in Exempted Companies - No renewal</b></span>
                                                 <?php }else{ ?>
-                                                    <?= date("d-M-Y", strtotime($client->next_billing_date)); ?>
+                                                    <?= date("m/d/Y", strtotime($client->next_billing_date)); ?>
                                                 <?php } ?>
                                                 
                                             </div>
@@ -190,7 +192,7 @@
                                                 if ($client->is_trial == 1) :
                                                     echo "---";
                                                 else :
-                                                    echo date("d-M-Y", strtotime($firstPayment->payment_date));
+                                                    echo date("m/d/Y", strtotime($firstPayment->payment_date));
                                                 endif;
                                                 ?>
                                             </div>
@@ -202,7 +204,7 @@
                                                     ---
                                                 <?php else : ?>
                                                     $<?= number_format($lastPayment->total_amount, 2); ?>
-                                                    on <?= date("d-M-Y", strtotime($lastPayment->payment_date)); ?>
+                                                    on <?= date("m/d/Y", strtotime($lastPayment->payment_date)); ?>
                                                     <button class="nsm-button btn-sm ms-3" onclick="location.href='<?= base_url('mycrm/view_payment/' . $lastPayment->id); ?>'">View</button>
                                                 <?php endif; ?>
                                             </div>
@@ -325,6 +327,21 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        <?php if( $this->session->flashdata('susbscription-addon-no-access') == 1 ){ ?>
+            let no_access_add_on_name = '<?= $this->session->flashdata('susbscription-addon-name'); ?>';
+            let add_more_add_on_url   = base_url + 'more/upgrades';
+            Swal.fire({
+                icon: 'error',
+                html: `You have no access to <b>${no_access_add_on_name}</b>. To gain access, please activate module via <a class="nsm-link" href="${add_more_add_on_url}"><b>Add More Add-ons</b></a>`,
+            });
+        <?php } ?>
+
+        <?php if( $this->session->flashdata('susbscription-no-access-module') == 1 ){ ?>
+            Swal.fire({
+                icon: 'error',
+                html: `You have no access to that module.`,
+            });
+        <?php } ?>
 
         $(".nsm-table").nsmPagination();
         
@@ -376,11 +393,11 @@
                             }
                         });
                     }else{
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Cannot process payment',
-                        text: o.message
-                    });
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Cannot process payment',
+                            text: o.message
+                        });
                     }
 
                     $("#btn-buy-license").html('Buy');

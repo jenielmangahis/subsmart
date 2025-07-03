@@ -1,6 +1,5 @@
 <div class="row">
-    <div class="col-12 grid-mb text-end">
-        <input type="hidden" id="customer-deal-modal-name" value="" />   
+    <div class="col-12 grid-mb text-end">                
         <div class="dropdown d-inline-block">
             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                 <span id="customer-deals-archive-num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>

@@ -18,8 +18,7 @@ class MY_Controller extends CI_Controller {
 			$this->users_model->logout();
 			die('Database is not configured');
 		}
-		
-		$this->sessionExpires();
+
 		$this->setNewtimezone();
 		$this->companyLeftNavMenuSetting();
 
@@ -45,14 +44,13 @@ class MY_Controller extends CI_Controller {
 
 		$company_id     = logged('company_id');
 		$is_plan_active = isCompanyPlanActive();
-		if(!empty($company_id)){
+		if($company_id > 0){
 			$company = getCompanyFolder();
 		}
 
 		$method     = $this->router->fetch_method();
 		$controller = $this->router->fetch_class();		
 		$controller = strtolower($controller);
-		$company_id = logged('company_id');		
 		$exempted_company_ids = exempted_company_ids();
 
 		if( !in_array($company_id, $exempted_company_ids) ){					
@@ -70,13 +68,6 @@ class MY_Controller extends CI_Controller {
 
 	public function gtMyIpGlobal(){
 		return $ipaddress = $this->timesheet_model->gtMyIpGlobal();
-	}
-
-	public function sessionExpires()
-	{
-		if( !$this->session->userdata('plan_active_addons') || !$this->session->userdata('userAccessModules') || !$this->session->userdata('is_plan_active') ){
-			redirect('logout'); 	
-		}
 	}
 
 	public function companyLeftNavMenuSetting(){
