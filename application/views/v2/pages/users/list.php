@@ -93,9 +93,9 @@
                                     <span class=""><i class='bx bx-chevron-down' ></i></span>
                                 </button>
                                 <ul class="dropdown-menu">                                
-                                    <li><a class="dropdown-item" id="btn-share-url" href="javascript:void(0);"><i class='bx bx-fw bx-share-alt'></i> Shareable link</a></li>        
-                                    <li><a class="dropdown-item" id="btn-export-list" href="javascript:void(0);"><i class="bx bx-fw bx-export"></i> Export</a></li>                               
-                                    <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);"><i class="bx bx-fw bx-trash"></i> Archived</a></li>                               
+                                    <li><a class="dropdown-item" id="btn-share-url" href="javascript:void(0);">Shareable link</a></li>        
+                                    <li><a class="dropdown-item" id="btn-export-list" href="javascript:void(0);">Export</a></li>                               
+                                    <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>                               
                                 </ul>
                             </div>
                             <?php } ?>

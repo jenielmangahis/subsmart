@@ -789,9 +789,9 @@ $(document).ready(function() {
         let _this = $(this);
         e.preventDefault();
 
-        let url = "<?php echo base_url(); ?>users/ajaxUpdateEmployeeProfilePhoto";
-        _this.find("button[type=submit]").html("Saving");
-        _this.find("button[type=submit]").prop("disabled", true);
+        let url = base_url + "user/_update_employee_profile_photo";
+        $('#btn-row-change-profile-photo').html("Saving");
+        $('#btn-row-change-profile-photo').prop("disabled", true);
         let formData = new FormData(_this[0]);   
 
         $.ajax({
@@ -805,20 +805,18 @@ $(document).ready(function() {
             data: formData,
             success: function(result) {
                 if (result == 1) {
+                    $("#change_profile_modal").modal('hide');
                     Swal.fire({
-                        title: 'Save Successful!',
+                        title: 'Employee Photo',
                         text: "Employee photo has been updated successfully.",
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
                     }).then((result) => {
-                        if (result.value) {
+                        //if (result.value) {
                             location.reload();
-                        }
-                    });
-
-                    $("#change_profile_modal").modal('hide');
-                    _this.trigger("reset");
+                        //}
+                    });                 
                 } else {
                     Swal.fire({
                         title: 'Failed',
@@ -829,8 +827,8 @@ $(document).ready(function() {
                     });
                 }
 
-                _this.find("button[type=submit]").html("Save");
-                _this.find("button[type=submit]").prop("disabled", false);
+                $('#btn-row-change-profile-photo').find("button[type=submit]").html("Save");
+                $('#btn-row-change-profile-photo').find("button[type=submit]").prop("disabled", false);
             },
         });
     });
