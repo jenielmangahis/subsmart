@@ -1253,6 +1253,7 @@ $route['users/_change_status_selected_users'] = 'Users/ajax_change_status_select
 $route['user/_change_user_password'] = 'Users/ajaxUpdateEmployeePasswordV2';
 $route['users/_archived_list'] = 'Users/ajax_archived_list';
 $route['users/_restore_selected_users'] = 'Users/ajax_restore_selected_users';
+$route['user/_update_employee_profile_photo'] = 'Users/ajaxUpdateEmployeeProfilePhoto';
 
 $route['company/download_w9_form']  = 'Users/download_company_w9_form';
 
