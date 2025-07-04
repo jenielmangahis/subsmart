@@ -256,29 +256,30 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="change_profile_modal" tabindex="-1" aria-labelledby="change_profile_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="change_profile_form">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Change Employee Photo</span>
-                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-12">                            
-                            <div class="nsm-img-upload">
-                                <span class="nsm-upload-label disable-select">Drop or click image to upload</span>
-                                <input type="file" name="userfile" class="nsm-upload" accept="image/*" required>
-                            </div>
+    <div class="modal-dialog modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Change Employee Photo</span>
+                <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="change_profile_form">
+                <input type="hidden" name="user_id_prof" id="user_id_prof" value="" />
+                <div class="row g-3">
+                    <div class="col-12">                            
+                        <div class="nsm-img-upload">
+                            <span class="nsm-upload-label disable-select">Drop or click image to upload</span>
+                            <input type="file" name="user_photo" class="nsm-upload" accept="image/*" required>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
-                </div>
+                </form>
             </div>
-        </form>
+            <div class="modal-footer">
+                <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" name="btn_modal_save" id="btn-row-change-profile-photo" class="nsm-button primary" form="change_profile_form">Save</button>
+            </div>
+        </div>        
     </div>
 </div>
 

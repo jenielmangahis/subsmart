@@ -161,8 +161,7 @@
                                                 </label>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <?php $exempted_company_ids = exempted_company_ids(); ?>
-                                                <?php if( in_array($client->id, $exempted_company_ids) ){ ?>
+                                                <?php if( in_array($client->id, exempted_company_ids()) ){ ?>
                                                     <span><b>Included in Exempted Companies - No renewal</b></span>
                                                 <?php }else{ ?>
                                                     <?= date("m/d/Y", strtotime($client->next_billing_date)); ?>

@@ -14,15 +14,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-6 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="">
+                        </div>
+                    </div> 
+                </div>
                 <table class="nsm-table">
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
-                            <td data-name="Order Number">Order Number</td>
+                            <td data-name="Order Number" style="width:60%;">Order Number</td>
                             <td data-name="Details">Details</td>
-                            <td data-name="Date Added">Date Added</td>
+                            <td data-name="Date Added">Date Created</td>
                             <td data-name="Amount">Amount</td>
-                            <td data-name="Manage"></td>
+                            <td data-name="Manage" style="width:3%;"></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,7 +50,7 @@
                                     </td>
                                     <td><?= $p->description; ?></td>
                                     <td><?= date("m/d/Y g:i A", strtotime($p->date_created)); ?></td>
-                                    <td>$<?= number_format($p->total_amount,2); ?></td>
+                                    <td style="text-align:right;">$<?= number_format($p->total_amount,2); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -83,6 +90,10 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
+
+        $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));        
+        }, 1000));
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

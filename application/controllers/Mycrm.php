@@ -224,32 +224,19 @@ class Mycrm extends MY_Controller
 
     public function orders()
     {
+        $this->load->model('CompanySubscriptionPayments_model');
+
         if(!checkRoleCanAccessModule('my-crm', 'read')){
 			show403Error();
 			return false;
 		}
-
-        $this->page_data['page']->title = 'Orders';
-        $this->page_data['page']->parent = 'Company';
-
-        $this->load->model('CompanySubscriptionPayments_model');
-
-        $company_id = logged('company_id');
-        $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);
-        $a_settings = unserialize($settings[0]->value);
-        if ($a_settings) {
-            $user_timezone = $a_settings['calendar_timezone'];
-        } else {
-            $user_timezone = 'UTC';
-        }
-
-        date_default_timezone_set($user_timezone);
-
+        
         $company_id = logged('company_id');
         $payments = $this->CompanySubscriptionPayments_model->getAllByCompanyId($company_id);
 
+        $this->page_data['page']->title = 'Orders';
+        $this->page_data['page']->parent = 'Company';
         $this->page_data['payments'] = $payments;
-        // $this->load->view('mycrm/order', $this->page_data);
         $this->load->view('v2/pages/mycrm/order', $this->page_data);
     }
 
