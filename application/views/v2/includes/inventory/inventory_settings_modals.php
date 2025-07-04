@@ -24,7 +24,7 @@
 
 <div class="modal fade nsm-modal fade" id="edit-custom-field-modal" tabindex="-1" aria-labelledby="edit_custom_field_modal_label" aria-hidden="true">
     <div class="modal-dialog">
-        <?php echo form_open_multipart(null, ['id' => 'form-update-custom-field', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
+        <?php echo form_open_multipart(null, ['id' => 'form-update-custom-field', 'class' => 'form-validate frm-update-custom-field', 'autocomplete' => 'off']); ?>
         <input type="hidden" name="cfid" value="" id="cfid" />
         <input type="hidden" name="default_custom_field_name" value="" id="default-custom-field_name" />
         <div class="modal-content">
