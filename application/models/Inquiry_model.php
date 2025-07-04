@@ -364,6 +364,15 @@ class Inquiry_model extends MY_Model
 
         return $query->row();
     }
+
+    public function getLeadFormByCompanyId($company_id) {
+        $this->db->select('*');
+        $this->db->from($this->table_2);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
     
     public function getAllCustomizeLeadFormByCompany($comp_id, $type) {
         $array = array('company_id' => $comp_id, 'type' => $type);
@@ -385,6 +394,59 @@ class Inquiry_model extends MY_Model
         $query = $this->db->get();
 
         return $query->result();
+    }
+
+    public function createCustomField($data)
+    {
+        $this->db->insert($this->table_3, $data);
+        return $this->db->insert_id();
+    }
+
+    public function createLeadForm($data)
+    {
+        $this->db->insert($this->table_2, $data);
+        return $this->db->insert_id();
+    }
+
+    public function updateLeadForm($id, $data = [], $filters = [])
+    {
+        $this->db->where('id', $id);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->update($this->table_2, $data);
+    }
+
+    public function deleteAllCustomizeLeadFormByCompanyId($company_id, $filters = [])
+    {
+        $this->db->where('company_id', $company_id);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->delete($this->table_3);
+    }
+
+    public function optionTextFont()
+    {
+        $options = [
+            'Roboto' => 'Roboto',
+            'Open Sans' => 'Open Sans',
+            'Lato' => 'Lato',
+            'Montserrat' => 'Montserrat',
+            'PT Serif' => 'PT Serif',
+            'Ubuntu' => 'Ubuntu',
+            'Heebo' => 'Heebo',
+        ];
+
+        return $options;
     }
 }
 

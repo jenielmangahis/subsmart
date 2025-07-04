@@ -31,75 +31,101 @@ table.dataTable.no-footer {
             <div class="nsm-page-content">
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
-                        
-                    </div>
-                    <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#custom-field-modal">
-                                <i class='bx bx-fw bx-list-plus'></i> New Field
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-md-4 grid-mb">
                         <div class="nsm-field-group search">                            
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field_custom" placeholder="Search Item">
                         </div>
                     </div>
+                    <?php if(checkRoleCanAccessModule('settings', 'write')){ ?>
+                    <div class="col-12 col-md-8 grid-mb text-end">
+                        <div class="dropdown d-inline-block">
+                            <input type="hidden" class="nsm-field form-control" id="selected_ids">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>
+                                    Batch Actions
+                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end batch-actions">
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete_selected">Delete Selected</a></li>
+                            </ul>
+                        </div>
+                        <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#custom-field-modal">
+                                <i class='bx bx-fw bx-list-plus'></i> New Field
+                            </button>
+                        </div>
+                    </div>
+                    <?php } ?>
+
                 </div>
-                <table class="nsm-table" id="custom-fields-table">
-                    <thead>
-                        <tr>
-                            <td class="table-icon"></td>
-                            <td data-name="Custom Field Name">Custom Field Name</td>                            
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($inventoryCustomFields)) : ?>                        
-                            <?php foreach ($inventoryCustomFields as $field) : ?>
+                <form id="frm-settings">
+                    <table class="nsm-table" id="custom-fields-table">
+                        <thead>
+                            <tr>
+                                <?php if(checkRoleCanAccessModule('settings', 'write')){ ?>
+                                <td class="table-icon text-center">
+                                    <input class="form-check-input select-all table-select" type="checkbox">
+                                </td>
+                                <?php } ?>
+                                <td class="table-icon"></td>
+                                <td data-name="Custom Field Name">Custom Field Name</td>                            
+                                <td data-name="Manage"></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($inventoryCustomFields)) : ?>                        
+                                <?php foreach ($inventoryCustomFields as $field) : ?>
+                                    <tr>
+                                        <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>
+                                        <td style="width:1%;">
+                                            <div class="table-row-icon table-checkbox">
+                                                <input class="form-check-input select-one table-select" type="checkbox" name="items[]" value="<?= $field->id; ?>" data-id="<?php echo $field->id; ?>">
+                                            </div>
+                                        </td>
+                                        <?php } ?>
+                                        <td><div class="table-row-icon"><i class='bx bx-cube'></i></div></td>
+                                        <td class="f"><?= $field->name ?></td>                                
+                                        <td class="text-end">
+                                            <div class="dropdown table-management">
+                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li>
+                                                        <a class="dropdown-item update-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit-custom-field-modal" data-id="<?=$field->id?>" data-name="<?=$field->name?>">Edit</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" data-name="<?php echo $field->name ?>" data-id="<?php echo $field->id?>">Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>                                    
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else : ?>
                                 <tr>
-                                    <td><div class="table-row-icon"><i class='bx bx-cube'></i></div></td>
-                                    <td class="f"><?= $field->name ?></td>                                
-                                    <td class="text-end">
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                            <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item update-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit-custom-field-modal" data-id="<?=$field->id?>" data-name="<?=$field->name?>">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-name="<?php echo $field->name ?>" data-id="<?php echo $field->id?>">Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>                                    
+                                    <td colspan="3">
+                                        <div class="nsm-empty">
+                                            <span>No results found.</span>
+                                        </div>
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php else : ?>
-                            <tr>
-                                <td colspan="3">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
+
     $(document).ready(function() {
+
         /* $("#custom-fields-table").nsmPagination({
             itemsPerPage: 20
         }); */
+        
         var CUSTOM_FIELD_TBL = $("#custom-fields-table").DataTable({
             "ordering": false,
             language: {
@@ -110,7 +136,7 @@ table.dataTable.no-footer {
                 { "width": "90%" },
                 null        
             ]
-        });
+        });    
 
         $("#search_field_custom").keyup(function() {
             CUSTOM_FIELD_TBL.search($(this).val()).draw()
@@ -252,10 +278,62 @@ table.dataTable.no-footer {
         $(document).on("click", ".update-item", function() {
             let id = $(this).attr('data-id');
             let name = $(this).attr('data-name');
+            let dname = $(this).attr('data-name');
             $('#cfid').val(id);
             $('#edit-custom-field-name').val(name);
-            $('#default-custom-field_name').val(name);
+            $('#default-custom-field_name').val(dname);
         });
     });
+
+    $(document).ready(function() {
+
+        $(document).on("click", ".select-all", function() {
+            
+            let _this = $(this);
+            if (_this.prop("checked")) {
+                $(".table-select").prop("checked", true);
+                selectedIds = [];
+
+                $(".table-select").each(function() {
+                    if ($(this).prop("checked"))
+                        selectedIds.push($(this).attr("data-id"));
+                })
+                $("#selected_ids").val(selectedIds);
+            } else {
+                $(".table-select").prop("checked", false);
+                $("#selected_ids").val('');
+                $("#delete_selected").addClass("disabled");
+            }
+
+            toggleBatchDelete(_this.prop("checked"));
+        });          
+
+        $(document).on("click", ".table-select", function() {            
+            let id = $(this).attr("data-id");
+            let _this = $(this);
+
+            if (!_this.prop("checked") && $(".select-all").prop("checked")) {
+                $(".select-all").prop("checked", false);
+            }
+
+            if (!_this.prop("checked")) {
+                selectedIds = $.grep(selectedIds, function(value) {
+                    return value != id
+                });
+                $("#selected_ids").val(selectedIds);
+            } else {
+                selectedIds.push(id);
+                $("#selected_ids").val(selectedIds);
+            }
+
+            toggleBatchDelete($(".table-select:checked").length > 0);
+        });        
+
+    });
+     
+
+    function toggleBatchDelete(enable = True) {
+        enable ? $("#delete_selected").removeClass("disabled") : $("#delete_selected").addClass("disabled");
+    }        
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

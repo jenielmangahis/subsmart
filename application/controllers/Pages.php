@@ -1798,4 +1798,44 @@ class Pages extends MYF_Controller {
 		}
         
     }
+
+	public function front_lead_contact_form($slug)
+	{
+		$this->load->model('Business_model');
+		$this->load->model('Inquiry_model');
+
+		$company = $this->Business_model->getByProfileSlug($slug);
+		if( $company ){
+			$customizeLeadForms = $this->Inquiry_model->getAllCustomizeLeadFormByCompany($company->id, 'lead_form');
+			$customizeLeadFormsDefault = $this->Inquiry_model->getAllCustomizeLeadFormByDefault();
+			$leadForm = $this->Inquiry_model->getLeadFormByCompanyId($company->id);
+
+			$this->page_data['slug'] = $slug;
+			$this->page_data['leadForm'] = $leadForm;
+        	$this->page_data['customizeLeadForms'] = $customizeLeadForms;
+        	$this->page_data['customizeLeadFormsDefault'] = $customizeLeadFormsDefault;
+			$this->load->view('pages/front_lead_contact_form', $this->page_data);
+		}else{
+			return redirect('/');
+		}
+	}
+
+	public function front_lead_contact_save($slug)
+	{
+		$this->load->model('Inquiry_model');
+		$this->load->model('Business_model');
+
+        $is_success = 0;
+        $msg = 'Error saving. Please try again later.';
+
+        $company = $this->Business_model->getByProfileSlug($slug);
+        $post = $this->input->post();
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 }
