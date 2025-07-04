@@ -266,12 +266,12 @@ class Users extends MY_Controller
 
 		$cid = logged('company_id');
 		$profiledata = $this->business_model->getByCompanyId($cid);
-		$workingDays = unserialize($profiledata->working_days);
+		$workingDays = unserialize($profiledata->working_days);		
 
 		$data_working_days = array();
 		if (!empty($workingDays)) {
 			foreach ($workingDays as $d) {
-				$data_working_days[$d['day']] = ['time_from' => $d['time_from'], 'time_to' => $d['time_to']];
+				$data_working_days[$d['day']] = ['time_from' => date("H:i:s",strtotime($d['time_from'])), 'time_to' => date("H:i:s", strtotime($d['time_to']))];
 			}
 		} else {
 			$data_working_days['Monday']    = ['time_from' => '', 'time_to' => ''];

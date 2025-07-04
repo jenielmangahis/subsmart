@@ -13,7 +13,7 @@
                 <input type="hidden" name="action" value="availability" />
                 <?php } ?>
                 <div class="row mt-3 g-3 align-items-start">
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-4">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title">
@@ -30,10 +30,10 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4">
-                                        <input type="text" name="monHoursFromAvail" id="mondayHoursFromAvail" class="nsm-field form-control timepicker" required value="<?= $data_working_days['Monday']['time_from']; ?>" <?= !array_key_exists("Monday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="time" name="monHoursFromAvail" id="mondayHoursFromAvail" class="nsm-field form-control" required value="<?= $data_working_days['Monday']['time_from']; ?>" <?= !array_key_exists("Monday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
                                     <div class="col-12 col-md-4">
-                                        <input type="text" name="monHoursToAvail" id="mondayHoursToAvail" class="nsm-field form-control timepicker" required value="<?= $data_working_days['Monday']['time_to']; ?>" <?= !array_key_exists("Monday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="time" name="monHoursToAvail" id="mondayHoursToAvail" class="nsm-field form-control" required value="<?= $data_working_days['Monday']['time_to']; ?>" <?= !array_key_exists("Monday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
                                                                         
                                     <div class="col-12 col-md-4">
@@ -43,10 +43,10 @@
                                         </div>
                                     </div>                                    
                                     <div class="col-12 col-md-4">
-                                        <input type="text" name="tueHoursFromAvail" id="tuesdayHoursFromAvail" class="nsm-field form-control timepicker" required value="<?= $data_working_days['Tuesday']['time_from']; ?>" <?= !array_key_exists("Tuesday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="time" name="tueHoursFromAvail" id="tuesdayHoursFromAvail" class="nsm-field form-control" required value="<?= $data_working_days['Tuesday']['time_from']; ?>" <?= !array_key_exists("Tuesday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
                                     <div class="col-12 col-md-4">
-                                        <input type="text" name="tueHoursToAvail" id="tuesdayHoursToAvail" class="nsm-field form-control timepicker" required value="<?= $data_working_days['Tuesday']['time_to']; ?>" <?= !array_key_exists("Tuesday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="time" name="tueHoursToAvail" id="tuesdayHoursToAvail" class="nsm-field form-control" required value="<?= $data_working_days['Tuesday']['time_to']; ?>" <?= !array_key_exists("Tuesday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
                                     
                                     <div class="col-12 col-md-4">
@@ -56,10 +56,10 @@
                                         </div>
                                     </div>                                    
                                     <div class="col-12 col-md-4">
-                                        <input type="text" name="wedHoursFromAvail" id="wednesdayHoursFromAvail" class="nsm-field form-control timepicker" required value="<?= $data_working_days['Wednesday']['time_from']; ?>" <?= !array_key_exists("Wednesday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="time" name="wedHoursFromAvail" id="wednesdayHoursFromAvail" class="nsm-field form-control" required value="<?= $data_working_days['Wednesday']['time_from']; ?>" <?= !array_key_exists("Wednesday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
                                     <div class="col-12 col-md-4">
-                                        <input type="text" name="wedHoursToAvail" id="wednesdayHoursToAvail" class="nsm-field form-control timepicker" required value="<?= $data_working_days['Wednesday']['time_to']; ?>" <?= !array_key_exists("Wednesday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="time" name="wedHoursToAvail" id="wednesdayHoursToAvail" class="nsm-field form-control" required value="<?= $data_working_days['Wednesday']['time_to']; ?>" <?= !array_key_exists("Wednesday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
                                     
                                     <div class="col-12 col-md-4">
@@ -69,10 +69,10 @@
                                         </div>
                                     </div>                                    
                                     <div class="col-12 col-md-4">
-                                        <input type="text" name="thuHoursFromAvail" id="thursdayHoursFromAvail" class="nsm-field form-control timepicker" required value="<?= $data_working_days['Thursday']['time_from']; ?>" <?= !array_key_exists("Thursday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="time" name="thuHoursFromAvail" id="thursdayHoursFromAvail" class="nsm-field form-control" required value="<?= $data_working_days['Thursday']['time_from']; ?>" <?= !array_key_exists("Thursday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
                                     <div class="col-12 col-md-4">
-                                        <input type="text" name="thuHoursToAvail" id="thursdayHoursToAvail" class="nsm-field form-control timepicker" required value="<?= $data_working_days['Thursday']['time_to']; ?>" <?= !array_key_exists("Thursday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="time" name="thuHoursToAvail" id="thursdayHoursToAvail" class="nsm-field form-control" required value="<?= $data_working_days['Thursday']['time_to']; ?>" <?= !array_key_exists("Thursday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
                                     
                                     <div class="col-12 col-md-4">
@@ -82,10 +82,10 @@
                                         </div>
                                     </div>                                    
                                     <div class="col-12 col-md-4">
-                                        <input type="text" name="friHoursFromAvail" id="fridayHoursFromAvail" class="nsm-field form-control timepicker" required value="<?= $data_working_days['Friday']['time_from']; ?>" <?= !array_key_exists("Friday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="time" name="friHoursFromAvail" id="fridayHoursFromAvail" class="nsm-field form-control" required value="<?= $data_working_days['Friday']['time_from']; ?>" <?= !array_key_exists("Friday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
                                     <div class="col-12 col-md-4">
-                                        <input type="text" name="friHoursToAvail" id="fridayHoursToAvail" class="nsm-field form-control timepicker" required value="<?= $data_working_days['Friday']['time_to']; ?>" <?= !array_key_exists("Friday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="time" name="friHoursToAvail" id="fridayHoursToAvail" class="nsm-field form-control" required value="<?= $data_working_days['Friday']['time_to']; ?>" <?= !array_key_exists("Friday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
                                                                         
                                     <div class="col-12 col-md-4">
@@ -95,10 +95,10 @@
                                         </div>
                                     </div>                                    
                                     <div class="col-12 col-md-4">
-                                        <input type="text" name="satHoursFromAvail" id="saturdayHoursFromAvail" class="nsm-field form-control timepicker" required value="<?= $data_working_days['Saturday']['time_from']; ?>" <?= !array_key_exists("Saturday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="time" name="satHoursFromAvail" id="saturdayHoursFromAvail" class="nsm-field form-control" required value="<?= $data_working_days['Saturday']['time_from']; ?>" <?= !array_key_exists("Saturday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
                                     <div class="col-12 col-md-4">
-                                        <input type="text" name="satHoursToAvail" id="saturdayHoursToAvail" class="nsm-field form-control timepicker" required value="<?= $data_working_days['Saturday']['time_to']; ?>" <?= !array_key_exists("Saturday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="time" name="satHoursToAvail" id="saturdayHoursToAvail" class="nsm-field form-control" required value="<?= $data_working_days['Saturday']['time_to']; ?>" <?= !array_key_exists("Saturday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
                                                                         
                                     <div class="col-12 col-md-4">
@@ -108,10 +108,10 @@
                                         </div>
                                     </div>                                    
                                     <div class="col-12 col-md-4">
-                                        <input type="text" name="sunHoursFromAvail" id="sundayHoursFromAvail" class="nsm-field form-control timepicker" required value="<?= $data_working_days['Sunday']['time_from']; ?>" <?= !array_key_exists("Sunday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="time" name="sunHoursFromAvail" id="sundayHoursFromAvail" class="nsm-field form-control" required value="<?= $data_working_days['Sunday']['time_from']; ?>" <?= !array_key_exists("Sunday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
                                     <div class="col-12 col-md-4">
-                                        <input type="text" name="sunHoursToAvail" id="sundayHoursToAvail" class="nsm-field form-control timepicker" required value="<?= $data_working_days['Sunday']['time_to']; ?>" <?= !array_key_exists("Sunday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="time" name="sunHoursToAvail" id="sundayHoursToAvail" class="nsm-field form-control" required value="<?= $data_working_days['Sunday']['time_to']; ?>" <?= !array_key_exists("Sunday", $data_working_days) || !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
 
                                     <?php if( checkRoleCanAccessModule('company-my-availability', 'write') ){ ?>
@@ -128,7 +128,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-4">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title">
@@ -138,13 +138,13 @@
                             </div>
                             <div class="nsm-card-content">
                                 <div class="row g-3">
-                                    <div class="col-12 col-md-6">
+                                    <div class="col-12 col-md-5">
                                         <label class="content-subtitle fw-bold d-block mb-2">From</label>
-                                        <input type="text" name="timeoff_from" class="nsm-field form-control datepicker" required value="<?= $profiledata->start_time_of_day; ?>" <?= !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="date" name="timeoff_from" class="nsm-field form-control" required value="<?= date("Y-m-d",strtotime($profiledata->start_time_of_day)); ?>" <?= !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
-                                    <div class="col-12 col-md-6">
+                                    <div class="col-12 col-md-5">
                                         <label class="content-subtitle fw-bold d-block mb-2">To</label>
-                                        <input type="text" name="timeoff_to" class="nsm-field form-control datepicker" required value="<?= $profiledata->end_time_of_day; ?>" <?= !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                        <input type="date" name="timeoff_to" class="nsm-field form-control" required value="<?= date("Y-m-d",strtotime($profiledata->end_time_of_day)); ?>" <?= !checkRoleCanAccessModule('company-my-availability', 'write') ? 'disabled="disabled"' : ''; ?> />
                                     </div>
                                 </div>
                             </div>
