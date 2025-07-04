@@ -182,14 +182,35 @@ class Dashboard_model extends MY_Model
                 return $query->result();
             break;
             case 'accounting_expense':
-                $this->db->select('accounting_vendor_transaction_categories.id AS id, accounting_check.company_id AS company_id, accounting_chart_of_accounts.name AS account_name, account.account_name AS account_type, SUM(accounting_check.total_amount) AS total, accounting_vendor_transaction_categories.created_at AS date');
+                $this->db->select('
+                    accounting_vendor_transaction_categories.id AS id, 
+                    accounting_check.company_id AS company_id, 
+                    accounting_chart_of_accounts.name AS account_name, 
+                    account.account_name AS account_type, 
+                    (
+                        COALESCE(SUM(accounting_check.total_amount), 0) +
+                        COALESCE(SUM(CASE WHEN accounting_vendor_transaction_categories.transaction_type = "Expense" THEN accounting_vendor_transaction_categories.amount ELSE 0 END), 0) +
+                        COALESCE(SUM(accounting_bill.total_amount), 0) +
+                        COALESCE(SUM(po.total_amount), 0) +
+                        COALESCE(SUM(vendor_credit.total_amount), 0) +
+                        COALESCE(SUM(credit_card.amount), 0)
+                    ) AS total,
+                    accounting_vendor_transaction_categories.created_at AS date
+                ');
                 $this->db->from('accounting_vendor_transaction_categories');
-                $this->db->where('accounting_check.company_id ', $company_id);
+                $this->db->where('accounting_check.company_id', $company_id);
                 $this->db->where("DATE_FORMAT(accounting_vendor_transaction_categories.created_at, '%Y-%m-%d') >=", $dateFrom);
                 $this->db->where("DATE_FORMAT(accounting_vendor_transaction_categories.created_at, '%Y-%m-%d') <=", $dateTo);
+            
                 $this->db->join('accounting_chart_of_accounts', 'accounting_chart_of_accounts.id = accounting_vendor_transaction_categories.expense_account_id', 'left');
-                $this->db->join('accounting_check', 'accounting_check.id = accounting_vendor_transaction_categories.transaction_id', 'left');
                 $this->db->join('account', 'account.id = accounting_chart_of_accounts.account_id', 'left');
+            
+                $this->db->join('accounting_check', 'accounting_check.id = accounting_vendor_transaction_categories.transaction_id', 'left');
+                $this->db->join('accounting_expense', 'accounting_expense.id = accounting_vendor_transaction_categories.transaction_id', 'left');
+                $this->db->join('accounting_bill', 'accounting_bill.id = accounting_vendor_transaction_categories.transaction_id', 'left');
+                $this->db->join('accounting_purchase_order AS po', 'po.id = accounting_vendor_transaction_categories.transaction_id', 'left');
+                $this->db->join('accounting_vendor_credit AS vendor_credit', 'vendor_credit.id = accounting_vendor_transaction_categories.transaction_id', 'left');
+                $this->db->join('accounting_pay_down_credit_card AS credit_card', 'credit_card.id = accounting_vendor_transaction_categories.transaction_id', 'left');
                 $this->db->group_by('accounting_chart_of_accounts.name');
                 $query = $this->db->get();
                 return $query->result();
