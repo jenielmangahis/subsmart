@@ -13,7 +13,6 @@
                 <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="nsm-button primary" form="frm-plan-addons">Subscribe</button>
             </div>
-        </div>
-        
+        </div>        
     </div>
 </div>
