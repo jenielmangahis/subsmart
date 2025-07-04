@@ -18,12 +18,12 @@
                 <span>Cards on File</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Orders' || $page->title == 'Orders : Payment Details'): echo 'active'; endif; ?>">
+        <!-- <li class="<?php if($page->title == 'Orders' || $page->title == 'Orders : Payment Details'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('mycrm/orders') ?>">
                 <i class='bx bx-fw bx-cart-alt'></i>
                 <span>Orders</span>
             </a>
-        </li>
+        </li> -->
         <li class="<?php if($page->title == 'Support'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('support') ?>">
                 <i class='bx bx-fw bx-support'></i>
