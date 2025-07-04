@@ -1964,6 +1964,33 @@ class Inventory extends MY_Controller
         exit;    
     }
 
+    public function ajax_delete_selected_custom_field()
+    {
+        $is_success = 0;
+        $msg = 'Please select item(s).';
+
+        $post = $this->input->post();
+        if( $post['items'] ){
+            $count_del = 0;
+            foreach($post['items'] as $id) {    
+                
+                $item    = $this->items_model->get_custom_field_by_id($id);
+                if( $item ){
+                    $this->items_model->delete_custom_field_by_id($id);
+                    $count_del++;
+                } 
+            }
+
+            if($count_del) {
+                $is_success = 1;
+                $msg = '';
+            } 
+        } 
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }    
+
     public function ajax_vendor_send_email(){
         $is_success = 1;
         $msg = 'Cannot send email';
