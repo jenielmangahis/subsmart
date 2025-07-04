@@ -1503,6 +1503,7 @@ $route['job_checklists/_delete_checklist'] = 'Job_Checklists/ajax_delete_checkli
 $route['business/(:any)'] = 'Pages/front_company_business_profile/$1';
 
 // Deals Steals
+$route['promote/_load_deals_list/(:any)'] = 'Promote/ajax_load_deals_list_v2/$1';
 $route['promote/_save_deals_steals'] = 'Promote/ajax_save_deals_steals';
 $route['promote/add_send_to'] = 'Promote/add_send_to';
 $route['promote/create_send_to'] = 'Promote/create_send_to';
@@ -1513,7 +1514,7 @@ $route['promote/_generate_preview'] = 'Promote/generate_preview';
 $route['promote/update_validity'] = 'Promote/ajax_update_validity';
 $route['promote/payment'] = 'Promote/payment';
 $route['promote/_activate_deals'] = 'Promote/ajax_activate_deals';
-$route['promote/_load_deals_list/(:any)'] = 'Promote/ajax_load_deals_list/$1';
+//$route['promote/_load_deals_list/(:any)'] = 'Promote/ajax_load_deals_list/$1';
 $route['promote/_load_status_counter'] = 'Promote/ajax_load_status_counter';
 $route['promote/_close_deal'] = 'Promote/ajax_close_deal';
 $route['promote/edit_deals/(:num)'] = 'Promote/edit_deals/$1';
