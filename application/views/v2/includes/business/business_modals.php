@@ -66,9 +66,6 @@
     </div>
 </div>
 
-
-
-
 <div class="modal fade nsm-modal fade" id="edit_image_caption_modal" tabindex="-1"
     aria-labelledby="edit_image_caption_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">        
