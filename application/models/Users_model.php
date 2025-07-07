@@ -1073,6 +1073,32 @@ class Users_model extends MY_Model
 
         $this->db->update($this->table, $data);
     }
+
+    public function bulkDelete($ids = [], $filters = [])
+    {
+        $this->db->where_in('id', $ids);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->delete($this->table);
+    }
+
+    public function deleteAllArchived($filters = [])
+    {
+        $this->db->where_in('is_archived', 'Yes');
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->delete($this->table);
+    }
 }
 
 
