@@ -192,7 +192,7 @@
 
 <!-- MODAL SECTION -->
 <div class="modal fade" id="inventory_location_modal" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-md modal-dialog-centered">
         <div class="modal-content" style="width:640px;">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Item Locations</span>
@@ -215,7 +215,7 @@
 </div>
 
 <div class="modal" id="add_location_modal" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-md modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Add Location</span>
