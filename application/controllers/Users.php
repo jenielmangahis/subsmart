@@ -1976,7 +1976,7 @@ class Users extends MY_Controller
 					'postal_code' => $post['postal_code'],
 					'user_type' => $post['user_type'],
 					'employee_number' => $post['emp_number'],
-					'date_modified' => date("Y-m-d H:i:s")
+					'updated_at' => date("Y-m-d H:i:s")
 				);
 
 				$this->Users_model->update($user->id,$data);
