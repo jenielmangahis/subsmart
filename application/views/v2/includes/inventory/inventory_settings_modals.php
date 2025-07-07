@@ -1,7 +1,7 @@
 <div class="modal fade nsm-modal fade" id="custom-field-modal" tabindex="-1" aria-labelledby="custom_field_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <?php echo form_open_multipart(null, ['id' => 'form-add-custom-field', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
+    <div class="modal-dialog modal-md modal-dialog-centered">
         <div class="modal-content">
+        <?php echo form_open_multipart(null, ['id' => 'form-add-custom-field', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
             <div class="modal-header">
                 <span class="modal-title content-title" id="custom_field_modal_label">Custom Field</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
@@ -17,17 +17,17 @@
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" class="nsm-button primary">Save</button>
             </div>
-        </div>
         <?php echo form_close(); ?>
+        </div>
     </div>
 </div>
 
 <div class="modal fade nsm-modal fade" id="edit-custom-field-modal" tabindex="-1" aria-labelledby="edit_custom_field_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <?php echo form_open_multipart(null, ['id' => 'form-update-custom-field', 'class' => 'form-validate frm-update-custom-field', 'autocomplete' => 'off']); ?>
-        <input type="hidden" name="cfid" value="" id="cfid" />
-        <input type="hidden" name="default_custom_field_name" value="" id="default-custom-field_name" />
+    <div class="modal-dialog modal-md modal-dialog-centered">
         <div class="modal-content">
+            <?php echo form_open_multipart(null, ['id' => 'form-update-custom-field', 'class' => 'form-validate frm-update-custom-field', 'autocomplete' => 'off']); ?>
+            <input type="hidden" name="cfid" value="" id="cfid" />
+            <input type="hidden" name="default_custom_field_name" value="" id="default-custom-field_name" />            
             <div class="modal-header">
                 <span class="modal-title content-title" id="custom_field_modal_label">Custom Field</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
@@ -43,7 +43,7 @@
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" class="nsm-button primary">Save</button>
             </div>
-        </div>
         <?php echo form_close(); ?>
+        </div>
     </div>
 </div>

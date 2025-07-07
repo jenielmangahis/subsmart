@@ -80,6 +80,12 @@ class Lead_model extends MY_Model
 
         $this->db->update($this->table, $data);
     }
+
+    public function createLead($data)
+    {
+        $this->db->insert($this->table, $data);
+        return $this->db->insert_id();
+    }
 }
 /* End of file Lead_model.php */
 /* Location: ./application/models/Lead_model.php */

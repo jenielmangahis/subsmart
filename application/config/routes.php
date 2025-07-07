@@ -1021,6 +1021,9 @@ $route['chatbot/settings'] = 'ChatbotSettings/settings';
 $route['lead_contact_form'] = 'LeadContactForm/index';
 $route['lead_contact_form/_update_settings'] = 'LeadContactForm/ajax_update_settings';
 $route['lead_contact_form/_form_preview'] = 'LeadContactForm/ajax_form_preview';
+$route['lead_contact_form/inquiries'] = 'LeadContactForm/inquiries';
+$route['lead_contact_form/inquiries/_convert_to_lead'] = 'LeadContactForm/ajax_convert_to_lead';
+$route['lead_contact_form/inquiries/_delete'] = 'LeadContactForm/ajax_delete_inquiry';
 
 //Public Lead Contact Form
 $route['online-leads/(:any)'] = 'Pages/front_lead_contact_form/$1';
@@ -1254,6 +1257,8 @@ $route['user/_change_user_password'] = 'Users/ajaxUpdateEmployeePasswordV2';
 $route['users/_archived_list'] = 'Users/ajax_archived_list';
 $route['users/_restore_selected_users'] = 'Users/ajax_restore_selected_users';
 $route['user/_update_employee_profile_photo'] = 'Users/ajaxUpdateEmployeeProfilePhoto';
+$route['users/_permanently_delete_selected_users'] = 'Users/ajax_permanently_delete_selected_users';
+$route['users/_delete_all_archived_users'] = 'Users/ajax_delete_all_archived_users';
 
 $route['company/download_w9_form']  = 'Users/download_company_w9_form';
 
@@ -1709,6 +1714,8 @@ $route['inventory/_delete_selected_custom_field'] = 'inventory/ajax_delete_selec
 $route['inventory/_create_inventory_fee'] = 'inventory/ajax_create_inventory_fee';
 $route['inventory/_edit_inventory_fee'] = 'inventory/ajax_edit_inventory_fee';
 $route['inventory/_update_inventory_fee'] = 'inventory/ajax_update_inventory_fee';  
+
+$route['inventory/_delete_selected_vendor'] = 'inventory/ajax_delete_selected_vendor';
 
 // Inventory Fees
 $route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';

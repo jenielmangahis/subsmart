@@ -160,7 +160,8 @@ class CompanyRoleAccessModule_model extends MY_Model
             'monthly-membership' => 'Monthly Membership',
             'cards-on-file' => 'Card on File',
             'chatbot-settings' => 'Chatbot Settings',
-            'automation' => 'Automation'
+            'automation' => 'Automation',
+            'lead-contact-form' => 'Lead Contact Form',
         ];  
 
         return $modules;

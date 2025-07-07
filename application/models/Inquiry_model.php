@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Inquiry_model extends MY_Model
 {
 
-    public $table = 'inquiries';
+    public $table = 'online_lead_inquiries';
     public $table_2 = 'online_lead_form';
     public $table_3 = 'customize_lead_forms';
 
@@ -385,6 +385,22 @@ class Inquiry_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllInquiriesByCompanyId($company_id, $filters = []) {
+        
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+        
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllCustomizeLeadFormByDefault() {
         $array = array('company_id' => 0, 'type' => 'default');
         
@@ -406,6 +422,38 @@ class Inquiry_model extends MY_Model
     {
         $this->db->insert($this->table_2, $data);
         return $this->db->insert_id();
+    }
+
+    public function createInquiry($data)
+    {
+        $this->db->insert($this->table, $data);
+        return $this->db->insert_id();
+    }
+
+    public function updateInquiry($id, $data = [], $filters = [])
+    {
+        $this->db->where('id', $id);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->update($this->table, $data);
+    }
+
+    public function deleteInquiry($id, $filters = [])
+    {
+        $this->db->where('id', $id);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->delete($this->table);
     }
 
     public function updateLeadForm($id, $data = [], $filters = [])

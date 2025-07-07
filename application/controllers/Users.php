@@ -1976,7 +1976,7 @@ class Users extends MY_Controller
 					'postal_code' => $post['postal_code'],
 					'user_type' => $post['user_type'],
 					'employee_number' => $post['emp_number'],
-					'date_modified' => date("Y-m-d H:i:s")
+					'updated_at' => date("Y-m-d H:i:s")
 				);
 
 				$this->Users_model->update($user->id,$data);
@@ -2536,11 +2536,7 @@ class Users extends MY_Controller
 
 		$role_id = logged('role');
 		$cid     = logged('company_id');
-		if ($role_id == 1 || $role_id == 2) {
-			$users = $this->users_model->getAllUsers();
-		} else {
-			$users = $this->users_model->getCompanyUsers($cid);
-		}
+		$users = $this->users_model->getCompanyUsers($cid);
 
 		$delimiter = ",";
 		$time      = time();
@@ -3687,6 +3683,52 @@ class Users extends MY_Controller
             $is_success = 1;
             $msg    = '';
         }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+	public function ajax_permanently_delete_selected_users()
+	{
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['users'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $this->Users_model->bulkDelete($post['users'], $filter);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+	public function ajax_delete_all_archived_users()
+	{
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+		$this->Users_model->deleteAllArchived($filter);
+
+		$is_success = 1;
+		$msg    = '';
 
         $return = [
             'is_success' => $is_success,
