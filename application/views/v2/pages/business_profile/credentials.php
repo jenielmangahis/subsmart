@@ -144,7 +144,7 @@
                                 <label class="content-subtitle fw-bold d-block mb-2">Bond Amount</label>
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
-                                    <input type="text" name="bonded_amount" class="nsm-field form-control"
+                                    <input type="number" step="any" name="bonded_amount" class="nsm-field form-control"
                                         required value="<?= $profiledata->bond_amount ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
                                 </div>
                             </div>
@@ -213,7 +213,7 @@
                                 <label class="content-subtitle fw-bold d-block mb-2">Insured Amount</label>
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
-                                    <input type="text" name="insured_amount" class="nsm-field form-control"
+                                    <input type="number" step="any" name="insured_amount" class="nsm-field form-control"
                                         required value="<?= $profiledata->insured_amount ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?>/>
                                 </div>
                             </div>

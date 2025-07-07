@@ -91,7 +91,7 @@ table.dataTable.no-footer {
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <li>
-                                                        <a class="dropdown-item update-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit-custom-field-modal" data-id="<?=$field->id?>" data-name="<?=$field->name?>">Edit</a>
+                                                        <a class="dropdown-item update-item-<?=$field->id?>" onClick="javascript:loadCustomFieldData(<?=$field->id?>);" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit-custom-field-modal" data-id="<?=$field->id?>" data-name="<?=$field->name?>">Edit</a>
                                                     </li>
                                                     <li>
                                                         <a class="dropdown-item delete-item" href="javascript:void(0);" data-name="<?php echo $field->name ?>" data-id="<?php echo $field->id?>">Delete</a>
@@ -120,6 +120,228 @@ table.dataTable.no-footer {
 
 <script type="text/javascript">
 
+    $('#form-add-custom-field').on('submit', function(e){            
+        let _this = $(this);
+        e.preventDefault();
+
+        var url = base_url + "inventory/_create_custom_field";
+        _this.find("button[type=submit]").html("Saving");
+        _this.find("button[type=submit]").prop("disabled", true);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: _this.serialize(),
+            dataType:'json',
+            success: function(result) {
+                if (result.is_success === 1) {
+                    $("#custom-field-modal").modal('hide');
+                    _this.trigger("reset");
+                    
+                    Swal.fire({
+                        title: 'Save Successful!',
+                        text: "Custom field has been created successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.reload();
+                        //}
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: result.msg
+                    });
+                }
+                
+                _this.find("button[type=submit]").html("Save");
+                _this.find("button[type=submit]").prop("disabled", false);
+            },
+        });
+    });    
+
+    $('.frm-update-custom-field').on('submit', function(e){      
+        e.preventDefault();   
+        let _this = $(this);
+        
+        var url = base_url + "inventory/_update_custom_field";
+        _this.find("button[type=submit]").html("Saving");
+        _this.find("button[type=submit]").prop("disabled", true);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: _this.serialize(),
+            dataType:'json',
+            success: function(result) {
+                if (result.is_success === 1) {
+                    $("#edit-custom-field-modal").modal('hide');
+                    _this.trigger("reset");
+                    
+                    Swal.fire({
+                        title: 'Save Successful!',
+                        text: "Custom field has been upated successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.reload();
+                        //}
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: result.msg
+                    });
+                }
+                
+                _this.find("button[type=submit]").html("Save");
+                _this.find("button[type=submit]").prop("disabled", false);
+            },
+        });
+    });      
+    
+    $(document).on("click", ".delete-item", function() {
+        let cfid = $(this).attr("data-id");
+        let name = $(this).attr("data-name");
+        Swal.fire({
+            title: 'Delete Custom Field',
+            //text: "Are you sure you want to delete selected item?",
+            html: `Are you sure you want to delete <b>${name}</b>?`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "inventory/_delete_custom_field",
+                    data: {
+                        cfid: cfid
+                    },
+                    dataType:'json',
+                    success: function(result) {
+                        console.log(result);
+                        if (result.is_success === 1) {
+                            Swal.fire({
+                                title: 'Delete Custom Field',
+                                text: "Custom field has been deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: result.msg
+                            }); 
+                        }
+                    },
+                });
+            }
+        });
+    });    
+
+    $(document).ready(function() {
+
+        $(document).on("click", ".select-all", function() {
+            let _this = $(this);
+            if (_this.prop("checked")) {
+                $(".table-select").prop("checked", true);
+                selectedIds = [];
+
+                $(".table-select").each(function() {
+                    if ($(this).prop("checked"))
+                        selectedIds.push($(this).attr("data-id"));
+                })
+                $("#selected_ids").val(selectedIds);
+            } else {
+                $(".table-select").prop("checked", false);
+                $("#selected_ids").val('');
+                $("#delete_selected").addClass("disabled");
+            }
+
+            toggleBatchDelete(_this.prop("checked"));
+        });          
+
+        $(document).on("click", ".table-select", function() {        
+            let id = $(this).attr("data-id");
+            let _this = $(this);
+            selectedIds = [];
+
+            if (!_this.prop("checked") && $(".select-all").prop("checked")) {
+                $(".select-all").prop("checked", false);
+            }
+
+            if (!_this.prop("checked")) {
+                selectedIds = $.grep(selectedIds, function(value) {
+                    return value != id
+                });
+                $("#selected_ids").val(selectedIds);
+            } else {
+                selectedIds.push(id);
+                $("#selected_ids").val(selectedIds);
+            }
+
+            toggleBatchDelete($(".table-select:checked").length > 0);
+        });       
+        
+        $("#delete_selected").on("click", function() {
+            Swal.fire({
+                title: 'Delete Selected Custom Fields',
+                text: "Are you sure you want to delete the selected custom fields?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "inventory/_delete_selected_custom_field",
+                        data: $('#frm-settings').serialize(),
+                        dataType:"json",
+                        success: function(data) {
+                            if (data.is_success) {
+                                Swal.fire({
+                                    title: 'Delete Inventory Custom Fields',
+                                    text: "Custom Fields has been deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: "Please try again later.",
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });        
+
+    });    
+
     $(document).ready(function() {
 
         /* $("#custom-fields-table").nsmPagination({
@@ -142,139 +364,6 @@ table.dataTable.no-footer {
             CUSTOM_FIELD_TBL.search($(this).val()).draw()
         });        
 
-        $('#form-add-custom-field').on('submit', function(e){            
-            let _this = $(this);
-            e.preventDefault();
-
-            var url = base_url + "inventory/_create_custom_field";
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
-
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: _this.serialize(),
-                dataType:'json',
-                success: function(result) {
-                    if (result.is_success === 1) {
-                        $("#custom-field-modal").modal('hide');
-                        _this.trigger("reset");
-                        
-                        Swal.fire({
-                            title: 'Save Successful!',
-                            text: "Custom field has been created successfully.",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            //if (result.value) {
-                                location.reload();
-                            //}
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            html: result.msg
-                        });
-                    }
-                    
-                    _this.find("button[type=submit]").html("Save");
-                    _this.find("button[type=submit]").prop("disabled", false);
-                },
-            });
-        });
-
-        $('#form-update-custom-field').on('submit', function(e){            
-            let _this = $(this);
-            e.preventDefault();
-
-            var url = base_url + "inventory/_update_custom_field";
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
-
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: _this.serialize(),
-                dataType:'json',
-                success: function(result) {
-                    if (result.is_success === 1) {
-                        $("#edit-custom-field-modal").modal('hide');
-                        _this.trigger("reset");
-                        
-                        Swal.fire({
-                            title: 'Save Successful!',
-                            text: "Custom field has been upated successfully.",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            //if (result.value) {
-                                location.reload();
-                            //}
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            html: result.msg
-                        });
-                    }
-                    
-                    _this.find("button[type=submit]").html("Save");
-                    _this.find("button[type=submit]").prop("disabled", false);
-                },
-            });
-        });
-
-        $(document).on("click", ".delete-item", function() {
-            let cfid = $(this).attr("data-id");
-            let name = $(this).attr("data-name");
-            Swal.fire({
-                title: 'Delete Custom Field',
-                //text: "Are you sure you want to delete selected item?",
-                html: `Are you sure you want to delete <b>${name}</b>?`,
-                icon: 'question',
-                confirmButtonText: 'Proceed',
-                showCancelButton: true,
-                cancelButtonText: "Cancel"
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        type: 'POST',
-                        url: base_url + "inventory/_delete_custom_field",
-                        data: {
-                            cfid: cfid
-                        },
-                        dataType:'json',
-                        success: function(result) {
-                            console.log(result);
-                            if (result.is_success === 1) {
-                                Swal.fire({
-                                    title: 'Delete Custom Field',
-                                    text: "Custom field has been deleted successfully!",
-                                    icon: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Okay'
-                                }).then((result) => {
-                                    //if (result.value) {
-                                        location.reload();
-                                    //}
-                                });
-                            }else{
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error!',
-                                    html: result.msg
-                                }); 
-                            }
-                        },
-                    });
-                }
-            });
-        });
-
         $(document).on("click", ".update-item", function() {
             let id = $(this).attr('data-id');
             let name = $(this).attr('data-name');
@@ -284,53 +373,16 @@ table.dataTable.no-footer {
             $('#default-custom-field_name').val(dname);
         });
     });
+    
+    function loadCustomFieldData(item_id) {
+        let id    = $(".update-item-"+item_id).attr('data-id');
+        let name  = $(".update-item-"+item_id).attr('data-name');
+        let dname = $(".update-item-"+item_id).attr('data-name');
 
-    $(document).ready(function() {
-
-        $(document).on("click", ".select-all", function() {
-            
-            let _this = $(this);
-            if (_this.prop("checked")) {
-                $(".table-select").prop("checked", true);
-                selectedIds = [];
-
-                $(".table-select").each(function() {
-                    if ($(this).prop("checked"))
-                        selectedIds.push($(this).attr("data-id"));
-                })
-                $("#selected_ids").val(selectedIds);
-            } else {
-                $(".table-select").prop("checked", false);
-                $("#selected_ids").val('');
-                $("#delete_selected").addClass("disabled");
-            }
-
-            toggleBatchDelete(_this.prop("checked"));
-        });          
-
-        $(document).on("click", ".table-select", function() {            
-            let id = $(this).attr("data-id");
-            let _this = $(this);
-
-            if (!_this.prop("checked") && $(".select-all").prop("checked")) {
-                $(".select-all").prop("checked", false);
-            }
-
-            if (!_this.prop("checked")) {
-                selectedIds = $.grep(selectedIds, function(value) {
-                    return value != id
-                });
-                $("#selected_ids").val(selectedIds);
-            } else {
-                selectedIds.push(id);
-                $("#selected_ids").val(selectedIds);
-            }
-
-            toggleBatchDelete($(".table-select:checked").length > 0);
-        });        
-
-    });
-     
+        $('#cfid').val(id);
+        $('#edit-custom-field-name').val(name);
+        $('#default-custom-field_name').val(dname);        
+    }
 
     function toggleBatchDelete(enable = True) {
         enable ? $("#delete_selected").removeClass("disabled") : $("#delete_selected").addClass("disabled");

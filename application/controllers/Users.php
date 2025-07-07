@@ -266,12 +266,12 @@ class Users extends MY_Controller
 
 		$cid = logged('company_id');
 		$profiledata = $this->business_model->getByCompanyId($cid);
-		$workingDays = unserialize($profiledata->working_days);
+		$workingDays = unserialize($profiledata->working_days);		
 
 		$data_working_days = array();
 		if (!empty($workingDays)) {
 			foreach ($workingDays as $d) {
-				$data_working_days[$d['day']] = ['time_from' => $d['time_from'], 'time_to' => $d['time_to']];
+				$data_working_days[$d['day']] = ['time_from' => date("H:i:s",strtotime($d['time_from'])), 'time_to' => date("H:i:s", strtotime($d['time_to']))];
 			}
 		} else {
 			$data_working_days['Monday']    = ['time_from' => '', 'time_to' => ''];
@@ -2349,6 +2349,48 @@ class Users extends MY_Controller
 		}
 	}
 
+	public function ajax_upload_portfolio_image()
+	{
+		$is_success = 0;
+        $msg = 'Please select image';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+		$profiledata = $this->business_model->getByCompanyId($company_id);
+		if(!empty($_FILES['work_picture']['name']) && $profiledata){
+			$target_dir = "./uploads/work_pictures/$company_id/";
+
+			if (!file_exists($target_dir)) {
+				mkdir($target_dir, 0777, true);
+			}
+
+			$tmp_name = $_FILES['work_picture']['tmp_name'];
+			$extension = strtolower(end(explode('.', $_FILES['work_picture']['name'])));
+			// basename() may prevent filesystem traversal attacks;
+			// further validation/sanitation of the filename may be appropriate
+			$name = time() . '_' . basename($_FILES["work_picture"]["name"]);
+			move_uploaded_file($tmp_name, "./uploads/work_pictures/$company_id/$name");
+
+			$workImages  = unserialize($profiledata->work_images);
+			$workImages[] = ['file' => $name, 'caption' => $post['image_caption']];
+			$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
+
+			$is_success = 1;
+			$msg = '';
+
+			//Activity Logs
+            $activity_name = 'Business Portfolio : Uploaded image'; 
+            createActivityLog($activity_name);
+		}
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
 	public function ajax_delete_company_work_picture()
 	{
 		$post    = $this->input->post();
@@ -2438,7 +2480,7 @@ class Users extends MY_Controller
 			$this->business_model->updateByCompanyId($cid, $data);
 
 			//Activity Logs
-			$activity_name = 'Updated Business Profile Settings'; 
+			$activity_name = 'My Business Settings : Updated business profile Settings'; 
 			createActivityLog($activity_name);
 
 			$is_success = 1;
@@ -2472,7 +2514,7 @@ class Users extends MY_Controller
 			$this->business_model->updateByCompanyId($cid, $post);
 
 			//Activity Logs
-			$activity_name = 'Updated Business Profile Social Media'; 
+			$activity_name = 'My Business Social Media: Updated social media'; 
 			createActivityLog($activity_name);
 
 			$is_success = 1;

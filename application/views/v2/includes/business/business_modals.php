@@ -66,14 +66,9 @@
     </div>
 </div>
 
-
-
-
 <div class="modal fade nsm-modal fade" id="edit_image_caption_modal" tabindex="-1"
     aria-labelledby="edit_image_caption_modal_label" aria-hidden="true">
-    <div class="modal-dialog">
-        <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-edit-image-caption', 'autocomplete' => 'off']); ?>
-        <?php echo form_input(['name' => 'image_key', 'type' => 'hidden', 'value' => '', 'id' => 'caption_image_key']); ?>
+    <div class="modal-dialog modal-dialog-centered">        
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">Edit Caption</span>
@@ -81,6 +76,8 @@
                         class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
+                <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-edit-image-caption', 'autocomplete' => 'off']); ?>
+                <?php echo form_input(['name' => 'image_key', 'type' => 'hidden', 'value' => '', 'id' => 'caption_image_key']); ?>
                 <div class="row g-3">
                     <div class="col-12">
                         <label class="content-subtitle fw-bold d-block mb-2">Caption</label>
@@ -88,27 +85,27 @@
                             required />
                     </div>
                 </div>
+                <?php echo form_close(); ?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="nsm-button primary">Save</button>
+                <button type="submit" class="nsm-button primary" form="form-edit-image-caption">Save</button>
             </div>
-        </div>
-        <?php echo form_close(); ?>
+        </div>        
     </div>
 </div>
 
 <div class="modal fade nsm-modal fade" id="add_image_modal" tabindex="-1" aria-labelledby="add_image_modal_label"
     aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" id="add_work_picture_form">
+    <div class="modal-dialog modal-dialog-centered">        
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="modal-title content-title">Add Work Pictures</span>
+                    <span class="modal-title content-title">Add Photo</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i
                             class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
+                    <form method="POST" id="add_work_picture_form">
                     <div class="row g-3">
                         <div class="col-12">
                             <div class="nsm-img-upload m-auto">
@@ -116,11 +113,17 @@
                                 <input type="file" name="work_picture" id="work-picture" class="nsm-upload" accept="image/*">
                             </div>
                         </div>
+                        <div class="col-12">
+                            <label class="content-subtitle fw-bold d-block mb-2">Caption</label>
+                            <input type="text" name="image_caption" id="image_caption" class="nsm-field form-control"
+                                required />
+                        </div>
                     </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
+                    <button type="submit" class="nsm-button primary" id="btn-portfolio-add-image" form="add_work_picture_form">Save</button>
                 </div>
             </div>
         </form>
