@@ -42,13 +42,7 @@
             </div>
             <span class="nsm-fab-label">Export List</span>
         </li>
-        <?php } ?>
-        <li onclick="location.href='<?php echo url('email_automation/templates') ?>'">
-            <div class="nsm-fab-icon">
-                <i class="bx bx-share-alt"></i>
-            </div>
-            <span class="nsm-fab-label">Share Add Employee</span>
-        </li>
+        <?php } ?>        
     </ul>
 </div>
 
@@ -93,7 +87,6 @@
                                     <span class=""><i class='bx bx-chevron-down' ></i></span>
                                 </button>
                                 <ul class="dropdown-menu">                                
-                                    <li><a class="dropdown-item" id="btn-share-url" href="javascript:void(0);">Shareable link</a></li>        
                                     <li><a class="dropdown-item" id="btn-export-list" href="javascript:void(0);">Export</a></li>                               
                                     <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>                               
                                 </ul>

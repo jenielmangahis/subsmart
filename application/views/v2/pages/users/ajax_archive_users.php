@@ -1,19 +1,19 @@
 <div class="row">
     <div class="col-12 grid-mb text-end">
         <div class="dropdown d-inline-block">
-            <button type="button" class="nsm-button primary" id="btn-delete-all">Delete All</button>
+            <button type="button" class="nsm-button primary" id="btn-empty-archives">Delete All</button>
             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                 <span id="users-archive-num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
             </button>
             <ul class="dropdown-menu dropdown-menu-end select-filter">                 
                 <li><a class="dropdown-item btn-with-selected" id="with-selected-restore" href="javascript:void(0);">Restore</a></li>                                
-                <li><a class="dropdown-item btn-with-selected" id="with-selected-restore" href="javascript:void(0);">Permanently Delete</a></li>                                
+                <li><a class="dropdown-item btn-with-selected" id="with-selected-perma-delete" href="javascript:void(0);">Permanently Delete</a></li>                                
             </ul>
         </div>
     </div>
 </div>
 <form id="frm-archive-with-selected">
-<table class="nsm-table" id="archived-jobs">
+<table class="nsm-table" id="archived-users">
     <thead>
         <tr>
             <td class="table-icon text-center sorting_disabled">
