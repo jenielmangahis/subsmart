@@ -48,6 +48,7 @@ add_css(array(
                                     <div class="row">
                                         <div class="col-lg-12 mb-2">
                                             <strong>Location Name</strong>
+                                            <input type="hidden" value="<?php echo $location->location_name?>" name="default_location_name" />
                                             <input type="text" class="form-control" maxlength="25" value="<?php echo $location->location_name?>" placeholder="Maximum 25 characters only" name="location_name" required/>
                                             <input type="text" value="<?php echo $location->loc_id?>" name="loc_id" hidden/>
                                         </div>
@@ -132,7 +133,8 @@ function readURL(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
-$("#location_form").submit(function(e) {
+
+$("#location_formOld").submit(function(e) {
     e.preventDefault(); // avoid to execute the actual submit of the form.
     var form = $(this);
     // console.log(form.serialize());
@@ -155,6 +157,46 @@ $("#location_form").submit(function(e) {
         // }
     });
 });
+
+$('#location_form').on('submit', function(e){            
+    let _this = $(this);
+    e.preventDefault();
+
+    var url = base_url + "inventory/editLocation";
+    _this.find("button[type=submit]").html("Saving");
+    _this.find("button[type=submit]").prop("disabled", true);
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: _this.serialize(),
+        dataType:'json',
+        success: function(result) {
+            if (result.is_success === 1) {
+                _this.trigger("reset");
+                
+                Swal.fire({
+                    title: 'Save Successful!',
+                    text: "Storage location was updated successfully!",
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+                    window.location.href = "<?= base_url()?>inventory/location";
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: result.msg
+                });
+            }
+            
+            _this.find("button[type=submit]").html("Save");
+            _this.find("button[type=submit]").prop("disabled", false);
+        },
+    });
+}); 
 
 $(document).ready(function() {
     $('#btn-cancel').on('click', function(){

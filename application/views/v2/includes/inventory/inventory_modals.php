@@ -1,5 +1,5 @@
 <div class="modal fade nsm-modal fade" id="print_inventory_modal" tabindex="-1" aria-labelledby="print_inventory_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="print_inventory_modal_label">Print Inventory List</span>

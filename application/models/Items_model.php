@@ -534,11 +534,23 @@ class Items_model extends MY_Model
             $this->db->update($this->table_has_location);
         }
     }
+
     public function getLocationById($id)
     {
         $this->db->select('*');
         $this->db->from('storage_loc');
         $this->db->where('loc_id', $id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getLocationByNameAndCompanyId($location_name, $company_id)
+    {
+        $this->db->select('*');
+        $this->db->from('storage_loc');
+        $this->db->where('location_name', $location_name);
+        $this->db->where('company_id', $company_id);
 
         $query = $this->db->get();
         return $query->row();

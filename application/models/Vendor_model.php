@@ -53,7 +53,6 @@ class Vendor_model extends MY_Model
 
     public function getByIdAndCompanyId($id, $company_id)
     {
-
         $this->db->select('*');
         $this->db->from($this->table);        
         $this->db->where('vendor_id', $id);

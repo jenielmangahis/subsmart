@@ -1287,6 +1287,44 @@ class Inventory extends MY_Controller
         echo json_encode($json_data);
     }
 
+    public function ajax_delete_selected_vendor() {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+
+        $cid = logged('company_id');
+        $ids = explode(",",$this->input->post('ids'));   
+        $total_deleted = 0;
+
+        foreach($ids as $id) {
+            $vendor = $this->vendor_model->getByIdAndCompanyId($id, $cid);
+            if( $vendor ){
+                $this->vendor_model->deleteByVendorId($id);
+                
+                //Activity Logs
+                $activity_name = 'Inventory : Deleted Vendor '. $vendor->vendor_name; 
+                createActivityLog($activity_name);
+                
+                $total_deleted++;
+            }            
+        }
+
+        if( $total_deleted > 0 ){
+            $is_success = 1;
+            $msg = '';            
+        }else{
+            $msg = 'Nothing to delete';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);        
+    }
+
     public function deleteMultipleItemGroup() 
     {
         $this->load->model('ItemCategory_model');
@@ -1326,29 +1364,53 @@ class Inventory extends MY_Controller
     }
 
     public function addNewLocation(){
-        postAllowed();
-        $COMPANY_ID = logged('company_id');
-        $LOCATION_NAME = $this->input->post('name');
-        $DEFAULT = $this->input->post('DEFAULT_LOCATION');
+        $is_success = 0;
+        $msg        = 'Cannot save data';
 
-        if ($DEFAULT == "true") {
-            $this->items_model->clearDefaultLocation();
-            $LOCATION_DATA = array(
-                'company_id'=> $COMPANY_ID,
-                'location_name' => $LOCATION_NAME,
-                'default' => $DEFAULT,
-            );
-        } else {
-            $LOCATION_DATA = array(
-                'company_id'=> $COMPANY_ID,
-                'location_name' => $LOCATION_NAME,
-                'default' => "",
-            );
+        postAllowed();
+
+        $post          = $this->input->post();
+        $company_id    = logged('company_id');
+        $location_name = $this->input->post('name');
+        $default       = $this->input->post('DEFAULT_LOCATION');
+
+        if($location_name != null) {
+
+            $isStorageLocationExists = $this->items_model->getLocationByNameAndCompanyId($location_name, $company_id);
+            if( !$isStorageLocationExists ){
+
+                if ($DEFAULT == "true") {
+                    $this->items_model->clearDefaultLocation();
+                    $location_data = array(
+                        'company_id'=> $company_id,
+                        'location_name' => $location_name,
+                        'default' => $default,
+                    );
+                } else {
+                    $location_data = array(
+                        'company_id'=> $company_id,
+                        'location_name' => $location_name,
+                        'default' => "",
+                    );
+                }
+
+                $result = $this->general->add_($location_data, 'storage_loc'); 
+                
+                $is_success = 1;
+                $msg = '';     
+
+            } else {
+                $is_success = 0;
+                $msg = 'Storage location <b>' . $location_name . '</b> already exists.';  
+            }
+
         }
 
-        $result = $this->general->add_($LOCATION_DATA, 'storage_loc');
-        echo json_encode($result);
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;            
     }
+
     public function addNewItemLocation() {
         $executeOnce = 0;
         postAllowed();
@@ -1378,29 +1440,58 @@ class Inventory extends MY_Controller
         $return = ['result' => $result, 'item_id' => $this->input->post('item_id')];
         echo json_encode($return);
     }
-    public function editLocation() {
-        postAllowed();
-        $ID = $this->input->post('loc_id');
-        $LOCATION_NAME = $this->input->post('location_name');
-        $DEFAULT = $this->input->post('DEFAULT_LOCATION');
 
-        if ($DEFAULT == "true") {
-            $this->items_model->clearDefaultLocation();
-            $LOCATION_DATA = array(
-                'location_name' => $LOCATION_NAME,
-                'default' => $DEFAULT,
-            );
-        } else {
-            $LOCATION_DATA = array(
-                'location_name' => $LOCATION_NAME,
-                'default' => "",
-            );
+    public function editLocation() {
+
+        $is_success = 0;
+        $msg        = 'Cannot save data';
+        postAllowed();
+
+        $post          = $this->input->post();
+        $location_name = $this->input->post('location_name');
+        $default_location_name = $this->input->post('default_location_name');
+        $default       = $this->input->post('DEFAULT_LOCATION');
+        $id            = $this->input->post('loc_id');
+        $company_id    = logged('company_id');
+
+        if($location_name != null) {
+
+            if( $post['location_name'] == $post['default_location_name'] ) {
+                $isStorageLocationExists = false;
+            } else {
+                $isStorageLocationExists = $this->items_model->getLocationByNameAndCompanyId($location_name, $company_id);
+            }
+            
+            if( !$isStorageLocationExists ){
+
+                if ($default == "true") {
+                    $this->items_model->clearDefaultLocation();
+                    $location_data = array(
+                        'location_name' => $location_name,
+                        'default' => $default,
+                    );
+                } else {
+                    $location_data = array(
+                        'location_name' => $location_name,
+                        'default' => "",
+                    );
+                }
+
+                $this->general->update_with_key_field($location_data, $id, 'storage_loc', 'loc_id');        
+                
+                $is_success = 1;
+                $msg = '';
+                
+            } else {
+                $is_success = 0;
+                $msg = 'Storage location <b>' . $location_name . '</b> already exists.';  
+            }
+
         }
 
-        // $this->items_model->updateLocation($id, $data, 'storage_loc');
-        $this->general->update_with_key_field($LOCATION_DATA, $ID, 'storage_loc', 'loc_id');
-
-        echo json_encode(["message" => "success"]);
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;  
     }
 
     public function getItemLocations() {
