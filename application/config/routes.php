@@ -1259,6 +1259,8 @@ $route['users/_restore_selected_users'] = 'Users/ajax_restore_selected_users';
 $route['user/_update_employee_profile_photo'] = 'Users/ajaxUpdateEmployeeProfilePhoto';
 $route['users/_permanently_delete_selected_users'] = 'Users/ajax_permanently_delete_selected_users';
 $route['users/_delete_all_archived_users'] = 'Users/ajax_delete_all_archived_users';
+$route['users/_restore_user'] = 'Users/ajax_restore_user';
+$route['users/_delete_archived_user'] = 'Users/ajax_delete_archived_user';
 
 $route['company/download_w9_form']  = 'Users/download_company_w9_form';
 
