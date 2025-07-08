@@ -139,7 +139,7 @@ class Mycrm extends MY_Controller
 			return false;
 		}
 
-        $this->page_data['page']->title = 'Monthly Membership';
+        $this->page_data['page']->title = 'Membership';
         $this->page_data['page']->parent = 'Company';
 
         $this->load->model('Clients_model');

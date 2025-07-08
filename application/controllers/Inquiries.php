@@ -166,8 +166,8 @@ class Inquiries extends MY_Controller {
         $this->page_data['customize_lead_forms'] = $customize_lead_forms;
         $this->page_data['customize_lead_forms_default'] = $customize_lead_forms_default;
         $this->page_data['page']->title = 'Lead Contact Form';
-        $this->load->view('v2/pages/inquiry/online_lead', $this->page_data);
-        //$this->load->view('inquiry/online_lead_v1', $this->page_data);
+        //$this->load->view('v2/pages/inquiry/online_lead', $this->page_data);
+        $this->load->view('inquiry/online_lead_v1', $this->page_data);
     }
 
     public function video_estimate() {
