@@ -5701,7 +5701,7 @@ class Timesheet extends MY_Controller
 
         $cid = logged('company_id');
         $uid = logged('id');
-        $conditions[] = ['field' => 'is_archived', 'value' => 0];
+        $conditions[] = ['field' => 'timesheet_leave.is_archived', 'value' => 0];
         if (logged('user_type') == 7) {
             $leaveRequests = $this->LeaveRequest_model->getAllByCompanyId($cid, $conditions);
         } else {
