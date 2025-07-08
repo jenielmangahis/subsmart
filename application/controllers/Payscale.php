@@ -165,15 +165,26 @@ class Payscale extends MY_Controller
                     break;
                 case 'base_daily_rate':
                     $today = date('Y-m-d');
-    
+
+                    $this->db->select('SUM(shift_duration + overtime) AS total_hours');
+                    $this->db->from('timesheet_attendance');
+                    $this->db->where('user_id', $employee_id);
+                    $this->db->where('DATE(date_created)', $today);
+                    $attendance_summary = $this->db->get()->row();
+                    $total_hours = $attendance_summary->total_hours ?? 0;
+
+                    if ($total_hours < 8) {
+                        break;
+                    }
+
                     $this->db->where([
                         'company_id'    => $company_id,
                         'employee_id'   => $employee_id,
-                        'payscale_name' => 'base_daily_rate',
-                        'DATE(date_created)'   => $today,
+                        'payscale_name' => 'base_daily_rate'
                     ]);
+                    $this->db->where('DATE(date_created)', $today);
                     $existing = $this->db->get('employee_payscale_summary');
-    
+
                     if ($existing->num_rows() == 0) {
                         $data = [
                             'company_id'     => $company_id,
@@ -196,16 +207,28 @@ class Payscale extends MY_Controller
                     }
                     break;
                 case 'base_weekly_rate':
-                    $startOfWeek = date('Y-m-d', strtotime('monday this week'));
-                    $endOfWeek   = date('Y-m-d', strtotime('sunday this week'));
+                    $startOfWeek = date('Y-m-d 00:00:00', strtotime('monday this week'));
+                    $endOfWeek   = date('Y-m-d 23:59:59', strtotime('friday this week'));
+                    
+                    $this->db->select('SUM(shift_duration + overtime) AS total_hours');
+                    $this->db->from('timesheet_attendance');
+                    $this->db->where('user_id', $employee_id);
+                    $this->db->where('date_created >=', $startOfWeek);
+                    $this->db->where('date_created <=', $endOfWeek);
+                    $attendance_summary = $this->db->get()->row();
+                    $total_hours = $attendance_summary->total_hours ?? 0;
+
+                    if ($total_hours < 40) {
+                        break;
+                    }
 
                     $this->db->where([
                         'company_id'    => $company_id,
                         'employee_id'   => $employee_id,
-                        'payscale_name' => 'base_weekly_rate',
-                        'DATE(date_created) >=' => $startOfWeek,
-                        'DATE(date_created) <=' => $endOfWeek,
+                        'payscale_name' => 'base_weekly_rate'
                     ]);
+                    $this->db->where('DATE(date_created) >=', $startOfWeek);
+                    $this->db->where('DATE(date_created) <=', $endOfWeek);
                     $existing_weekly = $this->db->get('employee_payscale_summary');
 
                     if ($existing_weekly->num_rows() == 0) {
