@@ -1807,14 +1807,18 @@ class Pages extends MYF_Controller {
 		$company = $this->Business_model->getByProfileSlug($slug);
 		if( $company ){
 			$customizeLeadForms = $this->Inquiry_model->getAllCustomizeLeadFormByCompany($company->id, 'lead_form');
-			$customizeLeadFormsDefault = $this->Inquiry_model->getAllCustomizeLeadFormByDefault();
-			$leadForm = $this->Inquiry_model->getLeadFormByCompanyId($company->id);
+			if( $customizeLeadForms ){
+				$customizeLeadFormsDefault = $this->Inquiry_model->getAllCustomizeLeadFormByDefault();
+				$leadForm = $this->Inquiry_model->getLeadFormByCompanyId($company->id);
 
-			$this->page_data['slug'] = $slug;
-			$this->page_data['leadForm'] = $leadForm;
-        	$this->page_data['customizeLeadForms'] = $customizeLeadForms;
-        	$this->page_data['customizeLeadFormsDefault'] = $customizeLeadFormsDefault;
-			$this->load->view('pages/front_lead_contact_form', $this->page_data);
+				$this->page_data['slug'] = $slug;
+				$this->page_data['leadForm'] = $leadForm;
+				$this->page_data['customizeLeadForms'] = $customizeLeadForms;
+				$this->page_data['customizeLeadFormsDefault'] = $customizeLeadFormsDefault;
+				$this->load->view('pages/front_lead_contact_form', $this->page_data);
+			}else{
+				return redirect('/');
+			}
 		}else{
 			return redirect('/');
 		}
@@ -1832,6 +1836,7 @@ class Pages extends MYF_Controller {
         $post = $this->input->post();
 
 		if( $company ){
+			$leadForm = $this->Inquiry_model->getLeadFormByCompanyId($company->company_id);
 			if( $post['first_name'] != '' && $post['last_name'] != '' ){
 				$custom_fields = json_encode($post['customFields']);
 				$data = [
@@ -1846,6 +1851,30 @@ class Pages extends MYF_Controller {
 				];
 
 				$this->Inquiry_model->createInquiry($data);
+
+				if( $leadForm->email_notification == 1 && $leadForm->email_notification_recipient != '' ){
+					$subject = 'nSmarTrac : Online Lead Inquiry';
+					$from = 'nSmarTrac';    
+					$to   = $leadForm->email_notification_recipient;
+					$body = "
+						<p>Hi,</p>
+						<p>Someone made an inquiry. Below are the details.</p>
+						<ul>
+							<li>Name : " . $post['first_name'] . " " . $post['last_name'] . "</li>
+							<li>Phone : " . $post['phone'] . "</li>
+							<li>Email : " . $post['email'] . "</li>
+							<li>Message : " . $post['message'] . "</li>
+						</ul>
+					";
+
+					$mail = email__getInstance(['subject' => $subject]);
+                    $mail->FromName = $from;
+                    $mail->addAddress($to, $to);
+                    $mail->isHTML(true);
+                    $mail->Subject = $subject;
+                    $mail->Body    = $body;
+                    $mail->Send();
+				}
 
 				$is_success = 1;
 				$msg = '';
