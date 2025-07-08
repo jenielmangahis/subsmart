@@ -280,7 +280,7 @@ $(document).ready(function() {
 
         Swal.fire({
             title: 'Delete Selected Items',
-            text: "Are you sure you want to delete the selected items?",
+            text: "Are you sure you want to delete the selected vendors?",
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,
@@ -289,14 +289,15 @@ $(document).ready(function() {
             if (result.isConfirmed) {
                 $.ajax({
                     type: "POST",
-                    url: base_url + "inventory/deleteMultipleVendor",
+                    //url: base_url + "inventory/deleteMultipleVendor",
+                    url: base_url + "inventory/_delete_selected_vendor",
                     data: params,
                     dataType:'json',
                     success: function(data) {
                         if( data.is_success == 1 ){
                             Swal.fire({
                                 title: 'Delete Vendor',
-                                text: "Selected data has been deleted successfully!",
+                                text: "Selected vendor has been deleted successfully!",
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'

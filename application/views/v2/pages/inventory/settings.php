@@ -1,23 +1,25 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/inventory/inventory_settings_modals'); ?>
 <style>
-table {
-    width: 100% !important;
-}
-#custom-fields-table_filter, #custom-fields-table_length, #custom-fields-table_info{
-    display: none;
-}
-table.dataTable thead th, table.dataTable thead td {
-padding: 10px 18px;
-border-bottom: 1px solid lightgray;
-}
-table.dataTable.no-footer {
-        border-bottom: 0px solid #111; 
-        margin-bottom: 10px;
-}
-.nsm-table tr:not(.nsm-row-collapse) td:not(:last-child) {    
-    max-width: initial !important;
-}
+    table {
+        width: 100% !important;
+    }
+
+    #CUSTOM_FIELD_TBL_filter, #CUSTOM_FIELD_TBL_length, #CUSTOM_FIELD_TBL_info, #CUSTOM_FIELD_TBL_length, #CUSTOM_FIELD_TBL_filter{
+        display: none;
+    }
+
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px 18px;
+    border-bottom: 1px solid lightgray;
+    }
+    table.dataTable.no-footer {
+            border-bottom: 0px solid #111; 
+            margin-bottom: 10px;
+    }
+    .nsm-table tr:not(.nsm-row-collapse) td:not(:last-child) {    
+        max-width: initial !important;
+    }
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -58,7 +60,7 @@ table.dataTable.no-footer {
 
                 </div>
                 <form id="frm-settings">
-                    <table class="nsm-table" id="custom-fields-table">
+                    <table id="CUSTOM_FIELD_TBL" class="nsm-table">
                         <thead>
                             <tr>
                                 <?php if(checkRoleCanAccessModule('settings', 'write')){ ?>
@@ -103,7 +105,7 @@ table.dataTable.no-footer {
                                 <?php endforeach; ?>
                             <?php else : ?>
                                 <tr>
-                                    <td colspan="3">
+                                    <td colspan="4">
                                         <div class="nsm-empty">
                                             <span>No results found.</span>
                                         </div>
@@ -118,7 +120,35 @@ table.dataTable.no-footer {
     </div>
 </div>
 
+<script src="<?php echo base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
+
+    $(document).ready(function() {
+
+        /* $("#CUSTOM_FIELD_TBL").nsmPagination({
+            itemsPerPage: 20
+        }); */        
+
+        var CUSTOM_FIELD_TBL = $("#CUSTOM_FIELD_TBL").DataTable({
+            "ordering": false,
+            language: {
+                processing: '<span>Fetching data...</span>'
+            },
+            "columns": [
+                { "width": "3%" },
+                { "width": "3%" },
+                { "width": "94%" },
+                null        
+            ]
+        });    
+
+        $("#search_field_custom").keyup(function() {
+            CUSTOM_FIELD_TBL.search($(this).val()).draw()
+        });        
+
+        CUSTOM_FIELD_TBL_SETTINGS = CUSTOM_FIELD_TBL.settings();        
+
+    });
 
     $('#form-add-custom-field').on('submit', function(e){            
         let _this = $(this);
@@ -343,27 +373,6 @@ table.dataTable.no-footer {
     });    
 
     $(document).ready(function() {
-
-        /* $("#custom-fields-table").nsmPagination({
-            itemsPerPage: 20
-        }); */
-        
-        var CUSTOM_FIELD_TBL = $("#custom-fields-table").DataTable({
-            "ordering": false,
-            language: {
-                processing: '<span>Fetching data...</span>'
-            },
-            "columns": [
-                { "width": "1%" },
-                { "width": "90%" },
-                null        
-            ]
-        });    
-
-        $("#search_field_custom").keyup(function() {
-            CUSTOM_FIELD_TBL.search($(this).val()).draw()
-        });        
-
         $(document).on("click", ".update-item", function() {
             let id = $(this).attr('data-id');
             let name = $(this).attr('data-name');
