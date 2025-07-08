@@ -307,7 +307,7 @@ if ($this->session->userdata('usertimezone') == null) {
                             </style>
                             <div class="expired-notice">
                                 <span class="expired-row"><i class='bx bxs-error-circle'></i> Subscription Expired</span>
-                                <a class="nsm-button btn-sm expired-btn" href="<?php echo base_url('mycrm/membership'); ?>">Renew Subscription</a>
+                                <!-- <a class="nsm-button btn-sm expired-btn" href="<?php echo base_url('mycrm/membership'); ?>">Renew Subscription</a> -->
                             </div>
                         </li>
                         <?php } ?>

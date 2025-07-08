@@ -400,20 +400,20 @@ class Mycrm extends MY_Controller
                     $amount = $plan->discount;
                     $num_months_discounted = $client->num_months_discounted - 1;
                 }
+                $amount = $amount + $total_addon_price;
                 $next_billing_date    = date('Y-m-d', strtotime('+1 month', strtotime($date)));
                 $plan_date_expiration = date('Y-m-d', strtotime('+1 month', strtotime($date)));
             } else {
                 if ($client->num_months_discounted <= 0) {
-                    $amount = $plan->price * 12;
+                    $amount = $plan->price;
                 } else {
-                    $amount = $plan->discount * 12;
+                    $amount = $plan->discount;
                     $num_months_discounted = max($client->num_months_discounted - 12,0);
                 }
+                $amount = ($amount + $total_addon_price) * 12;
                 $next_billing_date    = date('Y-m-d', strtotime('+1 year', strtotime($date)));
                 $plan_date_expiration = date('Y-m-d', strtotime('+1 year', strtotime($date)));
             }
-
-            $amount   = $amount + $total_addon_price;
 
             $company  = $this->Business_model->getByCompanyId($company_id);
             $address  = $company->street.' '.$company->city.' '.$company->state;

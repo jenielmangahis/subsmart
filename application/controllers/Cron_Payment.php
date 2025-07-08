@@ -25,7 +25,7 @@ class Cron_Payment extends MYF_Controller {
             'merchant_id' => CONVERGE_MERCHANTID,
             'user_id' => CONVERGE_MERCHANTUSERID,
             'pin' => CONVERGE_MERCHANTPIN,
-            'demo' => false,
+            'demo' => true,
         ]);
 
         $total_renewed = 0;
@@ -49,18 +49,17 @@ class Cron_Payment extends MYF_Controller {
                     $amount = 0;
                     $num_months_discounted = 0;
                     if( $client->num_months_discounted > 0 ){
-                        $amount   = $plan->price;
+                        $amount   = $plan->discount;
                     }else{
-                        $amount   = $plan->discount;    
+                        $amount   = $plan->price;    
                     }
-
 
                     if( $client->recurring_payment_type == 'monthly' ){
                         $amount = $amount + $total_addon_price;
                         $next_billing_date = date("Y-m-d", strtotime("+1 month", strtotime($client->next_billing_date)));
                         $num_months_discounted = $client->num_months_discounted - 1; 
                     }else{
-                        $amount = ($amount * 12) + $total_addon_price;
+                        $amount = ($amount + $total_addon_price) * 12;
                         $next_billing_date = date("Y-m-d", strtotime("+1 year", strtotime($client->next_billing_date)));
                         $num_months_discounted = max($client->num_months_discounted - 12,0); 
                     }
@@ -73,7 +72,9 @@ class Cron_Payment extends MYF_Controller {
                     }else{
                         $exp_month = $primaryCard->expiration_month;
                     }
-                    $exp_date = $exp_month . $primaryCard->expiration_year;
+                    $exp_year = date('m/d/'.$primaryCard->expiration_year);
+                    $exp_date = $exp_month . date('y', strtotime($exp_year));
+
                     $createSale = $converge->request('ccsale', [
                         'ssl_card_number' => $primaryCard->card_number,
                         'ssl_exp_date' => $exp_date,

@@ -143,14 +143,14 @@
                                             <div class="col-12 col-md-6">
                                                 1 <?= $client->recurring_payment_type == 'month' ? 'Monthly' : 'year'; ?>
                                             </div>
-                                            <?php if( $client->recurring_payment_type == 'monthly' ){ ?>
-                                            <div class="col-12 col-md-6">
-                                                <label class="content-title">Current Billing Period</label>
-                                            </div>
-                                            <?php } ?>
-                                            <div class="col-12 col-md-6">
-                                                <?= $start_billing_period; ?> to <?= $end_billing_period; ?>
-                                            </div>
+                                            <?php //if( $client->recurring_payment_type == 'monthly' ){ ?>
+                                                <div class="col-12 col-md-6">
+                                                    <label class="content-title">Billing Period</label>
+                                                </div>                                            
+                                                <div class="col-12 col-md-6">
+                                                    <?= $start_billing_period; ?> to <?= $end_billing_period; ?>
+                                                </div>
+                                            <?php //} ?>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-title">
                                                     <?php if ($client->is_trial == 1) : ?>
@@ -263,7 +263,7 @@
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
-                            <td data-name="Details">Details</td>
+                            <td data-name="Details" style="width:60%;">Details</td>
                             <td data-name="Type">Type</td>
                             <td data-name="Price">Price</td>
                             <?php if(checkRoleCanAccessModule('monthly-membership', 'write')){ ?>
@@ -279,7 +279,7 @@
                                         <i class='bx bx-extension'></i>
                                     </div>
                                 </td>
-                                <td class="nsm-text-primary"><?= $value; ?></td>
+                                <td class="nsm-text-primary fw-bold"><?= $value; ?></td>
                                 <td>Added</td>
                                 <td>0.00</td>
                                 <?php if(checkRoleCanAccessModule('monthly-membership', 'write')){ ?>
@@ -295,7 +295,7 @@
                                         <i class='bx bx-extension'></i>
                                     </div>
                                 </td>
-                                <td class="nsm-text-primary">
+                                <td class="nsm-text-primary fw-bold">
                                     <?php
                                     if ($a->with_request_removal == 1) :
                                         echo $a->name . " " . '<span class="nsm-badge error">Request Removal</span>';
@@ -304,7 +304,7 @@
                                     endif;
                                     ?>
                                 </td>
-                                <td>Monthly (<?= $start_billing_period; ?> to <?= $end_billing_period; ?>)</td>
+                                <td><?= $client->recurring_payment_type == 'monthly' ? 'Monthly' : 'Yearly'; ?> (<?= $start_billing_period; ?> to <?= $end_billing_period; ?>)</td>
                                 <td>$<?= number_format($a->service_fee, 2); ?></td>
                                 <?php if(checkRoleCanAccessModule('monthly-membership', 'write')){ ?>
                                 <td class="text-end">
