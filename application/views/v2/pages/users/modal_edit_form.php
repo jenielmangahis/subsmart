@@ -46,6 +46,14 @@
                     <option value="<?= $key; ?>" <?= $user->role == $key ? 'selected="selected"' : ''; ?>><?= $value['name']; ?></option>
                     <?php } ?>
                 </select>
+            </div>  
+            <div class="col-12 col-md-6">
+                <label class="content-subtitle fw-bold d-block mb-2">Status</label>
+                <select class="nsm-field form-select" name="status" required>
+                    <option value="" selected="selected" disabled>Select Status</option>
+                    <option value="1" <?= $user->status == 1 ? 'selected="selected"' : ''; ?>>Active</option>
+                    <option value="0" <?= $user->status == 0 ? 'selected="selected"' : ''; ?>>Inactive</option>
+                </select>
             </div>                                 
         </div>
     </div>

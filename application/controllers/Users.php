@@ -2544,7 +2544,7 @@ class Users extends MY_Controller
 
 		$f = fopen('php://memory', 'w');
 
-		$fields = array('Last Name', 'First Name', 'Role', 'Title', 'Email', 'Phone', 'Mobile', 'Address', 'City', 'State');
+		$fields = array('Last Name', 'First Name', 'Role', 'Title', 'Email', 'Phone', 'Mobile', 'Address', 'City', 'State', 'Is Archived');
 		fputcsv($f, $fields, $delimiter);
 
 		if (!empty($users)) {
@@ -2559,7 +2559,8 @@ class Users extends MY_Controller
 					$u->mobile,
 					$u->address,
 					$u->city,
-					$u->state
+					$u->state,
+					$u->is_archived
 				);
 				fputcsv($f, $csvData, $delimiter);
 			}
