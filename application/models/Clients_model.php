@@ -90,11 +90,9 @@ class Clients_model extends MY_Model
 
         $this->db->select('clients.*, nsmart_plans.plan_name, nsmart_plans.price, industry_type.name AS industry_type_name, industry_templates.name AS industry_template_name');
         $this->db->from($this->table);
-
         $this->db->join('industry_type', 'clients.industry_type_id = industry_type.id', 'left');
         $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'left');
         $this->db->join('industry_templates', 'industry_type.industry_template_id = industry_templates.id', 'left');
-
         $this->db->where('clients.id', $id);
 
         $query = $this->db->get()->row();
