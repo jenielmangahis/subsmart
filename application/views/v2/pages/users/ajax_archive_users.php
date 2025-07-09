@@ -37,7 +37,8 @@
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item btn-restore-customer-deal" data-id="<?= $deal->id; ?>" data-title="<?= $deal->deal_title; ?>" href="javascript:void(0);"><i class='bx bx-recycle'></i> Restore</a></li>   
+                                <li><a class="dropdown-item btn-restore-user" data-id="<?= $user->id; ?>" data-name="<?= $user->FName . ' ' . $user->LName; ?>" href="javascript:void(0);">Restore</a></li>   
+                                <li><a class="dropdown-item btn-permanently-delete-user" data-id="<?= $user->id; ?>" data-name="<?= $user->FName . ' ' . $user->LName; ?>" href="javascript:void(0);">Permanently Delete</a></li>   
                             </ul>
                         </div>
                     </td>

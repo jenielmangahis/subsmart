@@ -25,7 +25,7 @@ class Cron_Payment extends MYF_Controller {
             'merchant_id' => CONVERGE_MERCHANTID,
             'user_id' => CONVERGE_MERCHANTUSERID,
             'pin' => CONVERGE_MERCHANTPIN,
-            'demo' => true,
+            'demo' => false,
         ]);
 
         $total_renewed = 0;

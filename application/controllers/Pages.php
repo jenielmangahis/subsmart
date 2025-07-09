@@ -140,49 +140,49 @@ class Pages extends MYF_Controller {
 		$is_success = false;
 		$msg = 'Cannot save employee. Please try again later.';
 
-		if( $post['password'] == $post['confirm_password'] ){
-			//Check if username already taken
-			$isUsernameTaken = $this->Users_model->getUserByUsernname($post['username']);
-			if( $isUsernameTaken ){
-				$msg = 'Username already taken.';
-			}else{
-				$cid      = hashids_decrypt($post['eid'], '', 15);
-				$client   = $this->Clients_model->getById($cid);
+		// if( $post['password'] == $post['confirm_password'] ){
+		// 	//Check if username already taken
+		// 	$isUsernameTaken = $this->Users_model->getUserByUsernname($post['username']);
+		// 	if( $isUsernameTaken ){
+		// 		$msg = 'Username already taken.';
+		// 	}else{
+		// 		$cid      = hashids_decrypt($post['eid'], '', 15);
+		// 		$client   = $this->Clients_model->getById($cid);
 
-				if( $client ){
-					$uid = $this->users_model->create([
-		                'role' => 30,
-		                'FName' => $post['firstname'],
-		                'LName' => $post['lastname'],
-		                'username' => $post['username'],
-		                'email' => $post['email'],
-		                'company_id' => $cid,
-		                'status' => 1,
-		                'password_plain' =>  $post['password'],
-		                'password' => hash( "sha256", $post['password'] ),
-		            ]);
+		// 		if( $client ){
+		// 			$uid = $this->users_model->create([
+		//                 'role' => 30,
+		//                 'FName' => $post['firstname'],
+		//                 'LName' => $post['lastname'],
+		//                 'username' => $post['username'],
+		//                 'email' => $post['email'],
+		//                 'company_id' => $cid,
+		//                 'status' => 1,
+		//                 'password_plain' =>  $post['password'],
+		//                 'password' => hash( "sha256", $post['password'] ),
+		//             ]);
 
-		            $timesheetMember = $this->TimesheetTeamMember_model->create([
-		            	'user_id' => $uid,
-		            	'name' => $post['firstname'] . ' ' . $post['lastname'],
-		            	'email' => $post['email'],
-		            	'role' => 'Employee',
-		            	'department_id' => 0,
-		            	'department_role' => 'Member',
-		            	'will_track_location' => 1,
-		            	'status' => 1,
-		            	'company_id' => $cid
-		            ]);
+		//             $timesheetMember = $this->TimesheetTeamMember_model->create([
+		//             	'user_id' => $uid,
+		//             	'name' => $post['firstname'] . ' ' . $post['lastname'],
+		//             	'email' => $post['email'],
+		//             	'role' => 'Employee',
+		//             	'department_id' => 0,
+		//             	'department_role' => 'Member',
+		//             	'will_track_location' => 1,
+		//             	'status' => 1,
+		//             	'company_id' => $cid
+		//             ]);
 
-		            $msg = "Employee was successfully created.";
-		            $is_success = true;
-				}else{
-					$msg = "Cannot create employee.";
-				}
-			}
-		}else{
-			$msg = 'Password does not match';
-		}
+		//             $msg = "Employee was successfully created.";
+		//             $is_success = true;
+		// 		}else{
+		// 			$msg = "Cannot create employee.";
+		// 		}
+		// 	}
+		// }else{
+		// 	$msg = 'Password does not match';
+		// }
 
 		$data = ['msg' => $msg, 'is_success' => $is_success];
 		echo json_encode($data);
@@ -1807,14 +1807,18 @@ class Pages extends MYF_Controller {
 		$company = $this->Business_model->getByProfileSlug($slug);
 		if( $company ){
 			$customizeLeadForms = $this->Inquiry_model->getAllCustomizeLeadFormByCompany($company->id, 'lead_form');
-			$customizeLeadFormsDefault = $this->Inquiry_model->getAllCustomizeLeadFormByDefault();
-			$leadForm = $this->Inquiry_model->getLeadFormByCompanyId($company->id);
+			if( $customizeLeadForms ){
+				$customizeLeadFormsDefault = $this->Inquiry_model->getAllCustomizeLeadFormByDefault();
+				$leadForm = $this->Inquiry_model->getLeadFormByCompanyId($company->id);
 
-			$this->page_data['slug'] = $slug;
-			$this->page_data['leadForm'] = $leadForm;
-        	$this->page_data['customizeLeadForms'] = $customizeLeadForms;
-        	$this->page_data['customizeLeadFormsDefault'] = $customizeLeadFormsDefault;
-			$this->load->view('pages/front_lead_contact_form', $this->page_data);
+				$this->page_data['slug'] = $slug;
+				$this->page_data['leadForm'] = $leadForm;
+				$this->page_data['customizeLeadForms'] = $customizeLeadForms;
+				$this->page_data['customizeLeadFormsDefault'] = $customizeLeadFormsDefault;
+				$this->load->view('pages/front_lead_contact_form', $this->page_data);
+			}else{
+				return redirect('/');
+			}
 		}else{
 			return redirect('/');
 		}
@@ -1830,6 +1834,53 @@ class Pages extends MYF_Controller {
 
         $company = $this->Business_model->getByProfileSlug($slug);
         $post = $this->input->post();
+
+		if( $company ){
+			$leadForm = $this->Inquiry_model->getLeadFormByCompanyId($company->company_id);
+			if( $post['first_name'] != '' && $post['last_name'] != '' ){
+				$custom_fields = json_encode($post['customFields']);
+				$data = [
+					'company_id' => $company->company_id,
+					'first_name' => $post['first_name'],
+					'last_name' => $post['last_name'],
+					'phone' => $post['phone'],
+					'email' => $post['email'],
+					'message' => $post['message'],
+					'custom_fields' => $custom_fields,
+					'date_created' => date("Y-m-d H:i:s")
+				];
+
+				$this->Inquiry_model->createInquiry($data);
+
+				if( $leadForm->email_notification == 1 && $leadForm->email_notification_recipient != '' ){
+					$subject = 'nSmarTrac : Online Lead Inquiry';
+					$from = 'nSmarTrac';    
+					$to   = $leadForm->email_notification_recipient;
+					$body = "
+						<p>Hi,</p>
+						<p>Someone made an inquiry. Below are the details.</p>
+						<ul>
+							<li>Name : " . $post['first_name'] . " " . $post['last_name'] . "</li>
+							<li>Phone : " . $post['phone'] . "</li>
+							<li>Email : " . $post['email'] . "</li>
+							<li>Message : " . $post['message'] . "</li>
+						</ul>
+					";
+
+					$mail = email__getInstance(['subject' => $subject]);
+                    $mail->FromName = $from;
+                    $mail->addAddress($to, $to);
+                    $mail->isHTML(true);
+                    $mail->Subject = $subject;
+                    $mail->Body    = $body;
+                    $mail->Send();
+				}
+
+				$is_success = 1;
+				$msg = '';
+
+			}
+		}
 
 		$return = [
             'is_success' => $is_success,

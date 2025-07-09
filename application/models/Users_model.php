@@ -1089,7 +1089,7 @@ class Users_model extends MY_Model
 
     public function deleteAllArchived($filters = [])
     {
-        $this->db->where_in('is_archived', 'Yes');
+        $this->db->where('is_archived', 'Yes');
 
         if( $filters ){
             foreach( $filters as $filter ){

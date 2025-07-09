@@ -562,8 +562,9 @@ class Inventory extends MY_Controller
         $this->page_data['getAllLocation'] = $this->general->get_data_with_param($getAllLocation);
         $this->page_data['selectedLocation'] = $this->items_model->getSelectedLocation($id);
         $this->page_data['item_categories'] = $this->general->get_data_with_param($get_items_categories);
-        $this->page_data['item'] = $this->items_model->getByID($id);
+        $this->page_data['item'] = $item = $this->items_model->getByID($id);
         $this->page_data['custom_fields'] = $this->items_model->get_custom_fields_by_company_id(logged('company_id'));
+        
         $this->load->view('v2/pages/inventory/action/inventory_edit', $this->page_data);
     }
 

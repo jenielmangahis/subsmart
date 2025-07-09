@@ -461,13 +461,13 @@ echo 'active';
                 <i class='bx bx-fw bx-purchase-tag-alt'></i> Deals and Steals
             </a>
         </li>
-        <li class="<?php if ($page->title == 'Campaign 360') {
+        <!-- <li class="<?php if ($page->title == 'Campaign 360') {
             echo 'selected';
         } ?>">
             <a href="<?php echo base_url('campaign'); ?>">
                 <i class='bx bx-fw bx-map-pin'></i> Campaign 360
             </a>
-        </li>
+        </li> -->
         <li class="<?php if ($page->title == 'My Inquiry List') {
             echo 'selected';
         } ?>">
@@ -574,7 +574,7 @@ echo 'active';
         <li class="<?php if ($page->title == 'My CRM' || $page->title == 'Cards File' || $page->title == 'Monthly Membership' || $page->title == 'Orders' || $page->title == 'Support') {
             echo 'selected';
         } ?>">
-            <a href="<?php echo base_url('mycrm'); ?>">
+            <a href="<?php echo base_url('mycrm/membership'); ?>">
                 <i class='bx bx-fw bx-book-content'></i> My CRM
             </a>
         </li>

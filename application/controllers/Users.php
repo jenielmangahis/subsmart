@@ -3681,6 +3681,10 @@ class Users extends MY_Controller
             $data     = ['is_archived' => 'No', 'updated_at' => date("Y-m-d H:i:s")];
             $this->Users_model->bulkUpdate($post['users'], $data, $filter);
 
+			//Activity Logs
+			$activity_name = 'Users : Restored ' . count($post['users']). ' user(s)'; 
+			createActivityLog($activity_name);
+
             $is_success = 1;
             $msg    = '';
         }
@@ -3693,8 +3697,79 @@ class Users extends MY_Controller
         echo json_encode($return);
 	}
 
+	public function ajax_restore_user()
+	{
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $user = $this->Users_model->getUser($post['user_id']);
+		if( $user && $user->company_id == $company_id ){
+			$data     = ['is_archived' => 'No', 'updated_at' => date("Y-m-d H:i:s")];
+			$this->Users_model->update($user->id, $data);
+
+			//Activity Logs
+			$name = $user->FName . ' ' . $user->LName;
+			$activity_name = 'Users : Restored user ' . $name; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+	public function ajax_delete_archived_user()
+	{
+		$this->load->model('Clients_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+		$user = $this->Users_model->getUser($post['user_id']);
+        if( $user && $user->company_id == $company_id ){
+			//Return credits
+			if( !in_array($company_id, exempted_company_ids()) ){ 
+				$client = $this->Clients_model->getById($company_id);
+				$num_license = $client->number_of_license + 1;
+				$data = ['number_of_license' => $num_license];
+				$this->Clients_model->update($client->id, $data);		
+			}
+
+			$this->Users_model->delete($user->id);
+
+			//Activity Logs
+			$name = $user->FName . ' ' . $user->LName;
+			$activity_name = 'Users : Permanently deleted user ' . $name; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
 	public function ajax_permanently_delete_selected_users()
 	{
+		$this->load->model('Clients_model');
+
 		$is_success = 0;
         $msg    = 'Please select data';
 
@@ -3702,8 +3777,24 @@ class Users extends MY_Controller
         $post = $this->input->post();
 
         if( $post['users'] ){
+
+			$total_archived = count($post['users']);
+			//Return credits
+			if( !in_array($company_id, exempted_company_ids()) ){ 				
+				if( $total_archived > 0 ){
+					$client = $this->Clients_model->getById($company_id);
+					$num_license = $client->number_of_license + $total_archived;
+					$data = ['number_of_license' => $num_license];
+					$this->Clients_model->update($client->id, $data);
+				}			
+			}
+
             $filter[] = ['field' => 'company_id', 'value' => $company_id];
             $this->Users_model->bulkDelete($post['users'], $filter);
+
+			//Activity Logs
+			$activity_name = 'Users : Permanently deleted ' .$total_archived. ' user(s)'; 
+			createActivityLog($activity_name);
 
             $is_success = 1;
             $msg    = '';
@@ -3719,14 +3810,33 @@ class Users extends MY_Controller
 
 	public function ajax_delete_all_archived_users()
 	{
+		$this->load->model('Clients_model');
+
 		$is_success = 0;
         $msg    = 'Please select data';
 
         $company_id  = logged('company_id');
         $post = $this->input->post();
 
+		$filters = ['is_archived' => 'Yes'];
+        $users   = $this->Users_model->getCompanyUsers($company_id,$filters);
+		$total_archived = count($users);
+		//Return credits
+		if( !in_array($company_id, exempted_company_ids()) ){ 
+			if( $total_archived > 0 ){
+				$client = $this->Clients_model->getById($company_id);
+				$num_license = $client->number_of_license + $total_archived;
+				$data = ['number_of_license' => $num_license];
+				$this->Clients_model->update($client->id, $data);
+			}			
+		}		
+
         $filter[] = ['field' => 'company_id', 'value' => $company_id];
 		$this->Users_model->deleteAllArchived($filter);
+
+		//Activity Logs
+		$activity_name = 'Users : Permanently deleted ' .$total_archived. ' user(s)'; 
+		createActivityLog($activity_name);
 
 		$is_success = 1;
 		$msg    = '';

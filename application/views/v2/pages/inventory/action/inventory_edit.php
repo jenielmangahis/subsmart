@@ -154,7 +154,7 @@
                                         </div>
                                         <div class="col-lg-3 mb-2">
                                             <strong>Initial Quantity</strong>
-                                            <input type="number" class="form-control " name="initial_quantity" step="any" min="0" id="initial_quantity" required />
+                                            <input type="number" class="form-control" value="<?php echo getItemQtyOH($item->id); ?>" name="initial_quantity" step="any" min="0" id="initial_quantity" required />
                                         </div>
                                         <?php foreach($custom_fields as $field) : ?>
                                             <div style="position: relative;" class="col-lg-6 mt-2">

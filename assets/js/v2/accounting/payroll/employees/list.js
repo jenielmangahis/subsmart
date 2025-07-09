@@ -156,8 +156,9 @@ $("#add_employee_form").on("submit", function(e) {
 
 $('#run-payroll').on('click', function(e) {
     e.preventDefault();
-
-    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="payroll_modal"]').trigger('click');
+    //$('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="payroll_modal"]').trigger('click');
+    $('#payrollModal').modal('show');
+    
 });
 
 $('#bonus-only').on('click', function(e) {

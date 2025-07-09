@@ -48,12 +48,12 @@
                 <span>Deals and Steals</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Campaign 360'): echo 'active'; endif; ?>">
+        <!-- <li class="<?php if($page->title == 'Campaign 360'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('campaign')?>">
                 <i class='bx bx-fw bx-box'></i>
                 <span>Campaign 360</span>
             </a>
-        </li>
+        </li> -->
         <li class="<?php if($page->title == 'My Inquiry List'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('my_inquires')?>">
                 <i class='bx bx-fw bx-box'></i>

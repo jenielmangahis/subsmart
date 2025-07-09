@@ -1,12 +1,12 @@
 <div class="nsm-page-nav">
     <ul>
-        <li class="<?php if($page->title == 'My Account'): echo 'active'; endif; ?>">
+        <!-- <li class="<?php if($page->title == 'My Account'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('mycrm') ?>">
                 <i class='bx bx-fw bx-book-content'></i>
                 <span>My CRM</span>
             </a>
-        </li>
-        <li class="<?php if($page->title == 'Monthly Membership'): echo 'active'; endif; ?>">
+        </li> -->
+        <li class="<?php if($page->title == 'Monthly Membership' || $page->title == 'Membership'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('mycrm/membership') ?>">
                 <i class='bx bx-fw bx-id-card'></i>
                 <span>Membership</span>

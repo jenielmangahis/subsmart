@@ -6,12 +6,12 @@
                 <span>Add-ons</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Online Booking'): echo 'active'; endif; ?>">
+        <!-- <li class="<?php if($page->title == 'Online Booking'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('more/addon/booking') ?>">
                 <i class='bx bx-desktop' ></i>
                 <span>Online Booking</span>
             </a>
-        </li>
+        </li> -->
         <!-- <li class="<?php if($page->title == 'Lead Contact Form'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('online_leads') ?>">
                 <i class='bx bx-notepad' ></i>
