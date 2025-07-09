@@ -29,15 +29,16 @@
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button">
+                            <!-- <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-file'></i> Run Report
-                            </button>
-                            <button type="button" class="nsm-button" id="add-payment-term-button">
-                                <i class='bx bx-fw bx-list-plus'></i> New
+                            </button> -->
+                            <button type="button" class="nsm-button primary" id="add-payment-term-button">
+                                <i class='bx bx-fw bx-plus'></i> Add New
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_payment_terms_modal">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
+                            <!-- 
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
                                 <i class="bx bx-fw bx-cog"></i>
                             </button>
@@ -63,6 +64,7 @@
                                     </ul>
                                 </div>
                             </ul>
+                            -->
                         </div>
                     </div>
                 </div>

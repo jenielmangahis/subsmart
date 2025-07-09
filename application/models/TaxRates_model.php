@@ -59,7 +59,7 @@ class TaxRates_model extends MY_Model
         return $query;
     }
 
-    public function getAllByCompanyId($company_id)
+    public function getAllByCompanyId($company_id, $is_array_result = false)
     {
         $this->db->select('*');
         $this->db->from($this->table);
@@ -74,8 +74,12 @@ class TaxRates_model extends MY_Model
         $this->db->order_by('id', 'ASC');
 
         $query = $this->db->get();
-        return $query->result();
-    }
+        if($is_array_result) {
+            return $query->result_array();
+        } else {
+            return $query->result();
+        }
+    }  
 
     public function resetDefaultTaxRateByCompanyId($company_id)
     {
