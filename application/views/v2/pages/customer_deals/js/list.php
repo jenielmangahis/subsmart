@@ -35,6 +35,11 @@ $(function(){
         height: '150px',
     });
 
+    $(".nsm-table").nsmPagination();
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));        
+    }, 1000));
+
     $(document).on('change', '#select-all', function(){
         $('.row-select:checkbox').prop('checked', this.checked);  
         let total= $('input[name="customerDeals[]"]:checked').length;
