@@ -61,8 +61,8 @@
             let plugin_id = $(this).attr('data-id');
             if( plugin_id == 3 ){ //Online booking
                 location.href = base_url + 'more/addon/booking';
-            }else if( plugin_id == 4 ) { //Leads 
-                location.href = base_url + 'customer/leads';
+            }else if( plugin_id == 4 ) { //Lead Contact Form 
+                location.href = base_url + 'lead_contact_form';
             }else if( plugin_id == 8 ) { //Customer Deals
                 location.href = base_url + 'customer_deals';
             }else if( plugin_id == 11  ) { //Credit Report
