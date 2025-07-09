@@ -1,5 +1,133 @@
 <script>
 $(function(){
+    $(".nsm-table").nsmPagination();
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));        
+    }, 1000));
+
+    $(document).on('change', '#select-all', function(){
+        $('.row-select:checkbox').prop('checked', this.checked);  
+        let total= $('input[name="inquiries[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
+    $(document).on('change', '.row-select', function(){
+        let total= $('input[name="inquiries[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
+    $(document).on('click', '#with-selected-convert-leads', function(){
+        let total= $('input[name="inquiries[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Convert to Lead',
+                html: "Are you sure you want to <b>convert to lead</b> all selected rows?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'lead_contact_form/inquiries/_with_selected_convert_to_lead',
+                        dataType: 'json',
+                        data: $('#frm-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                    title: 'Convert to Lead',
+                                    text: "Inquiries was successfully converted to leads!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });  
+        }
+        
+    });
+
+    $(document).on('click', '#with-selected-delete', function(){
+        let total= $('input[name="inquiries[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Inquiry',
+                html: "Are you sure you want to <b>delete</b> all selected rows?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'lead_contact_form/inquiries/_with_selected_delete',
+                        dataType: 'json',
+                        data: $('#frm-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                    title: 'Delete Inquiry',
+                                    html: "Inquiries was successfully deleted",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });  
+        }
+        
+    });
+
     $(document).on('click', '.btn-convert-to-lead', function(){
         let inquiry_id = $(this).attr('data-id'); 
         let lead_name  = $(this).attr('data-name');
