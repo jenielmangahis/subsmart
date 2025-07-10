@@ -482,6 +482,19 @@ class Inquiry_model extends MY_Model
         $this->db->delete($this->table_3);
     }
 
+    public function bulkDeleteInquiries($ids = [], $filters = [])
+    {
+        $this->db->where_in('id', $ids);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->delete($this->table);
+    }
+
     public function optionTextFont()
     {
         $options = [

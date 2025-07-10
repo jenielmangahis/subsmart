@@ -30,7 +30,25 @@
                             Inquiry list from your lead contact form.
                         </div>
                     </div>
-                </div>                
+                </div>        
+                <div class="row mt-4 mb-4">
+                    <div class="col-6 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="">
+                        </div>
+                    </div> 
+                    <div class="col-6 grid-mb text-end">
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">                                   
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-convert-leads" href="javascript:void(0);">Convert to Lead</a></li>                   
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);">Delete</a></li>                                
+                            </ul>
+                        </div>    
+                    </div>
+                </div>    
                 <div class="row" id="deal-forecast">
                     <form id="frm-with-selected">
                         <table class="nsm-table" id="lead-contact-inquiry-list">
@@ -66,9 +84,9 @@
                                                 <i class='bx bx-user-circle lead-inquiry'></i>
                                             <?php } ?>
                                         </td>
-                                        <td><?= $inquiry->first_name . ' ' . $inquiry->last_name; ?></td>
-                                        <td><?= formatPhoneNumber($inquiry->phone); ?></td>
-                                        <td><?= $inquiry->email; ?></td>
+                                        <td class="fw-bold nsm-text-primary"><?= $inquiry->first_name . ' ' . $inquiry->last_name; ?></td>
+                                        <td class="nsm-text-primary"><?= formatPhoneNumber($inquiry->phone); ?></td>
+                                        <td class="nsm-text-primary"><?= $inquiry->email; ?></td>
                                         <td style="text-align:center;"><?= $inquiry->lead_id > 0 ? 'Yes' : 'No'; ?></td>
                                         <td><?= date("m/d/Y G:i A",strtotime($inquiry->date_created)); ?></td>                                                                                                                
                                         <td>

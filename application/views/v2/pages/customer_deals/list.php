@@ -113,6 +113,13 @@
                         <?php } ?>
                     </div>
                 </div>   
+                <div class="row mt-2 mb-2">
+                    <div class="col-6 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="">
+                        </div>
+                    </div> 
+                </div>
                 <div class="row" id="deal-forecast">
                     <form id="frm-with-selected">
                         <table class="nsm-table" id="email-broadcast-list">

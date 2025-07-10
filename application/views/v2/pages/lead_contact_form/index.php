@@ -9,7 +9,10 @@
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/upgrades_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/online_booking_tabs'); ?>
+    </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/lead_contact_form_subtabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
@@ -21,7 +24,7 @@
                             Place a contact form on your website and collect leads from your customers directly into nSmartrac. Customize the way the form looks and get notifications on new contact inquiries or check the leads online. Copy/Paste the iframe or javascript code on a page on your website.
                         </div>
                     </div>
-                </div>
+                </div>                
                 <form id="frm-save-lead-contact-form">
                 <div class="row g-3 align-items-start">                    
                     <div class="col-md-6 col-sm-12">
@@ -49,7 +52,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach($customize_lead_forms_default as $formDefault){ ?>
+                                            <?php foreach($customizeLeadFormsDefault as $formDefault){ ?>
                                                 <tr>
                                                     <td><i class='bx bx-grid-alt'></i></td>
                                                     <td><?= $formDefault->field; ?></td>
@@ -61,6 +64,27 @@
                                                     </td>
                                                     <td></td>
                                                 </tr>
+                                            <?php } ?>
+                                            <?php if( $customizeLeadForms ){ ?>
+                                                <?php $row = 0; ?>
+                                                <?php foreach($customizeLeadForms as $lf){ ?>
+                                                    <tr>
+                                                        <td><i class='bx bx-grid-alt'></i></td>
+                                                        <td>
+                                                            <input type="hidden" class="form-input" name="customFields[<?= $row; ?>][name]" value="<?= $lf->field; ?>">
+                                                            <?= $lf->field; ?>
+                                                        </td>
+                                                        <td style="text-align:center;">
+                                                            <input class="form-check-input" name="customFields[<?= $row; ?>][is_visible]" type="checkbox" <?= $lf->visible == 1 ? 'checked=""' : ''; ?>>
+                                                        </td>
+                                                        <td style="text-align:center;">
+                                                            <input class="form-check-input" type="checkbox" name="customFields[<?= $row; ?>][is_required]" <?= $lf->required == 1 ? 'checked=""' : ''; ?>>
+                                                        </td>
+                                                        <td style="text-align:center;">
+                                                            <button class="nsm-button btn-small default row-btn-delete"><i class='bx bx-trash'></i></button>
+                                                        </td>
+                                                    </tr>
+                                                <?php $row++; } ?>
                                             <?php } ?>
                                         </tbody>
                                     </table>
@@ -82,44 +106,32 @@
                                     <div class="col-sm-12 col-md-6">
                                         <label for="form-text-size" class="col-sm-2 col-form-label">Text Size</label>
                                         <select name="custom_field_text_size" class="nsm-field form-select" id="form-text-size">
-                                            <option value="10">10 px</option>
-                                            <option value="11">11 px</option>
-                                            <option value="12">12 px</option>
-                                            <option value="13">13 px</option>
-                                            <option value="14">14 px</option>
-                                            <option value="15">15 px</option>
-                                            <option value="16">16 px</option>
-                                            <option value="17">17 px</option>
-                                            <option value="18">18 px</option>
-                                            <option value="19">19 px</option>
-                                            <option value="20">20 px</option>
+                                            <?php for($x = 10; $x <= 20; $x++){ ?>
+                                                <option value="<?= $x; ?>" <?= $leadForm && $leadForm->text_size == $x ? 'selected="selected"' : ''; ?>><?= $x; ?> px</option>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                     <div class="col-sm-12 col-md-6">
                                         <label for="form-text-color" class="col-sm-2 col-form-label">Text Color</label>
-                                        <input type="color" name="custom_field_text_color" style="width:30%;height:32px;" class="form-control" id="form-text-color">
+                                        <input type="color" name="custom_field_text_color" value="<?= $leadForm ? $leadForm->text_color : '#000000'; ?>" style="width:30%;height:32px;" class="form-control" id="form-text-color">
                                     </div>
                                     <div class="col-sm-12 col-md-6">
                                         <label for="form-text-font" class="col-sm-2 col-form-label">Text Font</label>
                                         <select name="custom_field_text_font" class="nsm-field form-select" id="form-text-font">
-                                            <option value="roboto">Roboto</option>
-                                            <option value="Open Sans">Open Sans</option>
-                                            <option value="Lato">Lato</option>
-                                            <option value="Montserrat">Montserrat</option>
-                                            <option value="PT Serif">PT serif</option>
-                                            <option value="Ubuntu">Ubuntu</option>
-                                            <option value="Heebo">Heebo</option>
+                                            <?php foreach($optionTextFont as $font){ ?>
+                                                <option value="<?= $font; ?>" <?= $leadForm && $leadForm->text_font == $x ? 'selected="selected"' : ''; ?>><?= $font; ?></option>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                     <div class="col-sm-12 col-md-6">
                                         <div class="row">
                                             <div class="col-4">
                                                 <label for="form-button-color" class="col-sm-12 col-form-label">Button Color</label>
-                                                <input type="color" name="custom_field_button_color" style="height:32px;" class="form-control" id="form-button-color">
+                                                <input type="color" value="<?= $leadForm ? $leadForm->button_color : '#6a4a86'; ?>" name="custom_field_button_color" style="height:32px;" class="form-control" id="form-button-color">
                                             </div>
                                             <div class="col-6">
                                                 <label for="form-button-text-color" class="col-sm-12 col-form-label">Button Text Color</label>
-                                                <input type="color" name="custom_field_button_text_color" style="width:63%;height:32px;" class="form-control" id="form-button-text-color">
+                                                <input type="color" value="<?= $leadForm ? $leadForm->button_text_color : '#ffffff'; ?>" name="custom_field_button_text_color" style="width:63%;height:32px;" class="form-control" id="form-button-text-color">
                                             </div>
                                         </div>
                                     </div>
@@ -140,13 +152,20 @@
                                         <div class="row mb-3">   
                                             <div class="col-sm-12 col-md-6">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="checkbox" name="notification_email" id="custom-form-notification-email" checked="" value="1">
+                                                    <input class="form-check-input" type="checkbox" name="notification_email" id="custom-form-notification-email" value="1" <?= $leadForm && $leadForm->email_notification == 1 ? 'checked=""' : ''; ?>>
                                                     <label class="form-check-label" for="custom-form-notification-email">Email</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="checkbox" name="notification_app_notification" checked="" id="custom-form-notification-app" value="1">
+                                                    <input class="form-check-input" type="checkbox" name="notification_app_notification" id="custom-form-notification-app" value="1" <?= $leadForm && $leadForm->app_notification == 1 ? 'checked=""' : ''; ?>>
                                                     <label class="form-check-label" for="custom-form-notification-app">App Notification</label>
                                                 </div>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3" id="notification-email-recipient" style="<?= $leadForm && $leadForm->email_notification == 1 ? '' : 'display:none;'; ?>">   
+                                            <div class="col-sm-12 col-md-9">
+                                                <label for="notification-email-recipient" class="col-sm-12 col-form-label">Email address where notification will be sent</label>
+                                                <input type="email" value="<?= $leadForm ? $leadForm->email_notification_recipient : $default_email; ?>" name="notification_email_recipient" style="height:32px;" class="form-control" id="notification-email-recipient">
                                             </div>
                                         </div>
                                     </div>
@@ -163,7 +182,7 @@
                                     <div class="nsm-card-content">
                                         <div class="row mb-3">   
                                             <div class="col-sm-12 col-md-12">
-                                                <input type="text" name="" class="form-control" id="form-google-analytics-tracking-id" placeholder="Google Analytics Tracking Id" />
+                                                <input type="text" name="google_analytics_tracking_id" value="<?= $leadForm ? $leadForm->google_analytics_tracking_id : ''; ?>" class="form-control" id="form-google-analytics-tracking-id" placeholder="Google Analytics Tracking Id" />
                                             </div>
                                         </div>
                                     </div>
@@ -186,7 +205,7 @@
                                                     </a>
                                                 </div>
                                                 <div style="margin-bottom: 10px;">
-                                                    <textarea rows="3" readonly="readonly" name="iframe_code" id="code.iframe" class="input-focus form-control"><?php echo $lead_forms->iframe_code != '' ? $lead_forms->iframe_code : ''; ?></textarea>
+                                                    <textarea rows="3" readonly="readonly" name="iframe_code" id="code-iframe" class="input-focus form-control"><?= $leadForm ? $leadForm->iframe_code : ''; ?><iframe src="<?= $iframe_url; ?>" frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;" height="100%" width="100%"></iframe></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -210,26 +229,7 @@
                             </div>                          
 
                             <div class="nsm-card-content">
-                                <form name="widget-contact" method="post">
-                                    <?php foreach($customize_lead_forms_default as $form) : ?>
-                                            <div id="<?php echo 'pf'.$form->field; ?>" class="form-group">
-                                                <label><?php echo $form->field; ?></label>
-                                                <span id="<?php echo 'pf_req'.$form->field; ?>" class="form-required">*</span>
-                                                <input type="text" class="form-control">
-                                            </div>
-                                    <?php endforeach; ?>
-                                    <?php foreach($customize_lead_forms as $form) : ?>
-                                        <div id="<?php echo 'pf' . substr(str_replace(' ', '', $form->field), 0, 8); ?>" class="form-group">
-                                            <label><?php echo $form->field; ?></label>
-                                            <span id="<?php echo 'pf_req' . substr(str_replace(' ', '', $form->field), 0, 8); ?>" class="form-required">*</span>
-                                            <input type="text" class="form-control">
-                                        </div>
-                                    <?php endforeach; ?>
-                                </form>
-                                <hr class="card-hr">
-                                <div class="widget-contact-submit">
-                                    <button class="nsm-button primary margin-right" >Send</button>
-                                </div>
+                                <div id="lead-contact-form-preview"></div>                                
                             </div>
                         </div>
                     </div>
