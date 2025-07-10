@@ -177,17 +177,6 @@ $payment_link = base_url('customer_invoice/'.$company_info->profile_slug.'/' . $
             <div class="container-left">
                 <table style="margin-bottom: 50px;">
                     <tr>
-                        <div><b>TO:</b></div>                    
-                        <div><?= strtoupper($customer->first_name . ' ' . $customer->last_name); ?></div>
-                        <div><?= $invoice_address_a; ?></div>
-                        <div><?= $invoice_address_b; ?></div>
-                        <div>TEL: <?= $customer->phone_m; ?></div>
-                    </tr>
-                </table>
-            </div>
-            <div class="container-right">
-                <table style="margin-bottom: 50px;">
-                    <tr>
                         <div><b>FROM:</b></div>                    
                         <div><?= strtoupper(trim($company_info->business_name)); ?></div>
                         <div><?= strtoupper($company_info->street); ?></div>
@@ -195,6 +184,17 @@ $payment_link = base_url('customer_invoice/'.$company_info->profile_slug.'/' . $
                         <div>TEL: <?= $company_info->business_phone; ?></div>
                     </tr>
                 </table>  
+            </div>
+            <div class="container-right">
+                <table style="margin-bottom: 50px;">
+                    <tr>
+                        <div><b>TO:</b></div>                    
+                        <div><?= strtoupper($customer->first_name . ' ' . $customer->last_name); ?></div>
+                        <div><?= $invoice_address_a; ?></div>
+                        <div><?= $invoice_address_b; ?></div>
+                        <div>TEL: <?= $customer->phone_m; ?></div>
+                    </tr>
+                </table>
             </div>
             <div class="clear"></div>
             <table>

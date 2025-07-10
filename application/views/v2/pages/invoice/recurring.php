@@ -32,23 +32,23 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-2" style="margin-right: 75px;">
-                        <div class="nsm-counter primary h-100 mb-2" style="width: 310px;">
+                    <div class="col-12 col-md-4" style="">
+                        <div class="nsm-counter primary h-100 mb-2" style="">
                             <a class="custom-link" href="<?= base_url('invoice/recurring/paid') ?>">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2>$<?= number_format($totalPaidInvoices->total_amount,2,".",","); ?></h2>
-                                    <span>Total Paid</span>
+                                    <h2>$<?= number_format($totalRecurringInvoices->total_amount,2,".",","); ?></h2>
+                                    <span>Total Recurring Invoice</span>
                                 </div>
                             </div>
                             </a>
                         </div>
                     </div>
-                    <div class="col-12 col-md-3">
-                        <div class="nsm-counter secondary h-100 mb-2" style="width: 310px;">
+                    <div class="col-12 col-md-4">
+                        <div class="nsm-counter secondary h-100 mb-2" style="">
                             <a class="custom-link" href="<?= base_url('invoice/recurring/unpaid') ?>">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
@@ -57,6 +57,25 @@
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                                     <h2>$<?= number_format($totalUnPaidInvoices->total_amount,2,".",","); ?></h2>
                                     <span>Total Unpaid</span>
+                                </div>
+                            </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4" style="">
+                        <div class="nsm-counter primary success h-100 mb-2" style="">
+                            <a class="custom-link" href="<?= base_url('invoice/recurring/paid') ?>">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-receipt'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <?php if($totalPaidInvoicesV2->total_amount > 0) { ?>
+                                        <h2>$<?= number_format($totalPaidInvoicesV2->total_amount,2,".",","); ?></h2>
+                                    <?php } else { ?>
+                                        <h2>$<?= number_format($totalPaidInvoices->total_amount,2,".",","); ?></h2>
+                                    <?php } ?>
+                                    <span>Total Paid</span>
                                 </div>
                             </div>
                             </a>

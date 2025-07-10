@@ -261,11 +261,17 @@ class Invoice extends MY_Controller
             $i->bill_end_date = $end_date;
         }
 
+        
+        $totalPaidInvoicesV2 = $this->invoice_model->getTotalPaidRecurringInvoiceByCompanyIdV2($cid, []);
         $totalPaidInvoices   = $this->invoice_model->getTotalPaidRecurringInvoiceByCompanyId($cid, []);
         $totalUnPaidInvoices = $this->invoice_model->getTotalUnpaidRecurringInvoiceByCompanyId($cid, []);
 
+        $totalRecurringInvoices   = $this->invoice_model->getTotalRecurringInvoiceByCompanyId($cid, []);
+
         $this->page_data['invoices']            = $invoices;
+        $this->page_data['totalRecurringInvoices']   = $totalRecurringInvoices;
         $this->page_data['totalPaidInvoices']   = $totalPaidInvoices;
+        $this->page_data['totalPaidInvoicesV2'] = $totalPaidInvoicesV2;
         $this->page_data['totalUnPaidInvoices'] = $totalUnPaidInvoices;
         $this->page_data['page']->title   = 'Recurring Invoices';
         $this->page_data['page']->parent  = 'Sales';        
