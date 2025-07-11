@@ -1024,6 +1024,9 @@ $route['lead_contact_form/_form_preview'] = 'LeadContactForm/ajax_form_preview';
 $route['lead_contact_form/inquiries'] = 'LeadContactForm/inquiries';
 $route['lead_contact_form/inquiries/_convert_to_lead'] = 'LeadContactForm/ajax_convert_to_lead';
 $route['lead_contact_form/inquiries/_delete'] = 'LeadContactForm/ajax_delete_inquiry';
+$route['lead_contact_form/inquiries/_with_selected_convert_to_lead'] = 'LeadContactForm/ajax_with_selected_convert_to_lead';
+$route['lead_contact_form/inquiries/_with_selected_delete'] = 'LeadContactForm/ajax_with_selected_delete';
+$route['lead_contact_form/inquiries/_view_inquiry'] = 'LeadContactForm/ajax_view_inquiry';
 
 //Public Lead Contact Form
 $route['online-leads/(:any)'] = 'Pages/front_lead_contact_form/$1';
