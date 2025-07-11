@@ -1293,6 +1293,12 @@ $route['job/_quick_create_job_tag'] = 'Job/ajax_quick_create_job_tag';
 $route['job/new'] = 'job/new_job1';
 $route['job/edit/(:num)'] = 'job/new_job1/$1';
 $route['job/_update_job_status'] = 'Job/ajax_update_job_status';
+$route['job/_archive_selected_jobs'] = 'Job/ajax_archive_selected_jobs';
+$route['jobs/_delete_all_archived_jobs'] = 'Job/ajax_delete_all_archived_jobs';
+$route['jobs/_restore_selected_jobs'] = 'Job/ajax_restore_selected_jobs';
+$route['jobs/_permanently_delete_selected_jobs'] = 'Job/ajax_permanently_delete_selected_jobs';
+$route['jobs/_delete_archived_job'] = 'Job/ajax_delete_archived_job';
+$route['jobs/export_list'] = 'Job/export_list';
 
 // Trac360
 $route['job/bird_eye_view'] = 'JobMap/index';
