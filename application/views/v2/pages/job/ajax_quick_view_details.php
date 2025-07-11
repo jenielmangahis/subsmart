@@ -229,11 +229,14 @@
             <div class="card-body">
                 <div class="form-group">
                     <ul class="container details">
-                        <li><p><span class='bx bx-user-circle'></span> <b><?= $jobs_data->first_name .' '. $jobs_data->last_name; ?></b></p></li>
-                        <li><p><span class='bx bx-map'></span><?= $jobs_data->job_location; ?></p></li>
+                        <?php if( $show_customer_name == 1 ){ ?>
+                            <li><p><span class='bx bx-user-circle'></span> <b><?= $jobs_data->first_name .' '. $jobs_data->last_name; ?></b></p></li>
+                        <?php } ?>
+                        <?php if( $show_job_address_description == 1 ){ ?>
+                            <li><p><span class='bx bx-map'></span><?= $jobs_data->job_location; ?></p></li>
+                        <?php } ?>
                         <li><p><span class='bx bx-phone'></span> <?= $jobs_data->phone_m !="" || $jobs_data->phone_m !=null ? formatPhoneNumber($jobs_data->phone_m) : 'N/A'; ?></p></li>
                         <li><p><span class='bx bx-envelope'></span><a href="mailto:<?= $jobs_data->cust_email; ?>"><?= $jobs_data->cust_email; ?></a></p></li>
-                        <li><p><span class='bx bx-dollar-circle'></span> <?= number_format($job_total_amount,2,'.',','); ?></p>
                     </ul>
                 </div>
             </div>
@@ -266,7 +269,19 @@
                     <div class="col-md-4 col-12 mt-2">
                         <div class="label">JOB TYPE</div>
                         <i class='bx bx-briefcase-alt-2'></i> <?= $jobs_data->job_type != '' ? $jobs_data->job_type : '---';  ?>
+                    </div>                    
+                    <?php if( $show_job_address_description == 1 ){ ?>
+                    <div class="col-md-4 col-12 mt-2">
+                        <div class="label">JOB LOCATION</div>
+                        <i class='bx bx-map'></i> <?= $jobs_data->job_location; ?>
                     </div>
+                    <?php } ?>
+                    <?php if( $show_price == 1 ){ ?>
+                    <div class="col-md-4 col-12 mt-2">
+                        <div class="label">AMOUNT</div>
+                        <i class='bx bx-dollar-circle'></i> <?= number_format($job_total_amount,2,'.',','); ?>
+                    </div>
+                    <?php } ?>
                     <div class="col-md-4 col-12 mt-2">
                         <div class="label">ASSIGNED USERS</div>
                         <?php 

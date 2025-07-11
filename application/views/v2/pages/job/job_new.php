@@ -1504,10 +1504,7 @@
                                                     </div>
                                                     <a href="<?php echo url('job') ?>" class="btn">Cancel</a>
                                                     <button type="submit" class="nsm-button primary" id="btn-schedule-job"><?= isset($jobs_data) ? 'Save' : 'Schedule'; ?></button>                                                    
-                                                <?php //endif; ?>
-                                                <?php if(isset($jobs_data)): ?>
-                                                    <button type="button" onclick="location.href='<?= base_url('job/job_preview/'.$this->uri->segment(3)) ?>'" class="nsm-button primary"><i class='bx bx-bx bx-search-alt'></i> Preview</button>
-                                                <?php endif; ?>
+                                                <?php //endif; ?>                                                
                                             </div>
                                         </div>
                                     </div>

@@ -35,27 +35,21 @@
             <form class="nsm-page-content" id="createinvoiceform">
                 <input type="hidden" name="inid" id="inid" value="<?= $jobInvoice->id; ?>" />
                 <div class="col-md-12 mb-4">
-                    <h5>Customer Details</h5>
                     <div class="row form-group">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>Customer</label>
                             <input class="form-control" value="<?= $customer->first_name, " ", $customer->last_name; ?>" readonly>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>Job Location</label>
-                            <input class="form-control" id="job_location" value="<?= getFormatedCustomerAddress($customer) ?>" readonly>
-                        </div>
-                        <div class="col-md-4">
-                            <label>Job Name</label>
-                            <input id="job_name" class="form-control" value="<?= $customer->first_name, " ", $customer->last_name; ?>" readonly>
+                            <input class="form-control" id="job_location" value="<?= $jobInvoice->job_location; ?>" readonly>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-md-12 mb-4">
-                    <h5>Invoice Details</h5>
                     <div class="row form-group mb-3">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>Invoice Type</label>
                             <select name="invoice_type" class="form-select">
                                 <option value="Deposit">Deposit</option>
@@ -64,30 +58,30 @@
                                 <option value="Total Due" selected="selected">Total Due</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>Job #</label>
                             <input class="form-control" id="job_number" value="<?= formatJobNumber($job->job_number) ?>" readonly>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>Invoice #</label>
                             <input class="form-control" id="invoice_number_display" readonly value="<?php echo $invoiceNumber; ?>" required="">
                         </div>
-                    </div>
-
-                    <div class="row form-group mb-3">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>PO #</label>
                             <input id="po_number" class="form-control">
                         </div>
-                        <div class="col-md-4">
+                    </div>
+
+                    <div class="row form-group mb-3">                        
+                        <div class="col-md-3">
                             <label>Date Issued</label>
                             <input type="date" class="form-control" id="date-issued" value="<?= $jobInvoice ? date("Y-m-d", strtotime($jobInvoice->date_issued)) : date("Y-m-d"); ?>" required="">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>Due Date</label>
                             <input type="date" class="form-control" id="due-date" value="<?= $jobInvoice ? date("Y-m-d", strtotime($jobInvoice->due_date)) : date("m/d/Y"); ?>" required="">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label>Send a tip amount to assigned technician </label>
                             <input id="tip" name="tip" type="number" min=0 step="any" value="0" class="form-control">
                         </div>
