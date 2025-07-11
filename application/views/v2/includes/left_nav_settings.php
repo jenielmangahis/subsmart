@@ -34,7 +34,7 @@
                         <i class='bx bx-fw bx-square-rounded'></i> Smart Zoom
                     </a>
                 </li>
-                <li class="<?php if ($page->title == 'Inbox') {
+                <!-- <li class="<?php if ($page->title == 'Inbox') {
                     echo 'selected';
                 } ?>">
                     <a href="<?php echo base_url('inbox'); ?>">
@@ -47,7 +47,7 @@
                     <a href="#">
                         <i class='bx bx-fw bx-paper-plane'></i> Sent
                     </a>
-                </li>
+                </li> -->
                 <!-- <li class="<?php if ($page->title == 'Support') {
                     echo 'selected';
                 } ?>">
