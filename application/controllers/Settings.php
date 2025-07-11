@@ -60,7 +60,7 @@ class Settings extends MY_Controller {
 
         $args = array('company_id' => $company_id);
         $colorSettings = $this->ColorSettings_model->getByWhere($args);
-
+        
         $this->page_data['google_credentials'] = google_credentials();
         $this->page_data['module'] = 'calendar';
         $this->page_data['googleAccount'] = $googleAccount;
