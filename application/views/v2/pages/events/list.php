@@ -138,7 +138,7 @@ table.dataTable.no-footer {
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item btn-view-event" href="javascript:void(0);" data-id="<?= $event->id; ?>" data-event-number="<?= $event->event_number; ?>">Preview</a></li>
+                                        <li><a class="dropdown-item btn-view-event" href="javascript:void(0);" data-id="<?= $event->id; ?>" data-event-number="<?= $event->event_number; ?>">View</a></li>
                                         <?php if(checkRoleCanAccessModule('events', 'write')){ ?>
                                         <li><a class="dropdown-item" href="<?php echo base_url('events/event_edit/') . $event->id; ?>">Edit</a></li>
                                         <?php } ?>
@@ -155,13 +155,15 @@ table.dataTable.no-footer {
             </div>
             
             <div class="modal fade nsm-modal fade" id="modal-view-event" tabindex="-1" aria-labelledby="modal-view-event-label" aria-hidden="true">
-                <div class="modal-dialog modal-lg">        
+                <div class="modal-dialog modal-lg modal-dialog-centered">        
                     <div class="modal-content">
                         <div class="modal-header">
                             <span class="modal-title content-title">View Event</span>
                             <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                         </div>
-                        <div class="modal-body" id="view-event-container"></div>
+                        <div class="modal-body">
+                            <div class="view-schedule-container" id="view-event-container"></div>
+                        </div>
                     </div>        
                 </div>
             </div>
@@ -212,8 +214,8 @@ $(document).ready(function () {
 
         $.ajax({
             type: "POST",
-            url: base_url + 'events/_view_event',
-            data: {event_id:event_id},
+            url: base_url + 'event/_quick_view_event',
+            data: {appointment_id:event_id},
             success: function(html) {    
                $('#view-event-container').html(html);               
             },
