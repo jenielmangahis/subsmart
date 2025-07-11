@@ -1076,15 +1076,17 @@ class Users_model extends MY_Model
 
     public function bulkDelete($ids = [], $filters = [])
     {
-        $this->db->where_in('id', $ids);
+        if( count($ids) > 0 ){
+            $this->db->where_in('id', $ids);
 
-        if( $filters ){
-            foreach( $filters as $filter ){
-                $this->db->where($filter['field'], $filter['value']);
+            if( $filters ){
+                foreach( $filters as $filter ){
+                    $this->db->where($filter['field'], $filter['value']);
+                }
             }
-        }
 
-        $this->db->delete($this->table);
+            $this->db->delete($this->table);
+        }        
     }
 
     public function deleteAllArchived($filters = [])
