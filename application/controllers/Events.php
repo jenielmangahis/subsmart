@@ -1733,13 +1733,44 @@ class Events extends MY_Controller
         }
     }
 
-    public function ajax_quick_view_event() {
+    public function ajax_quick_view_event() 
+    {
+        $this->load->model('CalendarSettings_model');
 
-        $post = $this->input->post();
-
+        $post  = $this->input->post();
         $event = $this->event_model->getEvent($post['appointment_id']);
 
+        $show_customer_name = 1;
+        $show_job_address_description = 1;
+        $show_price = 1;
+        if( $this->input->get('view') ){
+            if( $this->input->get('view') == 'calendar' ){
+                $settings = $this->CalendarSettings_model->getByCompanyId($comp_id);  
+                $show_customer_name = $settings->display_customer_name ?? 1;
+                $show_job_address_description  = $settings->display_job_details ?? 1;
+                $show_price = $settings->display_price ?? 1;
+            }
+        }
+
+        $param    = [
+            'text' => $event->event_address,
+            'format' => 'json',
+            'apiKey' => GEOAPIKEY
+        ];            
+
+        $url = 'https://api.geoapify.com/v1/geocode/search?'.http_build_query($param);
+        $data = file_get_contents($url);            
+        $data = json_decode($data);
+        if( $data && isset($data->results[0] )){ 
+            $default_lat = $data->results[0]->lat;   
+            $default_lon = $data->results[0]->lon;            
+            $address_line2 = $data->results[0]->address_line2;            
+        }                 
+
         $this->page_data['event'] = $event;
+        $this->page_data['default_lat']   = $default_lat;
+        $this->page_data['default_lon']   = $default_lon;
+        $this->page_data['address_line2'] = $address_line2;
         $this->load->view('v2/pages/events/ajax_quick_view_event', $this->page_data);
     }
 
