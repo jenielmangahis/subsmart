@@ -68,6 +68,23 @@ class Payment_records_model extends MY_Model
         return $query->row();
     }
 
+    public function getTotalPaidInvoiceAmountByCompanyId($company_id, $is_archived = '')
+    {
+        $this->db->select('SUM(payment_records.invoice_amount) AS total_amount_paid');
+        $this->db->from($this->table);
+        $this->db->join('invoices', 'invoices.id = payment_records.invoice_id','left');
+
+        $this->db->where('invoices.company_id', $company_id);
+        $this->db->where('payment_records.company_id', $company_id);
+
+        $this->db->where('invoices.status', "Paid");
+        $this->db->where('invoices.status !=', "");
+        $this->db->where('invoices.view_flag =', $is_archived);
+        
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getAllByInvoiceId($invoice_id)
     {
         $this->db->select('*');

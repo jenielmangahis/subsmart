@@ -16,7 +16,7 @@
         <?php include viewPath('v2/includes/page_navigations/invoce_tabs_v2'); ?>
     </div>
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/invoice_subtabs'); ?>
+        <?php //include viewPath('v2/includes/page_navigations/invoice_subtabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
@@ -30,7 +30,14 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-12 col-md-4 grid-mb">
+                        <form action="<?php echo base_url('settings/tax_rates') ?>" method="get">
+                            <div class="nsm-field-group search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" name="search" id="search_field" placeholder="Find by Name" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                            </div>
+                        </form>
+                    </div>                    
+                    <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#new_tax_rate_modal">
                                 <i class='bx bx-fw bx-dollar-circle'></i> New Rate
@@ -54,7 +61,7 @@
                         ?>
                             <?php
                             foreach ($taxRates as $tax_rate) :
-                                if ($tax_rate->is_default == 1):
+                                if ($tax_rate['is_default'] == 1):
                                     $value = 'Yes'; 
                                     $badge = "success";
                                 else:
@@ -68,8 +75,8 @@
                                             <i class='bx bx-dollar-circle'></i>
                                         </div>
                                     </td>
-                                    <td class="fw-bold nsm-text-primary nsm-link default"><?= $tax_rate->name; ?></td>
-                                    <td><?= $tax_rate->rate; ?></td>
+                                    <td class="fw-bold nsm-text-primary nsm-link default"><?= $tax_rate['name']; ?></td>
+                                    <td><?= $tax_rate['rate']; ?></td>
                                     <td><span class="nsm-badge <?= $badge ?>"><?= $value; ?></span></td>
                                     <td>
                                         <div class="dropdown table-management">
@@ -78,10 +85,10 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $tax_rate->id; ?>">Edit</a>
+                                                    <a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $tax_rate['id']; ?>">Edit</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $tax_rate->id; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $tax_rate['id']; ?>">Delete</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -113,6 +120,12 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
+
+        $("#search_field").on("input", debounce(function() {
+            let _form = $(this).closest("form");
+
+            _form.submit();
+        }, 1500));        
 
         $(document).on("click", ".edit-item", function(){
             let tid = $(this).attr("data-id");

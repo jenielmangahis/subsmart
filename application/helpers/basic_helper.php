@@ -2548,6 +2548,28 @@ function get_invoice_amount($type)
     }
 }
 
+function get_total_invoice_amount($type, $company_id = 0, $is_arhived = 0)
+{
+    $CI =& get_instance();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    $CI->load->model('Payment_records_model');
+
+    switch ($type) {
+        case "paid":
+            $result = $CI->Payment_records_model->getTotalPaidInvoiceAmountByCompanyId($company_id, $is_arhived);
+            $total_invoice_amount = 0;
+            if( $result ){
+                $total_invoice_amount = $result->total_amount_paid;
+            }
+
+            return number_format($total_invoice_amount, 2, '.', ',');
+
+        default:        
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft'));
+            return total_invoice_amount($result);
+    }
+}
+
 /**
  * @return mixed
  */
