@@ -60,7 +60,7 @@ class Settings extends MY_Controller {
 
         $args = array('company_id' => $company_id);
         $colorSettings = $this->ColorSettings_model->getByWhere($args);
-
+        
         $this->page_data['google_credentials'] = google_credentials();
         $this->page_data['module'] = 'calendar';
         $this->page_data['googleAccount'] = $googleAccount;
@@ -361,7 +361,15 @@ class Settings extends MY_Controller {
         $user = $this->session->userdata('logged');
         $user = $this->Users_model->getUser($user['id']);
 
-        $taxRates = $this->TaxRates_model->getAllByCompanyId($company_id);
+        $taxRates = $this->TaxRates_model->getAllByCompanyId($company_id, true);
+        if(!empty(get('search'))) {
+            $search = get('search');
+            $taxRates = array_filter($taxRates, function($taxRate, $key) use ($search) {
+                return (stripos($taxRate['name'], $search) !== false);
+            }, ARRAY_FILTER_USE_BOTH);
+
+            $this->page_data['search'] = $search;
+        }
 
         $this->page_data['taxRates'] = $taxRates;
         $this->page_data['page']->menu = 'tax_rates';

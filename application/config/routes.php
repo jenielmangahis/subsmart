@@ -1024,6 +1024,9 @@ $route['lead_contact_form/_form_preview'] = 'LeadContactForm/ajax_form_preview';
 $route['lead_contact_form/inquiries'] = 'LeadContactForm/inquiries';
 $route['lead_contact_form/inquiries/_convert_to_lead'] = 'LeadContactForm/ajax_convert_to_lead';
 $route['lead_contact_form/inquiries/_delete'] = 'LeadContactForm/ajax_delete_inquiry';
+$route['lead_contact_form/inquiries/_with_selected_convert_to_lead'] = 'LeadContactForm/ajax_with_selected_convert_to_lead';
+$route['lead_contact_form/inquiries/_with_selected_delete'] = 'LeadContactForm/ajax_with_selected_delete';
+$route['lead_contact_form/inquiries/_view_inquiry'] = 'LeadContactForm/ajax_view_inquiry';
 
 //Public Lead Contact Form
 $route['online-leads/(:any)'] = 'Pages/front_lead_contact_form/$1';
@@ -1290,6 +1293,12 @@ $route['job/_quick_create_job_tag'] = 'Job/ajax_quick_create_job_tag';
 $route['job/new'] = 'job/new_job1';
 $route['job/edit/(:num)'] = 'job/new_job1/$1';
 $route['job/_update_job_status'] = 'Job/ajax_update_job_status';
+$route['job/_archive_selected_jobs'] = 'Job/ajax_archive_selected_jobs';
+$route['jobs/_delete_all_archived_jobs'] = 'Job/ajax_delete_all_archived_jobs';
+$route['jobs/_restore_selected_jobs'] = 'Job/ajax_restore_selected_jobs';
+$route['jobs/_permanently_delete_selected_jobs'] = 'Job/ajax_permanently_delete_selected_jobs';
+$route['jobs/_delete_archived_job'] = 'Job/ajax_delete_archived_job';
+$route['jobs/export_list'] = 'Job/export_list';
 
 // Trac360
 $route['job/bird_eye_view'] = 'JobMap/index';

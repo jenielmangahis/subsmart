@@ -1656,7 +1656,7 @@ class Invoice_model extends MY_Model
     public function get_company_archived_invoices($cid)
     {
         $this->db->where('company_id', $cid);
-        $this->db->where('view_flag', 0);
+        $this->db->where('view_flag', 1);
         $this->db->order_by('date_updated', 'DESC');
         $query = $this->db->get('invoices');
         return $query->result();
@@ -1859,6 +1859,26 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
+    public function getTotalPaidRecurringInvoiceByCompanyIdV2($cid, $filter = array())
+    {           
+        $this->db->select('SUM(payment_records.invoice_amount) AS total_amount_paid');
+        $this->db->from('invoices');
+        $this->db->join('payment_records', 'payment_records.invoice_id = invoices.id','left');
+        $this->db->where('invoices.is_recurring', 1);
+        $this->db->where('invoices.view_flag', 0);
+        $this->db->where('invoices.company_id', $cid);
+        $this->db->where('invoices.status', 'Paid');
+
+        if( $filter ){
+            foreach( $filter as $f ){
+                $this->db->where($f['field'], $f['value']);
+            }
+        }
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getTotalPaidRecurringInvoiceByCompanyId($cid, $filter = array())
     {           
         $this->db->select('COALESCE(SUM(invoices.grand_total),0)AS total_amount');
@@ -1867,6 +1887,24 @@ class Invoice_model extends MY_Model
         $this->db->where('invoices.view_flag', 0);
         $this->db->where('invoices.company_id', $cid);
         $this->db->where('invoices.status', 'Paid');
+
+        if( $filter ){
+            foreach( $filter as $f ){
+                $this->db->where($f['field'], $f['value']);
+            }
+        }
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getTotalRecurringInvoiceByCompanyId($cid, $filter = array())
+    {           
+        $this->db->select('COALESCE(SUM(invoices.grand_total),0)AS total_amount');
+        $this->db->from('invoices');
+        $this->db->where('invoices.is_recurring', 1);
+        $this->db->where('invoices.view_flag', 0);
+        $this->db->where('invoices.company_id', $cid);
 
         if( $filter ){
             foreach( $filter as $f ){

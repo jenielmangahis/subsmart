@@ -4778,6 +4778,7 @@ class Job extends MY_Controller
 
     public function ajax_quick_view_details()
     {
+        $this->load->model('CalendarSettings_model');
         $this->load->helper('functions');
 
         $post    = $this->input->post();
@@ -4831,6 +4832,18 @@ class Job extends MY_Controller
             $address_line2 = $data->results[0]->address_line2;            
         }                 
 
+        $show_customer_name = 1;
+        $show_job_address_description = 1;
+        $show_price = 1;
+        if( $this->input->get('view') ){
+            if( $this->input->get('view') == 'calendar' ){
+                $settings = $this->CalendarSettings_model->getByCompanyId($comp_id);  
+                $show_customer_name = $settings->display_customer_name ?? 1;
+                $show_job_address_description  = $settings->display_job_details ?? 1;
+                $show_price = $settings->display_price ?? 1;
+            }
+        }        
+
         $this->page_data['cid'] = $comp_id;
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
         $this->page_data['jobs_data'] = $jobs_data;
@@ -4838,7 +4851,10 @@ class Job extends MY_Controller
         $this->page_data['default_lon']   = $default_lon;
         $this->page_data['address_line2'] = $address_line2;
         $this->page_data['latest_job_payment'] = $this->jobs_model->get_latest_job_payment_by_job_id($id);  
-        $this->page_data['job_total_amount']   = $job_total_amount;              
+        $this->page_data['job_total_amount']   = $job_total_amount;    
+        $this->page_data['show_customer_name'] = $show_customer_name;
+        $this->page_data['show_job_address_description'] = $show_job_address_description;
+        $this->page_data['show_price'] = $show_price;
         $this->load->view('v2/pages/job/ajax_quick_view_details', $this->page_data);
     }
 

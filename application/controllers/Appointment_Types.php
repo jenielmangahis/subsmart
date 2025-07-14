@@ -16,6 +16,7 @@ class Appointment_Types extends MY_Controller {
 
 		$this->page_data['page']->title = 'Appointment Types';
 		$this->page_data['page']->menu = 'appointment_types';
+		$this->page_data['page']->parent = 'Calendar';
 	}
 
 	public function index()

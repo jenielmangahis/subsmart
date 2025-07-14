@@ -36,3 +36,15 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modal-view-inquiry" data-bs-backdrop="static" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">View Inquiry</span>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+            </div>              
+            <div class="modal-body" id="view-inquiry-container"></div>  
+        </div>
+    </div>
+</div>

@@ -1481,7 +1481,7 @@
 
                 //console.log('props', arg.event._def.extendedProps);
                 if ( appointment_type == 'job' ) {
-                    var url = base_url + "job/_quick_view_details";     
+                    var url = base_url + "job/_quick_view_details?view=calendar";     
                     //$('#upcoming-schedule-view-more-details').show();               
                 } else if ( appointment_type == 'booking' ) {
                     location.href = base_url + 'promote/view_booking/' + appointment_id;
@@ -1495,7 +1495,7 @@
                     var url = base_url + "calendar/_quick_view_tc_off"; 
                     //$('#upcoming-schedule-view-more-details').hide();                   
                 } else if( appointment_type == 'event' ) {
-                    var url = base_url + "event/_quick_view_event";               
+                    var url = base_url + "event/_quick_view_event?view=calendar";               
                 } else if( appointment_type == 'workorder' ) {
                     var url = base_url + "workorder/_quick_view_details"; 
                 }
@@ -2066,7 +2066,7 @@
     }
 
     function viewJob(appointment_id) {
-        let url = base_url + "job/_quick_view_details";
+        let url = base_url + "job/_quick_view_details?view=calendar";
 
         $("#modal-view-upcoming-jobs-tickets").modal('show');
         showLoader($(".view-schedule-container"));
@@ -2283,7 +2283,7 @@
         var order_number     = $(this).data('ordernum');
 
         if ( appointment_type == 'job' ) {
-            var url = base_url + "job/_quick_view_details";     
+            var url = base_url + "job/_quick_view_details?view=calendar";     
             //$('#upcoming-schedule-view-more-details').show();               
         } else if ( appointment_type == 'booking' ) {
             location.href = base_url + 'promote/view_booking/' + appointment_id;
@@ -2297,7 +2297,7 @@
             var url = base_url + "calendar/_quick_view_tc_off"; 
             //$('#upcoming-schedule-view-more-details').hide();                   
         } else if( appointment_type == 'event' ) {
-            var url = base_url + "event/_quick_view_event"; 
+            var url = base_url + "event/_quick_view_event?view=calendar"; 
         }
 
         $('#modal-quick-access-calendar-schedule').modal('hide');
@@ -2761,7 +2761,7 @@
     $(document).on('submit', '#quick-add-job-form', function(e){
         e.preventDefault();         
         
-        var url  = base_url + 'job/_create_job';
+        var url  = base_url + 'job/_create_job?view=calendar';
         var form = $(this);
         $.ajax({
             type: "POST",
