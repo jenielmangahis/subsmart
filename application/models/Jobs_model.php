@@ -65,7 +65,7 @@ class Jobs_model extends MY_Model
     /**
      * @return mixed
      */
-    public function get_all_jobs_by_tag($tag_id, $userId = null, $leaderBoardType = null)
+    public function get_all_jobs_by_tag($tag_name, $userId = null, $leaderBoardType = null)
     {
         $cid = logged('company_id');
         $this->db->from($this->table);
@@ -94,7 +94,28 @@ class Jobs_model extends MY_Model
             }
         }
 
-        $this->db->where("jobs.tags", $tag_id);
+        $this->db->where("jobs.tags", $tag_name);
+        $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get_all_jobs_by_status($status)
+    {
+        $cid = logged('company_id');
+        
+        $this->db->from($this->table);
+        $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,job_tags.name,COALESCE(invoices.grand_total,0) AS amount,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
+        $this->db->join('invoices', 'invoices.job_id = jobs.id', 'left');
+        $this->db->where("jobs.company_id", $cid);
+        $this->db->where('jobs.is_archived', 0);
+        $this->db->where("jobs.status", $status);
         $this->db->order_by('id', "DESC");
         $query = $this->db->get();
         return $query->result();
