@@ -43,10 +43,13 @@ class Job extends MY_Controller
         $userId = get('user_id');
         $leaderBoardType = get('leader_board_type');
 
-        if (get('job_tag')) {
+        if(get('job_tag')) {
             $tag_id = get('job_tag');
             $jobs = $this->jobs_model->get_all_jobs_by_tag($tag_id, $userId, $leaderBoardType);
-        } else {
+        }elseif(get('job_status')){
+            $status = get('job_status');
+            $jobs = $this->jobs_model->get_all_jobs_by_status($status);
+        }else {
             $jobs = $this->jobs_model->get_all_jobs($userId, $leaderBoardType);
         }
 
