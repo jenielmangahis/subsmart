@@ -5239,6 +5239,12 @@ class Job extends MY_Controller
             $activity_name = 'Created Caledar Schedule ' . $job_number; 
             createActivityLog($activity_name);
 
+            /**
+             * Insert job mail automation here
+             */
+            createAutomationQueueV2('send_email', 'job', 'created', '', $jobs_id);
+            createAutomationQueueV2('send_email', 'job', 'has_status', 'Scheduled', $jobs_id);            
+
             if( $this->input->post('is_with_esign') ){
                 //Emergency Contacts
                 $payload    = [];

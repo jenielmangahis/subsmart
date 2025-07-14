@@ -956,6 +956,118 @@ class Invoice extends MY_Controller
 
         echo json_encode($is_success);
     }
+
+    public function ajax_archive_selected_invoices()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post        = $this->input->post();
+
+        if( $post['invoice'] ){
+            $arhived_count = 0;
+            foreach($post['invoice'] as $invoice_id) {
+                $invoice = $this->invoice_model->getinvoice($invoice_id);
+                if($invoice){
+                    $data = array(
+                        'id' => $invoice_id,
+                        'view_flag' => '1',
+                    );
+
+                    $is_success = $this->invoice_model->deleteInvoice($data);
+                    customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Deleted invoice #'.$invoice->invoice_number);
+                    $arhived_count++;
+                }
+            }
+
+            if($arhived_count) {
+                $is_success = 1;
+                $msg    = '';
+            }
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }    
+
+    public function ajax_restore_selected_invoices()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post        = $this->input->post();     
+        
+        if( $post['invoice'] ){
+            $restore_count = 0;
+            foreach($post['invoice'] as $invoice_id) {
+                $invoice = $this->invoice_model->getById($invoice_id);
+                if ($invoice && $invoice->company_id == $company_id) {
+                    $this->invoice_model->restoreInvoice($invoice->id);
+
+                    //Activity Logs
+                    $activity_name = 'Archived : Restore invoice data  ' . $invoice->invoice_number; 
+                    createActivityLog($activity_name);   
+                                     
+                    $restore_count++;
+                }
+            }
+
+            if($restore_count) {
+                $is_success = 1;
+                $msg    = '';
+            }
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_permanent_selected_invoices()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post        = $this->input->post();     
+        
+        if( $post['invoice'] ){
+            $restore_count = 0;
+            foreach($post['invoice'] as $invoice_id) {
+                $invoice = $this->invoice_model->getById($invoice_id);
+                if ($invoice && $invoice->company_id == $company_id) {
+                    $this->invoice_model->delete_invoice($invoice->id);
+
+                    //Activity Logs
+                    $activity_name = 'Archived : Permanent delete invoice data ' . $invoice->invoice_number; 
+                    createActivityLog($activity_name);  
+                                     
+                    $restore_count++;
+                }
+            }
+
+            if($restore_count) {
+                $is_success = 1;
+                $msg    = '';
+            }
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }    
     
     public function void_invoice()
     {
@@ -3506,6 +3618,30 @@ class Invoice extends MY_Controller
 
         $this->page_data['invoices'] = $invoices;
         $this->load->view("v2/pages/invoice/ajax_archived_list", $this->page_data);
+    }  
+
+    public function ajax_permanent_delete()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find invoice data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $invoice = $this->invoice_model->getById($post['invoice_id']);
+        if ($invoice && $invoice->company_id == $company_id) {                        
+            $this->invoice_model->delete_invoice($post['invoice_id']);
+
+            //Activity Logs
+            $activity_name = 'Archived : Permanent delete invoice data ' . $invoice->invoice_number; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 
     public function ajax_restore_archived()
