@@ -1067,28 +1067,21 @@ class Users extends MY_Controller
 
 		$profile_image = '';
 		if( isset($_FILES['userfile']) && $_FILES['userfile']['size'] > 0 ){
-			// Upload profile picture
-			$config = array(
-				'upload_path' => './uploads/users/user-profile/',
-				'allowed_types' => '*',
-				'overwrite' => TRUE,
-				'max_size' => '20000',
-				'max_height' => '0',
-				'max_width' => '0',
-				'encrypt_name' => true
-			);
-			
-			$this->load->library('upload',$config);
-			$config = $this->uploadlib->initialize($config);
-			if ($this->upload->do_upload("userfile")){
-				$uploadData = $this->upload->data();			
-				$data = array(
-					'profile_image'=> $uploadData['file_name'],
-					'date_created' => time()
-				);
-				$img_id = $this->users_model->addProfilePhoto($data);
-				$profile_image = $uploadData['file_name'];
+			$target_dir = "./uploads/users/user-profile/";
+			if (!file_exists($target_dir)) {
+				mkdir($target_dir, 0777, true);
 			}
+
+			$tmp_name = $_FILES['userfile']['tmp_name'];
+			$img_name = $company_id . '_' . time() . '_profile_image'; 				
+			move_uploaded_file($tmp_name, "./uploads/users/user-profile/" . $img_name);
+			$profile_image = $img_name;
+
+			$data = array(
+				'profile_image'=> $profile_image,
+				'date_created' => time()
+			);
+			$img_id = $this->users_model->addProfilePhoto($data);
 		}
 
         $app_access = 0;
@@ -1835,7 +1828,7 @@ class Users extends MY_Controller
 
 				$tmp_name = $_FILES['user_photo']['tmp_name'];
 				//$name = basename($_FILES["user_photo"]["name"]);
-				$name = $company_id . time() . '_profile_image'; 				
+				$name = $company_id . '_' . time() . '_profile_image'; 				
 				move_uploaded_file($tmp_name, "./uploads/users/user-profile/" . $name);
 				$image_name = $name;
 
@@ -1918,28 +1911,25 @@ class Users extends MY_Controller
 			}
 
 			if( $is_success == 1 ){
+				$profile_image = $user->profile_img;
+
 				if( isset($_FILES['userfile']) && $_FILES['userfile']['size'] > 0 ){
-					$config = array(
-						'upload_path' => './uploads/users/user-profile/',
-						'allowed_types' => '*',
-						'overwrite' => TRUE,
-						'max_size' => '20000',
-						'max_height' => '0',
-						'max_width' => '0',
-						'encrypt_name' => true
-					);
-					$config = $this->uploadlib->initialize($config);
-					$this->load->library('upload',$config);					
-					if ($this->upload->do_upload("userfile")){						
-						$uploadData = $this->upload->data();
-						$profile_image = $uploadData['file_name'];
-					}else{
-						$profile_image = $user->profile_img;
+					$target_dir = "./uploads/users/user-profile/";
+					if (!file_exists($target_dir)) {
+						mkdir($target_dir, 0777, true);
 					}
-				}else{
-					$profile_image = $user->profile_img;
+
+					$tmp_name = $_FILES['userfile']['tmp_name'];
+					$img_name = $company_id . '_' . time() . '_profile_image'; 				
+					move_uploaded_file($tmp_name, "./uploads/users/user-profile/" . $img_name);
+					$profile_image = $img_name;
+
+					$data = array(
+						'profile_image'=> $profile_image,
+						'date_created' => time()
+					);
+					$img_id = $this->users_model->addProfilePhoto($data);
 				}
-					
 
 				$has_web_access = 0;
 				if ($post['web_access'] == 'on') {
@@ -2628,23 +2618,61 @@ class Users extends MY_Controller
 
 	public function ajax_update_profile()
 	{
+		$is_success = 0;
+        $msg = 'Cannot find data';
+
 		$post = $this->input->post();
+		$company_id = logged('company_id');
+		$user_id    = logged('id');
 
-		$data = array(
-			'FName' => $post['firstname'],
-			'LName' => $post['lastname'],
-			'address' => $post['address'],
-			'state' => $post['state'],
-			'city' => $city,
-			'postal_code' => $post['postal_code'],
-			'employee_number' => $post['emp_number'],
-			'phone' => $post['phone_number'],
-			'mobile' => $post['mobile_number']
-		);
+		$user = $this->Users_model->getUserByID($user_id);
+		if( $user && $user->company_id == $company_id ){
+			$profile_img = $user->profile_img;
+			if (!empty($_FILES['user_photo']['name'])) {
+				$target_dir = "./uploads/users/user-profile/";
 
-		$user = $this->Users_model->update($post['user_id'], $data);
+				if (!file_exists($target_dir)) {
+					mkdir($target_dir, 0777, true);
+				}
 
-		echo json_encode(1);
+				$tmp_name = $_FILES['user_photo']['tmp_name'];
+				//$name = basename($_FILES["user_photo"]["name"]);
+				$name = $company_id . '_' . time() . '_profile_image'; 				
+				move_uploaded_file($tmp_name, "./uploads/users/user-profile/" . $name);
+				$profile_img = $name;
+
+				$data = array(
+					'profile_image'=> $profile_img,
+					'date_created' => time()
+				);
+				$img_id = $this->users_model->addProfilePhoto($data);
+			}
+
+			$data = array(
+				'FName' => $post['firstname'],
+				'LName' => $post['lastname'],
+				'address' => $post['address'],
+				'state' => $post['state'],
+				'city' => $post['city'],
+				'postal_code' => $post['postal_code'],
+				'employee_number' => $post['emp_number'],
+				'phone' => $post['phone_number'],
+				'mobile' => $post['mobile_number'],
+				'profile_img' => $profile_img,
+			);
+
+			$user = $this->Users_model->update($user->id, $data);
+
+			$is_success = 1;
+			$msg = '';
+		}
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);
 	}
 
 	public function ajax_update_user_signature()

@@ -54,8 +54,7 @@ class Profile extends MY_Controller {
 
 		add_footer_js([
 			'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
-			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
-			'assets/js/esign/fill-and-sign/step2.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',			
             'assets/js/profile/signature.js',
 			'assets/js/jquery.signaturepad.js'
         ]);
