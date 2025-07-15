@@ -9,6 +9,10 @@
 .nsm-profile-info{
     padding: 24px;
 }
+.button-container button{
+    display:inline-block;
+    width:250px;
+}
 </style>
 <?php
 if ($user->profile_img != '') {
@@ -66,9 +70,10 @@ if ($user->profile_img != '') {
                                                 <label class="content-subtitle" style="display: block;margin-top: 5px;">
                                                     <i class='bx bx-fw bx-envelope'></i><?php echo $user->email ?></label>
                                                 <label class="content-subtitle" style="display: block;margin-top: 9px;">
-                                                    <i class='bx bx-fw bx-buildings'></i><?php echo getUserType($user->user_type); ?>
+                                                <i class='bx bx-fw bx-buildings'></i><?php echo getUserType($user->user_type); ?>
                                                 </label>
-                                                 <label class="content-subtitle" style="display: block;margin-top: 9px;">
+                                                <!--
+                                                <label class="content-subtitle" style="display: block;margin-top: 9px;">
                                                     <i class='bx bx-fw bx-food-menu' ></i> Current Plan : 
                                                     <?php if( in_array($client->id, exempted_company_ids()) ){ ?>
                                                         Free
@@ -79,7 +84,7 @@ if ($user->profile_img != '') {
                                                             <?= $plan->plan_name; ?> ($<?= number_format($plan->price, 2); ?>)
                                                         <?php endif; ?>
                                                     <?php } ?>
-                                                </label>                                                
+                                                </label>                                                 -->
                                                 <hr />
                                                 <label class="content-subtitle" style="display: block;margin-top: 9px;">
                                                     <i class='bx bx-fw bx-time-five'></i> Last Login : <?php echo ($user->last_login != '0000-00-00 00:00:00') ? date(setting('datetime_format'), strtotime($user->last_login)) : 'No Record' ?>
@@ -94,24 +99,23 @@ if ($user->profile_img != '') {
                                         <div class="w-100" style="">
                                             <div class="row g-3">                                                
                                                 <div class="col-12 col-md-12">
-                                                    <button name="btn_edit" type="button" class="nsm-button custom-prof-btn btn-edit-profile primary" data-id="<?= $user->id; ?>">
-                                                        <i class='bx bx-fw bx-edit'></i> Name, Phone Numbers, Address
-                                                    </button>
-                                                    <button name="btn_create_signature" type="button" class="nsm-button custom-prof-btn primary" data-bs-toggle="modal" data-bs-target="#register_signature_modal">
-                                                        <i class='bx bx-fw bx-pen'></i> Digital Signature
-                                                    </button>
-                                                    <button name="btn_change_password" type="button" class="nsm-button custom-prof-btn btn-change-pw primary" data-name="<?php echo $user->FName . ' ' . $user->LName; ?>" data-id="<?php echo $user->id ?>">
-                                                        <i class='bx bx-fw bx-key'></i> Password and Security
-                                                    </button>
-                                                    <button name="btn_change_profile_picture" type="button" class="nsm-button custom-prof-btn primary" data-bs-toggle="modal" data-bs-target="#change_photo_modal" data-id="<?= $user->id; ?>" data-img="<?= $data_img; ?>">
-                                                        <i class='bx bx-fw bx-user-circle'></i> Profile Picture
-                                                    </button>
-                                                    <button name="btn_subscriptions" type="button" class="nsm-button custom-prof-btn primary btn-subscriptions">
-                                                        <i class='bx bx-fw bx-list-check'></i> Subscriptions
-                                                    </button>
-                                                    <button name="btn_subscriptions" type="button" class="nsm-button custom-prof-btn primary btn-credit-card">
-                                                        <i class='bx bxs-credit-card' ></i> Credit Card Payment
-                                                    </button>
+                                                    <div class="button-container">
+                                                        <button name="btn_edit" type="button" class="nsm-button custom-prof-btn btn-edit-profile primary" data-id="<?= $user->id; ?>">
+                                                            <i class='bx bx-fw bx-edit'></i> Personal Information
+                                                        </button>
+                                                        <button name="btn_create_signature" type="button" class="nsm-button custom-prof-btn primary" data-bs-toggle="modal" data-bs-target="#register_signature_modal">
+                                                            <i class='bx bx-fw bx-pen'></i> Digital Signature
+                                                        </button>
+                                                        <button name="btn_change_password" type="button" class="nsm-button custom-prof-btn btn-change-pw primary" data-name="<?php echo $user->FName . ' ' . $user->LName; ?>" data-id="<?php echo $user->id ?>">
+                                                            <i class='bx bx-fw bx-key'></i> Change Password
+                                                        </button>
+                                                        <button name="btn_subscriptions" type="button" class="nsm-button custom-prof-btn primary btn-subscriptions">
+                                                            <i class='bx bx-fw bx-list-check'></i> My Subscription
+                                                        </button>
+                                                        <button name="btn_activity_logs" type="button" class="nsm-button custom-prof-btn primary btn-activity-logs">
+                                                            <i class='bx bx-fw bx-list-ul'></i> Activity Logs
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>                                            
                                         </div>
@@ -157,56 +161,60 @@ if ($user->profile_img != '') {
                 }
             });
         });
-
-        $(".btn-credit-card").click(function(){
+        
+        $('.btn-credit-card').on('click', function(){
             location.href = base_url + 'cards_file/list';
         });
 
-        $(".btn-subscriptions").click(function(){
+        $('.btn-subscriptions').on('click', function(){
             location.href = base_url + 'mycrm/membership';
         });
 
-        $("#edit_profile_form").on("submit", function(e) {
-            let _this = $(this);
+        $('.btn-activity-logs').on('click', function(){
+            location.href = base_url + 'activity_logs';
+        });
+
+        $("#edit_profile_form").on("submit", function(e) {            
             e.preventDefault();
 
-            var url = "<?php echo base_url('users/_update_profile'); ?>";
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
-
+            var formData = new FormData($("#edit_profile_form")[0]);
             $.ajax({
                 type: 'POST',
-                url: url,
+                url: base_url + 'users/_update_profile',                
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
                 dataType: "json",
-                data: _this.serialize(),
                 success: function(result) {
-                    if (result == 1) {
+                    if (result.is_success == 1) {
                         Swal.fire({
-                            title: 'Save Successful!',
+                            title: 'Edit Profile',
                             text: "Your profile was successfully updated.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 location.reload();
-                            }
+                            //}
                         });
                     } else {
                         Swal.fire({
                             title: 'Error',
-                            text: "Cannot update profile. Please try again.",
+                            text: result.msg,
                             icon: 'error',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         });
                     }
-                    $("#edit_profile_modal").modal('hide');
-                    _this.trigger("reset");
 
-                    _this.find("button[type=submit]").html("Save");
-                    _this.find("button[type=submit]").prop("disabled", false);
+                    $("#edit_profile_modal").modal('hide');
+                    $('#btn-update-profile').html("Save");                    
                 },
+                beforeSend: function() {
+                    $('#btn-update-profile').html('<span class="bx bx-loader bx-spin"></span>');
+                }
             });
         });
 
@@ -232,38 +240,36 @@ if ($user->profile_img != '') {
         $(document).on("submit", "#form-signature", function(e) {
             let _this = $(this);
             let first = $("#saveUserSignatureDB1aMb").val();
+
             $("#saveUserSignatureDB1aM_web").val(first);
             e.preventDefault();
 
-            var url = "<?php echo base_url('users/_update_user_signature'); ?>";
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
-
             $.ajax({
                 type: 'POST',
-                url: url,
+                url: base_url + 'users/_update_user_signature',
                 dataType: "html",
                 data: _this.serialize(),
                 success: function(result) {
+                    $('#btn-update-signature').html('Save');
                     $("#profile_signature").attr("src", first);
                     Swal.fire({
-                        title: 'Save Successful!',
+                        title: 'Digital Signature',
                         text: "Your signature was successfully updated.",
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
                     }).then((result) => {
-                        if (result.value) {
+                        //if (result.value) {
                             location.reload();
-                        }
+                        //}
                     });
 
                     $("#register_signature_modal").modal('hide');
-                    _this.trigger("reset");
-
-                    _this.find("button[type=submit]").html("Save");
-                    _this.find("button[type=submit]").prop("disabled", false);
+                    $('#btn-update-signature').html("Save");                    
                 },
+                beforeSend: function() {
+                    $('#btn-update-signature').html('<span class="bx bx-loader bx-spin"></span>');
+                }
             });
         });
 
@@ -280,24 +286,20 @@ if ($user->profile_img != '') {
             let _this = $(this);
 
             if (_this.hasClass("shown")) {
-                _this.text("Show passwords");
+                _this.text("Show password");
                 _this.removeClass("shown");
                 $(".pw-field").attr("type", "password");
             } else {
-                _this.text("Hide passwords");
+                _this.text("Hide password");
                 _this.addClass("shown");
                 $(".pw-field").attr("type", "text");
             }
         });
 
         $(document).on("submit", "#changePasswordForm", function(e) {
-            let _this = $(this);
             e.preventDefault();
 
-            var url = "<?php echo base_url('users/_update_employee_password'); ?>";
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
-
+            let _this = $(this);
             let values = {};
             $.each(_this.serializeArray(), function(i, field) {
                 values[field.name] = field.value;
@@ -306,40 +308,42 @@ if ($user->profile_img != '') {
             if (values['new_password'] && values['re_password']) {
                 $.ajax({
                     type: 'POST',
-                    url: url,
+                    url: base_url + 'users/_update_employee_password',
                     dataType: "json",
                     data: {
                         values: values
                     },
                     success: function(result) {
+                        $('#btn-update-password').html('Save');
                         if (result.is_success) {
+                            $("#change_pw_modal").modal('hide');
+
                             Swal.fire({
-                                title: 'Save Successful!',
+                                title: 'Change Password',
                                 text: "Your password was successfully updated.",
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
                             }).then((result) => {
-                                if (result.value) {
+                                //if (result.value) {
                                     location.reload();
-                                }
+                                //}
                             });
                         } else {
                             Swal.fire({
                                 title: 'Error',
-                                text: data.msg,
+                                text: result.msg,
                                 icon: 'error',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
                             });
                         }
 
-                        $("#change_pw_modal").modal('hide');
-                        _this.trigger("reset");
-
-                        _this.find("button[type=submit]").html("Save");
-                        _this.find("button[type=submit]").prop("disabled", false);
+                        $('#btn-update-password').html("Save");
                     },
+                    beforeSend: function() {
+                        $('#btn-update-password').html('<span class="bx bx-loader bx-spin"></span>');
+                    }
                 });
             } else {
                 Swal.fire({
@@ -350,55 +354,6 @@ if ($user->profile_img != '') {
                     confirmButtonText: 'Okay'
                 });
             }
-        });
-
-        $(document).on("submit", "#editEmployeeProfileForm", function(e) {
-            let _this = $(this);
-            e.preventDefault();
-
-            var url = "<?php echo base_url('users/ajaxUpdateEmployeeProfilePhoto'); ?>";
-            var formData = new FormData($("#editEmployeeProfileForm")[0]);
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
-
-            $.ajax({
-                type: 'POST',
-                url: url,
-                dataType: "json",
-                data: formData,
-                contentType: false,
-                cache: false,
-                processData: false,
-                success: function(result) {
-                    if (result == 1) {
-                        Swal.fire({
-                            title: 'Save Successful!',
-                            text: "Employee photo was successfully updated.",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            if (result.value) {
-                                location.reload();
-                            }
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Error',
-                            text: "Please select a valid image.",
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        });
-                    }
-
-                    $("#change_photo_modal").modal('hide');
-                    _this.trigger("reset");
-
-                    _this.find("button[type=submit]").html("Save");
-                    _this.find("button[type=submit]").prop("disabled", false);
-                },
-            });
         });
     });
 </script>
