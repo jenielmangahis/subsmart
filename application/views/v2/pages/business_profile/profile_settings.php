@@ -94,7 +94,7 @@
             let _this = $(this);
             e.preventDefault();
 
-            var url = "<?php echo base_url('users/update_profile_setting'); ?>";
+            var url = base_url + "users/update_profile_setting";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -111,8 +111,8 @@
                 success: function(result) {
                     if( result.is_success == 1 ){
                         Swal.fire({
-                            title: 'Save Successful!',
-                            text: "Business profile was successfully updated.",
+                            title: 'Profile Setting',
+                            text: "Setting was successfully updated.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'

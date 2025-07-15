@@ -468,7 +468,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <!-- <div class="col-12">
                                 <div class="nsm-card">
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-title">
@@ -487,7 +487,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-12">
                                 <div class="nsm-card">
                                     <div class="nsm-card-header">
