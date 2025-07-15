@@ -610,19 +610,19 @@ if (is_null($image)) {
                                         Notifications <span class="nsm-badge badge-circle error"><?= count($notification); ?></span>
                                     </div>
                                     <div class="list-item" onclick="location.href='<?php echo url('profile'); ?>'">
-                                        Public Profile
+                                        My Profile
                                     </div>
                                     <div class="list-item" onclick="location.href='<?php echo url(); ?>'">
                                         nSmart Home
                                     </div>
-                                    <div class="list-item">
+                                    <!-- <div class="list-item">
                                         Join Our Community
-                                    </div>
+                                    </div> -->
                                     <div class="list-item" onclick="location.href='<?php echo url('activity_logs'); ?>'">
                                         Activity Logs
                                     </div>
-                                    <div class="list-item" onclick="location.href='<?php echo base_url('settings/email_templates'); ?>'">
-                                        Settings
+                                    <div class="list-item" onclick="location.href='<?php echo base_url('mycrm/membership'); ?>'">
+                                        Membership
                                     </div>
                                     <div>
                                         <hr class="dropdown-divider">
