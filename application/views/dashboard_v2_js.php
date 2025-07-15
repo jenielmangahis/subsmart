@@ -1380,4 +1380,12 @@
             $('#payBillsModal').modal('show');
         });
     });
+
+    $(document).on('click', '.tbl-row', function(){
+        let row_id = $(this).attr('data-id');
+        let row_type = $(this).attr('data-type');
+        if( row_type == 'job_activities' ){
+            location.href = base_url + 'job/edit/' + row_id;
+        }
+    });
 </script>

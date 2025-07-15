@@ -59,13 +59,13 @@
         </div>
         <div class="row">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center textData">
+                <div class="text-center textData tile-service-ticket">
                     <small class="text-muted text-uppercase fw-bold">TOTAL AMOUNT</small>
                     <h4 class="<?php echo "textData1_$id"; ?>"></h4>
                 </div>
             </div>
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center textData">
+                <div class="text-center textData tile-service-ticket">
                     <small class="text-muted text-uppercase fw-bold">TOTAL COUNT</small>
                     <h4 class="<?php echo "textData2_$id"; ?>"></h4>
                 </div>
@@ -281,5 +281,9 @@
                 $('.<?php echo "graphDataContainer_$id"; ?>').hide();
             }
         }
+    });
+
+    $(document).on('click', '.tile-service-ticket', function(){
+        location.href = base_url + 'customer/ticketslist';
     });
 </script>

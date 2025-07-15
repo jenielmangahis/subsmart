@@ -396,9 +396,9 @@
 <div class="row page-content g-0">
     <div class="col-lg-12">
         <div class="thumbnailLayoutControl display_none">
-            <a href="javascript:void(0)" class="text-decoration-none thumbnailCustomizeLayout"><span>Customize Thumbnail Layout</span></a>
-            <a href="javascript:void(0)" class="text-decoration-none thumbnailSaveLayout display_none"><span>Save Layout</span></a>&nbsp;&nbsp;
-            <a href="javascript:void(0)" class="text-decoration-none thumbnailCancelLayout display_none text-muted"><span>Cancel</span></a>
+            <a href="javascript:void(0)" class="text-decoration-none thumbnailCustomizeLayout nsm-button"><span>Customize Thumbnail Layout</span></a>
+            <a href="javascript:void(0)" class="text-decoration-none thumbnailSaveLayout display_none nsm-button"><span>Save Layout</span></a>&nbsp;&nbsp;
+            <a href="javascript:void(0)" class="text-decoration-none thumbnailCancelLayout display_none text-muted nsm-button"><span>Cancel</span></a>
         </div>
         <div id="thumbnailMasonry" class="row thumbnailSortable thumbnailCardContainers">
             <?php 
@@ -429,9 +429,9 @@
     <div class="col-lg-12 mt-5 mb-5"></div>
     <div class="col-lg-12">
         <div class="widgetLayoutControl display_none">
-            <a href="javascript:void(0)" class="text-decoration-none widgetCustomizeLayout"><span>Customize Widget Layout</span></a>
-            <a href="javascript:void(0)" class="text-decoration-none widgetSaveLayout display_none"><span>Save Layout</span></a>&nbsp;&nbsp;
-            <a href="javascript:void(0)" class="text-decoration-none widgetCancelLayout display_none text-muted "><span>Cancel</span></a>
+            <a href="javascript:void(0)" class="text-decoration-none widgetCustomizeLayout nsm-button"><span>Customize Widget Layout</span></a>
+            <a href="javascript:void(0)" class="text-decoration-none widgetSaveLayout display_none nsm-button"><span>Save Layout</span></a>&nbsp;&nbsp;
+            <a href="javascript:void(0)" class="text-decoration-none widgetCancelLayout display_none text-muted nsm-button"><span>Cancel</span></a>
         </div>
         <div id="widgetMasonry" class="row widgetSortable widgetCardContainers">
             <?php 
@@ -2431,13 +2431,6 @@ function loadCustomerGroupChart() {
             console.error(error);
         });
 }
-
-
-
-
-
-
-
 </script>
 
 <?php include viewPath('v2/includes/footer'); ?>
