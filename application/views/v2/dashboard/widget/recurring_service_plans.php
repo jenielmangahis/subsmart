@@ -131,7 +131,9 @@
                     Object.entries(data).forEach(([key, value]) => {
                         graphLabels.push(key);
                         graphSeries.push(parseInt(value));
-                        
+                        let active_subscribers_url = `${window.origin}/customer?filter=Active Subscription`;
+                        let agreements_to_expire_url = `${window.origin}/customer?filter=Agreements to Expire in 30 days`;
+
                         let displayValue;
                         if (["Total & Recurring Payments"].includes(key)) {
                             displayValue = parseFloat(value).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -156,7 +158,7 @@
                             `);
                         } else if (key == "Active Subscribers") {
                             $('.<?php echo "textDatas_$id"; ?>').append(`
-                                <div class='col-6 col-md-6 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
+                                <div class='col-6 col-md-6 text-nowrap <?php echo "textDataContainer_$id"; ?>' onclick="window.open('${active_subscribers_url}', '_blank')">
                                     <div class='text-center textData'>
                                         <small class='text-muted text-uppercase fw-bold text-wrap'>${key}</small>
                                         <br>
@@ -169,7 +171,7 @@
                             `);
                         } else {
                             $('.<?php echo "textDatas_$id"; ?>').append(`
-                                <div class='col-6 col-md-6 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
+                                <div class='col-6 col-md-6 text-nowrap <?php echo "textDataContainer_$id"; ?>' onclick="window.open('${agreements_to_expire_url}', '_blank')">
                                     <div class='text-center textData'>
                                         <small class='text-muted text-uppercase fw-bold text-wrap'>${key}</small>
                                         <h4>${displayValue}</h4>

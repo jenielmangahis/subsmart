@@ -522,10 +522,22 @@ class Customer_advance_model extends MY_Model
         if (!empty($filter_status)) {
             if($filter_status =="Active Subscription"){
                 $this->db->where_in('acs_profile.status', ['Active w/RAR','Active w/RMR','Active w/RQR','Active w/RYR','Inactive w/RMM']); 
-            }else{
+            } else if ($filter_status =="Agreements to Expire in 30 days") {
+                $currentDate = date('Y-m-d');
+                $next30Days = date('Y-m-d', strtotime('+30 days')); 
+                $this->db->where_in('acs_profile.status', [
+                    'Active w/RAR', 
+                    'Active w/RQR', 
+                    'Active w/RMR', 
+                    'Active w/RYR', 
+                    'Inactive w/RMM'
+                ]);
+                $this->db->where("DATE(acs_b.bill_end_date) >=", $currentDate);
+                $this->db->where("DATE(acs_b.bill_end_date) <=", $next30Days);
+            }
+            else{
                 $this->db->where('acs_profile.status', $filter_status); 
             }
-            
         }
         if ($length > 0) {
             $this->db->limit($length, $start);

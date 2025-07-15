@@ -141,9 +141,11 @@
                         graphLabels.push(key);
                         graphSeries.push(parseInt(value));
                         labelWithCounts.push(`${key}: ${value}`);
+                        let url_filter = `${window.origin}/job?job_tag=${key}`;
+
                         $('.<?php echo "textDatas_$id"; ?>').append(`
-                            <div class='col-6 <?php echo "textDataContainer_$id"; ?>'>
-                                <div class='text-center textData tile-job-tags' data-name='${key}'>
+                            <div class='col-6 <?php echo "textDataContainer_$id"; ?>' onclick="window.open('${url_filter}', '_blank')">
+                                <div class='text-center textData'>
                                     <small class='text-muted text-uppercase fw-bold'>${key}</small>
                                     <h4>${value}</h4>
                                 </div>
@@ -273,10 +275,5 @@
                 $('.<?php echo "graphDataContainer_$id"; ?>').hide();
             }
         }
-    });
-
-    $(document).on('click', '.tile-job-tags', function(){
-        let tag_name = $(this).attr('data-name');
-        location.href = base_url + 'job?job_tag=' + tag_name;
     });
 </script>

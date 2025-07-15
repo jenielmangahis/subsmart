@@ -1,5 +1,197 @@
 <?php include viewPath('v2/includes/header'); ?>
+<style>
+.view-schedule-container .bg-primary{
+    background-color:#6a4a86;
+}
+.view-schedule-container .bg-primary{
+    background-color:#6a4a86 !important;
+}
+.view-schedule-container .bg-primary .card-body{
+    background-color:#f7f7f9;
+}
 
+.view-schedule-container .bg-primary .card-header{
+    color:#ffffff;
+}
+.view-schedule-container .details{
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+.view-schedule-container .details li{
+    font-size:17px;
+    display:inline-block;
+    width:49%;
+    margin-bottom:0px;
+    vertical-align:top;
+}
+.view-schedule-container .details li span.bx{
+    width: 35px;
+    display: inline-block;
+    font-size: 20px;
+    position: relative;
+    top: 3px;
+}
+#map-preview{
+    height: 310px;
+}
+
+.job-view-details{
+    font-size: 15px;
+}
+
+.job-view-details .label{
+    font-weight:bold;
+    margin-bottom: 5px;
+}
+.nsm-list-icon {
+    border: 2px solid #fff;
+    box-sizing: content-box;
+    margin-left: -12px;
+}
+.techs {
+    display: flex;
+    padding-left: 12px;
+}
+.techs > .nsm-profile {
+    border: 2px solid #fff;
+    box-sizing: content-box;
+    margin-left: -12px;
+}
+.nsm-profile {
+    --size: 35px;
+    max-width: var(--size);
+    height: var(--size);
+    min-width: var(--size);
+}
+@media (max-width: 932px) {
+    .view-schedule-container .details li {
+        font-size: 17px;
+        display: inline-block;
+        width: 100% !important;
+        margin-bottom: 0px;
+        vertical-align:top;
+    }
+
+    .steps .step {
+        display: inline-block !important;
+        width: 20% !important;
+    }
+}
+
+.steps .step {
+    display: block;
+    width: 100%;
+    margin-bottom: 35px;
+    text-align: center
+}
+
+.steps .step .step-icon-wrap {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 40px;
+    text-align: center
+}
+
+.steps .step .step-icon-wrap::before,
+.steps .step .step-icon-wrap::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    width: 50%;
+    height: 3px;
+    margin-top: -1px;
+    background-color: #e1e7ec;
+    content: '';
+    z-index: 1
+}
+
+.steps .step .step-icon-wrap::before {
+    left: 0
+}
+
+.steps .step .step-icon-wrap::after {
+    right: 0
+}
+
+.steps .step .step-icon {
+    display: inline-block;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e1e7ec;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    color: #374250;
+    font-size: 23px;
+    line-height: 40px !important;
+    z-index: 5
+}
+
+.steps .step .step-title {
+    margin-top: 16px;
+    margin-bottom: 0;
+    color: #606975;
+    font-size: 14px;
+    font-weight: 500
+}
+
+.steps .step:first-child .step-icon-wrap::before {
+    display: none
+}
+
+.steps .step:last-child .step-icon-wrap::after {
+    display: none
+}
+
+.steps .step.completed .step-icon-wrap::before,
+.steps .step.completed .step-icon-wrap::after {
+    background-color: #6a4a86
+}
+
+.steps .step.completed .step-icon {
+    border-color: #6a4a86;
+    background-color: #6a4a86;
+    color: #fff
+}
+
+@media (max-width: 576px) {
+    .flex-sm-nowrap .step .step-icon-wrap::before,
+    .flex-sm-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 768px) {
+    .flex-md-nowrap .step .step-icon-wrap::before,
+    .flex-md-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 991px) {
+    .flex-lg-nowrap .step .step-icon-wrap::before,
+    .flex-lg-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 1200px) {
+    .flex-xl-nowrap .step .step-icon-wrap::before,
+    .flex-xl-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+.bg-faded, .bg-secondary {
+    background-color: #f5f5f5 !important;
+}
+.job-view-details i{
+    position:relative;
+    font-size:18px;
+    top:2px;
+}
+</style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('job/add_new_job_tag'); ?>'">
         <i class='bx bx-tag'></i>
@@ -12,466 +204,301 @@
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/job_subtabs'); ?>
     </div>
-<hr>
-    <div class="col-12 mt-4">
+
+    <div class="col-12 mt-4 view-schedule-container">
         <div class="nsm-page">
             <div class="nsm-page-content">
-                <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-2"></div>
-                        <div class="col-md-8">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="right-text">
-                                        <span class="page-title " style="font-weight: bold;font-size: 16px; float: right"><?=  $jobs_data->job_number;  ?>
-                                        </span>
+
+                <div class="row">
+                    <div class="col-12 col-md-12">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
+                                    <div class="step <?= $jobs_data->status == 'Scheduled' || $jobs_data->status != 'Draft' ? 'completed' : '' ?>">
+                                        <div class="step-icon-wrap">
+                                            <div class="step-icon"><i class='bx bx-calendar'></i></div>
+                                        </div>
+                                        <h4 class="step-title">Scheduled</h4>
                                     </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <?php if ($company_info->business_image != ""): ?>
-                                            <img style="width: 100px" id="attachment-image" alt="Attachment"
-                                                src="<?=  '/uploads/users/business_profile/'.$company_info->id.'/'.$company_info->business_image; ?> ">
-                                            <?php endif; ?>
+                                    <div class="step <?= ($jobs_data->status == 'Started' || $jobs_data->status == 'Arrival' || $jobs_data->status == 'Finished' || $jobs_data->status == 'Invoiced') ? 'completed' : '' ?>">
+                                        <div class="step-icon-wrap">
+                                            <div class="step-icon"><i class='bx bx-time-five'></i></div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <table class="right-text">
-                                                <tbody>
-                                                    <tr>
-                                                        <td align="right" width="45%">Job Type :</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="right">Job Tags:</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="right">Date :</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="right">Priority :</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="right">Status :</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <table class="right-text float-end">
-                                                <tbody>
-                                                    <tr>
-                                                        <td align="right" width="65%"><strong><?= $jobs_data->job_type;  ?></strong>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="right"><strong><?= $jobs_data->tags;  ?></strong>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="right"><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="right" style="color: darkred;"><?=  $jobs_data->priority;  ?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="right" style="font-weight: 600;" class="job-status">
-                                                            <?=  $jobs_data->status;  ?>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <h6 class="title-border">FROM :</h6>
-                                            <b><?= $company_info->business_name; ?></b><br>
-                                            <span><?= $company_info->street; ?></span><br>
-                                            <span><?= $company_info->city.', '.$company_info->state.' '.$company_info->postal_code ; ?></span><br>
-                                            <span> Phone: <?= formatPhoneNumber($company_info->business_phone); ?></span>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <br>
-                                            <h6 class="title-border">TO :</h6>
-                                            <div class="row">
-                                                <div class="col-md-5">
-                                                    <b><?= $jobs_data->first_name.' '.$jobs_data->last_name; ?></b><br>
-                                                    <span><?= $jobs_data->mail_add; ?></span><br>
-                                                    <span><?= $jobs_data->cust_city.', '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span>
-                                                    <span class="fa fa-copy icon_preview"></span><br>
-                                                    <span>Email: <?= $jobs_data->cust_email ; ?></span>
-                                                    <a
-                                                        href="mailto:<?= $jobs_data->cust_email ; ?>"><span
-                                                            class="fa fa-envelope icon_preview"></span></a><br>
-                                                    <span>Phone: </span>
-                                                    <?php if ($jobs_data->phone_h!="" || $jobs_data->phone_h!=null): ?>
-                                                    <?= formatPhoneNumber($jobs_data->phone_h);  ?>
-                                                    <span class="fa fa-phone icon_preview"></span>
-                                                    <span class="fa fa-envelope-open-text icon_preview"></span>
-                                                    <?php else : echo 'N/A';?>
-                                                    <?php endif; ?>
-                                                    <br>
-                                                    <span>Mobile: </span>
-                                                    <?php if ($jobs_data->phone_m!="" || $jobs_data->phone_m!=null): ?>
-                                                    <!-- <?= $jobs_data->phone_h;  ?> -->
-                                                    <?= formatPhoneNumber($jobs_data->phone_m);  ?>
-                                                    <span class="fa fa-phone icon_preview"></span>
-                                                    <span class="fa fa-envelope-open-text icon_preview"></span>
-                                                    <?php else : echo 'N/A';?>
-                                                    <?php endif; ?>
-                                                    <br>
-                                                </div>
-                                                <div id="map" class="col-md-3 d-none"></div>
-                                                <div id="streetViewBody" class="col-md-4 d-none"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12" style="margin-top: 16px;">
-                                            <h6 class="title-border">JOB DETAILS :</h6>
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <td>Items</td>
-                                                        <td>Qty</td>
-                                                        <td>Price</td>
-                                                        <td>Total</td>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                        $subtotal = 0.00;
-                                                        foreach ($jobs_data_items as $item):
-                                                        $total = $item->cost * $item->qty;
-                                                    ?>
-                                                    <tr>
-                                                        <td>
-                                                            <?php 
-                                                                if( $item->title != '' ){
-                                                                    echo $item->title;
-                                                                }else{
-                                                                    echo $item->job_item_name;
-                                                                }
-                                                            ?>
-                                                        </td>
-                                                        <td><?= $item->qty; ?>
-                                                        </td>
-                                                        <td>$<?= $item->cost; ?>
-                                                        </td>
-                                                        <td>$<?= number_format((float)$total, 2, '.', ','); ?>
-                                                        </td>
-                                                    </tr>
-                                                    <?php
-                                                    $subtotal = $subtotal + $total;
-                                                    endforeach;
-                                                    $GRAND_TOTAL = $subtotal + $jobs_data->tax_rate;
-                                                ?>
-                                                </tbody>
-                                            </table>
-                                            <hr>
-                                            <b>Sub Total:</b>
-                                            <span class="right-text">$<?= number_format((float)$subtotal, 2, '.', ','); ?></span>
-                                            <br>
-                                            <b>Tax Rate:</b>&nbsp;
-                                            <span class="right-text">$<?= number_format((float)$jobs_data->tax_rate, 2, '.', ','); ?></span>
-                                            <br>
-                                            <?php 
-                                                $installation_cost = 0;
-                                                $monthly_monitoring = 0;
-                                                $program_setup = 0;
-                                            ?>
-                                            <?php if( in_array($cid, exempted_company_ids()) ){ ?>
-                                                <?php 
-                                                    if( $latest_job_payment ){
-                                                        $installation_cost = $latest_job_payment->installation_cost;
-                                                        $monthly_monitoring = $latest_job_payment->monthly_monitoring;
-                                                        $program_setup = $latest_job_payment->program_setup;
-                                                    }
-                                                ?>
-                                                <b>Installation Cost:</b>&nbsp;
-                                                <span class="right-text">$<?= number_format((float)$installation_cost, 2, '.', ','); ?></span>
-                                                <br>
-                                                <b>One time (Program and Setup):</b>&nbsp;
-                                                <span class="right-text">$<?= number_format((float)$program_setup, 2, '.', ','); ?></span>
-                                                <br>
-                                                <b>Monthly Monitoring:</b>&nbsp;
-                                                <span class="right-text">$<?= number_format((float)$monthly_monitoring, 2, '.', ','); ?></span>
-                                                <br>
-                                            <?php } ?>
-                                            <hr>
-
-                                            <?php if ($jobs_data->tax != null): ?>
-                                            <b>Tax </b>
-                                            <i class="right-text">$0.00</i>
-                                            <br>
-                                            <hr>
-                                            <?php endif; ?>
-
-                                            <?php if ($jobs_data->discount != null): ?>
-                                            <b>Discount </b>
-                                            <i class="right-text">$0.00</i>
-                                            <br>
-                                            <hr>
-                                            <?php endif; ?>
-                                            <?php $GRAND_TOTAL = $GRAND_TOTAL + $installation_cost + $monthly_monitoring + $program_setup; ?>
-                                            <b>Grand Total:</b>
-                                            <b class="right-text">$<?= number_format((float)$GRAND_TOTAL, 2, '.', ','); ?></b>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <br><br>
-                                            <h6 class="title-border">NOTES :</h6>
-                                            <span><?= isset($jobs_data->message) && strlen($jobs_data->message) ? $jobs_data->message : "No notes given."; ?></span>
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <br>
-                                            <h6 class="title-border">ASSIGNED TO :</h6>
-                                            <div>
-                                                <strong>
-                                                    <!-- <span><?= $employee_date = get_employee_name($jobs_data->employee_id); ?></span><br> -->
-                                                    <?php if( $jobs_data->employee2_id > 0 ){ ?>
-                                                        <span><i class='bx bx-user-circle' ></i> <?= $shared1 = get_employee_name($jobs_data->employee2_id); ?></span><br>
-                                                    <?php } ?>
-
-                                                    <?php if( $jobs_data->employee3_id > 0 ){ ?>
-                                                        <span><i class='bx bx-user-circle' ></i> <?= $shared1 = get_employee_name($jobs_data->employee3_id); ?></span><br>
-                                                    <?php } ?>
-
-                                                    <?php if( $jobs_data->employee4_id > 0 ){ ?>
-                                                        <span><i class='bx bx-user-circle' ></i> <?= $shared1 = get_employee_name($jobs_data->employee4_id); ?></span><br>
-                                                    <?php } ?>
-
-                                                    <?php if( $jobs_data->employee5_id > 0 ){ ?>
-                                                        <span><i class='bx bx-user-circle' ></i> <?= $shared1 = get_employee_name($jobs_data->employee5_id); ?></span><br>
-                                                    <?php } ?>
-
-                                                    <?php if( $jobs_data->employee6_id > 0 ){ ?>
-                                                        <span><i class='bx bx-user-circle' ></i> <?= $shared1 = get_employee_name($jobs_data->employee6_id); ?></span><br>
-                                                    <?php } ?>
-                                                </strong>
-                                            </div>                                            
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <br>
-                                            <h6 class="title-border">URL LINK :</h6>
-                                            <span><a style="color: darkred;" target="_blank"
-                                                    href="<?= $jobs_data->link; ?>"><?= $jobs_data->link; ?></a></span>
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <br>
-                                            <h6 class="title-border">SCHEDULE :</h6>
-                                            <table class="table table-bordered">
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="width:5%;">From</td>
-                                                        <td>
-                                                            <?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?>
-                                                            <?= isset($jobs_data) ?  $jobs_data->start_time : '';  ?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td style="width:5%;">To</td>
-                                                        <td>
-                                                            <?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->end_date)) : '';  ?>
-                                                            <?= isset($jobs_data) ?  $jobs_data->end_time : '';  ?>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <center>
-                                                <strong>Our Team will arrive between <?= $jobs_data->start_time. ' and '.$jobs_data->end_time;  ?></strong><br>
-                                                <small style="text-align: center;">Thank you for your business, Please
-                                                    call <?= $company_info->business_name; ?>
-                                                    at <?= $company_info->business_phone; ?>
-                                                    for quality customer service.</small>
-                                            </center>
-                                        </div>
+                                        <h4 class="step-title">Start</h4>
                                     </div>
-                                </div>
+                                    <div class="step <?= $jobs_data->status == 'Finished' || $jobs_data->status == 'Invoiced' ? 'completed' : '' ?>">
+                                        <div class="step-icon-wrap">
+                                            <div class="step-icon"><i class='bx bxs-flag-checkered'></i></div>
+                                        </div>
+                                        <h4 class="step-title">Finish</h4>
+                                    </div>
+                                    <div class="step <?= $jobs_data->status == 'Invoiced' ? 'completed' : '' ?>">
+                                        <div class="step-icon-wrap">
+                                            <div class="step-icon"><i class='bx bx-receipt'></i></div>
+                                        </div>
+                                        <h4 class="step-title">Invoice</h4>
+                                    </div>
+                                </div> 
                             </div>
                         </div>
-                        <div class="col-md-2"></div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="card bg-primary mb-3">                            
+                                    <div class="card-header">CUSTOMER</div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <ul class="container details">
+                                                <li><p><span class='bx bx-user-circle'></span> <b><?= $jobs_data->first_name .' '. $jobs_data->last_name; ?></b></p></li>
+                                                <li><p><span class='bx bx-map'></span><?= $jobs_data->job_location; ?></p></li>
+                                                <li><p><span class='bx bx-phone'></span> <?= $jobs_data->phone_m !="" || $jobs_data->phone_m !=null ? formatPhoneNumber($jobs_data->phone_m) : 'N/A'; ?></p></li>
+                                                <li><p><span class='bx bx-envelope'></span><a href="mailto:<?= $jobs_data->cust_email; ?>"><?= $jobs_data->cust_email; ?></a></p></li>
+                                                <li><p><span class='bx bx-dollar-circle'></span> <?= number_format($job_total_amount,2,'.',','); ?></p>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="card bg-primary mb-3">
+                                    <div class="card-header">JOB INFORMATION</div>
+                                    <div class="card-body">
+                                        <div class="row job-view-details">
+                                            <div class="col-md-4 col-12">
+                                                <div class="job-view-info">
+                                                    <div class="label">JOB NUMBER</div>
+                                                    <i class='bx bx-hash'></i> <?= $jobs_data->job_number; ?>
+                                                </div>                
+                                            </div>
+                                            <div class="col-md-4 col-12 mt-2">
+                                                <div class="label">JOB TAGS</div>
+                                                <i class='bx bx-purchase-tag-alt' ></i> <?= $jobs_data->tags != '' ? $jobs_data->tags : '---';  ?>
+                                            </div>
+                                            <div class="col-md-4 col-12 mt-2">
+                                                <div class="label">JOB TYPE</div>
+                                                <i class='bx bx-briefcase-alt-2'></i> <?= $jobs_data->job_type != '' ? $jobs_data->job_type : '---';  ?>
+                                            </div>
+                                            <div class="col-md-4 col-12 mt-2">
+                                                <div class="label">ASSIGNED USERS</div>
+                                                <?php 
+                                                    $assigned_employees = array();
+                                                    //$assigned_employees[] = $jobs_data->e_employee_id;
+                                                    if( $jobs_data->employee2_id > 0 ){
+                                                        $assigned_employees[] = $jobs_data->employee2_id;
+                                                    }
+                                                    if( $jobs_data->employee3_id > 0 ){
+                                                        $assigned_employees[] = $jobs_data->employee3_id;
+                                                    }
+                                                    if( $jobs_data->employee4_id > 0 ){
+                                                        $assigned_employees[] = $jobs_data->employee4_id;
+                                                    }
+                                                    if( $jobs_data->employee5_id > 0 ){
+                                                        $assigned_employees[] = $jobs_data->employee5_id;
+                                                    }
+                                                    if( $jobs_data->employee6_id > 0 ){
+                                                        $assigned_employees[] = $jobs_data->employee6_id;
+                                                    }
+                                                ?>
+                                                <div class="techs">
+                                                    <?php foreach($assigned_employees as $eid){ ?>
+                                                        <div class="nsm-profile" style="background-image: url('<?= userProfileImage($eid); ?>');"></div>
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+
+                                <div class="card bg-primary mb-3">                            
+                                    <div class="card-header">ITEMS</div>
+                                    <div class="card-body">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <td>Items</td>
+                                                    <td>Qty</td>
+                                                    <td>Price</td>
+                                                    <td>Total</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                    $subtotal = 0.00;
+                                                    $tax_total = 0;
+                                                    foreach ($jobs_data_items as $item):
+                                                    $total = $item->cost * $item->qty;
+                                                    $total_tax += $item->tax;
+                                                ?>
+                                                <tr>
+                                                    <td>
+                                                        <?php 
+                                                            if( $item->title != '' ){
+                                                                echo $item->title;
+                                                            }else{
+                                                                echo $item->job_item_name;
+                                                            }
+                                                        ?>
+                                                    </td>
+                                                    <td><?= $item->qty; ?>
+                                                    </td>
+                                                    <td>$<?= $item->cost; ?>
+                                                    </td>
+                                                    <td>$<?= number_format((float)$total, 2, '.', ','); ?>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                                $subtotal = $subtotal + $total;
+                                                endforeach;
+                                                $GRAND_TOTAL = $subtotal + $jobs_data->tax_rate;
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                        <hr>         
+                                        <div class="text-end">
+                                            <table class="table table-borderless">
+                                                <tr>
+                                                    <td>Sub Total</td>
+                                                    <td><span class="right-text">$<?= number_format((float)$subtotal, 2, '.', ','); ?></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Tax Rate</td>
+                                                    <td><span class="right-text">$<?= number_format((float)$jobs_data->tax_rate, 2, '.', ','); ?></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <?php 
+                                                        if( $jobs_data->no_tax == 1 ){
+                                                            $total_tax = 0;
+                                                        }
+                                                    ?>
+                                                    <td>Tax Total</td>
+                                                    <td><span class="right-text">$<?= number_format((float)$total_tax, 2, '.', ','); ?></span></td>
+                                                </tr>
+                                                <?php 
+                                                    $installation_cost = 0;
+                                                    $monthly_monitoring = 0;
+                                                    $program_setup = 0;
+                                                ?>
+                                                <?php if( in_array($cid, exempted_company_ids()) ){ ?>
+                                                    <?php 
+                                                        if( $latest_job_payment ){
+                                                            $installation_cost = $latest_job_payment->installation_cost;
+                                                            $monthly_monitoring = $latest_job_payment->monthly_monitoring;
+                                                            $program_setup = $latest_job_payment->program_setup;
+                                                        }
+                                                    ?>
+                                                <?php } ?>
+                                                <tr>
+                                                    <td>Installation Cost</td>
+                                                    <td><span class="right-text">$<?= number_format((float)$installation_cost, 2, '.', ','); ?></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>One time (Program and Setup)</td>
+                                                    <td><span class="right-text">$<?= number_format((float)$program_setup, 2, '.', ','); ?></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Monthly Monitoring</td>
+                                                    <td><span class="right-text">$<?= number_format((float)$monthly_monitoring, 2, '.', ','); ?></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Grand Total</b></td>
+                                                    <td><span class="right-text"><b>$<?= number_format((float)$GRAND_TOTAL, 2, '.', ','); ?></span></b></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="card bg-primary mb-3">
+                                    <div class="card-header">MAP</div>
+                                    <div class="card-body" style="padding:0px;">
+                                        <div class="form-group">
+                                            <div class="text-center map-container">
+                                                <div id="map-preview" class="map-preview"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>   
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+
             </div>
         </div>
     </div>
 </div>
-<div id="modal-for-start-job-confirmation" style="display: none;">
-    <div class="the-modal-body">
-        <div class="close-modal">x</div>
-        <div class="map"></div>
-        <div class="info">
-            <div id="route-details-setion">
-                <table class="route-details-table">
-                    <tbody class="tbody">
-                        <tr class="last-coords-details first-info" data-i="0">
-                            <td class="connected-icon">
-                                <div><i class="fa fa-car" aria-hidden="true"></i></div>
-                            </td>
-                            <td>
-                                <div class="address">
-                                    <?=$company_info->street?>
-                                    <?= $company_info->city.', '.$company_info->state.' '.$company_info->postal_code ?>
-                                </div>
-                                <div class="date-time"><?= isset($jobs_data) ?  date('F d, Y', strtotime($jobs_data->start_date)) : '';  ?>
-                                    <?= isset($jobs_data) ?  $jobs_data->start_time : '';  ?>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="last-coords-details last-info" data-i="3">
-                            <td class="connected-icon">
-                                <div><i class="fa fa-map-marker" aria-hidden="true"></i></div>
-                            </td>
-                            <td>
-                                <div class="address">
-                                    <?=$jobs_data->mail_add;?>
-                                    <?=$jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code?>
-                                </div>
-                                <div class="date-time">
-                                    <?= isset($jobs_data) ?  date('F d, Y', strtotime($jobs_data->end_date)) : '';  ?>
-                                    <?= isset($jobs_data) ?  $jobs_data->end_time : '';  ?>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="confirm">
-            <div class="text-confirmation">
-                <?php
-             if (logged('id') == $jobs_data->employee_id) {
-                 echo "Are you now heading to the job distination?";
-             } else {
-                 echo "Is $employee_date->FName heading now to the job distination?";
-             }
-             ?>
+<!-- Map files -->
+<script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
+<script type="text/javascript" src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
+<link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
+<script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
 
-            </div>
-            <div class="confirm-buttons">
-                <button type="button" class="cancel">Not yet</button>
-                <button type="button" class="arrival"
-                    data-job="<?=$jobs_data->id?>">Start Now</button>
-            </div>
-        </div>
-    </div>
-</div>
-<?php
-add_footer_js(array(
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-    'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-    'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/javascript.util/0.12.12/javascript.util.min.js',
-    'assets/textEditor/summernote-bs4.js',
-));
-?>
-<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=&v=weekly">
-</script>
-
-
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/styles/minimal.css" />
+<script src="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/dist/index.min.js"></script>
+<!-- End Map files -->
 <script>
-    var geocoder;
+$(function(){
+    var myAPIKey = "<?= GEOAPIKEY ?>";  
+    <?php if($default_lat != "" && $default_lon != "") { ?>
+            var default_lat    = '<?php echo $default_lat; ?>';
+            var default_lon    = '<?php echo $default_lon; ?>';        
+            var map_zoom_level = '11';  
+            var address_line2  = '<?= $jobs_data->first_name .' '. $jobs_data->last_name; ?>';
+    <?php } else { ?>
+            var default_lat    = '39.7837304';
+            var default_lon    = '-100.445882';   
+            var map_zoom_level = '5';    
+            var address_line2  = '<?= $jobs_data->first_name .' '. $jobs_data->last_name; ?>';
+    <?php } ?>
 
-    function initMap(address = null) {
-        if (address == null) {
-            address = '6866 Pine Forest Rd Pensacola FL 32526';
-        }
-        const myLatLng = {
-            lat: -25.363,
-            lng: 131.044
-        };
-        const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 12,
-            height: 220,
-            center: myLatLng,
-        });
-        new google.maps.Marker({
-            position: myLatLng,
-            map,
-            title: "Hello World!",
-        });
-        geocoder = new google.maps.Geocoder();
-        codeAddress(geocoder, map, address);
-    }
+    var map_style = 'osm-bright';
 
-    function codeAddress(geocoder, map, address) {
-        geocoder.geocode({
-            'address': address
-        }, function(results, status) {
-            if (status === 'OK') {
-                map.setCenter(results[0].geometry.location);
-                var marker = new google.maps.Marker({
-                    map: map,
-                    position: results[0].geometry.location
-                });
-            } else {
-                console.log(status);
-                console.log('Geocode was not successful for the following reason: ' + status);
-            }
-        });
-    }
+    var center = {
+        lat: default_lat,
+        lon: default_lon
+    };  
 
-    // Temporarily remove job_preview modal because of no styling
-    $("div#modal-for-start-job-confirmation").remove();
-
-    $(document).on("click", "div#modal-for-start-job-confirmation .the-modal-body .close-modal", function(event) {
-        $("div#modal-for-start-job-confirmation").fadeOut();
+    var geoMap = new maplibregl.Map({
+    center: [center.lon, center.lat],
+    zoom: map_zoom_level,
+    container: 'map-preview',
+    style: `https://maps.geoapify.com/v1/styles/${map_style}/style.json?apiKey=${myAPIKey}`,
     });
-    $(document).on("click",
-        "div#modal-for-start-job-confirmation .the-modal-body .confirm .confirm-buttons button.cancel",
-        function(event) {
-            $("div#modal-for-start-job-confirmation").fadeOut();
-        });
-    <?php
-    if (date('m/d/Y H:i:s', strtotime($jobs_data->start_date . " ".$jobs_data->start_time)) <= date("m/d/Y H:i:s") && $jobs_data->status == "Scheduled" && (logged('id') == $jobs_data->employee_id || logged("role") < 5)) {
-        echo " $('div#modal-for-start-job-confirmation').fadeIn();";
-    }
-    ?>
+    geoMap.addControl(new maplibregl.NavigationControl()); 
+    var currentMarkers=[];
 
-    $(document).on("click",
-        "div#modal-for-start-job-confirmation .the-modal-body .confirm .confirm-buttons button.arrival",
-        function(event) {
-            $.ajax({
-                type: 'POST',
-                url: baseURL + "on-my-way-to-job",
-                data: {
-                    id: $(this).attr("data-job"),
-                    status: "Arrival"
-                },
-                success: function(data) {
-                    if (data == "Success") {
-                        Swal.fire({
-                            showConfirmButton: false,
-                            timer: 2000,
-                            title: "Take care!",
-                            html: "Job status has been updated to arrival.",
-                            icon: "success",
-                        });
-                        $("div#modal-for-start-job-confirmation").fadeOut();
-                        $('.card-body table td.job-status').html("Arrival");
-                    } else {
-                        Swal.fire({
-                            showConfirmButton: false,
-                            timer: 2000,
-                            title: "Ooops",
-                            html: "Please try again later!",
-                            icon: "Error",
-                        });
-                    }
-                }
-            })
-        });
+    var markerIcon = L.icon({
+    iconUrl: `https://api.geoapify.com/v1/icon?size=xx-large&type=material&color=rgb(106,74,134)&icon=my_location&apiKey=${myAPIKey}`,
+    iconSize: [38, 56], // size of the icon
+    iconAnchor: [19, 51], // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -60] // point from which the popup should open relative to the iconAnchor
+    });
+
+    var coordinates = [default_lon, default_lat]
+    var marker_color = 'mediumpurple';
+    let map_icon = `https://api.geoapify.com/v1/icon?size=large&type=material&icon=business_center&noWhiteCircle=0&color=${marker_color}&apiKey=${myAPIKey}`;
+    const el = document.createElement('div');
+    el.className = 'marker';    
+    el.style.width = '30px';
+    el.style.color = marker_color;
+    el.style.height = '45px';
+    el.style.backgroundSize = "contain";
+    el.style.backgroundImage = `url(${map_icon})`;    
+
+    // create the popup
+    const popup = new maplibregl.Popup({offset: 25}).setHTML(
+        address_line2
+    );
+
+    // add marker to map
+    var marker = new maplibregl.Marker({element: el})
+        .setLngLat(coordinates)
+        .setPopup(popup)
+        .addTo(geoMap);
+
+    currentMarkers.push(marker);  
+});
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
