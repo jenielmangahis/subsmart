@@ -77,7 +77,7 @@
             </div>
 
             <div class="col-6 text-nowrap <?php echo "textDataContainer_$id"; ?> display_none">
-                <div class="text-center textData scorecard-container border-0">
+                <div class="text-center textData border-0">
                     <i class="fas fa-star fs-5 mt-2 mb-2" style="color: #6a4a86ab"></i><br>
                     <small class="text-muted text-uppercase fw-bold">Points</small>
                     <h4 class="scorecard_points">0</h4>
@@ -98,7 +98,7 @@
                 </div>
             </div> -->
             <div class="col-6 text-nowrap <?php echo "textDataContainer_$id"; ?> display_none">
-                <div class="text-center textData scorecard-container border-0">
+                <div class="text-center textData border-0">
                     <i class="fas fa-user-check fs-5 mt-2 mb-2" style="color: #6a4a86ab"></i><br>
                     <small class="text-muted text-uppercase fw-bold">Attendance</small>
                     <h4 class="scorecard_attendance">0</h4>
@@ -295,10 +295,11 @@
                     $('.scorecard_name').text(data[0].employee_name);
                     $('.scorecard_others').text(`Rep #${data[0].employee_id} • Since ${date_created}`);
                     $('.scorecard_points').text(points);
-                    $('.scorecard-container').attr('data-id', data[0].employee_id);
+                    $('.scorecard_points').parent().parent().attr(`onclick`, `window.open('${window.origin}/users/view/${data[0].employee_id}', '_blank')`);
                     // $('.scorecard_jobcount').text(data[0].job_count);
                     // $('.scorecard_servicecount').text(data[0].ticket_count);
                     $('.scorecard_attendance').text(`${data[0].attendance_percentage}%`);
+                    $('.scorecard_attendance').parent().parent().attr(`onclick`, `window.open('${window.origin}/users/view/${data[0].employee_id}', '_blank')`);
                     $('.scorecard_overall_performance').css('width', `${data[0].overall_performance}%`);
                     $('.scorecard_overall_performance > strong').text(`${data[0].overall_performance}%`);
                     $('.scorecard_ticket_column').text(data[0].job_count);
@@ -389,9 +390,4 @@
     //         console.error("Failed to fetch Tech Rep data.");
     //     }
     // });
-
-    $(document).on('click', '.scorecard-container', function(){
-        let user_id = $(this).attr('data-id');
-        location.href = base_url + 'users/view/' + user_id;
-    });
 </script>
