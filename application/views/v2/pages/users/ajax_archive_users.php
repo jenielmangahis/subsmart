@@ -1,3 +1,4 @@
+<?php if(checkRoleCanAccessModule('users', 'write')){ ?>
 <div class="row">
     <div class="col-12 grid-mb text-end">
         <div class="dropdown d-inline-block">
@@ -12,6 +13,7 @@
         </div>
     </div>
 </div>
+<?php } ?>
 <form id="frm-archive-with-selected">
 <table class="nsm-table" id="archived-users">
     <thead>
@@ -34,6 +36,7 @@
                     <td><div class="table-row-icon"><i class="bx bx-box"></i></div></td>
                     <td class="nsm-text-primary"><?= $user->FName . ' ' . $user->LName; ?></td>
                     <td style="width:5%;">
+                        <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -41,6 +44,7 @@
                                 <li><a class="dropdown-item btn-permanently-delete-user" data-id="<?= $user->id; ?>" data-name="<?= $user->FName . ' ' . $user->LName; ?>" href="javascript:void(0);">Permanently Delete</a></li>   
                             </ul>
                         </div>
+                        <?php } ?>
                     </td>
                 </tr>
             <?php } ?>
