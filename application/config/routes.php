@@ -326,6 +326,12 @@ $route['invoice/_archived_list'] = 'Invoice/ajax_archived_list';
 $route['invoice/_restore_archived'] = 'Invoice/ajax_restore_archived';
 $route['invoice/_update_status/(:any)'] = 'Invoice/ajax_update_status/$1';
 $route['invoice/recurring/(:any)'] = 'Invoice/recurring/$1';
+$route['invoice/_archive_selected_invoices'] = 'Invoice/ajax_archive_selected_invoices';
+$route['invoice/_restore_selected_invoices'] = 'Invoice/ajax_restore_selected_invoices';
+$route['invoice/_delete_permanent_selected_invoices'] = 'Invoice/ajax_delete_permanent_selected_invoices';
+
+$route['invoice/_permanent_delete'] = 'Invoice/ajax_permanent_delete';
+
 $route['customer_invoice/(:any)/(:any)'] = 'Pages/front_customer_invoice_pay_now_v2/$1/$2';
 $route['customer_view/(:any)/(:any)'] = 'Pages/front_customer_preview/$1/$2';
 

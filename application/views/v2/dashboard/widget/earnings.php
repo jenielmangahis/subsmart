@@ -143,7 +143,7 @@
 
                         $('.<?php echo "textDatas_$id"; ?>').append(`
                             <div class='col-6 col-md-6 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
-                                <div class='text-center textData'>
+                                <div class='text-center textData tile-earnings' data-type='${key}'>
                                     <small class='text-muted text-uppercase fw-bold'>${key}</small>
                                     <h4>${displayValue}</h4>
                                 </div>
@@ -273,6 +273,19 @@
                 $('.<?php echo "textDataContainer_$id"; ?>').show();
                 $('.<?php echo "graphDataContainer_$id"; ?>').hide();
             }
+        }
+    });
+
+    $(document).on('click', '.tile-earnings', function(){
+        let data_type = $(this).attr('data-type');
+        if( data_type == 'Open Invoices' ){
+            location.href = base_url + 'invoice';
+        }else if( data_type == 'Overdue Invoices' ){
+            location.href = base_url + 'invoice/tab/overdue';
+        }else if( data_type == 'Paid Invoices' ){
+            location.href = base_url + 'invoice/tab/paid';
+        }else if( data_type == 'Subscription' ){
+            location.href = base_url + 'invoice/recurring';
         }
     });
 </script>

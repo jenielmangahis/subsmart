@@ -6,7 +6,12 @@
     $type = trim($thumbnailsWidgetCard->type);
     $category = trim($thumbnailsWidgetCard->category);
 ?>
-
+<style>
+.no-link:hover{
+    background-color:#00000008 !important;
+    cursor:auto !important;
+}
+</style>
 <div class='card shadow widgetBorder <?php echo "card_$category$id "; ?>'>
     <div class="card-body">
         <div class="row">
@@ -143,7 +148,7 @@
                         labelWithCounts.push(`${key}: ${value}`);
                         $('.<?php echo "textDatas_$id"; ?>').append(`
                             <div class='col-6 col-md-4 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
-                                <div class='text-center textData'>
+                                <div class='text-center textData no-link'>
                                     <small class='text-muted text-uppercase fw-bold'>${key}</small>
                                     <h4>${value}</h4>
                                 </div>

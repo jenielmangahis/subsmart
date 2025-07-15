@@ -43,10 +43,13 @@ class Job extends MY_Controller
         $userId = get('user_id');
         $leaderBoardType = get('leader_board_type');
 
-        if (get('job_tag')) {
+        if(get('job_tag')) {
             $tag_id = get('job_tag');
             $jobs = $this->jobs_model->get_all_jobs_by_tag($tag_id, $userId, $leaderBoardType);
-        } else {
+        }elseif(get('job_status')){
+            $status = get('job_status');
+            $jobs = $this->jobs_model->get_all_jobs_by_status($status);
+        }else {
             $jobs = $this->jobs_model->get_all_jobs($userId, $leaderBoardType);
         }
 
@@ -5238,6 +5241,12 @@ class Job extends MY_Controller
             //Activity Logs
             $activity_name = 'Created Caledar Schedule ' . $job_number; 
             createActivityLog($activity_name);
+
+            /**
+             * Insert job mail automation here
+             */
+            createAutomationQueueV2('send_email', 'job', 'created', '', $jobs_id);
+            createAutomationQueueV2('send_email', 'job', 'has_status', 'Scheduled', $jobs_id);            
 
             if( $this->input->post('is_with_esign') ){
                 //Emergency Contacts

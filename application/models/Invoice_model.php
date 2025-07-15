@@ -1721,6 +1721,9 @@ class Invoice_model extends MY_Model
 
     public function delete_invoice($id)
     {
+        $this->db->where('invoice_id', $id);
+        $delete_child = $this->db->delete('accounting_tax_adjustments');
+
         $this->db->where('id', $id);
         $delete = $this->db->delete('invoices');
         return $delete;
@@ -1811,7 +1814,7 @@ class Invoice_model extends MY_Model
     public function restoreInvoice($id)
     {
         $this->db->where('id', $id);      
-        $this->db->update($this->table, array("view_flag" => 1, 'date_updated' => date("Y-m-d H:i:s")));        
+        $this->db->update($this->table, array("view_flag" => 0, 'date_updated' => date("Y-m-d H:i:s")));        
     }
 
     public function getInvoiceByFilter($filter = [])

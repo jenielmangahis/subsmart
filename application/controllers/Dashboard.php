@@ -2543,7 +2543,7 @@ class Dashboard extends Widgets
                         $techniciansList .= "<li>$technicians</li>";
                     }
                     $techniciansList .= "</ul>";
-                    echo "<tr style='cursor: pointer;'>
+                    echo "<tr style='cursor: pointer;' class='tbl-row' data-type='job_activities' data-id='$datas->id'>
                             <td class='p-2 align-middle'>
                                 <div class='d-flex position-relative'>
                                     <div class='flex-grow-1 min-width-0'>

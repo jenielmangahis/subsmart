@@ -89,6 +89,16 @@
                                 <li><a class="dropdown-item" href="<?php echo base_url('customer?type=residential') ?>">Residential</a></li>
                             </ul>
                         </div> -->
+                        <?php if(checkRoleCanAccessModule('invoice', 'write')){ ?>
+                            <div class="dropdown d-inline-block">
+                                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                    <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end select-filter"> 
+                                    <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                                </ul>
+                            </div>   
+                        <?php } ?>                     
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Sort by <?= $sort_by; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
@@ -148,170 +158,182 @@
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
-                    <thead>
-                        <tr>
-                            <td class="table-icon"></td>
-                            <td data-name="Invoice Number">Invoice Number</td>
-                            <td data-name="Job Number">Job Number</td>
-                            <td data-name="Date Issued">Date Issued</td>
-                            <td data-name="Date Due">Date Due</td>                            
-                            <td data-name="Customer">Customer</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="Amount" style="text-align:right;">Amount</td>
-                            <td data-name="Amount" style="text-align:right;">Balance</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (!empty($invoices)) :
-                        ?>
+                <form id="frm-with-selected">
+                    <table class="nsm-table">
+                        <thead>
+                            <tr>
+                                <?php if(checkRoleCanAccessModule('invoice', 'write')){ ?>
+                                <td class="table-icon text-center sorting_disabled">
+                                    <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                                </td>
+                                <?php } ?>
+                                <td class="table-icon"></td>
+                                <td data-name="Invoice Number">Invoice Number</td>
+                                <td data-name="Job Number">Job Number</td>
+                                <td data-name="Date Issued">Date Issued</td>
+                                <td data-name="Date Due">Date Due</td>                            
+                                <td data-name="Customer">Customer</td>
+                                <td data-name="Status">Status</td>
+                                <td data-name="Amount" style="text-align:right;">Amount</td>
+                                <td data-name="Amount" style="text-align:right;">Balance</td>
+                                <td data-name="Manage"></td>
+                            </tr>
+                        </thead>
+                        <tbody>
                             <?php
-                            foreach ($invoices as $invoice) :
+                            if (!empty($invoices)) :
+                            ?>
+                                <?php
+                                foreach ($invoices as $invoice) :
 
-                                $late_fee_amount = $invoice->late_fee;
-                                $current_date    = date('Y-m-d');
+                                    $late_fee_amount = $invoice->late_fee;
+                                    $current_date    = date('Y-m-d');
 
-                                switch ($invoice->status):
-                                    case "Partially Paid":
-                                        $badge = "secondary";
-                                        break;
-                                    case "Paid":
-                                        $badge = "success";
-                                        break;
-                                    case "Due":
-                                        $badge = "secondary";
-                                        break;
-                                    case "Overdue":
-                                        $badge = "error";
-                                        break;
-                                    case "Submitted":
-                                        $badge = "success";
-                                        break;
-                                    case "Approved":
-                                        $badge = "success";
-                                        break;
-                                    case "Declined":
-                                        $badge = "error";
-                                        break;
-                                    case "Scheduled":
-                                        $badge = "primary";
-                                        break;
-                                    case "Draft":
-                                        $badge = "error";
-                                        break;
-                                    default:
-                                        $badge = "error";
-                                        break;
-                                endswitch;
+                                    switch ($invoice->status):
+                                        case "Partially Paid":
+                                            $badge = "secondary";
+                                            break;
+                                        case "Paid":
+                                            $badge = "success";
+                                            break;
+                                        case "Due":
+                                            $badge = "secondary";
+                                            break;
+                                        case "Overdue":
+                                            $badge = "error";
+                                            break;
+                                        case "Submitted":
+                                            $badge = "success";
+                                            break;
+                                        case "Approved":
+                                            $badge = "success";
+                                            break;
+                                        case "Declined":
+                                            $badge = "error";
+                                            break;
+                                        case "Scheduled":
+                                            $badge = "primary";
+                                            break;
+                                        case "Draft":
+                                            $badge = "error";
+                                            break;
+                                        default:
+                                            $badge = "error";
+                                            break;
+                                    endswitch;
+                                ?>
+                                    <tr>
+                                        <?php if(checkRoleCanAccessModule('invoice', 'write')){ ?>
+                                        <td>
+                                            <input class="form-check-input row-select table-select" name="invoice[]" type="checkbox" value="<?= $invoice->id; ?>">
+                                        </td>
+                                        <?php } ?>                                    
+                                        <td>
+                                            <div class="table-row-icon">
+                                                <i class='bx bx-receipt'></i>
+                                            </div>
+                                        </td>
+                                        <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('invoice/genview/' . $invoice->id) ?>'"><?= formatInvoiceNumber($invoice->invoice_number) ?>
+                                        </td>
+                                        <td class="nsm-text-primary nsm-link default view-job-row" data-id="<?= $invoice->job_id; ?>">
+                                                <?php echo $invoice->jobnumber != '' ? $invoice->jobnumber : '---';  ?>
+                                        </td>
+                                        <td><?php echo get_format_date($invoice->date_issued) ?></td>
+                                        <td><?php echo get_format_date($invoice->due_date) ?></td>
+                                        <td class="nsm-text-primary">
+                                            <label class="d-block">
+                                            <?php 
+                                                if( trim($invoice->first_name != '') || trim($invoice->last_name != '') ){
+                                                    $customer_name = $invoice->first_name . ' ' . $invoice->last_name;
+                                                }else{
+                                                    $customer_name = '---';
+                                                }
+                                                
+                                                echo $customer_name;
+                                            ?>
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <span class="status-label nsm-badge <?= $badge ?>">
+                                                <?php 
+                                                    if( $invoice->status == '' ){
+                                                        echo 'Draft';
+                                                    }else{
+                                                        echo $invoice->status;
+                                                    }
+                                                ?>                                            
+                                            </span>
+                                        </td>
+                                        <td style="text-align:right;">$<?php echo number_format((float)$invoice->grand_total,2); ?></td>
+                                        <td style="text-align:right;">$<?php echo number_format((float)$invoice->balance,2); ?></td>
+                                        <td>
+                                            <div class="dropdown table-management">
+                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li>
+                                                        <a class="dropdown-item" href="<?php echo base_url('invoice/genview/' . $invoice->id) ?>">View Invoice</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<?php echo base_url('invoice/send/' . $invoice->id) ?>">Send Invoice</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" id="resend-invoice-late-fee" href="javascript:void(0);" data-number="<?= $invoice->invoice_number; ?>" data-id="<?= $invoice->id; ?>" date-latefee="<?php echo number_format($late_fee_amount,2); ?>">Resend Invoice with Late Fee</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>">Edit</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item recordPaymentBtn" href="javascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">Record Payment</a>
+                                                    </li>
+                                                    <!-- <li>
+                                                        <a class="dropdown-item voidPaymentBtn" href="javascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">Void Payments</a>
+                                                    </li> -->
+                                                    <li>
+                                                        <a class="dropdown-item viewPaymentBtn" href="javascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">View Payments</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>">Convert to Workorder</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item clone-item" href="javascript:void(0);" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>" data-bs-toggle="modal">Clone Invoice</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=pdf') ?>" target="_blank">Invoice PDF</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>" target="_blank">Print Invoice</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="<?= base_url('job/invoice_job/'. $invoice->id); ?>">Convert to Job</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item delete-item" href="javascript:void(0);" data-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>">Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php
+                                endforeach;
+                                ?>
+                            <?php
+                            else :
                             ?>
                                 <tr>
-                                    <td>
-                                        <div class="table-row-icon">
-                                            <i class='bx bx-receipt'></i>
-                                        </div>
-                                    </td>
-                                    <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('invoice/genview/' . $invoice->id) ?>'"><?= formatInvoiceNumber($invoice->invoice_number) ?>
-                                    </td>
-                                    <td class="nsm-text-primary nsm-link default view-job-row" data-id="<?= $invoice->job_id; ?>">
-                                            <?php echo $invoice->jobnumber != '' ? $invoice->jobnumber : '---';  ?>
-                                    </td>
-                                    <td><?php echo get_format_date($invoice->date_issued) ?></td>
-                                    <td><?php echo get_format_date($invoice->due_date) ?></td>
-                                    <td class="nsm-text-primary">
-                                        <label class="d-block">
-                                        <?php 
-                                            if( trim($invoice->first_name != '') || trim($invoice->last_name != '') ){
-                                                $customer_name = $invoice->first_name . ' ' . $invoice->last_name;
-                                            }else{
-                                                $customer_name = '---';
-                                            }
-                                            
-                                            echo $customer_name;
-                                        ?>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <span class="status-label nsm-badge <?= $badge ?>">
-                                            <?php 
-                                                if( $invoice->status == '' ){
-                                                    echo 'Draft';
-                                                }else{
-                                                    echo $invoice->status;
-                                                }
-                                            ?>                                            
-                                        </span>
-                                    </td>
-                                    <td style="text-align:right;">$<?php echo number_format((float)$invoice->grand_total,2); ?></td>
-                                    <td style="text-align:right;">$<?php echo number_format((float)$invoice->balance,2); ?></td>
-                                    <td>
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('invoice/genview/' . $invoice->id) ?>">View Invoice</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('invoice/send/' . $invoice->id) ?>">Send Invoice</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" id="resend-invoice-late-fee" href="javascript:void(0);" data-number="<?= $invoice->invoice_number; ?>" data-id="<?= $invoice->id; ?>" date-latefee="<?php echo number_format($late_fee_amount,2); ?>">Resend Invoice with Late Fee</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item recordPaymentBtn" href="javascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">Record Payment</a>
-                                                </li>
-                                                <!-- <li>
-                                                    <a class="dropdown-item voidPaymentBtn" href="javascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">Void Payments</a>
-                                                </li> -->
-                                                <li>
-                                                    <a class="dropdown-item viewPaymentBtn" href="javascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">View Payments</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>">Convert to Workorder</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item clone-item" href="javascript:void(0);" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>" data-bs-toggle="modal">Clone Invoice</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=pdf') ?>" target="_blank">Invoice PDF</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>" target="_blank">Print Invoice</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?= base_url('job/invoice_job/'. $invoice->id); ?>">Convert to Job</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>">Delete</a>
-                                                </li>
-                                            </ul>
+                                    <td colspan="11">
+                                        <div class="nsm-empty">
+                                            <span>No results found.</span>
                                         </div>
                                     </td>
                                 </tr>
                             <?php
-                            endforeach;
+                            endif;
                             ?>
-                        <?php
-                        else :
-                        ?>
-                            <tr>
-                                <td colspan="11">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        endif;
-                        ?>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </form>
             </div>
             
             <!-- Modal Record Payment -->
@@ -423,6 +445,200 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+
+        $(document).on('change', '#select-all', function(){
+            $('.row-select:checkbox').prop('checked', this.checked);  
+            let total= $('input[name="invoice[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
+        });
+
+        $(document).on('change', '.row-select', function(){
+            let total= $('input[name="invoice[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
+        });   
+        
+        $(document).on('click', '#with-selected-delete', function(){
+            let total= $('input[name="invoice[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Delete Invoice',
+                    html: `Are you sure you want to delete selected invoices?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'invoice/_archive_selected_invoices',
+                            dataType: 'json',
+                            data: $('#frm-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                        title: 'Delete Invoice',
+                                        text: "Data deleted successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        });   
+             
+        //For Achived Modal List - Start
+        $(document).on('change', '#select-all-archived', function(){
+            $('.row-select-archived:checkbox').prop('checked', this.checked);  
+            let total= $('input[name="invoice[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked-arhived').text(`(${total})`);
+            }else{
+                $('#num-checked-arhived').text('');
+            }
+        });
+
+        $(document).on('change', '.row-select-archived', function(){
+            let total= $('input[name="invoice[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked-arhived').text(`(${total})`);
+            }else{
+                $('#num-checked-arhived').text('');
+            }
+        });
+        
+        $(document).on('click', '#with-selected-restore', function(){
+            let total= $('input[name="invoice[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Restore Invoices',
+                    html: `Are you sure you want to restore the selected invoices?`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'invoice/_restore_selected_invoices',
+                            dataType: 'json',
+                            data: $('#frm-with-selected-archived').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                        title: 'Restore Invoice',
+                                        text: "Data restore successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        }); 
+
+        $(document).on('click', '#with-selected-permanent-delete', function(){
+            let total= $('input[name="invoice[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Delete Invoices Permanently',
+                    html: `Would you like to permanently delete the selected invoices? You will no longer recover this data.`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'invoice/_delete_permanent_selected_invoices',
+                            dataType: 'json',
+                            data: $('#frm-with-selected-archived').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                        title: 'Permanently Delete Invoice',
+                                        text: "Data permanently delete successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        }); 
+        //For Achived Modal List - End        
+
         $(".nsm-table").nsmPagination();
         $("#search_field").on("input", debounce(function() {
             tableSearch($(this));        
@@ -875,6 +1091,47 @@
                                 icon: 'success',
                                 title: 'Success',
                                 text: 'Invoice data was successfully restored.',
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '.btn-permanent-delete-invoice', function(){
+            var invoice_id     = $(this).attr('data-id');
+            var invoice_number = $(this).attr('data-invoicenumber');
+
+            Swal.fire({
+                title: 'Permanent Delete Invoice Data',
+                html: `Would you like to permanently delete the invoice <b>#${invoice_number}</b>? You will no longer recover this data.`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {                    
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "invoice/_permanent_delete",
+                        data: {invoice_id:invoice_id},
+                        dataType:'json',
+                        success: function(result) {                            
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-invoices').modal('hide');
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Invoice data was successfully deleted permanently.',
                                 }).then((result) => {
                                     location.reload();
                                 });

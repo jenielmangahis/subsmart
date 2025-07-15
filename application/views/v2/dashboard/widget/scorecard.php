@@ -70,14 +70,14 @@
                         class="img-thumbnail rounded-circle border me-3 scorecard_profile_img" 
                         style="width: 60px; height: 60px; object-fit: cover;">
                     <div>
-                        <h5 class="mb-0 fw-bold scorecard_name">Lauren</h5>
-                        <span class="text-muted scorecard_others">Rep #104 • Since 2020</span>
+                        <h5 class="mb-0 fw-bold scorecard_name"></h5>
+                        <span class="text-muted scorecard_others"></span>
                     </div>
                 </div>
             </div>
 
             <div class="col-6 text-nowrap <?php echo "textDataContainer_$id"; ?> display_none">
-                <div class="text-center textData border-0">
+                <div class="text-center textData scorecard-container border-0">
                     <i class="fas fa-star fs-5 mt-2 mb-2" style="color: #6a4a86ab"></i><br>
                     <small class="text-muted text-uppercase fw-bold">Points</small>
                     <h4 class="scorecard_points">0</h4>
@@ -98,7 +98,7 @@
                 </div>
             </div> -->
             <div class="col-6 text-nowrap <?php echo "textDataContainer_$id"; ?> display_none">
-                <div class="text-center textData border-0">
+                <div class="text-center textData scorecard-container border-0">
                     <i class="fas fa-user-check fs-5 mt-2 mb-2" style="color: #6a4a86ab"></i><br>
                     <small class="text-muted text-uppercase fw-bold">Attendance</small>
                     <h4 class="scorecard_attendance">0</h4>
@@ -291,11 +291,11 @@
 
                     // Temporary img
                     const profileImg = `${window.origin}/uploads/users/default.png`;
-
                     $('.scorecard_profile_img').attr('src', profileImg);
                     $('.scorecard_name').text(data[0].employee_name);
                     $('.scorecard_others').text(`Rep #${data[0].employee_id} • Since ${date_created}`);
                     $('.scorecard_points').text(points);
+                    $('.scorecard-container').attr('data-id', data[0].employee_id);
                     // $('.scorecard_jobcount').text(data[0].job_count);
                     // $('.scorecard_servicecount').text(data[0].ticket_count);
                     $('.scorecard_attendance').text(`${data[0].attendance_percentage}%`);
@@ -389,4 +389,9 @@
     //         console.error("Failed to fetch Tech Rep data.");
     //     }
     // });
+
+    $(document).on('click', '.scorecard-container', function(){
+        let user_id = $(this).attr('data-id');
+        location.href = base_url + 'users/view/' + user_id;
+    });
 </script>

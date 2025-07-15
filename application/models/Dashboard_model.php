@@ -441,7 +441,7 @@ class Dashboard_model extends MY_Model
                     LEFT JOIN users u5 ON u5.id = jobs.employee5_id
                     LEFT JOIN users u6 ON u6.id = jobs.employee6_id
 
-                    WHERE jobs.company_id = 31
+                    WHERE jobs.company_id = {$company_id}
                     AND jobs.status IN ('Finished', 'Completed')
                     AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') >= '{$dateFrom}'
                     AND DATE_FORMAT(jobs.date_created, '%Y-%m-%d') <= '{$dateTo}'

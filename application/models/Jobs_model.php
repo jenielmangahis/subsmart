@@ -65,7 +65,7 @@ class Jobs_model extends MY_Model
     /**
      * @return mixed
      */
-    public function get_all_jobs_by_tag($tag_id, $userId = null, $leaderBoardType = null)
+    public function get_all_jobs_by_tag($tag_name, $userId = null, $leaderBoardType = null)
     {
         $cid = logged('company_id');
         $this->db->from($this->table);
@@ -94,7 +94,7 @@ class Jobs_model extends MY_Model
             }
         }
 
-        $this->db->where("jobs.tags", $tag_id);
+        $this->db->where("jobs.tags", $tag_name);
         $this->db->order_by('id', "DESC");
         $query = $this->db->get();
         return $query->result();
