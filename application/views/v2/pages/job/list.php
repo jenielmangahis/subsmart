@@ -191,9 +191,13 @@ foreach ($jobs as $job) {
                         <div class="dropdown d-inline-block">
                                 <select id="CUSTOM_FILTER_DROPDOWN" class="dropdown-toggle nsm-button">
                                     <option selected value="">All</option>
+                                    <option value="Draft">Draft</option>
                                     <option value="Scheduled">Scheduled</option>
+                                    <option value="Arrival">Arrival</option>
                                     <option value="Started">Started</option>
                                     <option value="Approved">Approved</option>
+                                    <option value="Finished">Finished</option>
+                                    <option value="Cancelled">Cancelled</option>
                                     <option value="Invoiced">Invoiced</option>
                                     <option value="Completed">Completed</option>
                                 </select>
@@ -505,6 +509,10 @@ $(document).ready(function() {
 
     $('#btn-new-job').on('click',function(){
         location.href = base_url + 'job/new';
+    });
+
+    $("#btn-export-list").on("click", function() {
+        location.href = "<?php echo base_url('jobs/export_list'); ?>";
     });
 
     $(document).on('click', '#with-selected-delete', function(){
