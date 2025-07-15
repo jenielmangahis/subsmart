@@ -141,9 +141,11 @@
                         graphLabels.push(key);
                         graphSeries.push(parseInt(value));
                         labelWithCounts.push(`${key}: ${value}`);
+                        let url_filter = `${window.origin}/job?job_status=${key}`;
+
                         $('.<?php echo "textDatas_$id"; ?>').append(`
-                            <div class='col-4 col-md-3 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
-                                <div class='text-center textData tile-job-status' data-status='${key}'>
+                            <div class='col-4 col-md-3 text-nowrap <?php echo "textDataContainer_$id"; ?>' onclick="window.open('${url_filter}', '_blank')">
+                                <div class='text-center textData'>
                                     <small class='text-muted text-uppercase fw-bold'>${key}</small>
                                     <h4>${value}</h4>
                                 </div>
@@ -273,10 +275,5 @@
                 $('.<?php echo "graphDataContainer_$id"; ?>').hide();
             }
         }
-    });
-
-    $(document).on('click', '.tile-job-status', function(){
-        let status = $(this).attr('data-status');
-        location.href = base_url + 'job?job_status=' + status;
     });
 </script>

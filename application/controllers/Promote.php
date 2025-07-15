@@ -491,21 +491,14 @@ class Promote extends MY_Controller {
             $company_address  = $company->street . " " . $company->city . " " . $company->state;
             $company_zip      = $company->postal_code;
             $expiration_month =  str_pad($ccFile->expiration_month, 2, '0', STR_PAD_LEFT);             
-            $exp_date =  $expiration_month . $ccFile->expiration_year;
+            $exp_date =  $expiration_month . $ccFile->expiration_year;            
 
             $converge = new \wwwroth\Converge\Converge([
-                'merchant_id' => '2179135',
-                'user_id' => 'adiAPI',
-                'pin' => 'U3L0MSDPDQ254QBJSGTZSN4DQS00FBW5ELIFSR0FZQ3VGBE7PXP07RMKVL024AVR',
-                'demo' => false,
-            ]);
-
-            /*$converge = new \wwwroth\Converge\Converge([
                 'merchant_id' => CONVERGE_MERCHANTID,
                 'user_id' => CONVERGE_MERCHANTUSERID,
                 'pin' => CONVERGE_MERCHANTPIN,
-                'demo' => false,
-            ]);*/
+                'demo' => true,
+            ]);
 
             $createSale = $converge->request('ccsale', [
                 'ssl_card_number' => $ccFile->card_number,
@@ -700,6 +693,5 @@ class Promote extends MY_Controller {
         $obj_pdf->Output($title, 'I');
     }
 }
-
 /* End of file Promote.php */
 /* Location: ./application/controllers/Promote.php */
