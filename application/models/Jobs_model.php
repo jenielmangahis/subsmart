@@ -28,7 +28,7 @@ class Jobs_model extends MY_Model
     /**
      * @return mixed
      */
-    public function get_all_jobs($userId = null, $leaderBoardType = null, $sort = [])
+    public function get_all_jobs($userId = null, $leaderBoardType = null, $conditions= [], $sort = [])
     {
         $cid = logged('company_id');
         $this->db->from($this->table);
@@ -54,6 +54,12 @@ class Jobs_model extends MY_Model
                         ->or_where('jobs.employee6_id', $userId)
                         ->group_end();
                 }
+            }
+        }
+
+        if( !empty($conditions) ){
+            foreach( $conditions as $value ){
+                $this->db->where($value['field'], $value['value']);                
             }
         }
 
