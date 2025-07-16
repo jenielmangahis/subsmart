@@ -103,7 +103,7 @@ class Cron_Payment extends MYF_Controller {
                         //Record payment
                         $data_payment = [
                             'company_id' => $client->id,
-                            'description' => 'Paid Membership, ' . ucwords($client->recurring_payment_type),
+                            'description' => 'Paid Membership - ' . ucwords($client->recurring_payment_type),
                             'payment_date' => date("Y-m-d"),
                             'total_amount' => $amount,
                             'date_created' => date("Y-m-d H:i:s")
@@ -334,7 +334,7 @@ class Cron_Payment extends MYF_Controller {
                         //Record payment
                         $data_payment = [
                             'company_id' => $client->id,
-                            'description' => 'Paid Membership, ' . ucwords($client->recurring_payment_type),
+                            'description' => 'Paid Membership - ' . ucwords($client->recurring_payment_type),
                             'payment_date' => date("Y-m-d"),
                             'total_amount' => $amount,
                             'date_created' => date("Y-m-d H:i:s")

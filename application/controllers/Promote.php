@@ -28,67 +28,72 @@ class Promote extends MY_Controller {
 		$this->load->view('v2/pages/promote/deals', $this->page_data);
 	}
 
-	public function create_deals(){
-		add_css(array(
-            "assets/plugins/dropzone/dist/dropzone.css",
-        ));
-        add_footer_js(array(
-            "assets/plugins/dropzone/dist/dropzone.js",
-        ));
-
+	public function create_deals()
+    {		
         $this->session->unset_userdata('dealsStealsId');
+
+        $this->page_data['enable_deals_steals'] = true;
 		$this->load->view('v2/pages/promote/add_deals', $this->page_data);
 	}
 
-	public function ajax_save_deals_steals(){
+	public function ajax_save_deals_steals()
+    {
 		$is_success = true;
 		$err_msg = '';
 
-		$post  = $this->input->post(); 
-		$user  = $this->session->userdata('logged');
+		$post    = $this->input->post(); 
+		$user_id = logged('id');
+        $company_id = logged('company_id');
 
-        if($this->session->userdata('dealsStealsId')){
-            $deals_id    = $this->session->userdata('dealsStealsId');
-            $dealsSteals = $this->DealsSteals_model->getById($deals_id);
-            if( $_FILES['image']['tmp_name'] != '' ){
-                $photo = $this->upload_photo();
-            }else{
-                $photo = $dealsSteals->photos;
-            }
-            
-            $data = [
-                'title' => $post['title'],
-                'description' => $post['description'],
-                'terms_conditions' => $post['terms'],
-                'deal_price' => $post['price'],
-                'original_price' => $post['price_original'],
-                'photos' => $photo,
-                'views_count' => 0,
-                'date_modified' => date("Y-m-d H:i:s")
-            ];
-            $dealsSteals = $this->DealsSteals_model->updateDealsSteals($deals_id, $data);
-            $is_success = true;
-        }else{
-            $photo = $this->upload_photo();
-            $data = [
-                'user_id' => $user['id'],
-                'title' => $post['title'],
-                'description' => $post['description'],
-                'terms_conditions' => $post['terms'],
-                'deal_price' => $post['price'],
-                'original_price' => $post['price_original'],
-                'photos' => $photo,         
-                'valid_from' => date("Y-m-d"),
-                'valid_to' => date("Y-m-d", strtotime("+1 month")),
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_modified' => date("Y-m-d H:i:s"),
-                'status' => $this->DealsSteals_model->statusDraft()
-            ];
-
-            $deals_steals_id = $this->DealsSteals_model->create($data);
-            $this->session->set_userdata('dealsStealsId', $deals_steals_id);
-            $is_success = true;
+        if( $post['price_deal'] > $post['price_original'] ){
+            $err_msg = 'Deal price must be less than or equal to original price';
+            $is_success = false;
         }
+
+        if( $is_success ){
+            if($this->session->userdata('dealsStealsId')){
+                $deals_id    = $this->session->userdata('dealsStealsId');
+                $dealsSteals = $this->DealsSteals_model->getById($deals_id);
+                if( $_FILES['image']['tmp_name'] != '' ){
+                    $photo = $this->upload_photo();
+                }else{
+                    $photo = $dealsSteals->photos;
+                }
+                
+                $data = [
+                    'title' => $post['title'],
+                    'description' => $post['description'],
+                    'terms_conditions' => $post['terms'],
+                    'deal_price' => $post['price_deal'],
+                    'original_price' => $post['price_original'],
+                    'photos' => $photo,
+                    'views_count' => 0,
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+                $dealsSteals = $this->DealsSteals_model->updateDealsSteals($deals_id, $data);
+                $is_success = true;
+            }else{
+                $photo = $this->upload_photo();
+                $data = [
+                    'user_id' => $user_id,
+                    'title' => $post['title'],
+                    'description' => $post['description'],
+                    'terms_conditions' => $post['terms'],
+                    'deal_price' => $post['price_deal'],
+                    'original_price' => $post['price_original'],
+                    'photos' => $photo,         
+                    'valid_from' => date("Y-m-d"),
+                    'valid_to' => date("Y-m-d", strtotime("+1 month")),
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s"),
+                    'status' => $this->DealsSteals_model->statusDraft()
+                ];
+
+                $deals_steals_id = $this->DealsSteals_model->create($data);
+                $this->session->set_userdata('dealsStealsId', $deals_steals_id);
+                $is_success = true;
+            }
+        }        
 
 		$json_data = ['is_success' => $is_success, 'err_msg' => $err_msg];
 		echo json_encode($json_data);
@@ -130,61 +135,66 @@ class Promote extends MY_Controller {
         $this->page_data['emailSendTo'] = $emailSendTo;
         $this->page_data['customers'] = $customers;
         $this->page_data['customerGroups'] = $customerGroups;
+        $this->page_data['enable_deals_steals'] = true;
         $this->load->view('v2/pages/promote/add_send_to', $this->page_data);
 	}
 
 	public function create_send_to()
     {       
-        $json_data = [
-            'is_success' => true,
-            'err_msg' => 'Cannot save data'
-        ];
+        $is_success = true;
+		$err_msg = '';
 
         $post = $this->input->post(); 
         $deals_steals_id = $this->session->userdata('dealsStealsId');
-                
-        $data_exclude_groups  = array();
-        $data_customers       = array();
-        $data_customer_groups = arraY();
-        if( $post['to_type'] == 3 ){
+
+        if( $deals_steals_id <= 0 ){
+            $is_success = false;
+            $err_msg = 'Cannot find data';
+        } 
+
+        if( $is_success ){
+            $data_exclude_groups  = [];
+            $data_customers       = [];
+            $data_customer_groups = [];
+            if( $post['to_type'] == 3 ){
                 //Use optionB data    
                 if( isset($post['optionB']['customer_id']) ){
                     foreach( $post['optionB']['customer_id'] as $key => $value ){
-                    	$data_customers[$value] = $value;
+                        $data_customers[$value] = $value;
                     }
                 }
-                
-
-        }elseif( $post['to_type'] == 2 ){
+            }elseif( $post['to_type'] == 2 ){
                 //Use optionC data
                 if(isset($post['optionC']['customer_group_id'])){
                     foreach( $post['optionC']['customer_group_id'] as $key => $value ){
-                    	$data_customer_groups[] = $value;
+                        $data_customer_groups[] = $value;
                     }
                 }
-        }
-
-        if( isset($post['optionA']['exclude_customer_group_id']) ){
-        	foreach( $post['optionA']['exclude_customer_group_id'] as $key => $value ){
-            	$data_exclude_groups[$value] = $value;
             }
+
+            if( isset($post['optionA']['exclude_customer_group_id']) ){
+                foreach( $post['optionA']['exclude_customer_group_id'] as $key => $value ){
+                    $data_exclude_groups[$value] = $value;
+                }
+            }
+
+            $data_setting = [
+                'customer_type' => $post['optionA']['customer_type_service'],
+                'sending_type' => $post['to_type'],
+                'certain_customers' => serialize($data_customers),
+                'certain_groups' => serialize($data_customer_groups),
+                'exclude_customer_groups' => serialize($data_exclude_groups)
+            ];
+
+            $dealsSteals = $this->DealsSteals_model->updateDealsSteals($deals_steals_id, $data_setting);
         }
 
-        $data_setting = [
-            'customer_type' => $post['optionA']['customer_type_service'],
-            'sending_type' => $post['to_type'],
-            'certain_customers' => serialize($data_customers),
-            'certain_groups' => serialize($data_customer_groups),
-            'exclude_customer_groups' => serialize($data_exclude_groups)
-        ];
-
-        $dealsSteals = $this->DealsSteals_model->updateDealsSteals($deals_steals_id, $data_setting);
-
-        echo json_encode($json_data);
+        $json_data = ['is_success' => $is_success, 'err_msg' => $err_msg];
+		echo json_encode($json_data);
     }
 
-    public function build_email(){
-        $user = $this->session->userdata('logged');
+    public function build_email()
+    {
         $cid  = logged('company_id');
         $deals_steals_id = $this->session->userdata('dealsStealsId');
 
@@ -193,33 +203,33 @@ class Promote extends MY_Controller {
 
         $this->page_data['company'] = $company;
         $this->page_data['dealsSteals'] = $dealsSteals;
+        $this->page_data['enable_deals_steals'] = true;
         $this->load->view('v2/pages/promote/build_email', $this->page_data);
     }
 
     public function create_email_message()
     {
-        $json_data = [
-                'is_success' => false,
-                'err_msg' => 'Cannot save data'
-        ];
-
+        $is_success = true;
+		$err_msg = '';
 
         $post = $this->input->post(); 
         $deals_steals_id = $this->session->userdata('dealsStealsId');
 
-        $data = [
-            'email_subject' => $post['email_subject'],
-            'email_body' => $post['email_body']
-        ];
-        $dealsSteals = $this->DealsSteals_model->updateDealsSteals($deals_steals_id,$data);
+        if( $deals_steals_id <= 0 ){
+            $is_success = false;
+            $err_msg = 'Cannot find data';
+        } 
 
-        $json_data = [
-                'is_success' => true,
-                'err_msg' => ''
-        ];
+        if( $is_success ){
+            $data = [
+                'email_subject' => $post['email_subject'],
+                'email_body' => $post['email_body']
+            ];
+            $dealsSteals = $this->DealsSteals_model->updateDealsSteals($deals_steals_id,$data);
+        }
 
-        echo json_encode($json_data);
-
+        $json_data = ['is_success' => $is_success, 'err_msg' => $err_msg];
+		echo json_encode($json_data);
     }
 
     public function preview_email_message()
@@ -230,9 +240,10 @@ class Promote extends MY_Controller {
         $deals_steals_id = $this->session->userdata('dealsStealsId');
 
         $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
-        
+
         $this->page_data['dealsSteals'] = $dealsSteals;
         $this->page_data['deals_price'] = $this->DealsSteals_model->dealStealPrice();
+        $this->page_data['enable_deals_steals'] = true;
         $this->load->view('v2/pages/promote/preview_email_message', $this->page_data);
     }
 
@@ -248,35 +259,40 @@ class Promote extends MY_Controller {
         $this->page_data['message'] = replaceSmartTags($message);
         $this->page_data['subject'] = $subject;
         $this->page_data['company'] = $company;
-        $this->load->view('promote/preview_email', $this->page_data);
+        $this->load->view('v2/pages/promote/preview_email', $this->page_data);
     }
 
     public function ajax_update_validity(){
-    	$json_data = [
-                'is_success' => false,
-                'err_msg' => 'Cannot save data'
-        ];
-
+    	$is_success = true;
+		$err_msg = '';
 
         $post = $this->input->post(); 
         $deals_steals_id = $this->session->userdata('dealsStealsId');
+
+        if( $deals_steals_id <= 0 ){
+            $is_success = false;
+            $err_msg = 'Cannot find data';
+        }elseif( strtotime($post['valid_from']) > strtotime($post['valid_to']) ){
+            $is_success = false;
+            $err_msg = 'Invalid valid from and to date. Valid from should be less than or equal to valid to date.';
+        }
         
-        $data = [
-            'valid_from' => date("Y-m-d",strtotime($post['valid_from'])),
-            'valid_to' => date("Y-m-d",strtotime($post['valid_to']))
-        ];
+        if( $is_success ){
+            $data = [
+                'valid_from' => date("Y-m-d",strtotime($post['valid_from'])),
+                'valid_to' => date("Y-m-d",strtotime($post['valid_to']))
+            ];
 
-        $dealsSteals = $this->DealsSteals_model->updateDealsSteals($deals_steals_id,$data);
+            $dealsSteals = $this->DealsSteals_model->updateDealsSteals($deals_steals_id,$data);
+        }
+        
 
-        $json_data = [
-                'is_success' => true,
-                'err_msg' => ''
-        ];
-
-        echo json_encode($json_data);
+        $json_data = ['is_success' => $is_success, 'err_msg' => $err_msg];
+		echo json_encode($json_data);
     }
 
-    public function payment(){
+    public function payment()
+    {
     	$this->load->model('CardsFile_model');
     	$cid  = logged('company_id');
         $deals_steals_id = $this->session->userdata('dealsStealsId');
@@ -287,36 +303,77 @@ class Promote extends MY_Controller {
         $this->page_data['creditCards'] = $creditCards;
         $this->page_data['dealsSteals'] = $dealsSteals;
         $this->page_data['deals_price'] = $this->DealsSteals_model->dealStealPrice();
+        $this->page_data['enable_deals_steals'] = true;
         $this->load->view('v2/pages/promote/payment', $this->page_data);
     }
 
-    public function ajax_activate_deals(){
+    public function ajax_activate_deals()
+    {
+        $this->load->model('Clients_model');
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->helper('converge_payment_helper');
+
     	$is_success = false;
-        $msg = '';
-
+        $msg = '';        
+        
         $post = $this->input->post();
+        $company_id = logged('company_id');
+        $client     = $this->Clients_model->getById($company_id);
+        $deals_steals_id = $this->session->userdata('dealsStealsId');
 
-        if( isset($post['payment_method_token']) ){
-            $deals_steals_id = $this->session->userdata('dealsStealsId');
+        if( $deals_steals_id > 0 && $client ){
+            $address    = $company->street.' '.$company->city.' '.$company->state;
+            $zip_code   = $company->postal_code;
+            $total_cost = $this->DealsSteals_model->dealStealPrice();
+            $paymentData = [
+                'amount' => $total_cost,
+                'card_number' => $post['card_number'],
+                'exp_month' => $post['exp_month'],
+                'exp_year' => $post['exp_year'],
+                'card_cvc' => $post['cvc'],
+                'address' => $address,
+                'zip' => $zip_code,
+            ];
+            $paymentResult = convergeSendSale($paymentData);
+            if( $paymentResult['is_success'] ){
+                $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
+                $data = [
+                    'status' => $this->DealsSteals_model->statusActive(), 
+                    'total_cost' => $total_cost, 
+                    'date_activated' => date("Y-m-d"), 
+                    'date_expiration' => date("Y-m-d", strtotime('+1 month'))
+                ];
+                $this->DealsSteals_model->updateDealsSteals($dealsSteals->id,$data);
 
-            $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
-            if( $dealsSteals ){
-                $total_cost = $this->DealsSteals_model->dealStealPrice();
-                $is_auto_renew = 0;
-                if( isset($post['is_auto_renew']) ){
-                	$is_auto_renew = 1;
-                }
+                // Record payment
+                $data_payment = [
+                    'company_id' => $company_id,
+                    'payment_id' => $paymentResult['ssl_txn_id'],
+                    'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiConverge(),
+                    'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypeDealsSteals(),
+                    'description' => 'Deals Steals : ' . $dealsSteals->title,
+                    'payment_date' => date('Y-m-d'),
+                    'total_amount' => $total_cost,
+                    'date_created' => date('Y-m-d H:i:s'),
+                ];
 
-                $data = ['status' => $this->DealsSteals_model->statusActive(), 'is_auto_renew' => $is_auto_renew, 'total_cost' => $total_cost, 'cards_file_id' => $post['payment_method_token'], 'order_number' => $post['order_number']];
-                $this->DealsSteals_model->updateDealsSteals($deals_steals_id,$data);
+                $id = $this->CompanySubscriptionPayments_model->create($data_payment);
+                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
+
+                $data = ['order_number' => $order_number];
+                $this->CompanySubscriptionPayments_model->update($id, $data);
 
                 $is_success = true;
-                $msg = 'Deals Steals was successfully updated.';
+                $msg = 'Deals Steals was successfully activated.';
+
+                //Activity Logs
+                $activity_name = 'Deals Steals : Activated deals ' . $dealsSteals->title; 
+                createActivityLog($activity_name);
+
             }else{
-                $msg = 'Cannot find data';
-            }  
-        }else{
-            $msg = 'Please select credit card';
+                $is_success = false;
+                $msg = $paymentResult['msg'];
+            }
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];

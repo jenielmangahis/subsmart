@@ -272,6 +272,7 @@ class Mycrm extends MY_Controller
         $this->load->model('CompanySubscriptionPayments_model');
         $this->load->model('IndustryType_model');
         $this->load->model('IndustryTemplateModules_model');
+        $this->load->helper('converge_payment_helper');
 
         $is_success = 0;
         $message = '';
@@ -293,7 +294,6 @@ class Mycrm extends MY_Controller
             $address = $company->street.' '.$company->city.' '.$company->state;
             $zip_code = $company->postal_code;
             $converge_data = [
-                'company_id' => $company->company_id,
                 'amount' => $amount,
                 'card_number' => $post['card_number'],
                 'exp_month' => $post['exp_month'],
@@ -302,7 +302,7 @@ class Mycrm extends MY_Controller
                 'address' => $address,
                 'zip' => $zip_code,
             ];
-            $result = $this->converge_send_sale($converge_data);
+            $result = convergeSendSale($converge_data);
             if ($result['is_success']) {
                 //$next_billing_date = date('Y-m-d', strtotime('+1 month'));
                 $data = [
@@ -335,7 +335,10 @@ class Mycrm extends MY_Controller
                 // Record payment
                 $data_payment = [
                     'company_id' => $company_id,
-                    'description' => 'Paid Membership - '.ucwords($post['subscription_type']),
+                    'payment_id' => $result['ssl_txn_id'],
+                    'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiConverge(),
+                    'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypePlanUpgrade(),
+                    'description' => 'Paid Membership - Plan Upgrade (' . ucwords($post['subscription_type']) . ')',
                     'payment_date' => date('Y-m-d'),
                     'total_amount' => $amount,
                     'date_created' => date('Y-m-d H:i:s'),
@@ -348,7 +351,7 @@ class Mycrm extends MY_Controller
                 $this->CompanySubscriptionPayments_model->update($id, $data);
 
                 //Activity Logs
-                $activity_name = 'MyCRM : Paid Membership ' . ucwords($post['subscription_type']); 
+                $activity_name = 'MyCRM : Paid Membership - Plan Upgrade (' . ucwords($post['subscription_type']) . ')'; 
                 createActivityLog($activity_name);
 
                 $is_success = 1;
@@ -369,6 +372,7 @@ class Mycrm extends MY_Controller
         $this->load->model('SubscriberNsmartUpgrade_model');
         $this->load->model('IndustryType_model');
         $this->load->model('IndustryTemplateModules_model');
+        $this->load->helper('converge_payment_helper');
 
         $is_success = 0;
         $message = '';
@@ -419,7 +423,6 @@ class Mycrm extends MY_Controller
             $address  = $company->street.' '.$company->city.' '.$company->state;
             $zip_code = $company->postal_code;
             $converge_data = [
-                'company_id' => $company->company_id,
                 'amount' => $amount,
                 'card_number' => $post['card_number'],
                 'exp_month' => $post['exp_month'],
@@ -428,7 +431,7 @@ class Mycrm extends MY_Controller
                 'address' => $address,
                 'zip' => $zip_code,
             ];
-            $result = $this->converge_send_sale($converge_data);
+            $result = convergeSendSale($converge_data);
             if ($result['is_success']) {
                 $data = [
                     'payment_method' => 'converge',
@@ -467,6 +470,9 @@ class Mycrm extends MY_Controller
                 // Record payment
                 $data_payment = [
                     'company_id' => $company_id,
+                    'payment_id' => $result['ssl_txn_id'],
+                    'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiConverge(),
+                    'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypeSubscription(),
                     'description' => 'Paid Membership - '.ucwords($client->recurring_payment_type),
                     'payment_date' => date('Y-m-d'),
                     'total_amount' => $amount,
@@ -481,6 +487,10 @@ class Mycrm extends MY_Controller
 
                 // Send mail
                 $this->send_invoice_email($payment_id);
+
+                //Activity Logs
+                $activity_name = 'MyCRM : Paid Subscription'; 
+                createActivityLog($activity_name);
 
                 $is_success = 1;
             } else {
@@ -805,6 +815,7 @@ class Mycrm extends MY_Controller
         $this->load->model('Clients_model');
         $this->load->model('CompanySubscriptionPayments_model');
         $this->load->model('SubscriberNsmartUpgrade_model');
+        $this->load->helper('converge_payment_helper');
 
         $is_success = 0;
         $message = '';
@@ -821,7 +832,6 @@ class Mycrm extends MY_Controller
             $address = $company->street.' '.$company->city.' '.$company->state;
             $zip_code = $company->postal_code;
             $converge_data = [
-                'company_id' => $company->company_id,
                 'amount' => $amount,
                 'card_number' => $post['card_number'],
                 'exp_month' => $post['exp_month'],
@@ -830,7 +840,7 @@ class Mycrm extends MY_Controller
                 'address' => $address,
                 'zip' => $zip_code,
             ];
-            $result = $this->converge_send_sale($converge_data);
+            $result = convergeSendSale($converge_data);
             if ($result['is_success']) {
                 $data = [
                     'number_of_license' => $new_num_license,
@@ -840,6 +850,9 @@ class Mycrm extends MY_Controller
                 // Record payment
                 $data_payment = [
                     'company_id' => $company_id,
+                    'payment_id' => $result['ssl_txn_id'],
+                    'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiConverge(),
+                    'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypeLicense(),
                     'description' => 'Paid Plan License',
                     'payment_date' => date('Y-m-d'),
                     'total_amount' => $amount,
@@ -855,7 +868,11 @@ class Mycrm extends MY_Controller
                 $is_success = 1;
 
                 //Activity Logs
-                $activity_name = 'MyCRM : Purchase plan license'; 
+                if( $post['num_license'] > 1 ){
+                    $activity_name = 'MyCRM : Purchased ' . $post['num_license'] . ' plan licenses'; 
+                }else{
+                    $activity_name = 'MyCRM : Purchased ' . $post['num_license'] . ' plan license'; 
+                }
                 createActivityLog($activity_name);
 
             } else {
@@ -1077,7 +1094,6 @@ class Mycrm extends MY_Controller
             $address = $company->street.' '.$company->city.' '.$company->state;
             $zip_code = $company->postal_code;
             $converge_data = [
-                'company_id' => $company->company_id,
                 'amount' => $amount,
                 'card_number' => $post['card_number'],
                 'exp_month' => $post['exp_month'],
@@ -1086,7 +1102,7 @@ class Mycrm extends MY_Controller
                 'address' => $address,
                 'zip' => $zip_code,
             ];
-            $result = $this->converge_send_sale($converge_data);
+            $result = convergeSendSale($converge_data);
             if ($result['is_success'] == 1) {
                 $new_total_num_license = $client->number_of_license + $post['num_license'];
                 $data = [
@@ -1106,7 +1122,10 @@ class Mycrm extends MY_Controller
                 // Record payment
                 $data_payment = [
                     'company_id' => $company_id,
-                    'description' => 'Renew Membership, '.ucfirst($post['membership_plan_type']),
+                    'payment_id' => $result['ssl_txn_id'],
+                    'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiConverge(),
+                    'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypeSubscription(),
+                    'description' => 'Renew Membership - '.ucfirst($post['membership_plan_type']),
                     'payment_date' => date('Y-m-d'),
                     'total_amount' => $amount,
                     'date_created' => date('Y-m-d H:i:s'),
@@ -1122,6 +1141,10 @@ class Mycrm extends MY_Controller
 
                 // Send mail
                 $this->send_invoice_email($payment_id);
+
+                //Activity Logs
+                $activity_name = 'MyCRM : Renew membership'; 
+                createActivityLog($activity_name);
 
                 $is_success = 1;
             } else {
