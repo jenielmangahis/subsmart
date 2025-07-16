@@ -10,7 +10,6 @@ $(document).ready(function () {
             let rowCollapse = '';
             let colspan = _this.find("td").length;
             let headColIndex = 1;
-
             _this.find("td:nth-child(1)").addClass("show");
 
             if (withIcon) {
@@ -20,7 +19,7 @@ $(document).ready(function () {
                 _table.find("thead td:nth-child(1)").addClass("show");
                 _table.find("thead td:nth-child(2)").addClass("show");
                 _this.find("td:nth-child(2)").addClass("show");
-                _this.find("td:nth-child(2)").append("<i class='bx bx-chevron-down'></i>");
+                _this.find("td:nth-child(3)").append("<i class='bx bx-chevron-down'></i>");
                 headColIndex = 2;
             }
             else {
