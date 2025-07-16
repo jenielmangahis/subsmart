@@ -26,17 +26,58 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter primary h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-badge-check'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id=""><?= $activeSummaryDeals->total_records; ?></h2>
+                                    <span>Total Active Deals</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter secondary h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-dollar-circle'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id=""><?= number_format($activeSummaryDeals->sum_total_deal_price,2,".",","); ?></h2>
+                                    <span>Total Amount Active Deals</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-12 col-md-6 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="">
+                        </div>
+                    </div> 
+                    <div class="col-6 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Filter by Status: Active Deals</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
+                        </div>
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Filter : <?= $filter; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a name="btn_filter" class="dropdown-item" data-id="filter_active" href="javascript:void(0);">Active Deals</a></li>
-                                <li><a name="btn_filter" class="dropdown-item" data-id="filter_scheduled" href="javascript:void(0);">Scheduled</a></li>
-                                <li><a name="btn_filter" class="dropdown-item" data-id="filter_ended" href="javascript:void(0);">Ended</a></li>
-                                <li><a name="btn_filter" class="dropdown-item" data-id="filter_draft" href="javascript:void(0);">Draft</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-id="all" href="javascript:void(0);">All Deals</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-id="active" href="javascript:void(0);">Active Deals</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-id="ended" href="javascript:void(0);">Ended Deals</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-id="draft" href="javascript:void(0);">Draft Deals</a></li>
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
@@ -46,48 +87,173 @@
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table" id="tbl-deals-steals">
-                    <thead>
-                        <tr>
-                            <td class="table-icon"></td>
-                            <td data-name="Deal" style="width:60%;">Deal</td>                            
-                            <td data-name="Valid" style="width:20%;">Validity</td>
-                            <td data-name="Views">Views</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody id="deals_container">
-                    </tbody>
-                </table>
+                <form id="frm-with-selected">
+                    <table class="nsm-table" id="tbl-deals-steals">
+                        <thead>
+                            <tr>
+                                <td class="table-icon text-center sorting_disabled">
+                                    <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                                </td>
+                                <td class="table-icon"></td>
+                                <td data-name="Deal" style="width:60%;">Deal</td>                            
+                                <td data-name="Valid" style="width:20%;">Validity</td>
+                                <td data-name="Views">Views</td>
+                                <td data-name="Status">Status</td>
+                                <td data-name="Manage"></td>
+                            </tr>
+                        </thead>
+                        <tbody id="deals_container">
+                            <?php if (!empty($dealsSteals)) : ?>
+                                <?php
+                                foreach ($dealsSteals as $ds) :
+                                    switch ($ds->status):
+                                        case "1":
+                                            $badge = "success";
+                                            break;
+                                        case "3":
+                                            $badge = "primary";
+                                            break;
+                                        case "2":
+                                            $badge = "secondary";
+                                            break;
+                                        default:
+                                            $badge = "";
+                                            break;
+                                    endswitch;
+                                ?>
+                                    <tr>
+                                        <td>
+                                            <input class="form-check-input row-select table-select" name="deals[]" type="checkbox" value="<?= $job->id; ?>">
+                                        </td>
+                                        <td>
+                                            <div class="table-row-icon img" style="background-image: url('<?= base_url("uploads/deals_steals/" . $ds->company_id . "/" . $ds->photos); ?>')"></div>
+                                        </td>
+                                        <td class="fw-bold show nsm-text-primary">
+                                            <label class="d-block"><?= $ds->title; ?></label>
+                                            <label class="text-muted">$<?= number_format($ds->deal_price, 2); ?><label>
+                                        </td>            
+                                        <td><?= date("m/d/Y",strtotime($ds->valid_from)) . ' to ' . date("m/d/Y",strtotime($ds->valid_to)); ?></td>
+                                        <td><?= $ds->views_count > 0 ? $ds->views_count : 0; ?></td>
+                                        <td><span class="nsm-badge <?= $badge ?>"><?= $statusOptions[$ds->status]; ?></span></td>
+                                        <td>
+                                            <div class="dropdown table-management">
+                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li>
+                                                        <a class="dropdown-item row-btn-view" name="dropdown_list" data-id="<?= $ds->id; ?>" href="javascript:void(0);">View</a>
+                                                    </li>                                                                                            
+                                                    <?php if ($ds->status != $status_ended) : ?>
+                                                        <li>
+                                                            <a class="dropdown-item" name="dropdown_edit" href="<?php echo base_url('promote/edit_deals/' . $ds->id) ?>">Edit</a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item close-item" name="dropdown_close_deal" href="javascript:void(0);" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>">Close Deal</a>
+                                                        </li>
+                                                    <?php endif; ?>
+                                                    <li>
+                                                        <a class="dropdown-item" name="dropdown_bookings" href="<?= base_url('promote/bookings/'. $ds->id); ?>">Bookings</a>
+                                                    </li>    
+                                                    <li>
+                                                        <a class="dropdown-item delete-item" name="dropdown_delete" href="javascript:void(0);" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>">Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="nsm-empty">
+                                            <span>No results found.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </form>
             </div>
+
+            <div class="modal fade nsm-modal fade" id="modalViewDeals" aria-labelledby="modalViewDealsLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title" id="new_feed_modal_label">View Deals</span>
+                            <button name="btn_close_modal" type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="view-deals-container"></div>
+                        </div>             
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function() {
-        loadDeals();
         let activeTab = '<?= $status_active; ?>';
 
-        $(".select-filter .dropdown-item").on("click", function() {
-            let _this = $(this);
-
-            _this.closest(".dropdown").find(".dropdown-toggle span").html("Filter by Status: " + _this.html());
-
-            if (_this.attr("data-id") == "filter_scheduled") {
-                loadDeals('<?= $status_scheduled; ?>');
-                activeTab = 'scheduled';
-            } else if (_this.attr("data-id") == "filter_ended") {
-                loadDeals('<?= $status_ended; ?>');
-                activeTab = 'closed';
-            } else if (_this.attr("data-id") == "filter_draft") {
-                loadDeals('<?= $status_draft; ?>');
-                activeTab = 'draft';
-            } else {
-                loadDeals();
-                activeTab = '<?= $status_active; ?>';
+        $(".nsm-table").nsmPagination();
+        $("#search_field").on("input", debounce(function() {
+            let search = $(this).val();
+            if( search == '' ){
+                $(".nsm-table").nsmPagination();
+            }else{
+                tableSearch($(this));        
             }
+            
+        }, 1000));
+
+        $(document).on('change', '#select-all', function(){
+            $('.row-select:checkbox').prop('checked', this.checked);  
+            let total= $('input[name="deals[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
+        });
+
+        $(document).on('change', '.row-select', function(){
+            let total= $('input[name="deals[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
+        });
+
+        $(".select-filter .dropdown-item").on("click", function() {
+            let filter = $(this).attr('data-id');
+            if( filter == 'all' ){
+                location.href = base_url + 'promote/deals';
+            }else{
+                location.href = base_url + 'promote/deals?filter=' + filter;
+            }
+        });
+
+        $(document).on('click', '.row-btn-view', function(){
+            let deal_id = $(this).attr('data-id');
+
+            $('#modalViewDeals').modal('show');
+
+            $.ajax({
+                type: 'POST',
+                url: base_url + 'promote/deals/_view',
+                data: {deal_id: deal_id},
+                success: function(html) {
+                    $('#view-deals-container').html(html);
+                },
+                beforeSend: function(){
+                    $('#view-deals-container').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
         });
 
         $(document).on("click", ".close-item", function() {
@@ -97,7 +263,7 @@
 
             Swal.fire({
                 title: 'Close Deal',
-                text: "Are you sure you want close this Deal?",
+                html: `Are you sure you want close deals <b>${name}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -122,7 +288,8 @@
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
                                     if (result.value) {
-                                        loadDeals(activeTab);
+                                        //loadDeals(activeTab);
+                                        location.reload();
                                     }
                                 });
                             } else {
@@ -147,7 +314,7 @@
 
             Swal.fire({
                 title: 'Delete Deal',
-                text: "Are you sure you want delete this Deal?",
+                html: `Are you sure you want delete deals <b>${name}</b>?`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -170,9 +337,9 @@
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
-                                    if (result.value) {
-                                        loadDeals(activeTab);
-                                    }
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
                                 });
                             } else {
                                 Swal.fire({
@@ -188,6 +355,57 @@
                 }
             });
         });
+    });
+
+    $(document).on('click', '#with-selected-delete', function(){
+        let total= $('input[name="deals[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Deals',
+                html: `Are you sure you want to delete selected rows?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'promote/deals/_delete_selected',
+                        dataType: 'json',
+                        data: $('#frm-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                    title: 'Delete Jobs',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
     });
 
     function loadDeals(status = '<?= $status_active; ?>') {
