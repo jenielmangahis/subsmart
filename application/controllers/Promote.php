@@ -17,14 +17,54 @@ class Promote extends MY_Controller {
         $this->load->model('CustomerGroup_model');
 	}
 
-	public function deals(){
-        $this->page_data['page']->title = 'Deals & Steals';
-        $this->page_data['page']->parent = 'Marketing';
+	public function deals()
+    {        
+        $company_id  = logged('company_id');
 
-		$this->page_data['status_active']    = $this->DealsSteals_model->statusActive();                
+        $filter = 'All Deals';
+
+        if( get('filter') ){
+            switch (get('filter')) {
+                case 'active':
+                    $status_value = 1;
+                    $filter = 'Active Deals';
+                    break;
+                case 'scheduled':
+                    $status_value = 2;
+                    $filter = 'Scheduled Deals';
+                    break;
+                case 'ended':
+                    $status_value = 3;
+                    $filter = 'Ended Deals';
+                    break;
+                case 'draft':
+                    $status_value = 0;
+                    $filter = 'Draft Deals';
+                    break;
+                default:
+                    $status_value = 1;
+                    $filter = 'Active Deals';
+                    break;
+            }
+            $conditions[] = ['field' => 'deals_steals.status', 'value' => $status_value];
+            $dealsSteals = $this->DealsSteals_model->getAllByCompanyId($company_id, [], $conditions);
+        }else{
+            $dealsSteals = $this->DealsSteals_model->getAllByCompanyId($company_id, [], []);
+        }        
+        
+        $activeSummaryDeals = $this->DealsSteals_model->activeSummaryDealsByCompanyId($company_id);
+        $statusOptions = $this->DealsSteals_model->statusOptions();
+
+        $this->page_data['dealsSteals']      = $dealsSteals;
+        $this->page_data['activeSummaryDeals'] = $activeSummaryDeals;
+        $this->page_data['statusOptions']    = $statusOptions;
+        $this->page_data['filter']           = $filter;
+ 		$this->page_data['status_active']    = $this->DealsSteals_model->statusActive();                
         $this->page_data['status_scheduled'] = $this->DealsSteals_model->statusScheduled();
         $this->page_data['status_ended']     = $this->DealsSteals_model->statusEnded();
         $this->page_data['status_draft']     = $this->DealsSteals_model->statusDraft();
+        $this->page_data['page']->title = 'Deals & Steals';
+        $this->page_data['page']->parent = 'Marketing';
 		$this->load->view('v2/pages/promote/deals', $this->page_data);
 	}
 
@@ -688,13 +728,19 @@ class Promote extends MY_Controller {
     public function bookings($id){
         $this->load->model('DealsBookings_model');
 
-        $bookings    = $this->DealsBookings_model->getAllByDealsId($id);
-        $dealsSteals = $this->DealsSteals_model->getById($id);
+        $company_id = logged('company_id');
 
-        $this->page_data['dealsSteals'] = $dealsSteals;
-        $this->page_data['bookings'] = $bookings;
-        $this->page_data['page']->tab = 'Bookings';
-        $this->load->view('v2/pages/promote/bookings', $this->page_data); 
+        $dealsSteals = $this->DealsSteals_model->getById($id);
+        if( $dealsSteals && $dealsSteals->company_id == $company_id ){
+            $bookings    = $this->DealsBookings_model->getAllByDealsId($dealsSteals->id);        
+
+            $this->page_data['dealsSteals'] = $dealsSteals;
+            $this->page_data['bookings'] = $bookings;
+            $this->page_data['page']->tab = 'Bookings';
+            $this->load->view('v2/pages/promote/bookings', $this->page_data); 
+        }else{
+            redirect('promote/deals');
+        }
     }
 
     public function view_deals_payment($id){
@@ -748,6 +794,18 @@ class Promote extends MY_Controller {
         ob_end_clean();
         $obj_pdf->writeHTML($content, true, false, true, false, '');
         $obj_pdf->Output($title, 'I');
+    }
+
+    public function ajax_view_deals_steals()
+    {
+        $post = $this->input->post();
+        $company_id  = logged('company_id');
+
+        $dealsSteals = $this->DealsSteals_model->getById($post['deal_id']);
+        if( $dealsSteals && $dealsSteals->company_id == $company_id ){
+            $this->page_data['dealsSteals'] = $dealsSteals;
+            $this->load->view('v2/pages/promote/ajax_view_deals_steals', $this->page_data);
+        }
     }
 }
 /* End of file Promote.php */
