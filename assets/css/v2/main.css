@@ -109,7 +109,7 @@ body {
 .nsm-sidebar-bg.shown {
   opacity: 1;
   visibility: visible;
-  z-index: 2;
+  z-index: 3;
 }
 
 .nsm-container.nsm-mobile .nsm-logo-link {
@@ -2257,4 +2257,8 @@ span.select2-selection {
   .select2-results__option
   .select2-results__option {
   padding-left: 0.5em !important;
+}
+.btn-nsm, .btn-nsm:hover {
+    background-color: #6a4a86 !important;
+    color: #ffffff !important;
 }
