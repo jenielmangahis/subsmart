@@ -39,11 +39,7 @@
                                         <?php if ($client->is_plan_active == 1) : ?>
                                             Pay Subscription
                                         <?php else : ?>
-                                            <?php if( in_array($client->id, exempted_company_ids()) ){ ?>
-                                                Pay Subscription
-                                            <?php }else{ ?>
-                                                Renew Subscription
-                                            <?php } ?>                                            
+                                            Renew Subscription                                      
                                         <?php endif; ?>
                                     </button>
                                 </div>
