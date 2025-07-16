@@ -169,7 +169,7 @@
                                                 
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <label class="content-title">Recurring Payments</label>
+                                                <label class="content-title">Recurring Payments <i class="bx bx-fw bx-help-circle" id="popover-recurring-payments"></i></label>                                                
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <?php if ($client->is_auto_renew == 1) : ?>
@@ -177,7 +177,6 @@
                                                 <?php else : ?>
                                                     Inactive <button class="nsm-button btn-sm ms-3 btn-activate-recurring">Activate</button>
                                                 <?php endif; ?>
-                                                <label class="d-block content-subtitle">Auto renew your subscription and charge your card at the end of the billing cycle.</label>
                                             </div>
                                         </div>
                                     </div>
@@ -343,6 +342,15 @@
         <?php } ?>
 
         $(".nsm-table").nsmPagination();
+
+        $('#popover-recurring-payments').popover({
+            placement: 'top',
+            html : true, 
+            trigger: "hover focus",
+            content: function() {
+                return 'Auto renew your subscription and charge your card at the end of the billing cycle.';
+            } 
+        });
         
         $(".btn-activate-recurring").on("click", function() {
             updateRecurring();

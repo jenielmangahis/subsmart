@@ -27,7 +27,7 @@
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#add_image_modal">
-                                <i class='bx bx-fw bx-image-add'></i> Add New
+                                <i class='bx bx-plus' ></i> Add New
                             </button>
                         </div>
                     </div>
@@ -85,20 +85,18 @@
             $("#edit_image_caption_modal").modal("show");
         });
 
-        $(document).on("submit", "#form-edit-image-caption", function(e) {
+        $(document).on("submit", "#form-edit-image-caption", function(e) {            
+            e.preventDefault();            
             let _this = $(this);
-            e.preventDefault();
-
-            var url = "<?php echo base_url('users/_update_work_image_caption'); ?>";
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
-
+            
             $.ajax({
                 type: 'POST',
-                url: url,
+                url: base_url + 'users/_update_work_image_caption',
                 data: _this.serialize(),
                 dataType: "json",
                 success: function(result) {
+                    $('#btn-update-image-caption').html("Saving");
+                    $('#btn-update-image-caption').prop("disabled", true);
                     Swal.fire({
                         title: 'My Business Portfolio',
                         text: "Image caption was successfully updated",
@@ -106,9 +104,9 @@
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
                     }).then((result) => {
-                        if (result.value) {
+                        //if (result.value) {
                             location.reload();
-                        }
+                        //}
                     });
 
                     $("#edit_image_caption_modal").modal("hide");
@@ -116,6 +114,10 @@
                     _this.find("button[type=submit]").html("Save");
                     _this.find("button[type=submit]").prop("disabled", false);
                 },
+                beforeSend: function(){
+                    $('#btn-update-image-caption').html('<span class="bx bx-loader bx-spin"></span>');
+                    $('#btn-update-image-caption').prop("disabled", true);
+                }
             });
         });
 
@@ -165,9 +167,7 @@
             let _this = $(this);
             e.preventDefault();
 
-            var url = "<?php echo base_url('users/upload_work_picture_v2'); ?>";
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
+            var url = base_url + "user/_upload_portfolio_image";            
             let formData = new FormData(_this[0]);   
 
             $.ajax({
@@ -177,27 +177,42 @@
                 contentType: false,
                 cache: false,
                 processData:false,
-                success: function(result) {
-                    console.log(result);
-                    Swal.fire({
-                        title: 'My Business Portfolio',
-                        text: "New image was added successfully.",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        if (result.value) {
-                            location.reload();
-                        }
-                    });
-                    
-                    $("#add_image_modal").modal("hide");
+                dataType:'json',
+                success: function(data) {
+                    $('#btn-portfolio-add-image').html("Save");
+                    $('#btn-portfolio-add-image').prop("disabled", false);
 
-                    _this.find("button[type=submit]").html("Save");
-                    _this.find("button[type=submit]").prop("disabled", false);
+                    if (data.is_success) {
+                        $("#add_image_modal").modal("hide");
+                        Swal.fire({
+                            title: 'My Business Portfolio',
+                            text: "Photo was uploaded successfully.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                            location.reload();
+                            //}
+                        });                    
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function(){
+                    $('#btn-portfolio-add-image').html('<span class="bx bx-loader bx-spin"></span>');
+                    $('#btn-portfolio-add-image').prop("disabled", true);
                 },
                 error: function(result){
-                    console.log(result);
+                    
                 }
             });
         });

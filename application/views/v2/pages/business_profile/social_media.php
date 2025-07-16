@@ -133,7 +133,7 @@
             let _this = $(this);
             e.preventDefault();
 
-            var url = "<?php echo base_url('users/update_social_media'); ?>";
+            var url = base_url + "users/update_social_media";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -151,7 +151,7 @@
                 success: function(result) {
                     if (result.is_success == 1) {
                         Swal.fire({
-                            title: 'Save Successful!',
+                            title: 'Social Media',
                             text: "Social media links was successfully updated.",
                             icon: 'success',
                             showCancelButton: false,

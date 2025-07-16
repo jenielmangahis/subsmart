@@ -76,8 +76,8 @@
                         class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
-                <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-edit-image-caption', 'autocomplete' => 'off']); ?>
-                <?php echo form_input(['name' => 'image_key', 'type' => 'hidden', 'value' => '', 'id' => 'caption_image_key']); ?>
+                <form id="form-edit-image-caption">
+                <input type="hidden" name="image_key" id="caption_image_key" value="" />                
                 <div class="row g-3">
                     <div class="col-12">
                         <label class="content-subtitle fw-bold d-block mb-2">Caption</label>
@@ -85,11 +85,11 @@
                             required />
                     </div>
                 </div>
-                <?php echo form_close(); ?>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="nsm-button primary" form="form-edit-image-caption">Save</button>
+                <button type="submit" class="nsm-button primary" id="btn-update-image-caption" form="form-edit-image-caption">Save</button>
             </div>
         </div>        
     </div>
