@@ -1549,6 +1549,7 @@ $route['promote/invoice_pdf/(:any)'] = 'Promote/deals_invoice_pdf/$1';
 $route['promote/view_deals/(:any)'] = 'Promote/view_deals/$1';
 $route['promote/bookings/(:any)'] = 'Promote/bookings/$1';
 $route['promote/view_deals_payment/(:any)'] = 'Promote/view_deals_payment/$1';
+$route['promote/deals/_delete_selected'] = 'Promote/ajax_delete_selected';
 $route['promote/order_pdf/(:any)'] = 'Promote/deals_order_pdf/$1';
 $route['deal/booking/(:num)'] = 'Pages/deals_booking/$1';
 $route['deal/(:any)/(:num)'] = 'Pages/deals_view/$1/$2';
