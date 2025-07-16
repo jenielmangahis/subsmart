@@ -4,6 +4,11 @@
     text-decoration:none;
     color:inherit;
 }
+.btn-nsm-custom {
+    color: #ffffff; 
+    background-color: #6a4a86; 
+    margin-top: -2px;
+}
 </style>
 <?php if (hasPermissions('WORKORDER_MASTER')) : ?>
     <div class="nsm-fab-container">
@@ -91,6 +96,18 @@
                         </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
+
+                        <?php if(checkRoleCanAccessModule('invoice', 'write')){ ?>
+                            <div class="dropdown d-inline-block">
+                                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                    <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end select-filter"> 
+                                    <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                                </ul>
+                            </div>   
+                        <?php } ?>   
+
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter By Status: <?= $filter_status != '' ? ucwords($filter_status) : 'All'; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
@@ -99,20 +116,47 @@
                                 <li><a class="dropdown-item" href="<?php echo base_url('invoice/recurring') ?>">All</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('invoice/recurring/paid') ?>">Paid</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('invoice/recurring/unpaid') ?>">Unpaid</a></li>
-                                </ul>
+
+                                <li><a class="dropdown-item" href="<?php echo base_url('invoice/recurring/draft') ?>">Draft</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('invoice/recurring/partially_paid') ?>">Partially Paid</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('invoice/recurring/due') ?>">Due</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('invoice/recurring/overdue') ?>">Overdue</a></li>
+                            </ul>
                         </div>
-                        <div class="nsm-page-buttons page-button-container">
+
+                        <!-- <div class="nsm-page-buttons page-button-container">
                             <?php if (hasPermissions('WORKORDER_MASTER')) : ?>
                                 <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('invoice/add') ?>'">
                                     <i class='bx bx-fw bx-receipt'></i> Add New Invoice
                                 </button>
                             <?php endif; ?>
-                        </div>
+                        </div> -->
+
+                        <div class="nsm-page-buttons page-button-container">                            
+                            <?php if(checkRoleCanAccessModule('invoice', 'write')){ ?>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-nsm btn-nsm-custom" id="btn-add-new-invoice"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Add Recurring Invoice</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split btn-nsm-custom" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                
+                                    <li><a class="dropdown-item" id="export-invoice-list" href="javascript:void(0);">Export</a></li>                               
+                                    <li><a class="dropdown-item" id="archived-invoice-list" href="javascript:void(0);">Manage Archived</a></li>                               
+                                </ul>
+                            </div>
+                            <?php } ?>
+                        </div>  
                     </div>
                 </div>
+                <form id="frm-with-selected">
                 <table class="nsm-table" id="tbl-invoice-recurring">
                     <thead>
                         <tr>
+                            <?php if(checkRoleCanAccessModule('invoice', 'write')){ ?>
+                            <td class="table-icon text-center sorting_disabled">
+                                <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                            </td>
+                            <?php } ?>                            
                             <td class="table-icon"></td>
                             <td data-name="Invoice Number">Invoice Number</td>
                             <td data-name="Customer">Customer</td>
@@ -162,6 +206,11 @@
                                     endswitch;                                    
                                 ?>
                                 <tr>
+                                    <?php if(checkRoleCanAccessModule('invoice', 'write')){ ?>
+                                    <td>
+                                        <input class="form-check-input row-select table-select" name="invoice[]" type="checkbox" value="<?= $invoice->id; ?>">
+                                    </td>
+                                    <?php } ?>                                      
                                     <td><div class="table-row-icon"><i class='bx bx-calendar-alt'></i></div></td>
                                     <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('invoice/genview/' . $invoice->id) ?>'"><?= formatInvoiceNumber($invoice->invoice_number) ?></td>
                                     <td class="nsm-text-primary"><?= $invoice->customer_name; ?></td>
@@ -213,6 +262,7 @@
                         <?php } ?>
                     </tbody>
                 </table>
+                </form>
             </div>
         </div>
     </div>
@@ -236,6 +286,21 @@
             </form>
         </div>
     </div>
+
+    <div class="modal fade nsm-modal fade" id="modal-archived-invoices" aria-labelledby="modal-archived-invoices-label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form method="post" id="quick-add-event-form">   
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title">Archived Recurring Invoices</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body" id="invoices-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+                </div>
+            </form>
+        </div>
+    </div>    
+
 </div>
 
 <script type="text/javascript">
@@ -392,6 +457,305 @@
                 }
             });
         });
+
+        $(document).on("click", "#btn-add-new-invoice", function(){
+            let url = "<?php echo base_url('invoice/add'); ?>";
+            location.href = url;            
+        });
+        
+        $("#export-invoice-list").on("click", function() {
+            location.href = "<?php echo base_url('invoice/export_list?is_recurring=1'); ?>";
+        });   
+        
+        $('#archived-invoice-list').on('click', function(){
+            $('#modal-archived-invoices').modal('show');
+            $.ajax({
+                type: "POST",
+                url: base_url + "invoice/_recurring_archived_list",  
+                success: function(html) {    
+                    $('#invoices-archived-list-container').html(html);                          
+                },
+                beforeSend: function() {
+                    $('#invoices-archived-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        }); 
+        
+        $(document).on('change', '#select-all', function(){
+            $('.row-select:checkbox').prop('checked', this.checked);  
+            let total= $('input[name="invoice[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
+        });
+
+        $(document).on('change', '.row-select', function(){
+            let total= $('input[name="invoice[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
+        });   
+        
+        $(document).on('click', '#with-selected-delete', function(){
+            let total= $('input[name="invoice[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Delete Invoice',
+                    html: `Are you sure you want to delete selected invoices?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'invoice/_archive_selected_invoices',
+                            dataType: 'json',
+                            data: $('#frm-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                        title: 'Delete Invoice',
+                                        text: "Data deleted successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        });           
+
+        //For Achived Modal List - Start
+        $(document).on('change', '#select-all-archived', function(){
+            $('.row-select-archived:checkbox').prop('checked', this.checked);  
+            let total= $('input[name="invoice[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked-arhived').text(`(${total})`);
+            }else{
+                $('#num-checked-arhived').text('');
+            }
+        });
+
+        $(document).on('change', '.row-select-archived', function(){
+            let total= $('input[name="invoice[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked-arhived').text(`(${total})`);
+            }else{
+                $('#num-checked-arhived').text('');
+            }
+        });
+        
+        $(document).on('click', '#with-selected-restore', function(){
+            let total= $('input[name="invoice[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Restore Invoices',
+                    html: `Are you sure you want to restore the selected invoices?`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'invoice/_restore_selected_invoices',
+                            dataType: 'json',
+                            data: $('#frm-with-selected-archived').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                        title: 'Restore Invoice',
+                                        text: "Data restore successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        }); 
+
+        $(document).on('click', '#with-selected-permanent-delete', function(){
+            let total= $('input[name="invoice[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Delete Invoices Permanently',
+                    html: `Would you like to permanently delete the selected invoices? You will no longer recover this data.`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'invoice/_delete_permanent_selected_invoices',
+                            dataType: 'json',
+                            data: $('#frm-with-selected-archived').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                        title: 'Permanently Delete Invoice',
+                                        text: "Data permanently delete successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        }); 
+
+        $(document).on('click', '.btn-restore-invoice', function(){
+            var invoice_id = $(this).attr('data-id');
+            var invoice_number = $(this).attr('data-invoicenumber');
+
+            Swal.fire({
+                title: 'Restore Invoice Data',
+                html: `Proceed with restoring invoice data <b>${invoice_number}</b>?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {                    
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "invoice/_restore_archived",
+                        data: {invoice_id:invoice_id},
+                        dataType:'json',
+                        success: function(result) {                            
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-invoices').modal('hide');
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Invoice data was successfully restored.',
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '.btn-permanent-delete-invoice', function(){
+            var invoice_id     = $(this).attr('data-id');
+            var invoice_number = $(this).attr('data-invoicenumber');
+
+            Swal.fire({
+                title: 'Permanent Delete Invoice Data',
+                html: `Would you like to permanently delete the invoice <b>#${invoice_number}</b>? You will no longer recover this data.`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {                    
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "invoice/_permanent_delete",
+                        data: {invoice_id:invoice_id},
+                        dataType:'json',
+                        success: function(result) {                            
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-invoices').modal('hide');
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Invoice data was successfully deleted permanently.',
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });        
+        //For Achived Modal List - End          
+            
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

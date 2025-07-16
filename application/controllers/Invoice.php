@@ -260,7 +260,6 @@ class Invoice extends MY_Controller
             $i->bill_start_date = $start_date;
             $i->bill_end_date = $end_date;
         }
-
         
         $totalPaidInvoicesV2 = $this->invoice_model->getTotalPaidRecurringInvoiceByCompanyIdV2($cid, []);
         $totalPaidInvoices   = $this->invoice_model->getTotalPaidRecurringInvoiceByCompanyId($cid, []);
@@ -3620,6 +3619,17 @@ class Invoice extends MY_Controller
         $this->load->view("v2/pages/invoice/ajax_archived_list", $this->page_data);
     }  
 
+    public function ajax_recurring_archived_list()
+    {
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $invoices = $this->invoice_model->get_company_recurring_archived_invoices($cid);
+
+        $this->page_data['invoices'] = $invoices;
+        $this->load->view("v2/pages/invoice/ajax_archived_list", $this->page_data);
+    } 
+
     public function ajax_permanent_delete()
     {
         $is_success = 0;
@@ -3758,6 +3768,70 @@ class Invoice extends MY_Controller
 
         echo json_encode($return);    
     }
+
+	public function export_list()
+	{
+		$this->load->model('users_model');
+		$this->load->model('roles_model');
+
+        $filter_by = [];
+        $type  = "";
+        $order = "";
+
+		$role_id = logged('role');
+		$cid     = logged('company_id');
+
+        $filter_by = array(
+            'order' => $order, 
+            //'is_recurring' => !empty(get('is_recurring')) ? get('is_recurring') : 0
+        );
+
+        if(!empty(get('is_recurring'))) {
+            $type = get('is_recurring');
+        }
+
+        $invoices_data = $this->invoice_model->filterBy($filter_by, $cid, $type);
+
+		$delimiter = ",";
+		$time      = time();
+		$filename  = "invoice_list_" . $time . ".csv";
+
+		$f = fopen('php://memory', 'w');
+
+		$fields = array('Invoice Number', 'Invoice Type', 'Date Issued', 'Due Date', 'Status', 'Total Due', 'Balance', 'Grand Total', 'Is Archived');
+		fputcsv($f, $fields, $delimiter);
+
+		if (!empty($invoices_data)) {
+			foreach ($invoices_data as $inv) {
+                $is_archived = "No";
+                if($inv->view_flag == 1) {
+                    $is_archived = "Yes";
+                }
+				$csvData = array(
+					$inv->invoice_number,
+					$inv->invoice_type,
+                    $inv->date_issued,
+					$inv->due_date,
+					$inv->status,
+					$inv->total_due,
+					$inv->balance,
+					$inv->grand_total,
+					$is_archived
+				);
+				fputcsv($f, $csvData, $delimiter);
+			}
+		} else {
+			$csvData = array('');
+			fputcsv($f, $csvData, $delimiter);
+		}
+
+		fseek($f, 0);
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		fpassthru($f);
+	}    
 }
 
 /* End of file Invoice.php */
