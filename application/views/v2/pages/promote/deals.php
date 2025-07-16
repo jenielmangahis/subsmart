@@ -1,5 +1,10 @@
 <?php include viewPath('v2/includes/header'); ?>
-
+<style>
+#tbl-deals-steals .nsm-badge{
+    display:block;
+    font-size:14px;
+}
+</style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('promote/create_deals') ?>'">
         <i class="bx bx-plus"></i>
@@ -17,7 +22,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <!-- <button><i class='bx bx-x'></i></button> -->
-                            Listing the deals that are currently running.
+                            Your items and services offered at very low prices, implying the buyer is getting a great bargain.
                         </div>
                     </div>
                 </div>
@@ -36,19 +41,18 @@
                         </div>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" name="btn_create" class="nsm-button primary" onclick="location.href='<?php echo url('promote/create_deals') ?>'">
-                                <i class='bx bx-fw bx-chat'></i> Create Deal
+                                <i class='bx bx-plus'></i> Add New
                             </button>
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table class="nsm-table" id="tbl-deals-steals">
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
-                            <td data-name="Deal">Deal</td>
+                            <td data-name="Deal" style="width:60%;">Deal</td>                            
+                            <td data-name="Valid" style="width:20%;">Validity</td>
                             <td data-name="Views">Views</td>
-                            <td data-name="Bookings">Bookings</td>
-                            <td data-name="Valid">Valid</td>
                             <td data-name="Status">Status</td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -189,9 +193,8 @@
     function loadDeals(status = '<?= $status_active; ?>') {
         let _container = $("#deals_container");
         let loader = '<tr><td colspan="7"><div class="nsm-loader"><i class="bx bx-loader-alt bx-spin"></i></div></td></tr>';
-        let url = "<?php echo base_url(); ?>promote/ajax_load_deals_list_v2/" + status;
+        let url = base_url + "promote/_load_deals_list/" + status;
         _container.html(loader);
-
 
         $.ajax({
             type: 'POST',
