@@ -27,7 +27,12 @@ function convergeSendSale($data)
     if ($createSale['success'] == 1) {
         $is_success = true;
         $msg = '';
-        $ssl_txn_id = $createSale['ssl_txn_id'];
+        if( $createSale['ssl_txn_id'] ){
+            $ssl_txn_id = $createSale['ssl_txn_id'];
+        }elseif( $createSale['id'] ){
+            $ssl_txn_id = $createSale['id'];
+        }
+        
     } else {
         $is_success = false;
         $msg = $createSale['errorMessage'];
