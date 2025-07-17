@@ -323,7 +323,8 @@ class Mycrm extends MY_Controller
                 // Update access modules
                 $industryType = $this->IndustryType_model->getById($client->industry_type_id);
                 if ($industryType) {
-                    $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->id);
+                    $access_modules  = [];
+                    $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);                    
                     foreach ($industryModules as $im) {
                         $access_modules[] = $im->industry_module_id;
                     }
@@ -459,7 +460,8 @@ class Mycrm extends MY_Controller
                 // Update access modules
                 $industryType = $this->IndustryType_model->getById($client->industry_type_id);
                 if ($industryType) {
-                    $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->id);
+                    $access_modules  = [];
+                    $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);
                     foreach ($industryModules as $im) {
                         $access_modules[] = $im->industry_module_id;
                     }
