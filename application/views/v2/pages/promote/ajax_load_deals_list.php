@@ -1,6 +1,4 @@
-<?php
-if (!empty($dealsSteals)) :
-?>
+<?php if (!empty($dealsSteals)) : ?>
     <?php
     foreach ($dealsSteals as $ds) :
         switch ($ds->status):
@@ -61,12 +59,8 @@ if (!empty($dealsSteals)) :
                 </div>
             </td>
         </tr>
-    <?php
-    endforeach;
-    ?>
-<?php
-else :
-?>
+    <?php endforeach; ?>
+<?php else : ?>
     <tr>
         <td colspan="7">
             <div class="nsm-empty">
@@ -74,6 +68,4 @@ else :
             </div>
         </td>
     </tr>
-<?php
-endif;
-?>
+<?php endif; ?>

@@ -11,7 +11,7 @@
                         <div class="nsm-callout primary">Send to all your customers or only certain ones.</div>
                     </div>
                 </div>
-                <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'create_deals_steals', 'autocomplete' => 'off']); ?>
+                <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'create_send_to', 'autocomplete' => 'off']); ?>
                 <input type="hidden" name="default_icon_id" id="default-icon-id" value="">
                 <div class="row">
                     <div class="col-md-12">
@@ -36,6 +36,7 @@
                                         </div>
                                         <h4 class="step-title">Build Email</h4>
                                     </div>
+                                    <?php if( $dealSteals && $dealSteals->status == 0 ){ ?>
                                     <div class="step">
                                         <div class="step-icon-wrap">
                                             <div class="step-icon"><i class='bx bx-search-alt-2'></i></div>
@@ -48,6 +49,7 @@
                                         </div>
                                         <h4 class="step-title">Purchase</h4>
                                     </div>
+                                    <?php } ?>
                                 </div>  
                             </div>
                         </div>
@@ -62,17 +64,17 @@
                                         <div class="form-group">
                                             <label for="title"><b>Who are you sending to?</b></label>
                                             <div class="mt-2">
-                                            <?php if($smsCampaign){ ?>
+                                            <?php if($dealsSteals){ ?>
                                                 <div class="radio radio-sec margin-right">
-                                                    <input type="radio" name="to_type" value="1" id="to_type_1" <?= $smsCampaign->sending_type == 1 ? 'checked="checked"' : ''; ?> checked="checked">
+                                                    <input type="radio" name="to_type" value="1" id="to_type_1" <?= $dealsSteals->sending_type == 1 ? 'checked="checked"' : ''; ?> checked="checked">
                                                     <label for="to_type_1">All my customers with phone</label>
                                                 </div>
                                                 <div class="radio radio-sec margin-right">
-                                                    <input type="radio" name="to_type" value="2" id="to_type_3" <?= $smsCampaign->sending_type == 2 ? 'checked="checked"' : ''; ?>>
+                                                    <input type="radio" name="to_type" value="2" id="to_type_3" <?= $dealsSteals->sending_type == 2 ? 'checked="checked"' : ''; ?>>
                                                     <label for="to_type_3">To a customer group</label>
                                                 </div>
                                                 <div class="radio radio-sec margin-right">
-                                                    <input type="radio" name="to_type" value="3" id="to_type_2" <?= $smsCampaign->sending_type == 3 ? 'checked="checked"' : ''; ?>>
+                                                    <input type="radio" name="to_type" value="3" id="to_type_2" <?= $dealsSteals->sending_type == 3 ? 'checked="checked"' : ''; ?>>
                                                     <label for="to_type_2">Only to certain customers</label>
                                                 </div>
                                             <?php }else{ ?>
@@ -137,13 +139,12 @@
                                             </ul>
                                         </div>
                                     </div>
-
                                     <div class="col-sm-12 sending-option-2 customer selected mt-4" style="display: none;margin-bottom:20px ​!important;">
                                         <div class="margin-bottom-ter count-summary">
                                             <?php 
                                                 $customer_selected = 0;
-                                                if( $selectedCustomer ){
-                                                    $customer_selected = count($selectedCustomer);
+                                                if( $selectedCustomers ){
+                                                    $customer_selected = count($selectedCustomers);
                                                 }
                                             ?>
                                             <span class="contact-selected-count" style="font-weight: bold;"><?= $customer_selected; ?></span> customer selected.
@@ -172,8 +173,8 @@
                                                                 <div class="form-check">
                                                                     <?php
                                                                         $is_checked = ''; 
-                                                                        if($selectedCustomer){
-                                                                            if( array_key_exists($c->prof_id, $selectedCustomer) ){
+                                                                        if($selectedCustomers){
+                                                                            if( array_key_exists($c->prof_id, $selectedCustomers) ){
                                                                                 $is_checked = 'checked="checked"'; 
                                                                             }
                                                                         }
@@ -228,18 +229,18 @@
                                     <div class="col-sm-12 sending-option-3" style="display: none;">
                                         <div class="margin-bottom-sec">
                                             <label><b>Customer Type</b></label>
-                                            <?php if($smsCampaign){ ?>
+                                            <?php if($dealsSteals){ ?>
                                                 <div>
                                                     <div class="radio radio-sec margin-right">
-                                                        <input type="radio" name="optionC[customer_type_service]" value="0" <?= $smsCampaign->customer_type == 0 ? 'checked="checked"' : ''; ?> id="customer-group-type-both" checked="checked">
+                                                        <input type="radio" name="optionC[customer_type_service]" value="0" <?= $dealsSteals->customer_type == 0 ? 'checked="checked"' : ''; ?> id="customer-group-type-both" checked="checked">
                                                         <label for="customer-group-type-both">Both Residential and Commercial</label>
                                                     </div>
                                                     <div class="radio radio-sec margin-right">
-                                                        <input type="radio" name="optionC[customer_type_service]" value="1" <?= $smsCampaign->customer_type == 1 ? 'checked="checked"' : ''; ?> id="customer-group-type-residential">
+                                                        <input type="radio" name="optionC[customer_type_service]" value="1" <?= $dealsSteals->customer_type == 1 ? 'checked="checked"' : ''; ?> id="customer-group-type-residential">
                                                         <label for="customer-group-type-residential">Residential customers</label>
                                                     </div>
                                                     <div class="radio radio-sec margin-right">
-                                                        <input type="radio" name="optionC[customer_type_service]" value="2" <?= $smsCampaign->customer_type == 2 ? 'checked="checked"' : ''; ?> id="customer-group-type-commercial">
+                                                        <input type="radio" name="optionC[customer_type_service]" value="2" <?= $dealsSteals->customer_type == 2 ? 'checked="checked"' : ''; ?> id="customer-group-type-commercial">
                                                         <label for="customer-group-type-commercial">Commercial customers</label>
                                                     </div>
                                                 </div>
@@ -279,21 +280,19 @@
 </div>
 <script>
 $(function(){
-    <?php 
-        if( $dealsSteals ){
-            if($dealsSteals->sending_type == 1){
-                echo "to_type_1.click();";
-            }elseif( $dealsSteals->sending_type == 2 ){
-                echo '$(".sending-option-1").hide();';
-                echo '$(".sending-option-2").hide();';
-                echo '$(".sending-option-3").show();';
-            }else{
-                echo '$(".sending-option-1").show();';
-                echo '$(".sending-option-2").hide();';
-                echo '$(".sending-option-3").hide();';
-            } 
-        }
-    ?>
+    <?php if( $dealsSteals && $dealsSteals->sending_type == 1 ){ ?>
+        $(".sending-option-1").show();
+        $(".sending-option-2").hide();
+        $(".sending-option-3").hide();
+    <?php }elseif( $dealsSteals && $dealsSteals->sending_type == 2 ){ ?>
+        $(".sending-option-1").hide();
+        $(".sending-option-2").hide();
+        $(".sending-option-3").show();
+    <?php }elseif( $dealsSteals && $dealsSteals->sending_type == 3 ){ ?>
+        $(".sending-option-1").hide();
+        $(".sending-option-2").show();
+        $(".sending-option-3").hide();
+    <?php } ?>
 
     $(".nsm-table").nsmPagination();
     $("#search_field").on("input", debounce(function() {
@@ -349,7 +348,7 @@ $(function(){
         $(".contact-group-selected-count").html(contact_group_selected);
     });
 
-    $("#create_deals_steals").submit(function(e){
+    $("#create_send_to").submit(function(e){
         e.preventDefault();
         
         $.ajax({
