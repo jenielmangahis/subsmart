@@ -1538,6 +1538,7 @@ $route['promote/update_validity'] = 'Promote/ajax_update_validity';
 $route['promote/payment'] = 'Promote/payment';
 $route['promote/_activate_deals'] = 'Promote/ajax_activate_deals';
 $route['promote/deals/_view'] = 'Promote/ajax_view_deals_steals';
+$route['promote/deals/_reactivate_deal'] = 'Promote/ajax_reactivate_deal';
 //$route['promote/_load_deals_list/(:any)'] = 'Promote/ajax_load_deals_list/$1';
 $route['promote/_load_status_counter'] = 'Promote/ajax_load_status_counter';
 $route['promote/_close_deal'] = 'Promote/ajax_close_deal';

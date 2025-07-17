@@ -6697,7 +6697,80 @@ class Job extends MY_Controller
 
     public function export_list()
     {
-        
+		$role_id = logged('role');
+		$cid     = logged('company_id');
+
+        $sort     = ['field' => 'jobs.id', 'order' => 'DESC'];
+        $jobs = $this->jobs_model->get_all_jobs('', [], [], $sort);		
+
+		$delimiter = ",";
+		$time      = time();
+		$filename  = "jobs_list_" . $time . ".csv";
+
+		$f = fopen('php://memory', 'w');
+
+		$fields = array('Customer Name', 'Job Number', 'Job Location', 'Start Date', 'End Date', 'Start Time', 'End Time', 'Status', 'Total Amount', 'Is Archived');
+		fputcsv($f, $fields, $delimiter);
+
+		if (!empty($jobs)) {
+            $jobIds = array_map(function ($job) {
+                return $job->id;
+            }, $jobs);
+
+            $this->db->select('job_items.job_id,items.id,items.title,items.price,job_items.total,job_items.cost,job_items.qty,job_items.tax');
+            $this->db->from('job_items');
+            $this->db->join('items', 'items.id = job_items.items_id', 'left');
+            $this->db->where_in('job_items.job_id', $jobIds);
+            $itemsQuery = $this->db->get();
+            $items = $itemsQuery->result();
+
+            $jobAmounts = [];
+            foreach ($items as $item) {
+                if (!array_key_exists($item->job_id, $jobAmounts)) {
+                    $jobAmounts[$item->job_id] = 0;
+                }
+
+                //$total = (((float) $item->cost) * (float) $item->qty); // include tax? (float) $item->tax
+                $total = (float) $item->total; // include tax? (float) $item->tax
+                $jobAmounts[$item->job_id] = $jobAmounts[$item->job_id] + $total;
+            }
+
+            $jobs = array_map(function ($job) use ($jobAmounts) {
+                if (!array_key_exists($job->id, $jobAmounts)) {
+                    return $job;
+                }
+                $job->amount = $jobAmounts[$job->id];
+                return $job;
+            }, $jobs);
+
+			foreach ($jobs as $job) {
+                $customer_name = $job->first_name . ' ' . $job->last_name;
+                $amount = $job->amount + $job->adjustment_value + $job->program_setup + $job->monthly_monitoring + $job->installation_cost + $job->tax_rate;
+				$csvData = array(
+					$customer_name,
+					$job->job_number,
+					$job->job_location,
+					date("Y-m-d", strtotime($job->start_date)),
+                    date("Y-m-d", strtotime($job->end_date)),
+					date("g:i A", strtotime($job->start_time)),
+                    date("g:i A", strtotime($job->end_time)),
+					$job->status != '' ? $job->status : '---',
+					$amount,
+					$job->is_archived == 1 ? 'Yes' : 'No'
+				);
+				fputcsv($f, $csvData, $delimiter);
+			}
+		} else {
+			$csvData = array('');
+			fputcsv($f, $csvData, $delimiter);
+		}
+
+		fseek($f, 0);
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		fpassthru($f);
     }
 }
 
