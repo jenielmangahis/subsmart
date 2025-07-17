@@ -371,7 +371,6 @@
         $("#frm-buy-license").submit(function(e){
             e.preventDefault();
             var url = base_url + 'mycrm/_buy_plan_license';
-            $(".btn-modal-buy-license").html('<span class="spinner-border spinner-border-sm m-0"></span>');
 
             $.ajax({
                 type: "POST",
@@ -391,9 +390,9 @@
                             cancelButtonColor: '#d33',
                             confirmButtonText: 'Ok'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 location.reload();
-                            }
+                            //}
                         });
                     }else{
                         Swal.fire({
@@ -403,10 +402,12 @@
                         });
                     }
 
+                    $('#btn-buy-license').prop("disabled", false);
                     $("#btn-buy-license").html('Buy');
                 },
                 beforeSend: function(){
                     $("#btn-buy-license").html('<span class="bx bx-loader bx-spin"></span>');
+                    $('#btn-buy-license').prop("disabled", true);
                 }
             });
         });
@@ -422,6 +423,7 @@
                 success: function(o)
                 {
                     $("#modal-upgrade-plan").modal('hide'); 
+                    $("#btn-modal-upgrade-plan").prop("disabled", false);
                     $("#btn-modal-upgrade-plan").html('Upgrade');
 
                     if( o.is_success == 1 ){                        
@@ -434,9 +436,9 @@
                             cancelButtonColor: '#d33',
                             confirmButtonText: 'Ok'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 location.reload();
-                            }
+                            //}
                         });
                     }else{
                         Swal.fire({
@@ -448,6 +450,7 @@
                 },
                 beforeSend: function(){
                     $("#btn-modal-upgrade-plan").html('<span class="bx bx-loader bx-spin"></span>');
+                    $("#btn-modal-upgrade-plan").prop("disabled", true);
                 }
             });
         });
@@ -464,6 +467,7 @@
                 data: $("#frm-pay-subscription").serialize(),
                 success: function(o)
                 {
+                    $("#btn-modal-pay-subscription").prop("disabled", false);
                     $("#btn-modal-pay-subscription").html('Pay');
                     $("#modal-upgrade-plan").modal('hide'); 
 
@@ -491,6 +495,7 @@
                 },
                 beforeSend: function(){
                     $("#btn-modal-pay-subscription").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+                    $("#btn-modal-pay-subscription").prop("disabled", true);
                 }
             });
         });
@@ -526,9 +531,9 @@
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
-                                    if (result.value) {
+                                    //if (result.value) {
                                         location.reload();
-                                    }
+                                    //}
                                 });
                             } else {
                                 Swal.fire({
@@ -575,9 +580,9 @@
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
-                                    if (result.value) {
+                                    //if (result.value) {
                                         location.reload();
-                                    }
+                                    //}
                                 });
                             } else {
                                 Swal.fire({
@@ -626,9 +631,9 @@
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
                             }).then((result) => {
-                                if (result.value) {
+                                //if (result.value) {
                                     location.reload();
-                                }
+                                //}
                             });
 
                         } else {
