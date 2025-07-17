@@ -1,0 +1,209 @@
+.steps .step {
+    display: block;
+    width: 100%;
+    margin-bottom: 35px;
+    text-align: center
+}
+
+.steps .step .step-icon-wrap {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 40px;
+    text-align: center
+}
+
+.steps .step .step-icon-wrap::before,
+.steps .step .step-icon-wrap::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    width: 50%;
+    height: 3px;
+    margin-top: -1px;
+    background-color: #e1e7ec;
+    content: '';
+    z-index: 1
+}
+
+.steps .step .step-icon-wrap::before {
+    left: 0
+}
+
+.steps .step .step-icon-wrap::after {
+    right: 0
+}
+
+.steps .step .step-icon {
+    display: inline-block;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e1e7ec;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    color: #374250;
+    font-size: 23px;
+    line-height: 40px !important;
+    z-index: 2;
+}
+
+.steps .step .step-title {
+    margin-top: 16px;
+    margin-bottom: 0;
+    color: #606975;
+    font-size: 14px;
+    font-weight: 500
+}
+
+.steps .step:first-child .step-icon-wrap::before {
+    display: none
+}
+
+.steps .step:last-child .step-icon-wrap::after {
+    display: none
+}
+
+.steps .step.completed .step-icon-wrap::before,
+.steps .step.completed .step-icon-wrap::after {
+    background-color: #6a4a86
+}
+
+.steps .step.completed .step-icon {
+    border-color: #6a4a86;
+    background-color: #6a4a86;
+    color: #fff
+}
+
+@media (max-width: 576px) {
+    .flex-sm-nowrap .step .step-icon-wrap::before,
+    .flex-sm-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 768px) {
+    .flex-md-nowrap .step .step-icon-wrap::before,
+    .flex-md-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 991px) {
+    .flex-lg-nowrap .step .step-icon-wrap::before,
+    .flex-lg-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+@media (max-width: 1200px) {
+    .flex-xl-nowrap .step .step-icon-wrap::before,
+    .flex-xl-nowrap .step .step-icon-wrap::after {
+        display: none
+    }
+}
+
+.radio-sec input:checked+label::before {
+    padding: 2px 0px 0px 6px;
+}
+.group-list{
+    display: flex;
+}
+.group-list li{
+    display: list-item;
+    margin: 15px;
+}
+.radio-sec {
+    display: inline-block;
+    padding: 0;
+    margin: 12px 8px;
+    line-height: 1.2em;
+}
+.group-list{
+    display: flex;
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+.group-list li{
+    display: list-item;
+    margin: 15px;
+}
+.count-summary{
+    font-size: 16px;
+    margin-bottom: 10px;
+    background-color: #6a4a86;
+    /* width: 30%; */
+    color: #ffffff;
+    padding: 6px;
+}
+.box {
+    border: 1px solid #dfdfdf;
+    padding: 20px;
+}
+.package-price-original {
+    text-decoration: line-through;
+}
+.text-right{
+    text-align: right;
+}
+.card{
+    /* box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important; */
+}
+.card-help {
+    padding-left: 45px;
+    padding-top: 10px;
+}
+.card-type.visa {
+    background-position: 0 0;
+}
+.card-type {
+    margin-left: 25px;
+    display: inline-block;
+    width: 30px;
+    height: 20px;
+    background: url(<?= base_url("/assets/img/credit_cards.png"); ?>) no-repeat 0 0;
+    background-size: cover;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+.card-type.americanexpress {
+    background-position: -83px 0;
+}
+.expired{
+    color:red;
+}
+.card-type.discover {
+    background-position: -125px 0;
+}
+input[type="radio"], input[type="checkbox"] {
+    margin: 4px 5px 0 0 !important;
+}
+input[type=checkbox], input[type=radio] {
+    margin: 4px 0 0;
+    margin-top: 1px\9;
+    line-height: normal;
+}
+input[type=checkbox], input[type=radio] {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0;
+}
+label {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+}
+label>input {
+    visibility: visible;
+}
+.cc-list{
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+.cc-list li{
+    margin: 25px;
+    margin-left: 0px;
+}

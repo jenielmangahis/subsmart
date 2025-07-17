@@ -57,6 +57,10 @@ if ($this->session->userdata('usertimezone') == null) {
     <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/customer_deals/customer_deals.css'); ?>">
     <?php } ?>
 
+    <?php if (isset($enable_deals_steals)) { ?>
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/deals_steals/deals_steals.css'); ?>">
+    <?php } ?>
+
     <!-- Multi select -->
     <link rel="stylesheet" href="<?php echo base_url('assets/css/v2/multiple-select.min.css'); ?>">
 

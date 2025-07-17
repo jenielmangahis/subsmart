@@ -1343,6 +1343,11 @@ class Invoice_model extends MY_Model
         }
 
         if (!empty($filters)) {
+
+            /*if(isset($filters['is_recurring'])) {
+                $this->db->where('invoices.is_recurring', $filters['is_recurring']);
+            }*/
+
             if (isset($filters['status'])) {
                 switch ($filters['status']) {
                     case 'paid':
@@ -1657,6 +1662,16 @@ class Invoice_model extends MY_Model
     {
         $this->db->where('company_id', $cid);
         $this->db->where('view_flag', 1);
+        $this->db->order_by('date_updated', 'DESC');
+        $query = $this->db->get('invoices');
+        return $query->result();
+    }
+
+    public function get_company_recurring_archived_invoices($cid)
+    {
+        $this->db->where('company_id', $cid);
+        $this->db->where('view_flag', 1);
+        $this->db->where('is_recurring', 1);
         $this->db->order_by('date_updated', 'DESC');
         $query = $this->db->get('invoices');
         return $query->result();

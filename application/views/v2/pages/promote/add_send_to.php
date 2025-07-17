@@ -1,66 +1,4 @@
 <?php include viewPath('v2/includes/header'); ?>
-<style>
-.tabs-menu {
-    margin-bottom: 20px;
-    padding: 0;
-    margin-top: 20px;
-}
-.tabs-menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-.md-right {
-  float: right;
-  width: max-content;
-  display: block;
-  padding-right: 0px;
-}
-.tabs-menu .active, .tabs-menu .active a {
-    color: #2ab363;
-}
-.tabs-menu li {
-    float: left;
-    margin: 0;
-    padding: 0px 83px 0px 0px;
-    font-weight: 600;
-    font-size: 17px;
-}
-.radio-sec input:checked+label::before {
-    padding: 2px 0px 0px 6px;
-}
-.group-list{
-    display: flex;
-}
-.group-list li{
-    display: list-item;
-    margin: 15px;
-}
-.radio-sec {
-    display: inline-block;
-    padding: 0;
-    margin: 12px 8px;
-    line-height: 1.2em;
-}
-.group-list{
-    display: flex;
-    list-style: none;
-    margin: 0px;
-    padding: 0px;
-}
-.group-list li{
-    display: list-item;
-    margin: 15px;
-}
-.count-summary{
-    font-size: 16px;
-    margin-bottom: 10px;
-    background-color: #6a4a86;
-    width: 30%;
-    color: #ffffff;
-    padding: 6px;
-}
-</style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/marketing_tabs'); ?>
@@ -77,14 +15,41 @@
                 <input type="hidden" name="default_icon_id" id="default-icon-id" value="">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="validation-error" style="display: none;"></div>
-                        <div class="tabs-menu">
-                            <ul class="clearfix">
-                              <li>1. Create Deal</li>
-                              <li class="active">2. Select Customers</li>
-                              <li>3. Build Email</li>
-                              <li>4. Preview</li>
-                              <li>5. Purchase</li>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
+                                    <div class="step completed">
+                                        <div class="step-icon-wrap">
+                                            <div class="step-icon"><i class='bx bxs-badge-dollar'></i></div>
+                                        </div>
+                                        <h4 class="step-title">Create Deal</h4>
+                                    </div>
+                                    <div class="step completed">
+                                        <div class="step-icon-wrap">
+                                            <div class="step-icon"><i class='bx bxs-user-circle' ></i></div>
+                                        </div>
+                                        <h4 class="step-title">Select Customers</h4>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-icon-wrap">
+                                            <div class="step-icon"><i class='bx bxs-envelope'></i></div>
+                                        </div>
+                                        <h4 class="step-title">Build Email</h4>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-icon-wrap">
+                                            <div class="step-icon"><i class='bx bx-search-alt-2'></i></div>
+                                        </div>
+                                        <h4 class="step-title">Preview</h4>
+                                    </div>
+                                    <div class="step <?= $jobs_data->status == 'Invoiced' ? 'completed' : '' ?>">
+                                        <div class="step-icon-wrap">
+                                            <div class="step-icon"><i class='bx bx-credit-card'></i></div>
+                                        </div>
+                                        <h4 class="step-title">Purchase</h4>
+                                    </div>
+                                </div>  
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -95,7 +60,8 @@
                                 <div class="col-md-12">
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label for="title"><b>Who are you sending to?</b></label><br /><br />
+                                            <label for="title"><b>Who are you sending to?</b></label>
+                                            <div class="mt-2">
                                             <?php if($smsCampaign){ ?>
                                                 <div class="radio radio-sec margin-right">
                                                     <input type="radio" name="to_type" value="1" id="to_type_1" <?= $smsCampaign->sending_type == 1 ? 'checked="checked"' : ''; ?> checked="checked">
@@ -123,7 +89,7 @@
                                                     <label for="to_type_2">Only to certain customers</label>
                                                 </div>
                                             <?php } ?>
-                                            
+                                            </div>
                                         </div>
                                     </div>
 
@@ -131,7 +97,7 @@
                                         <div class="margin-bottom-ter count-summary">
                                             <span class="customer-count" data-to="customer-count-all"><?= count($customers); ?></span> contacts have a valid phone (excluding unsubscribed).
                                         </div>
-                                        <div class="margin-bottom-sec mt-5">
+                                        <div class="margin-bottom-sec mt-4">
                                             <label><b>Customer Type</b></label>
                                             <div>
                                                 <div class="radio radio-sec margin-right">
@@ -148,9 +114,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group mt-5" style="margin-bottom:20px ​!important;">
-                                            <label><b>Exclude Customer Groups</b></label>
-                                            <div class="help help-block help-sm">Optional, select the groups you would like to exclude from campaign.</div>
+                                        <div class="form-group mt-4">
+                                            <label><b>Exclude Customer Groups</b> <span class="bx bx-fw bx-help-circle" id="popover-help-exclude-customer-groups"></span></label>                                            
                                             <ul class="group-list">
                                                 <?php foreach($customerGroups as $cg){ ?>
                                                     <li>
@@ -163,9 +128,9 @@
                                                                 }
                                                             }
                                                         ?>
-                                                        <div class="checkbox checkbox-sm">
-                                                            <input class="checkbox-select chk-exclude-contact-group" type="checkbox" name="optionA[exclude_customer_group_id][]" value="<?= $cg->id; ?>" id="chk-exclude-customer-group-<?= $cg->id; ?>" <?= $is_checked; ?>>
-                                                            <label for="chk-exclude-customer-group-<?= $cg->id; ?>"><?= $cg->title; ?></label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input chk-exclude-contact-group" type="checkbox" name="optionA[exclude_customer_group_id][]" value="<?= $cg->id; ?>" id="chk-exclude-customer-group-<?= $cg->id; ?>" <?= $is_checked; ?>>
+                                                            <label class="form-check-label" for="chk-exclude-customer-group-<?= $cg->id; ?>"><?= $cg->title; ?></label>
                                                         </div>
                                                     </li>
                                                 <?php } ?>
@@ -184,20 +149,27 @@
                                             <span class="contact-selected-count" style="font-weight: bold;"><?= $customer_selected; ?></span> customer selected.
                                         </div>
                                         <div class="margin-bottom-sec">
-                                            <table id="dataTable1" class="table table-bordered table-striped">
+                                            <div class="row">
+                                                <div class="col-12 col-md-6 grid-mb">
+                                                    <div class="nsm-field-group search">
+                                                        <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="">
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                            <table id="tbl-contacts" class="nsm-table">
                                                 <thead>
                                                     <tr>
-                                                        <th style="width:30px;"></th>
-                                                        <th>Name</th>
-                                                        <th style="width: 10%;">Phone</th>
+                                                        <td style="width:1%;"></td>
+                                                        <td data-name="CustomerName">Name</td>
+                                                        <td data-name="CustomerPhone" style="width: 10%;">Phone</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php foreach($customers as $c){ ?>
                                                         <?php if($c->email != ''){ ?>
                                                         <tr>
-                                                            <td>
-                                                                <div class="checkbox checkbox-sm">
+                                                            <td style="width:1%;">
+                                                                <div class="form-check">
                                                                     <?php
                                                                         $is_checked = ''; 
                                                                         if($selectedCustomer){
@@ -206,14 +178,14 @@
                                                                             }
                                                                         }
                                                                     ?>
-                                                                    <input class="checkbox-select chk-contact" type="checkbox" name="optionB[customer_id][<?= $c->prof_id; ?>]" value="<?= $c->prof_id; ?>" id="chk-customer-<?= $c->prof_id; ?>" <?= $is_checked; ?>>
-                                                                    <label for="chk-customer-<?= $c->prof_id; ?>"></label>
+                                                                    <input class="form-check-input chk-contact" type="checkbox" name="optionB[customer_id][<?= $c->prof_id; ?>]" value="<?= $c->prof_id; ?>" id="chk-customer-<?= $c->prof_id; ?>" <?= $is_checked; ?>>
+                                                                    <label class="form-check-label" for="chk-customer-<?= $c->prof_id; ?>"></label>
                                                                 </div>
                                                             </td>
-                                                            <td>
+                                                            <td class="fw-bold show nsm-text-primary">
                                                                 <?= $c->first_name . ' ' . $c->last_name; ?>
-                                                            </td>
-                                                            <td><?= $c->email; ?></td>
+                                                            </td class="show nsm-text-primary">
+                                                            <td><?= $c->phone_m; ?></td>
                                                         </tr>
                                                         <?php } ?>
                                                     <?php } ?>
@@ -244,9 +216,9 @@
                                                                 }
                                                             }
                                                         ?>
-                                                        <div class="checkbox checkbox-sm">
-                                                            <input class="checkbox-select chk-contact-group" type="checkbox" <?= $is_checked; ?> name="optionC[customer_group_id][]" value="<?= $cg->id; ?>" id="chk-customer-group-<?= $cg->id; ?>">
-                                                            <label for="chk-customer-group-<?= $cg->id; ?>"><?= $cg->title; ?></label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input chk-contact-group" type="checkbox" <?= $is_checked; ?> name="optionC[customer_group_id][]" value="<?= $cg->id; ?>" id="chk-customer-group-<?= $cg->id; ?>">
+                                                            <label class="form-check-label" for="chk-customer-group-<?= $cg->id; ?>"><?= $cg->title; ?></label>
                                                         </div>
                                                     </li>
                                                 <?php } ?>
@@ -322,6 +294,27 @@ $(function(){
             } 
         }
     ?>
+
+    $(".nsm-table").nsmPagination();
+    $("#search_field").on("input", debounce(function() {
+        let search = $(this).val();
+        if( search == '' ){
+            $(".nsm-table").nsmPagination();
+        }else{
+            tableSearch($(this));        
+        }
+        
+    }, 1000));
+
+    $('#popover-help-exclude-customer-groups').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Optional, select the groups you would like to exclude from campaign';
+        }
+    });
+
     $("#to_type_2").change(function(){
         if( $(this).attr('checked', 'checked') ){
             $(".sending-option-1").hide();
@@ -358,32 +351,37 @@ $(function(){
 
     $("#create_deals_steals").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'promote/create_send_to';
-        $(".btn-save-send-settings").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
-        setTimeout(function () {
-          $.ajax({
-             type: "POST",
-             url: url,
-             dataType: "json",
-             data: $("#create_send_to").serialize(),
-             success: function(o)
-             {
+        
+        $.ajax({
+            type: "POST",
+            url: base_url + 'promote/create_send_to',
+            dataType: "json",
+            data: $("#create_send_to").serialize(),
+            success: function(o)
+            {
+                $('.btn-save-send-settings').prop("disabled", false);
+                $(".btn-save-send-settings").html('Continue »');
+
                 if( o.is_success ){
-                    $(".validation-error").hide();
-                    $(".validation-error").html('');
-                    //redirect to step2
+                    //redirect to step3
                     location.href = base_url + "promote/build_email";
                 }else{
-                    $(".validation-error").show();
-                    $(".validation-error").html(o.err_msg);
-                    $([document.documentElement, document.body]).animate({
-                        scrollTop: $("#create_send_to").offset().top
-                    }, 500); 
+                    Swal.fire({
+                        title: 'Error',
+                        text: o.err_msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
                 }
-                $(".btn-save-send-settings").html('Continue »');
-             }
-          });
-        }, 1000);
+            },
+            beforeSend: function(){
+                $('.btn-save-send-settings').html('<span class="bx bx-loader bx-spin"></span>');
+                $('.btn-save-send-settings').prop("disabled", true);
+            }
+        });
     });
 });
 </script>

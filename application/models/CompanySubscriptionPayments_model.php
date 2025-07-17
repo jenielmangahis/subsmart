@@ -84,6 +84,31 @@ class CompanySubscriptionPayments_model extends MY_Model
         return $issue_no; 
     }
 
+    public function paymentApiConverge()
+    {
+        return 'Converge';
+    }
+
+    public function transactionTypeLicense()
+    {
+        return 'License';
+    }
+
+    public function transactionTypeSubscription()
+    {
+        return 'Subscription';
+    }
+
+    public function transactionTypeDealsSteals()
+    {
+        return 'Deals Steals';
+    }
+
+    public function transactionTypePlanUpgrade()
+    {
+        return 'Plan Upgrade';
+    }
+
 }
 
 /* End of file CompanySubscriptionPayments_model.php */

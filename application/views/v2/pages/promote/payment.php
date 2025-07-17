@@ -1,102 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('v2/includes/header'); ?>
-
-<style>
-    div[wrapper__section] {
-        padding: 60px 10px !important;
-    }
-    .card{
-        box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
-    }
-    .tabs-menu {
-        margin-bottom: 20px;
-        padding: 0;
-        margin-top: 20px;
-    }
-    .tabs-menu ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-    .md-right {
-      float: right;
-      width: max-content;
-      display: block;
-      padding-right: 0px;
-    }
-    .tabs-menu .active, .tabs-menu .active a {
-        color: #2ab363;
-    }
-    .tabs-menu li {
-        float: left;
-        margin: 0;
-        padding: 0px 83px 0px 0px;
-        font-weight: 600;
-        font-size: 17px;
-    }
-    .card-help {
-        padding-left: 45px;
-        padding-top: 10px;
-    }
-    .text-ter {
-        color: #888888;
-    }
-    .card-type.visa {
-        background-position: 0 0;
-    }
-    .card-type {
-        margin-left: 25px;
-        display: inline-block;
-        width: 30px;
-        height: 20px;
-        background: url(<?= base_url("/assets/img/credit_cards.png"); ?>) no-repeat 0 0;
-        background-size: cover;
-        vertical-align: middle;
-        margin-right: 10px;
-    }
-    .card-type.americanexpress {
-        background-position: -83px 0;
-    }
-    .expired{
-      color:red;
-    }
-    .card-type.discover {
-        background-position: -125px 0;
-    }
-    input[type="radio"], input[type="checkbox"] {
-        margin: 4px 5px 0 0 !important;
-    }
-    input[type=checkbox], input[type=radio] {
-        margin: 4px 0 0;
-        margin-top: 1px\9;
-        line-height: normal;
-    }
-    input[type=checkbox], input[type=radio] {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        padding: 0;
-    }
-    label {
-        display: inline-block;
-        max-width: 100%;
-        margin-bottom: 5px;
-    }
-    label>input {
-      visibility: visible;
-    }
-    .cc-list{
-        list-style: none;
-        padding: 0px;
-        margin: 0px;
-    }
-    .cc-list li{
-      margin: 25px;
-      margin-left: 0px;
-    }
-</style>
-
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/marketing_tabs'); ?>
@@ -112,113 +16,134 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                 </div>
-                <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'activate-deals-steals', 'autocomplete' => 'off']); ?>
-                    <div class="tabs-menu">
-                        <ul class="clearfix">
-                          <li>1. Create Deal</li>
-                          <li>2. Select Customers</li>
-                          <li>3. Build Email</li>
-                          <li>4. Preview</li>
-                          <li class="active">5. Purchase</li>
-                        </ul>
-                    </div>                    
-                    <div class="row mt-5">
-                        <div class="col-md-6">                                    
-                            <div class="payment-options">
-                              <!-- p style="font-size: 19px;"><b>Payment Method</b></p> -->
-                              <p style="font-size: 15px;"><b>Pay securely using your credit card.</b></p>
-                              <ul class="cc-list">
-                              <?php foreach($creditCards as $c){ ?>
-                                <li>
-                                  <?php 
-                                    $is_checked = '';
-                                    if( $dealsSteals->cards_file_id == $c->id ){
-                                      $is_checked = 'checked="checked"';
-                                    }
-                                  ?>
-                                  <label class="weight-normal"><input <?= $is_checked; ?> type="radio" name="payment_method_token" value="<?= $c->id; ?>">
-                                  <?php 
-                                    $card_type = strtolower($c->cc_type); 
-                                    $card_type = str_replace(" ", "", $card_type);
-                                  ?>
-                                  <span class="card-type <?= $card_type; ?>"></span>                                       
-                                  <?php 
-                                    $card_number = maskCreditCardNumber($c->card_number);
-                                    echo $card_number;
-                                  ?>   
-                                  <?php
-                                    $today = date("y-m-d");  
-                                    $day   = date("d");                                 
-                                    $expires = date("y-m-d",strtotime($c->expiration_year . "-" . $c->expiration_month . "-" . $day));
-                                    $expired = 'expires';
-                                    if( strtotime($expires) < strtotime($today) ){
-                                      $expired = 'expired';
-                                    }
-                                    
-                                  ?>   
-                                    <span class="<?= $expired; ?>"> (<?= $expired; ?> <?= $c->expiration_month . "/" . $c->expiration_year; ?>)</span>
-                                  </label>
-                                </li>
-                              <?php } ?>
-                              </ul>
-                              <div data-payment="cc-save-container">
-                                  <label class="weight-normal"><input type="checkbox" name="chk_terms" id="chk-terms" value="1" checked="checked">
-                                  <span style="display: inline-block;">Securely save my card for future purchases</span></label>
-                                  <span class="help help-block help-sm">Easy to pay on your future purchases.</span>
-                              </div> 
-                            </div>
-                            <hr style="width:61%;" />
-                            <div class="stripe-form" style="display: none;">
-                              <div class="col-md-12">
-                                <h4 class="font-weight-bold pl-0 my-4" style="font-size: 17px;"><strong>Stripe Payment Method</strong></h3>
-                                  <div class="payment-method" style="display: block;margin-bottom: 16px;">
-                                    <label>SMS Campaign</label><br />
-                                    <label>Total Amount : <b><span class="total-amount">$<?= number_format($grand_total, 2); ?></span></b></label><br />
-                                    <hr />
+                <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'frm-activate-deals-steals', 'autocomplete' => 'off']); ?>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="card mb-3">
+                          <div class="card-body">
+                              <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
+                                  <div class="step completed">
+                                      <div class="step-icon-wrap">
+                                          <div class="step-icon"><i class='bx bxs-badge-dollar'></i></div>
+                                      </div>
+                                      <h4 class="step-title">Create Deal</h4>
                                   </div>
-                                <div id="card-element"></div>                       
-                                <div id="card-errors" role="alert"></div>
-                                <button class="stripe-btn">Submit Payment</button>`
-                                <button type="button" class="stripe-cancel-btn margin-right">Cancel</button>
-                              </div>
-                            </div>
-                            
-                            <div class="margin-top" style="color:#888888;">
-                              For any issues with your order, click here to <a href="<?= base_url('contact'); ?>" target="_new" style="color:#259e57;">contact us</a>.
-                            </div>
-                            <div style="color:#888888;">
-                              <p>By clicking Purchase button you agree to <a href="<?= base_url("terms-and-condition"); ?>" style="color:#259e57;" target="_new">NSmarTrac's Terms & Conditions</a>, <a href="<?= base_url("privacy-policy"); ?>" style="color:#259e57;" target="_new">Privacy Policy</a> and <a href="<?= base_url("anti-spam-policy"); ?>" style="color:#259e57;" style="color:#259e57;" target="_new">Anti-Spam Policy</a></p>
-                            </div>                            
-                        </div>
-                        <div class="col-md-4">
-                            <div class="cart-summary" style="background-color: #f2f2f2;padding: 20px;">
-                              <div class="row">
-                                <div class="col-md-6"><strong style="font-size: 15px;">Deal</strong></div>
-                                <div class="col-md-6"><strong style="font-size: 15px;"><?= $dealsSteals->title; ?></strong></div>
-                              </div>
-                              <div class="row mt-3">
-                                <div class="col-md-6"><strong style="font-size: 15px;">Package</strong></div>
-                                <div class="col-md-6"><strong style="font-size: 15px;">1 Month for $<?= number_format($deals_price, 2); ?></strong></div>
-                              </div>
-                              <div class="row mt-3">
-                                <div class="col-md-6"><strong style="font-size: 15px;">Valid Period</strong></div>
-                                <div class="col-md-6"><strong style="font-size: 15px;"><?= date("d-M-Y", strtotime($dealsSteals->valid_from)) . " to " . date("d-M-Y", strtotime($dealsSteals->valid_to)) ?></strong></div>
-                              </div>
-                              <div class="row mt-4">
-                                <div class="col-md-6"><strong style="font-size: 22px;">Amount to Pay</strong></div>
-                                <div class="col-md-6"><span class="cart-summary-total" style="font-size: 22px;"><b>$<?= number_format($deals_price, 2); ?></b></span></div>
-                              </div>
+                                  <div class="step completed">
+                                      <div class="step-icon-wrap">
+                                          <div class="step-icon"><i class='bx bxs-user-circle' ></i></div>
+                                      </div>
+                                      <h4 class="step-title">Select Customers</h4>
+                                  </div>
+                                  <div class="step completed">
+                                      <div class="step-icon-wrap">
+                                          <div class="step-icon"><i class='bx bxs-envelope'></i></div>
+                                      </div>
+                                      <h4 class="step-title">Build Email</h4>
+                                  </div>
+                                  <div class="step completed">
+                                      <div class="step-icon-wrap">
+                                          <div class="step-icon"><i class='bx bx-search-alt-2'></i></div>
+                                      </div>
+                                      <h4 class="step-title">Preview</h4>
+                                  </div>
+                                  <div class="step completed">
+                                      <div class="step-icon-wrap">
+                                          <div class="step-icon"><i class='bx bx-credit-card'></i></div>
+                                      </div>
+                                      <h4 class="step-title">Purchase</h4>
+                                  </div>
+                              </div>  
+                          </div>
+                      </div>
+                    </div>
+                  </div>    
 
-                               <div class="row mt-5">                 
-                                    <div class="col-md-12" style="text-align:center;">                                        
-                                        <a class="nsm-button" href="<?php echo url('promote/preview_email_message'); ?>" style="margin-right: 0px; width: 45%;display: inline-block;">&laquo; Back</a>
-                                        <button type="submit" class="nsm-button primary btn-deals-steals-activate" style="width: 45%;">Purchase</button>
+                    <div class="row mt-5">
+                        <div class="col-md-6">  
+                            <div class="nsm-card primary">
+                              <div class="nsm-card-header">
+                                <div class="nsm-card-title"><span><i class='bx bx-credit-card'></i> CREDIT CARD PAYMENT</span></div>
+                              </div>  
+                              <div class="nsm-card-content">
+                                <div class="row g-3">
+                                  <div class="col-12">
+                                      <label class="content-subtitle fw-bold d-block mb-2">Card Number</label>
+                                      <input type="text" placeholder="" name="card_number" class="nsm-field form-control" required />
+                                  </div>
+                                  <div class="col-12">
+                                      <label class="content-subtitle fw-bold d-block mb-2">Expiration</label>
+                                      <div class="row g-3">
+                                          <div class="col-12 col-md-3">
+                                              <select class="nsm-field form-select" name="exp_month" required>
+                                                  <option value="" selected="selected" disabled>Month</option>
+                                                  <option value="01">01</option>
+                                                  <option value="02">02</option>
+                                                  <option value="03">03</option>
+                                                  <option value="04">04</option>
+                                                  <option value="05">05</option>
+                                                  <option value="06">06</option>
+                                                  <option value="07">07</option>
+                                                  <option value="08">08</option>
+                                                  <option value="09">09</option>
+                                                  <option value="10">10</option>
+                                                  <option value="11">11</option>
+                                                  <option value="12">12</option>
+                                              </select>
+                                          </div>
+                                          <div class="col-12 col-md-2">
+                                              <select class="nsm-field form-select" name="exp_year" required>
+                                                  <option value="" selected="selected" disabled>Year</option>
+                                                  <?php for( $x = date("Y"); $x<=date("Y", strtotime("+20 years")); $x++ ){ ?>
+                                                      <option value="<?= $x; ?>"><?= $x; ?></option>
+                                                  <?php } ?>
+                                              </select>
+                                          </div>
+                                          <div class="col-12 col-md-2">
+                                              <input type="password" placeholder="CVC" name="cvc" class="nsm-field form-control" required maxlength="4" />
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                </div>                                
+                              </div>
+                            </div>             
+                        </div>
+                        <div class="col-md-6">
+                          <div class="nsm-card primary">
+                            <div class="nsm-card-header">
+                              <div class="nsm-card-title"><span><i class='bx bx-list-ul' ></i> ORDER DETAILS</span></div>
+                            </div>
+                            <div class="nsm-card-content">
+                                <div class="row">
+                                  <div class="col-md-6"><strong style="font-size: 15px;">Deal</strong></div>
+                                  <div class="col-md-6"><strong style="font-size: 15px;"><?= $dealsSteals->title; ?></strong></div>
+                                </div>
+                                <div class="row mt-3">
+                                  <div class="col-md-6"><strong style="font-size: 15px;">Package</strong></div>
+                                  <div class="col-md-6"><strong style="font-size: 15px;">1 Month for $<?= number_format($deals_price, 2); ?></strong></div>
+                                </div>
+                                <div class="row mt-3">
+                                  <div class="col-md-6"><strong style="font-size: 15px;">Valid Period</strong></div>
+                                  <div class="col-md-6"><strong style="font-size: 15px;"><?= date("m/d/Y", strtotime($dealsSteals->valid_from)) . " to " . date("m/d/Y", strtotime($dealsSteals->valid_to)) ?></strong></div>
+                                </div>
+                                <div class="row mt-3">
+                                  <div class="col-md-6"><strong style="font-size: 15px;">Expiration</strong></div>
+                                  <div class="col-md-6"><strong style="font-size: 15px;"><?= date("m/d/Y", strtotime('+1 month')); ?></strong></div>
+                                </div>
+                                <div class="row mt-4">
+                                  <div class="col-md-6"><strong style="font-size: 22px;">Amount to Pay</strong></div>
+                                  <div class="col-md-6"><span class="cart-summary-total" style="font-size: 22px;"><b>$<?= number_format($deals_price, 2); ?></b></span></div>
+                                </div>
+                                <div class="row mt-5">                 
+                                    <div class="col-md-12 text-center">   
+                                        <button type="button" class="nsm-button default" id="btn-deals-steals-back" style="width: 30%;">BACK</button>
+                                        <button type="submit" class="nsm-button primary" id="btn-deals-steals-activate" style="width: 30%;">PAY</button>
                                     </div>
                                 </div>
                             </div>
+                          </div>
                         </div>
-                    </div>
-                                        
+                    </div>          
                 <?php echo form_close(); ?>
             </div>
         </div>
@@ -227,72 +152,50 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
 <script>
 $(function(){
-    function activate_deals(){
-      var url = base_url + 'promote/_activate_deals';
-      $(".btn-deals-steals-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
-      setTimeout(function () {
+    $('#btn-deals-steals-back').on('click', function(){
+      location.href = base_url + 'promote/preview_email_message';
+    });
+
+    $('#frm-activate-deals-steals').on('submit', function(e){
+      e.preventDefault();
         $.ajax({
-           type: "POST",
-           url: url,
-           dataType: "json",
-           data: $("#activate-deals-steals").serialize(),
-           success: function(o)
-           {
-              if( o.is_success ){
+          type: "POST",
+          url: base_url + 'promote/_activate_deals',
+          dataType: "json",
+          data: $("#frm-activate-deals-steals").serialize(),
+          success: function(o)
+          {
+              $('#btn-deals-steals-activate').prop("disabled", false);
+              $('#btn-deals-steals-activate').html('PAY');
+
+              if( o.is_success == 1 ){                        
                   Swal.fire({
-                      title: 'Update Successful!',
-                      text: 'Deals was successfully activated',
+                      title: 'Deals Steals',
+                      text: "Payment successful. Your deals is now activated.",
                       icon: 'success',
                       showCancelButton: false,
                       confirmButtonColor: '#32243d',
                       cancelButtonColor: '#d33',
                       confirmButtonText: 'Ok'
                   }).then((result) => {
-                      if (result.value) {
-                          window.location.href= base_url + 'promote/payment_details';
-                      }
+                      //if (result.value) {
+                        location.href = base_url + 'promote/deals';
+                      //}
                   });
               }else{
                   Swal.fire({
-                    icon: 'error',
-                    title: o.msg,
-                    text: 'Cannot activate deals'
+                      icon: 'error',
+                      title: 'Cannot upgrade plan',
+                      text: o.message
                   });
               }
-           }
-        });
-      }, 1000);
-    }
-
-    $("#activate-deals-steals").submit(function(e){
-        e.preventDefault();
-
-        var url = base_url + 'promote/_converge_send_payment';
-        $(".btn-deals-steals-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-        setTimeout(function () {
-        $.ajax({
-           type: "POST",
-           url: url,
-           dataType: "json",
-           data: $("#activate-deals-steals").serialize(),
-           success: function(o)
-           {
-              if( o.is_success ){
-                $("#order-number").val(o.order_number);
-                activate_deals();
-              }else{
-                  Swal.fire({
-                    icon: 'error',
-                    title: o.msg,
-                    text: 'Cannot activate deals'
-                  });
-              }
-              $(".btn-deals-steals-activate").html('Purchase');
-           }
-        });
-      }, 1000);
-        
-        
+          },
+          beforeSend: function(){
+            //$('#btn-deals-steals-activate').prop("disabled", true);
+            $('#btn-deals-steals-activate').html('<span class="bx bx-loader bx-spin"></span>');
+          }
+      });
     });
+      
 });
 </script>

@@ -24,13 +24,10 @@ if (!empty($dealsSteals)) :
             </td>
             <td class="fw-bold nsm-text-primary">
                 <label class="d-block"><?= $ds->title; ?></label>
-                <a class="nsm-link" name="btn_count" href="javascript:void(0);">
-                    $<?= number_format($ds->deal_price, 2); ?>
-                </a>
-            </td>
-            <td>0</td>
-            <td>0</td>
-            <td></td>
+                <label class="text-muted">$<?= number_format($ds->deal_price, 2); ?><label>
+            </td>            
+            <td><?= date("m/d/Y",strtotime($ds->valid_from)) . ' to ' . date("m/d/Y",strtotime($ds->valid_to)); ?></td>
+            <td><?= $ds->views_count > 0 ? $ds->views_count : 0; ?></td>
             <td><span class="nsm-badge <?= $badge ?>"><?= $statusOptions[$ds->status]; ?></span></td>
             <td>
                 <div class="dropdown table-management">

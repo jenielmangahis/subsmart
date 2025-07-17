@@ -1,9 +1,14 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/invoice/invoice_modals'); ?>
 <style>
-.status-label{
- font-size:13px;
+.status-label {
+    font-size:13px;
 }    
+.btn-nsm-custom {
+    color: #ffffff; 
+    background-color: #6a4a86; 
+    margin-top: -2px;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('invoice/add') ?>'">
@@ -148,14 +153,30 @@
                                 <li><a class="dropdown-item" data-id="filter_unpaid" href="<?php echo base_url('invoice/tab/unpaid') ?>">Unpaid</a></li>
                             </ul>
                         </div>
-                        <div class="nsm-page-buttons page-button-container">
+
+                        <div class="nsm-page-buttons page-button-container">                            
+                            <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-nsm btn-nsm-custom" id="btn-add-new-invoice"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Add Invoice</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split btn-nsm-custom" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                
+                                    <li><a class="dropdown-item" id="export-invoice-list" href="javascript:void(0);">Export</a></li>                               
+                                    <li><a class="dropdown-item" id="archived-invoice-list" href="javascript:void(0);">Manage Archived</a></li>                               
+                                </ul>
+                            </div>
+                            <?php } ?>
+                        </div>  
+
+                        <!-- <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('invoice/add') ?>'">
                                 <i class='bx bx-fw bx-receipt'></i> Add New Invoice
                             </button>
                             <button type="button" class="nsm-button primary" id="archived-invoice-list">
                                 <i class='bx bx-fw bx-trash'></i> Manage Archived
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <form id="frm-with-selected">
@@ -1146,6 +1167,15 @@
                     });
                 }
             });
+        });
+
+        $(document).on("click", "#btn-add-new-invoice", function(){
+            let url = "<?php echo base_url('invoice/add'); ?>";
+            location.href = url;            
+        });
+
+        $("#export-invoice-list").on("click", function() {
+            location.href = "<?php echo base_url('invoice/export_list'); ?>";
         });
 
         // $(document).on("click", ".clone-item", function(){

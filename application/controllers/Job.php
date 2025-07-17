@@ -43,14 +43,54 @@ class Job extends MY_Controller
         $userId = get('user_id');
         $leaderBoardType = get('leader_board_type');
 
+        $sort_by  = 'Newest First';
+        $sort     = ['field' => 'jobs.id', 'order' => 'DESC'];
+        if( get('order') ){
+            $sort_by = get('order');    
+            switch (get('order')) {
+                case 'added-desc':
+                    $sort_by = 'Newest First';
+                    $sort    = ['field' => 'jobs.id', 'order' => 'DESC'];
+                    break;
+                case 'added-asc':
+                    $sort_by = 'Oldest First';
+                    $sort    = ['field' => 'jobs.id', 'order' => 'ASC'];
+                    break;
+                case 'job-number-desc':
+                    $sort_by = 'Job Number: Descending';
+                    $sort    = ['field' => 'jobs.job_number', 'order' => 'DESC'];
+                    break;
+                case 'job-number-asc':
+                    $sort_by = 'Job Number: Ascending';
+                    $sort    = ['field' => 'jobs.job_number', 'order' => 'ASC'];
+                    break;
+                case 'amount-asc':
+                    $sort_by = 'Amount: Lowest';
+                    break;
+                case 'amount-desc':
+                    $sort_by = 'Amount: Highest';
+                    break;
+                default:
+                    $sort_by = 'Newest First';
+                    break;
+            }
+        }      
+        
+        $filter = 'All';
+        $conditions = [];
+        if( get('status') ){
+            $filter = get('status');            
+            $conditions[] = ['field' => 'jobs.status', 'value' => get('status')];
+        }
+
         if(get('job_tag')) {
             $tag_id = get('job_tag');
-            $jobs = $this->jobs_model->get_all_jobs_by_tag($tag_id, $userId, $leaderBoardType);
+            $jobs = $this->jobs_model->get_all_jobs_by_tag($tag_id, $userId, $leaderBoardType,$sort);
         }elseif(get('job_status')){
             $status = get('job_status');
-            $jobs = $this->jobs_model->get_all_jobs_by_status($status);
+            $jobs = $this->jobs_model->get_all_jobs_by_status($status,$sort);
         }else {
-            $jobs = $this->jobs_model->get_all_jobs($userId, $leaderBoardType);
+            $jobs = $this->jobs_model->get_all_jobs($userId, $leaderBoardType, $conditions, $sort);
         }
 
         $jobIds = array_map(function ($job) {
@@ -90,34 +130,6 @@ class Job extends MY_Controller
             }, $jobs);
         }
 
-        // $jobs = array_map(function ($job) {
-        //     if (!$job->work_order_id) {
-        //         return $job;
-        //     }
-
-        //     $this->db->select('installation_cost,otp_setup,monthly_monitoring');
-        //     $this->db->where('id', $job->work_order_id);
-        //     $workorderQuery = $this->db->get('work_orders');
-        //     $workorder = $workorderQuery->row();
-
-        //     if (!$workorder) {
-        //         return $job;
-        //     }
-
-        //     // make sure to include adjustment to total
-        //     if ($workorder->installation_cost) {
-        //         $job->amount = (float) $job->amount + (float) $workorder->installation_cost;
-        //     }
-        //     if ($workorder->otp_setup) {
-        //         $job->amount = (float) $job->amount + (float) $workorder->otp_setup;
-        //     }
-        //     if ($workorder->monthly_monitoring) {
-        //         $job->amount = (float) $job->amount + (float) $workorder->monthly_monitoring;
-        //     }
-
-        //     return $job;
-        // }, $jobs);
-
         $companyId = logged('company_id');
         $user_id   = logged('id');
         $user_type = logged('user_type');
@@ -139,7 +151,7 @@ class Job extends MY_Controller
         $scheduledJobs  = $this->jobs_model->getAllByCompanyIdAndStatus($companyId, 'Scheduled');
         $pendingJobs   = $this->jobs_model->getAllPendingByCompanyId($companyId);
         $completedJobs = $this->jobs_model->getAllByCompanyIdAndStatus($companyId, 'Completed');
-        
+                
         $this->page_data['user_type'] = $user_type;
         $this->page_data['employees'] = $employees;
         $this->page_data['jobs'] = $jobs;
@@ -147,7 +159,8 @@ class Job extends MY_Controller
         $this->page_data['scheduledJobs'] = $scheduledJobs;
         $this->page_data['pendingJobs'] = $pendingJobs;
         $this->page_data['completedJobs'] = $completedJobs;
-        
+        $this->page_data['sort_by'] = $sort_by;
+        $this->page_data['filter']  = $filter;
         $this->load->view('v2/pages/job/list', $this->page_data);
     }
 
@@ -6563,6 +6576,128 @@ class Job extends MY_Controller
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
+    }
+
+    public function ajax_archive_selected_jobs()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['jobs'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archived' => 1, 'archived_date' => date("Y-m-d H:i:s")];
+            $this->jobs_model->bulkUpdate($post['jobs'], $data, $filter);
+
+            //Activity Logs
+			$activity_name = 'Jobs : Archived ' . count($post['jobs']). ' job(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_restore_selected_jobs()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['jobs'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archived' => 'No'];
+            $this->jobs_model->bulkUpdate($post['jobs'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Jobs : Restored ' . count($post['jobs']). ' job(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_permanently_delete_selected_jobs()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['jobs'] ){
+
+			$total_archived = count($post['jobs']);
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $this->jobs_model->bulkDelete($post['jobs'], $filter);
+
+			//Activity Logs
+			$activity_name = 'Jobs : Permanently deleted ' .$total_archived. ' job(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_all_archived_jobs()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $jobs    = $this->jobs_model->getAllIsArchiveByCompanyId($company_id);
+		$total_archived = count($jobs);
+
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+		$this->jobs_model->deleteAllArchived($filter);
+
+		//Activity Logs
+		$activity_name = 'Jobs : Permanently deleted ' .$total_archived. ' job(s)'; 
+		createActivityLog($activity_name);
+
+		$is_success = 1;
+		$msg    = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function export_list()
+    {
+        
     }
 }
 

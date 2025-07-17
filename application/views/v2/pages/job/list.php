@@ -181,26 +181,44 @@ foreach ($jobs as $job) {
                 </div>
 
                 <div class="row mt-5">
-                    <div class="col-6 grid-mb">
-                        <div class="nsm-field-group search form-group">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_JOB_SEARCHBAR" placeholder="Search Job">
-                            <input class="d-none" id="CUSTOM_FILTER_SEARCHBAR" type="text" placeholder="Filter" data-index="20">
+                    <div class="col-12 col-md-6 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Job" value="">
                         </div>
-                    </div>
-                    <div class="col-6 grid-mb text-end">
+                    </div> 
+                    <div class="col-12 col-md-6 grid-mb text-end">
                         <div class="dropdown d-inline-block">
-                                <select id="CUSTOM_FILTER_DROPDOWN" class="dropdown-toggle nsm-button">
-                                    <option selected value="">All</option>
-                                    <option value="Draft">Draft</option>
-                                    <option value="Scheduled">Scheduled</option>
-                                    <option value="Arrival">Arrival</option>
-                                    <option value="Started">Started</option>
-                                    <option value="Approved">Approved</option>
-                                    <option value="Finished">Finished</option>
-                                    <option value="Cancelled">Cancelled</option>
-                                    <option value="Invoiced">Invoiced</option>
-                                    <option value="Completed">Completed</option>
-                                </select>
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Sort by <?php echo $sort_by; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item"
+                                        href="<?php echo base_url('job'); ?>?order=added-desc">Newest First</a></li>
+                                <li><a class="dropdown-item"
+                                        href="<?php echo base_url('job'); ?>?order=added-asc">Oldest First</a></li>                                
+                                <li><a class="dropdown-item"
+                                        href="<?php echo base_url('job'); ?>?order=job-number-desc">Job Number:
+                                        Descending</a></li>
+                                <li><a class="dropdown-item"
+                                        href="<?php echo base_url('job'); ?>?order=job-number-asc">Job Number:
+                                        Ascending</a></li>
+                            </ul>
+                        </div>
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Filter : <?= $filter; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a name="btn_filter" class="dropdown-item" data-status="all" href="javascript:void(0);">All</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-status="Scheduled" href="javascript:void(0);">Scheduled</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-status="Arrival" href="javascript:void(0);">Arrival</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-status="Started" href="javascript:void(0);">Started</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-status="Approved" href="javascript:void(0);">Approved</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-status="Finished" href="javascript:void(0);">Finished</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-status="Cancelled" href="javascript:void(0);">Cancelled</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-status="Invoiced" href="javascript:void(0);">Invoiced</a></li>
+                                <li><a name="btn_filter" class="dropdown-item" data-status="Completed" href="javascript:void(0);">Completed</a></li>
+                            </ul>
                         </div>
                         <?php if(checkRoleCanAccessModule('jobs', 'write')){ ?>
                         <div class="dropdown d-inline-block">
@@ -225,6 +243,7 @@ foreach ($jobs as $job) {
                     </div>
                 </div>
                 <form id="frm-with-selected">
+                <input type="hidden" id="filter-status" />
                 <table id="JOB_LIST_TABLE" class="nsm-table w-100">
                     <thead>
                         <tr>
@@ -244,7 +263,7 @@ foreach ($jobs as $job) {
                             <td data-name="Priority">Priority</td>
                             <td data-name="Status">Status</td>
                             <td data-name="Amount" style="text-align:right">Amount</td>
-                            <td data-name="Manage"></td>
+                            <td data-name="Manage" style="width:5%;"></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -288,7 +307,7 @@ foreach ($jobs as $job) {
                             <td>
                                 <div class="table-row-icon"><i class='bx bx-briefcase'></i></div>
                             </td>
-                            <td class="fw-bold nsm-text-primary">                                
+                            <td class="fw-bold show nsm-text-primary">                                
                                 <?= $job->job_number; ?>
                             </td>
                             <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
@@ -337,7 +356,7 @@ foreach ($jobs as $job) {
                                 <?php endif; ?>
                             </td>
                             <td><?php echo $job->priority; ?></td>
-                            <td><?php echo $job->status; ?></td>
+                            <td class="nsm-text-primary"><?php echo $job->status; ?></td>
                             <td style="text-align:right;">
                                 <?php 
                                     $total_job = $job->amount + $job->adjustment_value + $job->program_setup + $job->monthly_monitoring + $job->installation_cost + $job->tax_rate;
@@ -392,16 +411,14 @@ foreach ($jobs as $job) {
             </div>
 
             <div class="modal fade nsm-modal fade" id="modal-archived-jobs" aria-labelledby="modal-archived-jobs-label" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <form method="post" id="quick-add-event-form">   
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <span class="modal-title content-title">Archived Jobs</span>
-                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                            </div>
-                            <div class="modal-body" id="jobs-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title">Archived Jobs</span>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                         </div>
-                    </form>
+                        <div class="modal-body" id="jobs-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+                    </div>
                 </div>
             </div>
 
@@ -423,22 +440,16 @@ foreach ($jobs as $job) {
 <script src="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/dist/index.min.js"></script>
 <!-- End Map files -->
 <script type="text/javascript">
-var JOB_LIST_TABLE = $("#JOB_LIST_TABLE").DataTable({
-    "ordering": false,
-    language: {
-        processing: '<span>Fetching data...</span>'
-    },
-});
-
-$("#CUSTOM_JOB_SEARCHBAR").keyup(function() {
-    JOB_LIST_TABLE.search($(this).val()).draw()
-});
-JOB_LIST_TABLE_SETTINGS = JOB_LIST_TABLE.settings();
-
-$('#CUSTOM_FILTER_DROPDOWN').change(function(event) {
-    $('#CUSTOM_FILTER_SEARCHBAR').val($('#CUSTOM_FILTER_DROPDOWN').val());
-    JOB_LIST_TABLE.columns(9).search(this.value).draw();
-});
+$(".nsm-table").nsmPagination();
+$("#search_field").on("input", debounce(function() {
+    let search = $(this).val();
+    if( search == '' ){
+        $(".nsm-table").nsmPagination();
+    }else{
+        tableSearch($(this));        
+    }
+    
+}, 1000));
 
 $(document).on('click', '.btn-delete-job', function(){
     var job_id = $(this).attr('data-id');
@@ -488,6 +499,28 @@ $(document).ready(function() {
     $("#filter_invoiced").nsmPagination();
     $("#filter_completed").nsmPagination();
 
+    // $(".select-filter .dropdown-item").on("click", function() {
+    //     let status = $(this).attr('data-status');
+    //     let _this  = $('#filter-status');        
+    //     if( status == 'all' ){
+    //         _this.val('');
+    //         tableSearch(_this); 
+    //         $(".nsm-table").nsmPagination();  
+    //     }else{
+    //         _this.val(status);
+    //         tableSearch(_this);  
+    //     }
+    // });
+
+    $(".select-filter .dropdown-item").on("click", function() {
+        let status = $(this).attr('data-status');
+        if( status == 'all' ){
+            location.href = base_url + 'job';
+        }else{
+            location.href = base_url + 'job?status=' + status;
+        }
+    });
+
     $(document).on('change', '#select-all', function(){
         $('.row-select:checkbox').prop('checked', this.checked);  
         let total= $('input[name="jobs[]"]:checked').length;
@@ -511,7 +544,7 @@ $(document).ready(function() {
         location.href = base_url + 'job/new';
     });
 
-    $("#btn-export-list").on("click", function() {
+    $("#btn-export-jobs").on("click", function() {
         location.href = "<?php echo base_url('jobs/export_list'); ?>";
     });
 
@@ -611,7 +644,7 @@ $(document).ready(function() {
 
     $(document).on('click', '#with-selected-perma-delete', function(){
         Swal.fire({
-            title: 'Delete Users',
+            title: 'Delete Jobs',
             html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
             icon: 'question',
             confirmButtonText: 'Proceed',
@@ -628,7 +661,7 @@ $(document).ready(function() {
                         if( result.is_success == 1 ) {
                             $('#modal-archived-jobs').modal('hide');
                             Swal.fire({
-                                title: 'Delete Users',
+                                title: 'Delete Jobs',
                                 text: "Data deleted successfully!",
                                 icon: 'success',
                                 showCancelButton: false,

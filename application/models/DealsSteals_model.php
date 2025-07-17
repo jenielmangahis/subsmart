@@ -53,10 +53,23 @@ class DealsSteals_model extends MY_Model
         }
 
         $this->db->where('users.company_id', $company_id);
-
+        $this->db->order_by('deals_steals.id', 'DESC');
         $query = $this->db->get();
+
         return $query->result();
     }  
+
+    public function activeSummaryDealsByCompanyId($company_id)
+    {
+        $this->db->select('COALESCE(SUM(deals_steals.total_cost),0) AS sum_total_cost,COALESCE(SUM(deals_steals.deal_price),0) AS sum_total_deal_price,COALESCE(COUNT(deals_steals.id),0) as total_records');
+        $this->db->from($this->table);
+        $this->db->join('users', 'deals_steals.user_id = users.id', 'LEFT');
+
+        $this->db->where('users.company_id', $company_id);
+        $this->db->where('deals_steals.status', 1);
+        $query = $this->db->get()->row();
+        return $query;
+    }
 
     public function getByUserId($user_id)
     {

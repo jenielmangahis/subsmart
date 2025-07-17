@@ -220,8 +220,7 @@
                         </div>
                         <h4 class="step-title">Invoice</h4>
                     </div>
-                </div>            
-            
+                </div>  
             </div>
         </div>
         <div class="card bg-primary mb-3">
