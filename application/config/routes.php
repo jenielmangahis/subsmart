@@ -1714,6 +1714,9 @@ $route['customer/_customer_add_basic_information'] = 'Customer/ajax_customer_add
 $route['customer/_quick_save'] = 'Customer/ajax_quick_save_customer_v2';
 $route['customer/export_customer'] = 'Customer/customer_export';
 $route['customer/export_customer_ledger'] = 'Customer/export_customer_ledger';
+$route['customers/_create_sales_area'] = 'Customer/ajax_create_sales_area';
+$route['customers/_create_activation_fee'] = 'Customer/ajax_create_activation_fee';
+$route['customers/_create_system_package_type'] = 'Customer/ajax_create_system_package_type';
 
 // Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';
