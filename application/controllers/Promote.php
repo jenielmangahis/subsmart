@@ -63,6 +63,8 @@ class Promote extends MY_Controller {
         $this->page_data['status_scheduled'] = $this->DealsSteals_model->statusScheduled();
         $this->page_data['status_ended']     = $this->DealsSteals_model->statusEnded();
         $this->page_data['status_draft']     = $this->DealsSteals_model->statusDraft();
+        $this->page_data['status_expired']   = $this->DealsSteals_model->statusExpired();
+        $this->page_data['dealStealPrice']   = $this->DealsSteals_model->dealStealPrice();
         $this->page_data['page']->title = 'Deals & Steals';
         $this->page_data['page']->parent = 'Marketing';
 		$this->load->view('v2/pages/promote/deals', $this->page_data);
@@ -108,13 +110,15 @@ class Promote extends MY_Controller {
                     'original_price' => $post['price_original'],
                     'photos' => $photo,
                     'views_count' => 0,
-                    'date_modified' => date("Y-m-d H:i:s")
+                    'is_expired' => 'No',
+                    'date_modified' => date("Y-m-d H:i:s"),                    
                 ];
                 $dealsSteals = $this->DealsSteals_model->updateDealsSteals($deals_id, $data);
                 $is_success = true;
             }else{
                 $photo = $this->upload_photo();
                 $data = [
+                    'company_id' => $company_id,
                     'user_id' => $user_id,
                     'title' => $post['title'],
                     'description' => $post['description'],
@@ -165,12 +169,14 @@ class Promote extends MY_Controller {
         $customers   = $this->Customer_model->getAllByCompany($cid);            
         $customerGroups = $this->CustomerGroup_model->getAllByCompany($cid);
 
-        $selectedExcludes = unserialize($dealsSteals->exclude_customer_groups);
+        $selectedExcludes  = unserialize($dealsSteals->exclude_customer_groups);
+        $selectedCustomers = unserialize($dealsSteals->certain_customers);
+        $selectedGroups    = unserialize($dealsSteals->certain_groups);
 
         $this->page_data['dealsSteals'] = $dealsSteals;
-        $this->page_data['selectedCustomer'] = unserialize($dealsSteals->certain_customers);
-        $this->page_data['selectedGroups']   = unserialize($dealsSteals->certain_groups);
-        $this->page_data['selectedExcludes'] = $selectedExcludes;
+        $this->page_data['selectedCustomers'] = $selectedCustomers;
+        $this->page_data['selectedGroups']    = $selectedGroups;
+        $this->page_data['selectedExcludes']  = $selectedExcludes;
         $this->page_data['emailCampaign'] = $emailCampaign;
         $this->page_data['emailSendTo'] = $emailSendTo;
         $this->page_data['customers'] = $customers;
@@ -207,7 +213,7 @@ class Promote extends MY_Controller {
                 //Use optionC data
                 if(isset($post['optionC']['customer_group_id'])){
                     foreach( $post['optionC']['customer_group_id'] as $key => $value ){
-                        $data_customer_groups[] = $value;
+                        $data_customer_groups[$value] = $value;
                     }
                 }
             }
@@ -219,7 +225,7 @@ class Promote extends MY_Controller {
             }
 
             $data_setting = [
-                'customer_type' => $post['optionA']['customer_type_service'],
+                'customer_type' => $post['optionC']['customer_type_service'],
                 'sending_type' => $post['to_type'],
                 'certain_customers' => serialize($data_customers),
                 'certain_groups' => serialize($data_customer_groups),
@@ -280,6 +286,9 @@ class Promote extends MY_Controller {
         $deals_steals_id = $this->session->userdata('dealsStealsId');
 
         $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
+        if( $dealsSteals->status != 0 ){
+            redirect('promote/deals');
+        }
 
         $this->page_data['dealsSteals'] = $dealsSteals;
         $this->page_data['deals_price'] = $this->DealsSteals_model->dealStealPrice();
@@ -339,6 +348,10 @@ class Promote extends MY_Controller {
 
         $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
         $creditCards = $this->CardsFile_model->getAllByCompanyId($cid);
+
+        if( $dealsSteals->status != 0 ){
+            redirect('promote/deals');
+        }
 
         $this->page_data['creditCards'] = $creditCards;
         $this->page_data['dealsSteals'] = $dealsSteals;
@@ -518,25 +531,18 @@ class Promote extends MY_Controller {
         $company_id = logged('company_id');
         $dealSteals = $this->DealsSteals_model->getById($id);
         $this->session->unset_userdata('dealsStealsId');
-        if( $dealSteals ){
-            if( $dealSteals->company_id == $company_id ){
-
-                $this->session->set_userdata('dealsStealsId', $dealSteals->id);
-                $this->page_data['dealSteals'] = $dealSteals;
-                $this->load->view('v2/pages/promote/edit_deals', $this->page_data);
-            }else{
-                $this->session->set_flashdata('message', 'Record not found.');
-                $this->session->set_flashdata('alert_class', 'alert-danger');
-                redirect('promote/deals');
-            }
+        if( $dealSteals && $dealSteals->company_id == $company_id ){
+            $this->session->set_userdata('dealsStealsId', $dealSteals->id);
+            $this->page_data['dealSteals'] = $dealSteals;
+            $this->page_data['enable_deals_steals'] = true;
+            $this->load->view('v2/pages/promote/edit_deals', $this->page_data);
         }else{
-            $this->session->set_flashdata('message', 'Record not found.');
-            $this->session->set_flashdata('alert_class', 'alert-danger');
             redirect('promote/deals');
         }
     }
 
-    public function ajax_delete_deal(){
+    public function ajax_delete_deal()
+    {
         $is_success = 0;
         $msg = '';
 
@@ -806,6 +812,105 @@ class Promote extends MY_Controller {
             $this->page_data['dealsSteals'] = $dealsSteals;
             $this->load->view('v2/pages/promote/ajax_view_deals_steals', $this->page_data);
         }
+    }
+
+    public function ajax_reactivate_deal()
+    {
+        $this->load->model('Clients_model');
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->helper('converge_payment_helper');
+
+    	$is_success = false;
+        $msg = 'Invalid data';        
+        
+        $post = $this->input->post();
+        $company_id  = logged('company_id');
+        $client      = $this->Clients_model->getById($company_id);
+        $dealsSteals = $this->DealsSteals_model->getById($post['deal_id']);
+
+        if( ($dealsSteals && $dealsSteals->company_id == $company_id) && $client ){
+            $address    = $company->street.' '.$company->city.' '.$company->state;
+            $zip_code   = $company->postal_code;
+            $total_cost = $this->DealsSteals_model->dealStealPrice();
+            $paymentData = [
+                'amount' => $total_cost,
+                'card_number' => $post['card_number'],
+                'exp_month' => $post['exp_month'],
+                'exp_year' => $post['exp_year'],
+                'card_cvc' => $post['cvc'],
+                'address' => $address,
+                'zip' => $zip_code,
+            ];
+            $paymentResult = convergeSendSale($paymentData);
+            if( $paymentResult['is_success'] ){
+                $data = [
+                    'status' => $this->DealsSteals_model->statusActive(), 
+                    'total_cost' => $total_cost, 
+                    'date_activated' => date("Y-m-d"), 
+                    'date_expiration' => date("Y-m-d", strtotime('+1 month')),
+                    'is_expired' => 'No'
+                ];
+                $this->DealsSteals_model->updateDealsSteals($dealsSteals->id,$data);
+
+                // Record payment
+                $data_payment = [
+                    'company_id' => $company_id,
+                    'payment_id' => $paymentResult['ssl_txn_id'],
+                    'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiConverge(),
+                    'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypeDealsSteals(),
+                    'description' => 'Deals Steals : ' . $dealsSteals->title,
+                    'payment_date' => date('Y-m-d'),
+                    'total_amount' => $total_cost,
+                    'date_created' => date('Y-m-d H:i:s'),
+                ];
+
+                $id = $this->CompanySubscriptionPayments_model->create($data_payment);
+                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
+
+                $data = ['order_number' => $order_number];
+                $this->CompanySubscriptionPayments_model->update($id, $data);
+
+                $is_success = true;
+                $msg = 'Deals Steals was successfully activated.';
+
+                //Activity Logs
+                $activity_name = 'Deals Steals : Activated deals ' . $dealsSteals->title; 
+                createActivityLog($activity_name);
+
+            }else{
+                $is_success = false;
+                $msg = $paymentResult['msg'];
+            }
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_selected()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post(); 
+        $company_id = logged('company_id');
+
+        $filter[]   = ['field' => 'company_id', 'value' => $company_id];
+        $dealSteals = $this->DealsSteals_model->bulkDelete($post['deals'], $filter);
+
+        //Activity Logs
+        $activity_name = 'Deals Steals : Deleted ' .count($post['deals']). ' deal(s)'; 
+        createActivityLog($activity_name);
+
+        $is_success = 1;
+        $msg = '';
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ]; 
+
+        echo json_encode($json_data);
     }
 }
 /* End of file Promote.php */
