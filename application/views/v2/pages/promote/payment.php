@@ -50,7 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                       <div class="step-icon-wrap">
                                           <div class="step-icon"><i class='bx bx-credit-card'></i></div>
                                       </div>
-                                      <h4 class="step-title">Purchase</h4>
+                                      <h4 class="step-title">Payment</h4>
                                   </div>
                               </div>  
                           </div>
