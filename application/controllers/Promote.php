@@ -161,28 +161,32 @@ class Promote extends MY_Controller {
 		return $name;
 	}
 
-	public function add_send_to(){
-		$user = $this->session->userdata('logged');
-        $cid  = logged('company_id');
+	public function add_send_to()
+    {		
+        $company_id  = logged('company_id');
         $deals_steals_id = $this->session->userdata('dealsStealsId');        
-        $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
-        $customers   = $this->Customer_model->getAllByCompany($cid);            
-        $customerGroups = $this->CustomerGroup_model->getAllByCompany($cid);
+        $dealsSteals     = $this->DealsSteals_model->getById($company_id);
+        if( $dealsSteals && $dealsSteals->company_id == $company_id && $dealsSteals->status == $this->DealsSteals_model->statusDraft() ){
+            $customers   = $this->Customer_model->getAllByCompany($company_id);            
+            $customerGroups = $this->CustomerGroup_model->getAllByCompany($company_id);
 
-        $selectedExcludes  = unserialize($dealsSteals->exclude_customer_groups);
-        $selectedCustomers = unserialize($dealsSteals->certain_customers);
-        $selectedGroups    = unserialize($dealsSteals->certain_groups);
+            $selectedExcludes  = unserialize($dealsSteals->exclude_customer_groups);
+            $selectedCustomers = unserialize($dealsSteals->certain_customers);
+            $selectedGroups    = unserialize($dealsSteals->certain_groups);
 
-        $this->page_data['dealsSteals'] = $dealsSteals;
-        $this->page_data['selectedCustomers'] = $selectedCustomers;
-        $this->page_data['selectedGroups']    = $selectedGroups;
-        $this->page_data['selectedExcludes']  = $selectedExcludes;
-        $this->page_data['emailCampaign'] = $emailCampaign;
-        $this->page_data['emailSendTo'] = $emailSendTo;
-        $this->page_data['customers'] = $customers;
-        $this->page_data['customerGroups'] = $customerGroups;
-        $this->page_data['enable_deals_steals'] = true;
-        $this->load->view('v2/pages/promote/add_send_to', $this->page_data);
+            $this->page_data['dealsSteals'] = $dealsSteals;
+            $this->page_data['selectedCustomers'] = $selectedCustomers;
+            $this->page_data['selectedGroups']    = $selectedGroups;
+            $this->page_data['selectedExcludes']  = $selectedExcludes;
+            $this->page_data['emailCampaign'] = $emailCampaign;
+            $this->page_data['emailSendTo'] = $emailSendTo;
+            $this->page_data['customers'] = $customers;
+            $this->page_data['customerGroups'] = $customerGroups;
+            $this->page_data['enable_deals_steals'] = true;
+            $this->load->view('v2/pages/promote/add_send_to', $this->page_data);
+        }else{
+            redirect('promote/deals'); 
+        }
 	}
 
 	public function create_send_to()
@@ -241,16 +245,18 @@ class Promote extends MY_Controller {
 
     public function build_email()
     {
-        $cid  = logged('company_id');
+        $company_id  = logged('company_id');
         $deals_steals_id = $this->session->userdata('dealsStealsId');
-
-        $dealsSteals  = $this->DealsSteals_model->getById($deals_steals_id);
-        $company      = $this->Business_model->getByCompanyId($cid);
-
-        $this->page_data['company'] = $company;
-        $this->page_data['dealsSteals'] = $dealsSteals;
-        $this->page_data['enable_deals_steals'] = true;
-        $this->load->view('v2/pages/promote/build_email', $this->page_data);
+        $dealsSteals     = $this->DealsSteals_model->getById($deals_steals_id);
+        if( $dealsSteals && $dealsSteals->company_id == $company_id && $dealsSteals->status == $this->DealsSteals_model->statusDraft() ){
+            $company      = $this->Business_model->getByCompanyId($company_id);
+            $this->page_data['company'] = $company;
+            $this->page_data['dealsSteals'] = $dealsSteals;
+            $this->page_data['enable_deals_steals'] = true;
+            $this->load->view('v2/pages/promote/build_email', $this->page_data);
+        }else{
+            redirect('promote/deals'); 
+        }        
     }
 
     public function create_email_message()
@@ -282,11 +288,11 @@ class Promote extends MY_Controller {
     {
         $this->load->helper('functions');
 
-        $cid  = logged('company_id');
+        $company_id  = logged('company_id');
         $deals_steals_id = $this->session->userdata('dealsStealsId');
 
         $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
-        if( $dealsSteals->status != 0 ){
+        if( $dealsSteals && $dealsSteals->company_id != $company_id && $dealsSteals->status != 0 ){
             redirect('promote/deals');
         }
 
@@ -342,18 +348,15 @@ class Promote extends MY_Controller {
 
     public function payment()
     {
-    	$this->load->model('CardsFile_model');
-    	$cid  = logged('company_id');
+    	$company_id  = logged('company_id');        
         $deals_steals_id = $this->session->userdata('dealsStealsId');
 
         $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
-        $creditCards = $this->CardsFile_model->getAllByCompanyId($cid);
 
-        if( $dealsSteals->status != 0 ){
+        if( $dealsSteals && $dealsSteals->company_id != $company_id && $dealsSteals->status != 0 ){        
             redirect('promote/deals');
         }
-
-        $this->page_data['creditCards'] = $creditCards;
+        
         $this->page_data['dealsSteals'] = $dealsSteals;
         $this->page_data['deals_price'] = $this->DealsSteals_model->dealStealPrice();
         $this->page_data['enable_deals_steals'] = true;
@@ -527,17 +530,18 @@ class Promote extends MY_Controller {
         echo json_encode($json_data);
     }
 
-    public function edit_deals($id){
+    public function edit_deals($id)
+    {
         $company_id = logged('company_id');
         $dealSteals = $this->DealsSteals_model->getById($id);
-        $this->session->unset_userdata('dealsStealsId');
-        if( $dealSteals && $dealSteals->company_id == $company_id ){
+        if( $dealSteals && $dealSteals->company_id == $company_id && $dealSteals->status == $this->DealsSteals_model->statusDraft() ){
             $this->session->set_userdata('dealsStealsId', $dealSteals->id);
+
             $this->page_data['dealSteals'] = $dealSteals;
             $this->page_data['enable_deals_steals'] = true;
             $this->load->view('v2/pages/promote/edit_deals', $this->page_data);
         }else{
-            redirect('promote/deals');
+           redirect('promote/deals'); 
         }
     }
 
