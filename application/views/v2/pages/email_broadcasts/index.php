@@ -1,71 +1,71 @@
 <?php include viewPath('v2/includes/header'); ?>
 <style>
-div.tagsinput span.tag{
-    background-color:#6a4a86 !important;
-    color:#ffffff !important;
-}
-div.tagsinput input {
- width:auto !important;
-}
-#btn-select-customer{
-    
-}
-#modal-send-test{
-    margin-top:9%;
-}
-.preview-subject{
-    padding: 69px;
-    text-align: left;    
-}
-.preview-text{
-    font-size: 12px;
-    white-space: nowrap;
-    width: 79%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-    position: relative;
-    top: 5px;
-}
-#modal-create-email-broadcast .modal-xl{
-    max-width:1500px !important;
-}
-#btn-send-test-broadcast, #btn-send-broadcast{
-    width:163px;
-}
-.btn-recipient-summary{
-    text-decoration:none;
-    color:inherit;
-}
-.badge-draft{
-    color: #ffffff;
-    background-color: #6c757d;
-}
-.badge-info{
-    color: #ffffff;
-    background-color: #17a2b8;
-}
-.badge-success{
-    color: #ffffff;
-    /* background-color: #6a4a86; */
-    background-color:#28a745;
-}
-#email-broadcast-list .nsm-badge{
-    width:100%;
-    display:block;
-    border-radius:5px;
-    text-align:center;
-}
-#btn-search-list{
-    margin:0px;
-}
-#btn-search-list i{
-    position:relative;
-    top:2px;
-}
-.nsm-field-group::before {
- left:18px !important;
-}
+    div.tagsinput span.tag{
+        background-color:#6a4a86 !important;
+        color:#ffffff !important;
+    }
+    div.tagsinput input {
+    width:auto !important;
+    }
+    #btn-select-customer{
+        
+    }
+    #modal-send-test{
+        margin-top:9%;
+    }
+    .preview-subject{
+        padding: 69px;
+        text-align: left;    
+    }
+    .preview-text{
+        font-size: 12px;
+        white-space: nowrap;
+        width: 79%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        position: relative;
+        top: 5px;
+    }
+    #modal-create-email-broadcast .modal-xl{
+        max-width:1500px !important;
+    }
+    #btn-send-test-broadcast, #btn-send-broadcast{
+        width:163px;
+    }
+    .btn-recipient-summary{
+        text-decoration:none;
+        color:inherit;
+    }
+    .badge-draft{
+        color: #ffffff;
+        background-color: #6c757d;
+    }
+    .badge-info{
+        color: #ffffff;
+        background-color: #17a2b8;
+    }
+    .badge-success{
+        color: #ffffff;
+        /* background-color: #6a4a86; */
+        background-color:#28a745;
+    }
+    #email-broadcast-list .nsm-badge{
+        width:100%;
+        display:block;
+        border-radius:5px;
+        text-align:center;
+    }
+    #btn-search-list{
+        margin:0px;
+    }
+    #btn-search-list i{
+        position:relative;
+        top:2px;
+    }
+    .nsm-field-group::before {
+    left:18px !important;
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('email_campaigns/add_email_blast') ?>'">
@@ -88,7 +88,7 @@ div.tagsinput input {
                     </div>
                 </div>
                 <div class="row mt-4">
-                    <div class="col-4 grid-mb text-end">
+                    <div class="col-5 grid-mb text-end">
                         <div class="nsm-field-group search form-group" style="display:block;max-width:600px;">
                             <form id="frm-list-search">
                                 <input type="text" class="nsm-field nsm-search form-control mb-2" id="search-list" value="<?= $search; ?>" placeholder="Search List..." style="width:92%; display:inline-block;" required>                            
@@ -96,7 +96,7 @@ div.tagsinput input {
                             </form>
                         </div>                        
                     </div>
-                    <div class="col-8 grid-mb text-end">
+                    <div class="col-7 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 Filter by Status: <span><?= $filter; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
@@ -110,7 +110,7 @@ div.tagsinput input {
                         </div>
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                                <span id="num-checked"></span> With Selected <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
                                 <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="pause">Pause</a></li>
@@ -119,7 +119,8 @@ div.tagsinput input {
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary" id="btn-create-email-broadcast" href="javascript:void(0);"><i class='bx bx-fw bx-envelope'></i> Create Email Broadcast</a>                            
+                            <!-- <a class="nsm-button primary" id="btn-create-email-broadcast" href="javascript:void(0);"><i class='bx bx-fw bx-envelope'></i> Create Email Broadcast</a> -->
+                            <a class="nsm-button primary" id="btn-create-email-broadcast" href="javascript:void(0);"><i class='bx bx-plus'></i> Add New</a>                            
                         </div>
                     </div>
                 </div>
@@ -141,7 +142,7 @@ div.tagsinput input {
                     <tbody>
                         <?php foreach($emailBroadcasts as $eb){ ?>
                             <tr>
-                                <td><input type="checkbox" name="row_selected[]" class="form-check-input chk-row" value="<?= $eb->id; ?>" /></td>
+                                <td><input type="checkbox" name="row_selected[]" class="form-check-input chk-row row-select" value="<?= $eb->id; ?>" /></td>
                                 <td>
                                     <div class="table-row-icon">
                                         <?php if( $eb->status == 'Completed' ){ ?>
@@ -303,7 +304,7 @@ div.tagsinput input {
                 <form>
                     <div class="modal-header">
                         <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bxs-user-account' ></i> Select Customer</span>
-                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+                        <button class="border-0 rounded mx-1 close-select-customer-modal" id="close-select-customer-modal" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                     </div>
                     <div class="modal-body">                        
                         <div id="customer-list-container"></div>
@@ -591,6 +592,10 @@ $(function(){
                 
             }
         });   
+    });
+
+    $('#close-select-customer-modal').on('click', function(){
+        $('#modal-create-email-broadcast').modal('show'); 
     });
 
     $('#btn-select-customer').on('click', function(){
@@ -982,6 +987,25 @@ $(function(){
         }
         
     });
+
+    $(document).on('change', '#chk-all-row', function(){
+        $('.row-select:checkbox').prop('checked', this.checked);  
+        let total= $('input[name="row_selected[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
+    $(document).on('change', '.row-select', function(){
+        let total= $('input[name="row_selected[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });     
 });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
