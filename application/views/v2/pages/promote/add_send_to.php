@@ -97,7 +97,7 @@
 
                                     <div class="col-sm-12 sending-option-1 mt-4">
                                         <div class="margin-bottom-ter count-summary">
-                                            <span class="customer-count" data-to="customer-count-all"><?= count($customers); ?></span> contacts have a valid phone (excluding unsubscribed).
+                                            <span class="customer-count" data-to="customer-count-all"><?= count($customers); ?></span> contacts have a valid email.
                                         </div>
                                         <div class="margin-bottom-sec mt-4">
                                             <label><b>Customer Type</b></label>
@@ -116,7 +116,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group mt-4">
+                                        <!-- <div class="form-group mt-4">
                                             <label><b>Exclude Customer Groups</b> <span class="bx bx-fw bx-help-circle" id="popover-help-exclude-customer-groups"></span></label>                                            
                                             <ul class="group-list">
                                                 <?php foreach($customerGroups as $cg){ ?>
@@ -137,7 +137,7 @@
                                                     </li>
                                                 <?php } ?>
                                             </ul>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <div class="col-sm-12 sending-option-2 customer selected mt-4" style="display: none;margin-bottom:20px ​!important;">
                                         <div class="margin-bottom-ter count-summary">
@@ -162,7 +162,7 @@
                                                     <tr>
                                                         <td style="width:1%;"></td>
                                                         <td data-name="CustomerName">Name</td>
-                                                        <td data-name="CustomerPhone" style="width: 10%;">Phone</td>
+                                                        <td data-name="CustomerPhone" style="width: 10%;">Email</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -186,7 +186,7 @@
                                                             <td class="fw-bold show nsm-text-primary">
                                                                 <?= $c->first_name . ' ' . $c->last_name; ?>
                                                             </td class="show nsm-text-primary">
-                                                            <td><?= $c->phone_m; ?></td>
+                                                            <td><?= $c->email; ?></td>
                                                         </tr>
                                                         <?php } ?>
                                                     <?php } ?>
