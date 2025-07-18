@@ -99,6 +99,16 @@
                     <div class="col-7 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span id="num-checked"></span> With Selected <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="pause">Pause</a></li>
+                                <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="resume">Resume</a></li>                                
+                                <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
+                        </div>
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 Filter by Status: <span><?= $filter; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
@@ -106,16 +116,6 @@
                                 <li><a class="dropdown-item btn-filter" href="javascript:void(0);" data-status="draft">Draft</a></li>                                
                                 <li><a class="dropdown-item btn-filter" href="javascript:void(0);" data-status="ongoing">Ongoing</a></li>                                
                                 <li><a class="dropdown-item btn-filter" href="javascript:void(0);" data-status="completed">Completed</a></li>                                
-                            </ul>
-                        </div>
-                        <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span id="num-checked"></span> With Selected <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="pause">Pause</a></li>
-                                <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="resume">Resume</a></li>                                
-                                <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">

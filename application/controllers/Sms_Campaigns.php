@@ -6,9 +6,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Sms_Campaigns extends MY_Controller
 {
-
-
-
     public function __construct()
     {
         parent::__construct();
@@ -344,7 +341,13 @@ class Sms_Campaigns extends MY_Controller
             $conditions[] = ['field' => 'sms_blast.status', 'value' => $status];
         }
 
-        $smsBlast      = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+        $filters = array();
+        $get_data     = $this->input->get();        
+        if($get_data['search_key'] != 'na') {
+            $filters['search'] = $get_data['search_key'];
+        }        
+
+        $smsBlast      = $this->SmsBlast_model->getAllByCompanyId($company_id, $filters, $conditions);
         $sendToOptions = $this->SmsBlast_model->sendToOptions();
         $statusOptions = $this->SmsBlast_model->statusOptions();
         $status_draft  = $this->SmsBlast_model->statusDraft();
@@ -354,6 +357,7 @@ class Sms_Campaigns extends MY_Controller
         $this->page_data['sendToOptions'] = $sendToOptions;
         $this->page_data['smsBlast']      = $smsBlast;
         $this->page_data['status_draft']  = $status_draft;
+
         // $this->load->view('sms_campaigns/ajax_load_campaigns', $this->page_data);
         $this->load->view('v2/pages/sms_campaigns/load_campaigns', $this->page_data);
     }
@@ -1090,6 +1094,61 @@ class Sms_Campaigns extends MY_Controller
         $this->page_data['smsLogs']  = $smsLogs;
         $this->load->view('v2/pages/sms_campaigns/view_logs', $this->page_data);
     }
+
+    public function ajax_delete_selected()
+    {
+        $is_success = 0;
+        $msg = 'Nothing to delete';
+
+        $post = $this->input->post();
+
+        if($post && $post['with_selected_action'] == 'delete') {
+            $total_deleted = 0;
+            foreach($post['row_selected'] as $smsBlast_id){
+                $smsBlastDelete = $this->SmsBlast_model->deleteSmsBlast($smsBlast_id);
+                $total++;
+            }
+
+            if( $total > 0 ){
+                $is_success = 1;
+                $msg = 'Selected SMS Blast was successfully deleted';
+            }
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }   
+    
+    public function ajax_delete_sms_blast()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+
+        $smsBlast =  $this->SmsBlast_model->getById($post['smsb_id']);
+        if( $smsBlast ){
+            
+            $smsBlastDelete = $this->SmsBlast_model->deleteSmsBlast($post['smsb_id']);
+
+            if($smsBlastDelete) {
+                $is_success = 1;
+                $msg = '';
+            }
+
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }    
 }
 
 
