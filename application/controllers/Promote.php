@@ -165,7 +165,7 @@ class Promote extends MY_Controller {
     {		
         $company_id  = logged('company_id');
         $deals_steals_id = $this->session->userdata('dealsStealsId');        
-        $dealsSteals     = $this->DealsSteals_model->getById($company_id);
+        $dealsSteals     = $this->DealsSteals_model->getById($deals_steals_id);
         if( $dealsSteals && $dealsSteals->company_id == $company_id && $dealsSteals->status == $this->DealsSteals_model->statusDraft() ){
             $customers   = $this->Customer_model->getAllByCompany($company_id);            
             $customerGroups = $this->CustomerGroup_model->getAllByCompany($company_id);
