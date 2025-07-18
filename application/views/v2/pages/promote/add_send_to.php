@@ -67,7 +67,7 @@
                                             <?php if($dealsSteals){ ?>
                                                 <div class="radio radio-sec margin-right">
                                                     <input type="radio" name="to_type" value="1" id="to_type_1" <?= $dealsSteals->sending_type == 1 ? 'checked="checked"' : ''; ?> checked="checked">
-                                                    <label for="to_type_1">All my customers with phone</label>
+                                                    <label for="to_type_1">All my customers with email</label>
                                                 </div>
                                                 <div class="radio radio-sec margin-right">
                                                     <input type="radio" name="to_type" value="2" id="to_type_3" <?= $dealsSteals->sending_type == 2 ? 'checked="checked"' : ''; ?>>
