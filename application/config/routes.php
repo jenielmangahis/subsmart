@@ -1538,6 +1538,7 @@ $route['promote/update_validity'] = 'Promote/ajax_update_validity';
 $route['promote/payment'] = 'Promote/payment';
 $route['promote/_activate_deals'] = 'Promote/ajax_activate_deals';
 $route['promote/deals/_view'] = 'Promote/ajax_view_deals_steals';
+$route['promote/deals/_reactivate_deal'] = 'Promote/ajax_reactivate_deal';
 //$route['promote/_load_deals_list/(:any)'] = 'Promote/ajax_load_deals_list/$1';
 $route['promote/_load_status_counter'] = 'Promote/ajax_load_status_counter';
 $route['promote/_close_deal'] = 'Promote/ajax_close_deal';
@@ -1714,6 +1715,9 @@ $route['customer/_customer_add_basic_information'] = 'Customer/ajax_customer_add
 $route['customer/_quick_save'] = 'Customer/ajax_quick_save_customer_v2';
 $route['customer/export_customer'] = 'Customer/customer_export';
 $route['customer/export_customer_ledger'] = 'Customer/export_customer_ledger';
+$route['customers/_create_sales_area'] = 'Customer/ajax_create_sales_area';
+$route['customers/_create_activation_fee'] = 'Customer/ajax_create_activation_fee';
+$route['customers/_create_system_package_type'] = 'Customer/ajax_create_system_package_type';
 
 // Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';

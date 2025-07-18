@@ -37,6 +37,7 @@
                                         </div>
                                         <h4 class="step-title">Build Email</h4>
                                     </div>
+                                    <?php if( $dealSteals && $dealSteals->status == 0 ){ ?>
                                     <div class="step">
                                         <div class="step-icon-wrap">
                                             <div class="step-icon"><i class='bx bx-search-alt-2'></i></div>
@@ -49,6 +50,7 @@
                                         </div>
                                         <h4 class="step-title">Purchase</h4>
                                     </div>
+                                    <?php } ?>
                                 </div>  
                             </div>
                         </div>
@@ -135,8 +137,12 @@
                         <a class="nsm-button margin-right btn-preview-email mt-10" href="javascript:void(0);">Preview Email</a>
                     </div>
                     <div class="col-6 mt-3 text-end">
-                        <button type="button" name="btn_back" class="nsm-button" onclick="location.href='<?php echo url('promote/edit_deals/' . $dealsSteals->id); ?>'">« Back</button>                        
-                        <button type="submit" name="btn_save" class="nsm-button primary btn-save-send-settings">Continue »</button>
+                        <button type="button" name="btn_back" class="nsm-button" onclick="location.href='<?php echo url('promote/add_send_to/' . $dealsSteals->id); ?>'">« Back</button>                        
+                        <?php if( $dealSteals && $dealSteals->status == 0 ){ ?>
+                            <button type="submit" name="btn_save" class="nsm-button primary btn-save-send-settings">Continue »</button>
+                        <?php }else{ ?>
+                            <button type="submit" name="btn_save" class="nsm-button primary btn-save-send-settings">Save</button>
+                        <?php } ?>
                     </div>
                 </div>
                 <?php echo form_close(); ?>
@@ -177,7 +183,11 @@ $(function(){
 
                 if( o.is_success ){                        
                     //redirect to step4
-                    location.href = base_url + "promote/preview_email_message";
+                    <?php if( $dealSteals && $dealSteals->status == 0 ){ ?>
+                        location.href = base_url + "promote/preview_email_message";
+                    <?php }else{ ?>
+                        location.href = base_url + "promote/deals";
+                    <?php } ?>
                 }else{
                     Swal.fire({
                         title: 'Error',

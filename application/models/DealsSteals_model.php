@@ -108,6 +108,24 @@ class DealsSteals_model extends MY_Model
         return $query;
     }
 
+    public function bulkDelete($ids = [], $filters = [])
+    {
+        $this->db->from($this->table);
+        $this->db->join('users', 'deals_steals.user_id = users.id', 'LEFT');
+
+        if( count($ids) > 0 ){
+            $this->db->where_in('id', $ids);
+
+            if( $filters ){
+                foreach( $filters as $filter ){
+                    $this->db->where($filter['field'], $filter['value']);
+                }
+            }
+
+            $this->db->delete($this->table);
+        }        
+    }
+
     public function isActive(){
         return $this->is_active;
     }
@@ -152,6 +170,10 @@ class DealsSteals_model extends MY_Model
 
     public function statusActive(){
         return $this->status_active;
+    }
+
+    public function statusExpired(){
+        return $this->status_expired;
     }
 
     public function statusOptions(){
