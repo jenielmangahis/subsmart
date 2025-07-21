@@ -28,6 +28,10 @@ class MY_Controller extends CI_Controller {
 			redirect('login','refresh');
 		} */
 
+		if( $this->isSessionExpires() ){
+			redirect('logout');
+		}
+
 		$this->page_data['url'] = (object) [
 			'assets' => assets_url()
 		];
@@ -64,6 +68,18 @@ class MY_Controller extends CI_Controller {
 				// }
 			}
 		}		
+	}
+
+	public function isSessionExpires()
+	{
+		$ci->load->library('session');
+
+		$is_expired = false;
+		if(!$ci->session->userdata('login_token')){
+			$is_expired = true;
+		}
+
+		return $is_expired;
 	}
 
 	public function gtMyIpGlobal(){
