@@ -44,7 +44,6 @@ class SmsBlast_model extends MY_Model
 
     public function getAllByCompanyId($company_id, $filters=array(), $conditions=array())
     {
-
         $this->db->select('sms_blast.*, users.id AS uid, users.company_id');
         $this->db->from($this->table);
         $this->db->join('users', 'sms_blast.user_id = users.id', 'LEFT');
@@ -113,7 +112,7 @@ class SmsBlast_model extends MY_Model
     
     public function deleteSmsBlast($id){
         $user_id = logged('id');
-        $this->db->delete($this->table, array('id' => $id));
+        return $this->db->delete($this->table, array('id' => $id));
     } 
 
     public function statusOptions(){

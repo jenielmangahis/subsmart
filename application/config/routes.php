@@ -1068,6 +1068,8 @@ $route['sms_campaigns/_load_paypal'] = 'Sms_Campaigns/get_paypal';
 $route['sms_campaigns/process_paypal_payment'] = 'Sms_Campaigns/process_paypal_payment';
 $route['sms_campaigns/process_stripe_payment'] = 'Sms_Campaigns/ajax_process_stripe_payment';
 $route['sms_campaigns/invoice_pdf/(:any)'] = 'Sms_Campaigns/campaign_invoice_pdf/$1';
+$route['sms_campaigns/_delete_selected'] = 'Sms_Campaigns/ajax_delete_selected';
+$route['sms_campaigns/_delete_sms_blast'] = 'Sms_Campaigns/ajax_delete_sms_blast';
 
 // sms automation
 $route['sms_automation/_load_automation_list/(:any)'] = 'Sms_Automation/ajax_load_automation_list/$1';
@@ -1715,9 +1717,7 @@ $route['customer/_customer_add_basic_information'] = 'Customer/ajax_customer_add
 $route['customer/_quick_save'] = 'Customer/ajax_quick_save_customer_v2';
 $route['customer/export_customer'] = 'Customer/customer_export';
 $route['customer/export_customer_ledger'] = 'Customer/export_customer_ledger';
-$route['customers/_create_sales_area'] = 'Customer/ajax_create_sales_area';
-$route['customers/_create_activation_fee'] = 'Customer/ajax_create_activation_fee';
-$route['customers/_create_system_package_type'] = 'Customer/ajax_create_system_package_type';
+$route['customer/_create_sales_area'] = 'Customer/ajax_create_sales_area';
 
 // Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';

@@ -22,7 +22,22 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-5 grid-mb text-end">
+                        <div class="nsm-field-group search form-group" style="display:block;max-width:600px;">
+                            <form id="frm-list-search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2 sms-blast-search-list" id="sms-blast-search-list" value="<?= $search; ?>" placeholder="Search List..." style="">                            
+                            </form>
+                        </div>                        
+                    </div>                    
+                    <div class="col-7 grid-mb text-end">
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span id="num-checked"></span> With Selected <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-action">                                
+                                <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
+                        </div>
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter by Status: All Campaigns</span> <i class='bx bx-fw bx-chevron-down'></i>
@@ -37,26 +52,31 @@
                         </div>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" name="btn_create_sms_blast" class="nsm-button primary" onclick="location.href='<?php echo url('sms_campaigns/add_sms_blast') ?>'">
-                                <i class='bx bx-fw bx-chat'></i> Create SMS Blast
-                            </button>
+                                <i class='bx bx-plus'></i> Add New
+                            </button>                      
+                        </div>
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
-                    <thead>
-                        <tr>
-                            <td class="table-icon"></td>
-                            <td data-name="Campaign">Campaign</td>
-                            <td data-name="Send To">Send To</td>
-                            <td data-name="Sent on">Sent on</td>
-                            <td data-name="Paid">Is Paid</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody id="sms_blast_container">
-                    </tbody>
-                </table>
+                <form id="frm-with-selected">
+                <input type="hidden" name="with_selected_action" value="" id="with-selected-action" />                
+                    <table class="nsm-table">
+                        <thead>
+                            <tr>
+                                <td style="width: 10px;"><input type="checkbox" class="form-check-input" id="chk-all-row" /></td>
+                                <td class="table-icon"></td>
+                                <td data-name="Campaign">Campaign</td>
+                                <td data-name="Send To">Send To</td>
+                                <td data-name="Sent on">Sent on</td>
+                                <td data-name="Paid">Is Paid</td>
+                                <td data-name="Status">Status</td>
+                                <td data-name="Manage"></td>
+                            </tr>
+                        </thead>
+                        <tbody id="sms_blast_container">
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
     </div>
@@ -185,14 +205,141 @@
                 }                
             });
         });
+
+        $(document).on('change', '#chk-all-row', function(){
+            $('.row-select:checkbox').prop('checked', this.checked);  
+            let total= $('input[name="row_selected[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
+        });
+
+        $(document).on('change', '.row-select', function(){
+            let total= $('input[name="row_selected[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
+        });       
+
+        $(document).on('keydown', '.sms-blast-search-list', function(){
+            let search_key = $('.sms-blast-search-list').val();
+            if(search_key != null && search_key != '') {
+                loadSMSBlasts('all', search_key);
+            } else  {
+                loadSMSBlasts();
+            }
+        });
+
+        $(document).on('change', '.sms-blast-search-list', function(){
+            let search_key = $('.sms-blast-search-list').val();
+            if(search_key == '') {
+                loadSMSBlasts();
+            }
+        });
+
+        $('.btn-with-selected').on('click', function(){
+            var action = $(this).attr('data-action');
+            var total_selected = $('input[name="row_selected[]"]:checked').length;
+            if( total_selected > 0 ){
+                if( action == 'delete' ){
+                    var msg = 'Proceed with <b>deleting</b> selected rows?';
+                    var url = base_url + 'sms_campaigns/_delete_selected';
+                    $('#with-selected-action').val('delete');
+                }
+
+                Swal.fire({
+                    title: 'With Selected Action',
+                    html: msg,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: $('#frm-with-selected').serialize(),
+                            dataType:'json',
+                            success: function(result) {
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: result.msg,
+                                    }).then((result) => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select row',
+                });
+            }        
+        });   
+        
+        $(document).on("click", ".btn-delete-sms-blast", function() {
+            var sms_blast_name = $(this).attr('data-blast-name');
+            var smsb_id = $(this).attr('data-id');
+
+            Swal.fire({
+                title: 'Delete',
+                html: `Proceed with deleting <b>${sms_blast_name}</b>?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "sms_campaigns/_delete_sms_blast",
+                        data: {smsb_id:smsb_id},
+                        dataType:'json',
+                        success: function(result) {
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'SMS Blast was successfully deleted.',
+                                }).then((result) => {
+                                    window.location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });        
     });
 
-    function loadSMSBlasts(status = 'all') {
+    function loadSMSBlasts(status = 'all', search_key = 'na') {
         let _container = $("#sms_blast_container");
         let loader = '<tr><td colspan="7"><div class="nsm-loader"><i class="bx bx-loader-alt bx-spin"></i></div></td></tr>';
-        let url = "<?php echo base_url(); ?>sms_campaigns/_load_campaigns/" + status;
+        let url = "<?php echo base_url(); ?>sms_campaigns/_load_campaigns/" + status + "?search_key=" + search_key;
         _container.html(loader);
-
 
         $.ajax({
             type: 'POST',

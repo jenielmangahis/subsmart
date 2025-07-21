@@ -5,6 +5,7 @@ if (!empty($smsBlast)) :
     foreach ($smsBlast as $sb) :
     ?>
         <tr>
+            <td><input type="checkbox" name="row_selected[]" class="form-check-input chk-row row-select" value="<?= $sb->id; ?>" /></td>
             <td>
                 <div class="table-row-icon">
                     <i class='bx bx-chat'></i>
@@ -72,6 +73,9 @@ if (!empty($smsBlast)) :
                                 <a class="dropdown-item close-item" name="dropdown_close" href="javascript:void(0);" data-name="<?= $sb->campaign_name; ?>" data-id="<?= $sb->id; ?>">Close</a>
                             </li>
                         <?php endif; ?>
+                        <li>
+                            <a class="dropdown-item btn-delete-sms-blast" href="javascript:void(0);" data-blast-name="<?= $sb->campaign_name; ?>" data-id="<?= $sb->id; ?>">Delete</a>
+                        </li>
                     </ul>
                 </div>
             </td>
@@ -83,7 +87,7 @@ if (!empty($smsBlast)) :
 else :
 ?>
     <tr>
-        <td colspan="7">
+        <td colspan="8">
             <div class="nsm-empty">
                 <span>No results found.</span>
             </div>

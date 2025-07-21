@@ -138,7 +138,7 @@
                                             <label class="text-muted">$<?= number_format($ds->deal_price, 2); ?><label>
                                         </td>            
                                         <td><?= date("m/d/Y",strtotime($ds->valid_from)) . ' to ' . date("m/d/Y",strtotime($ds->valid_to)); ?></td>
-                                        <td><?= date("m/d/Y", strtotime($ds->date_expiration)); ?></td>
+                                        <td><?= $ds->status != 0 ? date("m/d/Y", strtotime($ds->date_expiration)) : '---'; ?></td>
                                         <td><?= $ds->views_count > 0 ? $ds->views_count : 0; ?></td>
                                         <td><span class="nsm-badge <?= $badge ?>">
                                             <?php 
@@ -157,22 +157,15 @@
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <li>
                                                         <a class="dropdown-item row-btn-view" name="dropdown_list" data-id="<?= $ds->id; ?>" href="javascript:void(0);">View</a>
-                                                    </li>                                                     
-                                                    <?php if( $ds->status == $status_ended ){ ?>     
+                                                    </li>       
+                                                    <?php if( $ds->status == $status_draft ){ ?>
                                                         <li>
                                                             <a class="dropdown-item" name="dropdown_edit" href="<?php echo base_url('promote/edit_deals/' . $ds->id) ?>">Edit</a>
-                                                        </li>
-                                                    <?php }elseif( $ds->status == $status_active ){ ?>
-                                                        <li>
-                                                            <a class="dropdown-item" name="dropdown_edit" href="<?php echo base_url('promote/edit_deals/' . $ds->id) ?>">Edit</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item close-item" name="dropdown_close_deal" href="javascript:void(0);" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>">Close Deal</a>
                                                         </li>
                                                     <?php } ?>
-                                                    <?php if( $ds->is_expired == 'Yes' ){ ?>
+                                                    <?php if( $ds->status == $status_active ){ ?>                                                        
                                                         <li>
-                                                            <a class="dropdown-item row-btn-reactivate" name="dropdown_reactivate" data-id="<?= $ds->id; ?>" href="javascript:void(0);">Reactivate Deal</a>
+                                                            <a class="dropdown-item close-item" name="dropdown_close_deal" href="javascript:void(0);" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>">Close Deal</a>
                                                         </li>
                                                     <?php } ?>
                                                     <li>

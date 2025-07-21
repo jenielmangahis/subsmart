@@ -37,18 +37,18 @@
                                         </div>
                                         <h4 class="step-title">Build Email</h4>
                                     </div>
-                                    <?php if( $dealSteals && $dealSteals->status == 0 ){ ?>
+                                    <?php if( $dealsSteals && $dealsSteals->status == 0 ){ ?>
                                     <div class="step">
                                         <div class="step-icon-wrap">
                                             <div class="step-icon"><i class='bx bx-search-alt-2'></i></div>
                                         </div>
                                         <h4 class="step-title">Preview</h4>
                                     </div>
-                                    <div class="step <?= $jobs_data->status == 'Invoiced' ? 'completed' : '' ?>">
+                                    <div class="step">
                                         <div class="step-icon-wrap">
                                             <div class="step-icon"><i class='bx bx-credit-card'></i></div>
                                         </div>
-                                        <h4 class="step-title">Purchase</h4>
+                                        <h4 class="step-title">Payment</h4>
                                     </div>
                                     <?php } ?>
                                 </div>  
@@ -183,7 +183,7 @@ $(function(){
 
                 if( o.is_success ){                        
                     //redirect to step4
-                    <?php if( $dealSteals && $dealSteals->status == 0 ){ ?>
+                    <?php if( $dealsSteals && $dealsSteals->status == 0 ){ ?>
                         location.href = base_url + "promote/preview_email_message";
                     <?php }else{ ?>
                         location.href = base_url + "promote/deals";
