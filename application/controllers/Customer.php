@@ -12856,6 +12856,8 @@ class Customer extends MY_Controller
     {
         $this->load->model('CustomerDealLostReason_model');
 
+        $this->hasAccessModule(8); 
+
         $company_id = logged('company_id');
         $lostReasons = $this->CustomerDealLostReason_model->getAllByCompanyId($company_id);
 
