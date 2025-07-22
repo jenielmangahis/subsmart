@@ -292,7 +292,9 @@ class Promote extends MY_Controller {
         $deals_steals_id = $this->session->userdata('dealsStealsId');
 
         $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
-        if( $dealsSteals && $dealsSteals->company_id != $company_id && $dealsSteals->status != 0 ){
+        if( $dealsSteals && $dealsSteals->company_id != $company_id && $dealsSteals->status != 0 ){        
+            redirect('promote/deals');
+        }elseif( $dealsSteals && $dealsSteals->status != 0 ){
             redirect('promote/deals');
         }
 
@@ -355,6 +357,8 @@ class Promote extends MY_Controller {
 
         if( $dealsSteals && $dealsSteals->company_id != $company_id && $dealsSteals->status != 0 ){        
             redirect('promote/deals');
+        }elseif( $dealsSteals && $dealsSteals->status != 0 ){
+            redirect('promote/deals');
         }
         
         $this->page_data['dealsSteals'] = $dealsSteals;
@@ -367,69 +371,116 @@ class Promote extends MY_Controller {
     {
         $this->load->model('Clients_model');
         $this->load->model('CompanySubscriptionPayments_model');
-        $this->load->helper('converge_payment_helper');
+        $this->load->model('DealsStealsSentMail_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->helper('converge_payment_helper');        
 
     	$is_success = false;
         $msg = '';        
         
-        $post = $this->input->post();
+        $post       = $this->input->post();
         $company_id = logged('company_id');
         $client     = $this->Clients_model->getById($company_id);
         $deals_steals_id = $this->session->userdata('dealsStealsId');
-
         if( $deals_steals_id > 0 && $client ){
-            $address    = $company->street.' '.$company->city.' '.$company->state;
-            $zip_code   = $company->postal_code;
-            $total_cost = $this->DealsSteals_model->dealStealPrice();
-            $paymentData = [
-                'amount' => $total_cost,
-                'card_number' => $post['card_number'],
-                'exp_month' => $post['exp_month'],
-                'exp_year' => $post['exp_year'],
-                'card_cvc' => $post['cvc'],
-                'address' => $address,
-                'zip' => $zip_code,
-            ];
-            $paymentResult = convergeSendSale($paymentData);
-            if( $paymentResult['is_success'] ){
-                $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
-                $data = [
-                    'status' => $this->DealsSteals_model->statusActive(), 
-                    'total_cost' => $total_cost, 
-                    'date_activated' => date("Y-m-d"), 
-                    'date_expiration' => date("Y-m-d", strtotime('+1 month'))
+            $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
+            if( $dealsSteals && $dealsSteals->company_id == $company_id ){
+                $address     = $company->street.' '.$company->city.' '.$company->state;
+                $zip_code    = $company->postal_code;
+                $total_cost  = $this->DealsSteals_model->dealStealPrice();
+                $paymentData = [
+                    'amount' => $total_cost,
+                    'card_number' => $post['card_number'],
+                    'exp_month' => $post['exp_month'],
+                    'exp_year' => $post['exp_year'],
+                    'card_cvc' => $post['cvc'],
+                    'address' => $address,
+                    'zip' => $zip_code,
                 ];
-                $this->DealsSteals_model->updateDealsSteals($dealsSteals->id,$data);
+                $paymentResult = convergeSendSale($paymentData);
+                if( $paymentResult['is_success'] ){                
+                    $data = [
+                        'status' => $this->DealsSteals_model->statusActive(), 
+                        'total_cost' => $total_cost, 
+                        'date_activated' => date("Y-m-d"), 
+                        'date_expiration' => date("Y-m-d", strtotime('+1 month'))
+                    ];
+                    $this->DealsSteals_model->updateDealsSteals($dealsSteals->id,$data);
 
-                // Record payment
-                $data_payment = [
-                    'company_id' => $company_id,
-                    'payment_id' => $paymentResult['ssl_txn_id'],
-                    'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiConverge(),
-                    'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypeDealsSteals(),
-                    'description' => 'Deals Steals : ' . $dealsSteals->title,
-                    'payment_date' => date('Y-m-d'),
-                    'total_amount' => $total_cost,
-                    'date_created' => date('Y-m-d H:i:s'),
-                ];
+                    // Record payment
+                    $data_payment = [
+                        'company_id' => $company_id,
+                        'payment_id' => $paymentResult['ssl_txn_id'],
+                        'payment_api' => $this->CompanySubscriptionPayments_model->paymentApiConverge(),
+                        'transaction_type' => $this->CompanySubscriptionPayments_model->transactionTypeDealsSteals(),
+                        'description' => 'Deals Steals : ' . $dealsSteals->title,
+                        'payment_date' => date('Y-m-d'),
+                        'total_amount' => $total_cost,
+                        'date_created' => date('Y-m-d H:i:s'),
+                    ];
 
-                $id = $this->CompanySubscriptionPayments_model->create($data_payment);
-                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
+                    $id = $this->CompanySubscriptionPayments_model->create($data_payment);
+                    $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
 
-                $data = ['order_number' => $order_number];
-                $this->CompanySubscriptionPayments_model->update($id, $data);
+                    $data = ['order_number' => $order_number];
+                    $this->CompanySubscriptionPayments_model->update($id, $data);
 
-                $is_success = true;
-                $msg = 'Deals Steals was successfully activated.';
+                    //Create email data
+                    $mail_data = [];
+                    if( $dealsSteals->customer_type == 0 ){ //Both Residential and Commercial
+                        $conditions[] = ['field' => 'email !=', 'value' => '""'];
+                    }elseif( $dealsSteals->customer_type == 1  ){ //Residential
+                        $conditions[] = ['field' => 'customer_type', 'value' => 'Residential'];
+                        $conditions[] = ['field' => 'email !=', 'value' => ''];
+                    }elseif( $dealsSteals->customer_type == 2 ){ //Commercial
+                        $conditions[] = ['field' => 'customer_type', 'value' => 'Commercial'];
+                        $conditions[] = ['field' => 'email !=', 'value' => ''];
+                    }
 
-                //Activity Logs
-                $activity_name = 'Deals Steals : Activated deals ' . $dealsSteals->title; 
-                createActivityLog($activity_name);
+                    if( $dealsSteals->sending_type == 1 ){ //All customers                        
+                        $customers  = $this->AcsProfile_model->getAllByCompanyId($company_id, $conditions);                                                
+                    }elseif( $dealsSteals->sending_type == 2 ){ //Customer groups
+                        $customer_groups = unserialize($dealsSteals->certain_groups);
+                        if( $customer_groups ){
+                            $customers  = $this->AcsProfile_model->getAllByCompanyIdAndCustomerGroups($company_id, $customer_groups, $conditions);      
+                        }                                
+                    }elseif( $dealsSteals->sending_type == 3 ){ //Certain Customers
+                        $certain_customers  = unserialize($dealsSteals->certain_customers);
+                        if( $certain_customers ){
+                            $customers  = $this->AcsProfile_model->getAllByCompanyIdAndCustomerIds($company_id, $certain_customers, $conditions);  
+                        }                        
+                    }
 
-            }else{
-                $is_success = false;
-                $msg = $paymentResult['msg'];
-            }
+                    foreach($customers as $c){
+                        $mail_data[] = [
+                            'company_id' => $company_id,
+                            'deals_steals_id' => $dealsSteals->id,
+                            'email' => $c->email,
+                            'subject' => $dealsSteals->email_subject,
+                            'message' => $dealsSteals->email_body,
+                            'date_sent' => NULL,
+                            'is_sent' => 0,
+                            'error_message' => '',
+                            'date_created' => date("Y-m-d H:i:s")
+                        ];                            
+                    }
+
+                    if( $mail_data ){
+                        $this->DealsStealsSentMail_model->batchInsert($mail_data);
+                    }
+
+                    $is_success = true;
+                    $msg = 'Deals Steals was successfully activated.';
+
+                    //Activity Logs
+                    $activity_name = 'Deals Steals : Activated deals ' . $dealsSteals->title; 
+                    createActivityLog($activity_name);
+
+                }else{
+                    $is_success = false;
+                    $msg = $paymentResult['msg'];
+                }
+            }            
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];

@@ -426,4 +426,42 @@ class Cron_Marketing extends MY_Controller
         $this->page_data['data'] = $post;
         return $this->load->view('v2/pages/email_broadcasts/email_broadcast_email_template', $this->page_data, true);
     }
+
+    public function cronDealsStealsSendMails()
+    {
+        $this->load->model('DealsStealsSentMail_model');
+
+        $total_sent = 0;
+
+        $conditions[] = ['field' => 'is_sent', 'value' => '0'];
+        $conditions[] = ['field' => 'error_message', 'value' => ''];
+        $order_by  = ['field' => 'id', 'ASC'];
+        $sendMails = $this->DealsStealsSentMail_model->getAll($conditions,[], $order_by, 200);
+        foreach($sendMails as $s){
+            $mail = email__getInstance();
+            $mail->FromName = 'nSmarTrac';
+            $mail->addAddress($s->email, $s->email);
+            $mail->isHTML(true);
+            $mail->Subject = "nSmartrac: " . $s->subject;
+            $mail->Body = $s->message;
+
+            if ($mail->Send()) {
+                $err_msg = $mail->ErrorInfo;
+                $data = [
+                    'date_sent' => date("Y-m-d"),
+                    'is_sent' => 1,
+                    'error_message' => ''
+                ];
+
+                $this->DealsStealsSentMail_model->update($s->id, $data);
+
+                $total_sent++;
+            }else{
+                $data = ['error_message' => $mail->ErrorInfo];
+                $this->DealsStealsSentMail_model->update($s->id, $data);
+            }
+        }
+
+        echo 'Total sent : ' . $total_sent;
+    }
 }
