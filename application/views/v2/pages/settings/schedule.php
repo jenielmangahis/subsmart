@@ -185,12 +185,12 @@
                             <div class="col-12 col-md-4">
                                 <label class="content-title">Calendar Day Starts On</label>
                                 <label class="content-subtitle mb-2"></label>
-                                <input type="text" name="calendar_day_starts_on" class="nsm-field form-control timepicker" value="<?= $settings & $settings->day_starts_on != '' ? $settings->day_starts_on : ''; ?>" required />
+                                <input type="time" name="calendar_day_starts_on" class="nsm-field form-control" value="<?= $settings & $settings->day_starts_on != '' ? $settings->day_starts_on : '08:00'; ?>" required />
                             </div>
                             <div class="col-12 col-md-4">
                                 <label class="content-title">Calendar Day Ends On</label>
                                 <label class="content-subtitle mb-2"></label>
-                                <input type="text" name="calendar_day_ends_on" class="nsm-field form-control timepicker" value="<?= $settings & $settings->day_ends_on != '' ? $settings->day_ends_on : ''; ?>" required />
+                                <input type="time" name="calendar_day_ends_on" class="nsm-field form-control" value="<?= $settings & $settings->day_ends_on != '' ? $settings->day_ends_on : '17:00'; ?>" required />
                             </div>
                         </div>
                         <div class="row mt-4">
@@ -199,24 +199,44 @@
                                 <label class="content-subtitle mb-2">Set the calendar information.</label>
                                 <div class="nsm-card h-auto">
                                     <div class="nsm-card-content">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="calendar_display_customer_name" id="calendar_display_customer_name" value="1" <?= $settings && $settings->display_customer_name == 1 ? 'checked="checked"' : ''; ?>>
-                                            <label class="form-check-label" for="calendar_display_customer_name">Customer name</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="calendar_display_job_details" id="calendar_display_job_details" value="1" <?= $settings && $settings->display_job_details == 1 ? 'checked="checked"' : ''; ?>>
-                                            <label class="form-check-label" for="calendar_display_job_details">Job address and description</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="calendar_display_price" id="calendar_display_price" value="1" <?= $settings && $settings->display_price == 1 ? 'checked="checked"' : ''; ?>>
-                                            <label class="form-check-label" for="calendar_display_price">Price</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="calendar_display_url_link" id="calendar_display_url_link" value="1" <?= $settings && $settings->display_url_link == 1 ? 'checked="checked"' : ''; ?>>
-                                            <label class="form-check-label" for="calendar_display_url_link">Url Links</label>
-                                        </div>
-                                        <hr>
-                                        <a href="<?php echo base_url('settings') . '/notifications' ?>" class="nsm-link">Manage schedule notifications</a>
+                                        <?php if( $settings ){ ?>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="calendar_display_customer_name" id="calendar_display_customer_name" value="1" <?= $settings->display_customer_name == 1 ? 'checked="checked"' : ''; ?>>
+                                                <label class="form-check-label" for="calendar_display_customer_name">Customer name</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="calendar_display_job_details" id="calendar_display_job_details" value="1" <?= $settings->display_job_details == 1 ? 'checked="checked"' : ''; ?>>
+                                                <label class="form-check-label" for="calendar_display_job_details">Job address and description</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="calendar_display_price" id="calendar_display_price" value="1" <?= $settings->display_price == 1 ? 'checked="checked"' : ''; ?>>
+                                                <label class="form-check-label" for="calendar_display_price">Price</label>
+                                            </div>
+                                            <!-- <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="calendar_display_url_link" id="calendar_display_url_link" value="1" <?= $settings->display_url_link == 1 ? 'checked="checked"' : ''; ?>>
+                                                <label class="form-check-label" for="calendar_display_url_link">Url Links</label>
+                                            </div> -->
+                                        <?php }else{ ?>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="calendar_display_customer_name" id="calendar_display_customer_name" value="1" checked="">
+                                                <label class="form-check-label" for="calendar_display_customer_name">Customer name</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="calendar_display_job_details" id="calendar_display_job_details" value="1" checked="">
+                                                <label class="form-check-label" for="calendar_display_job_details">Job address and description</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="calendar_display_price" id="calendar_display_price" value="1" checked="">
+                                                <label class="form-check-label" for="calendar_display_price">Price</label>
+                                            </div>
+                                            <!-- <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="calendar_display_url_link" id="calendar_display_url_link" value="1" checked="">
+                                                <label class="form-check-label" for="calendar_display_url_link">Url Links</label>
+                                            </div> -->
+                                        <?php } ?>
+                                        
+                                        <!-- <hr>
+                                        <a href="<?php echo base_url('settings') . '/notifications' ?>" class="nsm-link">Manage schedule notifications</a> -->
                                     </div>
                                 </div>
                             </div>
@@ -286,7 +306,7 @@
                                             <option <?= $settings && $settings->google_calendar_popup_notification == '60 minutes' ? 'selected="selected"' : ''; ?> value="60 minutes">60 minutes</option>
                                         </select>
                                     </div>
-                                    <div class="col-12 col-md-4">
+                                    <!-- <div class="col-12 col-md-4">
                                         <label class="content-title">Auto SMS Notification</label>
                                         <label class="content-subtitle mb-2">Time interval sms notification will be sent before the event time</label>
                                         <select name="calendar_auto_sms_notification" id="calendar_auto_sms_notification" class="nsm-field form-select" required>
@@ -299,7 +319,7 @@
                                             <option <?= $settings && $settings->calendar_auto_sms_notification == '30 minutes' ? 'selected="selected"' : ''; ?> value="30 minutes">30 minutes</option>
                                             <option <?= $settings && $settings->calendar_auto_sms_notification == '60 minutes' ? 'selected="selected"' : ''; ?> value="60 minutes">60 minutes</option>
                                         </select>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row g-3 mt-5">
                                     <div class="col-12">
@@ -430,11 +450,18 @@
         $('.btn-append-event-color').click(function(){
             var color_name = $('#add-color-name').val();
             var color_code = $('#add-color-code').val();
+            
             if( color_name == '' || color_code == '' ){
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
                     html: 'Please enter event name and color'
+                });
+            }else if($(`ul.event-colors li:contains("${color_name}")`).length > 0){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: `Name ${color_name} already exists`
                 });
             }else{
                 var color_id   = generateRowId(5);
@@ -522,8 +549,8 @@
                 dataType:'json',
                 success: function(result) {
                     Swal.fire({
-                        title: 'Save Successful!',
-                        text: "Calendar settings has been updated successfully.",
+                        title: 'Calendar Settings',
+                        text: "Settings has been updated successfully.",
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'Okay'

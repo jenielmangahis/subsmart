@@ -41,8 +41,13 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-6 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search" value="">
+                        </div>
+                    </div> 
                     <?php if(checkRoleCanAccessModule('cards-on-file', 'write')){ ?>
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" name="btn_link" class="nsm-button primary btn-add-cards-file">
                                 <i class='bx bx-fw bx-plus'></i> Add New
@@ -235,6 +240,10 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
+        
+        $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));        
+        }, 1000));
 
         $('#help-popover-cvc').popover({
             placement: 'top',
