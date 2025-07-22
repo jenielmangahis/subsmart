@@ -259,8 +259,8 @@
                                         <td class="nsm-text-primary nsm-link default view-job-row" data-id="<?= $invoice->job_id; ?>">
                                                 <?php echo $invoice->jobnumber != '' ? $invoice->jobnumber : '---';  ?>
                                         </td>
-                                        <td><?php echo get_format_date($invoice->date_issued) ?></td>
-                                        <td><?php echo get_format_date($invoice->due_date) ?></td>
+                                        <td><?php echo date('m/d/Y', strtotime($invoice->date_issued)); //get_format_date($invoice->date_issued) ?></td>
+                                        <td><?php echo date('m/d/Y', strtotime($invoice->due_date)); //get_format_date($invoice->due_date) ?></td>
                                         <td class="nsm-text-primary">
                                             <label class="d-block">
                                             <?php 
