@@ -345,6 +345,7 @@ class Cron_Marketing extends MY_Controller
         print_r($apiResponse);
         exit;
     }
+    
     public function clockin_clockout_sms()
     {
         $phone_number = $this->input->post("phone_number");
@@ -362,59 +363,116 @@ class Cron_Marketing extends MY_Controller
         $this->load->model('EmailBroadcast_model');
         $this->load->model('EmailBroadcastRecipient_model');
         $this->load->model('Business_model');
+        $this->load->model('CalendarSettings_model');
+
+        $is_live_mail_credentials = true;
 
         $total_updated = 0;
         $total_sent    = 0;
 
         $limit = 5;
-        $conditions[] = ['field' => 'send_date', 'value' => date("Y-m-d")];
+        //$conditions[] = ['field' => 'send_date', 'value' => date("Y-m-d")];
         $emailBroadcast = $this->EmailBroadcast_model->getAllOngoingBroadcast($conditions, $limit);
+
         if( $emailBroadcast ){
             $mail = email__getInstance();
             foreach($emailBroadcast as $eb){
-                $company = $this->Business_model->getByCompanyId($eb->company_id);
 
-                $limit = 5;
-                $emailBroadcastrecipients = $this->EmailBroadcastRecipient_model->getAllNotSentByEmailBroadCastId($eb->id, $limit);
-                if( $emailBroadcastrecipients ){                    
-                    foreach($emailBroadcastrecipients as $r ){
-                        if( $r->recipient_email != '' ){
-                            $preview_text = '';
-                            if( $eb->preview_text != '' ){
+                $default_timezone    = 'America/New_York';
+                $settings = $this->CalendarSettings_model->getByCompanyId($eb->company_id);
+                if( $settings && $settings->timezone != '' ){
+                    $default_timezone = $settings->timezone;
+                }
+                date_default_timezone_set($default_timezone); 
+
+                if(strtotime($eb->send_date) <= strtotime(date('Y-m-d'))) { 
+                    $company = $this->Business_model->getByCompanyId($eb->company_id);
+
+                    $limit = 5;
+                    $emailBroadcastrecipients = $this->EmailBroadcastRecipient_model->getAllNotSentByEmailBroadCastId($eb->id, [], $limit);
+
+                    if( $emailBroadcastrecipients ){                    
+                        foreach($emailBroadcastrecipients as $r ){
+                            if( $r->recipient_email != '' ){
+
                                 $preview_text = '';
-                            }
-                            
-                            $subject = $company->business_name . ':' . $eb->content . $preview_text;
-                            $post['broadcast_content'] = $eb->content;
+                                if( $eb->preview_text != '' ){
+                                    $preview_text = '';
+                                }
+                                
+                                $subject = $company->business_name . ':' . $eb->content . $preview_text;
+                                $post['broadcast_content'] = $eb->content;
 
-                            $body = $this->emailBroadcastEmailHtml($post);                                                    
-                            $mail->FromName = $eb->sender_name;                            
-                            $mail->addAddress($r->recipient_email, $r->recipient_email);
-                            $mail->isHTML(true);
-                            $mail->Subject = $subject;
-                            $mail->Body = $body;
-                            
-                            
-                            if(!$mail->Send()){
-                                $email_broadcast_recipient_data = ['is_sent' => 0, 'is_with_error' => 1, 'error_message' => 'SMTP sending error'];
-                            }else{
-                                $total_sent++;
-                                $email_broadcast_recipient_data = ['is_sent' => 1, 'date_sent' => date("Y-m-d H:i:s"), 'is_with_error' => 0, 'error_message' => ''];
-                            } 
-                            
-                            $total_updated++;
-                            $this->EmailBroadcastRecipient_model->update($r->id, $email_broadcast_recipient_data);
+                                if($is_live_mail_credentials) {
+
+                                    $body = $this->emailBroadcastEmailHtml($post);                                                    
+                                    $mail->FromName = $eb->sender_name;                            
+                                    $mail->addAddress($r->recipient_email, $r->recipient_email);
+                                    $mail->isHTML(true);
+                                    $mail->Subject = $subject;
+                                    $mail->Body = $body;
+                                    
+                                    if(!$mail->Send()){
+                                        $email_broadcast_recipient_data = ['is_sent' => 0, 'is_with_error' => 1, 'error_message' => 'SMTP sending error'];
+                                    }else{
+                                        $total_sent++;
+                                        $email_broadcast_recipient_data = ['is_sent' => 1, 'date_sent' => date("Y-m-d H:i:s"), 'is_with_error' => 0, 'error_message' => ''];
+                                    } 
+                                    
+                                    $total_updated++;
+                                    $this->EmailBroadcastRecipient_model->update($r->id, $email_broadcast_recipient_data);                           
+
+                                } else {
+
+                                    $host     = 'smtp.mailtrap.io';
+                                    $port     = 2525;
+                                    $username = 'd7c92e3b5e901d';
+                                    $password = '203aafda110ab7';
+                                    $from     = 'noreply@nsmartrac.com';       
+                                    
+                                    $mail = new PHPMailer;
+                                    $mail->isSMTP();
+                                    $mail->Host = $host;
+                                    $mail->SMTPAuth = true;
+                                    $mail->Username = $username;
+                                    $mail->Password = $password;
+                                    $mail->SMTPSecure = 'tls';
+                                    $mail->Port = $port;            
+                                                        
+                                    $body = $this->emailBroadcastEmailHtml($post);                                                    
+                                    $mail->FromName = $eb->sender_name;        
+                                    
+                                    $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+
+                                    $mail->addAddress($r->recipient_email, $r->recipient_email);
+                                    $mail->isHTML(true);
+                                    $mail->Subject = $subject;
+                                    $mail->Body = $body;
+                                    
+                                    if(!$mail->Send()){
+                                        $email_broadcast_recipient_data = ['is_sent' => 0, 'is_with_error' => 1, 'error_message' => 'SMTP sending error'];
+                                    }else{
+                                        $total_sent++;
+                                        $email_broadcast_recipient_data = ['is_sent' => 1, 'date_sent' => date("Y-m-d H:i:s"), 'is_with_error' => 0, 'error_message' => ''];
+                                    } 
+                                    
+                                    $total_updated++;
+                                    $this->EmailBroadcastRecipient_model->update($r->id, $email_broadcast_recipient_data);
+                                }                            
+                            }
                         }
                     }
-                }
 
-                //Update to complete if all is sent
-                $conditions[] = ['field' => 'is_with_error', 'value' => 0];
-                $emailBroadcastIsNotSent = $this->EmailBroadcastRecipient_model->getAllNotSentByEmailBroadCastId($eb->id, $conditions);                
-                if( count($emailBroadcastIsNotSent) == 0 ){
-                    $email_broadcast_data = ['status' => $this->EmailBroadcast_model->isCompleted()];
-                    $this->EmailBroadcast_model->update($eb->id, $email_broadcast_data);
+                    //Update to complete if all is sent
+                    $conditions2[] = ['field' => 'is_with_error', 'value' => 0];
+                    $emailBroadcastIsNotSent = $this->EmailBroadcastRecipient_model->getAllNotSentByEmailBroadCastId($eb->id, $conditions2);                
+                    if( count($emailBroadcastIsNotSent) == 0 ){
+                        $email_broadcast_data = ['status' => $this->EmailBroadcast_model->isCompleted()];
+                        $this->EmailBroadcast_model->update($eb->id, $email_broadcast_data);
+                    }
                 }
+                 
+
             }
         }
 

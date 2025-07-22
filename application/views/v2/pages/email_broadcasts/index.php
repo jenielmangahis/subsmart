@@ -161,7 +161,7 @@
                                         <span class="text-muted preview-text">-<?= $eb->preview_text; ?></span>
                                     <?php } ?>
                                 </td>
-                                <td><?= date("Y-m-d",strtotime($eb->send_date)); ?></td>
+                                <td><?= date("m/d/Y",strtotime($eb->send_date)); ?></td>
                                 <td>
                                     <?php 
                                         if( $eb->status == 'Draft' ){
@@ -236,7 +236,7 @@
                                 <div class="col-12 mb-3">
                                     <div class="d-flex justify-content-between">
                                         <label class="content-subtitle fw-bold d-block mb-2">To <i id="help-popover-broadcast-to" class='bx bx-fw bx-info-circle ms-2 text-muted' style="margin-top: 0px !important;"></i></label>
-                                        <a class="nsm-link d-flex align-items-center btn-quick-add-job-type" id="btn-select-customer" href="javascript:void(0);">Select Customer</a>
+                                        <a class="nsm-link d-flex align-items-center btn-select-customer" id="btn-select-customer" href="javascript:void(0);">Select Customer</a>
                                     </div>
                                     <input type="email" name="broadcast_to" class="nsm-field form-control" id="email-tags" placeholder="" multiple>
                                 </div>
@@ -304,7 +304,8 @@
                 <form>
                     <div class="modal-header">
                         <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bxs-user-account' ></i> Select Customer</span>
-                        <button class="border-0 rounded mx-1 close-select-customer-modal" id="close-select-customer-modal" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+                        <a href="javascript:void(0);" class="border-0 rounded mx-1 close-select-customer-modal" id="close-select-customer-modal" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></a>
+                        <!-- <button class="border-0 rounded mx-1 close-select-customer-modal" id="close-select-customer-modal" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button> -->
                     </div>
                     <div class="modal-body">                        
                         <div id="customer-list-container"></div>
@@ -620,6 +621,8 @@ $(function(){
     $('.btn-recipient-summary').on('click', function(){
         var ebid = $(this).attr('data-id');
         var ebname = $(this).attr('data-name');
+
+        return false;
 
         $('#modal-recipient-summary').modal('show');
         $.ajax({
