@@ -241,10 +241,17 @@ $("#attachment-file").change(function() {
             var idd = this.id;
             var title = $(this).data('itemname');
             var price = parseInt($(this).attr('data-price'));
+
             if( isNaN(parseInt($(this).attr('data-retail'))) ){
                 var retail = 0;    
             }else{
                 var retail = parseInt($(this).attr('data-retail'));
+            }
+
+            if( isNaN(parseInt($(this).attr('data-price'))) ){
+                var price = 0;    
+            }else{
+                var price = parseInt($(this).attr('data-price'));
             }
             
             var qty = parseInt($(this).attr('data-quantity'));
@@ -253,7 +260,7 @@ $("#attachment-file").change(function() {
             var item_type = $(this).data('item_type');
             // var total_ = price * qty;
             var total_ = 0;
-            var total_price = retail + total_;
+            var total_price = price + total_;
             var total = parseFloat(total_price).toFixed(2);
             var withCommas = Number(total).toLocaleString('en');
 
@@ -270,7 +277,7 @@ $("#attachment-file").change(function() {
                 "<td width='35%'><small>Item name</small><input readonly value='"+title+"' type='text' name='item_name[]' class='form-control' ><input type='hidden' value='"+idd+"' name='item_id[]'></td>" +
                 "<td><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='1' type='number' name='item_qty[]' class='form-control item-qty-"+idd+" qty' min='0'></td>" +
                 "<td class='d-none'><small>Original Price</small><input data-id='"+idd+"' id='cost"+idd+"' value='"+price+"'  type='number' name='item_cost[]' class='form-control item-cost' step='any' placeholder='Original Price'></td>" +
-                "<td><small>Unit Price</small><input data-id='"+idd+"' id='price"+idd+"' value='"+retail+"'  type='number' name='item_price[]' class='form-control item-price' step='any' placeholder='Unit Price'></td>" +
+                "<td><small>Unit Price</small><input data-id='"+idd+"' id='price"+idd+"' value='"+price+"'  type='number' name='item_price[]' class='form-control item-price' step='any' placeholder='Unit Price'></td>" +
                 "<td class='d-none'><small>Commission</small><input data-id='"+idd+"' id='commission"+idd+"' value='"+commission+"'  type='number' name='item_commission[]' class='form-control item-commission' step='any' placeholder='Commission'></td>" +
                 "<td class='d-none'><small>Margin</small><input data-id='"+idd+"' id='margin"+idd+"' value='"+margin+"'  type='number' name='item_margin[]' class='form-control item-margin' step='any' placeholder='Margin'></td>" +
                 "<td><small>Item Type</small><input readonly type='text' class='form-control' value='"+item_type+"'></td>" +
