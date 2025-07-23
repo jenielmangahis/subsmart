@@ -1598,8 +1598,8 @@
                                         </td>
                                         <td>
                                             <?php 
-                                                if( $item->retail > 0 ){
-                                                    echo $item->retail;
+                                                if( $item->price > 0 ){
+                                                    echo $item->price;
                                                 }else{
                                                     echo '0.00';
                                                 }                                                
