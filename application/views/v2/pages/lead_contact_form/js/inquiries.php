@@ -128,6 +128,24 @@ $(function(){
         
     });
 
+    $(document).on('click', '.btn-view-inquiry', function(){
+        let inquiry_id = $(this).attr('data-id');
+
+        $('#modal-view-inquiry').modal('show');
+
+        $.ajax({
+            type: 'POST',
+            url: base_url + 'lead_contact_form/inquiries/_view_inquiry',
+            data: {inquiry_id: inquiry_id},
+            success: function(html) {
+                $('#view-inquiry-container').html(html);
+            },
+            beforeSend: function() {
+                $('#view-inquiry-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
     $(document).on('click', '.btn-convert-to-lead', function(){
         let inquiry_id = $(this).attr('data-id'); 
         let lead_name  = $(this).attr('data-name');

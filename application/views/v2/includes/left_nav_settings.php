@@ -580,14 +580,7 @@
             <a href="<?php echo base_url('marketing'); ?>">
                 <i class='bx bx-fw bx-bar-chart-square'></i> Marketing <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
             </a>
-            <ul class="mt-3">
-                <li class="<?php if ($page->title == 'Customers') {
-                    echo 'selected';
-                } ?>">
-                    <a href="<?php echo base_url('customer'); ?>">
-                        <i class='bx bx-fw bx-group'></i> My Customers
-                    </a>
-                </li>
+            <ul class="mt-3">                
                 <li class="<?php if ($page->title == 'SMS Blast') {
                     echo 'selected';
                 } ?>">

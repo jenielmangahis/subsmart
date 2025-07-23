@@ -20,6 +20,9 @@
     padding: unset;
     border-radius: 0px 0px 5px 5px;
 }
+.tbl-time-slot .form-check .form-check-input{
+    float:none !important;
+}
 </style>
 
 <div class="row page-content g-0">
@@ -60,18 +63,19 @@
                         $disabled = 'disabled="disabled"';
                     }
                 ?>
-                <table class="nsm-table">
+                <table class="nsm-table tbl-time-slot">
                     <thead>
                         <tr>
-                            <td data-name="Time Start - End">Time Start - End</td>
-                            <td data-name="Monday">Monday</td>
-                            <td data-name="Tuesday">Tuesday</td>
-                            <td data-name="Wednesday">Wednesday</td>
-                            <td data-name="Thursday">Thursday</td>
-                            <td data-name="Friday">Friday</td>
-                            <td data-name="Saturday">Saturday</td>
-                            <td data-name="Sunday">Sunday</td>
-                            <td data-name="Manage"></td>
+                            <td data-name="Time Start" style="width:8%;">Time Start</td>
+                            <td data-name="Time End" style="width:8%;">Time End</td>
+                            <td data-name="Monday" style="text-align:center;">Monday</td>
+                            <td data-name="Tuesday" style="text-align:center;">Tuesday</td>
+                            <td data-name="Wednesday" style="text-align:center;">Wednesday</td>
+                            <td data-name="Thursday" style="text-align:center;">Thursday</td>
+                            <td data-name="Friday" style="text-align:center;">Friday</td>
+                            <td data-name="Saturday" style="text-align:center;">Saturday</td>
+                            <td data-name="Sunday" style="text-align:center;">Sunday</td>
+                            <td data-name="Manage" style="text-align:center;"></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -88,53 +92,54 @@
                                 <?php if (is_array($days)) : ?>
                                     <tr class="tr-<?php echo $row; ?>">
                                         <td class="fw-bold nsm-text-primary">
-                                            <input type="text" placeholder="Name" name="time[<?php echo $row; ?>][time_start]" value="<?php echo $t->time_start; ?>" class="nsm-field form-control d-inline-block w-auto time-field" <?= $disabled; ?> autocomplete="off" />
-                                            -
-                                            <input type="text" placeholder="Name" name="time[<?php echo $row; ?>][time_end]" value="<?php echo $t->time_end; ?>" class="nsm-field form-control d-inline-block w-auto time-field" <?= $disabled; ?> autocomplete="off" />
+                                            <input type="time" placeholder="Time Start" name="time[<?php echo $row; ?>][time_start]" value="<?php echo $t->time_start; ?>" class="nsm-field form-control d-inline-block w-auto" <?= $disabled; ?> autocomplete="off" />
                                         </td>
-                                        <td>
+                                        <td class="fw-bold nsm-text-primary">
+                                            <input type="time" placeholder="Time End" name="time[<?php echo $row; ?>][time_end]" value="<?php echo $t->time_end; ?>" class="nsm-field form-control d-inline-block w-auto" <?= $disabled; ?> autocomplete="off" />
+                                        </td>
+                                        <td style="text-align:center;">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" <?= $disabled; ?> name="time[<?php echo $row; ?>][days][mon]" id="mon_0" value="Mon" <?php echo (in_array("Mon", $days) ? 'checked="checked"' : ''); ?>>
                                                 <label class="form-check-label" for="mon_<?php echo $row; ?>"></label>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="text-align:center;">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" <?= $disabled; ?> name="time[<?php echo $row; ?>][days][tue]" id="tue_0" value="Tue" <?php echo (in_array("Tue", $days) ? 'checked="checked"' : ''); ?>>
                                                 <label class="form-check-label" for="tue_<?php echo $row; ?>"></label>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="text-align:center;">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" <?= $disabled; ?> name="time[<?php echo $row; ?>][days][wed]" id="wed_0" value="Wed" <?php echo (in_array("Wed", $days) ? 'checked="checked"' : ''); ?>>
                                                 <label class="form-check-label" for="wed_<?php echo $row; ?>"></label>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="text-align:center;"> 
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" <?= $disabled; ?> name="time[<?php echo $row; ?>][days][thu]" id="thu_0" value="Thu" <?php echo (in_array("Thu", $days) ? 'checked="checked"' : ''); ?>>
                                                 <label class="form-check-label" for="thu_<?php echo $row; ?>"></label>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="text-align:center;">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" <?= $disabled; ?> name="time[<?php echo $row; ?>][days][fri]" id="fri_0" value="Fri" <?php echo (in_array("Fri", $days) ? 'checked="checked"' : ''); ?>>
                                                 <label class="form-check-label" for="fri_<?php echo $row; ?>"></label>
                                             </div>
                                         </td>
-                                        <td>
-                                            <div class="form-check">
+                                        <td style="text-align:center;">
+                                            <div class="form-check" style="text-align:center;">
                                                 <input class="form-check-input" type="checkbox" <?= $disabled; ?> name="time[<?php echo $row; ?>][days][sat]" id="sat_0" value="Sat" <?php echo (in_array("Sat", $days) ? 'checked="checked"' : ''); ?>>
                                                 <label class="form-check-label" for="sat_<?php echo $row; ?>"></label>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="text-align:center;">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" <?= $disabled; ?> name="time[<?php echo $row; ?>][days][sun]" id="sun_0" value="Sun" <?php echo (in_array("Sun", $days) ? 'checked="checked"' : ''); ?>>
                                                 <label class="form-check-label" for="sun_<?php echo $row; ?>"></label>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="text-align:center;">
                                             <?php if( checkRoleCanAccessModule('online-booking', 'delete') ){ ?>  
                                             <div class="dropdown table-management">
                                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -151,54 +156,55 @@
                                     </tr>
                                 <?php else : ?>
                                     <tr class="tr-0">
-                                        <td class="fw-bold nsm-text-primary">
+                                        <td class="fw-bold nsm-text-primary" style="text-align:center;">
                                             <input type="text" placeholder="Name" <?= $disabled; ?> name="time[0][time_start]" value="8:00 AM" class="nsm-field form-control d-inline-block w-auto time-field" autocomplete="off" />
-                                            -
+                                        </td>
+                                        <td class="fw-bold nsm-text-primary" style="text-align:center;">
                                             <input type="text" placeholder="Name" <?= $disabled; ?> name="time[0][time_end]" value="10:00 AM" class="nsm-field form-control d-inline-block w-auto time-field" autocomplete="off" />
                                         </td>
-                                        <td>
+                                        <td style="text-align:center;">
                                             <div class="form-check">
                                                 <input class="form-check-input" <?= $disabled; ?> type="checkbox" name="time[0][days][mon]" id="mon_0" value="Mon">
                                                 <label class="form-check-label" <?= $disabled; ?> for="mon_0"></label>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="text-align:center;">
                                             <div class="form-check">
                                                 <input class="form-check-input" <?= $disabled; ?> type="checkbox" name="time[0][days][tue]" id="tue_0" value="Tue">
                                                 <label class="form-check-label" <?= $disabled; ?> for="tue_0"></label>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="text-align:center;">
                                             <div class="form-check">
                                                 <input class="form-check-input" <?= $disabled; ?> type="checkbox" name="time[0][days][wed]" id="wed_0" value="Wed">
                                                 <label class="form-check-label" <?= $disabled; ?> for="wed_0"></label>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="text-align:center;">
                                             <div class="form-check">
                                                 <input class="form-check-input" <?= $disabled; ?> type="checkbox" name="time[0][days][thu]" id="thu_0" value="Thu">
                                                 <label class="form-check-label" <?= $disabled; ?> for="thu_0"></label>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="text-align:center;">
                                             <div class="form-check">
                                                 <input class="form-check-input" <?= $disabled; ?> type="checkbox" name="time[0][days][fri]" id="fri_0" value="Fri">
                                                 <label class="form-check-label" <?= $disabled; ?> for="fri_0"></label>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="text-align:center;">
                                             <div class="form-check">
                                                 <input class="form-check-input" <?= $disabled; ?> type="checkbox" name="time[0][days][sat]" id="sat_0" value="Sat">
                                                 <label class="form-check-label" <?= $disabled; ?> for="sat_0"></label>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="text-align:center;">
                                             <div class="form-check">
                                                 <input class="form-check-input" <?= $disabled; ?> type="checkbox" name="time[0][days][sun]" id="sun_0" value="Sun">
                                                 <label class="form-check-label" <?= $disabled; ?> for="sun_0"></label>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="text-align:center;">
                                             <?php if( checkRoleCanAccessModule('online-booking', 'delete') ){ ?>  
                                             <div class="dropdown table-management">
                                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -237,7 +243,7 @@
                     <div class="col-12">
                         <label class="content-title">Soonest Availability</label>
                         <label>Select how many days should be excluded from the booking calendar starting from current day.</label>
-                        <select class="nsm-field form-control w-auto mt-3" <?= $disabled; ?> id="soonest_availability" name="soonest_availability" required>
+                        <select class="nsm-field form-select w-auto mt-3" <?= $disabled; ?> id="soonest_availability" name="soonest_availability" required>
                             <option value="" disabled selected>Select Availability</option>
                             <option value="1" <?php echo ($availability == 1 ? 'selected="selected"' : ''); ?>>Same Day</option>
                             <option value="2" <?php echo ($availability == 2 ? 'selected="selected"' : ''); ?>>Next Day</option>
@@ -382,53 +388,54 @@
 
         markup += '<tr class="tr-'+click+'">';
         markup += '<td class="fw-bold nsm-text-primary">';
-        markup += '<input type="text" placeholder="Name" name="time['+click+'][time_start]" value="8:00 AM" class="nsm-field form-control d-inline-block w-auto time-field" autocomplete="off" />';
-        markup += ' - ';
-        markup += '<input type="text" placeholder="Name" name="time['+click+'][time_end]" value="10:00 AM" class="nsm-field form-control d-inline-block w-auto time-field" autocomplete="off" />';
+        markup += '<input type="time" placeholder="Name" name="time['+click+'][time_start]" value="8:00 AM" class="nsm-field form-control d-inline-block w-auto" autocomplete="off" />';
         markup += '</td>';
-        markup += '<td>';
+        markup += '<td class="fw-bold nsm-text-primary">';
+        markup += '<input type="time" placeholder="Name" name="time['+click+'][time_end]" value="10:00 AM" class="nsm-field form-control d-inline-block w-auto" autocomplete="off" />';
+        markup += '</td>';
+        markup += '<td style="text-align:center;">';
         markup += '<div class="form-check">';
         markup += '<input class="form-check-input" type="checkbox" name="time['+click+'][days][mon]" id="mon_'+click+'" value="Mon">';
         markup += '<label class="form-check-label" for="mon_'+click+'"></label>';
         markup += '</div>';
         markup += '</td>';
-        markup += '<td>';
+        markup += '<td style="text-align:center;">';
         markup += '<div class="form-check">';
         markup += '<input class="form-check-input" type="checkbox" name="time['+click+'][days][tue]" id="tue_'+click+'" value="Tue">';
         markup += '<label class="form-check-label" for="tue_'+click+'"></label>';
         markup += '</div>';
         markup += '</td>';
-        markup += '<td>';
+        markup += '<td style="text-align:center;">';
         markup += '<div class="form-check">';
         markup += '<input class="form-check-input" type="checkbox" name="time['+click+'][days][wed]" id="wed_'+click+'" value="Wed">';
         markup += '<label class="form-check-label" for="wed_'+click+'"></label>';
         markup += '</div>';
         markup += '</td>';
-        markup += '<td>';
+        markup += '<td style="text-align:center;">';
         markup += '<div class="form-check">';
         markup += '<input class="form-check-input" type="checkbox" name="time['+click+'][days][thu]" id="thu_'+click+'" value="Thu">';
         markup += '<label class="form-check-label" for="thu_'+click+'"></label>';
         markup += '</div>';
         markup += '</td>';
-        markup += '<td>';
+        markup += '<td style="text-align:center;">';
         markup += '<div class="form-check">';
         markup += '<input class="form-check-input" type="checkbox" name="time['+click+'][days][fri]" id="fri_'+click+'" value="Fri">';
         markup += '<label class="form-check-label" for="fri_'+click+'"></label>';
         markup += '</div>';
         markup += '</td>';
-        markup += '<td>';
+        markup += '<td style="text-align:center;">';
         markup += '<div class="form-check">';
         markup += '<input class="form-check-input" type="checkbox" name="time['+click+'][days][sat]" id="sat_'+click+'" value="Sat">';
         markup += '<label class="form-check-label" for="sat_'+click+'"></label>';
         markup += '</div>';
         markup += '</td>';
-        markup += '<td>';
+        markup += '<td style="text-align:center;">';
         markup += '<div class="form-check">';
         markup += '<input class="form-check-input" type="checkbox" name="time['+click+'][days][sun]" id="sun_'+click+'" value="Sun">';
         markup += '<label class="form-check-label" for="sun_'+click+'"></label>';
         markup += '</div>';
         markup += '</td>';
-        markup += '<td>';
+        markup += '<td style="text-align:center;">';
         markup += '<div class="dropdown table-management">';
         markup += '<a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">';
         markup += '<i class="bx bx-fw bx-dots-vertical-rounded"></i>';

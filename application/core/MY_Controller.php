@@ -72,11 +72,9 @@ class MY_Controller extends CI_Controller {
 
 	public function isSessionExpires()
 	{
-		$ci->load->library('session');
-
-		$is_expired = false;
-		if(!$ci->session->userdata('login_token')){
-			$is_expired = true;
+		$is_expired = true;		
+		if( $this->session->userdata('login_token')){
+			$is_expired = false;
 		}
 
 		return $is_expired;

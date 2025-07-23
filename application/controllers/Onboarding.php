@@ -39,6 +39,8 @@ class Onboarding extends MY_Controller {
 		$business_name    = $client->business_name;
 		$business_address = $client->business_address;
 		$zip_code         = $client->zip_code;
+		$city   		  = $client->city;
+		$state            = $client->state;
 		$business_phone   = $client->phone_number;
 		$business_email   = $client->email_address;
 
@@ -49,6 +51,8 @@ class Onboarding extends MY_Controller {
 
 		$this->page_data['business_name'] = $business_name;
 		$this->page_data['zip_code'] = $zip_code;
+		$this->page_data['city']	 = $city;
+		$this->page_data['state']    = $state;
 		$this->page_data['business_phone'] = $business_phone;
 		$this->page_data['business_address'] = $business_address;
 		$this->page_data['business_email'] = $business_email;

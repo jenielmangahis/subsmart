@@ -372,23 +372,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												</div>
 											</div>
 
-											<div class="row">
+											<div class="row">												
 												<div class="col-md-6">
 													<div class="input-group z-100">
-														<input autocomplete="off" type="email" name="email" id="email_address" class="email_address form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Email address" required="">
-													</div>
-												</div>
-
-												<div class="col-md-6">
-													<div class="input-group z-100">
-														<input autocomplete="off" type="text" name="phone" id="phone" maxlength="12" placeholder="xxx-xxx-xxxx" class="form-control ng-pristine ng-untouched ng-valid ng-empty business-phone" required="">
-													</div>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-md-6">
-													<div class="input-group z-100">
-														<input autocomplete="off" type="password" name="password" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Create your password" required="">
+														<input autocomplete="off" type="text" name="phone" id="phone" maxlength="12" placeholder="Phone Number" class="form-control ng-pristine ng-untouched ng-valid ng-empty business-phone" required="">
 													</div>
 												</div>
 												<div class="col-md-6">
@@ -405,33 +392,36 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													</div>
 												</div>
 											</div>
-											<hr />
 											<div class="row">
 												<div class="col-md-12">
 													<div class="input-group z-100">
 														<input id="google_search_place" type="text" name="business_name" class="business_name form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" required="" />
 													</div>
 												</div>
-											</div>
-											<div class="row">
 												<div class="col-md-12">
 													<div class="input-group z-100">
-														<input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Address" placeholder="Business Address" required="" />
+														<input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Business Address" placeholder="Business Address" required="" />
 													</div>
 												</div>
-											</div>
-
-											<div class="row">
-												<div class="col-md-6">
+												<div class="col-md-5">
+													<div class="input-group z-100">
+														<input id="business_city" type="text" name="business_city" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="City" placeholder="City" required="" />
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="input-group z-100">
+														<input id="business_state" type="text" name="business_state" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="State" placeholder="State" required="" />
+													</div>
+												</div>
+												<div class="col-md-3">
 													<div class="input-group z-100">
 														<input autocomplete="off" type="text" name="zip_code" id="zip_code" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Zip Code" required="">
 													</div>
 												</div>
-
-												<div class="col-md-6">
+												<div class="col-md-12">
 													<div class="input-group">
 														<select class="reg-select z-100 cmb-industry" id="industry_type_id" name="industry_type_id" required="">
-															<option>--Select your Industry--</option>
+															<option value="">--Select your Industry--</option>
 							                                <?php $businessTypeName  = "";
 							                                     foreach($industryTypes  as $industryType ){ ?>
 							                                           <?php if ($businessTypeName!== $industryType->business_type_name ) { ?> 
@@ -442,6 +432,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 														</select>
 													</div>
 												</div>
+											</div>
+											<hr />
+											<div class="row mb-4">
+												<div class="col-md-12 mb-2"><h4 style="font-size:18px;">Login Details</h4></div>
+												<div class="col-md-6">
+													<div class="input-group z-100">
+														<input autocomplete="off" type="email" name="email" id="email_address" class="email_address form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Email address" required="">
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="input-group z-100">
+														<input autocomplete="off" type="password" name="password" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Create your password" required="">
+													</div>
+												</div>												
 											</div>
 
 											<div class="row">
@@ -468,9 +472,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								          	<div class="payment-method-container">
 									          	<p><b>Payment Method</b></p>
 									          	<ul class="payment-method">
-									          		<li><div id="paypal-button-container"></div></li>
-									          		<li><a class="btn btn-primary" id="stripe-button" href="javascript:void(0);">PAY VIA STRIPE</a></li>
-									          		<li><a class="btn btn-primary" id="converge-button" href="javascript:void(0);">PAY VIA CONVERGE</a></li>
+													<li><a class="btn btn-primary" id="converge-button" href="javascript:void(0);">CREDIT CARD PAYMENT</a></li>
+									          		<li><div id="paypal-button-container"></div></li>									          		
 									          		<li>
 									          			<div class="form-row align-items-center" style="margin-top: 30px;">
 										          			<!-- Grid column -->
@@ -683,16 +686,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 
 <div class="modal fade" id="modal-converge-subscribe" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="">Pay Subscription Plan</h5>
           <button name="button" type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-        </div>
-        <form id="frm-pay-subscription" method="post">
+        </div>        
         <div class="modal-body">
+			<form id="frm-pay-subscription" method="post">
             <div class="row">
                 <div class="col-md-12">
                     <div class="card-body">                            
@@ -731,31 +734,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="col-md-4">
                                             <select id="exp_year" name="exp_year" class="form-control exp_year" required>
                                                 <option  value="">Year</option>
-                                                <option  value="2021">2021</option>
-                                                <option  value="2022">2022</option>
-                                                <option  value="2023">2023</option>
-                                                <option  value="2024">2024</option>
-                                                <option  value="2025">2025</option>
-                                                <option  value="2026">2026</option>
-                                                <option  value="2027">2027</option>
-                                                <option  value="2028">2028</option>
-                                                <option  value="2029">2029</option>
-                                                <option  value="2030">2030</option>
-                                                <option  value="2031">2031</option>
+												<?php for( $x = date("Y"); $x<=date("Y", strtotime("+20 years")); $x++ ){ ?>
+													<option value="<?= $x; ?>"><?= $x; ?></option>
+												<?php } ?>
                                             </select>
                                         </div>
                                         <div class="col-md-4">
-                                            <input type="text" maxlength="3" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC" required/>
+                                            <input type="text" maxlength="4" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC" required/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <hr />
                             <div class="row form_line">
-                                <div class="col-md-4">
-                                    Total Amount
-                                </div>
-                                <div class="col-md-8">
+                                <div class="col-md-4">Total Amount</div>
+                                <div class="col-md-5">
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1">$</span>
@@ -767,13 +760,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>			
+        	</form>
         </div>
         <div class="modal-footer">
             <button name="button" class="btn btn-indigo" type="button" data-dismiss="modal">Close</button>
-            <button name="button" class="btn btn-indigo btn-modal-pay-subscription" type="submit">Pay</button>
+            <button name="button" class="btn btn-indigo btn-modal-pay-subscription" type="submit" form="frm-pay-subscription">Pay</button>
         </div>
-        </form>
       </div>
     </div>
 </div>
@@ -910,47 +903,48 @@ $(function(){
         var address   = $("#business_address").val();
         var url 	  = base_url + 'registration/_pay_subscription';
 
-        $(".btn-modal-pay-subscription").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        $.ajax({
+			type: "POST",
+			url: url,
+			dataType: "json",
+			data: {
+			total_amount:total_amount,
+			firstname:firstname,
+			lastname:lastname,
+			email_add:email_add,
+			zipcode:zipcode,
+			address:address,
+			ccnumber:ccnumber,
+			expmonth:expmonth,
+			expyear:expyear,
+			plan_id:plan_id,
+			cvc:cvc
+			},
+			success: function(o)
+			{
+				$("#frm-pay-subscription").modal('hide'); 
 
-        setTimeout(function () {
-            $.ajax({
-               type: "POST",
-               url: url,
-               dataType: "json",
-               data: {
-               	total_amount:total_amount,
-               	firstname:firstname,
-               	lastname:lastname,
-               	email_add:email_add,
-               	zipcode:zipcode,
-               	address:address,
-               	ccnumber:ccnumber,
-               	expmonth:expmonth,
-               	expyear:expyear,
-               	plan_id:plan_id,
-               	cvc:cvc
-               },
-               success: function(o)
-               {
-                    $("#frm-pay-subscription").modal('hide'); 
+				if( o.is_success == 1 ){
+					$("#modal-converge-subscribe").modal('hide');
+					$("#payment-method").val('converge');
+					$("#payment-method-status").val('COMPLETED');
+					activate_registration();
+				}else{
+					Swal.fire({
+					icon: 'error',
+					title: 'Cannot process payment',
+					text: o.message
+					});
+				}
 
-                    if( o.is_success == 1 ){
-                      $("#modal-converge-subscribe").modal('hide');
-                      $("#payment-method").val('converge');
-			          $("#payment-method-status").val('COMPLETED');
-			          activate_registration();
-                    }else{
-                      Swal.fire({
-                        icon: 'error',
-                        title: 'Cannot process payment',
-                        text: o.message
-                      });
-                    }
-
-                    $(".btn-modal-pay-subscription").html('Pay');
-                }
-            });
-        }, 1000);
+				$('.btn-modal-pay-subscription').prop("disabled", false);
+				$(".btn-modal-pay-subscription").html('Pay');
+			},
+			beforeSend:function(){
+				$('.btn-modal-pay-subscription').prop("disabled", true);
+            	$('.btn-modal-pay-subscription').html('<span class="spinner-border spinner-border-sm m-0"></span>');
+			}
+		});
     });
 
     allNextBtn.click(function(){
@@ -960,15 +954,15 @@ $(function(){
         var curStepBtn = curStep.attr("id");
         //var curInputs  = curStep.find("input[type='text'],input[type='email'],input[type='password']");
 
-        var curInputs  = curStep.find("input[type='text'],input[type='email'],input[type='password']");
+        var curInputs      = curStep.find("input[type='text'],input[type='email'],input[type='password']");
         var curInputEmail  = curStep.find("input[type='email']");
-        //console.log("Test Validation");
-        //console.log(curInputs);
+		var curSelect      = $('#industry_type_id');
 
         var isValid = true;
         var isValidEmail = true;
 
         var emailErrMsg = "";
+		var industryTypeErrMsg = "";
 
         $(".form-group").removeClass("has-error");
 
@@ -989,6 +983,13 @@ $(function(){
                 emailErrMsg = "Please enter a correct email address";
             }
         }
+
+		if( curSelect.val() <= 0 ){
+			curSelect.closest(".input-group").addClass("has-error");
+			industryTypeErrMsg = "Please select industry type";
+		}else{
+			curSelect.closest(".input-group").removeClass("has-error");
+		}
 
         $("#ajax-authentication-alert-container").html('');
 
@@ -1051,7 +1052,9 @@ $(function(){
 
         	if(req_inc == 1 && emailErrMsg != "") {
         		$("." + curStepBtn + "-error-msg").html(emailErrMsg);
-        	} else {
+        	}else if( industryTypeErrMsg != "" ){
+				$("." + curStepBtn + "-error-msg").html(industryTypeErrMsg);
+			}else {
         		$("." + curStepBtn + "-error-msg").html("Cannot empty required fields");
         	}
         }
@@ -1153,30 +1156,28 @@ $(function(){
     	$("#modalVerifyOfferCode").modal("show");
     	$("#modalVerifyOfferCode .modal-body").html(aut_msg);
 
-    	setTimeout(function () {
-	        $.ajax({
-	           type: "POST",
-	           url: url,
-	           dataType: "json",
-	           data: $("#subscribe-form-payment").serialize(),
-	           success: function(o)
-	           {	
-	           		if( o.is_valid ){
-	           			var msg = "<div class='alert alert-success'><p>"+o.msg+"</p></div>";
-	           		}else{
-	           			var msg = "<div class='alert alert-danger'><p>"+o.msg+"</p></div>";	
-	           		}
+		$.ajax({
+			type: "POST",
+			url: url,
+			dataType: "json",
+			data: $("#subscribe-form-payment").serialize(),
+			success: function(o)
+			{	
+				if( o.is_valid ){
+					var msg = "<div class='alert alert-success'><p>"+o.msg+"</p></div>";
+				}else{
+					var msg = "<div class='alert alert-danger'><p>"+o.msg+"</p></div>";	
+				}
 
-	           		$("#modalVerifyOfferCode .modal-body").html(msg);
+				$("#modalVerifyOfferCode .modal-body").html(msg);
 
-	           		if( o.is_valid ){
-	           			setTimeout(function () {
-					        location.href = base_url + 'login';
-					    }, 1500);  
-	           		}
-	           }
-	        });
-	    }, 500);  
+				if( o.is_valid ){
+					setTimeout(function () {
+						location.href = base_url + 'login';
+					}, 1500);  
+				}
+			}
+		});
     });
 
 
@@ -1334,30 +1335,28 @@ $(function(){
     function activate_registration(){
     	$(".payment-method-container").hide();
         var url = base_url + 'registration/_create_registration';
-        setTimeout(function () {
-	        $.ajax({
-	           type: "POST",
-	           url: url,
-	           dataType: "json",
-	           data: $("#subscribe-form-payment").serialize(),
-	           success: function(o)
-	           {	
-	           		Swal.fire({
-		                title: 'Registration Completed!',
-		                text: 'You can now login to your account',
-		                icon: 'success',
-		                showCancelButton: false,
-		                confirmButtonColor: '#32243d',
-		                cancelButtonColor: '#d33',
-		                confirmButtonText: 'Login'
-		            }).then((result) => {
-		                if (result.value) {
-		                    window.location.href= base_url + 'login';
-		                }
-		            });
-	           }
-	        });
-	    }, 500);
+        $.ajax({
+			type: "POST",
+			url: url,
+			dataType: "json",
+			data: $("#subscribe-form-payment").serialize(),
+			success: function(o)
+			{	
+				Swal.fire({
+					title: 'Registration Completed!',
+					text: 'You can now login to your account',
+					icon: 'success',
+					showCancelButton: false,
+					confirmButtonColor: '#32243d',
+					cancelButtonColor: '#d33',
+					confirmButtonText: 'Login'
+				}).then((result) => {
+					if (result.value) {
+						window.location.href= base_url + 'login';
+					}
+				});
+			}
+		});
     }
 
 	$('.business-phone').keydown(function(e) {

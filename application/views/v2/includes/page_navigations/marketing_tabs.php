@@ -1,20 +1,14 @@
 <div class="nsm-page-nav">
     <ul>
-        <li class="<?php if($page->title == 'Customers'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer')?>">
-                <i class='bx bx-fw bx-box'></i>
-                <span>My Customers</span>
-            </a>
-        </li>
         <li class="<?php if($page->title == 'SMS Blast'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('sms_campaigns')?>">
-                <i class='bx bx-fw bx-box'></i>
+                <i class='bx bx-fw bx-chat'></i>
                 <span>SMS Blast</span>
             </a>
         </li>
         <li class="<?php if($page->title == 'Survey Wizard'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('survey')?>">
-                <i class='bx bx-fw bx-box'></i>
+                <i class='bx bx-fw bx-list-check'></i>
                 <span>Survey</span>
             </a>
         </li>
@@ -32,7 +26,7 @@
         </li> -->
         <li class="<?php if($page->title == 'Email Broadcast'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('email_broadcasts')?>">
-                <i class='bx bx-fw bx-box'></i>
+                <i class='bx bx-fw bx-envelope'></i>
                 <span>Email Broadcast</span>
             </a>
         </li>
@@ -44,7 +38,7 @@
         </li> -->
         <li class="<?php if($page->title == 'Deals & Steals'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('promote/deals')?>">
-                <i class='bx bx-fw bx-box'></i>
+                <i class='bx bx-fw bx-purchase-tag-alt'></i>
                 <span>Deals and Steals</span>
             </a>
         </li>
@@ -56,7 +50,7 @@
         </li> -->
         <li class="<?php if($page->title == 'My Inquiry List'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('my_inquires')?>">
-                <i class='bx bx-fw bx-box'></i>
+                <i class='bx bx-fw bx-help-circle'></i>
                 <span>My Inquiry List</span>
             </a>
         </li>

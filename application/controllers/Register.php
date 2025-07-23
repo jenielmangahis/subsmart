@@ -155,7 +155,7 @@ class Register extends MYF_Controller {
             $ip_exist = false;
         }
 
-        //$ip_exist = false;
+        $ip_exist = false;
 
         $industryTypes = $this->IndustryType_model->getAll();
         $paypal_client_id     = paypal_credential('client_id');
@@ -269,10 +269,10 @@ class Register extends MYF_Controller {
                         $count_exist_business_name++;
                     }
                 }
+
                 if($count_exist_business_name > 0) {
                     $is_authentic = 0;
                 }
-
 
                 $count_exist_ip_address = 0;
                 if($edata_ip){ 
@@ -289,6 +289,7 @@ class Register extends MYF_Controller {
         }
 
         //echo $is_authentic;
+        //$is_authentic =1;
         if( $is_authentic == 1 ){
             $leads_input = array(
                 'firstname'     => $post['firstname'],
@@ -1039,13 +1040,15 @@ class Register extends MYF_Controller {
             $today = strtotime(date("Y-m-d"));
             //$startup_checklist = generateClientChecklist();
 
-            $cid   = $this->Clients_model->create([
+            $cid = $this->Clients_model->create([
                 'first_name' => $post['firstname'],
                 'last_name'  => $post['lastname'],
                 'email_address' => $post['email'],
                 'phone_number'  => $post['phone'],
                 'business_name' => $post['business_name'],                
                 'business_address' => $post['business_address'],
+                'city' => $post['business_city'],
+                'state' => $post['business_state'],
                 'zip_code' => $post['zip_code'],
                 'number_of_employee' => $post['number_of_employee'],
                 'industry_type_id' => $post['industry_type_id'],
@@ -1057,7 +1060,7 @@ class Register extends MYF_Controller {
                 'nsmart_plan_id' => $post['plan_id'],
                 'payment_method' => $payment_method,
                 'plan_date_registered' => date("Y-m-d", $today),
-                'plan_date_expiration' => date("Y-m-d", strtotime("+1 month", $today)),
+                'plan_date_expiration' => $next_billing_date,
                 'is_trial' => $is_trial,
                 'is_startup' => 1,              
                 'is_auto_renew' => 0,  
@@ -1080,15 +1083,8 @@ class Register extends MYF_Controller {
                 'user_type' => 4,
                 'password_plain' =>  $post['password'],
                 'password' => hash( "sha256", $post['password'] ),
+                'is_archived' => 'No'
             ]); 
-
-            //Update cards file                        
-            if( $this->session->has_userdata('cfid') ) {
-                $cfid = $this->session->userdata('cfid');
-                $data = ['company_id' => $cid];
-                $this->CardsFile_model->updateCardsFile($cfid, $data);
-                $this->session->unset_userdata('cfid');
-            }
 
             if( $is_trial == 0 ){
                 $or_amount = $plan_amount;
@@ -1263,7 +1259,40 @@ class Register extends MYF_Controller {
         //echo $sessiontoken;  //shows the session token.
     }
 
-    public function ajax_converge_payment(){
+    public function ajax_converge_payment()
+    {
+        $this->load->model('CardsFile_model');
+        $this->load->helper('converge_payment_helper');    
+
+        $is_success = 0;        
+        $message    = 'Cannot process payment';
+
+        $post   = $this->input->post();
+        $plan   = $this->NsmartPlan_model->getById($post['plan_id']);
+        $amount = $plan->discount;
+        $converge_data = [
+            'amount' => $amount,
+            'card_number' => $post['ccnumber'],
+            'exp_month' => $post['expmonth'],
+            'exp_year' => $post['expyear'],
+            'card_cvc' => $post['cvc'],
+            'address' => $post['address'],
+            'zip' => $post['zipcode']
+        ];
+
+        $result = convergeSendSale($converge_data);
+        if ($result['is_success']) {
+            $is_success = 1;
+            $message    = '';
+        }else{
+            $message = $result['msg'];
+        }
+
+        echo json_encode(['is_success' => $is_success, 'message' => $message]);
+        exit;
+    }
+
+    public function ajax_converge_payment_old(){
         $this->load->model('CardsFile_model');
 
         $is_success = 0;        

@@ -131,7 +131,7 @@ error_reporting(0);
                   <div class="row">
                      <div class="col-md-4">
                         <label>City</label> <span class="form-required">*</span>
-                        <input type="text" name="city"  class="form-control" id="city" value="<?php echo ($profiledata) ? $profiledata->city : '' ?>" autocomplete="off" placeholder="e.g. Phoenix" required="">
+                        <input type="text" name="city"  class="form-control" id="city" value="<?php echo ($profiledata) ? $profiledata->city : $city; ?>" autocomplete="off" placeholder="e.g. Phoenix" required="">
                         <span class="validation-error-field" data-formerrors-for-name="city" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                      <div class="col-md-4">
@@ -148,7 +148,7 @@ error_reporting(0);
                      </div>
                      <div class="col-md-4">
                         <label>State/Province</label> <span class="form-required">*</span>
-                        <input type="text" name="state" value="<?php echo ($profiledata) ? $profiledata->state : '' ?>" class="form-control" id="state"/>
+                        <input type="text" name="state" value="<?php echo ($profiledata) ? $profiledata->state : $state; ?>" class="form-control" id="state"/>
                      </div>
                   </div>
                </div>
