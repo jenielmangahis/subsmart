@@ -86,9 +86,9 @@
                                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
+                                        <!-- <li>
                                             <a class="dropdown-item" href="#">Run report</a>
-                                        </li>
+                                        </li> -->
                                         <?php if($term['status'] === '1') : ?>
                                         <li>
                                             <a class="dropdown-item edit-term" href="#">Edit</a>
