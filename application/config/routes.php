@@ -998,6 +998,7 @@ $route['wizard/edit_workspace/(:num)'] = 'wizard/edit_workspace/$1';
 // $route['wizard/getSubOptions'] = 'wizard/getSubOptions';
 
 // Settings
+$route['settings/tax_rates'] = 'Settings/tax_rates';
 $route['settings/schedule'] = 'Settings/schedule';
 $route['settings/notifications'] = 'Settings/notifications';
 $route['settings/email_templates'] = 'Settings/email_templates';
@@ -1020,6 +1021,7 @@ $route['settings/_update_tax_rate'] = 'Settings/ajax_update_tax_rate';
 $route['settings/_delete_tax_rate'] = 'Settings/ajax_delete_tax_rate';
 $route['settings/_update_calendar_settings'] = 'Settings/ajax_update_calendar_settings';
 $route['settings/_update_email_branding'] = 'Settings/ajax_update_email_brandingg';
+$route['settings/tax_rates'] = 'Settings/tax_rates';
 
 //Chatbot
 $route['chatbot/settings'] = 'ChatbotSettings/settings';

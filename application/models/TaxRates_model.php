@@ -79,7 +79,7 @@ class TaxRates_model extends MY_Model
         } else {
             return $query->result();
         }
-    }  
+    } 
 
     public function resetDefaultTaxRateByCompanyId($company_id)
     {

@@ -29,7 +29,7 @@
         <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'frm-create-tax-rate', 'autocomplete' => 'off']); ?>
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="new_tax_rate_modal_label">New Tax Rate</span>
+                <span class="modal-title content-title" id="new_tax_rate_modal_label">New Tax Rate </span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
