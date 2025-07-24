@@ -998,6 +998,7 @@ $route['wizard/edit_workspace/(:num)'] = 'wizard/edit_workspace/$1';
 // $route['wizard/getSubOptions'] = 'wizard/getSubOptions';
 
 // Settings
+$route['settings/tax_rates'] = 'Settings/tax_rates';
 $route['settings/schedule'] = 'Settings/schedule';
 $route['settings/notifications'] = 'Settings/notifications';
 $route['settings/email_templates'] = 'Settings/email_templates';

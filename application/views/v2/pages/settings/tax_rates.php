@@ -119,6 +119,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        
         $(".nsm-table").nsmPagination();
 
         $("#search_field").on("input", debounce(function() {
