@@ -70,6 +70,21 @@ class Lead_model extends MY_Model
         $this->db->update($this->table, $data);
     }
 
+    public function bulkDelete($ids = [], $filters = [])
+    {
+        if( count($ids) > 0 ){
+            $this->db->where_in('leads_id', $ids);
+
+            if( $filters ){
+                foreach( $filters as $filter ){
+                    $this->db->where($filter['field'], $filter['value']);
+                }
+            }
+
+            $this->db->delete($this->table);
+        }        
+    }
+
     public function updateLead($lead_id, $data = [], $filters = [])
     {
         $this->db->where('leads_id', $lead_id);
