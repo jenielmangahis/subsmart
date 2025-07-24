@@ -2162,6 +2162,10 @@ $route['customers/_create_proposed_inverter'] = 'Customer/ajax_create_proposed_i
 $route['customers/_update_proposed_inverter'] = 'Customer/ajax_update_proposed_inverter';
 $route['customers/_delete_proposed_inverter'] = 'Customer/ajax_delete_proposed_inverter';
 $route['customers/download_statement_of_claims'] = 'Customer/download_statement_of_claims';
+$route['customers/leads/archived'] = 'Customer/archived_leads';
+$route['customers/leads/_restore_selected_leads'] = 'Customer/ajax_restore_selected_leads';
+$route['customers/leads/_permanently_delete_selected_leads'] = 'Customer/ajax_permanently_delete_selected_leads';
+$route['customers/leads/_restore_leads'] = 'Customer/ajax_restore_leads';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
