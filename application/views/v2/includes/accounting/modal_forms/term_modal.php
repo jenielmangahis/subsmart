@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col-12">
                         <label for="name"><span class="text-danger">*</span>Name</label>
-                        <input type="text" name="name" id="name" class="form-control nsm-field mb-2" value="<?=isset($term) ? $term->name : ''?>">
+                        <input type="text" name="name" id="name" class="form-control nsm-field mb-2" value="<?=isset($term) ? $term->name : ''?>" required>
 
                         <div class="form-check mb-2">
                             <input class="form-check-input" type="radio" name="payment_term_type" id="payment-term-type-1" value="1" <?=isset($term) && $term->type === "1" || !isset($term) ? 'checked' : ''?>>

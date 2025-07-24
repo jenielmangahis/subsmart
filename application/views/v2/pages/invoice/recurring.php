@@ -141,7 +141,7 @@
                                 </button>
                                 <ul class="dropdown-menu">                                
                                     <li><a class="dropdown-item" id="export-invoice-list" href="javascript:void(0);">Export</a></li>                               
-                                    <li><a class="dropdown-item" id="archived-invoice-list" href="javascript:void(0);">Manage Archived</a></li>                               
+                                    <li><a class="dropdown-item" id="archived-invoice-list" href="javascript:void(0);">Archived</a></li>                               
                                 </ul>
                             </div>
                             <?php } ?>

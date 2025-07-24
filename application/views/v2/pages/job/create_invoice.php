@@ -510,7 +510,7 @@
     //document.getElementById("due-date").value = today;
 </script>
 
-<script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+<script src="https://cdn.ckeditor.com/4.25.1/standard/ckeditor.js"></script>
 
 <script>
     window.addEventListener('DOMContentLoaded', (event) => {
@@ -523,9 +523,13 @@
 
             const jobLocation = document.getElementById("job_location").value;
             let ckeditorData = '';
-            if (CKEDITOR.instances.editor1_tc) {
-                ckeditorData = CKEDITOR.instances.editor1_tc.getData();
+
+            if (CKEDITOR.instances['editor1_tc']) {
+                ckeditorData = CKEDITOR.instances['editor1_tc'].getData();
             }
+
+            var jobNameData = ""; //document.querySelector('#job_name').value;
+            
             const payload = {
                 inid: document.querySelector('#inid').value,
                 job_id: "<?= $job->id; ?>",
@@ -546,7 +550,7 @@
                 message_on_voice: document.querySelector('[name=message_to_customer]').value,
                 job_number: document.querySelector('#job_number').value,
                 invoice_number: document.querySelector('#invoice_number_display').value,
-                job_name: document.querySelector('#job_name').value,
+                job_name: jobNameData,
                 status: "Submitted",
                 total_due: 0.00,
                 tip: document.querySelector('#tip').value,

@@ -138,8 +138,9 @@ class Payment_terms extends MY_Controller {
 
     public function add()
     {
+        $company_id = logged('company_id');
         $data = [
-            'company_id' => getLoggedCompanyID(),
+            'company_id' => $company_id,
             'name' => $this->input->post('name'),
             'type' => $this->input->post('payment_term_type'),
             'net_due_days' => $this->input->post('payment_term_type') === "1" ? $this->input->post('net_due_days') === "" ? 0 : $this->input->post('net_due_days') : null,
