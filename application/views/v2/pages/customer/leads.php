@@ -38,6 +38,17 @@
                         </div>
                     </div>                    
                     <div class="col-12 col-md-8 grid-mb text-end">
+                        <?php if(checkRoleCanAccessModule('leads', 'write')){ ?>
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-status" href="javascript:void(0);" data-action="status">Change Status</a></li>                                
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
+                        </div>
+                        <?php } ?>
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 Filter by Status: <span><?= $filter; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
@@ -56,13 +67,20 @@
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
                                 <i class='bx bx-fw bxs-user-plus'></i> New Leads
                             </button>
+                            <button type="button" id="btn-archive" class="nsm-button primary"><i class='bx bx-fw bx-trash'></i> Manage Archived</button>
                         </div>
-                        <?php } ?>
+                        <?php } ?>                        
                     </div>                    
                 </div>
+                <form id="frm-with-selected">
                 <table class="nsm-table">
                     <thead>
                         <tr>
+                            <?php if(checkRoleCanAccessModule('leads', 'write')){ ?>
+                            <td class="table-icon text-center sorting_disabled">
+                                <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                            </td>
+                            <?php } ?>
                             <td class="table-icon"></td>
                             <td data-name="Name">Name</td>
                             <td data-name="Address">Address</td>
@@ -100,6 +118,11 @@
                                 endswitch;
                             ?>
                                 <tr>
+                                    <?php if(checkRoleCanAccessModule('leads', 'write')){ ?>
+                                    <td>
+                                        <input class="form-check-input row-select table-select" name="leads[]" type="checkbox" value="<?= $lead->leads_id; ?>">
+                                    </td>
+                                    <?php } ?>
                                     <td>
                                         <?php 
                                             $n = ucwords($lead->firstname[0]) . ucwords($lead->lastname[0]);
@@ -141,7 +164,7 @@
                                                 </li>
                                                 <?php } ?>
                                                 <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $lead->leads_id; ?>">Delete</a>
+                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $lead->leads_id; ?>" data-value="<?= $lead->firstname.' '.$lead->lastname; ?>">Delete</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -165,6 +188,7 @@
                         ?>
                     </tbody>
                 </table>
+                </form>
             </div>
         </div>
     </div>
@@ -289,6 +313,76 @@
 
             _form.submit();
         }, 1500));
+
+        $(document).on('change', '#select-all', function(){
+            $('.row-select:checkbox').prop('checked', this.checked);  
+            let total= $('input[name="leads[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
+        });
+
+        $(document).on('change', '.row-select', function(){
+            let total= $('input[name="leads[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
+        });
+
+        $(document).on('click', '#with-selected-delete', function(){
+            let total= $('input[name="leads[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Delete Leads',
+                    html: `Are you sure you want to delete selected rows?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'customer/_archive_selected_leads',
+                            dataType: 'json',
+                            data: $('#frm-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                        title: 'Delete Leads',
+                                        text: "Data deleted successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        });
 
         $('.btn-convert-to-customer').on('click', function(){
             var lead_id = $(this).attr('data-id');
@@ -484,10 +578,11 @@
 
         $(document).on("click", ".delete-item", function() {
             let lead_id = $(this).attr('data-id');
+            let name = $(this).attr('data-value');
 
             Swal.fire({
-                title: 'Delete Lead',
-                text: "Are you sure you want to delete this lead?",
+                title: 'Delete Leads',
+                html: `Are you sure you want to delete lead <b>${name}</b>?<br /><br /><small>Deleted data can be restored via archived list.</small>`,         
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -495,27 +590,33 @@
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        type: 'POST',
-                        url: "<?php echo base_url(); ?>customer/remove_lead",
-                        data: {
-                            lead_id: lead_id
-                        },
-                        success: function(result) {
-                            if(result === "Done"){
+                        method: 'POST',
+                        url: base_url + "customer/_archive_lead",
+                        data: {lead_id: lead_id},
+                        dataType: 'json',                        
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
                                 Swal.fire({
-                                    title: 'Good job!',
-                                    text: "Data Deleted Successfully!",
+                                    title: 'Delete Leads',
+                                    text: "Data deleted successfully!",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
-                                    if (result.value) {
+                                    //if (result.value) {
                                         location.reload();
-                                    }
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
                                 });
                             }
                         },
                     });
+
                 }
             });
         });

@@ -350,7 +350,7 @@ class Customer_advance_model extends MY_Model
         $this->db->select('ac_leads.*,users.FName,users.LName, business_profile.business_name, ac_leadtypes.lead_name AS lead_type');
         $this->db->join('users', 'users.id = ac_leads.fk_assign_id', 'left');
         $this->db->join('business_profile', 'business_profile.company_id = ac_leads.company_id', 'left');
-        $this->db->join('ac_leadtypes', 'ac_leads.fk_lead_id = ac_leadtypes.lead_id', 'left');
+        $this->db->join('ac_leadtypes', 'ac_leads.fk_lead_type_id = ac_leadtypes.lead_id', 'left');
         $this->db->where('ac_leads.leads_id', $lead_id);
         $query = $this->db->get($tablename);
 

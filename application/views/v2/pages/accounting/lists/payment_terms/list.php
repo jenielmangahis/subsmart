@@ -108,7 +108,7 @@
                         <?php endforeach; ?>
 						<?php else : ?>
 						<tr>
-							<td colspan="14">
+							<td colspan="2">
 								<div class="nsm-empty">
 									<span>No results found.</span>
 								</div>

@@ -51,7 +51,7 @@
                             <td class="table-icon"></td>
                             <td data-name="Name">Name</td>
                             <td data-name="Rate" style="width:10%;">Rate</td>
-                            <td data-name="Default"  style="width:5%;">Default</td>
+                            <td data-name="Default" style="width:5%;">Default</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -101,7 +101,7 @@
                         else :
                         ?>
                             <tr>
-                                <td colspan="11">
+                                <td colspan="5">
                                     <div class="nsm-empty">
                                         <span>No results found.</span>
                                     </div>

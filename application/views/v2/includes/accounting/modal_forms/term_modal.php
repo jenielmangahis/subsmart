@@ -6,7 +6,7 @@
                 <button type="button" class="close-term-modal" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
             </div>
             <?php 
-                $action = isset($term) ? "/accounting/terms/update/$term->id" : "/accounting/terms/add";
+                $action = isset($term) ? base_url() . "accounting/terms/update/$term->id" : base_url() . "accounting/terms/add";
             ?>
             <form id="payment-term-form" action="<?=$action?>" method="post">
             <div class="modal-body">

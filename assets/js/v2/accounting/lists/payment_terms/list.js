@@ -3,7 +3,7 @@ $('.dropdown-menu.table-settings').on('click', function(e) {
 });
 
 $("#payment-terms-table").nsmPagination({
-    itemsPerPage: parseInt($('#table-rows li a.active').html().trim())
+    //itemsPerPage: parseInt($('#table-rows li a.active').html().trim())
 });
 
 $('.dropdown-menu#table-rows a.dropdown-item').on('click', function() {
@@ -32,7 +32,7 @@ $("#btn_print_payment_terms").on("click", function() {
 $('#add-payment-term-button').on('click', function(e) {
     e.preventDefault();
 
-    $.get(`/accounting/get-dropdown-modal/term_modal`, function(result) {
+    $.get(base_url + `/accounting/get-dropdown-modal/term_modal`, function(result) {
         if ($('#modal-container').length > 0) {
             $('div#modal-container').html(result);
         } else {
@@ -53,7 +53,7 @@ $('#payment-terms-table .edit-term').on('click', function(e) {
     var row = $(this).closest('tr');
     var id = row.data().id;
 
-    $.get(`/accounting/terms/edit/${id}`, function(result) {
+    $.get(base_url + `/accounting/terms/edit/${id}`, function(result) {
         if ($('#modal-container').length > 0) {
             $('div#modal-container').html(result);
         } else {
