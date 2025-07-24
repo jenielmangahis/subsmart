@@ -3817,8 +3817,9 @@ class Users extends MY_Controller
 				}			
 			}
 
-            $filter[] = ['field' => 'company_id', 'value' => $company_id];
-            $this->Users_model->bulkDelete($post['users'], $filter);
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+			$filters[] = ['field' => 'is_archived', 'value' => 'Yes'];
+            $this->Users_model->bulkDelete($post['users'], $filters);
 
 			//Activity Logs
 			$activity_name = 'Users : Permanently deleted ' .$total_archived. ' user(s)'; 
