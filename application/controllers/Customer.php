@@ -3996,12 +3996,12 @@ class Customer extends MY_Controller
             }
 
             $filter = ucwords($filter);
-            $filters[] = ['field_name' => 'status', 'field_value' => $filter];
-            $filters[] = ['field_name' => 'is_archive', 'field_value' => 'No'];
+            $filters[] = ['field_name' => 'ac_leads.status', 'field_value' => $filter];
+            $filters[] = ['field_name' => 'ac_leads.is_archive', 'field_value' => 'No'];
             $leads = $this->Lead_model->getAllByCompanyId($cid, $filters);
 
         }else{
-            $filters[] = ['field_name' => 'is_archive', 'field_value' => 'No'];
+            $filters[] = ['field_name' => 'ac_leads.is_archive', 'field_value' => 'No'];
             $leads = $this->Lead_model->getAllByCompanyId($cid, $filters);
         }
 
@@ -12927,4 +12927,114 @@ class Customer extends MY_Controller
 
         echo json_encode($return);
     }
+
+    public function archived_leads()
+    {
+        $this->load->model('Lead_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $filters[] = ['field_name' => 'is_archive', 'field_value' => 'Yes'];
+        $leads   = $this->Lead_model->getAllByCompanyId($company_id,$filters);
+        $this->page_data['leads'] = $leads;
+        $this->load->view('v2/pages/customer/ajax_archive_leads', $this->page_data);
+    }
+
+    public function ajax_restore_selected_leads()
+    {
+        $this->load->model('Lead_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['leads'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archive' => 'No', 'date_updated' => date("Y-m-d H:i:s")];
+            $this->Lead_model->bulkUpdate($post['leads'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Leads : Restored ' . count($post['leads']). ' lead(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_permanently_delete_selected_leads()
+	{
+		$this->load->model('Lead_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['leads'] ){
+
+			$total_archived = count($post['leads']);
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+			$filters[] = ['field' => 'is_archive', 'value' => 'Yes'];
+            $this->Lead_model->bulkDelete($post['leads'], $filters);
+
+			//Activity Logs
+			$activity_name = 'Leads : Permanently deleted ' .$total_archived. ' leads(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_restore_leads()
+	{
+        $this->load->model('Lead_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $lead = $this->Lead_model->getById($post['lead_id']);
+		if( $lead && $lead->company_id == $company_id ){
+			$data     = ['is_archive' => 'No', 'date_updated' => date("Y-m-d H:i:s")];
+			$this->Lead_model->update($lead->id, $data);
+
+			//Activity Logs
+			$name = $lead->firstname . ' ' . $lead->lastname;
+			$activity_name = 'Leads : Restored user ' . $name; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 }
