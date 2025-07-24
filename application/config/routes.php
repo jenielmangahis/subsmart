@@ -1560,6 +1560,10 @@ $route['deal/booking/(:num)'] = 'Pages/deals_booking/$1';
 $route['deal/(:any)/(:num)'] = 'Pages/deals_view/$1/$2';
 $route['deal/save_booking'] = 'Pages/create_deals_booking';
 
+//Cron Deals Steals
+$route['cron/deals_steals_send_mails'] = 'Cron_Marketing/cronDealsStealsSendMails';
+$route['cron/expired_deals'] = 'Cron_Marketing/cronExpiredDealsSteals';
+
 // Admin login
 $route['admin/login'] = 'Admin/login';
 
