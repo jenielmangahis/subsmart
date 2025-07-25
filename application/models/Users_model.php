@@ -1103,6 +1103,7 @@ class Users_model extends MY_Model
         }
 
         $this->db->delete($this->table);
+        return $this->db->affected_rows();
     }
 }
 

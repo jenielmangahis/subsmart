@@ -979,6 +979,20 @@ class AcsProfile_model extends MY_Model
         $this->db->delete($this->table);
         return $this->db->affected_rows();
     }
+
+    public function deleteAllArchived($filters = [])
+    {
+        $this->db->where('is_archived', 1);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->delete($this->table);
+        return $this->db->affected_rows();
+    }
 }
 
 /* End of file AcsProfile_model.php */
