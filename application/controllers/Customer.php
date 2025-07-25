@@ -274,6 +274,9 @@ class Customer extends MY_Controller
                 $labelName   = $customer->first_name.' '.$customer->last_name;
             }
             
+            $checkbox = "<input class='form-check-input row-select table-select' name='customers[]' type='checkbox' value='".$customer->prof_id."' />";
+            array_push($data_arr, $checkbox);
+            
             if (!empty($enabled_table_headers)) {
                 if (in_array('name', $enabled_table_headers)) {                    
                     $n = ucwords($customer->first_name[0]).ucwords($customer->last_name[0]);
@@ -554,6 +557,10 @@ class Customer extends MY_Controller
             }else{
                 $labelName   = $customer->first_name.' '.$customer->last_name;
             }
+            
+            $checkbox = "<input class='form-check-input row-select table-select' name='customers[]' type='checkbox' value='".$customer->prof_id."' />";
+            array_push($data_arr, $checkbox);
+
             if (!empty($enabled_table_headers)) {
                 if (in_array('name', $enabled_table_headers)) {                    
                     $n = ucwords($customer->first_name[0]).ucwords($customer->last_name[0]);
@@ -972,6 +979,10 @@ class Customer extends MY_Controller
             }
             
             $data_arr = [];
+            
+            $checkbox = "<input class='form-check-input row-select table-select' name='customers[]' type='checkbox' value='".$customer->prof_id."' />";
+            array_push($data_arr, $checkbox);
+
             if (!empty($enabled_table_headers)) {
                 if (in_array('name', $enabled_table_headers)) {
                     // if ($customer->customer_type === 'Business') {
@@ -984,8 +995,6 @@ class Customer extends MY_Controller
                     //     $data_name = "<div class='nsm-profile'><span>".$n.'</span></div>';
                     //     array_push($data_arr, $data_name);
                     // }
-                    $checkbox = "<input class='form-check-input row-select table-select' name='customers[]' type='checkbox' value='".$customer->prof_id."' />";
-                    array_push($data_arr, $checkbox);
 
                     $n = ucwords($customer->first_name[0]).ucwords($customer->last_name[0]);
                     $data_name = "<div class='nsm-profile'><span>".$n.'</span></div>';
