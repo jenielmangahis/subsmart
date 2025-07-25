@@ -26,7 +26,7 @@ class Lead_model extends MY_Model
     {
 
         $this->db->select('ac_leads.*, users.FName, users.LName, ac_leadtypes.lead_name');
-        $this->db->join('users', 'ac_leads.fk_assign_id = users.id', 'left');
+        $this->db->join('users', 'ac_leads.fk_sr_id = users.id', 'left');
         $this->db->join('ac_leadtypes', 'ac_leads.fk_lead_type_id = ac_leadtypes.lead_id', 'left');
         $this->db->from($this->table);
         $this->db->where('ac_leads.company_id', $company_id);
