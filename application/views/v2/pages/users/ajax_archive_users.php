@@ -75,7 +75,7 @@ $(function(){
     });
 
     $(document).on('change', '.users-archive-row-select', function(){
-        let total= $('input[name="users[]"]:checked').length;
+        let total= $('#archived-users input[name="users[]"]:checked').length;
         if( total > 0 ){
             $('#users-archive-num-checked').text(`(${total})`);
         }else{
