@@ -494,9 +494,13 @@
                     </div>
                 <?php else : ?>
                     <div class="cont">
+                        <form id="frm-with-selected">
                         <table class="customerTbl " id="customer-list" style="width:100%">
                             <thead>
                                 <tr>
+                                    <th class="table-icon text-center sorting_disabled">
+                                        <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                                    </th>
                                     <th class="table-icon"></th>
                                     <th data-name="Name">Name   </th>
                                     <?php if($companyId == 1): ?>
@@ -516,9 +520,9 @@
                                     <th data-name="Manage"></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                            </tbody>
+                            <tbody></tbody>
                         </table>
+                        </form>
                     </div>
                 <?php endif; ?>
             </div>
@@ -538,16 +542,14 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="modal-favorite-customers" aria-labelledby="modal-favorite-customers-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form method="post" id="quick-add-event-form">   
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Manage Favorite Customers</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body" id="customer-favorite-list-container" style="max-height: 800px; overflow: auto;"></div>
+    <div class="modal-dialog modal-lg modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Manage Favorite Customers</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-        </form>
+            <div class="modal-body" id="customer-favorite-list-container" style="max-height: 800px; overflow: auto;"></div>
+        </div>
     </div>
 </div>
 
@@ -644,7 +646,7 @@
 
         $(document).on('change', '#select-all', function(){
             $('.row-select:checkbox').prop('checked', this.checked);  
-            let total= $('input[name="customers[]"]:checked').length;
+            let total= $('#customer-list input[name="customers[]"]:checked').length;
             if( total > 0 ){
                 $('#num-checked').text(`(${total})`);
             }else{
@@ -653,7 +655,7 @@
         });
 
         $(document).on('change', '.row-select', function(){
-            let total= $('input[name="customers[]"]:checked').length;
+            let total= $('#customer-list input[name="customers[]"]:checked').length;
             if( total > 0 ){
                 $('#num-checked').text(`(${total})`);
             }else{
@@ -662,7 +664,7 @@
         });
 
         $(document).on('click', '#with-selected-favorites', function(){
-            let total= $('input[name="customers[]"]:checked').length;
+            let total= $('#customer-list input[name="customers[]"]:checked').length;
             if( total <= 0 ){
                 Swal.fire({
                     icon: 'error',
@@ -713,7 +715,7 @@
         });
 
         $(document).on('click', '#with-selected-delete', function(){
-            let total= $('input[name="customers[]"]:checked').length;
+            let total= $('#customer-list input[name="customers[]"]:checked').length;
             if( total <= 0 ){
                 Swal.fire({
                     icon: 'error',
@@ -738,7 +740,7 @@
                             success: function(result) {                        
                                 if( result.is_success == 1 ) {
                                     Swal.fire({
-                                        title: 'Delete Users',
+                                        title: 'Delete Customers',
                                         text: "Customer records deleted successfully!",
                                         icon: 'success',
                                         showCancelButton: false,
@@ -819,7 +821,7 @@
             var name = $(this).attr('data-name');
 
             Swal.fire({
-                title: 'Restore Customer Data',
+                title: 'Restore Customer',
                 html: `Proceed with restoring customer data <b>${name}</b>?`,
                 icon: 'question',
                 showCancelButton: true,
@@ -837,7 +839,7 @@
                                 $('#modal-archived-customers').modal('hide');
                                 Swal.fire({
                                 icon: 'success',
-                                title: 'Restore Customer Data',
+                                title: 'Restore Customer',
                                 text: 'Customer record was successfully restored.',
                                 }).then((result) => {
                                     CUSTOMER_LIST_TABLE.ajax.reload();
@@ -1303,7 +1305,7 @@
         });
 
         $(document).on('click', '#with-selected-restore', function(){
-            let total= $('input[name="customers[]"]:checked').length;
+            let total= $('#archived-customers input[name="customers[]"]:checked').length;
             if( total <= 0 ){
                 Swal.fire({
                     icon: 'error',
@@ -1355,7 +1357,7 @@
         });
 
         $(document).on('click', '#with-selected-perma-delete', function(){
-            let total= $('input[name="customers[]"]:checked').length;
+            let total= $('#archived-customers input[name="customers[]"]:checked').length;
             if( total <= 0 ){
                 Swal.fire({
                     icon: 'error',

@@ -21,7 +21,7 @@
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item btn-remove-favorite-customer" data-id="<?= $customer->prof_id; ?>" data-name="<?= $customer->first_name . ' ' . $customer->last_name; ?>" href="javascript:void(0);"><i class='bx bx-x-circle'></i> Remove to Favorites</a></li>   
+                                <li><a class="dropdown-item btn-remove-favorite-customer" data-id="<?= $customer->prof_id; ?>" data-name="<?= $customer->first_name . ' ' . $customer->last_name; ?>" href="javascript:void(0);">Remove to Favorites</a></li>   
                             </ul>
                         </div>
                     </td>

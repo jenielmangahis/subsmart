@@ -49,6 +49,10 @@
     overflow-y: auto;
     max-height: calc(100vh - 500px);
 }
+#company-list td:nth-child(1) {  
+    vertical-align:middle;
+    text-align:center;
+}
 </style>
 
 <div class="nsm-fab-container">
@@ -122,48 +126,48 @@
                                 <?php } ?>
                             </ul>
                         </div>
+                        <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
                         <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button primary" data-bs-toggle="dropdown" style="width:122px;">
-                                <span>More Action <i class='bx bx-fw bx-chevron-down'></i>
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                With Selected <small id="num-checked" class="text-muted"></small> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end">      
-                                <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
-                                <li>
-                                    <a class="dropdown-item" href="<?= url('customer/import_customer') ?>"><i class='bx bx-fw bx-chart'></i> Import</a>
-                                </li>
-                                <?php } ?>                              
-                                <li>
-                                    <a class="dropdown-item" id="btn-commercial-export-list" href="javascript:void(0);"><i class='bx bx-fw bx-file'></i> Export</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" id="print-customer-list" href="javascript:void(0)"><i class='bx bx-fw bx-printer'></i> Print</a>
-                                </li>
-                                <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
-                                <li>
-                                    <a class="dropdown-item" id="favorite-customer-list" href="javascript:void(0)"><i class='bx bx-fw bxs-heart'></i> Favorite Customers</a>
-                                </li>
-                                <?php } ?>
-                            </ul>     
-                        </div>
-                        <?php if(checkRoleCanAccessModule('customers', 'write')){ ?>
-                        <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary" id="openModalBtn"  style="margin-left: 10px; cursor:pointer"><i class='bx bx-fw bxs-user-plus'></i> New Customer</a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-favorites" href="javascript:void(0);" data-action="delete">Add to Favorites</a></li>       
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
                         </div>
                         <?php } ?>
-                        <?php if( checkRoleCanAccessModule('customers', 'delete') ){ ?>
-                        <button type="button" class="nsm-button primary" id="archived-customer-list">
-                            <i class='bx bx-fw bx-trash'></i> Manage Archived
-                        </button>
-                        <?php } ?>    
+                        <div class="nsm-page-buttons primary page-button-container">                            
+                            <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-nsm" id="openModalBtn"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Customer</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                                                                                  
+                                    <li><a class="dropdown-item" id="archived-customer-list" href="javascript:void(0);">Archived</a></li>        
+                                    <li><a class="dropdown-item" id="favorite-customer-list" href="javascript:void(0);">Favorites</a></li> 
+                                     <li><div class="dropdown-divider"></div></li> 
+                                    <li><a class="dropdown-item" id="btn-commercial-export-list" href="javascript:void(0);">Export</a></li>                               
+                                    <li><a class="dropdown-item" id="btn-import-customer" href="javascript:void(0);">Import</a></li>                               
+                                    <li><a class="dropdown-item" id="print-customer-list" href="javascript:void(0);">Print</a></li>                               
+                                </ul>
+                            </div>
+                            <?php } ?>
+                        </div>  
                     </div>
                 </div>
                 <input type="hidden" id="page_type" value="company">
                 
                 <?php if (!empty($enabled_table_headers)) : ?>
                     <div class="cont">
+                        <form id="frm-with-selected">
                         <table id="company-list" style="width:100%;">
                             <thead>
                                 <tr>
+                                    <th class="table-icon text-center sorting_disabled">
+                                        <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                                    </th>
                                     <th class="table-icon"></th>
                                     <?php if (in_array('name', $enabled_table_headers)) : ?><th data-name="Name">Name</th><?php endif; ?>
                                     <?php if (in_array('email', $enabled_table_headers)) : ?><th data-name="Name">Email</th><?php endif; ?>
@@ -333,12 +337,17 @@
                                 ?>
                             </tbody>
                         </table>
+                        </form>
                     </div>
                 <?php else : ?>
                     <div class="cont">
+                        <form id="frm-with-selected">
                         <table id="company-list" style="width:100%">
                             <thead>
                                 <tr>
+                                    <th class="table-icon text-center sorting_disabled">
+                                        <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                                    </th>
                                     <th class="table-icon"></th>
                                     <th data-name="Name">Name   </th>
                                     <?php if($companyId == 1): ?>
@@ -361,6 +370,7 @@
                             <tbody>
                             </tbody>
                         </table>
+                        </form>
                     </div>
                 <?php endif; ?>
 
@@ -369,29 +379,38 @@
         </div>
     </div>
 </div>
-<div class="modal fade nsm-modal fade" id="modal-favorite-customers" aria-labelledby="modal-favorite-customers-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form method="post" id="quick-add-event-form">   
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Manage Favorite Customers</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body" id="customer-favorite-list-container" style="max-height: 800px; overflow: auto;"></div>
+<div class="modal fade nsm-modal fade" id="modal-archived-customers" aria-labelledby="modal-archived-customers-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Archived Customers</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-        </form>
+            <div class="modal-body" id="customer-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+        </div>
     </div>
 </div>
-<div class="modal fade nsm-modal fade" id="company_modal" tabindex="-1" aria-labelledby="company_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <form id="person_and_company_form">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title" id=""><i class="bx bx-building"></i> Add Commercial Customer</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body" style="overflow-y:auto;overflow-x:hidden;max-height:700px;">
-                        
+
+<div class="modal fade nsm-modal fade" id="modal-favorite-customers" aria-labelledby="modal-favorite-customers-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Manage Favorite Customers</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body" id="customer-favorite-list-container" style="max-height: 800px; overflow: auto;"></div>
+        </div>
+    </div>
+</div>
+<div class="modal fade nsm-modal fade" id="company_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="new_customer_status_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Add Commercial Customer</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">                      
+                <form id="person_and_company_form">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="row form_line">
@@ -436,94 +455,91 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <h3 class="form-header">CUSTOMER INFORMATION</h3>
-                        <div class="col-md-6">
-                            <div class="row form_line" id="businessName">
-                                <div class="col-md-4 " id="businessNameLabel"><label for="" >Business Name</div>
-                                <div class="col-md-8" id="businessNameInput">
-                                    <input type="text" class="form-control" name="business_name" id="business_name" value=""/>
-                                </div>
-                            </div>
-                            <div class="row form_line">
-                                <div class="col-md-4">First Name <span class="required"> *</span></div>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control" name="first_name" id="first_name" value="" required/>
-                                </div>
-                            </div>
-                            <div class="row form_line">
-                                <div class="col-md-4">Middle Initial</div>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control" maxlength="1" name="middle_name" id="middle_name" value="" />
-                                </div>
-                            </div>
-                            <div class="row form_line">
-                                <div class="col-md-4">Last Name <span class="required"> *</span></div>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control" name="last_name" id="last_name" value="" required/>
-                                </div>
-                            </div>
-                            <div class="row form_line">
-                                <div class="col-md-4">Name Prefix</div>
-                                <div class="col-md-8">
-                                    <select id="prefix" name="prefix" data-customer-source="dropdown" class="form-controls input_select searchable-dropdown">
-                                        <?php for ($prefix=0;$prefix<28;$prefix++){ ?>
-                                            <option value="<?= prefix_name($prefix); ?>"><?= prefix_name($prefix); ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row form_line">
-                                <div class="col-md-4">Suffix</div>
-                                <div class="col-md-8">
-                                    <select id="suffix" name="suffix" data-customer-source="dropdown" class="input_select searchable-dropdown" >
-                                        <?php for ($suffix=0;$suffix<14;$suffix++){ ?>
-                                            <option value="<?= suffix_name($suffix); ?>"><?= suffix_name($suffix); ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="row form_line">
-                                <div class="col-md-4">Social Security No.</div>
-                                <div class="col-md-8">
-                                    <input type="text" placeholder="xxx-xx-xxxx" maxlength="11" class="form-control" name="ssn" id="ssn" value="" />
-                                </div>
-                            </div>
-                            <div class="row form_line">
-                                <div class="col-md-4">Date Of Birth</div>
-                                <div class="col-md-8">
-                                    <input type="text" placeholder="" class="form-control" name="date_of_birth" id="date_of_birth" value="" />
-                                </div>
-                            </div>
-                            <hr />
-                            <div class="row form_line">
-                                <div class="col-md-4">Email</div>
-                                <div class="col-md-8">
-                                    <input data-type="customer_email" type="email" class="form-control email-input-element" name="email" id="email" value="" />
-                                </div>
-                            </div>
 
-                            <div class="row form_line">
-                                <div class="col-md-4">Phone (H)</div>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_h" id="phone_h" value="" />
-                                </div>
+                <div class="row">
+                    <div class="col-md-12"><h3 class="form-header">CUSTOMER INFORMATION</h3></div>
+                
+                    <div class="col-md-6">
+                        <div class="row form_line" id="businessName">
+                            <div class="col-md-4 " id="businessNameLabel"><label for="" >Business Name</div>
+                            <div class="col-md-8" id="businessNameInput">
+                                <input type="text" class="form-control" name="business_name" id="business_name" value=""/>
                             </div>
-                            <div class="row form_line">
-                                <div class="col-md-4">Phone (M) <span class="required"> *</span></div>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_m" id="phone_m" value="" required />
-                                </div>
-                            </div>                               
                         </div>
-                        <div class="col-md-6">
                         <div class="row form_line">
-                            <!-- <div class="col-md-4">Country</div>
-                                <div class="col-md-8">
-                                    <input data-type="customer_address_country" type="text" class="form-control" name="country" id="country" value="" />
-                                </div>
-                            </div> -->
+                            <div class="col-md-4">First Name <span class="required"> *</span></div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="first_name" id="first_name" value="" required/>
+                            </div>
+                        </div>
+                        <div class="row form_line">
+                            <div class="col-md-4">Middle Initial</div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" maxlength="1" name="middle_name" id="middle_name" value="" />
+                            </div>
+                        </div>
+                        <div class="row form_line">
+                            <div class="col-md-4">Last Name <span class="required"> *</span></div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="last_name" id="last_name" value="" required/>
+                            </div>
+                        </div>
+                        <div class="row form_line">
+                            <div class="col-md-4">Name Prefix</div>
+                            <div class="col-md-8">
+                                <select id="prefix" name="prefix" data-customer-source="dropdown" class="form-controls input_select searchable-dropdown">
+                                    <?php for ($prefix=0;$prefix<28;$prefix++){ ?>
+                                        <option value="<?= prefix_name($prefix); ?>"><?= prefix_name($prefix); ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row form_line">
+                            <div class="col-md-4">Suffix</div>
+                            <div class="col-md-8">
+                                <select id="suffix" name="suffix" data-customer-source="dropdown" class="input_select searchable-dropdown" >
+                                    <?php for ($suffix=0;$suffix<14;$suffix++){ ?>
+                                        <option value="<?= suffix_name($suffix); ?>"><?= suffix_name($suffix); ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row form_line">
+                            <div class="col-md-4">Social Security No.</div>
+                            <div class="col-md-8">
+                                <input type="text" placeholder="xxx-xx-xxxx" maxlength="11" class="form-control" name="ssn" id="ssn" value="" />
+                            </div>
+                        </div>
+                        <div class="row form_line">
+                            <div class="col-md-4">Date Of Birth</div>
+                            <div class="col-md-8">
+                                <input type="text" placeholder="" class="form-control" name="date_of_birth" id="date_of_birth" value="" />
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row form_line">
+                            <div class="col-md-4">Email</div>
+                            <div class="col-md-8">
+                                <input data-type="customer_email" type="email" class="form-control email-input-element" name="email" id="email" value="" />
+                            </div>
+                        </div>
+
+                        <div class="row form_line">
+                            <div class="col-md-4">Phone (H)</div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_h" id="phone_h" value="" />
+                            </div>
+                        </div>
+                        <div class="row form_line">
+                            <div class="col-md-4">Phone (M) <span class="required"> *</span></div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_m" id="phone_m" value="" required />
+                            </div>
+                        </div>                               
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row form_line">
                             <div class="row form_line">
                                 <div class="col-md-4">Address <span class="required"> *</span></div>
                                 <div class="col-md-8">
@@ -560,23 +576,16 @@
                                 <div class="col-md-8">
                                     <textarea style="height:80px;" data-type="customer_address_street" class="form-control" name="cross_street" id="cross_street"></textarea>
                                 </div>
-                            </div>                
-                            <!-- <div class="row form_line">
-                                <div class="col-md-4">Subdivision</div>
-                                <div class="col-md-8">
-                                    <textarea style="height:80px;" data-type="customer_address_subdivision" class="form-control" name="subdivision" id="subdivision"></textarea>
-                                </div>
-                            </div> -->
+                            </div>  
                         </div>
                     </div>
-
-                </div>                  
-                <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
-                </div>
+                </form>
             </div>
-        </form>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="person_and_company_form">Save</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -618,6 +627,274 @@ $(document).ready(function() {
 
     });
 
+    $(document).on('change', '#select-all', function(){
+        $('.row-select:checkbox').prop('checked', this.checked);  
+        let total= $('#company-list input[name="customers[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
+    $(document).on('change', '.row-select', function(){
+        let total= $('#company-list input[name="customers[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
+    $(document).on('click', '#with-selected-favorites', function(){
+        let total= $('#company-list input[name="customers[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Add to Favorites',
+                html: `Are you sure you want to add selected rows to the list?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + "customers/_with_selected_add_to_favorites",
+                        dataType: 'json',
+                        data: $('#frm-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                    title: 'Add to Favorites',
+                                    text: "Customer records updated successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        COMPANY_LIST_TABLE.ajax.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }     
+    });
+
+    $(document).on('click', '#with-selected-delete', function(){
+        let total= $('#company-list input[name="customers[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Customers',
+                html: `Are you sure you want to delete selected rows?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'customers/_archive_selected_customers',
+                        dataType: 'json',
+                        data: $('#frm-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                    title: 'Delete Customers',
+                                    text: "Customer records deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        COMPANY_LIST_TABLE.ajax.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#with-selected-restore', function(){
+        let total= $('#archived-customers input[name="customers[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Restore Customers',
+                html: `Are you sure you want to restore selected rows?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'customers/_restore_selected_customers',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-customers').modal('hide');
+                                Swal.fire({
+                                    title: 'Restore Customers',
+                                    text: "Data restored successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#with-selected-perma-delete', function(){
+        let total= $('#archived-customers input[name="customers[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Customers',
+                html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'customers/_permanently_delete_selected_customers',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-customers').modal('hide');
+                                Swal.fire({
+                                    title: 'Delete Customers',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '.btn-remove-favorite-customer', function(){
+        var cid = $(this).attr('data-id');
+        var name = $(this).attr('data-name');
+
+        Swal.fire({
+            title: 'Remove from Favorites',
+            html: `Do you wish to remove from favorites customer <b>${name}</b>?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {                    
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "customer/_remove_favorite",
+                    data: {cid:cid},
+                    dataType:'json',
+                    success: function(result) {     
+                        $('#modal-favorite-customers').modal('hide');                       
+                        if( result.is_success == 1 ) {
+                            $('#modal-archived-customers').modal('hide');
+                            Swal.fire({
+                            title: 'Remove from Favorites',
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Customer record was successfully updated.',
+                            }).then((result) => {
+                                COMPANY_LIST_TABLE.ajax.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
+
     $('#archived-customer-list').on('click', function(){
         $('#modal-archived-customers').modal('show');
         $.ajax({
@@ -644,6 +921,58 @@ $(document).ready(function() {
                 $('#customer-favorite-list-container').html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
+    });
+
+    $(document).on('click', '#btn-empty-archives', function(){        
+        let total_records = $('#archived-customers input[name="customers[]"]').length;        
+        if( total_records > 0 ){
+            Swal.fire({
+                title: 'Empty Archived',
+                html: `Are you sure you want to <b>permanently delete</b> <b>${total_records}</b> archived customers? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'customers/_delete_all_archived_customers',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-customers').modal('hide');
+                                Swal.fire({
+                                    title: 'Empty Archived',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }else{
+            Swal.fire({                
+                icon: 'error',
+                title: 'Error',              
+                html: 'Archived is empty',
+            });
+        }        
     });
     
     $('.select-filter .dropdown-item').on('click', function(e) {
