@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-12 grid-mb text-end">
         <div class="dropdown d-inline-block">
-            <button type="button" class="nsm-button primary" id="btn-empty-archives">Delete All</button>
+            <button type="button" class="nsm-button primary" id="btn-empty-archives">Empty Archived</button>
             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                 <span id="users-archive-num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
             </button>

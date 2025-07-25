@@ -82,7 +82,7 @@
                         <div class="nsm-page-buttons page-button-container">                            
                             <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-nsm" id="btn-add-employee"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Add Employee</button>
+                                <button type="button" class="btn btn-nsm" id="btn-add-employee"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Employee</button>
                                 <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class=""><i class='bx bx-chevron-down' ></i></span>
                                 </button>

@@ -262,8 +262,8 @@ $(document).ready(function() {
     $(document).on('click', '#btn-empty-archives', function(){
         let total_records = $('#archived-users tbody tr').length;
         Swal.fire({
-            title: 'Delete All',
-            html: `Are you sure you want to delete all <b>${total_records}</b> archived users? <br/><br/>Note : This cannot be undone.`,
+            title: 'Empty Archived',
+            html: `Are you sure you want to <b>permanently delete</b> <b>${total_records}</b> archived users? <br/><br/>Note : This cannot be undone.`,
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,
@@ -279,7 +279,7 @@ $(document).ready(function() {
                         if( result.is_success == 1 ) {
                             $('#modal-view-archive').modal('hide');
                             Swal.fire({
-                                title: 'Delete All',
+                                title: 'Empty Archived',
                                 text: "Data deleted successfully!",
                                 icon: 'success',
                                 showCancelButton: false,
