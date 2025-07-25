@@ -36,7 +36,7 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#with-selected-delete', function(){
-        let total= $('input[name="users[]"]:checked').length;
+        let total= $('#tbl-users-list input[name="users[]"]:checked').length;
         if( total <= 0 ){
             Swal.fire({
                 icon: 'error',
@@ -87,7 +87,7 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#with-selected-change-status', function(){
-        let total= $('input[name="users[]"]:checked').length;
+        let total= $('#tbl-users-list input[name="users[]"]:checked').length;
         if( total <= 0 ){
             Swal.fire({
                 icon: 'error',
@@ -156,7 +156,7 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#with-selected-restore', function(){
-        let total= $('input[name="users[]"]:checked').length;
+        let total= $('#archived-users input[name="users[]"]:checked').length;
         if( total <= 0 ){
             Swal.fire({
                 icon: 'error',
@@ -208,7 +208,7 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#with-selected-perma-delete', function(){
-        let total= $('input[name="users[]"]:checked').length;
+        let total = $('#archived-users input[name="users[]"]:checked').length;
         if( total <= 0 ){
             Swal.fire({
                 icon: 'error',
@@ -259,48 +259,56 @@ $(document).ready(function() {
         }        
     });
 
-    $(document).on('click', '#btn-empty-archives', function(){
-        let total_records = $('#archived-users tbody tr').length;
-        Swal.fire({
-            title: 'Empty Archived',
-            html: `Are you sure you want to <b>permanently delete</b> <b>${total_records}</b> archived users? <br/><br/>Note : This cannot be undone.`,
-            icon: 'question',
-            confirmButtonText: 'Proceed',
-            showCancelButton: true,
-            cancelButtonText: "Cancel"
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    method: 'POST',
-                    url: base_url + 'users/_delete_all_archived_users',
-                    dataType: 'json',
-                    data: $('#frm-archive-with-selected').serialize(),
-                    success: function(result) {                        
-                        if( result.is_success == 1 ) {
-                            $('#modal-view-archive').modal('hide');
-                            Swal.fire({
-                                title: 'Empty Archived',
-                                text: "Data deleted successfully!",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            }).then((result) => {
-                                //if (result.value) {
-                                    //location.reload();
-                                //}
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: result.msg,
-                            });
-                        }
-                    },
-                });
+    $(document).on('click', '#btn-empty-archives', function(){        
+        let total_records = $('#archived-users input[name="users[]"]').length;        
+        if( total_records > 0 ){
+            Swal.fire({
+                title: 'Empty Archived',
+                html: `Are you sure you want to <b>permanently delete</b> <b>${total_records}</b> archived users? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'users/_delete_all_archived_users',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Empty Archived',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
 
-            }
-        });
+                }
+            });
+        }else{
+            Swal.fire({                
+                icon: 'error',
+                title: 'Error',              
+                html: 'Archived is empty',
+            });
+        }        
     });
 
     $(document).on('click', '.btn-restore-user', function(){
