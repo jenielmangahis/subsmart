@@ -934,6 +934,51 @@ class AcsProfile_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function bulkUpdate($ids = [], $data = [], $filters = [])
+    {
+        $this->db->where_in('prof_id', $ids);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->update($this->table, $data);
+        return $this->db->affected_rows();
+    }
+
+    public function bulkDelete($ids = [], $filters = [])
+    {
+        if( count($ids) > 0 ){
+            $this->db->where_in('prof_id', $ids);
+
+            if( $filters ){
+                foreach( $filters as $filter ){
+                    $this->db->where($filter['field'], $filter['value']);
+                }
+            }
+
+            $this->db->delete($this->table);
+        }        
+
+        return $this->db->affected_rows();
+    }
+
+    public function deleteCustomer($prof_id, $conditions = [])
+    {
+        $this->db->where('prof_id', $prof_id);
+
+        if( $conditions ){
+            foreach( $conditions as $condition ){
+                $this->db->where($condition['field'], $condition['value']);
+            }
+        }
+
+        $this->db->delete($this->table);
+        return $this->db->affected_rows();
+    }
 }
 
 /* End of file AcsProfile_model.php */

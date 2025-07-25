@@ -62,7 +62,7 @@
 </form>
 <script>
 $(function(){
-    $("#archived-jobs").nsmPagination();
+    $("#archived-users").nsmPagination();
 
     $(document).on('change', '#users-archive-select-all', function(){
         $('.users-archive-row-select:checkbox').prop('checked', this.checked);  

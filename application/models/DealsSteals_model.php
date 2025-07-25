@@ -187,6 +187,42 @@ class DealsSteals_model extends MY_Model
         return $options;
     }
 
+    public function getAllExpired($conditions = [], $limit = 0)
+    {
+        $date = date("Y-m-d");
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('date_expiration <=', $date);
+        $this->db->where('is_expired', 'No');
+
+        if( !empty($conditions) ){
+            foreach( $conditions as $key => $value ){
+                $this->db->where($value['field'], $value['value']);                
+            }
+        }
+
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }
+
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+    
+    public function setAllExpired()
+    {
+        $date = date("Y-m-d");
+
+        $this->db->set('is_expired','Yes');
+        $this->db->where('date_expiration <=', $date);
+        $this->db->where('is_expired', 'No');
+        $this->db->update($this->table);
+        return $this->db->affected_rows();
+    }
+
 }
 
 /* End of file DealsSteals_model.php */

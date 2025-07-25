@@ -522,4 +522,13 @@ class Cron_Marketing extends MY_Controller
 
         echo 'Total sent : ' . $total_sent;
     }
+
+    public function cronExpiredDealsSteals()
+    {
+        $this->load->model('DealsSteals_model');
+
+        $total_updated = $this->DealsSteals_model->setAllExpired();
+        echo 'Total updated ' . $total_updated;
+        
+    }
 }
