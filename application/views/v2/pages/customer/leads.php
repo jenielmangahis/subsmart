@@ -63,11 +63,19 @@
                             </ul>
                         </div>
                         <?php if(checkRoleCanAccessModule('leads', 'write')){ ?>
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
-                                <i class='bx bx-fw bxs-user-plus'></i> New Leads
-                            </button>
-                            <button type="button" id="btn-archive" class="nsm-button primary"><i class='bx bx-fw bx-trash'></i> Manage Archived</button>
+                        <div class="nsm-page-buttons primary page-button-container">                            
+                            <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-nsm" id="btn-new-leads"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Leads</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">      
+                                    <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>   
+                                    <li><a class="dropdown-item" id="btn-export-leads" href="javascript:void(0);">Export</a></li>                            
+                                </ul>
+                            </div>
+                            <?php } ?>
                         </div>
                         <?php } ?>                        
                     </div>                    
@@ -284,6 +292,18 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modal-view-archived" data-bs-backdrop="static" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title" style="font-size: 17px;">Archived</span>
+                    <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+                </div>
+                <div class="modal-body" id="leads-archived-container"></div>            
+            </div>
+        </div>
+    </div>
     
 
 </div>
@@ -313,6 +333,129 @@
 
             _form.submit();
         }, 1500));
+
+        $('#btn-new-leads').on('click', function(){
+            location.href = base_url + 'customer/add_lead';
+        });
+
+        $('#btn-archived').on('click', function(){
+            $('#modal-view-archived').modal('show');
+
+            $.ajax({
+                type: "POST",
+                url: base_url + "customers/leads/archived",
+                success: function(html) {    
+                    $('#leads-archived-container').html(html);
+                },
+                beforeSend: function() {
+                    $('#leads-archived-container').html('<div class="col"><span class="bx bx-loader bx-spin"></span></div>');
+                }
+            });
+        });
+
+        $(document).on('click', '#with-selected-restore', function(){
+            let total= $('input[name="leads[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Restore Leads',
+                    html: `Are you sure you want to restore selected rows?`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'customers/leads/_restore_selected_leads',
+                            dataType: 'json',
+                            data: $('#frm-archive-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    $('#modal-view-archived').modal('hide');
+                                    Swal.fire({
+                                        title: 'Restore Leads',
+                                        text: "Data restored successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }
+        });
+
+        $(document).on('click', '#with-selected-perma-delete', function(){
+            let total= $('input[name="leads[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Delete Leads',
+                    html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'customers/leads/_permanently_delete_selected_leads',
+                            dataType: 'json',
+                            data: $('#frm-archive-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    $('#modal-view-archived').modal('hide');
+                                    Swal.fire({
+                                        title: 'Delete Leads',
+                                        text: "Data deleted successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            //location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        });
 
         $(document).on('change', '#select-all', function(){
             $('.row-select:checkbox').prop('checked', this.checked);  
@@ -617,6 +760,55 @@
                         },
                     });
 
+                }
+            });
+        });
+
+        $(document).on('click', '.btn-restore-lead', function(){
+            let lead_id   = $(this).attr('data-id');
+            let lead_name = $(this).attr('data-name');
+
+            Swal.fire({
+                title: 'Restore Lead',
+                html: `Are you sure you want to restore lead <b>${lead_name}</b>?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + 'customers/leads/_restore_leads',
+                        data: {
+                            lead_id: lead_id
+                        },
+                        dataType: "JSON",
+                        success: function(result) {
+                            $('#modal-view-archived').modal('hide');
+                            if (result.is_success) {
+                                Swal.fire({
+                                    title: 'Restore Lead',
+                                    html: "Data updated successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        },
+                    });
                 }
             });
         });
