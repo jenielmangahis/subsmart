@@ -75,7 +75,7 @@ $(function(){
     });
 
     $(document).on('change', '.jobs-archive-row-select', function(){
-        let total= $('input[name="jobs[]"]:checked').length;
+        let total= $('#archived-jobs input[name="jobs[]"]:checked').length;
         if( total > 0 ){
             $('#jobs-archive-num-checked').text(`(${total})`);
         }else{
