@@ -984,6 +984,9 @@ class Customer extends MY_Controller
                     //     $data_name = "<div class='nsm-profile'><span>".$n.'</span></div>';
                     //     array_push($data_arr, $data_name);
                     // }
+                    $checkbox = "<input class='form-check-input row-select table-select' name='customers[]' type='checkbox' value='".$customer->prof_id."' />";
+                    array_push($data_arr, $checkbox);
+
                     $n = ucwords($customer->first_name[0]).ucwords($customer->last_name[0]);
                     $data_name = "<div class='nsm-profile'><span>".$n.'</span></div>';
                     array_push($data_arr, $data_name);
@@ -13029,6 +13032,189 @@ class Customer extends MY_Controller
 			$is_success = 1;
 			$msg    = '';
 		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_restore_selected_customers()
+	{
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['customers'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archived' => 0, 'updated_at' => date("Y-m-d H:i:s"), 'deleted_at' => NULL];
+            $total_updated = $this->AcsProfile_model->bulkUpdate($post['customers'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Customers : Restored ' . $total_updated . ' customer(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_permanently_delete_selected_customers()
+	{
+		$this->load->model('AcsProfile_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['customers'] ){
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+			$filters[] = ['field' => 'is_archived', 'value' => 1];
+            $total_deleted = $this->AcsProfile_model->bulkDelete($post['customers'], $filters);
+
+			//Activity Logs
+			$activity_name = 'Customers : Permanently deleted ' .$total_deleted. ' customer(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_permanently_delete_archived_customer()
+    {
+        $this->load->model('AcsProfile_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+		$customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
+        if( $customer && $customer->company_id == $company_id ){			
+			$this->AcsProfile_model->deleteCustomer($customer->prof_id);
+
+			//Activity Logs
+			$activity_name = 'Customers : Permanently deleted customer ' . $customer->first_name . ' ' . $customer->last_name; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_archive_selected_customers()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['customers'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archived' => 1, 'deleted_at' => date("Y-m-d H:i:s")];
+            $total_updated = $this->AcsProfile_model->bulkUpdate($post['customers'], $data, $filter);
+
+            //Activity Logs
+			$activity_name = 'Customers : Deleted ' . $total_updated . ' customer(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_with_selected_add_to_favorites()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['customers'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_favorite' => 1, 'updated_at' => date("Y-m-d H:i:s")];
+            $total_updated = $this->AcsProfile_model->bulkUpdate($post['customers'], $data, $filter);
+
+            //Activity Logs
+			$activity_name = 'Customers : Added ' . $total_updated . ' customer(s) to favorite list'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_all_archived_customers()
+	{
+		$this->load->model('AcsProfile_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+		
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+		$total_deleted = $this->AcsProfile_model->deleteAllArchived($filter);
+
+		//Activity Logs
+		$activity_name = 'Customers : Permanently deleted ' .$total_deleted. ' customer(s)'; 
+		createActivityLog($activity_name);
+
+		$is_success = 1;
+		$msg    = '';
 
         $return = [
             'is_success' => $is_success,

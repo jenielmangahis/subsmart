@@ -3707,10 +3707,10 @@ class Users extends MY_Controller
         if( $post['users'] ){
             $filter[] = ['field' => 'company_id', 'value' => $company_id];
             $data     = ['is_archived' => 'No', 'updated_at' => date("Y-m-d H:i:s")];
-            $this->Users_model->bulkUpdate($post['users'], $data, $filter);
+            $total_updated = $this->Users_model->bulkUpdate($post['users'], $data, $filter);
 
 			//Activity Logs
-			$activity_name = 'Users : Restored ' . count($post['users']). ' user(s)'; 
+			$activity_name = 'Users : Restored ' . $total_updated . ' user(s)'; 
 			createActivityLog($activity_name);
 
             $is_success = 1;
@@ -3819,10 +3819,10 @@ class Users extends MY_Controller
 
             $filters[] = ['field' => 'company_id', 'value' => $company_id];
 			$filters[] = ['field' => 'is_archived', 'value' => 'Yes'];
-            $this->Users_model->bulkDelete($post['users'], $filters);
+            $total_deleted = $this->Users_model->bulkDelete($post['users'], $filters);
 
 			//Activity Logs
-			$activity_name = 'Users : Permanently deleted ' .$total_archived. ' user(s)'; 
+			$activity_name = 'Users : Permanently deleted ' .$total_deleted. ' user(s)'; 
 			createActivityLog($activity_name);
 
             $is_success = 1;
