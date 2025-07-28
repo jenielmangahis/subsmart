@@ -137,7 +137,7 @@ $(document).ready(function() {
                                 Swal.fire({
                                 icon: 'success',
                                 title: 'Change Status',
-                                text: 'Users was updated successfully.',
+                                text: 'Data was updated successfully.',
                                 }).then((result) => {
                                     location.reload();
                                 });
