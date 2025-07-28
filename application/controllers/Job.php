@@ -2404,6 +2404,7 @@ class Job extends MY_Controller
         $msg = '';
 
         $input = $this->input->post();
+
         $comp_id = logged('company_id');
 
         // Point Rating System set data into variables
@@ -2786,15 +2787,12 @@ class Job extends MY_Controller
                 'end_time' => $input['end_time'],
                 'event_color' => $input['event_color'],
                 'customer_reminder_notification' => $input['customer_reminder_notification'],
-                'priority' => $input['priority'], //$this->input->post('job_priority'),
-                'tags' => $jobTag->name, //$this->input->post('job_priority'),
-                'status' => 'Scheduled', //$this->input->post('job_status'),
-                // 'message' => $input['message'],
+                'priority' => $input['priority'], 
+                'tags' => $jobTag->name, 
+                'status' => 'Scheduled', 
                 'company_id' => $comp_id,
                 'date_created' => date('Y-m-d H:i:s'),
-                //'created_by' => $input['created_by'],
                 'created_by' => logged('id'),
-                //'notes' => $input['notes'],
                 'attachment' => $input['attachment'],
                 'tax_percentage' => $input['tax_percentage'],
                 'tax_rate' => $input['tax'],
@@ -2804,12 +2802,11 @@ class Job extends MY_Controller
                 'commission' => $input['commission_amount'],
                 'tech_commission' => json_encode($jobTechCommission_amount),
                 'tech_commission_total' => $techcommission_total,
-                //'fix_cost' => $input['input_totalFixCost'],
-                //'margin' => $input['input_totalEquipmentMargin'],
-                //'amount_collected' => $input['input_totalAmountCollected'],
-                //'gross_profit' => $input['input_totalJobGrossProfit'],
                 'job_account_number' => $job_account_number,
-                'is_archived' => 0          
+                'monthly_monitoring' => $input['monthly_monitoring'],
+                'program_setup' => $input['installation_cost'],
+                'installation_cost' => $input['installation_cost'],               
+                'is_archived' => 0
             );
 
             $commission_history_payload = [
@@ -5048,7 +5045,7 @@ class Job extends MY_Controller
 
     public function ajax_create_job()
     {
-        $this->load->helper(array('hashids_helper'));
+        $this->load->helper(array('hashids_helper','stripe_helper'));
 
         $is_valid = 1;
         $msg = '';
@@ -5080,8 +5077,8 @@ class Job extends MY_Controller
             $msg = 'Please select customer';
             $is_valid = 0;
         }
-
-        if( $this->input->post('is_with_esign') && $this->input->post('bill_method') == 'CC' ){
+        
+        /*if( $this->input->post('is_with_esign') && $this->input->post('bill_method') == 'CC' ){
             $card_details = [
                 'card_number' => $this->input->post('customer_cc_num'),
                 'card_month' => $this->input->post('customer_cc_expiry_date_month'),
@@ -5096,7 +5093,7 @@ class Job extends MY_Controller
             }else{
                 $card_type = $result['card']['brand'];
             }
-        }
+        }*/
 
         $payment_method = '';
         if( $this->input->post('is_with_esign') ){
@@ -5692,11 +5689,12 @@ class Job extends MY_Controller
         $program_setup      = $job->program_setup;
         $installation_cost  = $job->installation_cost;
         $adjustment_value   = $job->adjustment_value;
-        $job_total = $monthly_monitoring + $program_setup + $installation_cost + $adjustment_value;
+        $tax_rate           = $job->tax_rate;
+        $job_total = $monthly_monitoring + $program_setup + $installation_cost + $adjustment_value + $tax_rate;
 
         $grand_total = $job_total;
         $sub_total   = 0;
-        $tax         = 0;
+        $tax         = $tax_rate;
 
         // $monthly_monitoring = 0;
         // $program_setup = 0;

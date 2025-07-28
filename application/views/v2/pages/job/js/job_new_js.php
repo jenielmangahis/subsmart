@@ -245,13 +245,13 @@ $("#attachment-file").change(function() {
             if( isNaN(parseInt($(this).attr('data-retail'))) ){
                 var retail = 0;    
             }else{
-                var retail = parseInt($(this).attr('data-retail'));
+                var retail = $(this).attr('data-retail'); //parseInt($(this).attr('data-retail'));
             }
 
             if( isNaN(parseInt($(this).attr('data-price'))) ){
                 var price = 0;    
             }else{
-                var price = parseInt($(this).attr('data-price'));
+                var price = $(this).attr('data-price'); //parseInt($(this).attr('data-price'))
             }
             
             var qty = parseInt($(this).attr('data-quantity'));

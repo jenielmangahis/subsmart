@@ -2,6 +2,7 @@
     <div class="col-12 col-md-12 grid-mb text-end">
     <?php if(checkRoleCanAccessModule('invoice', 'write')){ ?>
         <div class="dropdown d-inline-block">
+            <button type="button" class="nsm-button primary" id="btn-empty-invoice-archives">Empty Archived</button>
             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                 <span id="num-checked-arhived"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
             </button>
@@ -14,7 +15,7 @@
     </div>
 </div>
 <form id="frm-with-selected-archived">
-    <table class="nsm-table" id="archived-invoices">
+    <table class="nsm-table archived-invoices" id="archived-invoices">
         <thead>
             <tr>
                 <?php if(checkRoleCanAccessModule('invoice', 'write')){ ?>

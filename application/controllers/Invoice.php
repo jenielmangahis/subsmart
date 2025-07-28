@@ -1067,6 +1067,73 @@ class Invoice extends MY_Controller
 
         echo json_encode($return);
     }    
+
+	public function ajax_delete_all_archived_invoices()
+	{
+		$is_success = 0;
+        $msg        = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post        = $this->input->post();	
+
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+        $filter[] = ['field' => 'is_recurring', 'value' => '0'];
+
+        $invoices   = $this->invoice_model->get_company_archived_invoices($company_id);
+		$total_archived = count($invoices);    
+        
+        if($total_archived > 0) {
+            $delete_all = $this->invoice_model->deleteAllArchived($filter);
+
+            //Activity Logs
+            $activity_name = 'Users : Permanently deleted ' .$total_archived. ' invoice(s)'; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+        
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}  
+    
+    
+	public function ajax_delete_all_recurring_archived_invoices()
+	{
+		$is_success = 0;
+        $msg        = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post        = $this->input->post();	
+
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+        $filter[] = ['field' => 'is_recurring', 'value' => '1'];
+
+        $invoices   = $this->invoice_model->get_company_archived_invoices($company_id);
+		$total_archived = count($invoices);    
+        
+        if($total_archived > 0) {
+            $delete_all = $this->invoice_model->deleteAllArchived($filter);
+
+            //Activity Logs
+            $activity_name = 'Users : Permanently deleted ' .$total_archived. ' invoice(s)'; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+        
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}      
     
     public function void_invoice()
     {
