@@ -28,7 +28,7 @@
                                         <div class="nsm-card-title">
                                             <span>Logo</span>
                                         </div>
-                                        <label class="nsm-subtitle">Customize your invoice, estimate or email to better match your branding. Your logo will appear on the top left corner.</label>
+                                        <label class="nsm-subtitle">Customize your invoice to better match your branding. Your logo will appear on the top left corner.</label>
                                     </div>
                                     <div class="nsm-card-content">
                                         <input type="hidden" name="img_setting" value="<?php echo $setting->logo ?>">

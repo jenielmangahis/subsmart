@@ -1,6 +1,6 @@
 <?php
 $invoice_date = date('m/d/Y', strtotime($invoice->date_issued));
-$company_image = base_url('/uploads/users/business_profile/' . $company_info->id . '/' . $company_info->business_image);
+$invoice_logo = companyInvoiceLogo($invoice->company_id);
 
 $due_date = 'Due on receipt';
 if ($invoice->due_date > date('Y-m-d')) {
@@ -46,7 +46,7 @@ if ($invoice->due_date > date('Y-m-d')) {
         <table style="padding: 16px;margin-top:5px;margin-bottom:5px;">
             <tr>
                 <td>
-                    <img alt="Company Logo" src="<?= $company_image; ?>" class="companyimage" />
+                    <img alt="Invoice Logo" src="<?= $invoice_logo; ?>" class="companyimage" />
                 </td>
                 <td style="text-align: center; width: 1%; white-space: nowrap; padding: 0 16px;">
                     <b>INVOICE NO#</b>
