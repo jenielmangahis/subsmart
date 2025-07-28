@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-12 col-md-12 grid-mb text-end">
-    <?php if(checkRoleCanAccessModule('invoice', 'write')){ ?>
+    <?php if(checkRoleCanAccessModule('invoice', 'delete')){ ?>
         <div class="dropdown d-inline-block">
             <button type="button" class="nsm-button primary" id="btn-empty-invoice-archives">Empty Archived</button>
             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
@@ -18,7 +18,7 @@
     <table class="nsm-table archived-invoices" id="archived-invoices">
         <thead>
             <tr>
-                <?php if(checkRoleCanAccessModule('invoice', 'write')){ ?>
+                <?php if(checkRoleCanAccessModule('invoice', 'delete')){ ?>
                 <td class="table-icon text-center sorting_disabled">
                     <input class="form-check-input select-all-archived table-select" type="checkbox" name="id_selector" value="0" id="select-all-archived">
                 </td>
@@ -33,7 +33,7 @@
             <?php if ($invoices) { ?>
                 <?php foreach($invoices as $invoice){ ?>
                     <tr>
-                        <?php if(checkRoleCanAccessModule('invoice', 'write')){ ?>
+                        <?php if(checkRoleCanAccessModule('invoice', 'delete')){ ?>
                         <td>
                             <input class="form-check-input row-select-archived table-select" name="invoice[]" type="checkbox" value="<?= $invoice->id; ?>">
                         </td>
