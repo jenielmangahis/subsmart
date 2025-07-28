@@ -13292,4 +13292,35 @@ class Customer extends MY_Controller
 
         echo json_encode($return);
 	}
+
+    public function ajax_change_status_selected_leads()
+    {
+        $this->load->model('Lead_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['leads'] ){                                    
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['status' => $post['status'], 'date_updated' => date("Y-m-d H:i:s")];
+            $this->Lead_model->bulkUpdate($post['leads'], $data, $filter);
+
+            //Activity Logs
+            $activity_name = 'Leads : Changed ' .$total_deleted. ' lead(s) status to ' . $post['status']; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
 }
