@@ -44,7 +44,7 @@
                                 <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a class="dropdown-item btn-with-selected" id="with-selected-status" href="javascript:void(0);" data-action="status">Change Status</a></li>                                
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-change-status" href="javascript:void(0);" data-action="status">Change Status</a></li>                                
                                 <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
                             </ul>
                         </div>
@@ -81,7 +81,7 @@
                     </div>                    
                 </div>
                 <form id="frm-with-selected">
-                <table class="nsm-table">
+                <table class="nsm-table" id="tbl-leads-list">
                     <thead>
                         <tr>
                             <?php if(checkRoleCanAccessModule('leads', 'write')){ ?>
@@ -353,8 +353,181 @@
             });
         });
 
+        $(document).on('click', '.btn-permanently-delete-lead', function(){
+            let lead_id   = $(this).attr('data-id');
+            let lead_name = $(this).attr('data-name');
+
+            Swal.fire({
+                title: 'Delete Lead',
+                html: `Are you sure you want to <b>permanently delete</b> lead <b>${lead_name}</b>? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + 'customers/leads/_delete_archived_lead',
+                        data: {
+                            lead_id: lead_id
+                        },
+                        dataType: "JSON",
+                        success: function(result) {
+                            $('#modal-view-archived').modal('hide');
+                            if (result.is_success) {
+                                Swal.fire({
+                                    title: 'Delete Lead',
+                                    html: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#with-selected-change-status', function(){
+            let total= $('#tbl-leads-list input[name="leads[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                let html_content = `
+                    <div class="row user-change-status">
+                        <div class="col-sm-12">
+                            <label class="mb-2">Status</label>
+                            <div class="input-group mb-3">
+                                <select class="form-select" id="with-selected-status">
+                                    <option value="New">New</option>
+                                    <option value="Contacted">Contacted</option>
+                                    <option value="Follow Up">Follow Up</option>
+                                    <option value="Converted">Converted</option>
+                                    <option value="Closed">Closed</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                `; 
+
+                Swal.fire({
+                    title: 'Change Status',
+                    html: html_content,
+                    icon: false,
+                    confirmButtonColor: '#3085d6',
+                    showCancelButton: true,
+                    confirmButtonText: 'Save',                    
+                    cancelButtonText: 'Cancel',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let status  = $('#with-selected-status').val();
+
+                        const form = document.getElementById('frm-with-selected');
+                        const formData = new FormData(form);
+                        formData.append('status', status); 
+
+                        $.ajax({
+                            type: "POST",
+                            url: base_url + "customers/leads/_change_status_selected_leads",
+                            data:formData,
+                            processData: false,
+                            contentType: false,
+                            dataType:'json',
+                            success: function(result) {                            
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: 'Change Status',
+                                    text: 'Data was updated successfully.',
+                                    }).then((result) => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }        
+        });
+
+        $(document).on('click', '#btn-empty-archives', function(){        
+            let total_records = $('#archived-leads input[name="leads[]"]').length;        
+            if( total_records > 0 ){
+                Swal.fire({
+                    title: 'Empty Archived',
+                    html: `Are you sure you want to <b>permanently delete</b> <b>${total_records}</b> archived leads? <br/><br/>Note : This cannot be undone.`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'customers/leads/ajax_delete_all_archived_leads',
+                            dataType: 'json',
+                            data: $('#frm-archive-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    $('#modal-view-archived').modal('hide');
+                                    Swal.fire({
+                                        title: 'Empty Archived',
+                                        text: "Data deleted successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            //location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }else{
+                Swal.fire({                
+                    icon: 'error',
+                    title: 'Error',              
+                    html: 'Archived is empty',
+                });
+            }        
+        });
+
         $(document).on('click', '#with-selected-restore', function(){
-            let total= $('input[name="leads[]"]:checked').length;
+            let total= $('#archived-leads input[name="leads[]"]:checked').length;
             if( total <= 0 ){
                 Swal.fire({
                     icon: 'error',
@@ -406,7 +579,7 @@
         });
 
         $(document).on('click', '#with-selected-perma-delete', function(){
-            let total= $('input[name="leads[]"]:checked').length;
+            let total= $('#archived-leads input[name="leads[]"]:checked').length;
             if( total <= 0 ){
                 Swal.fire({
                     icon: 'error',
@@ -477,7 +650,7 @@
         });
 
         $(document).on('click', '#with-selected-delete', function(){
-            let total= $('input[name="leads[]"]:checked').length;
+            let total= $('#tbl-leads-list input[name="leads[]"]:checked').length;
             if( total <= 0 ){
                 Swal.fire({
                     icon: 'error',
