@@ -4018,7 +4018,7 @@ class Customer extends MY_Controller
         }
 
         $this->page_data['filter'] = $filter;
-        $this->page_data['page']->title = 'Leads Manager List';
+        $this->page_data['page']->title = 'Leads';
         $this->page_data['page']->parent = 'Customers';
         $this->page_data['leads'] = $leads;
         $this->load->view('v2/pages/customer/leads', $this->page_data);
@@ -13031,7 +13031,7 @@ class Customer extends MY_Controller
         $lead = $this->Lead_model->getById($post['lead_id']);
 		if( $lead && $lead->company_id == $company_id ){
 			$data     = ['is_archive' => 'No', 'date_updated' => date("Y-m-d H:i:s")];
-			$this->Lead_model->update($lead->id, $data);
+			$this->Lead_model->updateLead($lead->id, $data);
 
 			//Activity Logs
 			$name = $lead->firstname . ' ' . $lead->lastname;
@@ -13220,6 +13220,66 @@ class Customer extends MY_Controller
 
 		//Activity Logs
 		$activity_name = 'Customers : Permanently deleted ' .$total_deleted. ' customer(s)'; 
+		createActivityLog($activity_name);
+
+		$is_success = 1;
+		$msg    = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_archived_lead()
+	{
+		$this->load->model('Lead_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+		$lead = $this->Lead_model->getById($post['lead_id']);
+        if( $lead && $lead->company_id == $company_id ){
+			$this->Lead_model->deleteLead($lead->leads_id);
+
+			//Activity Logs
+			$name = $lead->firstname . ' ' . $lead->lastname;
+			$activity_name = 'Leads : Permanently deleted lead ' . $name; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_all_archived_leads()
+	{
+		$this->load->model('Lead_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+		
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+		$total_deleted = $this->Lead_model->deleteAllArchived($filter);
+
+		//Activity Logs
+		$activity_name = 'Leads : Permanently deleted ' .$total_deleted. ' lead(s)'; 
 		createActivityLog($activity_name);
 
 		$is_success = 1;
