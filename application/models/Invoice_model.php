@@ -2024,6 +2024,20 @@ class Invoice_model extends MY_Model
         $hash_id = hashids_encrypt($invoice_id, '', 15);
         return $hash_id;
     }
+
+    public function deleteAllArchived($filters = [])
+    {
+        $this->db->where('view_flag', '1');
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->delete($this->table);
+        return $this->db->affected_rows();
+    }    
 }
 
 /* End of file Invoice_model.php */

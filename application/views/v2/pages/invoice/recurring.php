@@ -754,6 +754,58 @@
                 }
             });
         });        
+
+        $(document).on('click', '#btn-empty-invoice-archives', function(){        
+            let total_records = $('#archived-invoices input[name="invoice[]"]').length;                           
+            if( total_records > 0 ){
+                Swal.fire({
+                    title: 'Empty Archived',
+                    html: `Are you sure you want to <b>permanently delete</b> <b>${total_records}</b> archived invoices? <br/><br/>Note : This cannot be undone.`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'invoice/_delete_all_recurring_archived_invoices',
+                            dataType: 'json',
+                            data: $('#frm-with-selected-archived').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    $('#modal-archived-invoices').modal('hide');
+                                    Swal.fire({
+                                        title: 'Empty Archived',
+                                        text: "Data deleted successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            //location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }else{
+                Swal.fire({                
+                    icon: 'error',
+                    title: 'Error',              
+                    html: 'Archived is empty',
+                });
+            }        
+        });           
         //For Achived Modal List - End          
             
     });
