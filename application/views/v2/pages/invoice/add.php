@@ -82,6 +82,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
             <!-- end row -->
             <?php echo form_open_multipart(null, ['class' => 'form-validate require-validation', 'id' => 'invoice_form', 'autocomplete' => 'off']); ?>
+            <input type="hidden" id="default-tax" value="<?= $default_tax_percentage; ?>" />
             <div class="row">
                 <div class="col-md-4">
                     <div class="nsm-card primary">
@@ -256,7 +257,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <th style="width:8% !important;" id="qty_type_value"><b>Quantity</b></th>
                                                     <th style="width:10% !important;"><b>Price</b></th>
                                                     <th style="width:10% !important;"><b>Discount</b></th>
-                                                    <th style="width:10% !important;"><b>Tax(%)</b></th>
+                                                    <th style="width:10% !important;"><b>Tax</b></th>
                                                     <th style="width:15% !important;"><b>Total</b></th>
                                                     <th style="width:2% !important;"></th>
                                                 </tr>
