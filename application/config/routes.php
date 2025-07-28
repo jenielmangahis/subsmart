@@ -2161,7 +2161,6 @@ $route['customers/_create_proposed_module'] = 'Customer/ajax_create_proposed_mod
 $route['customers/_update_proposed_module'] = 'Customer/ajax_update_proposed_module';
 $route['customers/_delete_proposed_module'] = 'Customer/ajax_delete_proposed_module';
 $route['customers/settings_lost_reasons'] = 'Customer/settings_lost_reasons';
-
 $route['customers/_create_proposed_inverter'] = 'Customer/ajax_create_proposed_inverter';
 $route['customers/_update_proposed_inverter'] = 'Customer/ajax_update_proposed_inverter';
 $route['customers/_delete_proposed_inverter'] = 'Customer/ajax_delete_proposed_inverter';
@@ -2170,6 +2169,12 @@ $route['customers/leads/archived'] = 'Customer/archived_leads';
 $route['customers/leads/_restore_selected_leads'] = 'Customer/ajax_restore_selected_leads';
 $route['customers/leads/_permanently_delete_selected_leads'] = 'Customer/ajax_permanently_delete_selected_leads';
 $route['customers/leads/_restore_leads'] = 'Customer/ajax_restore_leads';
+$route['customers/_restore_selected_customers'] = 'Customer/ajax_restore_selected_customers';
+$route['customers/_permanently_delete_selected_customers'] = 'Customer/ajax_permanently_delete_selected_customers';
+$route['customers/_permanently_delete_archived_customer'] = 'Customer/ajax_permanently_delete_archived_customer';
+$route['customers/_archive_selected_customers'] = 'Customer/ajax_archive_selected_customers';
+$route['customers/_with_selected_add_to_favorites'] = 'Customer/ajax_with_selected_add_to_favorites';
+$route['customers/_delete_all_archived_customers'] = 'Customer/ajax_delete_all_archived_customers';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
