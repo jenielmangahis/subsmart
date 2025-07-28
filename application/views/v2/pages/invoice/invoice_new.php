@@ -163,7 +163,7 @@
                                 </button>
                                 <ul class="dropdown-menu">                                
                                     <li><a class="dropdown-item" id="export-invoice-list" href="javascript:void(0);">Export</a></li>                               
-                                    <li><a class="dropdown-item" id="archived-invoice-list" href="javascript:void(0);">Manage Archived</a></li>                               
+                                    <li><a class="dropdown-item" id="archived-invoice-list" href="javascript:void(0);">Archived</a></li>                               
                                 </ul>
                             </div>
                             <?php } ?>
@@ -313,10 +313,7 @@
                                                     </li> -->
                                                     <li>
                                                         <a class="dropdown-item viewPaymentBtn" href="javascript:void(0);" data-status="<?= $invoice->status; ?>" data-id="<?php echo $invoice->id ?>">View Payments</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>">Convert to Workorder</a>
-                                                    </li>
+                                                    </li>                                                    
                                                     <li>
                                                         <a class="dropdown-item clone-item" href="javascript:void(0);" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>" data-bs-toggle="modal">Clone Invoice</a>
                                                     </li>
@@ -325,10 +322,7 @@
                                                     </li>
                                                     <li>
                                                         <a class="dropdown-item" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>" target="_blank">Print Invoice</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?= base_url('job/invoice_job/'. $invoice->id); ?>">Convert to Job</a>
-                                                    </li>
+                                                    </li>                                                    
                                                     <li>
                                                         <a class="dropdown-item delete-item" href="javascript:void(0);" data-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>">Delete</a>
                                                     </li>

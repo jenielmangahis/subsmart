@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-12 grid-mb text-end">
         <div class="dropdown d-inline-block">
-            <button type="button" class="nsm-button primary" id="btn-empty-archives">Delete All</button>
+            <button type="button" class="nsm-button primary" id="btn-empty-archives">Empty Archived</button>
             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                 <span id="users-archive-num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
             </button>
@@ -66,7 +66,7 @@ $(function(){
 
     $(document).on('change', '#users-archive-select-all', function(){
         $('.users-archive-row-select:checkbox').prop('checked', this.checked);  
-        let total= $('input[name="users[]"]:checked').length;
+        let total= $('#archived-users input[name="users[]"]:checked').length;
         if( total > 0 ){
             $('#users-archive-num-checked').text(`(${total})`);
         }else{
@@ -75,7 +75,7 @@ $(function(){
     });
 
     $(document).on('change', '.users-archive-row-select', function(){
-        let total= $('input[name="users[]"]:checked').length;
+        let total= $('#archived-users input[name="users[]"]:checked').length;
         if( total > 0 ){
             $('#users-archive-num-checked').text(`(${total})`);
         }else{

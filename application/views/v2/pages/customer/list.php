@@ -346,6 +346,9 @@
         overflow-y: auto;
         max-height: calc(100vh - 500px);
     }
+    #customer-list td:nth-child(1) {  
+      vertical-align:middle;
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
@@ -410,7 +413,7 @@
                         </div>
                     </div>
                     <div class="col-md-8 grid-mb text-end">
-                    <div class="dropdown d-inline-block">
+                        <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter by : <span id="filter-selected">All Status</span></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
@@ -422,52 +425,50 @@
                                 <?php } ?>
                             </ul>
                         </div>
-                    <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>            
-                    <button type="button" class="nsm-button batchUpdaterButton"><i class="fas fa-wrench text-muted"></i>&nbsp;&nbsp;Batch Updater Tool</button>
-                    <button type="button" class="nsm-button dupEntryButton"><i class="fas fa-copy text-muted"></i>&nbsp;&nbsp;Manage Duplicated Entries&nbsp;<small class="text-muted dupEntryCount"></small></button>
-                    <?php } ?>
-                        <div class="nsm-page-buttons primary page-button-container">
-                            <div class="dropdown d-inline-block">
-                                <button type="button" class="dropdown-toggle nsm-button primary" data-bs-toggle="dropdown" style="width:122px;">
-                                    <span>More Action <i class='bx bx-fw bx-chevron-down'></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
-                                    <li>
-                                        <a class="dropdown-item" href="<?= url('customer/import_customer') ?>"><i class='bx bx-fw bx-chart'></i> Import</a>
-                                    </li>
-                                    <?php } ?>
-                                    <li>
-                                        <a class="dropdown-item" href="<?= url('customer/export_customer') ?>"><i class='bx bx-fw bx-file'></i> Export</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" id="print-customer-list" href="javascript:void(0)"><i class='bx bx-fw bx-printer'></i> Print</a>
-                                    </li>
-                                    <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
-                                    <li>
-                                        <a class="dropdown-item" id="favorite-customer-list" href="javascript:void(0)"><i class='bx bx-fw bxs-heart'></i> Favorite Customers</a>
-                                    </li>
-                                    <?php } ?>
-                                </ul>     
-                            </div>
-                            <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('customer/add_advance') ?>'">
-                                <i class='bx bx-fw bxs-user-plus'></i> New Customer
+                        <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>                                
+                        <button type="button" class="nsm-button dupEntryButton"><i class="fas fa-copy text-muted"></i>&nbsp;&nbsp;Manage Duplicate Entries&nbsp;<small class="text-muted dupEntryCount"></small></button>
+                        <?php } ?>
+                        <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                With Selected <small id="num-checked" class="text-muted"></small> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <?php } ?>
-                            <?php if( checkRoleCanAccessModule('customers', 'delete') ){ ?>
-                            <button type="button" class="nsm-button primary" id="archived-customer-list">
-                                <i class='bx bx-fw bx-trash'></i> Manage Archived
-                            </button>
-                            <?php } ?>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-favorites" href="javascript:void(0);" data-action="delete">Add to Favorites</a></li>       
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
                         </div>
+                        <?php } ?>
+                        <div class="nsm-page-buttons primary page-button-container">                            
+                            <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-nsm" id="btn-new-customer"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Customer</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                                              
+                                    <li><a class="dropdown-item batchUpdaterButton" href="javascript:void(0);">Batch Updater Tool</a></li>        
+                                    <li><a class="dropdown-item" id="archived-customer-list" href="javascript:void(0);">Archived</a></li>        
+                                    <li><a class="dropdown-item" id="favorite-customer-list" href="javascript:void(0);">Favorites</a></li> 
+                                     <li><div class="dropdown-divider"></div></li> 
+                                    <li><a class="dropdown-item" id="btn-export-customer" href="javascript:void(0);">Export</a></li>                               
+                                    <li><a class="dropdown-item" id="btn-import-customer" href="javascript:void(0);">Import</a></li>                               
+                                    <li><a class="dropdown-item" id="print-customer-list" href="javascript:void(0);">Print</a></li>                               
+                                </ul>
+                            </div>
+                            <?php } ?>
+                        </div>                        
                     </div>
                 </div>
                 <?php if (!empty($enabled_table_headers)) : ?>
                     <div class="cont">
+                        <form id="frm-with-selected">
                         <table class="customerTbl customer-list table table-hover w-100 mb-3" id="customer-list">
                             <thead>
                                 <tr>
+                                    <th class="table-icon text-center sorting_disabled">
+                                        <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                                    </th>
                                     <th class="table-icon"></th>
                                     <?php if (in_array('name', $enabled_table_headers)) : ?><th data-name="Name">Name</th><?php endif; ?>
                                     <?php if (in_array('email', $enabled_table_headers)) : ?><th data-name="Name">Email</th><?php endif; ?>
@@ -487,162 +488,19 @@
                                     <th data-name="Manage"></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php
-                                if (!empty($profiles)) :
-                                ?>
-                                    <?php
-                                    foreach ($profiles as $customer) :
-                                        switch (strtoupper($customer->status)):
-                                            case "INSTALLED":
-                                                $badge = "success";
-                                                break;
-                                            case "CANCELLED":
-                                                $badge = "error";
-                                                break;
-                                            case "COLLECTIONS":
-                                                $badge = "secondary";
-                                                break;
-                                            case "CHARGED BACK":
-                                                $badge = "primary";
-                                                break;
-                                            default:
-                                                $badge = "";
-                                                break;
-                                        endswitch;
-                                    ?>
-                                        <?php if (in_array('name', $enabled_table_headers)) : ?>
-                                            <td>
-                                                <div class="nsm-profile">
-                                                    <?php if ($customer->customer_type === 'Business'): ?>
-                                                        <span>
-                                                        <?php 
-                                                            $parts = explode(' ', strtoupper(trim($customer->business_name)));
-                                                            echo count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
-                                                        ?>
-                                                        </span>
-                                                    <?php else: ?>
-                                                        <span><?= ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]) ?></span>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </td>
-                                            <td class="nsm-text-primary">
-                                                <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('/customer/module/' . $customer->prof_id); ?>'">
-                                                    <?php if ($customer->customer_type === 'Business'): ?>
-                                                        <?= $customer->business_name ?>
-                                                    <?php else: ?>
-                                                        <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
-                                                    <?php endif; ?>
-                                                </label>
-                                                <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
-                                            </td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('industry', $enabled_table_headers)) : ?>
-                                            <td>
-                                                <?php 
-                                                    if( $customer->industry_type_id > 0 ){
-                                                        echo $customer->industry_type;
-                                                    }else{
-                                                        echo 'Not Specified';                                                    
-                                                    }
-                                                ?>
-                                            </td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('city', $enabled_table_headers)) : ?>
-                                            <td><?php echo $customer->city; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('state', $enabled_table_headers)) : ?>
-                                            <td><?php echo $customer->state; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('source', $enabled_table_headers)) : ?>
-                                            <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('added', $enabled_table_headers)) : ?>
-                                            <td><?php echo $customer->entered_by; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('sales_rep', $enabled_table_headers)) : ?>
-                                            <td><?php print_r( get_sales_rep_name($customer->fk_sales_rep_office)); ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('tech', $enabled_table_headers)) : ?>
-                                            <?php $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : 'Not Assigned'; ?>
-                                            <td><?= $techician; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('plan_type', $enabled_table_headers)) : ?>
-                                            <td><?php echo $customer->system_type; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('rate_plan', $enabled_table_headers)) : ?>
-                                            <td><?php echo $customer->rate_plan; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
-                                            <td>$<?= $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',') ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
-                                            <td>$<?= $companyId == 58 ? number_format(floatval($customer->proposed_solar), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',') ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('phone', $enabled_table_headers)) : ?>
-                                            <td><?php echo $customer->phone_m; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('status', $enabled_table_headers)) : ?>
-                                            <td><span class="nsm-badge <?= $badge ?>"><?= $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
-                                        <?php endif; ?>
-                                        <td>
-                                            <div class="dropdown table-management">
-                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                </a>
-                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('customer/preview_/' . $customer->prof_id); ?>">Preview</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('customer/add_advance/' . $customer->prof_id); ?>">Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="mailto:<?= $customer->email; ?>">Email</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item call-item" href="javascript:void(0);" data-id="<?= $customer->phone_m; ?>">Call</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?= base_url('invoice/add/'); ?>">Invoice</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?= base_url('customer/module/' . $customer->prof_id); ?>">Dashboard</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?= base_url('job/new_job1/'); ?>">Schedule</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item btn-messages" href="javascript:void(0);" data-id="<?= $customer->prof_id; ?>">Message</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                        </tr>
-                                    <?php
-                                    endforeach;
-                                    ?>
-                                <?php
-                                else :
-                                ?>
-                                    <tr>
-                                        <td colspan="14">
-                                            <div class="nsm-empty">
-                                                <span>No results found.</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php
-                                endif;
-                                ?>
-                            </tbody>
+                            <tbody></tbody>
                         </table>
+                        </form>
                     </div>
                 <?php else : ?>
                     <div class="cont">
+                        <form id="frm-with-selected">
                         <table class="customerTbl " id="customer-list" style="width:100%">
                             <thead>
                                 <tr>
+                                    <th class="table-icon text-center sorting_disabled">
+                                        <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                                    </th>
                                     <th class="table-icon"></th>
                                     <th data-name="Name">Name   </th>
                                     <?php if($companyId == 1): ?>
@@ -662,9 +520,9 @@
                                     <th data-name="Manage"></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                            </tbody>
+                            <tbody></tbody>
                         </table>
+                        </form>
                     </div>
                 <?php endif; ?>
             </div>
@@ -672,30 +530,26 @@
     </div>
 </div>
 <div class="modal fade nsm-modal fade" id="modal-archived-customers" aria-labelledby="modal-archived-customers-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form method="post" id="quick-add-event-form">   
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Manage Archived Customers</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body" id="customer-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+    <div class="modal-dialog modal-lg modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Archived Customers</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-        </form>
+            <div class="modal-body" id="customer-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+        </div>
     </div>
 </div>
 
 <div class="modal fade nsm-modal fade" id="modal-favorite-customers" aria-labelledby="modal-favorite-customers-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form method="post" id="quick-add-event-form">   
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Manage Favorite Customers</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body" id="customer-favorite-list-container" style="max-height: 800px; overflow: auto;"></div>
+    <div class="modal-dialog modal-lg modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Manage Favorite Customers</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-        </form>
+            <div class="modal-body" id="customer-favorite-list-container" style="max-height: 800px; overflow: auto;"></div>
+        </div>
     </div>
 </div>
 
@@ -790,6 +644,127 @@
             CUSTOMER_LIST_TABLE.search($(this).val()).draw()
         });
 
+        $(document).on('change', '#select-all', function(){
+            $('.row-select:checkbox').prop('checked', this.checked);  
+            let total= $('#customer-list input[name="customers[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
+        });
+
+        $(document).on('change', '.row-select', function(){
+            let total= $('#customer-list input[name="customers[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
+        });
+
+        $(document).on('click', '#with-selected-favorites', function(){
+            let total= $('#customer-list input[name="customers[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Add to Favorites',
+                    html: `Are you sure you want to add selected rows to the list?`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + "customers/_with_selected_add_to_favorites",
+                            dataType: 'json',
+                            data: $('#frm-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                        title: 'Add to Favorites',
+                                        text: "Customer records updated successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            CUSTOMER_LIST_TABLE.ajax.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }     
+        });
+
+        $(document).on('click', '#with-selected-delete', function(){
+            let total= $('#customer-list input[name="customers[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Delete Customers',
+                    html: `Are you sure you want to delete selected rows?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'customers/_archive_selected_customers',
+                            dataType: 'json',
+                            data: $('#frm-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                        title: 'Delete Customers',
+                                        text: "Customer records deleted successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            CUSTOMER_LIST_TABLE.ajax.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        });
+
         $('#btn-reset-customer-list').on('click', function(){
             CUSTOMER_LIST_TABLE.state.clear(); 
             location.reload();
@@ -846,7 +821,7 @@
             var name = $(this).attr('data-name');
 
             Swal.fire({
-                title: 'Restore Customer Data',
+                title: 'Restore Customer',
                 html: `Proceed with restoring customer data <b>${name}</b>?`,
                 icon: 'question',
                 showCancelButton: true,
@@ -864,8 +839,8 @@
                                 $('#modal-archived-customers').modal('hide');
                                 Swal.fire({
                                 icon: 'success',
-                                title: 'Success',
-                                text: 'Customer data was successfully restored.',
+                                title: 'Restore Customer',
+                                text: 'Customer record was successfully restored.',
                                 }).then((result) => {
                                     CUSTOMER_LIST_TABLE.ajax.reload();
                                 });
@@ -895,7 +870,7 @@
                 });
             }else{
                 Swal.fire({
-                    title: "Favorite Customer",
+                    title: "Add to Favorites",
                     html: `Do you want to add to <b>${cname}</b> to the list?`,
                     icon: 'question',
                     confirmButtonText: 'Proceed',
@@ -917,7 +892,8 @@
                             success: function(result) {
                                 if (result.is_success == 1) {
                                     Swal.fire({
-                                        html: 'Customer record was updated successfully',
+                                        title: "Add to Favorites",
+                                        text: "Customer record updated successfully!",
                                         icon: 'success',
                                         showCancelButton: false,
                                         confirmButtonText: 'Okay'
@@ -949,8 +925,8 @@
             var name = $(this).attr('data-name');
 
             Swal.fire({
-                title: 'Customers',
-                html: `Delete selected customer <b>${name}</b>?`,
+                title: 'Delete Customer',
+                html: `Delete selected customer <b>${name}</b>?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -971,6 +947,7 @@
                         success: function(result) {
                             if (result.is_success == 1) {
                                 Swal.fire({
+                                    title: 'Delete Customer',
                                     html: 'Customer record was deleted successfully',
                                     icon: 'success',
                                     showCancelButton: false,
@@ -1099,7 +1076,7 @@
                         if (o.is_success == 1) {
                             $("#messages_modal").modal("hide");
                             Swal.fire({
-                                title: 'Save Successful!',
+                                title: 'Send Message',
                                 text: "Customer message was successfully sent",
                                 icon: 'success',
                                 showCancelButton: false,
@@ -1150,6 +1127,18 @@
                     },
                 });
             }
+        });
+
+        $('#btn-new-customer').on('click', function(){
+            location.href = base_url + 'customer/add_advance';
+        });
+
+        $('#btn-export-customer').on('click', function(){
+            location.href = base_url + 'customer/export_customer';
+        });
+
+        $('#btn-import-customer').on('click', function(){
+            location.href = base_url + 'customer/import_customer';
         });
 
         $('#archived-customer-list').on('click', function(){
@@ -1203,9 +1192,10 @@
                             if( result.is_success == 1 ) {
                                 $('#modal-archived-customers').modal('hide');
                                 Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: 'Customer data was successfully updated.',
+                                title: 'Remove from Favorites',
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'Customer record was successfully updated.',
                                 }).then((result) => {
                                     CUSTOMER_LIST_TABLE.ajax.reload();
                                 });
@@ -1260,6 +1250,211 @@
             );
 
             $('#modal-send-esign').modal('hide');
+        });
+
+        $(document).on('click', '#btn-empty-archives', function(){        
+            let total_records = $('#archived-customers input[name="customers[]"]').length;        
+            if( total_records > 0 ){
+                Swal.fire({
+                    title: 'Empty Archived',
+                    html: `Are you sure you want to <b>permanently delete</b> <b>${total_records}</b> archived customers? <br/><br/>Note : This cannot be undone.`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'customers/_delete_all_archived_customers',
+                            dataType: 'json',
+                            data: $('#frm-archive-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    $('#modal-archived-customers').modal('hide');
+                                    Swal.fire({
+                                        title: 'Empty Archived',
+                                        text: "Data deleted successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            //location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }else{
+                Swal.fire({                
+                    icon: 'error',
+                    title: 'Error',              
+                    html: 'Archived is empty',
+                });
+            }        
+        });
+
+        $(document).on('click', '#with-selected-restore', function(){
+            let total= $('#archived-customers input[name="customers[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Restore Customers',
+                    html: `Are you sure you want to restore selected rows?`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'customers/_restore_selected_customers',
+                            dataType: 'json',
+                            data: $('#frm-archive-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    $('#modal-archived-customers').modal('hide');
+                                    Swal.fire({
+                                        title: 'Restore Customers',
+                                        text: "Data restored successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        });
+
+        $(document).on('click', '#with-selected-perma-delete', function(){
+            let total= $('#archived-customers input[name="customers[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Delete Customers',
+                    html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'customers/_permanently_delete_selected_customers',
+                            dataType: 'json',
+                            data: $('#frm-archive-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    $('#modal-archived-customers').modal('hide');
+                                    Swal.fire({
+                                        title: 'Delete Customers',
+                                        text: "Data deleted successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            //location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        });
+
+        $(document).on('click', '.btn-permanently-delete-customer', function(){
+            let customer_id   = $(this).attr('data-id');
+            let customer_name = $(this).attr('data-name');
+
+            Swal.fire({
+                title: 'Delete Customer',
+                html: `Are you sure you want to <b>permanently delete</b> customer <b>${customer_name}</b>? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + 'customers/_permanently_delete_archived_customer',
+                        data: {
+                            customer_id: customer_id
+                        },
+                        dataType: "JSON",
+                        success: function(result) {
+                            $('#modal-archived-customers').modal('hide');
+                            if (result.is_success) {
+                                Swal.fire({
+                                    title: 'Delete Customer',
+                                    html: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        },
+                    });
+                }
+            });
         });
     });
 

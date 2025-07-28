@@ -600,89 +600,107 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#with-selected-restore', function(){
-        Swal.fire({
-            title: 'Restore Jobs',
-            html: `Are you sure you want to restore selected rows?`,
-            icon: 'question',
-            confirmButtonText: 'Proceed',
-            showCancelButton: true,
-            cancelButtonText: "Cancel"
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    method: 'POST',
-                    url: base_url + 'jobs/_restore_selected_jobs',
-                    dataType: 'json',
-                    data: $('#frm-archive-with-selected').serialize(),
-                    success: function(result) {                        
-                        if( result.is_success == 1 ) {
-                            $('#modal-archived-jobs').modal('hide');
-                            Swal.fire({
-                                title: 'Restore Jobs',
-                                text: "Data restored successfully!",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            }).then((result) => {
-                                //if (result.value) {
-                                    location.reload();
-                                //}
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: result.msg,
-                            });
-                        }
-                    },
-                });
+        let total= $('#archived-jobs input[name="jobs[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Restore Jobs',
+                html: `Are you sure you want to restore selected rows?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'jobs/_restore_selected_jobs',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-jobs').modal('hide');
+                                Swal.fire({
+                                    title: 'Restore Jobs',
+                                    text: "Data restored successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
 
-            }
-        });
+                }
+            });   
+        }        
     });
 
     $(document).on('click', '#with-selected-perma-delete', function(){
-        Swal.fire({
-            title: 'Delete Jobs',
-            html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
-            icon: 'question',
-            confirmButtonText: 'Proceed',
-            showCancelButton: true,
-            cancelButtonText: "Cancel"
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    method: 'POST',
-                    url: base_url + 'jobs/_permanently_delete_selected_jobs',
-                    dataType: 'json',
-                    data: $('#frm-archive-with-selected').serialize(),
-                    success: function(result) {                        
-                        if( result.is_success == 1 ) {
-                            $('#modal-archived-jobs').modal('hide');
-                            Swal.fire({
-                                title: 'Delete Jobs',
-                                text: "Data deleted successfully!",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            }).then((result) => {
-                                //if (result.value) {
-                                    //location.reload();
-                                //}
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: result.msg,
-                            });
-                        }
-                    },
-                });
+        let total= $('#archived-jobs input[name="jobs[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Jobs',
+                html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'jobs/_permanently_delete_selected_jobs',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-jobs').modal('hide');
+                                Swal.fire({
+                                    title: 'Delete Jobs',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
 
-            }
-        });
+                }
+            });
+        }        
     });
 
     $(document).on('click', '.btn-permanently-delete-job', function(){
@@ -735,47 +753,55 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#btn-empty-archives', function(){
-        let total_records = $('#archived-jobs tbody tr').length;
-        Swal.fire({
-            title: 'Delete All',
-            html: `Are you sure you want to delete all <b>${total_records}</b> archived jobs? <br/><br/>Note : This cannot be undone.`,
-            icon: 'question',
-            confirmButtonText: 'Proceed',
-            showCancelButton: true,
-            cancelButtonText: "Cancel"
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    method: 'POST',
-                    url: base_url + 'jobs/_delete_all_archived_jobs',
-                    dataType: 'json',
-                    data: $('#frm-archive-with-selected').serialize(),
-                    success: function(result) {                        
-                        if( result.is_success == 1 ) {
-                            $('#modal-archived-jobs').modal('hide');
-                            Swal.fire({
-                                title: 'Delete All',
-                                text: "Data deleted successfully!",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            }).then((result) => {
-                                //if (result.value) {
-                                    //location.reload();
-                                //}
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: result.msg,
-                            });
-                        }
-                    },
-                });
+        let total_records = $('#archived-jobs input[name="jobs[]"]').length;        
+        if( total_records > 0 ){
+            Swal.fire({
+                title: 'Empty Archived',
+                html: `Are you sure you want to <b>permanently delete</b> <b>${total_records}</b> archived jobs? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'jobs/_delete_all_archived_jobs',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-jobs').modal('hide');
+                                Swal.fire({
+                                    title: 'Empty Archived',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
 
-            }
-        });
+                }
+            });
+        }else{
+            Swal.fire({                
+                icon: 'error',
+                title: 'Error',              
+                html: 'Archived is empty',
+            });
+        }        
     });
 
     $(".select-filter .dropdown-item").on("click", function() {

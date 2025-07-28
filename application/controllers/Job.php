@@ -5048,7 +5048,7 @@ class Job extends MY_Controller
 
     public function ajax_create_job()
     {
-        $this->load->helper(array('hashids_helper'));
+        $this->load->helper(array('hashids_helper','stripe_helper'));
 
         $is_valid = 1;
         $msg = '';
@@ -5080,8 +5080,8 @@ class Job extends MY_Controller
             $msg = 'Please select customer';
             $is_valid = 0;
         }
-
-        if( $this->input->post('is_with_esign') && $this->input->post('bill_method') == 'CC' ){
+        
+        /*if( $this->input->post('is_with_esign') && $this->input->post('bill_method') == 'CC' ){
             $card_details = [
                 'card_number' => $this->input->post('customer_cc_num'),
                 'card_month' => $this->input->post('customer_cc_expiry_date_month'),
@@ -5096,7 +5096,7 @@ class Job extends MY_Controller
             }else{
                 $card_type = $result['card']['brand'];
             }
-        }
+        }*/
 
         $payment_method = '';
         if( $this->input->post('is_with_esign') ){

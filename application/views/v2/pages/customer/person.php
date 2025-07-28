@@ -49,6 +49,10 @@
     overflow-y: auto;
     max-height: calc(100vh - 500px);
 }
+#person-list td:nth-child(1) {  
+    vertical-align:middle;
+    text-align:center;
+}
 </style>
 
 <div class="nsm-fab-container">
@@ -110,49 +114,46 @@
                                 <?php } ?>
                             </ul>
                         </div>
+                        <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
                         <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button primary" data-bs-toggle="dropdown" style="width:122px;">
-                                <span>More Action <i class='bx bx-fw bx-chevron-down'></i>
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                With Selected <small id="num-checked" class="text-muted"></small> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end"> 
-                                <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
-                                <li>
-                                    <a class="dropdown-item" href="<?= url('customer/import_customer') ?>"><i class='bx bx-fw bx-chart'></i> Import</a>
-                                </li>
-                                <?php } ?>                                   
-                                <li>
-                                    <a class="dropdown-item" id="btn-residential-export-list" href="javascript:void(0);"><i class='bx bx-fw bx-file'></i> Export</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" id="print-customer-list" href="javascript:void(0)"><i class='bx bx-fw bx-printer'></i> Print</a>
-                                </li>
-                                <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
-                                <li>
-                                    <a class="dropdown-item" id="favorite-customer-list" href="javascript:void(0)"><i class='bx bx-fw bxs-heart'></i> Favorite Customers</a>
-                                </li>
-                                <?php } ?>
-                            </ul>     
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-favorites" href="javascript:void(0);" data-action="delete">Add to Favorites</a></li>       
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
                         </div>
-                        
+                        <?php } ?>
                         <?php if(checkRoleCanAccessModule('customers', 'write')){ ?>
-                        <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary" id="openModalBtn" style="margin-left: 10px; cursor: pointer;"> <i class='bx bx-fw bxs-user-plus'></i> New Customer</a>
-                        </div>
-                        <?php } ?> 
-                        <?php if( checkRoleCanAccessModule('customers', 'delete') ){ ?>
-                        <button type="button" class="nsm-button primary" id="archived-customer-list">
-                            <i class='bx bx-fw bx-trash'></i> Manage Archived
-                        </button>
-                        <?php } ?>                       
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-nsm" id="openModalBtn"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Customer</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">       
+                                    <li><a class="dropdown-item" id="archived-customer-list" href="javascript:void(0);">Archived</a></li>        
+                                    <li><a class="dropdown-item" id="favorite-customer-list" href="javascript:void(0);">Favorites</a></li> 
+                                     <li><div class="dropdown-divider"></div></li> 
+                                    <li><a class="dropdown-item" id="btn-residential-export-list" href="javascript:void(0);">Export</a></li>                               
+                                    <li><a class="dropdown-item" id="btn-import-customer" href="javascript:void(0);">Import</a></li>                               
+                                    <li><a class="dropdown-item" id="print-customer-list" href="javascript:void(0);">Print</a></li>                               
+                                </ul>
+                            </div>
+                        <?php } ?>                    
                     </div>
                 </div>
                 <input type="hidden" id="page_type" value="person">
                 
                 <?php if (!empty($enabled_table_headers)) { ?>
                     <div class="cont">
+                        <form id="frm-with-selected">
                         <table id="person-list" style="width:100%;">
                             <thead>
                                 <tr>
+                                    <th class="table-icon text-center sorting_disabled">
+                                        <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                                    </th>
                                     <th class="table-icon"></th>
                                     <?php if (in_array('name', $enabled_table_headers)) { ?><th data-name="Name">Name</th><?php } ?>
                                     <?php if (in_array('email', $enabled_table_headers)) { ?><th data-name="Name">Email</th><?php } ?>
@@ -172,162 +173,19 @@
                                     <th data-name="Manage"></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php
-            if (!empty($profiles)) {
-                ?>
-                                    <?php
-                    foreach ($profiles as $customer) {
-                        switch (strtoupper($customer->status)) {
-                            case 'INSTALLED':
-                                $badge = 'success';
-                                break;
-                            case 'CANCELLED':
-                                $badge = 'error';
-                                break;
-                            case 'COLLECTIONS':
-                                $badge = 'secondary';
-                                break;
-                            case 'CHARGED BACK':
-                                $badge = 'primary';
-                                break;
-                            default:
-                                $badge = '';
-                                break;
-                        }
-                        ?>
-                                        <?php if (in_array('name', $enabled_table_headers)) { ?>
-                                            <td>
-                                                <div class="nsm-profile">
-                                                    <?php if ($customer->customer_type === 'Business') { ?>
-                                                        <span>
-                                                        <?php
-                                                $parts = explode(' ', strtoupper(trim($customer->business_name)));
-                                                        echo count($parts) > 1 ? $parts[0][0].end($parts)[0] : $parts[0][0];
-                                                        ?>
-                                                        </span>
-                                                    <?php } else { ?>
-                                                        <span><?php echo ucwords($customer->first_name[0]).ucwords($customer->last_name[0]); ?></span>
-                                                    <?php } ?>
-                                                </div>
-                                            </td>
-                                            <td class="nsm-text-primary">
-                                                <label class="nsm-link default d-block fw-bold" onclick="location.href='<?php echo base_url('/customer/module/'.$customer->prof_id); ?>'">
-                                                    <?php if ($customer->customer_type === 'Business') { ?>
-                                                        <?php echo $customer->business_name; ?>
-                                                    <?php } else { ?>
-                                                        <?php echo ($customer) ? $customer->first_name.' '.$customer->last_name : ''; ?>
-                                                    <?php } ?>
-                                                </label>
-                                                <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
-                                            </td>
-                                        <?php } ?>
-                                        <?php if (in_array('industry', $enabled_table_headers)) { ?>
-                                            <td>
-                                                <?php
-                                                    if ($customer->industry_type_id > 0) {
-                                                        echo $customer->industry_type;
-                                                    } else {
-                                                        echo 'Not Specified';
-                                                    }
-                                            ?>
-                                            </td>
-                                        <?php } ?>
-                                        <?php if (in_array('city', $enabled_table_headers)) { ?>
-                                            <td><?php echo $customer->city; ?></td>
-                                        <?php } ?>
-                                        <?php if (in_array('state', $enabled_table_headers)) { ?>
-                                            <td><?php echo $customer->state; ?></td>
-                                        <?php } ?>
-                                        <?php if (in_array('source', $enabled_table_headers)) { ?>
-                                            <td><?php echo $customer->lead_source != '' ? $customer->lead_source : 'n/a'; ?></td>
-                                        <?php } ?>
-                                        <?php if (in_array('added', $enabled_table_headers)) { ?>
-                                            <td><?php echo $customer->entered_by; ?></td>
-                                        <?php } ?>
-                                        <?php if (in_array('sales_rep', $enabled_table_headers)) { ?>
-                                            <td><?php print_r(get_sales_rep_name($customer->fk_sales_rep_office)); ?></td>
-                                        <?php } ?>
-                                        <?php if (in_array('tech', $enabled_table_headers)) { ?>
-                                            <?php $techician = !empty($customer->technician) ? get_employee_name($customer->technician)->FName : 'Not Assigned'; ?>
-                                            <td><?php echo $techician; ?></td>
-                                        <?php } ?>
-                                        <?php if (in_array('plan_type', $enabled_table_headers)) { ?>
-                                            <td><?php echo $customer->system_type; ?></td>
-                                        <?php } ?>
-                                        <?php if (in_array('rate_plan', $enabled_table_headers)) { ?>
-                                            <td><?php echo $customer->rate_plan; ?></td>
-                                        <?php } ?>
-                                        <?php if (in_array('subscription_amount', $enabled_table_headers)) { ?>
-                                            <td>$<?php echo $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ','); ?></td>
-                                        <?php } ?>
-                                        <?php if (in_array('subscription_amount', $enabled_table_headers)) { ?>
-                                            <td>$<?php echo $companyId == 58 ? number_format(floatval($customer->proposed_solar), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ','); ?></td>
-                                        <?php } ?>
-                                        <?php if (in_array('phone', $enabled_table_headers)) { ?>
-                                            <td><?php echo $customer->phone_m; ?></td>
-                                        <?php } ?>
-                                        <?php if (in_array('status', $enabled_table_headers)) { ?>
-                                            <td><span class="nsm-badge <?php echo $badge; ?>"><?php echo $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
-                                        <?php } ?>
-                                        <td>
-                                            <div class="dropdown table-management">
-                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                </a>
-                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('customer/preview_/'.$customer->prof_id); ?>">Preview</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('customer/add_advance/'.$customer->prof_id); ?>">Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="mailto:<?php echo $customer->email; ?>">Email</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item call-item" href="javascript:void(0);" data-id="<?php echo $customer->phone_m; ?>">Call</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('invoice/add/'); ?>">Invoice</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('customer/module/'.$customer->prof_id); ?>">Dashboard</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('job/new_job1/'); ?>">Schedule</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item btn-messages" href="javascript:void(0);" data-id="<?php echo $customer->prof_id; ?>">Message</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                        </tr>
-                                    <?php
-                    }
-                ?>
-                                <?php
-            } else {
-                ?>
-                                    <tr>
-                                        <td colspan="14">
-                                            <div class="nsm-empty">
-                                                <span>No results found.</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php
-            }
-                    ?>
-                            </tbody>
+                            <tbody></tbody>
                         </table>
+                        </form>
                     </div>
                 <?php } else { ?>
                     <div class="cont">
+                        <form id="frm-with-selected">
                         <table id="person-list" style="width:100%">
                             <thead>
                                 <tr>
+                                    <th class="table-icon text-center sorting_disabled">
+                                        <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                                    </th>
                                     <th class="table-icon"></th>
                                     <th data-name="Name">Name   </th>
                                     <?php if ($companyId == 1) { ?>
@@ -347,9 +205,9 @@
                                     <th data-name="Manage"></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                            </tbody>
+                            <tbody></tbody>
                         </table>
+                        </form>
                     </div>
                 <?php } ?>
             </div>
@@ -371,27 +229,25 @@
     </div>
 </div>
 <div class="modal fade nsm-modal fade" id="modal-favorite-customers" aria-labelledby="modal-favorite-customers-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form method="post" id="quick-add-event-form">   
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Manage Favorite Customers</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body" id="customer-favorite-list-container" style="max-height: 800px; overflow: auto;"></div>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Manage Favorite Customers</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-        </form>
+            <div class="modal-body" id="customer-favorite-list-container" style="max-height: 800px; overflow: auto;"></div>
+        </div>
     </div>
 </div>
-<div class="modal fade nsm-modal fade" id="person_modal" tabindex="-1" aria-labelledby="person_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <form id="person_and_company_form">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title" id=""><i class='bx bxs-face'></i> Add Residential Customer</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body" style="overflow-y:auto;overflow-x:hidden;max-height:700px;">
+<div class="modal fade nsm-modal fade" id="person_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="new_customer_status_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">         
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Add Residential Customer</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body">                      
+                <form id="person_and_company_form">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="row form_line">
@@ -436,8 +292,9 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
-                        <h3 class="form-header">CUSTOMER INFORMATION</h3>
+                        <div class="col-md-12"><h3 class="form-header">CUSTOMER INFORMATION</h3></div>
                         <div class="col-md-6">
                             <div class="row form_line">
                                 <div class="col-md-4">First Name <span class="required"> *</span></div>
@@ -512,64 +369,54 @@
                             </div>                               
                         </div>
                         <div class="col-md-6">
-                        <div class="row form_line">
-                            <!-- <div class="col-md-4">Country</div>
-                                <div class="col-md-8">
-                                    <input data-type="customer_address_country" type="text" class="form-control" name="country" id="country" value="" />
-                                </div>
-                            </div> -->
                             <div class="row form_line">
-                                <div class="col-md-4">Address <span class="required"> *</span></div>
-                                <div class="col-md-8">
-                                    <input data-type="customer_address" type="text" class="form-control" name="mail_add" id="mail_address" value="" required/>
+                                <div class="row form_line">
+                                    <div class="col-md-4">Address <span class="required"> *</span></div>
+                                    <div class="col-md-8">
+                                        <input data-type="customer_address" type="text" class="form-control" name="mail_add" id="mail_address" value="" required/>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row form_line">
-                                <div class="col-md-4">City <span class="required"> *</span></div>
-                                <div class="col-md-8">
-                                    <input data-type="customer_address_city" type="text" class="form-control" name="city" id="city" value="" required/>
+                                <div class="row form_line">
+                                    <div class="col-md-4">City <span class="required"> *</span></div>
+                                    <div class="col-md-8">
+                                        <input data-type="customer_address_city" type="text" class="form-control" name="city" id="city" value="" required/>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row form_line">
-                                <div class="col-md-4">County <span class="required"> *</span></div>
-                                <div class="col-md-8">
-                                    <input data-type="customer_address_county" type="text" class="form-control" name="county" id="county" value="" required/>
+                                <div class="row form_line">
+                                    <div class="col-md-4">County <span class="required"> *</span></div>
+                                    <div class="col-md-8">
+                                        <input data-type="customer_address_county" type="text" class="form-control" name="county" id="county" value="" required/>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row form_line">
-                                <div class="col-md-4">State <span class="required"> *</span></div>
-                                <div class="col-md-8">
-                                    <input data-type="customer_address_state" type="text" class="form-control" name="state" id="state" value="" required/>
+                                <div class="row form_line">
+                                    <div class="col-md-4">State <span class="required"> *</span></div>
+                                    <div class="col-md-8">
+                                        <input data-type="customer_address_state" type="text" class="form-control" name="state" id="state" value="" required/>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="row form_line">
-                                <div class="col-md-4">Zip Code <span class="required"> *</span></div>
-                                <div class="col-md-8">
-                                    <input required data-type="customer_address_zip" type="text" class="form-control" name="zip_code" id="zip_code" value=""/>
+                                <div class="row form_line">
+                                    <div class="col-md-4">Zip Code <span class="required"> *</span></div>
+                                    <div class="col-md-8">
+                                        <input required data-type="customer_address_zip" type="text" class="form-control" name="zip_code" id="zip_code" value=""/>
+                                    </div>
                                 </div>
+                                <div class="row form_line">
+                                    <div class="col-md-4">Cross Street</div>
+                                    <div class="col-md-8">
+                                        <textarea style="height:80px;" data-type="customer_address_street" class="form-control" name="cross_street" id="cross_street"></textarea>
+                                    </div>
+                                </div>   
                             </div>
-                            <div class="row form_line">
-                                <div class="col-md-4">Cross Street</div>
-                                <div class="col-md-8">
-                                    <textarea style="height:80px;" data-type="customer_address_street" class="form-control" name="cross_street" id="cross_street"></textarea>
-                                </div>
-                            </div>                
-                            <!-- <div class="row form_line">
-                                <div class="col-md-4">Subdivision</div>
-                                <div class="col-md-8">
-                                    <textarea style="height:80px;" data-type="customer_address_subdivision" class="form-control" name="subdivision" id="subdivision"></textarea>
-                                </div>
-                            </div> -->
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
-                </div>
+                </form>
             </div>
-        </form>
+            <div class="modal-footer">
+                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="nsm-button primary" id="person_and_company_form">Save</button>
+            </div>
+        </div>
     </div>
 </div>
 <?php include viewPath('v2/includes/footer'); ?>
@@ -636,7 +483,322 @@ $(document).ready(function() {
         PERSON_LIST_TABLE.ajax.reload();
     });
 
-    
+    $(document).on('change', '#select-all', function(){
+        $('.row-select:checkbox').prop('checked', this.checked);  
+        let total= $('#person-list input[name="customers[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
+    $(document).on('click', '.btn-remove-favorite-customer', function(){
+        var cid = $(this).attr('data-id');
+        var name = $(this).attr('data-name');
+
+        Swal.fire({
+            title: 'Remove from Favorites',
+            html: `Do you wish to remove from favorites customer <b>${name}</b>?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {                    
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "customer/_remove_favorite",
+                    data: {cid:cid},
+                    dataType:'json',
+                    success: function(result) {     
+                        $('#modal-favorite-customers').modal('hide');                       
+                        if( result.is_success == 1 ) {
+                            $('#modal-archived-customers').modal('hide');
+                            Swal.fire({
+                            title: 'Remove from Favorites',
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Customer record was successfully updated.',
+                            }).then((result) => {
+                                PERSON_LIST_TABLE.ajax.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('change', '.row-select', function(){
+        let total= $('#person-list input[name="customers[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
+    $(document).on('click', '#with-selected-favorites', function(){
+        let total= $('#person-list input[name="customers[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Add to Favorites',
+                html: `Are you sure you want to add selected rows to the list?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + "customers/_with_selected_add_to_favorites",
+                        dataType: 'json',
+                        data: $('#frm-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                    title: 'Add to Favorites',
+                                    text: "Customer records updated successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        PERSON_LIST_TABLE.ajax.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }     
+    });
+
+    $(document).on('click', '#with-selected-delete', function(){
+        let total= $('#person-list input[name="customers[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Customers',
+                html: `Are you sure you want to delete selected rows?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'customers/_archive_selected_customers',
+                        dataType: 'json',
+                        data: $('#frm-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                    title: 'Delete Customers',
+                                    text: "Customer records deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        PERSON_LIST_TABLE.ajax.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#with-selected-restore', function(){
+        let total= $('#archived-customers input[name="customers[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Restore Customers',
+                html: `Are you sure you want to restore selected rows?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'customers/_restore_selected_customers',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-customers').modal('hide');
+                                Swal.fire({
+                                    title: 'Restore Customers',
+                                    text: "Data restored successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#with-selected-perma-delete', function(){
+        let total= $('#archived-customers input[name="customers[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Customers',
+                html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'customers/_permanently_delete_selected_customers',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-customers').modal('hide');
+                                Swal.fire({
+                                    title: 'Delete Customers',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '.btn-permanently-delete-customer', function(){
+        let customer_id   = $(this).attr('data-id');
+        let customer_name = $(this).attr('data-name');
+
+        Swal.fire({
+            title: 'Delete Customer',
+            html: `Are you sure you want to <b>permanently delete</b> customer <b>${customer_name}</b>? <br/><br/>Note : This cannot be undone.`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + 'customers/_permanently_delete_archived_customer',
+                    data: {
+                        customer_id: customer_id
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-archived-customers').modal('hide');
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Delete Customer',
+                                html: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    });
 
     function deleteItem(itemId) {
         Swal.fire({
@@ -773,7 +935,7 @@ $(document).ready(function() {
         var name = $(this).attr('data-name');
 
         Swal.fire({
-            title: 'Restore Customer Data',
+            title: 'Restore Customer',
             html: `Proceed with restoring customer data <b>${name}</b>?`,
             icon: 'question',
             showCancelButton: true,
@@ -791,7 +953,7 @@ $(document).ready(function() {
                             $('#modal-archived-customers').modal('hide');
                             Swal.fire({
                             icon: 'success',
-                            title: 'Success',
+                            title: 'Restore Customer',
                             text: 'Customer data was successfully restored.',
                             }).then((result) => {
                                 PERSON_LIST_TABLE.ajax.reload();
