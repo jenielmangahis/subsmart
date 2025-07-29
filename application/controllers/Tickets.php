@@ -3264,20 +3264,14 @@ class Tickets extends MY_Controller
         $total_deleted = 0;
         
         if( count($post['tickets']) > 0 ){
-            foreach($post['tickets'] as $tid){
-                $ticket = $this->tickets_model->getByIdAndCompanyId($tid, $cid);
-                if( $ticket ){
-                    //Activity Logs
-                    $activity_name = 'Service Ticket : Deleted Ticket # ' . $ticket->ticket_no; 
-                    createActivityLog($activity_name);
+            $filter[] = ['field' => 'company_id', 'value' => $cid];
+            $data     = ['is_archived' => 1, 'archived_date' => date("Y-m-d H:i:s")];
+            $total_updated = $this->tickets_model->bulkUpdate($post['tickets'], $data, $filter);
 
-                    $this->tickets_model->delete($tid);
-                    $total_deleted++;
-                }
-            }
-        }
+            //Activity Logs
+			$activity_name = 'Service Ticket : Archived ' . $total_updated . ' ticket(s)'; 
+			createActivityLog($activity_name);
 
-        if( $total_deleted > 0 ){
             $is_success = 1;
             $msg = '';
         }
@@ -3300,22 +3294,14 @@ class Tickets extends MY_Controller
         $total_updated = 0;
         
         if( count($post['tickets']) > 0 ){
-            foreach($post['tickets'] as $tid){
-                $ticket = $this->tickets_model->getByIdAndCompanyId($tid, $cid);
-                if( $ticket ){
-                    $data = ['ticket_status' => $post['change_status']];
-                    $this->tickets_model->update($ticket->id, $data);
+            $filter[] = ['field' => 'company_id', 'value' => $cid];
+            $data     = ['ticket_status' => $post['change_status'], 'updated_at' => date("Y-m-d H:i:s")];
+            $total_updated = $this->tickets_model->bulkUpdate($post['tickets'], $data, $filter);
 
-                    //Activity Logs
-                    $activity_name = 'Service Ticket : Changed ticket # status from ' . $ticket->ticket_status . ' to ' . $post['change_status']; 
-                    createActivityLog($activity_name);
-                    
-                    $total_updated++;
-                }
-            }
-        }
+            //Activity Logs
+			$activity_name = 'Service Ticket : ' . $total_updated . ' ticket(s) was changed status to ' . $post['change_status']; 
+			createActivityLog($activity_name);
 
-        if( $total_updated > 0 ){
             $is_success = 1;
             $msg = '';
         }
@@ -3531,6 +3517,66 @@ class Tickets extends MY_Controller
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
+
+    public function ajax_restore_selected_tickets()
+	{
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['tickets'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archived' => 0];
+            $total_updated = $this->tickets_model->bulkUpdate($post['tickets'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Service Ticket : Restored ' . $total_updated . ' ticket(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_permanently_delete_selected_tickets()
+	{
+		$this->load->model('Clients_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['tickets'] ){
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+			$filters[] = ['field' => 'is_archived', 'value' => 1];
+            $total_deleted = $this->tickets_model->bulkDelete($post['tickets'], $filters);
+
+			//Activity Logs
+			$activity_name = 'Service Ticket : Permanently deleted ' .$total_deleted. ' ticket(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 }
 
 /* End of file Tickets.php */

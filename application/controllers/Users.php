@@ -3648,6 +3648,10 @@ class Users extends MY_Controller
             $data     = ['is_archived' => 'Yes', 'updated_at' => date("Y-m-d H:i:s")];
             $this->Users_model->bulkUpdate($post['users'], $data, $filter);
 
+			//Activity Logs
+			$activity_name = 'Users : Archived ' . $total_updated . ' user(s)'; 
+			createActivityLog($activity_name);
+
             $is_success = 1;
             $msg    = '';
         }
@@ -3671,7 +3675,11 @@ class Users extends MY_Controller
         if( $post['users'] ){                                    
             $filter[] = ['field' => 'company_id', 'value' => $company_id];
             $data     = ['status' => $post['status'], 'updated_at' => date("Y-m-d H:i:s")];
-            $this->Users_model->bulkUpdate($post['users'], $data, $filter);
+            $total_updated = $this->Users_model->bulkUpdate($post['users'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Users : ' . $total_updated . ' user(s) was changed status to ' . $post['status']; 
+			createActivityLog($activity_name);
 
             $is_success = 1;
             $msg    = '';
