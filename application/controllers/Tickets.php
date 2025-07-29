@@ -3606,7 +3606,7 @@ class Tickets extends MY_Controller
         echo json_encode($return);
 	}
 
-    public function ajax_delete_archived_user()
+    public function ajax_delete_archived_ticket()
 	{
 		$this->load->model('Clients_model');
 
@@ -3634,6 +3634,49 @@ class Tickets extends MY_Controller
         ];
 
         echo json_encode($return);
+	}
+
+    public function ticket_export()
+	{
+		$role_id = logged('role');
+		$cid     = logged('company_id');
+		$tickets = $this->tickets_model->getAllByCompanyId($cid);
+
+		$delimiter = ",";
+		$time      = time();
+		$filename  = "service_ticket_list_" . $time . ".csv";
+
+		$f = fopen('php://memory', 'w');
+
+		$fields = array('Customer Name', 'Service Ticket Number', 'Location', 'Date', 'Status', 'Amount', 'Is Archived');
+		fputcsv($f, $fields, $delimiter);
+
+		if (!empty($tickets)) {
+			foreach ($tickets as $t) {
+                $customer = $t->first_name . ' ' . $t->last_name;
+                $location = $t->service_location;
+				$csvData = array(
+					$customer,
+					$t->ticket_no,
+                    $location,
+					date("m/d/Y", strtotime($t->ticket_date)),
+					$t->ticket_status,
+                    number_format($t->grandtotal,2),
+					$t->is_archived == 1 ? 'Yes' : 'No'
+				);
+				fputcsv($f, $csvData, $delimiter);
+			}
+		} else {
+			$csvData = array('');
+			fputcsv($f, $csvData, $delimiter);
+		}
+
+		fseek($f, 0);
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		fpassthru($f);
 	}
 }
 
