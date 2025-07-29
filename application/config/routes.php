@@ -2174,7 +2174,6 @@ $route['customers/leads/_restore_leads'] = 'Customer/ajax_restore_leads';
 $route['customers/leads/_delete_archived_lead'] = 'Customer/ajax_delete_archived_lead';
 $route['customers/leads/ajax_delete_all_archived_leads'] = 'Customer/ajax_delete_all_archived_leads';
 $route['customers/leads/_change_status_selected_leads'] = 'Customer/ajax_change_status_selected_leads';
-
 $route['customers/_restore_selected_customers'] = 'Customer/ajax_restore_selected_customers';
 $route['customers/_permanently_delete_selected_customers'] = 'Customer/ajax_permanently_delete_selected_customers';
 $route['customers/_permanently_delete_archived_customer'] = 'Customer/ajax_permanently_delete_archived_customer';

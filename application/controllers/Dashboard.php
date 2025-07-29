@@ -142,7 +142,6 @@ class Dashboard extends Widgets
     public function index()
     {        
         // load necessary model and functions
-        $this->hasAccessModule(39);
         $this->load->model('AcsProfile_model');
         $this->load->model('Job_tags_model');
         $this->load->model('Users_model');
