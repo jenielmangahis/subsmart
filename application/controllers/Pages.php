@@ -1641,7 +1641,7 @@ class Pages extends MYF_Controller {
     {
         include APPPATH . 'libraries/braintree/lib/Braintree.php'; 
         
-        $this->load->model('Invoice_model', 'invoice_model');        
+        $this->load->model('Invoice_model', 'invoice_model');      		
         $this->load->model('CompanyOnlinePaymentAccount_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('Business_model');
@@ -1651,7 +1651,7 @@ class Pages extends MYF_Controller {
             $invoice = $this->invoice_model->getByHashId($invoice_hash_id);
 			$company = $this->Business_model->getByProfileSlug($slug);
             if( ($invoice && $company) && ($invoice->company_id == $company->company_id) ){
-                $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company->company_id);                
+                $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company->company_id);  
                 if( $companyOnlinePaymentAccount && ($companyOnlinePaymentAccount->braintree_merchant_id != '' && $companyOnlinePaymentAccount->braintree_public_key != '' && $companyOnlinePaymentAccount->braintree_private_key != '') ){
                     $gateway = new Braintree\Gateway([
                         'environment' => BRAINTREE_ENVIRONMENT,
@@ -1684,6 +1684,7 @@ class Pages extends MYF_Controller {
 	public function generateInvoiceHTML($id, $type = 1)
     {
 		$this->load->model('Invoice_model', 'invoice_model');       
+		$this->load->model('Invoice_settings_model');
         $this->load->model('general_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('CompanyOnlinePaymentAccount_model');

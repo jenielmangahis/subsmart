@@ -1828,6 +1828,27 @@ if (!function_exists('put_footer_assets')) {
     }
 }
 
+if (!function_exists('companyInvoiceLogo')) {
+    function companyInvoiceLogo($company_id)
+    {
+        $CI =& get_instance();
+        $CI->load->model('Invoice_settings_model');
+        $CI->load->model('Business_model');
+
+        $company = $CI->Business_model->getByCompanyId($company_id);
+        $invoiceSettings = $CI->Invoice_settings_model->getByCompanyId($company_id);
+        
+        $invoice_logo = base_url('uploads/users/business_profile/' . $company->id . '/' . $company->business_image);
+        if( $invoiceSettings ){
+            $invoice_logo_settings = base_url('uploads/invoice/settings/' . $$company_id . '/' . $logo);
+            if( file_exists($invoice_logo) ){
+                $invoice_logo = $invoice_logo;
+            }
+        }
+
+        return $invoice_logo;
+    }
+}
 
 /**
  * @param $item_name

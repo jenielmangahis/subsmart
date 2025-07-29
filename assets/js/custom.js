@@ -783,10 +783,7 @@ $(".select_item2").click(function () {
 });
 
 $(".select_item").click(function () {
-  //
   var idd = this.id;
-  //console.log(idd);
-  //console.log($(this).data('itemname'));
   var title = $(this).data("itemname");
   var price = $(this).data("price");
 
@@ -801,7 +798,13 @@ $(".select_item").click(function () {
   var count = parseInt($("#count").val()) + 1;
   $("#count").val(count);
   var total_ = price * qty;
-  var tax_ = (parseFloat(total_).toFixed(2) * 7.5) / 100;
+
+  var tax_rate = 7.5;
+  if( $('#default-tax').length ){
+    tax_rate = parseFloat($('#default-tax').val());
+  }
+
+  var tax_ = (parseFloat(total_).toFixed(2) * tax_rate) / 100;
   var taxes_t = parseFloat(tax_).toFixed(2);
   var total = parseFloat(total_).toFixed(2);
   var withCommas = Number(total).toLocaleString("en");
@@ -860,7 +863,7 @@ $(".select_item").click(function () {
     "'  min=\"0\" value='" +
     taxes_t +
     "'></td>\n" +
-    '<td style="text-align: center" class="hidden_mobile_view">$<span class="span-input" data-subtotal=\'' +
+    '<td style="text-align: center" class="hidden_mobile_view"><span class="span-input" data-subtotal=\'' +
     total_ +
     "' id='span_total_" +
     count +
@@ -2455,11 +2458,15 @@ $(document).on("focusout", ".discount", function () {
 });
 
 function calculation(counter) {
+  var tax_rate = 7.5;
+  if( $('#default-tax').length ){
+    tax_rate = parseFloat($('#default-tax').val());
+  }
   var price = $("#price_" + counter).val();
   var quantity = $("#quantity_" + counter).val();
   var discount = $("#discount_" + counter).val();
-  var tax = (parseFloat(price) * 7.5) / 100;
-  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+  var tax = (parseFloat(price) * tax_rate) / 100;
+  var tax1 = (((parseFloat(price) * tax_rate) / 100) * parseFloat(quantity)).toFixed(
     2
   );
 

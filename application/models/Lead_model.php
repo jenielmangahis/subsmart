@@ -85,6 +85,21 @@ class Lead_model extends MY_Model
         }        
     }
 
+    public function deleteLead($id, $filters = [])
+    {
+        if( $id > 0 ){
+            $this->db->where('leads_id', $id);
+
+            if( $filters ){
+                foreach( $filters as $filter ){
+                    $this->db->where($filter['field'], $filter['value']);
+                }
+            }
+
+            $this->db->delete($this->table);
+        }        
+    }
+
     public function updateLead($lead_id, $data = [], $filters = [])
     {
         $this->db->where('leads_id', $lead_id);
@@ -102,6 +117,20 @@ class Lead_model extends MY_Model
     {
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
+    }
+
+    public function deleteAllArchived($filters = [])
+    {
+        $this->db->where('is_archive', 'Yes');
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->delete($this->table);
+        return $this->db->affected_rows();
     }
 }
 /* End of file Lead_model.php */

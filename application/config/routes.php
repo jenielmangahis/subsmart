@@ -332,6 +332,8 @@ $route['invoice/_restore_selected_invoices'] = 'Invoice/ajax_restore_selected_in
 $route['invoice/_delete_permanent_selected_invoices'] = 'Invoice/ajax_delete_permanent_selected_invoices';
 $route['invoice/_permanent_delete'] = 'Invoice/ajax_permanent_delete';
 $route['invoice/export_list'] = 'Invoice/export_list';
+$route['invoice/_delete_all_archived_invoices'] = 'Invoice/ajax_delete_all_archived_invoices';
+$route['invoice/_delete_all_recurring_archived_invoices'] = 'Invoice/ajax_delete_all_recurring_archived_invoices';
 
 $route['customer_invoice/(:any)/(:any)'] = 'Pages/front_customer_invoice_pay_now_v2/$1/$2';
 $route['customer_view/(:any)/(:any)'] = 'Pages/front_customer_preview/$1/$2';
@@ -2161,7 +2163,6 @@ $route['customers/_create_proposed_module'] = 'Customer/ajax_create_proposed_mod
 $route['customers/_update_proposed_module'] = 'Customer/ajax_update_proposed_module';
 $route['customers/_delete_proposed_module'] = 'Customer/ajax_delete_proposed_module';
 $route['customers/settings_lost_reasons'] = 'Customer/settings_lost_reasons';
-
 $route['customers/_create_proposed_inverter'] = 'Customer/ajax_create_proposed_inverter';
 $route['customers/_update_proposed_inverter'] = 'Customer/ajax_update_proposed_inverter';
 $route['customers/_delete_proposed_inverter'] = 'Customer/ajax_delete_proposed_inverter';
@@ -2170,6 +2171,15 @@ $route['customers/leads/archived'] = 'Customer/archived_leads';
 $route['customers/leads/_restore_selected_leads'] = 'Customer/ajax_restore_selected_leads';
 $route['customers/leads/_permanently_delete_selected_leads'] = 'Customer/ajax_permanently_delete_selected_leads';
 $route['customers/leads/_restore_leads'] = 'Customer/ajax_restore_leads';
+$route['customers/leads/_delete_archived_lead'] = 'Customer/ajax_delete_archived_lead';
+$route['customers/leads/ajax_delete_all_archived_leads'] = 'Customer/ajax_delete_all_archived_leads';
+$route['customers/leads/_change_status_selected_leads'] = 'Customer/ajax_change_status_selected_leads';
+$route['customers/_restore_selected_customers'] = 'Customer/ajax_restore_selected_customers';
+$route['customers/_permanently_delete_selected_customers'] = 'Customer/ajax_permanently_delete_selected_customers';
+$route['customers/_permanently_delete_archived_customer'] = 'Customer/ajax_permanently_delete_archived_customer';
+$route['customers/_archive_selected_customers'] = 'Customer/ajax_archive_selected_customers';
+$route['customers/_with_selected_add_to_favorites'] = 'Customer/ajax_with_selected_add_to_favorites';
+$route['customers/_delete_all_archived_customers'] = 'Customer/ajax_delete_all_archived_customers';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';
