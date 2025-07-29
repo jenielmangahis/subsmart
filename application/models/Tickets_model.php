@@ -810,6 +810,51 @@ class Tickets_model extends MY_Model
         $this->db->where('id', $id);      
         $this->db->update($this->table, array("is_archived" => 0, 'updated_at' => date("Y-m-d H:i:s")));        
     }
+
+    public function bulkUpdate($ids = [], $data = [], $filters = [])
+    {
+        $this->db->where_in('id', $ids);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->update($this->table, $data);
+        return $this->db->affected_rows();
+    }
+
+    public function bulkDelete($ids = [], $filters = [])
+    {
+        if( count($ids) > 0 ){
+            $this->db->where_in('id', $ids);
+
+            if( $filters ){
+                foreach( $filters as $filter ){
+                    $this->db->where($filter['field'], $filter['value']);
+                }
+            }
+
+            $this->db->delete($this->table);
+        }        
+
+        return $this->db->affected_rows();
+    }
+
+    public function deleteAllArchived($filters = [])
+    {
+        $this->db->where('is_archived', 1);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->delete($this->table);
+        return $this->db->affected_rows();
+    }
 }
 
 ?>
