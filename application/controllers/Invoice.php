@@ -1419,6 +1419,8 @@ class Invoice extends MY_Controller
         $cid  = logged('company_id');
         $post = $this->input->post();
 
+        $total_balance = 0;
+
         $objInvoice = $this->invoice_model->getinvoice($this->input->post('invoiceDataID'));
 
         $upload_path = "./uploads/invoice/attachments/".$cid."/";        
@@ -1433,6 +1435,16 @@ class Invoice extends MY_Controller
             $file = $upload_path . $attachment;
             move_uploaded_file($tmp_name, $file);
         }
+
+        $sub_total = !empty($this->input->post('subtotal')) ? $this->input->post('subtotal') : 0;
+        $late_fee  = !empty($this->input->post('late_fee')) ? $this->input->post('late_fee') : 0;
+        $taxes     = !empty($this->input->post('taxes')) ? $this->input->post('taxes') : 0;
+        $grand_total = !empty($this->input->post('grand_total')) ? $this->input->post('grand_total') : 0;
+
+        $grand_total_less_late = $grand_total - $late_fee;
+
+        $total_balance = $objInvoice->grand_total + $late_fee;
+        //$total_balance = $grand_total + $late_fee;
 
         $job_location = $post['jobs_location'] . ' ' . $post['jobs_city'] . ', ' . $post['jobs_state'] . ' ' . $post['jobs_zip'];
         $update_data = array(
@@ -1464,8 +1476,8 @@ class Invoice extends MY_Controller
             //'job_number'                => $this->input->post('job_number'), //to add on database
             // 'attachments'            => $this->input->post('attachments'),
             'tags'                      => $this->input->post('tags'),//
-            // 'total_due'              => $this->input->post('total_due'),
-            // 'balance'                => $this->input->post('balance'),
+            //'total_due'              => $this->input->post('total_due'),
+            'balance'                   => $total_balance,
             'deposit_request_type'      => $this->input->post('deposit_request_type'),
             'deposit_request'           => $this->input->post('deposit_amount'),
             'message_to_customer'       => $this->input->post('message_to_customer'),
@@ -1476,7 +1488,7 @@ class Invoice extends MY_Controller
             // 'invoice_totals'         => $this->input->post('invoice_totals'),
             'phone'                     => $this->input->post('phone'),
             //'payment_schedule'          => $this->input->post('payment_schedule'),
-            //'late_fee'                  => $this->input->post('late_fee'),
+            'late_fee'                  => $late_fee,
             'subtotal'                  => $this->input->post('subtotal'),
             'no_tax'                    => isset($post['is_tax_exempted']) ? 1 : 0,
             'taxes'                     => $this->input->post('taxes'),
