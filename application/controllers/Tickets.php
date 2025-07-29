@@ -3577,6 +3577,64 @@ class Tickets extends MY_Controller
 
         echo json_encode($return);
 	}
+
+    public function ajax_delete_all_archived_tickets()
+	{
+		$this->load->model('Clients_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+		$this->tickets_model->deleteAllArchived($filter);
+
+		//Activity Logs
+		$activity_name = 'Service Ticket : Permanently deleted ' .$total_archived. ' ticket(s)'; 
+		createActivityLog($activity_name);
+
+		$is_success = 1;
+		$msg    = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_archived_user()
+	{
+		$this->load->model('Clients_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+		$ticket = $this->tickets_model->getByIdAndCompanyId($post['ticket_id'], $company_id);
+        if( $ticket ){
+			$this->tickets_model->delete($ticket->id);
+
+			//Activity Logs
+			$activity_name = 'Service Tickets : Permanently deleted ticket number ' . $ticket->ticket_no; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 }
 
 /* End of file Tickets.php */
