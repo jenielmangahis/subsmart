@@ -1,5 +1,5 @@
 <div class="modal fade" id="omw_modal" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Arrival</span>
