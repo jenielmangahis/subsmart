@@ -148,7 +148,7 @@
                                     <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                                 </td>
                                 <td class="table-icon"></td>
-                                <td data-name="Work Order Number">Service Ticket No.</td>
+                                <td data-name="Work Order Number">Service Ticket Number</td>
                                 <td data-name="AssignedTech">Assigned Tech</td>
                                 <td data-name="Customer">Customer</td>                                
                                 <td data-name="Date Issued">
@@ -362,6 +362,10 @@
         location.href = base_url + 'ticket/add';
     });
 
+    $("#btn-export-list").on("click", function() {
+        location.href = "<?php echo base_url('tickets/export'); ?>";
+    });
+
     $(document).on('click', '.btn-restore-ticket', function(){
         var ticket_id = $(this).attr('data-id');
         var ticket_number = $(this).attr('data-name');
@@ -420,7 +424,7 @@
                     type: 'POST',
                     url: base_url + 'ticket/_delete_archived_ticket',
                     data: {
-                        user_id: user_id
+                        ticket_id: ticket_id
                     },
                     dataType: "JSON",
                     success: function(result) {
@@ -434,7 +438,7 @@
                                 confirmButtonText: 'Okay'
                             }).then((result) => {
                                 //if (result.value) {
-                                    location.reload();
+                                    //location.reload();
                                 //}
                             });
                         } else {
