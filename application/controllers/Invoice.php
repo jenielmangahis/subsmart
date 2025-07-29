@@ -1412,6 +1412,8 @@ class Invoice extends MY_Controller
 
         $this->load->model('Automation_model', 'automation_model');
         $this->load->model('Automation_Queue_model', 'automation_queue_model');
+        $this->load->model('Jobs_model', 'jobs_model');
+        $this->load->model('General_model', 'general');
 
         $id   = $this->input->post('invoiceDataID');
         $cid  = logged('company_id');
@@ -1489,6 +1491,20 @@ class Invoice extends MY_Controller
 
         $addQuery   = $this->invoice_model->update_invoice_data($update_data);
         customerAuditLog(logged('id'), $this->input->post('customer_id'), $this->input->post('invoiceDataID'), 'Invoice', 'Updated invoice #'.$objInvoice->invoice_number);
+
+        //Update job status to 'Approved' if invoice status is paid
+        $job = $this->jobs_model->get_specific_job($post['invoiceJobId']);
+        if($job) {
+            if($job->status == 'Started') {
+                $invoice_status = $post['status'];
+                if($invoice_status == 'Paid') {
+                    
+                    $input['status'] = 'Approved';
+                    $updateJobStatus = $this->general->update_with_key($input, $job->id, "jobs");
+                }
+            }
+        }
+        //Update job status to 'Approved' if invoice status is paid - end
 
         $delete2 = $this->invoice_model->delete_items($id);
         $a          = $this->input->post('itemid');
@@ -2569,7 +2585,7 @@ class Invoice extends MY_Controller
     {
         $this->load->model('AcsProfile_model');
 
-        $is_live_credential = true;
+        $is_live_credential = false;
         $is_success = 1;
         $msg = '';
 
@@ -2588,12 +2604,17 @@ class Invoice extends MY_Controller
         }
         
         if( $is_success == 1 ){
+
+            $payment_fee = 0;
+            $late_fee    = 0;      
+
+            /*
+            //Compute late fee *auto compute
             $datetime1 = new DateTime($invoice->due_date);
             $datetime2 = new DateTime();
             $difference = $datetime1->diff($datetime2);
-            $days_diff  = $difference->d > 0 ? $difference->d : 0;            
-
-            //Compute late fee
+            $days_diff  = $difference->d > 0 ? $difference->d : 0;   
+            
             $invoiceSettings = $this->invoice_settings_model->getByCompanyId($cid);
             $late_fee_amount = $invoiceSettings && $invoiceSettings->late_fee_amount_per_day > 0 ? $invoiceSettings->late_fee_amount_per_day : 0;
             $total_late_fee  = $late_fee_amount * $days_diff;
@@ -2605,10 +2626,24 @@ class Invoice extends MY_Controller
                 }else{
                     $payment_fee = $invoiceSettings->payment_fee_amount;
                 }
+            }*/
+
+            if($invoice->late_fee > 0) {
+                $late_fee = $invoice->late_fee + $post['late_fee'];
+            } else {
+                $late_fee = $post['late_fee'];
             }
 
-            $grand_total = $invoice->grand_total + $total_late_fee + $payment_fee;
-            $data = ['payment_fee' => $payment_fee, 'late_fee' => $post['late_fee'], 'grand_total' => $grand_total];
+            $grand_total = $invoice->sub_total + $invoice->taxes + $late_fee;
+            $balance     = $invoice->sub_total + $invoice->taxes + $late_fee;
+            $total_due   = $invoice->sub_total + $invoice->taxes + $late_fee;
+
+            $data = [
+                'payment_fee' => $payment_fee, 
+                'late_fee' => $late_fee, 
+                'total_due' => $grand_total, 
+                'balance' => $balance, 
+                'grand_total' => $grand_total];
             $this->invoice_model->update($invoice->id, $data);
 
             if($is_live_credential) {

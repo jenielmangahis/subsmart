@@ -84,6 +84,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="nsm-card-content">
                             <div class="row">
                                 <div class="col-md-12">
+                                    <input type="hidden" value="<?php echo $invoice->job_id; ?>" name="invoiceJobId">
                                     <input type="hidden" value="<?php echo $invoice->id; ?>" name="invoiceDataID">
                                     <label for="invoice_customer" class="bold">Customer</label>
                                     <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" style="float:right;">Add New</a>
