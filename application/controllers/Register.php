@@ -245,17 +245,9 @@ class Register extends MYF_Controller {
                 $edata = $this->Clients_model->getByEmail($aemail); 
                 $udata = $this->Users_model->getUserByUsernname($aemail);
                 $edata_business = $this->Clients_model->getByBusinessName($abname); 
-                $edata_ip = $this->Clients_model->getByIPAddress($client_ip_address);
+                //$edata_ip = $this->Clients_model->getByIPAddress($client_ip_address);
 
-            
-                $count_exist_email = 0;
                 if($edata){ 
-                    foreach ($edata as $edata_val) {
-                        $count_exist_email++;
-                    }
-                }
-
-                if($count_exist_email > 0) {
                     $is_authentic = 0;
                 }
 
@@ -263,18 +255,11 @@ class Register extends MYF_Controller {
                     $is_authentic = 0;
                 }
 
-                $count_exist_business_name = 0;
                 if($edata_business){ 
-                    foreach ($edata_business as $edata_business_val) {
-                        $count_exist_business_name++;
-                    }
+                    $is_authentic = 0;                    
                 }
 
-                if($count_exist_business_name > 0) {
-                    $is_authentic = 0;
-                }
-
-                $count_exist_ip_address = 0;
+                /*$count_exist_ip_address = 0;
                 if($edata_ip){ 
                     foreach ($edata_ip as $edata_ip_val) {
                         $count_exist_ip_address++;
@@ -282,7 +267,7 @@ class Register extends MYF_Controller {
                 }
                 if($count_exist_ip_address > 0) {
                     $is_authentic = 0;
-                }
+                }*/
             }else{
                 $is_authentic = 0;
             }

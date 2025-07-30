@@ -88,7 +88,7 @@ class Invoice_model extends MY_Model
             // 'attachments'            => $this->input->post('attachments'),
             'tags'                      => $tags,//
             // 'total_due'              => $this->input->post('total_due'),
-            // 'balance'                => $this->input->post('balance'),
+            'balance'                   => $balance,
             'deposit_request_type'      => $deposit_request_type,
             'deposit_request'           => $deposit_request,
             'message_to_customer'       => $message_to_customer,
@@ -98,6 +98,7 @@ class Invoice_model extends MY_Model
             // 'is_recurring'           => $this->input->post('is_recurring'),
             // 'invoice_totals'         => $this->input->post('invoice_totals'),
             // 'phone'                     => $this->input->post('phone'),
+            'late_fee'                  => $late_fee,
             'payment_schedule'          => $payment_schedule,
             'sub_total'                 => $subtotal,
             'taxes'                     => $taxes,

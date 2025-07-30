@@ -43,7 +43,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
                         </div>                        
-                        <input type="number" step="any" class="form-control" name="amount" value="<?= $balance; ?>" aria-label="Amount (to the nearest dollar)">
+                        <input type="number" step="any" class="form-control" name="amount" value="<?= $invoice->grand_total; ?>" aria-label="Amount (to the nearest dollar)">
                     </div>
                 </div>
 

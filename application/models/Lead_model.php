@@ -68,6 +68,7 @@ class Lead_model extends MY_Model
         }
 
         $this->db->update($this->table, $data);
+        return $this->db->affected_rows();
     }
 
     public function bulkDelete($ids = [], $filters = [])
@@ -83,6 +84,8 @@ class Lead_model extends MY_Model
 
             $this->db->delete($this->table);
         }        
+
+        return $this->db->affected_rows();
     }
 
     public function deleteLead($id, $filters = [])

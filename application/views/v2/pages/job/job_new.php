@@ -1788,7 +1788,7 @@
     }
 ?>
 <div class="modal fade" id="finish_modal" data-bs-backdrop='static' role="dialog">
-    <div class="modal-dialog FINISH_MODAL_SIZE">
+    <div class="modal-dialog FINISH_MODAL_SIZE modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title FINISH_MODAL_TITLE" style="font-size: 17px;">Finish Job</span>
@@ -1857,7 +1857,7 @@
 
 
 <div class="modal fade" id="approveThisJobModal" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Send Esign</span>

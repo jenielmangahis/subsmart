@@ -19,6 +19,12 @@
     height: var(--size);
     min-width: var(--size);
 }
+.swal2-html-container{
+    overflow:hidden;
+}
+.ticket-change-status{
+    text-align:left;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">
@@ -92,16 +98,7 @@
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="custom-ticket-searchbar" name="search" placeholder="Search Service Ticket..." value="">
                         </div>
                     </div>
-                    <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                With Selected  <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a class="dropdown-item btn-with-selected" id="with-selected-change-status" href="javascript:void(0);" data-action="pause">Change Status</a></li>                          
-                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
-                            </ul>
-                        </div>
+                    <div class="col-12 col-md-8 grid-mb text-end">                        
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Sort by Newest First</span> <i class='bx bx-fw bx-chevron-down'></i>
@@ -117,16 +114,29 @@
                                 <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>?order=amount-desc">Amount: Highest</a></li>
                             </ul>
                         </div>
-                        <?php if(checkRoleCanAccessModule('service-tickets', 'write')){ ?>
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('ticket/add') ?>'">
-                                <i class='bx bx-fw bx-note'></i> New Service Ticket
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <button type="button" class="nsm-button primary" id="archived-ticket-list">
-                                <i class='bx bx-fw bx-trash'></i> Manage Archived
-                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-change-status" href="javascript:void(0);" data-action="pause">Change Status</a></li>                          
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
                         </div>
-                        <?php } ?>
+                        <div class="nsm-page-buttons page-button-container">                            
+                            <?php if(checkRoleCanAccessModule('service-tickets', 'write')){ ?>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-nsm" id="btn-add-service-ticket"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Service Ticket</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                                                    
+                                    <li><a class="dropdown-item" id="archived-ticket-list" href="javascript:void(0);">Archived</a></li>                               
+                                    <li><a class="dropdown-item" id="btn-export-list" href="javascript:void(0);">Export</a></li>                               
+                                </ul>
+                            </div>
+                            <?php } ?>
+                        </div>
                     </div>
                 </div>
                 <form id="frm-with-selected">
@@ -138,7 +148,7 @@
                                     <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                                 </td>
                                 <td class="table-icon"></td>
-                                <td data-name="Work Order Number">Service Ticket No.</td>
+                                <td data-name="Work Order Number">Service Ticket Number</td>
                                 <td data-name="AssignedTech">Assigned Tech</td>
                                 <td data-name="Customer">Customer</td>                                
                                 <td data-name="Date Issued">
@@ -209,7 +219,7 @@
                                             <li><a class="dropdown-item" tabindex="-1" href="<?php echo base_url('tickets/editDetails/' . $ticket->id) ?>">Edit</a></li>
                                             <?php } ?>
                                             <?php if(checkRoleCanAccessModule('service-tickets', 'delete')){ ?>
-                                            <li><a class="dropdown-item delete-ticket" href="javascript:void(0);" data-tk-id="<?php echo $ticket->id; ?>">Delete</a></li>
+                                            <li><a class="dropdown-item delete-ticket" href="javascript:void(0);" data-tk-number="<?= $ticket->ticket_no; ?>" data-tk-id="<?php echo $ticket->id; ?>">Delete</a></li>
                                             <?php } ?>
                                         </ul>
                                     </div>
@@ -273,16 +283,14 @@
     </div>
 
     <div class="modal fade nsm-modal fade" id="modal-archived-tickets" aria-labelledby="modal-archived-tickets-label" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <form method="post" id="quick-add-event-form">   
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <span class="modal-title content-title">Archived Service Tickets</span>
-                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                    </div>
-                    <div class="modal-body" id="tickets-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Archived Service Tickets</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
-            </form>
+                <div class="modal-body" id="tickets-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+            </div>
         </div>
     </div>
 
@@ -318,7 +326,23 @@
 <script>
     $(document).on('change', '#select-all', function(){
         $('.row-select:checkbox').prop('checked', this.checked);  
+        let total= $('#ticket-list-table input[name="tickets[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
     });
+
+    $(document).on('change', '.row-select', function(){
+        let total= $('#ticket-list-table input[name="tickets[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
     <?php if(checkRoleCanAccessModule('service-tickets', 'write')){ ?>
     $('#archived-ticket-list').on('click', function(){
         $('#modal-archived-tickets').modal('show');
@@ -334,9 +358,17 @@
         });
     });
 
+    $('#btn-add-service-ticket').on('click', function(){
+        location.href = base_url + 'ticket/add';
+    });
+
+    $("#btn-export-list").on("click", function() {
+        location.href = "<?php echo base_url('tickets/export'); ?>";
+    });
+
     $(document).on('click', '.btn-restore-ticket', function(){
         var ticket_id = $(this).attr('data-id');
-        var ticket_number = $(this).attr('data-ticketnumber');
+        var ticket_number = $(this).attr('data-name');
 
         Swal.fire({
             title: 'Restore Service Ticket',
@@ -374,12 +406,14 @@
             }
         });
     });
-    <?php } ?>
 
-    $(document).on('click', '#with-selected-delete', function(){
+    $(document).on('click', '.btn-permanently-delete-ticket', function(){
+        var ticket_id = $(this).attr('data-id');
+        var ticket_number = $(this).attr('data-name');
+
         Swal.fire({
             title: 'Delete Service Ticket',
-            text: "Are you sure you want to delete selected data?",
+            html: `Are you sure you want to <b>permanently delete</b> service ticket <b>${ticket_number}</b>? <br/><br/>Note : This cannot be undone.`,
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,
@@ -387,42 +421,256 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    method: 'POST',
-                    url: base_url + 'tickets/_delete_selected_tickets',
-                    dataType: 'json',
-                    data: $('#frm-with-selected').serialize(),
-                    success: function(result) {                        
-                        if( result.is_success == 1 ) {
+                    type: 'POST',
+                    url: base_url + 'ticket/_delete_archived_ticket',
+                    data: {
+                        ticket_id: ticket_id
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-archived-tickets').modal('hide');
+                        if (result.is_success) {
                             Swal.fire({
                                 title: 'Delete Service Ticket',
-                                text: "Data deleted successfully!",
+                                html: "Data deleted successfully!",
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
                             }).then((result) => {
-                                if (result.value) {
-                                    location.reload();
-                                }
+                                //if (result.value) {
+                                    //location.reload();
+                                //}
                             });
                         } else {
                             Swal.fire({
-                                icon: 'error',
                                 title: 'Error',
                                 text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
                             });
                         }
                     },
                 });
-
             }
         });
+    });
+    <?php } ?>
+
+    $(document).on('click', '#with-selected-restore', function(){
+        let total= $('#archived-tickets input[name="tickets[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Restore Service Tickets',
+                html: `Are you sure you want to restore selected rows?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'ticket/_restore_selected_tickets',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-tickets').modal('hide');
+                                Swal.fire({
+                                    title: 'Restore Service Tickets',
+                                    text: "Data restored successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#with-selected-perma-delete', function(){
+        let total= $('#archived-tickets input[name="tickets[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Service Tickets',
+                html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'ticket/_permanently_delete_selected_tickets',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-tickets').modal('hide');
+                                Swal.fire({
+                                    title: 'Delete Service Tickets',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#btn-empty-archives', function(){        
+        let total_records = $('#archived-tickets input[name="tickets[]"]').length;        
+        if( total_records > 0 ){
+            Swal.fire({
+                title: 'Empty Archived',
+                html: `Are you sure you want to <b>permanently delete</b> <b>${total_records}</b> archived tickets? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'ticket/_delete_all_archived_tickets',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-tickets').modal('hide');
+                                Swal.fire({
+                                    title: 'Empty Archived',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }else{
+            Swal.fire({                
+                icon: 'error',
+                title: 'Error',              
+                html: 'Archived is empty',
+            });
+        }        
+    });
+
+    $(document).on('click', '#with-selected-delete', function(){
+        let total= $('#ticket-list-table input[name="tickets[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Service Tickets',
+                html: `Are you sure you want to delete selected rows?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'tickets/_delete_selected_tickets',
+                        dataType: 'json',
+                        data: $('#frm-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                    title: 'Delete Service Tickets',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
     });
     
     $(document).on('click', '.delete-ticket', function(){
         var tkID = $(this).attr('data-tk-id');
+        var tkNum = $(this).attr('data-tk-number');
+
         Swal.fire({
             title: 'Delete Service Ticket',
-            text: "Are you sure you want to delete this selected ticket?",
+            html: `Are you sure you want to delete ticket number <b>${tkNum}?</b><br /><br /><small>Deleted data can be restored via archived list.</small>`,
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,
@@ -462,7 +710,79 @@
     });
 
     $(document).on('click', '#with-selected-change-status', function(){
-        $('#modal-with-change-status').modal('show');
+        let total= $('#ticket-list-table input[name="tickets[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            let html_content = `
+                <div class="row ticket-change-status">
+                    <div class="col-sm-12">
+                        <label class="mb-2">Status</label>
+                        <div class="input-group mb-3">
+                            <select class="form-select" id="with-selected-status">
+                                <option value="New">New</option>
+                                <option value="Draft">Draft</option>
+                                <option value="Scheduled">Scheduled</option>
+                                <option value="Arrived">Arrived</option>
+                                <option value="Started">Started</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Finished">Finished</option>
+                                <option value="Invoiced">Invoiced</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `; 
+
+            Swal.fire({
+                title: 'Change Status',
+                html: html_content,
+                icon: false,
+                confirmButtonColor: '#3085d6',
+                showCancelButton: true,
+                confirmButtonText: 'Save',                    
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let status  = $('#with-selected-status').val();
+
+                    const form = document.getElementById('frm-with-selected');
+                    const formData = new FormData(form);
+                    formData.append('change_status', status); 
+
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + 'tickets/_update_status_selected_tickets',
+                        data:formData,
+                        processData: false,
+                        contentType: false,
+                        dataType:'json',
+                        success: function(result) {                            
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Change Status',
+                                text: 'Data was updated successfully.',
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        }  
     });
 
     $(document).on('click', '#btn-change-status-submit', function(e){

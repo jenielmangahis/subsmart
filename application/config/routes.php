@@ -2093,6 +2093,11 @@ $route['ticket/add'] = 'Tickets/addTicket';
 $route['ticket/_archived_list'] = 'Tickets/ajax_archived_list';
 $route['ticket/_restore_archived'] = 'Tickets/ajax_restore_archived';
 $route['ticket/_update_ticket_status'] = 'Tickets/ajax_update_ticket_status';
+$route['ticket/_restore_selected_tickets'] = 'Tickets/ajax_restore_selected_tickets';
+$route['ticket/_permanently_delete_selected_tickets'] = 'Tickets/ajax_permanently_delete_selected_tickets';
+$route['ticket/_delete_all_archived_tickets'] = 'Tickets/ajax_delete_all_archived_tickets';
+$route['ticket/_delete_archived_ticket'] = 'Tickets/ajax_delete_archived_ticket';
+$route['tickets/export'] = 'Tickets/ticket_export';
 
 //Setting : Index
 $route['tickets/settings'] = 'Tickets/settings_tickets';

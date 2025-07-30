@@ -1412,10 +1412,14 @@ class Invoice extends MY_Controller
 
         $this->load->model('Automation_model', 'automation_model');
         $this->load->model('Automation_Queue_model', 'automation_queue_model');
+        $this->load->model('Jobs_model', 'jobs_model');
+        $this->load->model('General_model', 'general');
 
         $id   = $this->input->post('invoiceDataID');
         $cid  = logged('company_id');
         $post = $this->input->post();
+
+        $total_balance = 0;
 
         $objInvoice = $this->invoice_model->getinvoice($this->input->post('invoiceDataID'));
 
@@ -1431,6 +1435,16 @@ class Invoice extends MY_Controller
             $file = $upload_path . $attachment;
             move_uploaded_file($tmp_name, $file);
         }
+
+        $sub_total = !empty($this->input->post('subtotal')) ? $this->input->post('subtotal') : 0;
+        $late_fee  = !empty($this->input->post('late_fee')) ? $this->input->post('late_fee') : 0;
+        $taxes     = !empty($this->input->post('taxes')) ? $this->input->post('taxes') : 0;
+        $grand_total = !empty($this->input->post('grand_total')) ? $this->input->post('grand_total') : 0;
+
+        $grand_total_less_late = $grand_total - $late_fee;
+
+        $total_balance = $objInvoice->grand_total + $late_fee;
+        //$total_balance = $grand_total + $late_fee;
 
         $job_location = $post['jobs_location'] . ' ' . $post['jobs_city'] . ', ' . $post['jobs_state'] . ' ' . $post['jobs_zip'];
         $update_data = array(
@@ -1462,8 +1476,8 @@ class Invoice extends MY_Controller
             //'job_number'                => $this->input->post('job_number'), //to add on database
             // 'attachments'            => $this->input->post('attachments'),
             'tags'                      => $this->input->post('tags'),//
-            // 'total_due'              => $this->input->post('total_due'),
-            // 'balance'                => $this->input->post('balance'),
+            //'total_due'              => $this->input->post('total_due'),
+            'balance'                   => $total_balance,
             'deposit_request_type'      => $this->input->post('deposit_request_type'),
             'deposit_request'           => $this->input->post('deposit_amount'),
             'message_to_customer'       => $this->input->post('message_to_customer'),
@@ -1474,7 +1488,7 @@ class Invoice extends MY_Controller
             // 'invoice_totals'         => $this->input->post('invoice_totals'),
             'phone'                     => $this->input->post('phone'),
             //'payment_schedule'          => $this->input->post('payment_schedule'),
-            //'late_fee'                  => $this->input->post('late_fee'),
+            'late_fee'                  => $late_fee,
             'subtotal'                  => $this->input->post('subtotal'),
             'no_tax'                    => isset($post['is_tax_exempted']) ? 1 : 0,
             'taxes'                     => $this->input->post('taxes'),
@@ -1489,6 +1503,20 @@ class Invoice extends MY_Controller
 
         $addQuery   = $this->invoice_model->update_invoice_data($update_data);
         customerAuditLog(logged('id'), $this->input->post('customer_id'), $this->input->post('invoiceDataID'), 'Invoice', 'Updated invoice #'.$objInvoice->invoice_number);
+
+        //Update job status to 'Approved' if invoice status is paid
+        $job = $this->jobs_model->get_specific_job($post['invoiceJobId']);
+        if($job) {
+            if($job->status == 'Started') {
+                $invoice_status = $post['status'];
+                if($invoice_status == 'Paid') {
+                    
+                    $input['status'] = 'Approved';
+                    $updateJobStatus = $this->general->update_with_key($input, $job->id, "jobs");
+                }
+            }
+        }
+        //Update job status to 'Approved' if invoice status is paid - end
 
         $delete2 = $this->invoice_model->delete_items($id);
         $a          = $this->input->post('itemid');
@@ -2588,12 +2616,17 @@ class Invoice extends MY_Controller
         }
         
         if( $is_success == 1 ){
+
+            $payment_fee = 0;
+            $late_fee    = 0;      
+
+            /*
+            //Compute late fee *auto compute
             $datetime1 = new DateTime($invoice->due_date);
             $datetime2 = new DateTime();
             $difference = $datetime1->diff($datetime2);
-            $days_diff  = $difference->d > 0 ? $difference->d : 0;            
-
-            //Compute late fee
+            $days_diff  = $difference->d > 0 ? $difference->d : 0;   
+            
             $invoiceSettings = $this->invoice_settings_model->getByCompanyId($cid);
             $late_fee_amount = $invoiceSettings && $invoiceSettings->late_fee_amount_per_day > 0 ? $invoiceSettings->late_fee_amount_per_day : 0;
             $total_late_fee  = $late_fee_amount * $days_diff;
@@ -2605,10 +2638,24 @@ class Invoice extends MY_Controller
                 }else{
                     $payment_fee = $invoiceSettings->payment_fee_amount;
                 }
+            }*/
+
+            if($invoice->late_fee > 0) {
+                $late_fee = $invoice->late_fee + $post['late_fee'];
+            } else {
+                $late_fee = $post['late_fee'];
             }
 
-            $grand_total = $invoice->grand_total + $total_late_fee + $payment_fee;
-            $data = ['payment_fee' => $payment_fee, 'late_fee' => $post['late_fee'], 'grand_total' => $grand_total];
+            $grand_total = $invoice->sub_total + $invoice->taxes + $late_fee;
+            $balance     = $invoice->sub_total + $invoice->taxes + $late_fee;
+            $total_due   = $invoice->sub_total + $invoice->taxes + $late_fee;
+
+            $data = [
+                'payment_fee' => $payment_fee, 
+                'late_fee' => $late_fee, 
+                'total_due' => $grand_total, 
+                'balance' => $balance, 
+                'grand_total' => $grand_total];
             $this->invoice_model->update($invoice->id, $data);
 
             if($is_live_credential) {
