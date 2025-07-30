@@ -591,6 +591,7 @@ $route['accounting/terms/update/(:any)']['post'] = 'accounting_controllers/payme
 $route['accounting/terms/ajax-add-term']['post'] = 'accounting_controllers/payment_terms/ajax_add_term';
 $route['accounting/terms/print']['post'] = 'accounting_controllers/payment_terms/print';
 $route['accounting/payment_terms/_save_payment_terms'] = 'accounting_controllers/payment_terms/ajax_save_payment_terms';
+$route['accounting/payment_terms/_delete_selected_payment_terms'] = 'accounting_controllers/payment_terms/ajax_delete_selected_payment_terms';
 
 $route['accounting/customers'] = 'accounting_controllers/customers/index';
 $route['accounting/customers/batch-select-customer-type']['post'] = 'accounting_controllers/customers/batch_select_customer_type';
@@ -1021,6 +1022,7 @@ $route['settings/_edit_sms_template'] = 'Settings/ajax_edit_sms_template';
 $route['settings/_add_tax_rate'] = 'Settings/ajax_add_tax_rate';
 $route['settings/_update_tax_rate'] = 'Settings/ajax_update_tax_rate';
 $route['settings/_delete_tax_rate'] = 'Settings/ajax_delete_tax_rate';
+$route['settings/_delete_selected_tax_rates'] = 'Settings/ajax_delete_selected_tax_rates';
 $route['settings/_update_calendar_settings'] = 'Settings/ajax_update_calendar_settings';
 $route['settings/_update_email_branding'] = 'Settings/ajax_update_email_brandingg';
 $route['settings/tax_rates'] = 'Settings/tax_rates';

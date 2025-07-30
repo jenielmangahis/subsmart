@@ -1622,6 +1622,40 @@ class Settings extends MY_Controller {
         echo json_encode($json_data);
     }
 
+    public function ajax_delete_selected_tax_rates() 
+    {
+        $this->load->model('TaxRates_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';  
+
+        $company_id  = logged('company_id');
+        $post        = $this->input->post();     
+        
+        if( $post['tax_rates'] ){
+            $delete_count = 0;
+            foreach($post['tax_rates'] as $tax_rate_id) {
+                $taxRate = $this->TaxRates_model->getById($tax_rate_id);
+                if( $taxRate ){
+                    $this->TaxRates_model->delete($tax_rate_id);
+                    $delete_count++;
+                }                
+            }
+
+            if($delete_count) {
+                $is_success = 1;
+                $msg    = '';
+            }            
+        }
+        
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);        
+    }
+
     public function ajax_update_calendar_settings()
     {
         $this->load->model('CalendarSettings_model');
