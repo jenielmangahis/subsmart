@@ -730,24 +730,27 @@ class Register extends MYF_Controller {
         //postAllowed();
         $post = $this->input->post(); 
 
-        $is_form_valid = false;
+        $is_form_valid = true;
         $is_captcha_valid = false;
-        $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.GOOGLE_CAPTCHA_SECRET_KEY.'&response='.$post['g-recaptcha-response']);
-        $responseData = json_decode($verifyResponse);
 
-        if( $post['offer_code'] != '' ){
-            $is_form_valid = true;   
-        }else{
+        if( $post['offer_code'] == '' ){
+            $is_form_valid = false;   
             $msg = 'Offer code is required';
         }
 
-        if( $responseData->success == 1 ){
-            $is_captcha_valid = true;            
-        }else{
-            $msg = 'Invalid Captcha';
-        }
+        //Google Captcha
+        /*if( $post['g-recaptcha-response'] != '' ){
+            $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.GOOGLE_CAPTCHA_SECRET_KEY.'&response='.$post['g-recaptcha-response']);
+            $responseData = json_decode($verifyResponse);
+            if( $responseData->success != 1 ){
+                $is_captcha_valid = true;
+            }else{
+                $msg = 'Invalid Captcha';
+            }
+        }*/
 
-        if( $is_form_valid && $is_captcha_valid ){
+        //if( $is_form_valid && $is_captcha_valid ){ //Enable for google captcha
+        if( $is_form_valid ){
             //Check if offer code is valid
             $offerCode = $this->OfferCodes_model->getByOfferCodes($post['offer_code']);
             //$startup_checklist = generateClientChecklist();
@@ -763,7 +766,9 @@ class Register extends MYF_Controller {
                     'phone_number'  => $post['phone'],
                     'business_name' => $post['business_name'],
                     'business_address' => $post['business_address'],
-                    'zip_code' => $post['zip_code'],
+                    'city' => $post['business_city'],
+                    'state' => $post['business_state'],
+                    'zip_code' => $post['zip_code'],                    
                     'number_of_employee' => $post['number_of_employee'],
                     'industry_type_id' => $post['industry_type_id'],
                     'password' => $post['password'],
