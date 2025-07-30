@@ -502,8 +502,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								          	</div>
 											<a href="javascript:void(0);" class="btn-terms-agreement" style="margin-top: 29px;display: block;">Service Subscription License Agreement</a>
 								      	  </div>		
-																		
-										  <div class="g-recaptcha mt-2 mb-2" data-sitekey="<?= GOOGLE_CAPTCHA_SITE_KEY; ?>"></div>
+										  	<div id="captcha-container">						
+										  		<div class="g-recaptcha mt-2 mb-2" data-sitekey="<?= GOOGLE_CAPTCHA_SITE_KEY; ?>"></div>
+											</div>
 
 								          <button name="button" class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
 								          <button name="button" class="btn btn-indigo btn-rounded trial-register-btn float-left" type="button" style="margin-left: 10px;">Register</button>
@@ -1041,7 +1042,10 @@ $(function(){
 					        $("#" + curStepBtn).hide();
 					        $("." + curStepBtn + "-error-msg").removeClass("alert alert-danger");
 					        $("." + curStepBtn + "-error-msg").html("");	
-					        $("#ajax-authentication-alert-container").html("");               			
+					        $("#ajax-authentication-alert-container").html("");
+							
+							grecaptcha.reset();
+							
 	               		} else {
 	               			$("#ajax-authentication-alert-container").html('<div class="alert alert-danger" role="alert">Your credential already register to our system, please try another.</div>');
 	               		}
@@ -1074,9 +1078,11 @@ $(function(){
     	var plan_name  = $(this).attr("data-plan");
     	var subscription_type = $(".subscription-type").val();
 
-    	//alert(plan_price);
-    	//alert(plan_price_discounted);
-    	//alert(subscription_type);
+		if( subscription_type == 'prospect' ){
+			$('#captcha-container').hide();
+		}else{
+			$('#captcha-container').show();
+		}
 
     	$("#plan_id").val(plan_id);
     	$("#plan_price").val(plan_price);
