@@ -37,10 +37,6 @@
                     <td align="right">Purchase</td>
                 </tr>
                 <tr>
-                    <td align="right">Payment Method:</td>
-                    <td align="right">CC</td>
-                </tr>
-                <tr>
                     <td align="right"><b>Balance Due</b>:</td>
                     <td align="right"><b>$<?php echo number_format($payment->total_amount, 2); ?></b></td>
                 </tr>
