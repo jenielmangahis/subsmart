@@ -2597,7 +2597,7 @@ class Invoice extends MY_Controller
     {
         $this->load->model('AcsProfile_model');
 
-        $is_live_credential = false;
+        $is_live_credential = true;
         $is_success = 1;
         $msg = '';
 
