@@ -745,9 +745,10 @@ class Register extends MYF_Controller {
             $is_captcha_valid = true;            
         }else{
             $msg = 'Invalid Captcha';
-        }
+        } 
 
-        if( $is_form_valid && $is_captcha_valid ){
+        //if( $is_form_valid && $is_captcha_valid ){
+        if( $is_form_valid ){
             //Check if offer code is valid
             $offerCode = $this->OfferCodes_model->getByOfferCodes($post['offer_code']);
             //$startup_checklist = generateClientChecklist();
