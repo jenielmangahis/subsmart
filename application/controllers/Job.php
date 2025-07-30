@@ -2804,7 +2804,7 @@ class Job extends MY_Controller
                 'tech_commission_total' => $techcommission_total,
                 'job_account_number' => $job_account_number,
                 'monthly_monitoring' => $input['monthly_monitoring'],
-                'program_setup' => $input['installation_cost'],
+                'program_setup' => $input['otps'],
                 'installation_cost' => $input['installation_cost'],               
                 'is_archived' => 0
             );
