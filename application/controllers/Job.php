@@ -1163,7 +1163,7 @@ class Job extends MY_Controller
 
             $jobs_data = $this->jobs_model->get_specific_job($id);
             $jobItems  = $this->jobs_model->get_specific_job_items($id);
-
+            
             //Deposit Amount
             $deposit_amount = 0;
             if ($jobs_data->estimate_id > 0) {
@@ -1188,6 +1188,18 @@ class Job extends MY_Controller
             $job_total_amount = 0;
             foreach ($jobItems as $item) {
                 $job_total_amount += (((float) $item->cost) * (float) $item->qty);
+            }
+
+            if($jobs_data->program_setup != null) {
+                $job_total_amount += $jobs_data->program_setup;
+            }
+
+            if($jobs_data->monthly_monitoring != null) {
+                $job_total_amount += $jobs_data->monthly_monitoring;
+            }
+
+            if($jobs_data->installation_cost != null) {
+                $job_total_amount += $jobs_data->installation_cost;
             }
 
             $job_total_amount = ($job_total_amount + $jobs_data->tax_rate) - $deposit_amount;

@@ -1502,7 +1502,7 @@
                                                         Send an email after scheduling this job.
                                                       </label>
                                                     </div>
-                                                    <a href="<?php echo url('job') ?>" class="btn">Cancel</a>
+                                                    <a href="<?php echo url('job') ?>" class="nsm-button">Cancel</a>
                                                     <button type="submit" class="nsm-button primary" id="btn-schedule-job"><?= isset($jobs_data) ? 'Save' : 'Schedule'; ?></button>                                                    
                                                 <?php //endif; ?>                                                
                                             </div>
