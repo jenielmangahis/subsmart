@@ -2133,6 +2133,11 @@ $route['customer/_remove_favorite']       = 'Customer/ajax_remove_favorite';
 
 //Events
 $route['events/_view_event']  = 'Events/ajax_view_event';
+$route['events/_archive_selected_events'] = 'Events/ajax_archive_selected_events';
+$route['events/_archived_list'] = 'Events/ajax_archived_list';
+$route['events/_restore_selected_events'] = 'Events/ajax_restore_selected_events';
+$route['events/_permanently_delete_selected_events'] = 'Events/ajax_permanently_delete_selected_events';
+$route['events/_delete_all_archived_events'] = 'Events/ajax_delete_all_archived_events';
 
 //Job Archives
 $route['jobs/_archived_list'] = 'Job/ajax_archived_list';
