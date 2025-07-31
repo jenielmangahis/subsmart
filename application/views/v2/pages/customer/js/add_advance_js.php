@@ -549,7 +549,8 @@
                     url: base_url + "customer/save_person_profile",
                     dataType: 'json',
                     data: form.serialize(), // serializes the form's elements.
-                    success: function(data) {                        
+                    success: function(data) { 
+                        $('#btn-save-residential-commercial-customer').html('Save');                       
                         if( isCompany ){
                             $('#company_modal').modal('hide');
                         }else{
@@ -566,6 +567,9 @@
                              
                         }
                         //console.log(data);
+                    },
+                    beforeSend: function(){
+                        $('#btn-save-residential-commercial-customer').html('<span class="bx bx-loader bx-spin"></span>');
                     }
                 });
             } else {
@@ -619,7 +623,7 @@
 
         function success_person_and_company(information,type) {
             Swal.fire({
-                //title: 'Good job!',
+                title: 'Add Customer',
                 text: information,
                 icon: 'success',
                 showCancelButton: false,

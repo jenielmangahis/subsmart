@@ -1044,7 +1044,7 @@ class Register extends MYF_Controller {
             if( $is_trial == 1 ){ //Validate captcha
                 $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.GOOGLE_CAPTCHA_SECRET_KEY.'&response='.$post['g-recaptcha-response']);
                 $responseData = json_decode($verifyResponse);
-                if( $responseData->success !== 1 ){
+                if( $responseData->success != 1 ){
                     $captcha_validated = false;
                 }
             }
