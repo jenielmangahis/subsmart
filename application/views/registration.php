@@ -6,6 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <script src="https://www.paypal.com/sdk/js?client-id=<?= $paypal_client_id; ?>&currency=USD"></script>
 <script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script> <!-- Production --> 
+<script src="https://www.google.com/recaptcha/api.js"></script>
 <!-- <script src="https://demo.convergepay.com/hosted-payments/PayWithConverge.js"></script> --> <!-- Demo -->
 <style>
 	.steps-form {
@@ -301,10 +302,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							      	<!-- First Step -->
 							      	<div class="row setup-content" id="step-1">
 								        <div class="col-md-12">
-			                      			<?php if($ip_exist== false){ ?>
+			                      			<?php if($ip_exist == false){ ?>
 				                      			<div class="reg-s1">
 				  						          <h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 1 : Select Plan</strong></h4>
-				  						          <select name="subscription_type" id="subscription_type" class="form-control-dr subscription-type" style="width: 100%;margin: 33px auto;max-width: 380px;">
+				  						          <select name="subscription_type" id="subscription_type" class="form-control-dr subscription-type" style="width: 100%;margin: 33px auto;max-width: 380px;" required="">													
 				  						          	<option value="prospect" <?= $default_type == 'discounted' ? 'selected="selected"' : ''; ?>><?= REGISTRATION_MONTHS_DISCOUNTED; ?> months 50% off</option>
 				  						          	<option value="trial" <?= $default_type == 'free' ? 'selected="selected"' : ''; ?>>Free Trial (14 Days)</option>
 				  						          </select>
@@ -500,7 +501,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									          	</ul>	
 								          	</div>
 											<a href="javascript:void(0);" class="btn-terms-agreement" style="margin-top: 29px;display: block;">Service Subscription License Agreement</a>
-								      	  </div>								      	  
+								      	  </div>		
+										  	<div id="captcha-container">						
+										  		<div class="g-recaptcha mt-2 mb-2" data-sitekey="<?= GOOGLE_CAPTCHA_SITE_KEY; ?>"></div>
+											</div>
+
 								          <button name="button" class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
 								          <button name="button" class="btn btn-indigo btn-rounded trial-register-btn float-left" type="button" style="margin-left: 10px;">Register</button>
 								          <!-- <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Proceed to Payment</button> -->
@@ -524,7 +529,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 						<!-- MODAL USE OFFER CODE -->
 						<div id="modalVerifyOfferCode" class="modal fade" role="dialog">
-						    <div class="modal-dialog modal-md">
+						    <div class="modal-dialog modal-md modal-dialog-centered">
 						        <!-- Modal content-->
 						        <div class="modal-content">
 						            <div class="modal-header">
@@ -1037,7 +1042,10 @@ $(function(){
 					        $("#" + curStepBtn).hide();
 					        $("." + curStepBtn + "-error-msg").removeClass("alert alert-danger");
 					        $("." + curStepBtn + "-error-msg").html("");	
-					        $("#ajax-authentication-alert-container").html("");               			
+					        $("#ajax-authentication-alert-container").html("");
+							
+							grecaptcha.reset();
+							
 	               		} else {
 	               			$("#ajax-authentication-alert-container").html('<div class="alert alert-danger" role="alert">Your credential already register to our system, please try another.</div>');
 	               		}
@@ -1070,9 +1078,11 @@ $(function(){
     	var plan_name  = $(this).attr("data-plan");
     	var subscription_type = $(".subscription-type").val();
 
-    	//alert(plan_price);
-    	//alert(plan_price_discounted);
-    	//alert(subscription_type);
+		if( subscription_type == 'prospect' ){
+			$('#captcha-container').hide();
+		}else{
+			$('#captcha-container').show();
+		}
 
     	$("#plan_id").val(plan_id);
     	$("#plan_price").val(plan_price);
@@ -1100,7 +1110,7 @@ $(function(){
 	    	$("span.step-2").addClass('btn-indigo');
 
     	}else{
-    		$("#subscription_type").val('discounted');
+    		//$("#subscription_type").val('discounted');
     		$(".total-amount").text("$" + plan_price_discounted  + " (3 months 50% off)");
     		$(".payment-method-container").show();
     		$(".trial-register-btn").hide();
@@ -1151,10 +1161,10 @@ $(function(){
 
     $(".btn-use-offer-code").click(function(){
     	var url = base_url + 'registration/_use_offer_code';
-    	var aut_msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'assets/img/spinner.gif" /> Verifiying code...</div>';
+    	//var aut_msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'assets/img/spinner.gif" /> Verifiying code...</div>';
 
-    	$("#modalVerifyOfferCode").modal("show");
-    	$("#modalVerifyOfferCode .modal-body").html(aut_msg);
+    	//$("#modalVerifyOfferCode").modal("show");
+    	//$("#modalVerifyOfferCode .modal-body").html(aut_msg);
 
 		$.ajax({
 			type: "POST",
@@ -1163,19 +1173,36 @@ $(function(){
 			data: $("#subscribe-form-payment").serialize(),
 			success: function(o)
 			{	
+				$(".btn-use-offer-code").html('Use Code');
 				if( o.is_valid ){
+					Swal.fire({
+						title: 'Registration Completed!',
+						text: 'You can now login to your account',
+						icon: 'success',
+						showCancelButton: false,
+						confirmButtonColor: '#32243d',
+						cancelButtonColor: '#d33',
+						confirmButtonText: 'Login'
+					}).then((result) => {
+						//if (result.value) {
+							window.location.href= base_url + 'login';
+						//}
+					});
 					var msg = "<div class='alert alert-success'><p>"+o.msg+"</p></div>";
 				}else{
-					var msg = "<div class='alert alert-danger'><p>"+o.msg+"</p></div>";	
+					Swal.fire({
+					icon: 'error',
+					html: '<center>'+ o.msg +'</center>',
+					text: o.msg
+					});
 				}
 
-				$("#modalVerifyOfferCode .modal-body").html(msg);
-
-				if( o.is_valid ){
-					setTimeout(function () {
-						location.href = base_url + 'login';
-					}, 1500);  
+				if( !o.is_captcha_valid ){
+					grecaptcha.reset();
 				}
+			},
+			beforeSend: function(){
+				$(".btn-use-offer-code").html('Validating code');
 			}
 		});
     });
@@ -1342,19 +1369,28 @@ $(function(){
 			data: $("#subscribe-form-payment").serialize(),
 			success: function(o)
 			{	
-				Swal.fire({
-					title: 'Registration Completed!',
-					text: 'You can now login to your account',
-					icon: 'success',
-					showCancelButton: false,
-					confirmButtonColor: '#32243d',
-					cancelButtonColor: '#d33',
-					confirmButtonText: 'Login'
-				}).then((result) => {
-					if (result.value) {
-						window.location.href= base_url + 'login';
-					}
-				});
+				if( o.is_success ){
+					Swal.fire({
+						title: 'Registration Completed!',
+						text: 'You can now login to your account',
+						icon: 'success',
+						showCancelButton: false,
+						confirmButtonColor: '#32243d',
+						cancelButtonColor: '#d33',
+						confirmButtonText: 'Login'
+					}).then((result) => {
+						if (result.value) {
+							window.location.href= base_url + 'login';
+						}
+					});
+				}else{
+					Swal.fire({
+						icon: 'error',
+						title: 'Registration Error',
+						html: '<center>' + o.msg + '</center>'
+					});
+				}
+				
 			}
 		});
     }

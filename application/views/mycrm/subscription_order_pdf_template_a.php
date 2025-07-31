@@ -16,12 +16,8 @@
 <table style="widows: 100%;">
     <tr>
         <td style="width: 30%;">Date:</td>
-        <td><?= date("d-M-Y", strtotime($payment->payment_date)); ?></td>
-    </tr>
-    <tr>
-        <td style="width: 30%;">Payment Method:</td>
-        <td>CC</td>
-    </tr>
+        <td><?= date("m/d/Y", strtotime($payment->payment_date)); ?></td>
+    </tr>    
     <tr>
         <td style="width: 30%;">Customer Name:</td>
         <td><?= $company->business_name; ?></td>

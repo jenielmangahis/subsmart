@@ -26,7 +26,7 @@ class Register extends MYF_Controller {
     public function index(){
         
         $default_plan = '';
-        $default_type = '';
+        $default_type = 'discounted';
         if( $this->input->get('plan') ){
             $default_plan = $this->input->get('plan');
         }
@@ -139,7 +139,7 @@ class Register extends MYF_Controller {
         $ns_plans = $this->NsmartPlan_model->getAll();      
 
 
-        $ip_address = getValidIpAddress();
+        /*$ip_address = getValidIpAddress();
         $ip_adds = $this->Clients_model->getByIPAddress($ip_address);
         
         $ip_count = 0;
@@ -153,7 +153,7 @@ class Register extends MYF_Controller {
             $ip_exist = true;
         }else{
             $ip_exist = false;
-        }
+        }*/
 
         $ip_exist = false;
 
@@ -730,165 +730,189 @@ class Register extends MYF_Controller {
         //postAllowed();
         $post = $this->input->post(); 
 
-        //Check if offer code is valid
-        $offerCode = $this->OfferCodes_model->getByOfferCodes($post['offer_code']);
-        //$startup_checklist = generateClientChecklist();
+        $is_form_valid = true;
+        $is_captcha_valid = false;
 
-        if( $offerCode && $offerCode->status == 0 ){
-            $num_days_trial = $offerCode->trial_days;
-            $next_billing_date = date("Y-m-d", strtotime("+".$num_days_trial." day"));
-            $today = strtotime(date("Y-m-d"));
-            $cid   = $this->Clients_model->create([
-                'first_name' => $post['firstname'],
-                'last_name'  => $post['lastname'],
-                'email_address' => $post['email'],
-                'phone_number'  => $post['phone'],
-                'business_name' => $post['business_name'],
-                'business_address' => $post['business_address'],
-                'zip_code' => $post['zip_code'],
-                'number_of_employee' => $post['number_of_employee'],
-                'industry_type_id' => $post['industry_type_id'],
-                'password' => $post['password'],
-                'ip_address' => getValidIpAddress(),
-                'plan_date_registered' => date("Y-m-d"),
-                'plan_date_expiration' => date("Y-m-d", strtotime("+".$num_days_trial." day")),
-                'date_created'  => date("Y-m-d H:i:s"),
-                'date_modified' => date("Y-m-d H:i:s"),
-                'is_plan_active' => 1,
-                'nsmart_plan_id' => $post['plan_id'],
-                'is_trial' => 1,
-                'is_startup' => 1,
-                'payment_method' => 'offer code',
-                'is_auto_renew' => 0,  
-                'next_billing_date' => $next_billing_date,
-                'num_months_discounted' => 0,
-                'recurring_payment_type' => 'monthly',
-                'checklist' => '',
-                'is_checklist' => 1
-            ]);
-
-            $uid = $this->users_model->create([
-                'role' => 7,
-                'FName' => $post['firstname'],
-                'LName' => $post['lastname'],
-                'username' => $post['email'],
-                'email' => $post['email'],
-                'company_id' => $cid,
-                'status' => 1,
-                'password_plain' =>  $post['password'],
-                'password' => hash( "sha256", $post['password'] ),
-            ]);
-
-            $this->OfferCodes_model->update($offerCode->id, array(
-                'client_id' => $cid,
-                'status' => 1
-            ));
-
-            //Create customer
-            $customer_data = array(
-                'company_id'      => 1,
-                'fk_user_id'      => 5,
-                'fk_sa_id'        => 0,
-                'contact_name'    => $post['firstname'] . ' ' . $post['lastname'],
-                'status'          => '',
-                'customer_type'   => 'Business',
-                'business_name'   => $post['business_name'],
-                'first_name'      => $post['firstname'],
-                'middle_name'     => '',
-                'industry_type_id' => $post['industry_type_id'],
-                'last_name'       => $post['lastname'],
-                'mail_add'        => $post['business_address'],
-                'city'            => '',
-                'state'           => '',
-                'zip_code'        => $post['zip_code'],
-                'phone_h'         => '',
-                'phone_m'         => $post['phone']
-            );
-            $fk_prod_id = $this->customer_ad_model->add($customer_data,"acs_profile");
-            
-            $is_valid = true;
-            $msg      = 'Registration completed. Redirecting to login page.';
-
-            $this->session->set_flashdata('alert-type', 'success');
-            $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
-
-        }elseif( $post['offer_code'] == 'CPNSMART202324' ){
-            $num_days_trial = 30;
-            $next_billing_date = date("Y-m-d", strtotime("+".$num_days_trial." day"));
-            $today = strtotime(date("Y-m-d"));
-            $cid   = $this->Clients_model->create([
-                'first_name' => $post['firstname'],
-                'last_name'  => $post['lastname'],
-                'email_address' => $post['email'],
-                'phone_number'  => $post['phone'],
-                'business_name' => $post['business_name'],
-                'business_address' => $post['business_address'],
-                'zip_code' => $post['zip_code'],
-                'number_of_employee' => $post['number_of_employee'],
-                'industry_type_id' => $post['industry_type_id'],
-                'password' => $post['password'],
-                'ip_address' => getValidIpAddress(),
-                'plan_date_registered' => date("Y-m-d"),
-                'plan_date_expiration' => date("Y-m-d", strtotime("+".$num_days_trial." day")),
-                'date_created'  => date("Y-m-d H:i:s"),
-                'date_modified' => date("Y-m-d H:i:s"),
-                'is_plan_active' => 1,
-                'nsmart_plan_id' => $post['plan_id'],
-                'is_trial' => 1,
-                'is_startup' => 1,
-                'payment_method' => 'offer code',
-                'is_auto_renew' => 0,  
-                'next_billing_date' => $next_billing_date,
-                'num_months_discounted' => 0,
-                'recurring_payment_type' => 'monthly',
-                'checklist' => '',
-                'is_checklist' => 1
-            ]);
-
-            $uid = $this->users_model->create([
-                'role' => 7,
-                'FName' => $post['firstname'],
-                'LName' => $post['lastname'],
-                'username' => $post['email'],
-                'email' => $post['email'],
-                'company_id' => $cid,
-                'status' => 1,
-                'password_plain' =>  $post['password'],
-                'password' => hash( "sha256", $post['password'] ),
-            ]);
-
-            //Create customer
-            $customer_data = array(
-                'company_id'      => 1,
-                'fk_user_id'      => 5,
-                'fk_sa_id'        => 0,
-                'contact_name'    => $post['firstname'] . ' ' . $post['lastname'],
-                'status'          => '',
-                'customer_type'   => 'Business',
-                'business_name'   => $post['business_name'],
-                'first_name'      => $post['firstname'],
-                'middle_name'     => '',
-                'industry_type_id' => $post['industry_type_id'],
-                'last_name'       => $post['lastname'],
-                'mail_add'        => $post['business_address'],
-                'city'            => '',
-                'state'           => '',
-                'zip_code'        => $post['zip_code'],
-                'phone_h'         => '',
-                'phone_m'         => $post['phone']
-            );
-            $fk_prod_id = $this->customer_ad_model->add($customer_data,"acs_profile");
-            
-            $is_valid = true;
-            $msg      = 'Registration completed. Redirecting to login page.';
-
-            $this->session->set_flashdata('alert-type', 'success');
-            $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
-        }else{
-            $msg = 'Invalid offer code';   
+        if( $post['offer_code'] == '' ){
+            $is_form_valid = false;   
+            $msg = 'Offer code is required';
         }
 
-        $json_data = ['is_valid' => $is_valid, 'msg' => $msg];
+        //Google Captcha
+        /*if( $post['g-recaptcha-response'] != '' ){
+            $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.GOOGLE_CAPTCHA_SECRET_KEY.'&response='.$post['g-recaptcha-response']);
+            $responseData = json_decode($verifyResponse);
+            if( $responseData->success != 1 ){
+                $is_captcha_valid = true;
+            }else{
+                $msg = 'Invalid Captcha';
+            }
+        }*/
+
+        //if( $is_form_valid && $is_captcha_valid ){ //Enable for google captcha
+        if( $is_form_valid ){
+            //Check if offer code is valid
+            $offerCode = $this->OfferCodes_model->getByOfferCodes($post['offer_code']);
+            //$startup_checklist = generateClientChecklist();
+            
+            if( $offerCode && $offerCode->status == 0 ){
+                $num_days_trial = $offerCode->trial_days;
+                $next_billing_date = date("Y-m-d", strtotime("+".$num_days_trial." day"));
+                $today = strtotime(date("Y-m-d"));
+                $cid   = $this->Clients_model->create([
+                    'first_name' => $post['firstname'],
+                    'last_name'  => $post['lastname'],
+                    'email_address' => $post['email'],
+                    'phone_number'  => $post['phone'],
+                    'business_name' => $post['business_name'],
+                    'business_address' => $post['business_address'],
+                    'city' => $post['business_city'],
+                    'state' => $post['business_state'],
+                    'zip_code' => $post['zip_code'],                    
+                    'number_of_employee' => $post['number_of_employee'],
+                    'industry_type_id' => $post['industry_type_id'],
+                    'password' => $post['password'],
+                    'ip_address' => getValidIpAddress(),
+                    'plan_date_registered' => date("Y-m-d"),
+                    'plan_date_expiration' => date("Y-m-d", strtotime("+".$num_days_trial." day")),
+                    'date_created'  => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s"),
+                    'is_plan_active' => 1,
+                    'nsmart_plan_id' => $post['plan_id'],
+                    'is_trial' => 1,
+                    'is_startup' => 1,
+                    'payment_method' => 'offer code',
+                    'is_auto_renew' => 0,  
+                    'next_billing_date' => $next_billing_date,
+                    'num_months_discounted' => 0,
+                    'recurring_payment_type' => 'monthly',
+                    'checklist' => '',
+                    'is_checklist' => 1
+                ]);
+
+                $uid = $this->users_model->create([
+                    'role' => 7,
+                    'FName' => $post['firstname'],
+                    'LName' => $post['lastname'],
+                    'username' => $post['email'],
+                    'email' => $post['email'],
+                    'company_id' => $cid,
+                    'status' => 1,
+                    'password_plain' =>  $post['password'],
+                    'password' => hash( "sha256", $post['password'] ),
+                ]);
+
+                $this->OfferCodes_model->update($offerCode->id, array(
+                    'client_id' => $cid,
+                    'status' => 1
+                ));
+
+                //Create customer
+                $customer_data = array(
+                    'company_id'      => 1,
+                    'fk_user_id'      => 5,
+                    'fk_sa_id'        => 0,
+                    'contact_name'    => $post['firstname'] . ' ' . $post['lastname'],
+                    'status'          => '',
+                    'customer_type'   => 'Business',
+                    'business_name'   => $post['business_name'],
+                    'first_name'      => $post['firstname'],
+                    'middle_name'     => '',
+                    'industry_type_id' => $post['industry_type_id'],
+                    'last_name'       => $post['lastname'],
+                    'mail_add'        => $post['business_address'],
+                    'city'            => '',
+                    'state'           => '',
+                    'zip_code'        => $post['zip_code'],
+                    'phone_h'         => '',
+                    'phone_m'         => $post['phone']
+                );
+                $fk_prod_id = $this->customer_ad_model->add($customer_data,"acs_profile");
+                
+                $is_valid = true;
+                $msg      = 'Registration completed. Redirecting to login page.';
+
+                $this->session->set_flashdata('alert-type', 'success');
+                $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
+
+            }elseif( $post['offer_code'] == 'CPNSMART202324' ){
+                $num_days_trial = 30;
+                $next_billing_date = date("Y-m-d", strtotime("+".$num_days_trial." day"));
+                $today = strtotime(date("Y-m-d"));
+                $cid   = $this->Clients_model->create([
+                    'first_name' => $post['firstname'],
+                    'last_name'  => $post['lastname'],
+                    'email_address' => $post['email'],
+                    'phone_number'  => $post['phone'],
+                    'business_name' => $post['business_name'],
+                    'business_address' => $post['business_address'],
+                    'zip_code' => $post['zip_code'],
+                    'number_of_employee' => $post['number_of_employee'],
+                    'industry_type_id' => $post['industry_type_id'],
+                    'password' => $post['password'],
+                    'ip_address' => getValidIpAddress(),
+                    'plan_date_registered' => date("Y-m-d"),
+                    'plan_date_expiration' => date("Y-m-d", strtotime("+".$num_days_trial." day")),
+                    'date_created'  => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s"),
+                    'is_plan_active' => 1,
+                    'nsmart_plan_id' => $post['plan_id'],
+                    'is_trial' => 1,
+                    'is_startup' => 1,
+                    'payment_method' => 'offer code',
+                    'is_auto_renew' => 0,  
+                    'next_billing_date' => $next_billing_date,
+                    'num_months_discounted' => 0,
+                    'recurring_payment_type' => 'monthly',
+                    'checklist' => '',
+                    'is_checklist' => 1
+                ]);
+
+                $uid = $this->users_model->create([
+                    'role' => 7,
+                    'FName' => $post['firstname'],
+                    'LName' => $post['lastname'],
+                    'username' => $post['email'],
+                    'email' => $post['email'],
+                    'company_id' => $cid,
+                    'status' => 1,
+                    'password_plain' =>  $post['password'],
+                    'password' => hash( "sha256", $post['password'] ),
+                ]);
+
+                //Create customer
+                $customer_data = array(
+                    'company_id'      => 1,
+                    'fk_user_id'      => 5,
+                    'fk_sa_id'        => 0,
+                    'contact_name'    => $post['firstname'] . ' ' . $post['lastname'],
+                    'status'          => '',
+                    'customer_type'   => 'Business',
+                    'business_name'   => $post['business_name'],
+                    'first_name'      => $post['firstname'],
+                    'middle_name'     => '',
+                    'industry_type_id' => $post['industry_type_id'],
+                    'last_name'       => $post['lastname'],
+                    'mail_add'        => $post['business_address'],
+                    'city'            => '',
+                    'state'           => '',
+                    'zip_code'        => $post['zip_code'],
+                    'phone_h'         => '',
+                    'phone_m'         => $post['phone']
+                );
+                $fk_prod_id = $this->customer_ad_model->add($customer_data,"acs_profile");
+                
+                $is_valid = true;
+                $msg      = 'Registration completed. Redirecting to login page.';
+
+                $this->session->set_flashdata('alert-type', 'success');
+                $this->session->set_flashdata('alert', 'Registration Sucessful. You can login to your account.'); 
+            }else{
+                $msg = 'Invalid offer code';   
+            }
+        }      
+
+        $json_data = ['is_valid' => $is_valid, 'is_captcha_valid' => $is_captcha_valid, 'msg' => $msg];
 
         echo json_encode($json_data);
     }
@@ -983,6 +1007,7 @@ class Register extends MYF_Controller {
 
         $is_success = true;
         $is_valid   = false;
+        $msg = '';
 
         $post = $this->input->post(); 
         if( $post['subscription_type'] != 'trial' ){
@@ -1015,90 +1040,105 @@ class Register extends MYF_Controller {
                 $plan_amount = $post['plan_price_discounted'];
             }
 
-            $plan = $this->NsmartPlan_model->getById($post['plan_id']);
-            if( $is_trial == 1 ){
-                $next_billing_date = date("Y-m-d", strtotime("+14 days"));
+            $captcha_validated = true;
+            if( $is_trial == 1 ){ //Validate captcha
+                $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.GOOGLE_CAPTCHA_SECRET_KEY.'&response='.$post['g-recaptcha-response']);
+                $responseData = json_decode($verifyResponse);
+                if( $responseData->success !== 1 ){
+                    $captcha_validated = false;
+                }
+            }
+
+            if( $captcha_validated ){
+                $plan = $this->NsmartPlan_model->getById($post['plan_id']);
+                if( $is_trial == 1 ){
+                    $next_billing_date = date("Y-m-d", strtotime("+14 days"));
+                }else{
+                    $next_billing_date = date("Y-m-d", strtotime("+1 month"));
+                }
+                
+                $today = strtotime(date("Y-m-d"));
+                //$startup_checklist = generateClientChecklist();
+
+                $cid = $this->Clients_model->create([
+                    'first_name' => $post['firstname'],
+                    'last_name'  => $post['lastname'],
+                    'email_address' => $post['email'],
+                    'phone_number'  => $post['phone'],
+                    'business_name' => $post['business_name'],                
+                    'business_address' => $post['business_address'],
+                    'city' => $post['business_city'],
+                    'state' => $post['business_state'],
+                    'zip_code' => $post['zip_code'],
+                    'number_of_employee' => $post['number_of_employee'],
+                    'industry_type_id' => $post['industry_type_id'],
+                    'password' => $post['password'],
+                    'ip_address' => getValidIpAddress(),
+                    'date_created'  => date("Y-m-d H:i:s"),
+                    'date_modified' => date("Y-m-d H:i:s"),
+                    'is_plan_active' => 1,
+                    'nsmart_plan_id' => $post['plan_id'],
+                    'payment_method' => $payment_method,
+                    'plan_date_registered' => date("Y-m-d", $today),
+                    'plan_date_expiration' => $next_billing_date,
+                    'is_trial' => $is_trial,
+                    'is_startup' => 1,              
+                    'is_auto_renew' => 0,  
+                    'number_of_license' => $plan->num_license,
+                    'next_billing_date' => $next_billing_date,
+                    'num_months_discounted' => $num_months_discounted,
+                    'recurring_payment_type' => 'monthly',
+                    'checklist' => '',
+                    'is_checklist' => 1
+                ]);
+
+                $uid = $this->users_model->create([
+                    'role' => 7,
+                    'FName' => $post['firstname'],
+                    'LName' => $post['lastname'],
+                    'username' => $post['email'],
+                    'email' => $post['email'],
+                    'company_id' => $cid,
+                    'status' => 1,
+                    'user_type' => 4,
+                    'password_plain' =>  $post['password'],
+                    'password' => hash( "sha256", $post['password'] ),
+                    'is_archived' => 'No'
+                ]); 
+
+                if( $is_trial == 0 ){
+                    $or_amount = $plan_amount;
+                    $or_description = 'Paid Membership, Monthly';
+                }else{
+                    $or_amount = 0;
+                    $or_description = 'Trial Membership';
+                }
+
+                //Record payment
+                $data_payment = [
+                    'company_id' => $cid,
+                    'description' => $or_description,
+                    'payment_date' => date("Y-m-d"),
+                    'total_amount' => $or_amount,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $sid = $this->CompanySubscriptionPayments_model->create($data_payment);                
+                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($sid);
+
+                $or_data = ['order_number' => $order_number];
+                $this->CompanySubscriptionPayments_model->update($sid, $or_data);
+
+                //Send invoice
+                $this->send_invoice_email($cid, $sid);
             }else{
-                $next_billing_date = date("Y-m-d", strtotime("+1 month"));
+                $is_success = false;
+                $msg = 'Invalid captcha';
             }
             
-            $today = strtotime(date("Y-m-d"));
-            //$startup_checklist = generateClientChecklist();
-
-            $cid = $this->Clients_model->create([
-                'first_name' => $post['firstname'],
-                'last_name'  => $post['lastname'],
-                'email_address' => $post['email'],
-                'phone_number'  => $post['phone'],
-                'business_name' => $post['business_name'],                
-                'business_address' => $post['business_address'],
-                'city' => $post['business_city'],
-                'state' => $post['business_state'],
-                'zip_code' => $post['zip_code'],
-                'number_of_employee' => $post['number_of_employee'],
-                'industry_type_id' => $post['industry_type_id'],
-                'password' => $post['password'],
-                'ip_address' => getValidIpAddress(),
-                'date_created'  => date("Y-m-d H:i:s"),
-                'date_modified' => date("Y-m-d H:i:s"),
-                'is_plan_active' => 1,
-                'nsmart_plan_id' => $post['plan_id'],
-                'payment_method' => $payment_method,
-                'plan_date_registered' => date("Y-m-d", $today),
-                'plan_date_expiration' => $next_billing_date,
-                'is_trial' => $is_trial,
-                'is_startup' => 1,              
-                'is_auto_renew' => 0,  
-                'number_of_license' => $plan->num_license,
-                'next_billing_date' => $next_billing_date,
-                'num_months_discounted' => $num_months_discounted,
-                'recurring_payment_type' => 'monthly',
-                'checklist' => '',
-                'is_checklist' => 1
-            ]);
-
-            $uid = $this->users_model->create([
-                'role' => 7,
-                'FName' => $post['firstname'],
-                'LName' => $post['lastname'],
-                'username' => $post['email'],
-                'email' => $post['email'],
-                'company_id' => $cid,
-                'status' => 1,
-                'user_type' => 4,
-                'password_plain' =>  $post['password'],
-                'password' => hash( "sha256", $post['password'] ),
-                'is_archived' => 'No'
-            ]); 
-
-            if( $is_trial == 0 ){
-                $or_amount = $plan_amount;
-                $or_description = 'Paid Membership, Monthly';
-            }else{
-                $or_amount = 0;
-                $or_description = 'Trial Membership';
-            }
-
-            //Record payment
-            $data_payment = [
-                'company_id' => $cid,
-                'description' => $or_description,
-                'payment_date' => date("Y-m-d"),
-                'total_amount' => $or_amount,
-                'date_created' => date("Y-m-d H:i:s")
-            ];
-
-            $sid = $this->CompanySubscriptionPayments_model->create($data_payment);                
-            $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($sid);
-
-            $or_data = ['order_number' => $order_number];
-            $this->CompanySubscriptionPayments_model->update($sid, $or_data);
-
-            //Send invoice
-            $this->send_invoice_email($cid, $sid);
         }
 
-        $json_data = ['is_success' => $is_success];
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);
     }
