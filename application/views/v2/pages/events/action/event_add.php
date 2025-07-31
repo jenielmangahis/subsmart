@@ -521,34 +521,42 @@ $('#ADD_EVENT_FORM').submit(function (event) {
     var EVENT_DESCRIPTION = $(".EVENT_DESCRIPTION").val();
     var TOTAL_ITEM_AMOUNT = $(".TOTAL_ITEM_AMOUNT").text();
     var EVENT_ID = $("#eid").val();
-    $.post("<?php echo base_url('events/event_save'); ?>", {
-        FROM_DATE: FROM_DATE,
-        FROM_TIME: FROM_TIME,
-        TO_DATE: TO_DATE,
-        TO_TIME: TO_TIME,
-        EMPLOYEE_ID: EMPLOYEE_ID,
-        EVENT_COLOR: EVENT_COLOR,
-        CUSTOMER_REMINDER: CUSTOMER_REMINDER,
-        TIMEZONE: TIMEZONE,
-        LOCATION: LOCATION,
-        URL_LINK: URL_LINK,
-        PRIVATE_NOTES: PRIVATE_NOTES,
-        EVENT_TYPE: EVENT_TYPE,
-        EVENT_TAG: EVENT_TAG,
-        EVENT_DESCRIPTION: EVENT_DESCRIPTION,
-        TOTAL_ITEM_AMOUNT: TOTAL_ITEM_AMOUNT,
-        EVENT_ID: EVENT_ID
-    }).done(function (data) {
+    if( LOCATION == '' ){
         Swal.fire({
-            icon: 'success',
-            title: 'Add Event',
-            text: "Data has been created successfully",
-            showCancelButton: false,
-            confirmButtonText: 'Okay'
-        }).then((result) => {
-            window.location.href = base_url + "events";
+            icon: 'error',
+            title: 'Error',
+            text: 'Location is required',
+        }); 
+    }else{
+        $.post("<?php echo base_url('events/event_save'); ?>", {
+            FROM_DATE: FROM_DATE,
+            FROM_TIME: FROM_TIME,
+            TO_DATE: TO_DATE,
+            TO_TIME: TO_TIME,
+            EMPLOYEE_ID: EMPLOYEE_ID,
+            EVENT_COLOR: EVENT_COLOR,
+            CUSTOMER_REMINDER: CUSTOMER_REMINDER,
+            TIMEZONE: TIMEZONE,
+            LOCATION: LOCATION,
+            URL_LINK: URL_LINK,
+            PRIVATE_NOTES: PRIVATE_NOTES,
+            EVENT_TYPE: EVENT_TYPE,
+            EVENT_TAG: EVENT_TAG,
+            EVENT_DESCRIPTION: EVENT_DESCRIPTION,
+            TOTAL_ITEM_AMOUNT: TOTAL_ITEM_AMOUNT,
+            EVENT_ID: EVENT_ID
+        }).done(function (data) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Add Event',
+                text: "Data has been created successfully",
+                showCancelButton: false,
+                confirmButtonText: 'Okay'
+            }).then((result) => {
+                window.location.href = base_url + "events";
+            });
         });
-    });
+    }    
 });
 // END: ADD EVENT SCRIPT
 
