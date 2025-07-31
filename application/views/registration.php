@@ -284,10 +284,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								          <span class="btn reg-sc btn-default btn-circle step-3">3</span>
 								          <p>Step 3</p>
 								        </div>
-								        <div class="steps-step">
-								          <span class="btn reg-sc btn-default btn-circle step-4">4</span>
-								          <p>Step 4</p>
-								        </div>
 								      </div>
 								    </div>
 									<?php } ?>
@@ -509,15 +505,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								          <button name="button" class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
 								          <button name="button" class="btn btn-indigo btn-rounded trial-register-btn float-left" type="button" style="margin-left: 10px;">Register</button>
 								          <!-- <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Proceed to Payment</button> -->
-								        </div>
-							      	</div>
-
-							      	<!-- 4th Step -->
-							      	<div class="row setup-content" id="step-4">
-								        <div class="col-md-12">
-								          <h3 class="font-weight-bold pl-0 my-4"><strong>Step 4 : Finish</strong></h3>
-								          <p>Please add paypal success here..</p>
-								          <a class="btn btn-indigo btn-rounded float-left" href="<?php echo url('/login') ?>">Login to your account</a>
 								        </div>
 							      	</div>
 
@@ -790,7 +777,6 @@ $(function(){
         step1Container = $('#step-1'),
         step2Container = $('#step-2'),
         step3Container = $('#step-3'),
-        step4Container = $('#step-4'),
         step2bBtn  = $('.step2-btn'),
         subType = $(".subscription-type"),
         step3bBtnPrcPayment = $('.step3-btn-processPayment');
@@ -1141,7 +1127,6 @@ $(function(){
     		step1Container.hide();
     	    step2Container.hide();
     	    $('#step-3').hide();
-    	    $('#step-4').show();
 
     <?php }elseif($payment_status == 'cancel') { ?>
     		$('div.setup-panel div a#step4').trigger('click');
@@ -1177,11 +1162,12 @@ $(function(){
 				if( o.is_valid ){
 					Swal.fire({
 						title: 'Registration Completed!',
-						text: 'You can now login to your account',
+						html: '<center>You can now login to your account</center>',
 						icon: 'success',
 						showCancelButton: false,
 						confirmButtonColor: '#32243d',
 						cancelButtonColor: '#d33',
+						timer: 2500,
 						confirmButtonText: 'Login'
 					}).then((result) => {
 						//if (result.value) {
@@ -1369,19 +1355,21 @@ $(function(){
 			data: $("#subscribe-form-payment").serialize(),
 			success: function(o)
 			{	
+				$('.trial-register-btn').html('Register');
 				if( o.is_success ){
 					Swal.fire({
 						title: 'Registration Completed!',
-						text: 'You can now login to your account',
+						html: '<center>You can now login to your account</center>',
 						icon: 'success',
 						showCancelButton: false,
 						confirmButtonColor: '#32243d',
 						cancelButtonColor: '#d33',
+						timer: 2500,
 						confirmButtonText: 'Login'
 					}).then((result) => {
-						if (result.value) {
+						//if (result.value) {
 							window.location.href= base_url + 'login';
-						}
+						//}
 					});
 				}else{
 					Swal.fire({
@@ -1391,6 +1379,9 @@ $(function(){
 					});
 				}
 				
+			},
+			beforeSend:function(){
+				$('.trial-register-btn').html('<span class="spinner-border spinner-border-sm m-0"></span>');
 			}
 		});
     }
