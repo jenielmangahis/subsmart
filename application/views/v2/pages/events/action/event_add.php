@@ -541,8 +541,8 @@ $('#ADD_EVENT_FORM').submit(function (event) {
     }).done(function (data) {
         Swal.fire({
             icon: 'success',
-            title: 'Success',
-            text: 'Event was addedd successfully!',            
+            title: 'Add Event',
+            text: "Data has been created successfully",
             showCancelButton: false,
             confirmButtonText: 'Okay'
         }).then((result) => {
