@@ -486,7 +486,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
                                     <button class="nsm-button primary" id="btn-update-invoice">Save</button>                                    
-                                    <a href="<?php echo url('invoice') ?>" class="btn">Cancel</a>
+                                    <a href="<?php echo url('invoice') ?>" class="nsm-button">Cancel</a>
                                 </div>
                             </div>
 
