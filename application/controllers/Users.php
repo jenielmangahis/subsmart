@@ -3869,7 +3869,7 @@ class Users extends MY_Controller
 		}		
 
         $filter[] = ['field' => 'company_id', 'value' => $company_id];
-		$this->Users_model->deleteAllArchived($filter);
+		$total_archived = $this->Users_model->deleteAllArchived($filter);
 
 		//Activity Logs
 		$activity_name = 'Users : Permanently deleted ' .$total_archived. ' user(s)'; 

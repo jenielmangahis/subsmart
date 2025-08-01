@@ -2141,6 +2141,9 @@ $route['events/_archived_list'] = 'Events/ajax_archived_list';
 $route['events/_restore_selected_events'] = 'Events/ajax_restore_selected_events';
 $route['events/_permanently_delete_selected_events'] = 'Events/ajax_permanently_delete_selected_events';
 $route['events/_delete_all_archived_events'] = 'Events/ajax_delete_all_archived_events';
+$route['events/_restore_event'] = 'Events/ajax_restore_event';
+$route['events/_delete_archived_event'] = 'Events/ajax_delete_archived_event';
+$route['events/export_list'] = 'Events/events_export';
 
 //Job Archives
 $route['jobs/_archived_list'] = 'Job/ajax_archived_list';

@@ -24,10 +24,10 @@
                                     $disabled = 'disabled="disabled"';
                                 }
                             ?>
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="nsm-card primary">
                                     <div class="row g-3">
-                                        <div class="col-3">
+                                        <div class="col-6">
                                             <div class="nsm-card-header d-block">
                                                 <div class="nsm-card-title">
                                                     <span>Event Number</span>
@@ -39,19 +39,19 @@
                                                     <div class="col-12 col-md-3">
                                                         <input type="text" placeholder="Prefix" name="event_settings_prefix" id="number-prefix" class="nsm-field form-control" value="<?= $eventSettings ? $eventSettings->event_prefix : 'EVENT-'; ?>" required="" autocomplete="off" <?= $disabled; ?> />
                                                     </div>
-                                                    <div class="col-12 col-md-9">
+                                                    <div class="col-12 col-md-5">
                                                         <input type="number" step="1" placeholder="Next Number" name="event_settings_next_number" id="number-base" class="nsm-field form-control" value="<?= $eventSettings ? $eventSettings->event_next_num : $default_next_num; ?>" required="" autocomplete="off" <?= $disabled; ?> />
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="col-4">
+                                        <div class="col-6">
                                             <div class="nsm-card-header d-block">
                                                 <div class="nsm-card-title">
-                                                    <span>Default Timezone</span>                                                    
+                                                    <span>Timezone</span>                                                    
                                                 </div>
-                                                <label class="nsm-subtitle">&nbsp;</label>
+                                                <label class="nsm-subtitle">Set default timezone when adding events.</label>
                                             </div>
                                             <div class="nsm-card-content">
                                                 <div class="row g-2">
@@ -67,31 +67,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-5"></div>
-
-                                        <div class="col-3">
-                                            <div class="nsm-card-header d-block">
-                                                <div class="nsm-card-title">
-                                                    <span>Customer Reminder Notification</span>
-                                                </div>
-                                            </div>
-                                            <div class="nsm-card-content">
-                                                <div class="row g-2">
-                                                    <div class="col-12 col-md-12">
-                                                        <select required id="" name="event_settings_customer_reminder_notification" class="form-control v2-dropdown" <?= $disabled; ?>>
-                                                            <?php foreach($optionsCustomerNotifications as $key => $value){ ?>
-                                                                <option <?= $eventSettings && $eventSettings->customer_reminder_notification == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
-                                                            <?php } ?>
-                                                        </select>
-                                                    </div>                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-5"></div>
                                         <?php if(checkRoleCanAccessModule('events-settings', 'write')){ ?>
-                                        <div class="col-7 text-end">
-                                            <hr>
-                                            <button type="submit" class="nsm-button primary">Save Changes</button>
+                                        <div class="col-12 text-end">
+                                            <button type="submit" class="nsm-button primary" id="btn-update-settings">Save</button>
                                         </div>   
                                         <?php } ?>                                     
                                     </div>
@@ -120,11 +98,12 @@ $(function(){
             dataType:'json',
             success: function(result)
             {
+                $('#btn-update-settings').html('Save');
                 if(result.is_success === 1){
                     Swal.fire({
                         icon: 'success',
-                        title: 'Success',
-                        text: 'Event settings was successfully updated',            
+                        title: 'Event Settings',
+                        text: 'Settings was successfully updated',            
                         showCancelButton: false,
                         confirmButtonText: 'Okay'
                     }).then((result) => {
@@ -139,6 +118,9 @@ $(function(){
                         html: result.msg
                     });
                 }
+            },
+            beforeSend:function(){
+                $('#btn-update-settings').html('<div class="col"><span class="bx bx-loader bx-spin"></span></div>');
             }
         });   
     });
