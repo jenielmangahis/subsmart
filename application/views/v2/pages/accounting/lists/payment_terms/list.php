@@ -84,6 +84,7 @@
                                     <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                                 </td>                              
                                 <td data-name="Name">NAME</td>
+                                <td data-name="Status">STATUS</td>
                                 <td data-name="Manage"></td>
                             </tr>
                         </thead>
@@ -95,6 +96,20 @@
                                     <input class="form-check-input row-select table-select" name="terms[]" type="checkbox" value="<?= $term['id']; ?>">
                                 </td>                                
                                 <td class="fw-bold nsm-text-primary nsm-link default"><?=$term['name']?></td>
+                                <?php 
+                                    $status = "";
+                                    $badge  = "";
+                                    if($term['status'] == 1) {
+                                        $badge = "success";
+                                        $status = "Active";
+                                    }elseif($term['status'] == 0) {
+                                        $badge = "error";
+                                        $status = "Inactive";
+                                    }
+                                ?>
+                                <td class="fw-bold nsm-text-primary nsm-link default">
+                                    <span class="status-label nsm-badge <?= $badge ?>"><?php echo $status; ?></span>
+                                </td>
                                 <td>
                                     <div class="dropdown table-management">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -109,11 +124,14 @@
                                                 <a class="dropdown-item edit-term" href="#">Edit</a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item make-inactive" href="#">Make inactive</a>
+                                                <a class="dropdown-item delete-term" href="javascript:void(0);" data-id="<?= $term['id']; ?>">Delete</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item term-status" href="javascript:void(0);" data-id="<?= $term['id']; ?>" data-status="0">Make Inactive</a>
                                             </li>
                                             <?php else : ?>
                                             <li>
-                                                <a class="dropdown-item make-active" href="#">Make active</a>
+                                                <a class="dropdown-item term-status" href="javascript:void(0);" data-id="<?= $term['id']; ?>" data-status="1">Make Active</a>
                                             </li>
                                             <?php endif; ?>
                                         </ul>
@@ -123,7 +141,7 @@
                             <?php endforeach; ?>
                             <?php else : ?>
                             <tr>
-                                <td colspan="2">
+                                <td colspan="3">
                                     <div class="nsm-empty">
                                         <span>No results found.</span>
                                     </div>
@@ -207,7 +225,84 @@ $(document).ready(function() {
                 }
             });
         }        
-    });     
+    });  
+    
+    $(document).on("click", ".delete-term", function(){
+        let tid = $(this).attr("data-id");
+        let url = "<?php echo base_url(); ?>accounting/terms/_delete_term";
+
+        Swal.fire({
+            title: 'Delete Tax Rate',
+            text: "Are you sure you want to delete selected Payment term?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {tid:tid},
+                    dataType: 'json',
+                    success: function(o){
+                        Swal.fire({                                
+                            text: "Data Deleted Successfully!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            location.reload();
+                        });
+                    }
+                });
+            }
+        });
+    });    
+
+    
+    $(document).on("click", ".term-status", function(){
+        let tid = $(this).attr("data-id");
+        let t_status = $(this).attr("data-status");
+        let turl = "<?php echo base_url(); ?>accounting/terms/_update_status";
+
+        if(t_status == 0) {
+            var swal_text = "Are you sure you want to change term status to Inactive?";
+        } else {
+            var swal_text = "Are you sure you want to change term status to Active?";
+        }
+
+        Swal.fire({
+            title: 'Change Term Status',
+            text: swal_text,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: turl,
+                    data: {
+                        tid:tid,
+                        t_status:t_status
+                    },
+                    dataType: 'json',
+                    success: function(o){
+                        Swal.fire({                                
+                            text: "Status Successfully Change!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            location.reload();
+                        });
+                    }
+                });
+            }
+        });
+    });       
 })
 
 </script>

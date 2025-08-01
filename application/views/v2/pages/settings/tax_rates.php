@@ -31,7 +31,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
-                        <form action="<?php echo base_url('settings/tax_rates') ?>" method="get">
+                        <form action="<?php echo base_url('settings/tax_rates') ?>" method="get"> 
                             <div class="nsm-field-group search">
                                 <input type="text" class="nsm-field nsm-search form-control mb-2" name="search" id="search_field" placeholder="Find by Name" value="<?php echo (!empty($search)) ? $search : '' ?>">
                             </div>
@@ -40,7 +40,7 @@
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i> 
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter"> 
                                 <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                

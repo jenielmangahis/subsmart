@@ -42,6 +42,19 @@ class Accounting_terms_model extends MY_Model {
 		}
 	}
 
+	public function updateTermStatus($id, $status, $company_id) {
+		$dataTerm = ['status' => $status];
+
+		$this->db->where('company_id', $company_id);
+		$this->db->where('id', $id);
+		$update = $this->db->update($this->table, $dataTerm);
+		if($update) {
+			return true;
+		} else {
+			return false;
+		}
+	}	
+
 	public function get_by_id($id, $companyId)
 	{
 		return $this->db->where(['company_id' => $companyId, 'id' => $id])->get($this->table)->row();
