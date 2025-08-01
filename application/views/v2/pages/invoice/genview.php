@@ -689,12 +689,12 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         })
 
         if (response.isConfirmed && invoiceId) {
-            window.location.href = `/invoice/invoice_edit/${invoiceId}`;
+            window.location.href = base_url + `invoice/invoice_edit/${invoiceId}`;
             return;
         }
 
         if (response.isDenied && invoiceJobId) {
-            window.location.href = `/job/billing/${invoiceJobId}`;
+            window.location.href = base_url + `job/billing/${invoiceJobId}`;
         }
     }
 });

@@ -2262,3 +2262,7 @@ span.select2-selection {
     background-color: #6a4a86 !important;
     color: #ffffff !important;
 }
+.select2-container--default .select2-selection--single .select2-selection__clear { 
+    font-size: 16px;
+    margin-left: 3px;
+}

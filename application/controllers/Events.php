@@ -40,13 +40,14 @@ class Events extends MY_Controller
 
         $get = $this->input->get();
         $filter_status = '';
-
+        
+        $conditions[]   = ['field' => 'events.is_archived', 'value' => 'No'];
         if( isset($get['status']) ){
             $filter_status = $get['status'];
-            $condition[]   = ['field' => 'events.status', 'value' => ucfirst($get['status'])];
-            $this->page_data['events'] = $this->event_model->get_all_events(0, $condition);
+            $conditions[]   = ['field' => 'events.status', 'value' => ucfirst($get['status'])];
+            $this->page_data['events'] = $this->event_model->get_all_events(0, $conditions);
         }else{
-            $this->page_data['events'] = $this->event_model->get_all_events();
+            $this->page_data['events'] = $this->event_model->get_all_events(0, $conditions);
         }
 
         $this->page_data['filter_status'] = $filter_status;
@@ -179,7 +180,7 @@ class Events extends MY_Controller
             return false;
         }
 
-		$this->page_data['page']->title = 'Event Scheduler Tool';
+		$this->page_data['page']->title = 'Events';
         $this->page_data['page']->parent = 'Sales';
         $this->page_data['page']->tab = 'Events';
         
@@ -343,7 +344,7 @@ class Events extends MY_Controller
     public function event_edit($id=null) {
         $this->load->model('Users_model');
 
-		$this->page_data['page']->title = 'Event Scheduler Tool';
+		$this->page_data['page']->title = 'Events';
         $this->page_data['page']->parent = 'Sales';
         $this->page_data['page']->tab = 'Events';
         
@@ -445,19 +446,23 @@ class Events extends MY_Controller
                     }
                 }  
 
-                $param    = [
-                    'text' => $event->event_address,
-                    'format' => 'json',
-                    'apiKey' => GEOAPIKEY
-                ];            
-                $url = 'https://api.geoapify.com/v1/geocode/search?'.http_build_query($param);
-                $data = file_get_contents($url);            
-                $data = json_decode($data);
-                if( $data && isset($data->results[0] )){ 
-                    $default_lon = $data->results[0]->lon;
-                    $default_lat = $data->results[0]->lat;      
-                    $address_line2 = $data->results[0]->address_line2;                  
-                }               
+                $default_lon = 0;
+                $default_lat = 0;
+                if( $event->event_address != '' ){
+                    $param    = [
+                        'text' => $event->event_address,
+                        'format' => 'json',
+                        'apiKey' => GEOAPIKEY
+                    ];            
+                    $url = 'https://api.geoapify.com/v1/geocode/search?'.http_build_query($param);
+                    $data = file_get_contents($url);            
+                    $data = json_decode($data);
+                    if( $data && isset($data->results[0] )){ 
+                        $default_lon = $data->results[0]->lon;
+                        $default_lat = $data->results[0]->lat;      
+                        $address_line2 = $data->results[0]->address_line2;                  
+                    }                 
+                }
 
                 $this->page_data['default_lon'] = $default_lon;
                 $this->page_data['default_lat'] = $default_lat;
@@ -1029,6 +1034,7 @@ class Events extends MY_Controller
         $this->page_data['eventSettings'] = $eventSettings;
         $this->page_data['default_next_num'] = $default_next_num;
         $this->page_data['page']->tab = 'Event Settings';
+        $this->page_data['page']->title = 'Events Settings';
         $this->load->view('v2/pages/events/settings', $this->page_data);
     }
 
@@ -1044,21 +1050,26 @@ class Events extends MY_Controller
         $this->load->view('job/job_settings/job_time_settings', $this->page_data);
     }
 
-    public function event_save() {
-        $USER_ID = logged('id');
-        $COMPANY_ID = logged('company_id');
+    public function event_save() 
+    {
+        $is_success = 0;
+        $msg = 'Cannot save data';
 
-        if( $_POST['EVENT_ID'] > 0 ){
-            $event = $this->event_model->get_specific_event($_POST['EVENT_ID']);
-            $EVENT_NUMBER = $event->event_number;
+        $uid  = logged('id');
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['eid'] > 0 ){
+            $event = $this->event_model->get_specific_event($post['eid']);
+            $event_number = $event->event_number;
         }else{
-            $eventSettings = $this->EventSettings_model->getByCompanyId($COMPANY_ID);
+            $eventSettings = $this->EventSettings_model->getByCompanyId($cid);
             if( $eventSettings ){
                 $prefix   = $eventSettings->event_prefix;
                 $next_num = str_pad($eventSettings->event_next_num, 5, '0', STR_PAD_LEFT);
             }else{
                 $prefix = 'EVENT-';
-                $lastId = $this->event_model->getlastInsert($COMPANY_ID);
+                $lastId = $this->event_model->getlastInsert($cid);
                 if ($lastId) {
                     $next_num = $lastId->id + 1;
                     $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
@@ -1067,44 +1078,44 @@ class Events extends MY_Controller
                 }
             }
 
-            $EVENT_NUMBER = $prefix . $next_num;
+            $event_number = $prefix . $next_num;
         }
         
-        $employee_ids = json_encode($_POST['EMPLOYEE_ID']);
-        $DATA = array(
+        $employee_ids = json_encode($post['employee_id']);
+        $data = array(
             'employee_id' => $employee_ids,
-            'start_date' => $_POST['FROM_DATE'],
-            'start_time' => $_POST['FROM_TIME'],
-            'end_date' => $_POST['TO_DATE'],
-            'end_time' => $_POST['TO_TIME'],
-            'event_type' => $_POST['EVENT_TYPE'],
-            'event_color' => $_POST['EVENT_COLOR'],
-            'url_link' => $_POST['URL_LINK'],
-            'customer_reminder_notification' => $_POST['CUSTOMER_REMINDER'],
-            'created_by' => $USER_ID,
-            'company_id' => $COMPANY_ID,
-            'description' => $_POST['EVENT_DESCRIPTION'],
-            'event_description' => $_POST['EVENT_DESCRIPTION'],
+            'start_date' => $post['start_date'],
+            'start_time' => $post['start_time'],
+            'end_date' => $post['end_date'],
+            'end_time' => $post['end_time'],
+            'event_type' => $post['event_types'],
+            'event_color' => $post['event_color'],
+            'url_link' => $post['link'],
+            'customer_reminder_notification' => $post['customer_reminder_notification'],
+            'created_by' => $uid,
+            'company_id' => $cid,
+            'description' => $post['event_description'],
+            'event_description' => $post['event_description'],
             'status' => "Scheduled",
-            'event_address' => $_POST['LOCATION'],
-            'event_number' => $EVENT_NUMBER,
-            'event_tag' => $_POST['EVENT_TAG'],
-            'notes' => $_POST['PRIVATE_NOTES'],
+            'event_address' => $post['event_address'],
+            'event_number' => $event_number,
+            'event_tag' => $post['tags'],
+            'notes' => $post['description'],
             'amount' => 0,
-            'timezone' => $_POST['TIMEZONE'],
+            'timezone' => $post['timezone'],
         );
-        if( $_POST['EVENT_ID'] > 0 ){
-            $event = $this->event_model->get_specific_event($_POST['EVENT_ID']);
+        if( $post['eid'] > 0 ){
+            $event = $this->event_model->get_specific_event($post['eid']);
             if( $event ){
-                $EVENT_ID = $event->id;
-                $this->event_model->update($_POST['EVENT_ID'],$DATA);           
+                $event_id = $event->id;
+                $this->event_model->update($post['eid'],$data);           
                 
                 //Activity Logs
-                $activity_name = 'Updated Event Number ' . $EVENT_NUMBER; 
+                $activity_name = 'Events : Updated event number ' . $EVENT_NUMBER; 
                 createActivityLog($activity_name);
             }
         }else{
-            $EVENT_ID = $this->general->add_return_id($DATA, 'events');   
+            $event_id = $this->general->add_return_id($data, 'events');   
 
             //Update event settings
             if( $eventSettings ){
@@ -1130,34 +1141,27 @@ class Events extends MY_Controller
             }
 
             //Activity Logs
-            $activity_name = 'Created Event Number ' . $EVENT_NUMBER; 
+            $activity_name = 'Events : Created event number ' . $event_number; 
             createActivityLog($activity_name);
         }
-        
 
         //SMS Notification
-        foreach($_POST['EMPLOYEE_ID'] as $uid){
-            createCronAutoSmsNotification($COMPANY_ID, $EVENT_ID, 'event', 'Scheduled', $uid);    
+        foreach($post['employee_id'] as $uid){
+            createCronAutoSmsNotification($cid, $event_id, 'event', 'Scheduled', $uid);    
         }
-        
 
         //Google Calendar
-        createSyncToCalendar($EVENT_ID, 'event', $COMPANY_ID);
-        
-        customerAuditLog(logged('id'), 0, $EVENT_ID, 'Events', 'Created an event #'.$EVENT_NUMBER);
+        createSyncToCalendar($event_id, 'event', $cid);
 
-        // if(isset($input['item_id'])){
-        //     $devices = count($input['item_id']);
-        //     for($xx=0;$xx<$devices;$xx++){
-        //         $events_items_data = array();
-        //         $events_items_data['EVENT_ID'] = $EVENT_ID;
-        //         $events_items_data['items_id'] = $input['item_id'][$xx];
-        //         $events_items_data['qty'] = $input['item_qty'][$xx];
-        //         $events_items_data['item_price'] = $input['item_price'][$xx];
-        //         $this->general->add_($events_items_data, 'event_items');
-        //         unset($events_items_data);
-        //     }
-        // }
+        $is_success = 1;
+        $msg = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
     }
 
 
@@ -2062,6 +2066,244 @@ class Events extends MY_Controller
         $this->page_data['company_info']  = $company_info;
         $this->load->view('v2/pages/events/ajax_view_event', $this->page_data);
     }
+
+    public function ajax_archive_selected_events()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['events'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archived' => 'Yes', 'date_updated' => date("Y-m-d H:i:s")];
+            $total_updated = $this->event_model->bulkUpdate($post['events'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Events : Archived ' . $total_updated . ' event(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_archived_list()
+	{
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+		$filters[] = ['field' => 'is_archived', 'value' => 'Yes'];
+        $events    = $this->event_model->getAllByCompany($company_id,$filters);
+        $this->page_data['events'] = $events;
+        $this->load->view('v2/pages/events/ajax_archived_events', $this->page_data);
+	}
+
+    public function ajax_restore_selected_events()
+	{
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['events'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archived' => 'No', 'date_updated' => date("Y-m-d H:i:s")];
+            $total_updated = $this->event_model->bulkUpdate($post['events'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Events : Restored ' . $total_updated . ' event(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_permanently_delete_selected_events()
+	{
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['events'] ){
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+			$filters[] = ['field' => 'is_archived', 'value' => 'Yes'];
+            $total_deleted = $this->event_model->bulkDelete($post['events'], $filters);
+
+			//Activity Logs
+			$activity_name = 'Events : Permanently deleted ' .$total_deleted. ' event(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_all_archived_events()
+	{
+		$this->load->model('Clients_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+		$total_archived = $this->event_model->deleteAllArchived($filter);
+
+		//Activity Logs
+		$activity_name = 'Events : Permanently deleted ' .$total_archived. ' event(s)'; 
+		createActivityLog($activity_name);
+
+		$is_success = 1;
+		$msg    = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_restore_event()
+	{
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $event = $this->event_model->get_specific_event($post['event_id']);
+		if( $event && $event->company_id == $company_id ){
+			$data = ['is_archived' => 'No', 'date_updated' => date("Y-m-d H:i:s")];
+			$this->event_model->update($event->id, $data);
+
+			//Activity Logs
+			$activity_name = 'Events : Restored event number ' . $event->event_number; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_archived_event()
+	{
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+		$event = $this->event_model->get_specific_event($post['event_id']);
+		if( $event && $event->company_id == $company_id ){
+			$this->event_model->delete($event->id);
+
+			//Activity Logs
+			$name = $user->FName . ' ' . $user->LName;
+			$activity_name = 'Events : Permanently deleted event number ' . $event->event_number; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function events_export()
+	{
+        $this->load->model('Users_model');
+
+		$cid     = logged('company_id');
+		$events  = $this->event_model->get_all_events(0);
+
+		$delimiter = ",";
+		$time      = time();
+		$filename  = "events_list_" . $time . ".csv";
+
+		$f = fopen('php://memory', 'w');
+
+		$fields = array('Event Number', 'Date', 'Location', 'Attendees', 'Is Archived');
+		fputcsv($f, $fields, $delimiter);
+
+		if (!empty($events)) {
+			foreach ($events as $e) {
+                $str_attendees = '';
+                $attendees     = json_decode($e->employee_id);                
+                if( count($attendees) > 0 ){
+                    $filters['eids'] = $attendees;
+                    $users = $this->Users_model->getCompanyUsers($cid,$filters);
+                    
+                    $a_users = [];
+                    foreach($users as $u){
+                        $a_users[] = $u->FName .' '. $u->LName; 
+                    }
+
+                    $str_attendees = implode(",", $a_users);
+                }
+
+				$csvData = array(
+					$e->event_number,
+					date("m/d/Y",strtotime($e->start_date)),
+                    $e->event_address,
+                    $str_attendees,
+                    $e->is_archived
+				);
+				fputcsv($f, $csvData, $delimiter);
+			}
+		} else {
+			$csvData = array('');
+			fputcsv($f, $csvData, $delimiter);
+		}
+
+		fseek($f, 0);
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		fpassthru($f);
+	}
 }
 
 /* End of file Events.php */

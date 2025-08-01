@@ -99,14 +99,19 @@ class Event_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllByCompany($company_id)
+    public function getAllByCompany($company_id, $filters = [])
     {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
 
-        $query = $this->db->get();
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
 
+        $query = $this->db->get();
         return $query->result();
     }
 
@@ -1088,5 +1093,36 @@ class Event_model extends MY_Model
 
         $query = $this->db->get();
         return $query->row();
+    }
+
+    public function bulkUpdate($ids = [], $data = [], $filters = [])
+    {
+        $this->db->where_in('id', $ids);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->update($this->table, $data);
+        return $this->db->affected_rows();
+    }
+
+    public function bulkDelete($ids = [], $filters = [])
+    {
+        if( count($ids) > 0 ){
+            $this->db->where_in('id', $ids);
+
+            if( $filters ){
+                foreach( $filters as $filter ){
+                    $this->db->where($filter['field'], $filter['value']);
+                }
+            }
+
+            $this->db->delete($this->table);
+        }        
+
+        return $this->db->affected_rows();
     }
 }

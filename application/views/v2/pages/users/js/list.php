@@ -519,7 +519,7 @@ $(document).ready(function() {
                         $('#add_employee_modal').modal('hide');
                         Swal.fire({
                             title: 'Create Employee',
-                            text: "Data has been created successfully.",
+                            text: "Data has been created successfully",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'

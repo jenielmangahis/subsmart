@@ -196,64 +196,6 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-12">
-                                    <div class="color-box-custom">
-                                        <h6>Event Color on Calendar</h6>
-                                        <?php 
-                                            $is_default_color_exists = 0;
-                                            $default_color = '#2e9e39'; 
-                                        ?>
-                                        <ul id="EVENT_COLOR_LIST">
-                                            <?php if(isset($color_settings)): ?>
-                                            <?php foreach ($color_settings as $color): ?>
-                                                <?php 
-                                                    if( strtolower($color->color_code) == $default_color){
-                                                        $is_default_color_exists = 1;
-                                                    }
-                                                ?>
-                                                <li>
-                                                    <a data-color="<?php echo $color->color_code; ?>" style="background-color: <?php echo $color->color_code; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="<?php echo $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?php echo $color->color_name; ?>">
-                                                    <?php if(isset($jobs_data) && $jobs_data->event_color == $color->color_code) {echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; } ?>
-                                                    </a>
-                                                </li>
-                                            <?php endforeach; ?>                                            
-                                            <?php endif; ?>
-                                            <?php if( $is_default_color_exists == 0 ){ ?>
-                                                <li>
-                                                    <a data-color="<?= $default_color; ?>" style="background-color: <?= $default_color; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="default-event-color" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="Default Event Color">
-                                                    <?php 
-                                                        if(isset($jobs_data) && $jobs_data->event_color == $default_color){
-                                                            echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; 
-                                                        }
-
-                                                        if( empty($jobs_data) ){
-                                                            echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; 
-                                                        }
-                                                    ?>
-                                                    </a>
-                                                </li>
-                                            <?php } ?>
-                                        </ul>
-                                        <input value="<?php echo (isset($jobs_data) && $jobs_data->event_color == $color->id) ? $jobs_data->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
-                                        <input id="EVENT_COLOR" type="hidden" value="#2e9e39">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-12">
-                                    <h6>Customer Reminder Notification</h6>
-                                    <select required id="customer_reminder" name="customer_reminder_notification" class="form-control">
-                                        <?php foreach($optionsCustomerNotifications as $key => $value){ ?>
-                                            <?php if( $jobs_data ){ ?>
-                                                <option <?= $jobs_data && $jobs_data->customer_reminder_notification == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
-                                            <?php }else{ ?>
-                                                <option <?= $eventSettings && $eventSettings->customer_reminder_notification == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
-                                            <?php } ?>
-                                        <?php } ?>                                        
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-12">
                                     <h6>Time Zone</h6>
                                     <select required id="inputState" name="timezone" class="form-control">
                                         <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
@@ -281,6 +223,52 @@
                                     <h6>Private Notes</h6>
                                     <textarea required name="description" cols="50" style="width: 100%;margin-bottom: 8px;height:54px;" id="note_txt" class="form-control input"><?php echo isset($jobs_data) ? $jobs_data->description : ''; ?></textarea>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="nsm-card-header d-block">
+                            <div class="nsm-card-title"><span><i class='bx bx-palette'></i> Event Color <i class="bx bx-fw bx-help-circle" id="help-popover-event-color"></i></span></div>
+                        </div>
+                        <hr>
+                        <div class="nsm-card-content">
+                            <div class="color-box-custom">
+                                <?php 
+                                    $is_default_color_exists = 0;
+                                    $default_color = '#2e9e39'; 
+                                ?>
+                                <ul id="EVENT_COLOR_LIST">
+                                    <?php if(isset($color_settings)): ?>
+                                    <?php foreach ($color_settings as $color): ?>
+                                        <?php 
+                                            if( strtolower($color->color_code) == $default_color){
+                                                $is_default_color_exists = 1;
+                                            }
+                                        ?>
+                                        <li>
+                                            <a data-color="<?php echo $color->color_code; ?>" style="background-color: <?php echo $color->color_code; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="<?php echo $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?php echo $color->color_name; ?>">
+                                            <?php if(isset($jobs_data) && $jobs_data->event_color == $color->color_code) {echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; } ?>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>                                            
+                                    <?php endif; ?>
+                                    <?php if( $is_default_color_exists == 0 ){ ?>
+                                        <li>
+                                            <a data-color="<?= $default_color; ?>" style="background-color: <?= $default_color; ?>; border-radius: 0px;border: 1px solid black;margin-bottom: 4px;" id="default-event-color" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="Default Event Color">
+                                            <?php 
+                                                if(isset($jobs_data) && $jobs_data->event_color == $default_color){
+                                                    echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; 
+                                                }
+
+                                                if( empty($jobs_data) ){
+                                                    echo '<i class="bx bx-check calendar_button event-color-check" aria-hidden="true"></i>'; 
+                                                }
+                                            ?>
+                                            </a>
+                                        </li>
+                                    <?php } ?>
+                                </ul>
+                                <input value="<?php echo (isset($jobs_data) && $jobs_data->event_color == $color->id) ? $jobs_data->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
+                                <input id="EVENT_COLOR" type="hidden" value="#2e9e39">
                             </div>
                         </div>
                     </div>
@@ -339,8 +327,9 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <div class="float-end">                                        
-                                        <button class="nsm-button primary" type="submit"><i class='bx bx-calendar-event'></i>&nbsp;Schedule</button>
+                                    <div class="float-end">           
+                                        <a href="<?= base_url('events'); ?>" class="nsm-button default" style="padding: 9px;">Cancel</a>                                 
+                                        <button class="nsm-button primary" type="submit">Save</button>
                                     </div>
                                 </div>
                             </div>
@@ -371,13 +360,15 @@
 //Start Map
 var myAPIKey = "<?= GEOAPIKEY ?>"; 
 <?php if($jobs_data){ ?>
-var default_lat = '<?= $default_lat; ?>';
-var default_lon = '<?= $default_lon; ?>';
-var map_zoom_level = '11'; 
+    var default_lat = '<?= $default_lat; ?>';
+    var default_lon = '<?= $default_lon; ?>';
+    var address_line2  = '<?php echo $address_line2; ?>';
+    var map_zoom_level = '11'; 
 <?php }else{ ?>
-var default_lat = '39.7837304';
-var default_lon = '-100.445882';
-var map_zoom_level = '5'; 
+    var default_lat = '39.7837304';
+    var default_lon = '-100.445882';
+    var map_zoom_level = '5'; 
+    var address_line2  = '<?php echo $address_line2; ?>';
 <?php } ?>
 
 var map_style = 'osm-bright';
@@ -412,10 +403,40 @@ var markerIcon = L.icon({
     iconSize: [38, 56], // size of the icon
     iconAnchor: [19, 51], // point of the icon which will correspond to marker's location
     popupAnchor: [0, -60] // point from which the popup should open relative to the iconAnchor
-});      
+});   
+
+/**
+ * Add default marker - start
+ */
+var coordinates = [default_lon, default_lat]
+var marker_color = 'mediumpurple';
+let map_icon = `https://api.geoapify.com/v1/icon?size=large&type=material&icon=business_center&noWhiteCircle=0&color=${marker_color}&apiKey=${myAPIKey}`;
+const el = document.createElement('div');
+el.className = 'marker';    
+el.style.width = '30px';
+el.style.color = marker_color;
+el.style.height = '50px';
+el.style.backgroundSize = "contain";
+el.style.backgroundImage = `url(${map_icon})`;    
+
+// create the popup
+const popup = new maplibregl.Popup({offset: 25}).setHTML(
+    address_line2
+);
+
+// add marker to map
+var marker = new maplibregl.Marker({element: el})
+    .setLngLat(coordinates)
+    .setPopup(popup)
+    .addTo(geoMap);
+
+currentMarkers.push(marker); 
+/**
+ * Add default marker - end
+ */
 
 let zooMarker;
-let marker;
+//let marker;
 
 autocompleteInput.on('select', (location) => {
     // Add marker with the selected location
@@ -502,62 +523,19 @@ autocompleteInput.on('select', (location) => {
 });
 //End Map
 
-// START: ADD EVENT SCRIPT
-$('#ADD_EVENT_FORM').submit(function (event) {
-    event.preventDefault();
-    var FROM_DATE = $("#start_date").val();
-    var FROM_TIME = $("#start_time").val();
-    var TO_DATE = $("#end_date").val();
-    var TO_TIME = $("#end_time").val();
-    var EMPLOYEE_ID = $("#employee_id").val();
-    var EVENT_COLOR = $("#EVENT_COLOR").val();
-    var CUSTOMER_REMINDER = $("#customer_reminder").val();
-    var TIMEZONE = $("#inputState").val();
-    var LOCATION = $("#event_address").val();
-    var URL_LINK = $(".URL_LINK").val();
-    var PRIVATE_NOTES = $("#note_txt").val();
-    var EVENT_TYPE = $("#event_type_option").val();
-    var EVENT_TAG = $("#event_tags_option").val();
-    var EVENT_DESCRIPTION = $(".EVENT_DESCRIPTION").val();
-    var TOTAL_ITEM_AMOUNT = $(".TOTAL_ITEM_AMOUNT").text();
-    var EVENT_ID = $("#eid").val();
-    $.post("<?php echo base_url('events/event_save'); ?>", {
-        FROM_DATE: FROM_DATE,
-        FROM_TIME: FROM_TIME,
-        TO_DATE: TO_DATE,
-        TO_TIME: TO_TIME,
-        EMPLOYEE_ID: EMPLOYEE_ID,
-        EVENT_COLOR: EVENT_COLOR,
-        CUSTOMER_REMINDER: CUSTOMER_REMINDER,
-        TIMEZONE: TIMEZONE,
-        LOCATION: LOCATION,
-        URL_LINK: URL_LINK,
-        PRIVATE_NOTES: PRIVATE_NOTES,
-        EVENT_TYPE: EVENT_TYPE,
-        EVENT_TAG: EVENT_TAG,
-        EVENT_DESCRIPTION: EVENT_DESCRIPTION,
-        TOTAL_ITEM_AMOUNT: TOTAL_ITEM_AMOUNT,
-        EVENT_ID: EVENT_ID
-    }).done(function (data) {
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Event was addedd successfully!',            
-            showCancelButton: false,
-            confirmButtonText: 'Okay'
-        }).then((result) => {
-            window.location.href = base_url + "/events";
-        });
-    });
-});
-// END: ADD EVENT SCRIPT
-
-$("#start_date").change(function (event) {
-    $("#end_date").val($("#start_date").val());
-});
-
-
 $(function () {
+    $('#help-popover-event-color').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Color on calendar schedule';
+        } 
+    });
+
+    $("#start_date").change(function (event) {
+        $("#end_date").val($("#start_date").val());
+    });
     $("#start_time, #end_time, #customer_reminder, #inputState").select2();
     $('#employee_id').select2({
         ajax: {
@@ -608,38 +586,95 @@ $(function () {
     function formatRepoSelectionUser(repo) {
         return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
     }
-function formatState (opt) {
-    if (!opt.id) {
+    function formatState (opt) {
+        if (!opt.id) {
+            return opt.text;
+        } 
+        var optimage = $(opt.element).attr('data-image'); 
+        if(!optimage){
         return opt.text;
-    } 
-    var optimage = $(opt.element).attr('data-image'); 
-    if(!optimage){
-       return opt.text;
-    } else {                    
-        var $opt = $(
-           '<span><img src="<?php echo base_url('uploads/icons/'); ?>' + optimage + '" style="width: 20px; margin-top: -4px;" /> ' + opt.text + '</span>'
-        );
-        return $opt;
-    }
-};
-
-});
-
-$("body").delegate(".color-scheme", "click", function () {
-    var id = this.id;
-    var COLOR = $(this).attr("data-color");
-    $("#EVENT_COLOR").val(COLOR);
-    $('[id="job_color_id"]').val(id);
-    $("#" + id).append("<i class=\"bx bx-check calendar_button\" aria-hidden=\"true\"></i>");
-    remove_others(id);
-});
-
-function remove_others(color_id) {
-    $('.color-scheme').each(function (index) {
-        var idd = this.id;
-        if (idd !== color_id) {
-            $("#" + idd).empty();
+        } else {                    
+            var $opt = $(
+            '<span><img src="<?php echo base_url('uploads/icons/'); ?>' + optimage + '" style="width: 20px; margin-top: -4px;" /> ' + opt.text + '</span>'
+            );
+            return $opt;
         }
+    };
+
+    $('#ADD_EVENT_FORM').submit(function (event) {
+        event.preventDefault();
+        var FROM_DATE = $("#start_date").val();
+        var FROM_TIME = $("#start_time").val();
+        var TO_DATE = $("#end_date").val();
+        var TO_TIME = $("#end_time").val();
+        var EMPLOYEE_ID = $("#employee_id").val();
+        var EVENT_COLOR = $("#EVENT_COLOR").val();
+        var CUSTOMER_REMINDER = $("#customer_reminder").val();
+        var TIMEZONE = $("#inputState").val();
+        var LOCATION = $("#event_address").val();
+        var URL_LINK = $(".URL_LINK").val();
+        var PRIVATE_NOTES = $("#note_txt").val();
+        var EVENT_TYPE = $("#event_type_option").val();
+        var EVENT_TAG = $("#event_tags_option").val();
+        var EVENT_DESCRIPTION = $(".EVENT_DESCRIPTION").val();
+        var TOTAL_ITEM_AMOUNT = $(".TOTAL_ITEM_AMOUNT").text();
+        var EVENT_ID = $("#eid").val();
+
+        if( LOCATION == '' ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Location is required',
+            }); 
+        }else{
+            $.post("<?php echo base_url('events/event_save'); ?>", {
+            FROM_DATE: FROM_DATE,
+            FROM_TIME: FROM_TIME,
+            TO_DATE: TO_DATE,
+            TO_TIME: TO_TIME,
+            EMPLOYEE_ID: EMPLOYEE_ID,
+            EVENT_COLOR: EVENT_COLOR,
+            CUSTOMER_REMINDER: CUSTOMER_REMINDER,
+            TIMEZONE: TIMEZONE,
+            LOCATION: LOCATION,
+            URL_LINK: URL_LINK,
+            PRIVATE_NOTES: PRIVATE_NOTES,
+            EVENT_TYPE: EVENT_TYPE,
+            EVENT_TAG: EVENT_TAG,
+            EVENT_DESCRIPTION: EVENT_DESCRIPTION,
+            TOTAL_ITEM_AMOUNT: TOTAL_ITEM_AMOUNT,
+            EVENT_ID: EVENT_ID
+        }).done(function (data) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Edit Event',
+                text: 'Data was updated successfully',            
+                showCancelButton: false,
+                confirmButtonText: 'Okay'
+            }).then((result) => {
+                window.location.href = base_url + "/events";
+            });
+        });
+        }    
     });
-}
+
+    $("body").delegate(".color-scheme", "click", function () {
+        var id = this.id;
+        var COLOR = $(this).attr("data-color");
+        $("#EVENT_COLOR").val(COLOR);
+        $('[id="job_color_id"]').val(id);
+        $("#" + id).append("<i class=\"bx bx-check calendar_button\" aria-hidden=\"true\"></i>");
+        remove_others(id);
+    });
+
+    function remove_others(color_id) {
+        $('.color-scheme').each(function (index) {
+            var idd = this.id;
+            if (idd !== color_id) {
+                $("#" + idd).empty();
+            }
+        });
+    }
+
+});
 </script>

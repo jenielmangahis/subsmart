@@ -75,33 +75,48 @@ table.dataTable.no-footer {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-6 grid-mb">
-                        <div class="nsm-field-group search form-group">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_EVENT_SEARCHBAR" placeholder="Search Event...">
-                            <input class="d-none" id="CUSTOM_FILTER_SEARCHBAR" type="text" placeholder="Filter" data-index="20">
+                    <div class="col-12 col-md-6 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Event" value="">
                         </div>
-                    </div>
+                    </div> 
                     <?php if(checkRoleCanAccessModule('events', 'write')){ ?>
                     <div class="col-6 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('events/event_add') ?>'">
-                            <i class='bx bx-fw bx-calendar-event'></i> New Event
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-nsm" id="btn-new-event"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Event</button>
+                            <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class=""><i class='bx bx-chevron-down' ></i></span>
+                            </button>
+                            <ul class="dropdown-menu">                          
+                                <li><a class="dropdown-item" id="btn-export-list" href="javascript:void(0);">Export</a></li>                               
+                                <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>                               
+                            </ul>
                         </div>
                     </div>
                     <?php } ?>
                 </div>
-                <table id="EVENT_TABLE" class="nsm-table w-100">
+                <form id="frm-with-selected">
+                <table id="events-table" class="nsm-table w-100">
                     <thead>
                         <tr>
+                            <td class="table-icon text-center">
+                                <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                            </td>
                             <td class="table-icon"></td>
-                            <td data-name="Event Number">Event Number</td>
-                            <td data-name="Date">Event Date</td>
-                            <td data-name="Event Color" style="width:5%;">Event Color</td>
-                            <td data-name="Employee">Employee</td>                            
+                            <td data-name="Event Number" style="width:35%;">Event Number</td>
+                            <td data-name="Date">Date</td>                            
+                            <td data-name="Employee">Attendees</td>                            
+                            <td data-name="Event Color" style="width:8%;">Event Color</td>
                             <td data-name="Event Type">Event Type</td>
-                            <td data-name="Event Tag">Event Tag</td>                            
-                            <td data-name="Event Type" style="width:5%;">Created</td>
+                            <td data-name="Event Tag">Event Tag</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -111,18 +126,16 @@ table.dataTable.no-footer {
                                 foreach ($events as $event) {
                             ?>
                         <tr>
+                            <td style="text-align:center;"><input class="form-check-input row-select table-select" name="events[]" type="checkbox" name="id_selector" value="<?= $event->id; ?>"></td>
                             <td>
                                 <div class="table-row-icon">
                                     <i class='bx bx-calendar-event'></i>
                                 </div>
                             </td>
-                            <td class="fw-bold nsm-text-primary">
+                            <td class="fw-bold nsm-text-primary show">
                                 <a class="btn-view-event" href="javascript:void(0);" data-id="<?= $event->id; ?>" data-event-number="<?= $event->event_number; ?>"><?php echo $event->event_number; ?></a>
                             </td>
-                            <td><?= date("m/d/Y", strtotime($event->start_date)); ?> - <?= date("m/d/Y", strtotime($event->end_date)); ?></td>
-                            <td>
-                                <div class="nsm-profile me-3" style="background-color:<?= $event->event_color; ?>; width: 40px;"></div>
-                            </td>
+                            <td><?= date("m/d/Y", strtotime($event->start_date)); ?></td>                            
                             <td>
                                 <div class="techs">                   
                                     <?php $attendees = json_decode($event->employee_id); ?>
@@ -131,9 +144,11 @@ table.dataTable.no-footer {
                                     <?php } ?>            
                                 </div>
                             </td>                            
-                            <td><?php echo $event->event_type; ?></td>
-                            <td><?php echo $event->event_tag; ?></td>                            
-                            <td><?php echo date_format(date_create($event->date_created), "m/d/Y"); ?></td>
+                            <td>
+                                <div class="nsm-profile" style="background-color:<?= $event->event_color; ?>; width: 40px;"></div>
+                            </td>
+                            <td class="nsm-text-primary"><?php echo $event->event_type; ?></td>
+                            <td class="nsm-text-primary"><?php echo $event->event_tag; ?></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
@@ -152,6 +167,7 @@ table.dataTable.no-footer {
                         <?php } } ?>
                     </tbody>
                 </table>
+                </form>
             </div>
             
             <div class="modal fade nsm-modal fade" id="modal-view-event" tabindex="-1" aria-labelledby="modal-view-event-label" aria-hidden="true">
@@ -165,6 +181,18 @@ table.dataTable.no-footer {
                             <div class="view-schedule-container" id="view-event-container"></div>
                         </div>
                     </div>        
+                </div>
+            </div>
+
+            <div class="modal fade" id="modal-view-archive" data-bs-backdrop="static" role="dialog">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title" style="font-size: 17px;">Archived Events</span>
+                            <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+                        </div>
+                        <div class="modal-body" id="events-archived-container"></div>            
+                    </div>
                 </div>
             </div>
 
@@ -187,25 +215,59 @@ table.dataTable.no-footer {
 <!-- End Map files -->
  
 <script type="text/javascript">
-var EVENT_TABLE = $("#EVENT_TABLE").DataTable({
-    "ordering": false,
-    language: {
-        processing: '<span>Fetching data...</span>'
-    },
-});
-
-$("#CUSTOM_EVENT_SEARCHBAR").keyup(function () {
-    EVENT_TABLE.search($(this).val()).draw()
-});
-EVENT_TABLE_SETTINGS = EVENT_TABLE.settings();
-
-$('#CUSTOM_FILTER_DROPDOWN').change(function (event) {
-    $('#CUSTOM_FILTER_SEARCHBAR').val($('#CUSTOM_FILTER_DROPDOWN').val());
-    EVENT_TABLE.columns(7).search(this.value).draw();
-});
-
 $(document).ready(function () {
-    // $(".nsm-table").nsmPagination();
+    $(".nsm-table").nsmPagination();
+    $("#search_field").on("input", debounce(function() {
+        let search = $(this).val();
+        if( search == '' ){
+            $(".nsm-table").nsmPagination();
+            $("#events-table").find("tbody .nsm-noresult").remove();
+        }else{
+            tableSearch($(this));        
+        }
+    }, 1000));
+
+    $(document).on('change', '#select-all', function(){
+        $('.row-select:checkbox').prop('checked', this.checked);  
+        let total= $('#events-table input[name="events[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
+    $(document).on('change', '.row-select', function(){
+        let total= $('#events-table input[name="events[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
+    $('#btn-archived').on('click', function(){
+        $('#modal-view-archive').modal('show');
+
+         $.ajax({
+            type: "POST",
+            url: base_url + "events/_archived_list",
+            success: function(html) {    
+                $('#events-archived-container').html(html);
+            },
+            beforeSend: function() {
+                $('#events-archived-container').html('<div class="col"><span class="bx bx-loader bx-spin"></span></div>');
+            }
+        });
+    });
+
+    $('#btn-new-event').on('click', function(){
+        location.href = base_url + 'events/event_add';
+    });
+
+    $("#btn-export-list").on("click", function() {
+        location.href = "<?php echo base_url('events/export_list'); ?>";
+    });
 
     $('.btn-view-event').on('click', function(){
         var event_id = $(this).attr('data-id');
@@ -223,6 +285,57 @@ $(document).ready(function () {
                 $('#view-event-container').html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
+    });
+
+    $(document).on('click', '#with-selected-delete', function(){
+        let total= $('#events-table input[name="events[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Events',
+                html: `Are you sure you want to delete selected rows?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'events/_archive_selected_events',
+                        dataType: 'json',
+                        data: $('#frm-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                    title: 'Delete Events',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
     });
 
     $(document).on("click", ".delete-item", function (event) {
@@ -261,6 +374,260 @@ $(document).ready(function () {
                                 icon: 'error',
                                 title: 'Error!',
                                 html: result.msg
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '#with-selected-restore', function(){
+        let total= $('#archived-events input[name="events[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Restore Events',
+                html: `Are you sure you want to restore selected rows?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'events/_restore_selected_events',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Restore Events',
+                                    text: "Data restored successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#with-selected-perma-delete', function(){
+        let total = $('#archived-events input[name="events[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Events',
+                html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'events/_permanently_delete_selected_events',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Delete Events',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#btn-empty-archives', function(){        
+        let total_records = $('#archived-events input[name="events[]"]').length;        
+        if( total_records > 0 ){
+            Swal.fire({
+                title: 'Empty Archived',
+                html: `Are you sure you want to <b>permanently delete</b> <b>${total_records}</b> archived events? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'events/_delete_all_archived_events',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Empty Archived',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }else{
+            Swal.fire({                
+                icon: 'error',
+                title: 'Error',              
+                html: 'Archived is empty',
+            });
+        }        
+    });
+
+    $(document).on('click', '.btn-restore-event', function(){
+        let event_id   = $(this).attr('data-id');
+        let event_number = $(this).attr('data-number');
+
+        Swal.fire({
+            title: 'Restore Event',
+            html: `Are you sure you want to restore event number <b>${event_number}</b>?`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + 'events/_restore_event',
+                    data: {
+                        event_id: event_id
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-view-archive').modal('hide');
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Restore Event',
+                                html: "Data updated successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.btn-permanently-delete-event', function(){
+        let event_id   = $(this).attr('data-id');
+        let event_number = $(this).attr('data-number');
+
+        Swal.fire({
+            title: 'Delete Event',
+            html: `Are you sure you want to <b>permanently delete</b> event number <b>${event_number}</b>? <br/><br/>Note : This cannot be undone.`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + 'events/_delete_archived_event',
+                    data: {
+                        event_id: event_id
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-view-archive').modal('hide');
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Delete Event',
+                                html: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
                             });
                         }
                     },

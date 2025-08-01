@@ -4,10 +4,12 @@
             placeholder: "Select Sales Area"
         });
         $("#prefix").select2({
-            placeholder: "Select Name Prefix"
+            placeholder: "Select Name Prefix",
+            allowClear: true
         });
         $("#suffix").select2({
-            placeholder: "Select Name Suffix"
+            placeholder: "Select Name Suffix",
+            allowClear: true
         });
         $("#pay_history").select2({
             placeholder: "Select Pay History"
