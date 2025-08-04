@@ -2909,4 +2909,204 @@ class Estimate extends MY_Controller
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
+
+    public function ajax_archive_selected_estimates()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['estimates'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['view_flag' => 1, 'archived_date' => date("Y-m-d H:i:s")];
+            $total_updated = $this->estimate_model->bulkUpdate($post['estimates'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Estimates : Archived ' . $total_updated . ' estimate(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    } 
+
+    public function ajax_change_status_selected_estimates()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['estimates'] ){                                    
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['status' => $post['status'], 'updated_at' => date("Y-m-d H:i:s")];
+            $total_updated = $this->estimate_model->bulkUpdate($post['estimates'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Estimates : ' . $total_updated . ' estimate(s) was changed status to ' . $post['status']; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_restore_selected_estimates()
+	{
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['estimates'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['view_flag' => 0];
+            $total_updated = $this->estimate_model->bulkUpdate($post['estimates'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Estimates : Restored ' . $total_updated . ' estimate(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_permanently_delete_selected_estimates()
+	{
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['estimates'] ){
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+			$filters[] = ['field' => 'view_flag', 'value' => 1];
+            $total_deleted = $this->estimate_model->bulkDelete($post['estimates'], $filters);
+
+			//Activity Logs
+			$activity_name = 'Estimates : Permanently deleted ' .$total_deleted. ' estimate(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_all_archived_estimates()
+	{
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+		$total_archived = $this->estimate_model->deleteAllArchived($filter);
+
+		//Activity Logs
+		$activity_name = 'Estimates : Permanently deleted ' .$total_archived. ' estimate(s)'; 
+		createActivityLog($activity_name);
+
+		$is_success = 1;
+		$msg    = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_restore_estimate()
+	{
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $estimate = $this->estimate_model->getEstimate($post['estimate_id']);
+		if( $estimate && $estimate->company_id == $company_id ){
+			$data     = ['view_flag' => 0];
+			$this->estimate_model->update($estimate->id, $data);
+
+			//Activity Logs
+			$activity_name = 'Estimates : Restored estimate number ' . $estimate->estimate_number; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_archived_estimate()
+	{
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+		$estimate = $this->estimate_model->getEstimate($post['estimate_id']);
+		if( $estimate && $estimate->company_id == $company_id ){
+			$this->estimate_model->delete($estimate->id);
+
+			//Activity Logs
+			$activity_name = 'Estimates : Restored estimate number ' . $estimate->estimate_number; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 }
