@@ -116,15 +116,9 @@
                                             <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
-                                            <!-- <li>
-                                                <a class="dropdown-item" href="#">Run report</a>
-                                            </li> -->
                                             <?php if($term['status'] === '1') : ?>
                                             <li>
                                                 <a class="dropdown-item edit-term" href="#">Edit</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item delete-term" href="javascript:void(0);" data-id="<?= $term['id']; ?>">Delete</a>
                                             </li>
                                             <li>
                                                 <a class="dropdown-item term-status" href="javascript:void(0);" data-id="<?= $term['id']; ?>" data-status="0">Make Inactive</a>
@@ -134,6 +128,9 @@
                                                 <a class="dropdown-item term-status" href="javascript:void(0);" data-id="<?= $term['id']; ?>" data-status="1">Make Active</a>
                                             </li>
                                             <?php endif; ?>
+                                            <li>
+                                                <a class="dropdown-item delete-term" href="javascript:void(0);" data-id="<?= $term['id']; ?>">Delete</a>
+                                            </li>                                            
                                         </ul>
                                     </div>
                                 </td>
