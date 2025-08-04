@@ -73,7 +73,7 @@
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                            <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item btn-with-selected" id="with-selected-change-status" href="javascript:void(0);" data-action="change-status">Change Status</a></li>   
                                 <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
                             </ul>
