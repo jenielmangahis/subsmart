@@ -260,11 +260,11 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#btn-empty-archives', function(){        
-        let total_records = $('#archived-users input[name="users[]"]').length;        
-        if( total_records > 0 ){
+        let total = $('#archived-users input[name="users[]"]').length;        
+        if( total > 0 ){
             Swal.fire({
                 title: 'Empty Archived',
-                html: `Are you sure you want to <b>permanently delete</b> <b>${total_records}</b> archived users? <br/><br/>Note : This cannot be undone.`,
+                html: `Are you sure you want to <b>permanently delete</b> <b>${total}</b> archived users? <br/><br/>Note : This cannot be undone.`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
