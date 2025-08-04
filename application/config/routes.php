@@ -1774,6 +1774,9 @@ $route['inventory/_edit_item_category'] = 'inventory/ajax_edit_item_category';
 $route['inventory/_update_item_category'] = 'inventory/ajax_update_item_category';
 $route['inventory/item_groups/delete'] = 'inventory/ajax_delete_item_category';
 
+// Inventory Arhived
+$route['inventory/_archived_list'] = 'Inventory/ajax_archived_list';
+
 // Sales Overview
 $route['sales-overview/income-overtime'] = 'AccountingSales/get_income_overtime';
 
