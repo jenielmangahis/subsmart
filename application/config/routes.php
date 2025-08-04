@@ -593,9 +593,6 @@ $route['accounting/terms/print']['post'] = 'accounting_controllers/payment_terms
 $route['accounting/payment_terms/_save_payment_terms'] = 'accounting_controllers/payment_terms/ajax_save_payment_terms';
 $route['accounting/payment_terms/_delete_selected_payment_terms'] = 'accounting_controllers/payment_terms/ajax_delete_selected_payment_terms';
 
-$route['accounting/terms/_delete_term'] = 'accounting_controllers/payment_terms/ajax_delete_term';
-$route['accounting/terms/_update_status'] = 'accounting_controllers/payment_terms/ajax_update_status';
-
 $route['accounting/customers'] = 'accounting_controllers/customers/index';
 $route['accounting/customers/batch-select-customer-type']['post'] = 'accounting_controllers/customers/batch_select_customer_type';
 $route['accounting/customers/view/(:any)'] = 'accounting_controllers/customers/view/$1';
@@ -1345,6 +1342,7 @@ $route['estimate/_update_estimate_status'] = 'Estimate/ajax_update_estimate_stat
 $route['estimate/_get_package_items'] = 'Estimate/ajax_get_package_items';
 $route['estimate/_delete_selected_estimates'] = 'Estimate/ajax_delete_selected_estimates';
 $route['estimates/_archived_list'] = 'Estimate/ajax_archived_list';
+$route['estimates/_archive_selected_estimates'] = 'Estimate/ajax_archive_selected_estimates';
 
 // Credit Notes
 $route['credit_notes'] = 'Credit_Notes/index';
