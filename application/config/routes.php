@@ -1343,6 +1343,12 @@ $route['estimate/_get_package_items'] = 'Estimate/ajax_get_package_items';
 $route['estimate/_delete_selected_estimates'] = 'Estimate/ajax_delete_selected_estimates';
 $route['estimates/_archived_list'] = 'Estimate/ajax_archived_list';
 $route['estimates/_archive_selected_estimates'] = 'Estimate/ajax_archive_selected_estimates';
+$route['estimates/_change_status_selected_estimates'] = 'Estimate/ajax_change_status_selected_estimates';
+$route['estimates/_restore_selected_estimates'] = 'Estimate/ajax_restore_selected_estimates';
+$route['estimates/_permanently_delete_selected_estimates'] = 'Estimate/ajax_permanently_delete_selected_estimates';
+$route['estimates/_delete_all_archived_estimates'] = 'Estimate/ajax_delete_all_archived_estimates';
+$route['estimates/_restore_estimate'] = 'Estimate/ajax_restore_estimate';
+$route['estimates/_delete_archived_estimate'] = 'Estimate/ajax_delete_archived_estimate';
 
 // Credit Notes
 $route['credit_notes'] = 'Credit_Notes/index';
