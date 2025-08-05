@@ -1349,6 +1349,7 @@ $route['estimates/_permanently_delete_selected_estimates'] = 'Estimate/ajax_perm
 $route['estimates/_delete_all_archived_estimates'] = 'Estimate/ajax_delete_all_archived_estimates';
 $route['estimates/_restore_estimate'] = 'Estimate/ajax_restore_estimate';
 $route['estimates/_delete_archived_estimate'] = 'Estimate/ajax_delete_archived_estimate';
+$route['estimates/export_list'] = 'Estimate/estimate_export';
 
 // Credit Notes
 $route['credit_notes'] = 'Credit_Notes/index';
