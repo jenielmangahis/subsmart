@@ -62,6 +62,12 @@
     background-color:#f8d7da;
     color:#721c24;
 }
+.swal2-html-container{
+    overflow:hidden;
+}
+.estimate-change-status{
+    text-align:left;
+}
 </style>
 
 <div class="nsm-fab-container">
@@ -217,240 +223,254 @@
 ?>
                             </ul>
                         </div>
-                        <div class="nsm-page-buttons page-button-container">
+                        <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-change-status" href="javascript:void(0);" data-action="change-status">Change Status</a></li>   
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
+                        </div>
+                        <?php } ?>
+                        <div class="nsm-page-buttons page-button-container">                            
                             <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
-                                <button type="button" class="nsm-button primary" data-bs-toggle="modal"
-                                    data-bs-target="#new_estimate_modal">
-                                    <i class='bx bx-fw bx-chart'></i> New Estimate
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-nsm" data-bs-toggle="modal" data-bs-target="#new_estimate_modal"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Estimate</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
                                 </button>
-                                <button type="button" class="nsm-button primary" id="archived-estimate-list">
-                                    <i class='bx bx-fw bx-trash'></i> Manage Archived
-                                </button>
-                            <?php } ?>
-                            <?php if (isset($estimates) && count($estimates) > 0) { ?>
-                                <!-- <button type="button" class="nsm-button primary" onclick="window.open('<?php echo base_url('estimate/print'); ?>','_blank')">
-                                    <i class='bx bx-fw bx-printer'></i>
-                                </button> -->
+                                <ul class="dropdown-menu">                                                                    
+                                    <li><a class="dropdown-item" id="archived-estimate-list" href="javascript:void(0);">Archived</a></li>                               
+                                    <!-- <li><a class="dropdown-item" id="btn-print" onclick="window.open('<?php echo base_url('estimate/print'); ?>','_blank')" href="javascript:void(0);">Print</a></li> -->
+                                    <li><a class="dropdown-item" id="btn-export-list" href="javascript:void(0);">Export</a></li>                               
+                                </ul>
+                            </div>
                             <?php } ?>
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
-                    <thead>
-                        <tr>
-                            <td class="table-icon"></td>
-                            <td data-name="EstimateNumber">Estimate Number</td>                            
-                            <td data-name="Customer">Customer</td>
-                            <td data-name="Date" style="width:10%;">Date</td>
-                            <!-- <td data-name="Type">Type</td> -->
-                            <td data-name="Status" style="width:8%;">Status</td>
-                            <td data-name="Amount" style="text-align:right;">Amount</td>
-                            <td data-name="Amount" style="text-align:center;">Is Email Seen</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (!empty($estimates)) {
+                <form id="frm-with-selected">
+                    <table class="nsm-table" id="tbl-estimate-list">
+                        <thead>
+                            <tr>
+                                <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
+                                <td class="table-icon text-center sorting_disabled">
+                                    <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                                </td>
+                                <?php } ?>
+                                <td class="table-icon"></td>
+                                <td data-name="EstimateNumber">Estimate Number</td>                            
+                                <td data-name="Customer">Customer</td>
+                                <td data-name="Date" style="width:10%;">Date</td>
+                                <!-- <td data-name="Type">Type</td> -->
+                                <td data-name="Status" style="width:8%;">Status</td>
+                                <td data-name="Amount" style="text-align:right;">Amount</td>
+                                <td data-name="Amount" style="text-align:center;">Is Email Seen</td>
+                                <td data-name="Manage"></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if (!empty($estimates)) {
+                                ?>
+                            <?php
+                                foreach ($estimates as $estimate) {
+                                    switch ($estimate->status) {
+                                        case 'Draft':
+                                            $badge = '';
+                                            break;
+                                        case 'Submitted':
+                                            $badge = 'success';
+                                            break;
+                                        case 'Accepted':
+                                            $badge = 'success';
+                                            break;
+                                        case 'Invoiced':
+                                            $badge = 'primary';
+                                            break;
+                                        case 'Lost':
+                                            $badge = 'secondary';
+                                            break;
+                                        case 'Declined By Customer':
+                                            $badge = 'error';
+                                            break;
+                                    }
+
+                                    $row_class = '';
+                                    if( $estimate->next_remind_date == date("Y-m-d") ){
+                                        $row_class = 'with-reminder';
+                                    }
                             ?>
-                        <?php
-                            foreach ($estimates as $estimate) {
-                                switch ($estimate->status) {
-                                    case 'Draft':
-                                        $badge = '';
-                                        break;
-                                    case 'Submitted':
-                                        $badge = 'success';
-                                        break;
-                                    case 'Accepted':
-                                        $badge = 'success';
-                                        break;
-                                    case 'Invoiced':
-                                        $badge = 'primary';
-                                        break;
-                                    case 'Lost':
-                                        $badge = 'secondary';
-                                        break;
-                                    case 'Declined By Customer':
-                                        $badge = 'error';
-                                        break;
-                                }
-
-                                $row_class = '';
-                                if( $estimate->next_remind_date == date("Y-m-d") ){
-                                    $row_class = 'with-reminder';
-                                }
-                        ?>
-                        <tr class="<?= $row_class; ?>">
-                            <td>
-                                <div class="table-row-icon">
-                                    <?php if( $row_class == '' ){ ?>
-                                        <i class='bx bx-chart'></i>
-                                    <?php }else{ ?>
-                                        <i class='bx bx-alarm-exclamation'></i>
+                            <tr class="<?= $row_class; ?>">
+                                <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
+                                <td>
+                                    <input class="form-check-input row-select table-select" name="estimates[]" type="checkbox" value="<?= $estimate->id; ?>">
+                                </td>
+                                <?php } ?>
+                                <td>
+                                    <div class="table-row-icon">
+                                        <?php if( $row_class == '' ){ ?>
+                                            <i class='bx bx-chart'></i>
+                                        <?php }else{ ?>
+                                            <i class='bx bx-alarm-exclamation'></i>
+                                        <?php } ?>
+                                    </div>
+                                </td>
+                                <td class="fw-bold nsm-text-primary show">
+                                    <?php echo $estimate->estimate_number; ?>
+                                </td>                        
+                                <td>
+                                    <?php if ($estimate->customer_id > 0) { ?>
+                                        <?php echo $estimate->customer_name != '' ? $estimate->customer_name : '---'; ?>
+                                    <?php } elseif ($estimate->lead_id > 0) { ?>
+                                         <?php echo $estimate->lead_name != '' ? $estimate->lead_name : '---'; ?>
                                     <?php } ?>
-                                </div>
-                            </td>
-                            <td class="fw-bold nsm-text-primary">
-                                <a target="_blank" class="nsm-link" href="<?php echo base_url('estimate/view/'.$estimate->id);?>" ><?php echo $estimate->estimate_number; ?></a>
-                            </td>                        
-                            <td>
-                                <?php if ($estimate->customer_id > 0) { ?>
-                                <a class="nsm-link"
-                                    href="<?php echo base_url('customer/preview_/'.$estimate->customer_id); ?>">
-                                    <?php echo $estimate->customer_name != '' ? $estimate->customer_name : '---'; ?>
-                                </a>
-                                <?php } elseif ($estimate->lead_id > 0) { ?>
-                                <a class="nsm-link"
-                                    href="<?php echo base_url('customer/add_lead/'.$estimate->lead_id); ?>">
-                                    <?php echo $estimate->lead_name != '' ? $estimate->lead_name : '---'; ?>
-                                </a>
-                                <?php } ?>
-                            </td>
-                            <td class="nsm-text-primary"><?php echo date('m/d/Y', strtotime($estimate->estimate_date)); ?></td>
-                            <!-- <td><?php echo $estimate->estimate_type; ?></td> -->
-                            <td><span class="nsm-badge <?php echo $badge; ?>"><?php echo $estimate->status; ?></span></td>
-                            <td style="width:10%;text-align:right;">
-                                <?php
-                                                $total1 = ((float) $estimate->option1_total) + ((float) $estimate->option2_total);
-                                    $total2 = ((float) $estimate->bundle1_total) + ((float) $estimate->bundle2_total);
-                                    echo '$'.number_format(floatval($estimate->grand_total), 2);
+                                </td>
+                                <td class="nsm-text-primary"><?php echo date('m/d/Y', strtotime($estimate->estimate_date)); ?></td>
+                                <!-- <td><?php echo $estimate->estimate_type; ?></td> -->
+                                <td><span class="nsm-badge <?php echo $badge; ?>"><?php echo $estimate->status; ?></span></td>
+                                <td style="width:10%;text-align:right;">
+                                    <?php
+                                                    $total1 = ((float) $estimate->option1_total) + ((float) $estimate->option2_total);
+                                        $total2 = ((float) $estimate->bundle1_total) + ((float) $estimate->bundle2_total);
+                                        echo '$'.number_format(floatval($estimate->grand_total), 2);
 
-                                    ?>
-                            </td>
-                            <td style="width:8%;text-align:center;">
-                                <?php if ($estimate->is_mail_open == 1) { ?>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                    <path fill="#888888"
-                                        d="M15 12c0 1.654-1.346 3-3 3s-3-1.346-3-3 1.346-3 3-3 3 1.346 3 3zm9-.449s-4.252 8.449-11.985 8.449c-7.18 0-12.015-8.449-12.015-8.449s4.446-7.551 12.015-7.551c7.694 0 11.985 7.551 11.985 7.551zm-7 .449c0-2.757-2.243-5-5-5s-5 2.243-5 5 2.243 5 5 5 5-2.243 5-5z" />
-                                </svg>
-                                <?php } else { ?>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                    <path fill="#888888"
-                                        d="M11.885 14.988l3.104-3.098.011.11c0 1.654-1.346 3-3 3l-.115-.012zm8.048-8.032l-3.274 3.268c.212.554.341 1.149.341 1.776 0 2.757-2.243 5-5 5-.631 0-1.229-.13-1.785-.344l-2.377 2.372c1.276.588 2.671.972 4.177.972 7.733 0 11.985-8.449 11.985-8.449s-1.415-2.478-4.067-4.595zm1.431-3.536l-18.619 18.58-1.382-1.422 3.455-3.447c-3.022-2.45-4.818-5.58-4.818-5.58s4.446-7.551 12.015-7.551c1.825 0 3.456.426 4.886 1.075l3.081-3.075 1.382 1.42zm-13.751 10.922l1.519-1.515c-.077-.264-.132-.538-.132-.827 0-1.654 1.346-3 3-3 .291 0 .567.055.833.134l1.518-1.515c-.704-.382-1.496-.619-2.351-.619-2.757 0-5 2.243-5 5 0 .852.235 1.641.613 2.342z" />
-                                </svg>
-                                <?php } ?>
-                            </td>
-                            <td>
-                                <div class="dropdown table-management">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <a class="dropdown-item"
-                                                href="<?php echo base_url('estimate/view/'.$estimate->id); ?>">View
-                                                Estimate</a>
-                                        </li>
+                                        ?>
+                                </td>
+                                <td style="width:8%;text-align:center;">
+                                    <?php if ($estimate->is_mail_open == 1) { ?>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                        <path fill="#888888"
+                                            d="M15 12c0 1.654-1.346 3-3 3s-3-1.346-3-3 1.346-3 3-3 3 1.346 3 3zm9-.449s-4.252 8.449-11.985 8.449c-7.18 0-12.015-8.449-12.015-8.449s4.446-7.551 12.015-7.551c7.694 0 11.985 7.551 11.985 7.551zm-7 .449c0-2.757-2.243-5-5-5s-5 2.243-5 5 2.243 5 5 5 5-2.243 5-5z" />
+                                    </svg>
+                                    <?php } else { ?>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                        <path fill="#888888"
+                                            d="M11.885 14.988l3.104-3.098.011.11c0 1.654-1.346 3-3 3l-.115-.012zm8.048-8.032l-3.274 3.268c.212.554.341 1.149.341 1.776 0 2.757-2.243 5-5 5-.631 0-1.229-.13-1.785-.344l-2.377 2.372c1.276.588 2.671.972 4.177.972 7.733 0 11.985-8.449 11.985-8.449s-1.415-2.478-4.067-4.595zm1.431-3.536l-18.619 18.58-1.382-1.422 3.455-3.447c-3.022-2.45-4.818-5.58-4.818-5.58s4.446-7.551 12.015-7.551c1.825 0 3.456.426 4.886 1.075l3.081-3.075 1.382 1.42zm-13.751 10.922l1.519-1.515c-.077-.264-.132-.538-.132-.827 0-1.654 1.346-3 3-3 .291 0 .567.055.833.134l1.518-1.515c-.704-.382-1.496-.619-2.351-.619-2.757 0-5 2.243-5 5 0 .852.235 1.641.613 2.342z" />
+                                    </svg>
+                                    <?php } ?>
+                                </td>
+                                <td>
+                                    <div class="dropdown table-management">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a class="dropdown-item"
+                                                    href="<?php echo base_url('estimate/view/'.$estimate->id); ?>">View
+                                                    Estimate</a>
+                                            </li>
 
-                                        <li>
-                                            <a class="dropdown-item"
-                                                href="<?php echo base_url('estimate/view_pdf/'.$estimate->id); ?>"
-                                                target="_new">View PDF</a>
-                                        </li>
-                                        <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
-                                        <li>
-                                            <a class="dropdown-item send-item" href="javascript:void(0);"
-                                                acs-id="<?php echo $estimate->customer_id; ?>"
-                                                est-id="<?php echo $estimate->id; ?>">Send to Customer</a>
-                                        </li>
-                                        <?php } ?>
-                                        <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
-                                        <li>
-                                            <a class="dropdown-item clone-item" href="javascript:void(0);"
-                                                data-bs-toggle="modal" data-bs-target="#clone_estimate_modal"
-                                                data-id="<?php echo $estimate->id; ?>"
-                                                data-wo_num="<?php echo $estimate->estimate_number; ?>"
-                                                data-name="WO-00433">Clone Estimate</a>
-                                        </li>
-                                        <?php } ?>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                    href="<?php echo base_url('estimate/view_pdf/'.$estimate->id); ?>"
+                                                    target="_new">View PDF</a>
+                                            </li>
+                                            <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
+                                            <li>
+                                                <a class="dropdown-item send-item" href="javascript:void(0);"
+                                                    acs-id="<?php echo $estimate->customer_id; ?>"
+                                                    est-id="<?php echo $estimate->id; ?>">Send to Customer</a>
+                                            </li>
+                                            <?php } ?>
+                                            <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
+                                            <li>
+                                                <a class="dropdown-item clone-item" href="javascript:void(0);"
+                                                    data-bs-toggle="modal" data-bs-target="#clone_estimate_modal"
+                                                    data-id="<?php echo $estimate->id; ?>"
+                                                    data-wo_num="<?php echo $estimate->estimate_number; ?>"
+                                                    data-name="WO-00433">Clone Estimate</a>
+                                            </li>
+                                            <?php } ?>
 
-                                        <?php if ($estimate->status === 'Accepted') { ?>
+                                            <?php if ($estimate->status === 'Accepted') { ?>
+                                                <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="<?php echo base_url('job/estimate_job/'.$estimate->id); ?>">Convert to
+                                                        Job</a>
+                                                </li>
+                                                <?php } ?>
+                                            <?php } ?>
+                                            
                                             <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
                                             <li>
                                                 <a class="dropdown-item"
-                                                    href="<?php echo base_url('job/estimate_job/'.$estimate->id); ?>">Convert to
-                                                    Job</a>
+                                                    href="<?php echo base_url('workorder/estimateConversionWorkorder/'.$estimate->id); ?>">Convert
+                                                    to Workorder</a>
                                             </li>
                                             <?php } ?>
-                                        <?php } ?>
-                                        
-                                        <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
-                                        <li>
-                                            <a class="dropdown-item"
-                                                href="<?php echo base_url('workorder/estimateConversionWorkorder/'.$estimate->id); ?>">Convert
-                                                to Workorder</a>
-                                        </li>
-                                        <?php } ?>
 
-                                        <li>
-                                            <a class="dropdown-item"
-                                                href="<?php echo base_url('estimate/print/'.$estimate->id); ?>"
-                                                target="_new">Print</a>
-                                        </li>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                    href="<?php echo base_url('estimate/print/'.$estimate->id); ?>"
+                                                    target="_new">Print</a>
+                                            </li>
 
-                                        <?php if ($estimate->status !== 'Accepted') { ?>
-                                            <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
-                                                <?php if ($estimate->estimate_type == 'Standard') { ?>
-                                                <li>
-                                                    <a class="dropdown-item"
-                                                        href="<?php echo base_url('estimate/edit/'.$estimate->id); ?>">Edit</a>
-                                                </li>
-                                                <?php } elseif ($estimate->estimate_type == 'Option') { ?>
-                                                <li>
-                                                    <a class="dropdown-item"
-                                                        href="<?php echo base_url('estimate/editOption/'.$estimate->id); ?>">Edit</a>
-                                                </li>
-                                                <?php } else { ?>
+                                            <?php if ($estimate->status !== 'Accepted') { ?>
+                                                <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
+                                                    <?php if ($estimate->estimate_type == 'Standard') { ?>
                                                     <li>
                                                         <a class="dropdown-item"
-                                                            href="<?php echo base_url('estimate/editBundle/'.$estimate->id); ?>">Edit</a>
+                                                            href="<?php echo base_url('estimate/edit/'.$estimate->id); ?>">Edit</a>
                                                     </li>
+                                                    <?php } elseif ($estimate->estimate_type == 'Option') { ?>
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="<?php echo base_url('estimate/editOption/'.$estimate->id); ?>">Edit</a>
+                                                    </li>
+                                                    <?php } else { ?>
+                                                        <li>
+                                                            <a class="dropdown-item"
+                                                                href="<?php echo base_url('estimate/editBundle/'.$estimate->id); ?>">Edit</a>
+                                                        </li>
+                                                    <?php } ?>
                                                 <?php } ?>
                                             <?php } ?>
-                                        <?php } ?>
-                                        <?php if(checkRoleCanAccessModule('estimates', 'delete')){ ?>
-                                        <li>
-                                            <a class="dropdown-item delete-item" href="javascript:void(0);"
-                                                est-id="<?php echo $estimate->id; ?>">Delete</a>
-                                        </li>
-                                        <?php } ?>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php
-                                }
-                            ?>
-                        <?php
-                        } else {
-                            ?>
-                        <tr>
-                            <td colspan="8">
-                                <div class="nsm-empty">
-                                    <span>No results found.</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php
-                        }
-?>
-                    </tbody>
-                </table>
+                                            <?php if(checkRoleCanAccessModule('estimates', 'delete')){ ?>
+                                            <li>
+                                                <a class="dropdown-item delete-item" href="javascript:void(0);"
+                                                    est-id="<?php echo $estimate->id; ?>">Delete</a>
+                                            </li>
+                                            <?php } ?>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php
+                                    }
+                                ?>
+                            <?php
+                            } else {
+                                ?>
+                            <tr>
+                                <td colspan="8">
+                                    <div class="nsm-empty">
+                                        <span>No results found.</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php
+                            }
+    ?>
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
 
         <div class="modal fade nsm-modal fade" id="modal-archived-estimates" aria-labelledby="modal-archived-estimates-label" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <form method="post" id="quick-add-event-form">   
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <span class="modal-title content-title">Archived Estimates</span>
-                            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                        </div>
-                        <div class="modal-body" id="estimates-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+            <div class="modal-dialog modal-lg modal-dialog-centered">                
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title">Archived Estimates</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                     </div>
-                </form>
+                    <div class="modal-body" id="estimates-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+                </div>                
             </div>
         </div>
         
@@ -473,6 +493,25 @@ $(document).ready(function() {
         _form.submit();
     }, 1500));
 
+    $(document).on('change', '#select-all', function(){
+        $('.row-select:checkbox').prop('checked', this.checked);  
+        let total= $('input[name="estimates[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
+    $(document).on('change', '.row-select', function(){
+        let total= $('input[name="estimates[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
     $(document).on('click', '#archived-estimate-list', function(){
         $('#modal-archived-estimates').modal('show');
         $.ajax({
@@ -488,41 +527,49 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.btn-restore-estimate', function(){
-        var estimate_id = $(this).attr('data-id');
-        var estimate_number = $(this).attr('data-estimatenumber');
+        let estimate_id   = $(this).attr('data-id');
+        let estimate_number = $(this).attr('data-estimatenumber');
 
         Swal.fire({
-            title: 'Restore Estimate Data',
-            html: `Proceed with restoring estimate data <b>${estimate_number}</b>?`,
+            title: 'Restore Estimate',
+            html: `Are you sure you want to restore estimate number <b>${estimate_number}</b>?`,
             icon: 'question',
+            confirmButtonText: 'Proceed',
             showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
+            cancelButtonText: "Cancel"
         }).then((result) => {
-            if (result.isConfirmed) {                    
+            if (result.value) {
                 $.ajax({
-                    type: "POST",
-                    url: base_url + "estimates/_restore_archived",
-                    data: {estimate_id:estimate_id},
-                    dataType:'json',
-                    success: function(result) {                            
-                        if( result.is_success == 1 ) {
-                            $('#modal-archived-estimates').modal('hide');
+                    type: 'POST',
+                    url: base_url + 'estimates/_restore_estimate',
+                    data: {
+                        estimate_id: estimate_id
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                         $('#modal-archived-estimates').modal('hide');
+                        if (result.is_success) {
                             Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Estimate data was successfully restored.',
+                                title: 'Restore Estimate',
+                                html: "Data updated successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
                             }).then((result) => {
-                                location.reload();
+                                //if (result.value) {
+                                    location.reload();
+                                //}
                             });
                         } else {
                             Swal.fire({
-                                icon: 'error',
                                 title: 'Error',
                                 text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
                             });
                         }
-                    }
+                    },
                 });
             }
         });
@@ -647,6 +694,334 @@ $(document).ready(function() {
                                 location.reload();
                             }
                         });
+                    },
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '#with-selected-delete', function(){
+        let total= $('#tbl-estimate-list input[name="estimates[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Estimates',
+                html: `Are you sure you want to delete selected rows?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'estimates/_archive_selected_estimates',
+                        dataType: 'json',
+                        data: $('#frm-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                    title: 'Delete Estimates',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#with-selected-change-status', function(){
+        let total= $('#tbl-estimate-list input[name="estimates[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            let html_content = `
+                <div class="row estimate-change-status">
+                    <div class="col-sm-12">
+                        <label class="mb-2">Status</label>
+                        <div class="input-group mb-3">
+                            <select class="form-select" id="with-selected-status">
+                                <option value="Draft">Draft</option>
+                                <option value="Submitted">Submitted</option>
+                                <option value="Accepted">Accepted</option>
+                                <option value="Declined By Customer">Declined By Customer</option>
+                                <option value="Lost">Lost</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `; 
+
+            Swal.fire({
+                title: 'Change Status',
+                html: html_content,
+                icon: false,
+                confirmButtonColor: '#3085d6',
+                showCancelButton: true,
+                confirmButtonText: 'Save',                    
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let status  = $('#with-selected-status').val();
+
+                    const form = document.getElementById('frm-with-selected');
+                    const formData = new FormData(form);
+                    formData.append('status', status); 
+
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "estimates/_change_status_selected_estimates",
+                        data:formData,
+                        processData: false,
+                        contentType: false,
+                        dataType:'json',
+                        success: function(result) {                            
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Change Status',
+                                text: 'Data was updated successfully.',
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#with-selected-restore', function(){
+        let total= $('#archived-estimates input[name="estimates[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Restore Estimates',
+                html: `Are you sure you want to restore selected rows?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'estimates/_restore_selected_estimates',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-estimates').modal('hide');
+                                Swal.fire({
+                                    title: 'Restore Estimates',
+                                    text: "Data restored successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#with-selected-perma-delete', function(){
+        let total = $('#archived-estimates input[name="estimates[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Estimates',
+                html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'estimates/_permanently_delete_selected_estimates',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-estimates').modal('hide');
+                                Swal.fire({
+                                    title: 'Delete Estimates',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#btn-empty-archives', function(){        
+        let total = $('#archived-estimates input[name="estimates[]"]').length;       
+        if( total > 0 ){
+            Swal.fire({
+                title: 'Empty Archived',
+                html: `Are you sure you want to <b>permanently delete</b> <b>${total}</b> archived estimates? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'estimates/_delete_all_archived_estimates',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-estimates').modal('hide');
+                                Swal.fire({
+                                    title: 'Empty Archived',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }else{
+            Swal.fire({                
+                icon: 'error',
+                title: 'Error',              
+                html: 'Archived is empty',
+            });
+        }        
+    });
+
+    $(document).on('click', '.btn-permanently-delete-estimate', function(){
+        let estimate_id   = $(this).attr('data-id');
+        let estimate_number = $(this).attr('data-estimatenumber');
+
+        Swal.fire({
+            title: 'Delete Estimate',
+            html: `Are you sure you want to <b>permanently delete</b> estimate number <b>${estimate_number}</b>? <br/><br/>Note : This cannot be undone.`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + 'estimates/_delete_archived_estimate',
+                    data: {
+                        estimate_id: estimate_id
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-archived-estimates').modal('hide');
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Delete Estimate',
+                                html: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    //location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
                     },
                 });
             }

@@ -46,6 +46,8 @@ class Inventory extends MY_Controller
 			return false;
 		}
 
+        $is_archived = 0;
+
         $this->page_data['page']->title = 'Inventory';
         $this->page_data['page']->parent = 'Tools';
 
@@ -56,22 +58,14 @@ class Inventory extends MY_Controller
         $type    = $this->page_data['type']  = (!empty($get['type'])) ? $get['type'] : "product";
         $role_id = intval(logged('role'));
         if (!empty($get['category'])) {
-            /*if( $role_id == 1 || $role_id == 2 ){
-                $comp_id = 0;
-            }*/
             $this->page_data['category'] = $get['category'];
             $this->page_data['active_category'] = $get['category'];
-            $items = $this->items_model->filterBy(['category' => $get['category'], 'type' => 'product', 'is_active' => "1"], $comp_id, ucfirst($type));
+            $items = $this->items_model->filterBy(['category' => $get['category'], 'type' => 'product', 'is_active' => "1", 'is_archived' => $is_archived], $comp_id, ucfirst($type));
         } else {
-            /*if( $role_id == 1 || $role_id == 2 ){
-                $arg = array('type'=>ucfirst($type), 'is_active'=>1); 
-            }else{
-                $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1); 
-            }*/            
-            //$arg   = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active' => 1);
-            $arg   = array('company_id'=>$comp_id, 'type' => 'product', 'is_active' => 1); 
+            $arg   = array('company_id'=>$comp_id, 'type' => 'product', 'is_active' => 1, 'is_archived' => $is_archived); 
             $items = $this->items_model->getByWhere($arg);            
         }
+
         $ITEM_DATA = $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
         $comp = array(
             'company_id' => $comp_id
@@ -88,6 +82,7 @@ class Inventory extends MY_Controller
             ),
             "table" => "storage_loc"
         );
+
         $this->page_data['locations'] = $this->general->get_data_with_param($location_param);
         $this->page_data['items_location'] = $ITEM_LOCATION_ARRAY;
         $this->page_data['user_item_transaction_history'] = $this->items_model->getItemTransactionHistory("USER");
@@ -772,16 +767,14 @@ class Inventory extends MY_Controller
             'company_id' => logged('company_id')
         ];
 
-        $delete = $this->items_model->inactiveItem($data);
+        $is_inactived = $this->items_model->inactiveItem($data);
+        $is_archived  = $this->items_model->archivedItem($data);
+        
 
-        // $remove_item = array(
-        //     'where' => array('id' =>$id, 'company_id' => $company_id),
-        //     'table' => 'items'
-        // );
-        if ($delete) {
+        if ($is_archived) {
 
             //Activity Logs
-            $activity_name = 'Inventory : Deleted item '.$item->title; 
+            $activity_name = 'Inventory : Archived item '. $item->title; 
             createActivityLog($activity_name);
             
             echo '1';
@@ -802,10 +795,12 @@ class Inventory extends MY_Controller
                 'id' => $id,
                 'company_id' => $company_id
             ];
+
             $delete = $this->items_model->inactiveItem($data);
+            $is_archived  = $this->items_model->archivedItem($data);
 
             //Activity Logs
-            $activity_name = 'Inventory : Deleted item '.$item->title; 
+            $activity_name = 'Inventory : Archived item '.$item->title; 
             createActivityLog($activity_name);
 
             $is_success = 1;
@@ -839,11 +834,11 @@ class Inventory extends MY_Controller
                         $attempt++;
                     } while(!is_null($checkName));
     
-                    $data = ['is_active' => 0, 'modified' => date("Y-m-d H:i:s")];
+                    $data = ['is_active' => 0, 'is_archived' => 1, 'modified' => date("Y-m-d H:i:s")];
                     $this->items_model->updateItem($item->id, $data);
     
                     //Activity Logs
-                    $activity_name = 'Inventory : Deleted item '.$item->title; 
+                    $activity_name = 'Inventory : Archived item '.$item->title; 
                     createActivityLog($activity_name);
                 } 
                 
@@ -1205,11 +1200,11 @@ class Inventory extends MY_Controller
                         $attempt++;
                     } while(!is_null($checkName));
     
-                    $data = ['is_active' => 0, 'modified' => date("Y-m-d H:i:s")];
+                    $data = ['is_active' => 0, 'is_archived' => 1, 'modified' => date("Y-m-d H:i:s")];
                     $this->items_model->updateItem($item->id, $data);
     
                     //Activity Logs
-                    $activity_name = 'Inventory : Deleted item '.$item->title; 
+                    $activity_name = 'Inventory : Archived item '. $item->title; 
                     createActivityLog($activity_name);
                 } 
                 
@@ -2288,6 +2283,20 @@ class Inventory extends MY_Controller
             echo 'Data not found.';
         }
     }
+
+    public function ajax_archived_list()
+    {
+        $post = $this->input->post();
+        $company_id  = logged('company_id');
+        $is_archived = 1;
+
+        $conditions  = array('company_id'=> $company_id, 'type' => 'product', 'is_archived' => $is_archived); 
+        $items = $this->items_model->getByWhere($conditions);            
+
+        $this->page_data['items'] = $items;
+        $this->load->view("v2/pages/inventory/ajax_archived_list", $this->page_data);
+    }     
+
 }
 /* End of file items.php */
 

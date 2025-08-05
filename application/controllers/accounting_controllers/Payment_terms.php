@@ -111,7 +111,7 @@ class Payment_terms extends MY_Controller {
         ));
 
         $status = [
-            1
+            1,0
         ];
 
         if (!empty(get('inactive') && get('inactive') === '1') ) {
@@ -138,8 +138,9 @@ class Payment_terms extends MY_Controller {
 
     public function add()
     {
+        $company_id = logged('company_id');
         $data = [
-            'company_id' => getLoggedCompanyID(),
+            'company_id' => $company_id,
             'name' => $this->input->post('name'),
             'type' => $this->input->post('payment_term_type'),
             'net_due_days' => $this->input->post('payment_term_type') === "1" ? $this->input->post('net_due_days') === "" ? 0 : $this->input->post('net_due_days') : null,
@@ -193,7 +194,7 @@ class Payment_terms extends MY_Controller {
             'payment_term_name' => $payment_term_name
         ];
         echo json_encode($return);
-    }
+    }   
 
     public function delete($id)
     {
@@ -216,6 +217,90 @@ class Payment_terms extends MY_Controller {
             $this->session->set_flashdata('error', "Please try again!");
         }
     }
+
+    public function ajax_delete_term(){
+        $this->load->model('Accounting_terms_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id  = logged('company_id');
+        $post        = $this->input->post();
+
+        if($post) {
+            $term = $this->Accounting_terms_model->get_by_id($post['tid'], $company_id);
+            if( $term ){
+                $this->Accounting_terms_model->delete($post['tid']);
+                $is_success = 1;
+                $msg = '';            
+            } else {
+                $msg = 'Cannot find data';
+            } 
+        }
+     
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }     
+
+    public function ajax_update_status(){
+        $this->load->model('Accounting_terms_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id  = logged('company_id');
+        $post        = $this->input->post();
+
+        if($post) {
+            $term = $this->Accounting_terms_model->get_by_id($post['tid'], $company_id);
+            if( $term ){
+                $update = $this->accounting_terms_model->updateTermStatus($post['tid'], $post['t_status'], $company_id);
+                if($update) {
+                    $is_success = 1;
+                    $msg = '';                            
+                }
+            } else {
+                $msg = 'Cannot find data';
+            } 
+        }
+     
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }         
+
+    public function ajax_delete_selected_payment_terms() 
+    {
+        $this->load->model('Accounting_terms_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';  
+
+        $company_id  = logged('company_id');
+        $post        = $this->input->post();     
+        
+        if( $post['terms'] ){
+            $delete_count = 0;
+            foreach($post['terms'] as $term_id) {
+                $term = $this->Accounting_terms_model->get_by_id($term_id, $company_id);
+                if( $term ){
+                    $this->Accounting_terms_model->delete($term_id);
+                    $delete_count++;
+                }                
+            }
+
+            if($delete_count) {
+                $is_success = 1;
+                $msg    = '';
+            }            
+        }
+        
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);        
+    }    
 
     public function activate($id)
     {

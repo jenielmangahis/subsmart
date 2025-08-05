@@ -281,8 +281,15 @@ class Items_model extends MY_Model
     {
         $this->db->where('company_id', $data['company_id']);
         $this->db->where('id', $data['id']);
-        //$inactive = $this->db->update($this->table, ['is_active' => 0, 'title' => $data['name']]);
         $inactive = $this->db->update($this->table, ['is_active' => 0]);
+        return $inactive ? true : false;
+    }
+
+    public function archivedItem($data)
+    {
+        $this->db->where('company_id', $data['company_id']);
+        $this->db->where('id', $data['id']);
+        $inactive = $this->db->update($this->table, ['is_archived' => 1]);
         return $inactive ? true : false;
     }
 

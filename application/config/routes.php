@@ -1342,6 +1342,13 @@ $route['estimate/_update_estimate_status'] = 'Estimate/ajax_update_estimate_stat
 $route['estimate/_get_package_items'] = 'Estimate/ajax_get_package_items';
 $route['estimate/_delete_selected_estimates'] = 'Estimate/ajax_delete_selected_estimates';
 $route['estimates/_archived_list'] = 'Estimate/ajax_archived_list';
+$route['estimates/_archive_selected_estimates'] = 'Estimate/ajax_archive_selected_estimates';
+$route['estimates/_change_status_selected_estimates'] = 'Estimate/ajax_change_status_selected_estimates';
+$route['estimates/_restore_selected_estimates'] = 'Estimate/ajax_restore_selected_estimates';
+$route['estimates/_permanently_delete_selected_estimates'] = 'Estimate/ajax_permanently_delete_selected_estimates';
+$route['estimates/_delete_all_archived_estimates'] = 'Estimate/ajax_delete_all_archived_estimates';
+$route['estimates/_restore_estimate'] = 'Estimate/ajax_restore_estimate';
+$route['estimates/_delete_archived_estimate'] = 'Estimate/ajax_delete_archived_estimate';
 
 // Credit Notes
 $route['credit_notes'] = 'Credit_Notes/index';
@@ -1770,6 +1777,9 @@ $route['inventory/item_groups/edit/(:num)'] = 'inventory/edit_item_category/$1';
 $route['inventory/_edit_item_category'] = 'inventory/ajax_edit_item_category';
 $route['inventory/_update_item_category'] = 'inventory/ajax_update_item_category';
 $route['inventory/item_groups/delete'] = 'inventory/ajax_delete_item_category';
+
+// Inventory Arhived
+$route['inventory/_archived_list'] = 'Inventory/ajax_archived_list';
 
 // Sales Overview
 $route['sales-overview/income-overtime'] = 'AccountingSales/get_income_overtime';

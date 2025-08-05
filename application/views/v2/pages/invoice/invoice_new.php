@@ -94,7 +94,7 @@
                                 <li><a class="dropdown-item" href="<?php echo base_url('customer?type=residential') ?>">Residential</a></li>
                             </ul>
                         </div> -->
-                        <?php if(checkRoleCanAccessModule('invoice', 'write')){ ?>
+                        <?php if(checkRoleCanAccessModule('invoice', 'delete')){ ?>
                             <div class="dropdown d-inline-block">
                                 <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                     <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
@@ -183,7 +183,7 @@
                     <table class="nsm-table">
                         <thead>
                             <tr>
-                                <?php if(checkRoleCanAccessModule('invoice', 'write')){ ?>
+                                <?php if(checkRoleCanAccessModule('invoice', 'delete')){ ?>
                                 <td class="table-icon text-center sorting_disabled">
                                     <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                                 </td>
@@ -244,7 +244,7 @@
                                     endswitch;
                                 ?>
                                     <tr>
-                                        <?php if(checkRoleCanAccessModule('invoice', 'write')){ ?>
+                                        <?php if(checkRoleCanAccessModule('invoice', 'delete')){ ?>
                                         <td>
                                             <input class="form-check-input row-select table-select" name="invoice[]" type="checkbox" value="<?= $invoice->id; ?>">
                                         </td>

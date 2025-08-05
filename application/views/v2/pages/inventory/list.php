@@ -86,19 +86,36 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
+
                         <div class="dropdown d-inline-block">
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>
-                                    Batch Actions
-                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span id="num-checked-items" class="num-checked-items"></span> With Selected <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete_selected">Delete Selected</a></li>
+                                <li><a class="dropdown-item btn-with-selected disabled" href="javascript:void(0);" id="delete_selected">Delete Selected</a></li>
                             </ul>
                         </div>
-                        <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>
-                        <div class="nsm-page-buttons page-button-container">
+
+                        <div class="nsm-page-buttons page-button-container">                            
+
+                            <div class="btn-group" style="margin-bottom: 4px;">
+                                <button type="button" class="btn btn-nsm btn-nsm-custom" id="btn-add-new-inventory-item" onclick="location.href='<?php echo base_url('inventory/add') ?>'"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Item</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split btn-nsm-custom" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">     
+                                    <li><a class="dropdown-item" id="import-items" href="javascript:void(0);" onclick="location.href='<?php echo url('inventory/import') ?>'">Import</a></li>                            
+                                    <li><a class="dropdown-item export-items" id="export-items" href="javascript:void(0);">Export</a></li>       
+                                    <li><a class="dropdown-item print-items" id="print-items" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#print_inventory_modal">Print List</a></li>                         
+                                    <li><a class="dropdown-item" id="archived-items-list" href="javascript:void(0);">Archived</a></li>                               
+                                </ul>
+                            </div>
+                   
+                        </div>                         
+
+                        <?php //if(checkRoleCanAccessModule('inventory', 'write')){ ?>
+                        <!-- <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('inventory/import') ?>'">
                                 <i class='bx bx-fw bx-import'></i> Import
                             </button>
@@ -108,14 +125,15 @@
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('inventory/add') ?>'">
                                 <i class='bx bx-fw bx-plus'></i> Add New Item
                             </button>
-                            <!-- <button type="button" class="nsm-button btn-share-url">
+                            <button type="button" class="nsm-button btn-share-url">
                                 <i class='bx bx-fw bx-share-alt'></i>
-                            </button> -->
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_inventory_modal">
+                            </button>
+                            <button type="button" class="btn btn-nsm primary" data-bs-toggle="modal" data-bs-target="#print_inventory_modal">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
-                        </div>
-                        <?php } ?>
+                        </div> -->
+                        <?php //} ?>
+
                     </div>
                 </div>
                 <form id="frm-list-inventory">
@@ -123,7 +141,7 @@
                         <thead>
                             <tr>
                                 <td class="table-icon text-center">
-                                    <input class="form-check-input select-all table-select" type="checkbox">
+                                    <input class="form-check-input select-all table-select" id="select-all" type="checkbox">
                                 </td>
                                 <td class="table-icon"></td>
                                 <td data-name="Item">Item</td>
@@ -140,7 +158,7 @@
                             <tr>
                                 <td style="width:1%;">
                                     <div class="table-row-icon table-checkbox">
-                                        <input class="form-check-input select-one table-select" type="checkbox" data-id="<?php echo $item[3]; ?>" name="items[<?= $item[3]; ?>]" value="<?php echo $item[3]; ?>">
+                                        <input class="form-check-input select-one row-select table-select" type="checkbox" data-id="<?php echo $item[3]; ?>" name="items[<?= $item[3]; ?>]" value="<?php echo $item[3]; ?>">
                                     </div>
                                 </td>
                                 <td style="width:1%;">
@@ -423,10 +441,10 @@
     </div>
 </div>
 
-
 <script src="<?php echo base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+
         $('#ITH_LOADER').hide();
         $('#ITH_CONTENT').fadeIn('fast');
 
@@ -465,6 +483,21 @@
         $("#LOCATION_STATUS_TABLE_SEARCH").keyup(function() {
             LOCATION_STATUS_TABLE.columns(0).search($(this).val()).draw();
         });
+
+        $('#archived-items-list').on('click', function(){
+            $('#modal-archived-items').modal('show');
+            $.ajax({
+                type: "POST",
+                url: base_url + "inventory/_archived_list",  
+                success: function(html) {    
+                    $('#inventory-items-archived-list-container').html(html);                          
+                },
+                beforeSend: function() {
+                    $('#inventory-items-archived-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });     
+             
     });
 
     var ITEM_ID;
@@ -516,6 +549,7 @@
         $('#inventory_location_modal').modal('show');
         $('#edit_location_qty_modal').modal('hide');
     });
+
     $('#close-add-location-modal').click(function() {
         $('#inventory_location_modal').modal('show');
         $('#add_location_modal').modal('hide');
@@ -536,6 +570,7 @@
             console.log(error);
         })
     }
+
     $("#edit_location_qty").submit(function(e) {
         e.preventDefault();
         var form = $('#edit_location_qty');
@@ -561,6 +596,7 @@
             }
         });
     });
+
     $("#location_form").submit(function(e) {
         e.preventDefault();
         var form = $('#location_form');
@@ -578,261 +614,272 @@
             }
         });        
     });
-$(document).ready(function() {
 
-    // var ITEM_LOCATION_TABLE = $("#ITEM_LOCATION_TABLE").DataTable({
-    //     "ordering": false,
-    //     language: {
-    //         processing: '<span>Fetching data...</span>'
-    //     },
-    //     "columnDefs": [
-    //         { "width": "5%"},
-    //         { "width": "80%"},
-    //         { "width": "5%"}
-    //     ],
-    // });
+    $(document).ready(function() {
 
-    $('.SEE_LOCATION').delay(1000).removeAttr('disabled');
-    // $('.SEE_LOCATION').hover(function() {
-    //     const DATA_ID = parseInt($(this).attr("data-id"));
-    //     ITEM_LOCATION_TABLE.columns(0).search('^'+DATA_ID+'$', true, false).draw();
-    // }, function() {
-    //     ITEM_LOCATION_TABLE.search('').draw();
-    // });
+        // var ITEM_LOCATION_TABLE = $("#ITEM_LOCATION_TABLE").DataTable({
+        //     "ordering": false,
+        //     language: {
+        //         processing: '<span>Fetching data...</span>'
+        //     },
+        //     "columnDefs": [
+        //         { "width": "5%"},
+        //         { "width": "80%"},
+        //         { "width": "5%"}
+        //     ],
+        // });
+
+        $('.SEE_LOCATION').delay(1000).removeAttr('disabled');
+        // $('.SEE_LOCATION').hover(function() {
+        //     const DATA_ID = parseInt($(this).attr("data-id"));
+        //     ITEM_LOCATION_TABLE.columns(0).search('^'+DATA_ID+'$', true, false).draw();
+        // }, function() {
+        //     ITEM_LOCATION_TABLE.search('').draw();
+        // });
 
 
-    var INVENTORY_TABLE = $("#INVENTORY_TABLE").DataTable({
-        "ordering": false,
-        language: {
-            processing: '<span>Fetching data...</span>'
-        },
-    });
-
-    $("#search_field_custom").keyup(function() {
-        INVENTORY_TABLE.search($(this).val()).draw();
-    });
-
-    let selectedIds = [];
-
-    $("#inventory_list").nsmPagination();
-
-    $("#search_field").on("input", debounce(function() {
-        tableSearch($(this));
-    }, 1000));
-
-    $("#select-all").on("change", function() {
-        let isChecked = $(this).is(":checked");
-
-        if (isChecked) {
-            $(".nsm-table").find(".select-one").prop("checked", true);
-            $(".batch-actions").find("a.dropdown-item").removeClass("disabled");
-        } else {
-            $(".nsm-table").find(".select-one").prop("checked", false);
-            $(".batch-actions").find("a.dropdown-item").addClass("disabled");
-        }
-    });
-
-    $(".btn-share-url").on("click", function() {
-        var _shareableLink = $("<input>");
-        $("body").append(_shareableLink);
-        _shareableLink.val(window.location.href).select();
-        document.execCommand('copy');
-        _shareableLink.remove();
-
-        Swal.fire({
-            title: 'Success',
-            text: "Shareable link has been copied to clipboard.",
-            icon: 'success',
-            showCancelButton: false,
-            confirmButtonText: 'Okay'
+        var INVENTORY_TABLE = $("#INVENTORY_TABLE").DataTable({
+            "ordering": false,
+            language: {
+                processing: '<span>Fetching data...</span>'
+            },
         });
-    });
 
-    $("#btn_print_inventory").on("click", function() {
-        $("#inventory_table_print").printThis();
-    });
+        $("#search_field_custom").keyup(function() {
+            INVENTORY_TABLE.search($(this).val()).draw();
+        });
 
-    $(".export-items").click(function() {
-        window.location.href = "<?php echo base_url('inventory/export_list') ?>";
-    });
+        let selectedIds = [];
 
-    $(document).on("change", ".table-select", function() {
-        let _this = $(this);
-        let id = _this.attr("data-id");
+        $("#inventory_list").nsmPagination();
 
-        if (!_this.prop("checked") && $(".select-all").prop("checked")) {
-            $(".select-all").prop("checked", false);
-        }
+        $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));
+        }, 1000));
 
-        if (!_this.prop("checked")) {
-            selectedIds = $.grep(selectedIds, function(value) {
-                return value != id
+        $("#select-all").on("change", function() {
+            let isChecked = $(this).is(":checked");
+
+            if (isChecked) {
+                $(".nsm-table").find(".select-one").prop("checked", true);
+                $(".batch-actions").find("a.dropdown-item").removeClass("disabled");
+            } else {
+                $(".nsm-table").find(".select-one").prop("checked", false);
+                $(".batch-actions").find("a.dropdown-item").addClass("disabled");
+            }
+        });
+
+        $(".btn-share-url").on("click", function() {
+            var _shareableLink = $("<input>");
+            $("body").append(_shareableLink);
+            _shareableLink.val(window.location.href).select();
+            document.execCommand('copy');
+            _shareableLink.remove();
+
+            Swal.fire({
+                title: 'Success',
+                text: "Shareable link has been copied to clipboard.",
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Okay'
             });
-            $("#selected_ids").val(selectedIds);
-        } else {
-            selectedIds.push(id);
-            $("#selected_ids").val(selectedIds);
-        }
+        });
 
-        toggleBatchDelete($(".table-select:checked").length > 0);
-    });
+        $("#btn_print_inventory").on("click", function() {
+            $("#inventory_table_print").printThis();
+        });
 
-    $(document).on("change", ".select-all", function() {
-        let _this = $(this);
+        $(".export-items").click(function() {
+            window.location.href = "<?php echo base_url('inventory/export_list') ?>";
+        });
 
-        if (_this.prop("checked")) {
-            $(".table-select").prop("checked", true);
-            selectedIds = [];
+        $(document).on("change", ".table-select", function() {
+            let _this = $(this);
+            let id = _this.attr("data-id");
 
-            $(".table-select").each(function() {
-                if ($(this).prop("checked"))
-                    selectedIds.push($(this).attr("data-id"));
-            })
-            $("#selected_ids").val(selectedIds);
-        } else {
-            $(".table-select").prop("checked", false);
-            $("#selected_ids").val('');
-            $("#delete_selected").addClass("disabled");
-        }
+            if (!_this.prop("checked") && $(".select-all").prop("checked")) {
+                $(".select-all").prop("checked", false);
+            }
 
-        toggleBatchDelete(_this.prop("checked"));
-    });
+            if (!_this.prop("checked")) {
+                selectedIds = $.grep(selectedIds, function(value) {
+                    return value != id
+                });
 
-    $("#delete_selected").on("click", function() {
+                $("#selected_ids").val(selectedIds);
+            } else {
+                selectedIds.push(id);
+                $("#selected_ids").val(selectedIds);
+            }
 
-        Swal.fire({
-            title: 'Delete Selected Items',
-            text: "Are you sure you want to delete the selected items?",
-            icon: 'question',
-            confirmButtonText: 'Proceed',
-            showCancelButton: true,
-            cancelButtonText: "Cancel"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url('inventory/deleteMultiple') ?>",
-                    data: $('#frm-list-inventory').serialize(),
-                    dataType:'json',
-                    success: function(response) {
-                        if( response.is_success == 1 ){
-                            Swal.fire({
-                                title: 'Delete Inventory Item',
-                                text: "Selected data has been deleted successfully!",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            }).then((result) => {
-                                //if (result.value) {
-                                    location.reload();
-                                //}
-                            });
-                        }else{
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: response.msg,
-                            });  
+            let total_selected = $(".table-select:checked").length;
+            
+            if( total_selected > 0 ){
+                $('#num-checked-items').text(`(${total})`);
+            }else{
+                $('#num-checked-items').text('');
+            }            
+
+            toggleBatchDelete($(".table-select:checked").length > 0);
+        });
+
+        $(document).on("change", ".select-all", function() {
+            let _this = $(this);
+
+            if (_this.prop("checked")) {
+                $(".table-select").prop("checked", true);
+                selectedIds = [];
+
+                $(".table-select").each(function() {
+                    if ($(this).prop("checked"))
+                        selectedIds.push($(this).attr("data-id"));
+                })
+                $("#selected_ids").val(selectedIds);
+            } else {
+                $(".table-select").prop("checked", false);
+                $("#selected_ids").val('');
+                $("#delete_selected").addClass("disabled");
+            }
+
+            toggleBatchDelete(_this.prop("checked"));
+        });
+
+        $("#delete_selected").on("click", function() {
+
+            Swal.fire({
+                title: 'Delete Selected Items',
+                text: "Are you sure you want to delete the selected items?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "<?php echo base_url('inventory/deleteMultiple') ?>",
+                        data: $('#frm-list-inventory').serialize(),
+                        dataType:'json',
+                        success: function(response) {
+                            if( response.is_success == 1 ){
+                                Swal.fire({
+                                    title: 'Delete Inventory Item',
+                                    text: "Selected data has been deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: response.msg,
+                                });  
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
-    });
 
-    $(document).on("click", ".delete-item", function() {
-        let id = $(this).attr('data-id');
-        let name = $(this).attr('data-name');
+        $(document).on("click", ".delete-item", function() {
+            let id = $(this).attr('data-id');
+            let name = $(this).attr('data-name');
 
-        Swal.fire({
-            title: 'Delete Inventory Item',
-            html: `Are you sure you want to delete item <b>${name}</b>?`,
-            icon: 'question',
-            confirmButtonText: 'Proceed',
-            showCancelButton: true,
-            cancelButtonText: "Cancel"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url('/inventory/delete') ?>",
-                    data: {
-                        id: id
-                    },
-                    // success: function(data) {
-                    //     if (data === "1") {
-                    //         Swal.fire({
-                    //             title: 'Delete Success',
-                    //             text: "Data has been deleted successfully!",
-                    //             icon: 'success',
-                    //             showCancelButton: false,
-                    //             confirmButtonText: 'Okay'
-                    //         }).then((result) => {
-                    //             if (result.value) {
-                    //                 location.reload();
-                    //             }
-                    //         });
-                    //     } else {
-                    //         Swal.fire({
-                    //             title: 'Delete Failed',
-                    //             text: "Please try again later.",
-                    //             icon: 'error',
-                    //             showCancelButton: false,
-                    //             confirmButtonText: 'Okay'
-                    //         });
-                    //     }
-                    // }
-                });
-                Swal.fire({
-                    title: 'Delete Success',
-                    text: "Data has been deleted successfully!",
-                    icon: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'Okay'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        location.reload();
-                    }
-                });
-            }
-        });
-    });
-    $(document).on("click", ".delete-location-item", function() {
-        let id = $(this).attr('data-id');
-
-        Swal.fire({
-            title: 'Delete Location',
-            text: "Are you sure you want to delete this location?",
-            icon: 'question',
-            confirmButtonText: 'Proceed',
-            showCancelButton: true,
-            cancelButtonText: "Cancel"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url('/inventory/deleteItemLocation') ?>", 
-                    data: {id: id},
-                    dataType:'json',
-                    success: function(response){
-                        if(response.is_success == 1 ){
-                            load_item_location_list(response.item_id);
-                        }else{
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Cannot find data',
-                            });  
+            Swal.fire({
+                title: 'Delete Inventory Item',
+                html: `Are you sure you want to delete item <b>${name}</b>?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "<?php echo base_url('/inventory/delete') ?>",
+                        data: {
+                            id: id
+                        },
+                        // success: function(data) {
+                        //     if (data === "1") {
+                        //         Swal.fire({
+                        //             title: 'Delete Success',
+                        //             text: "Data has been deleted successfully!",
+                        //             icon: 'success',
+                        //             showCancelButton: false,
+                        //             confirmButtonText: 'Okay'
+                        //         }).then((result) => {
+                        //             if (result.value) {
+                        //                 location.reload();
+                        //             }
+                        //         });
+                        //     } else {
+                        //         Swal.fire({
+                        //             title: 'Delete Failed',
+                        //             text: "Please try again later.",
+                        //             icon: 'error',
+                        //             showCancelButton: false,
+                        //             confirmButtonText: 'Okay'
+                        //         });
+                        //     }
+                        // }
+                    });
+                    Swal.fire({
+                        title: 'Delete Success',
+                        text: "Data has been deleted successfully!",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
                         }
-                    }
-                });                
-            }
+                    });
+                }
+            });
+        });
+        $(document).on("click", ".delete-location-item", function() {
+            let id = $(this).attr('data-id');
+
+            Swal.fire({
+                title: 'Delete Location',
+                text: "Are you sure you want to delete this location?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "<?php echo base_url('/inventory/deleteItemLocation') ?>", 
+                        data: {id: id},
+                        dataType:'json',
+                        success: function(response){
+                            if(response.is_success == 1 ){
+                                load_item_location_list(response.item_id);
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Cannot find data',
+                                });  
+                            }
+                        }
+                    });                
+                }
+            });
         });
     });
-});
 
-function toggleBatchDelete(enable = True) {
-    enable ? $("#delete_selected").removeClass("disabled") : $("#delete_selected").addClass("disabled");
-}
+    function toggleBatchDelete(enable = True) {
+        enable ? $("#delete_selected").removeClass("disabled") : $("#delete_selected").addClass("disabled");
+    }  
+
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

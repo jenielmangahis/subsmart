@@ -121,3 +121,17 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="modal-archived-items" aria-labelledby="modal-archived-items-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form method="post" id="archived-items-list-form">   
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Archived Inventory Items</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="inventory-items-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+            </div>
+        </form>
+    </div>
+</div>
