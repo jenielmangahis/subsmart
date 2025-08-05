@@ -150,8 +150,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-md-4 col-12" style="font-size:16px;">
                         <h4 class="title-border">From</h4>
                         <h4><i class="bx bx-buildings"></i> <?= $client->business_name; ?></h4>
-                        <div class="col-xl-5 ml-0 pl-0">
-                          <span class="ul-text"><?php echo $client->street .' <br>'.$client->city .', '.$client->state .' '.$client->postal_code; ?></span><br>
+                        <div class="ml-0 pl-0">
+                          <span class="ul-text"><?php echo $client->street .' '.$client->city .', '.$client->state .' '.$client->postal_code; ?></span><br>
                           <span class=""><?= $client->business_email; ?></span><br />
                           <span class=""><?= formatPhoneNumber($client->office_phone); ?></span>
                         </div>
@@ -166,7 +166,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <?php if($estimate->job_location != null && $estimate->job_location != "") { ?>
                               <span class=""><?php echo $estimate->job_location; ?></span><br />
                             <?php }else{ ?>
-                              <span class=""><?= $customer->mail_add . "<br />" . $customer->city.', '. $customer->state .' '. $customer->zip_code;  ?></span><br />
+                              <span class=""><?= $customer->mail_add . ' ' . $customer->city.', '. $customer->state .' '. $customer->zip_code;  ?></span><br />
                             <?php } ?>
                             <span class=""><span class=""><?= $customer->email; ?></span><br />
                             <span class=""><span class=""><?= formatPhoneNumber($customer->phone_m); ?></span><br />
@@ -410,7 +410,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                               <td colspan="1" style="text-align: right;">
                                 <p>$<?= number_format((float)$estimate->adjustment_value, 2); ?></p></td>
                             </tr> 
-                            <?php } ?>                           
+                            <?php } ?>   
+                            <tr>
+                              <td colspan="4" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                              <td colspan="2" style="text-align: ;"><p>Deposit Amount Requested</p></td>
+                              <td colspan="1" style="text-align: right;">
+                                <?php 
+                                  //$deposit_amount = $estimate->grand_total * ($estimate->deposit_amount/100); 
+                                  $deposit_amount = $estimate->deposit_amount;
+                                ?>
+                                <p>$<?= number_format((float)$deposit_amount, 2); ?></p></td>
+                            </tr>                        
                             <tr>
                               <td colspan="4" style="border-left: 1px solid Transparent!important;border-bottom: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
                               <td colspan="2" style="text-align: ;"><b>TOTAL AMOUNT</b></td>
@@ -424,18 +434,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 // }
                               ?>
                               <td colspan="1" style="text-align: right;"><b>$<?= number_format((float)$grand_total, 2); ?></b></td>
-                            </tr>
-                            <tr><td colspan="7"></td></tr>                            
-                            <tr>
-                              <td colspan="4" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
-                              <td colspan="2" style="text-align: ;"><p>Deposit Amount Requested</p></td>
-                              <td colspan="1" style="text-align: right;">
-                                <?php 
-                                  //$deposit_amount = $estimate->grand_total * ($estimate->deposit_amount/100); 
-                                  $deposit_amount = $estimate->deposit_amount;
-                                ?>
-                                <p>$<?= number_format((float)$deposit_amount, 2); ?></p></td>
-                            </tr>
+                            </tr>                                                    
                           <?php } ?>
                         </tbody>
                       </table>
@@ -595,11 +594,9 @@ $(document).on('click touchstart', '.approveEstimate', function(){
           data:{'estId':estId },
           url : "<?php echo base_url(); ?>estimate/approveEstimate",
           beforeSend: function(data) {
-              $('#loading_modal').modal('show');
-              $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Updating estimate....');
+              
           },
           success: function (data) {
-            $('#loading_modal').modal('hide');       
             Swal.fire({                        
                 text: "Data was successfully updated!",
                 icon: 'success',
