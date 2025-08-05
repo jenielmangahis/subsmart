@@ -445,6 +445,259 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
+        //For Achived Modal List - Start
+        $(document).on('change', '#select-all-archived', function(){
+            $('.row-select-archived:checkbox').prop('checked', this.checked);  
+            let total= $('input[name="archived_items[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked-arhived').text(`(${total})`);
+            }else{
+                $('#num-checked-arhived').text('');
+            }
+        });
+
+        $(document).on('change', '.row-select-archived', function(){
+            let total= $('input[name="archived_items[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked-arhived').text(`(${total})`);
+            }else{
+                $('#num-checked-arhived').text('');
+            }
+        });
+        
+        $(document).on('click', '#with-selected-restore', function(){
+            let total= $('input[name="archived_items[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Restore Items',
+                    html: `Are you sure you want to restore the selected items?`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'inventory/_restore_selected_items',
+                            dataType: 'json',
+                            data: $('#frm-with-selected-archived').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                        title: 'Restore Items',
+                                        text: "Data restore successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        }); 
+
+        $(document).on('click', '#with-selected-permanent-delete', function(){
+            let total= $('input[name="archived_items[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Delete Items Permanently',
+                    html: `Would you like to permanently delete the selected items? You will no longer recover this data.`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'inventory/_delete_permanent_selected_items',
+                            dataType: 'json',
+                            data: $('#frm-with-selected-archived').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                        title: 'Permanently Delete Items',
+                                        text: "Data permanently delete successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        }); 
+
+        $(document).on('click', '.btn-permanent-delete-item', function(){
+            var item_id = $(this).attr('data-id');
+            var item_title = $(this).attr('data-title');
+
+            Swal.fire({
+                title: 'Permanent Delete Item Data',
+                html: `Would you like to permanently delete the item <b>#${item_title}</b>? You will no longer recover this data.`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {                    
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "inventory/_permanent_delete",
+                        data: {item_id:item_id},
+                        dataType:'json',
+                        success: function(result) {                            
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-items').modal('hide');
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Item data was successfully deleted permanently.',
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '.btn-restore-item', function(){
+            var item_id = $(this).attr('data-id');
+            var item_title = $(this).attr('data-title');
+
+            Swal.fire({
+                title: 'Restore Items Data',
+                html: `Proceed with restoring item <b>${item_title}</b>?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {                    
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "inventory/_restore_archived",
+                        data: {item_id:item_id},
+                        dataType:'json',
+                        success: function(result) {                            
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-items').modal('hide');
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Item data was successfully restored.',
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });        
+
+        $(document).on('click', '#btn-empty-item-archives', function(){        
+            let total_records = $('#archived-items input[name="archived_items[]"]').length;                         
+            if( total_records > 0 ){
+                Swal.fire({
+                    title: 'Empty Archived',
+                    html: `Are you sure you want to <b>permanently delete</b> <b>${total_records}</b> archived items? <br/><br/>Note : This cannot be undone.`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'inventory/_delete_all_archived_items',
+                            dataType: 'json',
+                            data: $('#frm-with-selected-archived').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    $('#modal-archived-items').modal('hide');
+                                    Swal.fire({
+                                        title: 'Empty Archived',
+                                        text: "Data deleted successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }else{
+                Swal.fire({                
+                    icon: 'error',
+                    title: 'Error',              
+                    html: 'Archived is empty',
+                });
+            }        
+        });    
+        //For Achived Modal List - End             
+
         $('#ITH_LOADER').hide();
         $('#ITH_CONTENT').fadeIn('fast');
 
@@ -714,12 +967,6 @@
 
             let total_selected = $(".table-select:checked").length;
             
-            if( total_selected > 0 ){
-                $('#num-checked-items').text(`(${total})`);
-            }else{
-                $('#num-checked-items').text('');
-            }            
-
             toggleBatchDelete($(".table-select:checked").length > 0);
         });
 
