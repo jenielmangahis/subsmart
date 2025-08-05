@@ -445,6 +445,7 @@ $("#search_field").on("input", debounce(function() {
     let search = $(this).val();
     if( search == '' ){
         $(".nsm-table").nsmPagination();
+        $("#JOB_LIST_TABLE").find("tbody .nsm-noresult").remove();
     }else{
         tableSearch($(this));        
     }
