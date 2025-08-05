@@ -744,6 +744,7 @@ class Inventory extends MY_Controller
 
         echo json_encode($json_data);
     }
+
     public function delete()
     {
         $post = $this->input->post();
@@ -2295,7 +2296,170 @@ class Inventory extends MY_Controller
 
         $this->page_data['items'] = $items;
         $this->load->view("v2/pages/inventory/ajax_archived_list", $this->page_data);
-    }     
+    }      
+    
+    public function ajax_restore_archived()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find item data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $item = $this->items_model->getItemById($post['item_id'])[0];
+        if ($item) {        
+                        
+            $updateData = ['is_active' => 1, 'is_archived' => 0, 'modified' => date("Y-m-d H:i:s")];
+            $this->items_model->updateItem($item->id, $updateData);
+
+            //Activity Logs
+            $activity_name = 'Archived : Restore item data  ' . $item->title; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }   
+
+    public function ajax_restore_selected_items()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post        = $this->input->post();     
+        
+        if( $post['archived_items'] ){
+            $restore_count = 0;
+            foreach($post['archived_items'] as $item_id) {
+                $item = $this->items_model->getItemById($item_id)[0];
+                if ($item && $item->company_id == $company_id) {
+
+                    $updateData = ['is_active' => 1, 'is_archived' => 0, 'modified' => date("Y-m-d H:i:s")];
+                    $this->items_model->updateItem($item->id, $updateData);
+
+                    //Activity Logs
+                    $activity_name = 'Archived : Restore invoice data  ' . $item->title; 
+                    createActivityLog($activity_name);   
+                                     
+                    $restore_count++;
+                }
+            }
+
+            if($restore_count) {
+                $is_success = 1;
+                $msg    = '';
+            }
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }    
+    
+    public function ajax_permanent_delete()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find item data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $item = $this->items_model->getItemById($post['item_id'])[0];
+        if ($item) {                        
+            $this->items_model->deleteItem($post['item_id']);
+
+            //Activity Logs
+            $activity_name = 'Archived : Permanent item invoice data ' . $item->title; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }   
+    
+    public function ajax_delete_permanent_selected_items()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post        = $this->input->post();  
+                
+        if( $post['archived_items'] ){
+            $delete_count = 0;
+            foreach($post['archived_items'] as $item_id) {
+                $item = $this->items_model->getItemById($item_id)[0];
+                if ($item && $item->company_id == $company_id) {
+                    $item_delete = $this->items_model->deleteItem($item_id);
+                    if($item_delete) {
+                        //Activity Logs
+                        $activity_name = 'Archived : Permanent delete item data ' . $invoice->invoice_number; 
+                        createActivityLog($activity_name);  
+                        $delete_count++;
+                    }
+                }
+            }
+
+            if($delete_count) {
+                $is_success = 1;
+                $msg    = '';
+            }
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }    
+    
+	public function ajax_delete_all_archived_items()
+	{
+		$is_success = 0;
+        $msg        = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post        = $this->input->post();	
+        $type        = 'Product';
+
+        $items   = $this->items_model->getArchivedItems($company_id, $type);
+		$total_archived = count($items);    
+
+        
+        if($total_archived > 0) {
+
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $filter[] = ['field' => 'is_archived', 'value' => '1'];
+            $filter[] = ['field' => 'type', 'value' => $type];
+
+            $delete_all = $this->items_model->deleteAllArchived($filter);
+
+            //Activity Logs
+            $activity_name = 'Users : Permanently deleted ' .$total_archived. ' invoice(s)'; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+        
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}      
 
 }
 /* End of file items.php */

@@ -1781,6 +1781,11 @@ $route['inventory/item_groups/delete'] = 'inventory/ajax_delete_item_category';
 
 // Inventory Arhived
 $route['inventory/_archived_list'] = 'Inventory/ajax_archived_list';
+$route['inventory/_restore_archived'] = 'Inventory/ajax_restore_archived';
+$route['inventory/_permanent_delete'] = 'Inventory/ajax_permanent_delete';
+$route['inventory/_delete_permanent_selected_items'] = 'Inventory/ajax_delete_permanent_selected_items';
+$route['inventory/_restore_selected_items'] = 'Inventory/ajax_restore_selected_items';
+$route['inventory/_delete_all_archived_items'] = 'Inventory/ajax_delete_all_archived_items';
 
 // Sales Overview
 $route['sales-overview/income-overtime'] = 'AccountingSales/get_income_overtime';
