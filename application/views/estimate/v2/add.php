@@ -348,6 +348,13 @@ label.bold {
 .select2-results__group{
     margin-left: 0px !important;
 }
+#items_table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+#items_table td:nth-child(5){
+text-align:right !important;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
@@ -397,20 +404,20 @@ label.bold {
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-3">
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <div class="row">
                                         <div class="col-md-12 mb-3">
                                             <div class="d-flex justify-content-between">
                                                 <label for="job_name"><b>Customer</b></label>
                                                 <div class="d-flex">
-                                                    <a class="nsm-link d-flex align-items-center" data-bs-toggle="modal"
+                                                    <a class="nsm-button btn-small d-flex" data-bs-toggle="modal"
                                                         data-bs-target="#new_customer" href="javascript:void(0);">
-                                                        <span class="bx bx-plus"></span>Create Customer
+                                                        Add New Customer
                                                     </a>
-                                                    <a class="nsm-link d-flex align-items-center"
+                                                    <a class="nsm-button btn-small d-flex d-flex"
                                                         style="margin-left:5px;" data-bs-toggle="modal"
                                                         data-bs-target="#quick-add-lead" href="javascript:void(0);">
-                                                        <span class="bx bx-plus"></span>Create Lead
+                                                        Add New Lead
                                                     </a>
                                                 </div>
                                             </div>
@@ -438,7 +445,7 @@ label.bold {
                                         </div>
 
                                         <div class="col-md-12 mb-3">
-                                            <label for="job_location"><b>Job Location</b></label><a class="btn-use-different-address" id="btn-use-different-address" data-id="0" href="javascript:void(0);" style="float: right; display:none;">Use Other Address</a>
+                                            <label for="job_location"><b>Job Location</b></label><a class="nsm-button btn-small btn-use-different-address" id="btn-use-different-address" data-id="0" href="javascript:void(0);" style="float: right; display:none;">Use Other Address</a>
                                             <input type="text" class="form-control" name="job_location" id="job_location" />
                                         </div>
 
@@ -456,7 +463,6 @@ label.bold {
 
                                     </div>
                                 </div>
-                                <div class="col-md-1"></div>
                                 <div class="col-md-7">
                                     <div class="col-md-12 MAP_LOADER_CONTAINER">
                                         <div class="text-center MAP_LOADER">
@@ -506,8 +512,8 @@ label.bold {
                                         onChange="jQuery('#customer_name').text(jQuery(this).val());" />
                                 </div>
                                 <div class="col-md-3 form-group">
-                                    <label for="estimate_date">Estimate Type <span style="color:red;">*</span></label>
-                                    <select name="estimate_type" class="form-control">
+                                    <label for="estimate_date"><b>Estimate Type</b> <span style="color:red;">*</span></label>
+                                    <select name="estimate_type" class="form-select">
                                         <option value="Deposit">Deposit</option>
                                         <option value="Partial Payment">Partial Payment</option>
                                         <option value="Final Payment">Final Payment</option>
@@ -520,22 +526,13 @@ label.bold {
                                     <label for="status" class="required"><b>Estimate Status</b></label>
                                     <!-- <input type="text" class="form-control" name="zip" id="zip" required
                                                 placeholder="Enter Estimate Status"/> -->
-                                    <select required name="status" class="form-control" id="estimate-status">
+                                    <select required name="status" class="form-select" id="estimate-status">
                                         <option value="Draft">Draft</option>
                                         <option value="Submitted">Submitted</option>
                                         <option value="Accepted">Accepted</option>
                                         <option value="Declined By Customer">Declined By Customer</option>
                                         <option value="Lost">Lost</option>
                                     </select>
-                                </div>
-
-                                <div class="col-md-6 mt-4">
-                                    <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="reminder_14d" value="1" id="reminder14d">
-                                    <label class="form-check-label" for="reminder14d">
-                                        <b>Remind me in 14 days</b>
-                                    </label>
-                                    </div>
                                 </div>
                             </div>
 
@@ -544,14 +541,6 @@ label.bold {
 
                                 <div class="col-md-3">
                                     <b>Items Summary</b>
-                                </div>
-                                <div class="col-md-6">
-                                </div>
-                                <div class="col-md-3" align="right">
-                                    <b>Show qty as: </b>
-                                    <select class="dropdown">
-                                        <option>Quantity</option>
-                                    </select>
                                 </div>
                             </div>
 
@@ -576,49 +565,40 @@ label.bold {
                                         <tbody id="jobs_items_table_body">
                                         </tbody>
                                     </table>
-                                    <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
-                                    <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
                                     <div class="add-item-container">
-                                        <a class="nsm-button primary" href="#" id="add_another_items"
-                                            data-bs-toggle="modal" data-bs-target="#item_list"><i
-                                                class='bx bx-plus-medical'></i> Add Another Line</a>
-                                        <a class="nsm-button primary" href="#"
-                                            onclick="window.open('<?php echo base_url('estimate/add_new_inventory_item'); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');"><i
-                                                class='bx bx-plus-medical'></i> Add Items</a>
+                                        <button class="nsm-button primary small link-modal-open" type="button" id="add_another_items">
+                                            <i class='bx bx-plus'></i>Add Items
+                                        </button>                                        
                                     </div>
-                                    &emsp;
-                                    <!-- <a class="link-modal-open nsm-link" href="#" id="add_package" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span> Add Package</a> &emsp; -->
-                                    <!-- <span class="link-modal-open nsm-link" id="createNewItem" style="border:solid white 1px;background-color:white;"><span class="fa fa-plus-square fa-margin-right"></span> Create New Item</span> -->
                                     <hr>
                                 </div>
                             </div>
 
-                            <div class="row mb-3" style="background-color:white;font-size:16px;">
+                            <div class="row mb-3">
                                 <div class="col-md-7">
+                                    <div class="row mb-3" style="background-color:white;">
+                                        <div class="col-md-12">
+                                            <label class="bold">Request a deposit <i id="help-popover-request-deposit" class='bx bx-fw bx-help-circle'></i></label>                                            
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            <label class="visually-hidden" for="autoSizingInputGroup">Username</label>
+                                            <div class="input-group">
+                                                <div class="input-group-text">$</div>
+                                                <input type="number" step="any" name="deposit_amount" id="deposit-amount" value="0" class="form-control" autocomplete="off">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="bold">Attachment</label>
+                                            <i id="help-popover-attachment" class='bx bx-fw bx-help-circle'></i></label>                                       
+                                            <input type="file" name="est_contract_upload" id="est_contract_upload"
+                                                class="form-control" />
+                                        </div>
+                                    </div>
                                 </div>
+
                                 <div class="col-md-5">
-                                    <!-- <table class="table" style="text-align:left;">
-                                            <tr>
-                                                <td>Subtotal</td>
-                                                <td></td>
-                                                <td>$ <span id="span_sub_total_invoice">0.00</span>
-                                                    <input type="hidden" name="sub_total" id="item_total"></td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
-                                                <td style="width:150px;">
-                                                <input type="number" name="adjustment_input" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
-                                                    <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
-                                                </td>
-                                                <td>0.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Grand Total ($)</b></td>
-                                                <td></td>
-                                                <td><b><span id="grand_total">0.00</span>
-                                                    <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
-                                            </tr>
-                                        </table> -->
                                     <table class="table table_mobile" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
@@ -705,47 +685,12 @@ label.bold {
                                     </table>
                                 </div>
                             </div>
-
-                            <div class="row mb-3" style="background-color:white;">
-                                <div class="col-md-12">
-                                    <label class="bold">Request a Deposit</label>
-                                    <span class="help help-sm help-block">You can request an upfront payment on accept
-                                        estimate.</span>
-                                </div>
-                                <!-- <div class="col-md-3 form-group">
-                                    <select name="deposit_request" class="form-control">
-                                        <option value="1" selected="selected">Deposit amount $</option>
-                                        <option value="2">Percentage %</option>
-                                    </select>
-                                </div> -->
-                                <div class="col-md-2 form-group">
-                                    <div class="input-group">
-                                        <!-- <div class="input-group-addon bold">$</div> -->
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">%</div>
-                                        </div>
-                                        <input type="number" step="any" name="deposit_amount" id="deposit-percentage"
-                                            value="0" class="form-control" placeholder="Percentage of total amount"
-                                            autocomplete="off">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 form-group">
-                                    <div class="input-group mb-2">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">$</div>
-                                        </div>
-                                        <input type="text" id="deposit-total-amount" value="0.00" readonly=""
-                                            disabled="" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
                             <br>
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="bold">Message to Customer</label>
-                                        <span class="help help-sm help-block">Add a message that will be displayed on
-                                            the estimate.</span>
+                                        <label class="bold">Message to customer</label>
+                                        <i id="help-popover-message-customer" class='bx bx-fw bx-help-circle'></i></label>   
                                         <textarea name="customer_message" id="message_est" cols="40" rows="2"
                                             class="form-control">
                                             <?php echo $default_customer_message; ?>
@@ -755,8 +700,7 @@ label.bold {
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label class="bold">Terms &amp; Conditions</label>
-                                        <span class="help help-sm help-block">Mention your company's T&amp;C that will
-                                            appear on the estimate.</span>
+                                        <i id="help-popover-terms-conditions" class='bx bx-fw bx-help-circle'></i></label>                                           
                                         <textarea name="terms_conditions" cols="40" rows="2" class="form-control"
                                             id="terms_conditions_est">
                                             <?php echo $default_terms_condition; ?>
@@ -765,36 +709,21 @@ label.bold {
                                 </div>
                             </div>
 
-                            <div class="row mb-3" style="background-color:white;">
-                                <div class="col-md-4">
-                                    <label class="bold">Attachment</label>
-                                    <span class="help help-sm help-block">Optionally attach files to this invoice.
-                                        Allowed type: pdf, doc, dock, png, jpg, gif</span>
-                                    <input type="file" name="est_contract_upload" id="est_contract_upload"
-                                        class="form-control" />
-                                </div>
-                            </div>
-
-                            <div class="row mb-3" style="background-color:white;">
-                                <div class="col-md-12">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="bold">Instructions</label>
-                                        <span class="help help-sm help-block">Optional internal notes, will not appear
-                                            to customer</span>
+                                        <i id="help-popover-instructions" class='bx bx-fw bx-help-circle'></i></label>              
                                         <textarea name="instructions" cols="40" rows="2" class="form-control"
                                             id="instructions_est"></textarea>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="row" style="background-color:white;">
-                                <div class="col-md-12 form-group">
-                                    <a href="<?php echo url('estimate'); ?>" class="nsm-button"
-                                        style="color: black;">Cancel</a>
-                                    <!-- <button type="button" class="nsm-button" style="margin: 0; height: 34px;" id="estimate-save-draft-btn">Save as Draft</button> -->
-                                    <button type="submit" class="nsm-button primary" style="margin: 0; height: 34px;"
-                                        id="estimate-save-btn">Save</button>
-                                    <!-- <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button> -->
+                            <div class="row">
+                                <div class="col-md-12 form-group text-end">
+                                    <a href="<?php echo url('estimate'); ?>" class="nsm-button" style="color: black;">Cancel</a>
+                                    <button type="submit" class="nsm-button primary" style="margin: 0; height: 34px;" id="estimate-save-btn">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -957,74 +886,82 @@ label.bold {
             </div>
 
             <!-- Modal -->
-            <div class="modal fade" id="item_list" tabindex="-1" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+            <div class="modal fade" id="item_list" tabindex="-1"  aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <span class="modal-title content-title" style="font-size: 17px;">Items List</span>
-                            <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button"
-                                name="name-button" style="cursor: pointer;"></i>
+                            <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                         </div>
                         <div class="modal-body">
-                            <div class="row">
-                                <div class="col-sm-12 mb-2">
-                                    <input id="ITEM_CUSTOM_SEARCH" style="width: 200px;" class="form-control"
-                                        type="text" placeholder="Search Item...">
-                                </div>
-                                <div class="col-sm-12">
-                                    <table id="items_table" class="table table-hover table-sm w-100">
-                                        <thead class="bg-light">
-                                            <tr>
-                                                <td></td>
-                                                <td><strong>Name</strong></td>
-                                                <td><strong>On Hand</strong></td>
-                                                <td><strong>Price</strong></td>
-                                                <td><strong>Type</strong></td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <button style="display:none" type="button" data-bs-dismiss="modal"
-                                                data-trigger="trigger_button"
-                                                class='nsm-button primary small select_item2a'><i
-                                                    class='bx bx-plus-medical'></i></button>
-                                            <?php foreach ($items as $item) { ?>
-                                            <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
-                                                <td style="width: 0% !important;">
-                                                    <button type="button" data-bs-dismiss="modal"
-                                                        class='nsm-button primary small select_item2a'
-                                                        id="<?php echo $item->id; ?>"
-                                                        data-item_type="<?php echo ucfirst($item->type); ?>"
-                                                        data-quantity="<?php echo $item_qty[0]->total_qty; ?>"
-                                                        data-itemname="<?php echo $item->title; ?>"
-                                                        data-price="<?php echo $item->price; ?>"
-                                                        data-location_name="<?php echo $item->location_name; ?>"
-                                                        data-location_id="<?php echo $item->location_id; ?>"><i
-                                                            class='bx bx-plus-medical'></i></button>
-                                                </td>
-                                                <td><?php echo $item->title; ?></td>
-                                                <td>
-                                                    <?php
-                                                            foreach ($itemsLocation as $itemLoc) {
-                                                                if ($itemLoc->item_id == $item->id) {
-                                                                    echo "<div class='data-block'>";
-                                                                    echo $itemLoc->name.' = '.$itemLoc->qty;
-                                                                    echo '</div>';
-                                                                }
-                                                            }
+                                <div class="row">                        
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-12 col-md-12 grid-mb">
+                                                <div class="nsm-field-group search">
+                                                    <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" for="items_table" placeholder="Search List">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <table id="items_table" class="nsm-table w-100">
+                                            <thead class="bg-light">
+                                                <tr>
+                                                    <td data-name="Action" style="width: 0% !important;"></td>
+                                                    <td data-name="Name"><strong>Name</strong></td>
+                                                    <td data-name="Type"><strong>Type</strong></td>
+                                                    <td data-name="Stock"><strong>Stock</strong></td>
+                                                    <td data-name="Price"><strong>Price</strong></td>                                        
+                                                    <td data-name="Location" class='d-none'><strong>Location</strong></td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                    if (!empty($items)) {
+                                                        foreach ($items as $item) {
+                                                        $item_qty = get_total_item_qty($item->id);
                                                 ?>
-                                                </td>
-                                                <td><?php echo $item->price; ?></td>
-                                                <td><?php echo $item->type; ?></td>
-
-                                                <?php } ?>
-                                        </tbody>
-                                    </table>
+                                                <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
+                                                    <td style="width: 0% !important;">
+                                                        <button type="button" data-bs-dismiss="modal" class='nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-retail="<?= $item->retail; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                                    </td>
+                                                    <td class="show nsm-text-primary"><?php echo $item->title; ?></td>
+                                                    <td class="nsm-text-primary"><?php echo $item->type; ?></td>
+                                                    <td>
+                                                        <?php 
+                                                        $total_stock = 0;
+                                                        foreach($itemsLocation as $itemLoc){
+                                                            if($itemLoc->item_id == $item->id){
+                                                                $total_stock += $itemLoc->qty;
+                                                                //echo "<div class='data-block'>";
+                                                                //echo $itemLoc->name. " = " .$itemLoc->qty;
+                                                                //echo "</div>";
+                                                            } 
+                                                        }
+                                                        echo $total_stock;
+                                                        ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php 
+                                                            if( $item->price > 0 ){
+                                                                echo $item->price;
+                                                            }else{
+                                                                echo '0.00';
+                                                            }                                                
+                                                        ?>                                                
+                                                    </td>                                        
+                                                    <td class='d-none'><?php echo $item->location_name; ?></td>
+                                                </tr>
+                                                <?php } } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- Modal -->
+            
             <div class="modal fade nsm-modal" id="modalAddNewSource" tabindex="-1" role="dialog"
                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
@@ -1073,32 +1010,22 @@ add_footer_js([
 ]);
 ?>
 <?php include viewPath('v2/includes/footer'); ?>
-
-<script>
-CKEDITOR.replace('terms_conditions_est');
-</script>
-<script>
-CKEDITOR.replace('message_est');
-</script>
-<script>
-CKEDITOR.replace('instructions_est');
-</script>
-
-
-<script type="text/javascript">
-var base_url = "<?php echo base_url(); ?>";
-</script>
 <script src="<?php echo $url->assets; ?>js/add.js"></script>
-
 <script>
-//   $(function() {
-//     $("#rebatable_toggle").each(function(){
-//     $(this).change(function() {
-//     //   $('#console-event').html('Toggle: ' + $(this).prop('checked'))
-//     alert('yeah');
-//     })
-//   })
 $(document).ready(function() {
+    var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : ''; ?>"; 
+
+    CKEDITOR.replace('instructions_est');
+    CKEDITOR.replace('message_est');
+    CKEDITOR.replace('terms_conditions_est');
+    
+    $("#items_table").nsmPagination({itemsPerPage:10});
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));        
+    }, 1000));
+    
+    $('#sel-customer').select2();    
+
     $('.phone_number').keydown(function(e) {
         var key = e.charCode || e.keyCode || 0;
         $text = $(this);
@@ -1112,6 +1039,21 @@ $(document).ready(function() {
         }
         return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
     });
+
+    $('#add_another_items').on('click', function(){
+        $('#item_list').modal('show');
+    });
+
+    function validatecard() {
+        var inputtxt = $('.card-number').val();
+
+        if (inputtxt == 4242424242424242) {
+            $('.require-validation').submit();
+        } else {
+            alert("Not a valid card number!");
+            return false;
+        }
+    }
 
     $('#customer_id').select2({
         ajax: {
@@ -1267,53 +1209,6 @@ $(document).ready(function() {
             // });
         });
     });
-});
-</script>
-
-<script>
-function validatecard() {
-    var inputtxt = $('.card-number').val();
-
-    if (inputtxt == 4242424242424242) {
-        $('.require-validation').submit();
-    } else {
-        alert("Not a valid card number!");
-        return false;
-    }
-}
-
-
-$(document).ready(function() {
-    $('#sel-customer').select2();
-    var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : ''; ?>";
-
-    /*$('#customers')
-        .empty() //empty select
-        .append($("<option/>") //add option tag in select
-            .val(customer_id) //set value for option to post it
-        .val(customer_id) //select option of select2
-        .trigger("change"); //apply to select2*/
-});
-</script>
-
-<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script> -->
-<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?php echo google_credentials()['api_key']; ?>&callback=initialize&libraries=&v=weekly"></script>
-<script>
-    function initialize() {
-        var input = document.getElementById('job_location');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        google.maps.event.addListener(autocomplete, 'place_changed', function() {
-            var place = autocomplete.getPlace();
-            document.getElementById('city2').value = place.name;
-            document.getElementById('cityLat').value = place.geometry.location.lat();
-            document.getElementById('cityLng').value = place.geometry.location.lng();
-        });
-    }
-    google.maps.event.addDomListener(window, 'load', initialize);
-</script> -->
-
-<script>
-$(document).ready(function() {
 
     $(document).on('click', '.btn-use-other-address', function(){
         let prof_id = $(this).attr('data-id');
@@ -1330,6 +1225,51 @@ $(document).ready(function() {
         trigger: "hover focus",
         content: function() {
             return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
+        }
+    });
+
+    $('#help-popover-request-deposit').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'You can request an upfront payment on accept estimate.';
+        }
+    });
+
+    $('#help-popover-message-customer').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Add a message that will be displayed on the estimate.';
+        }
+    });
+
+    $('#help-popover-terms-conditions').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return `Mention your company's T&amp;C that will appear on the estimate.`;
+        }
+    });
+
+    $('#help-popover-attachment').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return `Optionally attach files to this invoice.`;
+        }
+    });
+
+    $('#help-popover-instructions').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return `Optional internal notes, will not appear to customer.`;
         }
     });
 
@@ -1565,33 +1505,17 @@ jQuery(document).ready(function() {
 </script>
 <script>
 $(function() {
-    var ITEMS_TABLE = $('#items_table').DataTable({
-        "ordering": false,
-    });
-
-    $("#ITEM_CUSTOM_SEARCH").keyup(function() {
-        ITEMS_TABLE.search($(this).val()).draw()
-    });
-
     $("#datepicker_dateissued").datepicker({
         format: 'M dd, yyyy'
     });
 
-    $('#deposit-percentage').keypress(function() {
-        computeDepositAmount();
-    });
-
-    $('#deposit-percentage').keyup(function() {
-        computeDepositAmount();
-    });
-
     $('#grand_total_input').change(function() {
-        computeDepositAmount();
+        //computeDepositAmount();
         no_tax();
     });
 
     $('#no-tax').on('change', function(){
-        computeDepositAmount();
+        //computeDepositAmount();
         no_tax();
     });
 
@@ -1790,204 +1714,6 @@ $(".select_package").click(function() {
 
         }
     });
-
-
-
-    //   if(!$(this).data('quantity')){
-    //     // alert($(this).data('quantity'));
-    //     var qty = 0;
-    //   }else{
-    //     // alert('0');
-    //     var qty = $(this).data('quantity');
-    //   }
-
-    //   var count = parseInt($("#count").val()) + 1;
-    //   $("#count").val(count);
-    //   var total_ = price * qty;
-    //   var tax_ =(parseFloat(total_).toFixed(2) * 7.5) / 100;
-    //   var taxes_t = parseFloat(tax_).toFixed(2);
-    //   var total = parseFloat(total_).toFixed(2);
-    //   var withCommas = Number(total).toLocaleString('en');
-    //   total = '$' + withCommas + '.00';
-    //   // console.log(total);
-    //   // alert(total);
-    //   markup = "<tr id=\"ss\">" +
-    //       "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div></td>\n" +
-    //       "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-    //       "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest2 mobile_qty \"></td>\n" +
-    //       // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-    //       "<td width=\"10%\"><input id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control hidden_mobile_view \" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+idd+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span><input type=\"hidden\" class=\"form-control price\" name=\"price[]\" data-counter=\"0\" id=\"priceM_0\" min=\"0\" value='"+price+"'></div></td>\n" +
-    //       // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
-    //       // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-    //       "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+idd+"'></td>\n" +
-    //       // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-    //       "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+idd+"' min=\"0\" value='"+taxes_t+"'></td>\n" +
-    //       "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+idd+"' class=\"total_per_item\">"+total+
-    //       // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-    //       "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+idd+"' value='"+total+"'></td>" +
-    //       "</tr>";
-    //   tableBody = $("#jobs_items_table_body");
-    //   tableBody.append(markup);
-    //   markup2 = "<tr id=\"sss\">" +
-    //       "<td >"+title+"</td>\n" +
-    //       "<td ></td>\n" +
-    //       "<td ></td>\n" +
-    //       "<td >"+price+"</td>\n" +
-    //       "<td ></td>\n" +
-    //       "<td >"+qty+"</td>\n" +
-    //       "<td ></td>\n" +
-    //       "<td ></td>\n" +
-    //       "<td >0</td>\n" +
-    //       "<td ></td>\n" +
-    //       "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></i></a> <a href=\"javascript:void(0)\" class=\"remove_audit_item_row\"><span class=\"fa fa-trash\"></span></i></a></td>\n" +
-    //       "</tr>";
-    //   tableBody2 = $("#device_audit_datas");
-    //   tableBody2.append(markup2);
-    //   // calculate_subtotal();
-    //   // var counter = $(this).data("counter");
-    //   // calculation(idd);
-
-    // var in_id = idd;
-    // var price = $("#price_" + in_id).val();
-    // var quantity = $("#quantity_" + in_id).val();
-    // var discount = $("#discount_" + in_id).val();
-    // var tax = (parseFloat(price) * 7.5) / 100;
-    // var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-    // 2
-    // );
-    // if( discount == '' ){
-    // discount = 0;
-    // }
-
-    // var total = (
-    // (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-    // parseFloat(discount)
-    // ).toFixed(2);
-
-    // var total_wo_tax = price * quantity;
-
-    // // alert( 'yeah' + total);
-
-
-    // $("#priceqty_" + in_id).val(total_wo_tax);
-    // $("#span_total_" + in_id).text(total);
-    // $("#sub_total_text" + in_id).val(total);
-    // $("#tax_1_" + in_id).text(tax1);
-    // $("#tax1_" + in_id).val(tax1);
-    // $("#discount_" + in_id).val(discount);
-
-    // if( $('#tax_1_'+ in_id).length ){
-    // $('#tax_1_'+in_id).val(tax1);
-    // }
-
-    // if( $('#item_total_'+ in_id).length ){
-    // $('#item_total_'+in_id).val(total);
-    // }
-
-    // var eqpt_cost = 0;
-    // var total_costs = 0;
-    // var cnt = $("#count").val();
-    // var total_discount = 0;
-    // var pquantity = 0;
-    // for (var p = 0; p <= cnt; p++) {
-    // var prc = $("#price_" + p).val();
-    // var quantity = $("#quantity_" + p).val();
-    // var discount = $("#discount_" + p).val();
-    // var pqty = $("#priceqty_" + p).val();
-    // // var discount= $('#discount_' + p).val();
-    // // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-    // pquantity += parseFloat(pqty);
-    // total_costs += parseFloat(prc);
-    // eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-    // total_discount += parseFloat(discount);
-    // }
-    // //   var subtotal = 0;
-    // // $( total ).each( function(){
-    // //   subtotal += parseFloat( $( this ).val() ) || 0;
-    // // });
-
-    // var total_cost = 0;
-    // // $("#span_total_0").each(function(){
-    // $('*[id^="price_"]').each(function(){
-    // total_cost += parseFloat($(this).val());
-    // });
-
-    // // var totalcosting = 0;
-    // // $('*[id^="span_total_"]').each(function(){
-    // //   totalcosting += parseFloat($(this).val());
-    // // });
-
-
-    // // alert(total_cost);
-
-    // var tax_tot = 0;
-    // $('*[id^="tax1_"]').each(function(){
-    // tax_tot += parseFloat($(this).val());
-    // });
-
-    // over_tax = parseFloat(tax_tot).toFixed(2);
-    // // alert(over_tax);
-
-    // $("#sales_taxs").val(over_tax);
-    // $("#total_tax_input").val(over_tax);
-    // $("#total_tax_").text(over_tax);
-
-
-    // eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-    // total_discount = parseFloat(total_discount).toFixed(2);
-    // stotal_cost = parseFloat(total_cost).toFixed(2);
-    // priceqty = parseFloat(pquantity).toFixed(2);
-    // // var test = 5;
-
-    // var subtotal = 0;
-    // // $("#span_total_0").each(function(){
-    // $('*[id^="span_total_"]').each(function(){
-    // subtotal += parseFloat($(this).text());
-    // });
-    // // $('#sum').text(subtotal);
-
-    // var subtotaltax = 0;
-    // // $("#span_total_0").each(function(){
-    // $('*[id^="tax_1_"]').each(function(){
-    // subtotaltax += parseFloat($(this).text());
-    // });
-
-
-    // var priceqty2 = 0;
-    // $('*[id^="priceqty_"]').each(function(){
-    // priceqty2 += parseFloat($(this).val());
-    // });
-
-    // $("#span_sub_total_invoice").text(priceqty2.toFixed(2));
-    // // $("#span_sub_total_invoice").text(priceqty);
-
-    // $("#eqpt_cost").val(eqpt_cost);
-    // $("#total_discount").val(total_discount);
-    // $("#span_sub_total_0").text(total_discount);
-    // // $("#span_sub_total_invoice").text(stotal_cost);
-    // // $("#item_total").val(subtotal.toFixed(2));
-    // $("#item_total").val(priceqty2.toFixed(2));
-
-    // var s_total = subtotal.toFixed(2);
-    // var adjustment = $("#adjustment_input").val();
-    // var grand_total = s_total - parseFloat(adjustment);
-    // var markup = $("#markup_input_form").val();
-    // var grand_total_w = grand_total + parseFloat(markup);
-
-    // // $("#total_tax_").text(subtotaltax.toFixed(2));
-    // // $("#total_tax_").val(subtotaltax.toFixed(2));
-
-
-
-
-    // $("#grand_total").text(grand_total_w.toFixed(2));
-    // $("#grand_total_input").val(grand_total_w.toFixed(2));
-    // $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-
-    // var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-    // sls = parseFloat(sls).toFixed(2);
-    // $("#sales_tax").val(sls);
-    // cal_total_due();
 });
 </script>
 
@@ -2010,377 +1736,3 @@ window.document.addEventListener("DOMContentLoaded", async () => {
     $($customer).val(params.customer).trigger("change");
 });
 </script>
-
-<script>
-window.document.addEventListener("DOMContentLoaded", async () => {
-    const $saveDraftButton = document.getElementById("estimate-save-draft-btn");
-    const $saveButton = document.getElementById("estimate-save-btn");
-
-    const $statusSelect = document.getElementById("estimate-status");
-    const $form = document.getElementById("estimate_form");
-
-    $saveDraftButton.addEventListener("click", () => {
-        $statusSelect.value = "Draft";
-        if (!isFormValid($form)) return;
-        $form.submit();
-    });
-
-    $saveButton.addEventListener("click", () => {
-        $statusSelect.value = "Submitted";
-        if (!isFormValid($form)) return;
-        $form.submit();
-    });
-
-    function isFormValid($formElement) {
-        const $requiredInputs = [...$formElement.querySelectorAll("[required]")];
-        let $firstInputHasError = null;
-
-        for (let index = 0; index < $requiredInputs.length; index++) {
-            const $input = $requiredInputs[index];
-            $input.classList.remove("is-invalid");
-
-            if ($input.getAttribute("name") === "customer_id" && $input.value === "0") {
-                $input.classList.add("is-invalid");
-                $firstInputHasError = $firstInputHasError ? $firstInputHasError : $input;
-            }
-
-            if (!$input.value) {
-                $input.classList.add("is-invalid");
-                $firstInputHasError = $firstInputHasError ? $firstInputHasError : $input;
-            }
-        }
-
-        if ($firstInputHasError) {
-            $firstInputHasError.focus();
-        }
-
-        return $firstInputHasError === null;
-    }
-});
-</script>
-<script>
-let itemSelectedId = []
-$(".select_item2a").click(function() {
-
-    itemSelectedId = $('#data_item_selected_id').val() ?
-        $('#data_item_selected_id').val().split(",") : [];
-
-    // taxRate();
-    if (!itemSelectedId.includes(this.id.toString())) {
-
-        itemSelectedId.push(this.id.toString());
-    }
-    // Convert array back to string with comma separator
-    $('#data_item_selected_id').val(itemSelectedId.join(","));
-
-    console.log("itemSelectedId add", itemSelectedId);
-
-
-    var idd = $(this).attr('id');
-
-    var items = <?php echo json_encode($items); ?>;
-    var title = $(this).attr('data-itemname');
-    var price = parseInt($(this).attr('data-price'));
-    // var qty = parseInt($(this).attr('data-quantity'));
-    var location_name = $(this).data('location_name');
-    var location_id = $(this).data('location_id');
-    var item_type = $(this).data('item_type');
-
-    // var total_ = price * qty;
-    // var total_ = 0;
-    // var total_price = price + total_;
-    // var total = parseFloat(total_price).toFixed(2);
-    // var withCommas = Number(total).toLocaleString('en');
-    if (!$(this).data('quantity')) {
-        // alert($(this).data('quantity'));
-        var qty = 1;
-    } else {
-        // alert('0');
-        var qty = $(this).data('data-quantity');
-    }
-    var return_first = function() {
-        var tax_rate = null;
-        $.ajax({
-            'async': false,
-            type: 'POST',
-            url: "<?php echo base_url(); ?>/workorder/getTaxRate",
-            success: function(result) {
-                //   console.log('test '+result);
-                // return result;
-                // var json = $.parseJSON(result);
-                // for (var i=0;i<json.length;++i)
-                // {
-                //     tax_rate = json[i].rate;
-                // }
-                tax_rate = result;
-            }
-        });
-        return tax_rate;
-    }();
-
-    // alert(return_first);
-    var json = $.parseJSON(return_first);
-    var tax_rate_ = 0;
-    for (var i = 0; i < json.length; ++i) {
-        tax_rate_ = json[i].rate;
-    }
-    // alert(tax_rate_);
-    var taxRate = tax_rate_;
-
-    var count = $(this).attr('data-count') ? parseInt($(this).attr('data-count')) : parseInt($("#count").val());
-    if (!$(this).attr('data-replace')) {
-        count += 1
-    }
-    $("#count").val(count);
-    var total_ = price * qty;
-    var tax_ = (parseFloat(total_).toFixed(2) * taxRate) / 100;
-    var taxes_t = parseFloat(tax_).toFixed(2);
-    var total = parseFloat(total_).toFixed(2);
-    var withCommas = Number(total).toLocaleString('en');
-    total = '$' + withCommas + '.00';
-    $("#ITEMLIST_PRODUCT_" + idd).hide();
-    // markup = "<tr id='ss'>" +
-    //     "<td width='35%'><small>Item name</small><input readonly value='"+title+"' type='text' name='item_name[]' class='form-control' ><input type='hidden' value='"+idd+"' name='item_id[]'></td>" +
-    //     "<td><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='1' type='number' name='item_qty[]' class='form-control item-qty-"+idd+" qty' min='0'></td>" +
-    //     "<td><small>Unit Price</small><input data-id='"+idd+"' id='price"+idd+"' value='"+price+"'  type='number' name='item_price[]' class='form-control item-price' step='any' placeholder='Unit Price'></td>" +
-    //     "<td><small>Item Type</small><input readonly type='text' class='form-control' value='"+item_type+"'></td>" +
-    //     // "<td width='25%'><small>Inventory Location</small><input type='text' name='item_loc[]' class='form-control'></td>" +
-    //     "<td><small>Amount</small><br><b data-subtotal='"+total_price+"' id='sub_total"+idd+"' class='total_per_item'>$"+total+"</b></td>" +
-    //     "<td><button type='button' class='nsm-button items_remove_btn remove_item_row mt-2' onclick='$(`#ITEMLIST_PRODUCT_"+idd+"`).show();'><i class='bx bx-trash'></i></button></td>" +
-    //     "</tr>";
-    if (item_type == 'Product') {
-        var item_type_dropdown =
-            '<select name="item_type[]" class="form-control"><option selected="selected" value="product">Product</option><option value="service">Service</option><option value="fee">Fee</option></select>';
-    } else if (item_type == 'Fees') {
-        var item_type_dropdown =
-            '<select name="item_type[]" class="form-control"><option value="product">Product</option><option value="service">Service</option><option selected="selected" value="fee">Fee</option></select>';
-    } else if (item_type == 'Service') {
-        var item_type_dropdown =
-            '<select name="item_type[]" class="form-control"><option value="product">Product</option><option  selected="selected" value="service">Service</option><option value="fee">Fee</option></select>';
-    } else {
-        var item_type_dropdown =
-            '<select name="item_type[]" class="form-control"><option selected="selected" value="product">Product</option><option  value="service">Service</option><option value="fee">Fee</option></select>';
-    }
-    var options = '';
-
-
-    items.forEach(function(item) {
-        options += `<option value="` + item.id + `"   data-item_type="${item.type.charAt(0).toUpperCase() + item.type.slice(1)}"
-        data-itemname="` + item.title + `" data-price="` + item.price + `"  data-location_name="` + item
-            .location_name + `" data-count="` + count + `"
-        data-location_id="` + item.location_id + `" `;
-        if (item.title == title) {
-            options += ' selected="selected"';
-        }
-        options += '>' + item.title + '</option>';
-    });
-    // <input value='" + title +"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" >
-    markup = "<tr id='jobs_items_table_body_tr_" + idd + "'>" +
-        "<td width=\"35%\">" +
-        `          <select name="items[]" class="getItemsSearch" class="form-control getItems"  id=` + idd + `>
-                                            ` + options + `
-                                        </select>` + "<input type=\"hidden\" value='" +
-        idd +
-        "' name=\"item_id[]\"><div class=\"show_mobile_view\"></div><input type=\"hidden\" name=\"itemid[]\" id=\"itemid\" class=\"itemid\" value='" +
-        idd + "'><input type=\"hidden\" name=\"packageID[]\" value=\"0\"></td>\n" +
-        "<td width=\"20%\"><div class=\"dropdown-wrapper\">" + item_type_dropdown + "</div></td>\n" +
-        "<td width=\"10%\"><input data-itemid='" + idd + "' id='quantity_" + count + "' value='" + qty +
-        "' type=\"number\" name=\"quantity[]\" data-counter='" + count +
-        "'  min=\"0\" class=\"form-control quantity mobile_qty \"></td>\n" +
-        // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-        "<td width=\"10%\"><input data-itemid='" + idd + "' id='price_" + count + "' value='" + price +
-        "'  type=\"number\" name=\"price[]\" data-counter='" + count +
-        "' class=\"form-control price hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_" +
-        count + "'><div class=\"show_mobile_view\"><span class=\"price\">" + price + "</span></div></td>\n" +
-        // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
-        // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-        "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" value=\"0\" class=\"form-control discount\" data-counter='" +
-        count + "' id='discount_" + count + "'></td>\n" +
-        // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-        "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='" + idd +
-        "' class=\"form-control tax_change\" name=\"tax[]\" data-counter='" + count + "' id='tax1_" + count +
-        "' readonly min=\"0\" value='" + taxes_t + "'></td>\n" +
-        "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='" +
-        total_ + "' id='span_total_" + count + "' class=\"total_per_item\">" + total +
-        // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-        "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text" + count + "' value='" + total +
-        "'></td>" +
-        "<td>\n" +
-        "<a href=\"#\" class=\"remove nsm-button danger\" id='" + count +
-        "' data-row-remove='" + idd + "'  ><i class=\"bx bx-fw bx-trash\"></i></a>\n" +
-        "</td>\n" +
-        "</tr>";
-    tableBody = $("#jobs_items_table_body");
-    if ($(this).attr('data-replace')) {
-        var tableRow = $("#jobs_items_table_body_tr_" + $(this).attr('data-to-replace')).first();;
-        tableRow.closest("tr")
-            .find(".remove")
-            .first()
-            .attr('data-remove', true)
-            .click();
-        $(tableRow).replaceWith(markup);
-    } else {
-        tableBody.append(markup);
-        $('.getItemsSearch').each(function() {
-            var $select = $(this);
-            $select.find('option').each(function() {
-                var optionValue = $(this).val();
-                if (itemSelectedId.includes(optionValue.toString())) {
-                    $(this).prop('disabled', true);
-                } else {
-                    $(this).prop('disabled', false);
-                }
-            });
-        });
-    }
-
-
-    $(this).removeAttr('data-replace');
-    $(this).removeAttr('data-to-replace');
-
-    $('.getItemsSearch').select2();
-    // markup2 = "<tr id=\"sss\">" +
-    //     "<td >"+title+"</td>\n" +
-    //     "<td >0</td>\n" +
-    //     "<td >"+price+"</td>\n" +
-    //     "<td id='device_qty"+idd+"'>"+qty+"</td>\n" +
-    //     "<td id='device_sub_total"+idd+"'>"+total+"</td>\n" +
-    //     "<td ></td>\n" +
-    //     "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></a> </td>\n" + // <a href="javascript:void(0)" class="remove_audit_item_row"><span class="fa fa-trash"></span></i></a>
-    //     "</tr>";
-    markup2 = "<td></td>" +
-        "<td></td>" +
-        "<td></td>" +
-        "<td></td>" +
-        "<td></td>" +
-        "<td></td>" +
-        "<td></td>" +
-        "<td></td>";
-
-    //device audit
-    markup3 = "<tr id='ss'>" +
-        "<td>" + title + "</td>" +
-        "<td>" + item_type + "</td>" +
-        "<td></td>" +
-        "<td>" + price + "</td>" +
-        "<td id='device_qty" + idd + "'>" + qty + "</td>" +
-        "<td id='device_sub_total" + idd + "'>" + total + "</td>" +
-        "<td>" +
-        "<input hidden name='item_id1[]' value='" + idd + "'>" +
-        "<input hidden name='location_qty[]' id='location_qty" + idd + "' value='" + qty + "'>" +
-        "<select id='location" + idd + "' name='location[]' class='form-control location'>" +
-        "<option>Select Location</option>" +
-        "<option value='" + location_id + "' selected>" + location_name + "</option>" +
-        "<?php
-                    if ($getAllLocation) {
-                        foreach ($getAllLocation as $getAllLocations) {
-                            if ($getAllLocations->default == 'true') {
-                                echo "<option selected value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
-                            } else {
-                                echo "<option value='$getAllLocations->loc_id'>$getAllLocations->location_name</option>";
-                            }
-                        }
-                    }
-?>" +
-        "</select>" +
-        "</td>";
-
-    tableBody3 = $("#device_audit_append");
-    tableBody3.append(markup3);
-    calculation(count);
-
-
-    tableBody2 = $("#device_audit_datas");
-    tableBody2.append(markup2);
-    //calculate_subtotal();
-    $(".location").select2({
-        placeholder: "Choose Location"
-    });
-});
-
-
-async function getLoc(id, qty) {
-    var postData = new FormData();
-    postData.append('id', id);
-    postData.append('qty', qty);
-    fetch('<?php echo base_url('job/getItemLocation'); ?>', {
-        method: 'POST',
-        body: postData
-    }).then(response => response.json()).then(response => {
-        var {
-            locations
-        } = response;
-        var select = document.querySelector('#location' + id);
-        const locations_len = Object.keys(locations);
-        // Avoid TypeError: Cannot set properties of null (setting 'innerHTML')
-        if (select === null) return;
-        console.log(locations);
-        select.innerHTML = '';
-        // Loop through each location and append a new option element to the select
-        if (locations_len.length > 1) {
-            var options = document.createElement('option');
-            options.text = "Select Location";
-            options.value = "0";
-            select.appendChild(options);
-        }
-
-
-        // Get all the location name promises
-        var promises = locations.map(function(location) {
-            return getLocName(location.loc_id);
-        });
-
-        // Wait for all the promises to resolve
-        Promise.all(promises).then(function(names) {
-            // Loop through each location and append a new option element to the select
-            locations.forEach(function(location, index) {
-                var option = document.createElement('option');
-                option.text = names[index];
-                option.value = location.id;
-                select.appendChild(option);
-            });
-        });
-    }).catch((error) => {
-        console.log(error);
-    })
-}
-
-function getLocName(id) {
-    var postData = new FormData();
-    postData.append('id', id);
-    return fetch('<?php echo base_url('inventory/getLocationNameById'); ?>', {
-        method: 'POST',
-        body: postData
-    }).then(response => response.json()).then(response => {
-        var {
-            location
-        } = response;
-        return location.location_name;
-    }).catch((error) => {
-        console.log(error);
-    })
-}
-
-
-function taxRate() {
-    $.ajax({
-        type: 'POST',
-        url: "<?php echo base_url(); ?>/workorder/getTaxRate",
-        success: function(result) {
-            //   console.log('test '+result);
-            return result;
-            // var json = $.parseJSON(result);
-            // for (var i=0;i<json.length;++i)
-            // {
-            //     tax_rate = json[i].rate;
-            // }
-        },
-        error: function() {
-            alert('Error occured');
-        }
-    });
-}
-</script>
-
-
-<!-- <script src="<?php // base_url("assets/js/custom.js")?>"></script> -->
