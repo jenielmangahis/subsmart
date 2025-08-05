@@ -144,7 +144,7 @@
                                     <input class="form-check-input select-all table-select" id="select-all" type="checkbox">
                                 </td>
                                 <td class="table-icon"></td>
-                                <td data-name="Item">Item</td>
+                                <td data-name="Item" class="show">Item</td>
                                 <td data-name="Model">Model</td>
                                 <td data-name="Brand">Brand</td>
                                 <td data-name="Quantity-OH" style="text-align:right;">Quantity-OH</td>
@@ -166,7 +166,7 @@
                                         <i class='bx bx-package' ></i>
                                     </div>
                                 </td>
-                                <td class="nsm-text-primary">
+                                <td class="nsm-text-primary show">
                                     <label class="nsm-link default d-block fw-bold"><?php echo $item[0]; ?></label>
                                     <label class="nsm-link default content-subtitle"><?php echo $item[1]; ?></label>
                                 </td>
