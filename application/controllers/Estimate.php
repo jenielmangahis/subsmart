@@ -10,6 +10,7 @@ class Estimate extends MY_Controller
         $this->hasAccessModule(19);
         $this->page_data['page']->title = 'Estimates';
         $this->page_data['page']->menu = 'estimates';
+        $this->page_data['page']->parent = 'Sales';
         $this->load->model('Estimate_model', 'estimate_model');
         $this->load->model('Jobs_model', 'jobs_model');
         $this->load->model('items_model');
@@ -17,7 +18,7 @@ class Estimate extends MY_Controller
         $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Customer_model', 'customer_model');
         $this->load->model('General_model', 'general');
-
+        $this->load->helper('functions');
         $this->checkLogin();
 
         $user_id = getLoggedUserID();
@@ -193,7 +194,7 @@ class Estimate extends MY_Controller
             // 'message_statement' => $this->input->post('message_statement'),
             'status' => $this->input->post('status'),
             // 'deposit_request' => $this->input->post('deposit_request'),
-            'deposit_request' => 2, // 1 = amount / 2 = percentage
+            'deposit_request' => 1, // 1 = amount / 2 = percentage
             'deposit_amount' => $this->input->post('deposit_amount'),
             'customer_message' => $this->input->post('customer_message'),
             'terms_conditions' => $this->input->post('terms_conditions'),
@@ -887,8 +888,8 @@ class Estimate extends MY_Controller
 
     public function savenewestimateOptions()
     {
-        $company_id = getLoggedCompanyID();
-        $user_id = getLoggedUserID();
+        $company_id = logged('company_id'); 
+        $user_id    = logged('id'); 
 
         $no_tax = 0;
         if( $this->input->post('no_tax') ){
@@ -900,11 +901,29 @@ class Estimate extends MY_Controller
             $next_remind_date = date("Y-m-d", strtotime("+14 days"));
         }  
 
+        // Generate Estimate Number
+        $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
+        if ($setting) {
+            $next_num = $setting->estimate_num_next;
+            $prefix = $setting->estimate_num_prefix;
+        } else {
+            $lastInsert = $this->estimate_model->getlastInsertByComp($company_id);
+            if ($lastInsert) {
+                $next_num = $lastInsert->id + 1;
+            } else {
+                $next_num = 1;
+            }
+            $prefix = 'EST-';
+        }
+
+        $estimate_number = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+        $estimate_number = $prefix.$estimate_number;
+
         $new_data = [
             'customer_id' => $this->input->post('customer_id'),
             'job_location' => $this->input->post('job_location'),
             'job_name' => $this->input->post('job_name'),
-            'estimate_number' => $this->input->post('estimate_number'),
+            'estimate_number' => $estimate_number,
             'estimate_date' => $this->input->post('estimate_date'),
             'business_name' => $this->input->post('business_name'),
             'expiry_date' => $this->input->post('expiry_date'),
@@ -935,6 +954,12 @@ class Estimate extends MY_Controller
         ];
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
+
+        // Update estimate setting
+        if ($setting) {
+            $estimate_setting = ['estimate_num_next' => $next_num + 1];
+            $this->EstimateSettings_model->update($setting->id, $estimate_setting);
+        }
 
         // GET CUSTOMER AND USER INFO
         $getUserInfo = [
@@ -1368,6 +1393,10 @@ class Estimate extends MY_Controller
         ];
 
         $addQuery = $this->estimate_model->update_estimate($new_data);
+
+        //Activity Logs
+        $activity_name = 'Estimates : Updated estimate number ' . $estimate->estimate_number; 
+        createActivityLog($activity_name);
 
         if( $lead_customer == 'customer' ){
             //Auto update customer info
@@ -2650,8 +2679,17 @@ class Estimate extends MY_Controller
     public function approveEstimate()
     {
         $id = $this->input->post('estId');
-        $updateQuery = $this->estimate_model->approveEstimate($id);
+        $company_id = logged('company_id');
 
+        $estimate = $this->estimate_model->getById($id);
+        if( $estimate && $estimate->company_id == $company_id ){
+            $updateQuery = $this->estimate_model->approveEstimate($id);
+
+            //Activity Logs
+            $activity_name = 'Estimates : Changed estimate number ' . $estimate->estimate_number . ' status to Accepted'; 
+            createActivityLog($activity_name);
+        }   
+        
         echo json_encode($updateQuery);
     }
 
@@ -2811,6 +2849,10 @@ class Estimate extends MY_Controller
             if( $status != '' ){
                 $data = ['status' => $status];
                 $this->estimate_model->update($estimate->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Estimates : Changed estimate number ' . $estimate->estimate_number . ' status to ' . $status; 
+                createActivityLog($activity_name);
 
                 $is_success = 1;
                 $msg = '';
@@ -3108,5 +3150,56 @@ class Estimate extends MY_Controller
         ];
 
         echo json_encode($return);
+	}
+
+    public function estimate_export()
+	{
+		$this->load->model('users_model');
+		$this->load->model('roles_model');
+
+		$role_id = logged('role');
+		$cid     = logged('company_id');
+		$estimates = $this->estimate_model->getAllByCompany($cid);
+
+		$delimiter = ",";
+		$time      = time();
+		$filename  = "estimates_list_" . $time . ".csv";
+
+		$f = fopen('php://memory', 'w');
+
+		$fields = array('Estimate Number', 'Customer', 'Date', 'Amount', 'Status', 'Is Archived');
+		fputcsv($f, $fields, $delimiter);
+
+		if (!empty($estimates)) {
+			foreach ($estimates as $e) {
+                $customer_name = '---';
+                if( $e->customer_id > 0 ){
+                    $customer_name = $e->customer_name;
+                }
+                if( $e->lead_id > 0 ){
+                    $customer_name = $e->lead_name;
+                }
+                
+				$csvData = array(
+					$e->estimate_number,
+					$customer_name,
+					date("m/d/Y", strtotime($e->estimate_date)),
+					number_format($e->grand_total),
+					$e->status,
+				    $e->view_flag == 1 ? 'Yes' : 'No'
+				);
+				fputcsv($f, $csvData, $delimiter);
+			}
+		} else {
+			$csvData = array('');
+			fputcsv($f, $csvData, $delimiter);
+		}
+
+		fseek($f, 0);
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		fpassthru($f);
 	}
 }
