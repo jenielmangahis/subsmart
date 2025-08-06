@@ -15,27 +15,27 @@
 </div>
 <?php } ?>
 <form id="frm-archive-with-selected">
-<table class="nsm-table" id="archived-events">
+<table class="nsm-table w-100" id="archived-events">
     <thead>
         <tr>
-            <td class="table-icon text-center sorting_disabled">
+            <td class="table-icon text-center sorting_disabled show">
                 <input class="form-check-input table-select" type="checkbox" name="" value="0" id="events-archive-select-all">
             </td>
-            <td class="table-icon"></td>
-            <td data-name="EventNumber" style="width:40%;">Event Number</td>                        
-            <td data-name="Action" style="width:5%;"></td>                
+            <td class="table-icon show"></td>
+            <td class="show" data-name="EventNumber" style="width:40%;">Event Number</td>                        
+            <td class="show" data-name="Action" style="width:5%;"></td>                
         </tr>
     </thead>
     <tbody>
         <?php if ($events) { ?>
             <?php foreach($events as $event){ ?>
                 <tr>
-                    <td class="text-center">
+                    <td class="text-center show">
                         <input class="form-check-input events-archive-row-select table-select" name="events[]" type="checkbox" value="<?= $event->id; ?>">
                     </td>
-                    <td><div class="table-row-icon"><i class="bx bx-box"></i></div></td>
-                    <td class="nsm-text-primary"><?= $event->event_number; ?></td>
-                    <td style="width:5%;">
+                    <td class="show"><div class="table-row-icon "><i class="bx bx-box"></i></div></td>
+                    <td class="fw-bold nsm-text-primary show"><?= $event->event_number; ?></td>
+                    <td class="show" style="width:5%;">
                         <?php if(checkRoleCanAccessModule('events', 'write')){ ?>
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>

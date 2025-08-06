@@ -1179,7 +1179,6 @@ $route['workorder/_delete_workorder_priority'] = 'Workorder/ajax_delete_workorde
 $route['workorder/_quick_view_details'] = 'Workorder/ajax_quick_view_details';
 $route['workorder/_edit/(:num)'] = 'Workorder/redirect_edit/$1';
 $route['workorder/_quick_delete_workorder'] = 'Workorder/ajax_quick_delete_workorder';
-
 $route['workorder/_update_wo_terms_condition'] = 'Workorder/ajax_update_wo_terms_condition';
 $route['workorder/_update_wo_header'] = 'Workorder/ajax_update_wo_header';
 $route['workorder/_save_custom_fields'] = 'Workorder/ajax_save_custom_fields';
@@ -1188,9 +1187,10 @@ $route['workorder/_delete_custom_fields'] = 'Workorder/ajax_delete_custom_fields
 $route['workorder/_get_offer_code'] = 'Workorder/ajax_get_offer_code';
 $route['workorder/_shareable_email'] = 'Workorder/ajax_shareable_email';
 $route['workorder/_update_workorder'] = 'Workorder/ajax_update_workorder';
-
 $route['workorder/_archived_list'] = 'Workorder/ajax_archived_list';
 $route['workorder/_restore_archived'] = 'Workorder/ajax_restore_archived';
+$route['workorders/_archive_selected_workorders'] = 'Workorder/ajax_archive_selected_workorders';
+$route['workorders/_change_status_selected_workorders'] = 'Workorder/ajax_change_status_selected_workorders';
 
 $route['customer/_get_customer_data'] = 'Customer/ajax_get_customer_data';
 $route['customer/_get_lead_data'] = 'Customer/ajax_get_lead_data';
