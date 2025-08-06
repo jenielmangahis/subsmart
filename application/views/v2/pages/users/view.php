@@ -41,7 +41,7 @@
                     </div>                    
                 </div>
                 <div class="row">
-                    <div class="col-3 grid-mb">
+                    <div class="col-12 col-md-3 grid-mb">
                         <div class="nsm-card primary">
                             <div class="nsm-card-content">
                               <div class="d-flex flex-column align-items-center text-center">
@@ -61,32 +61,32 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-9">
+                    <div class="col-12 col-md-9">
                         <div class="nsm-card primary">
                             <div class="nsm-card-content">
                                 <div class="row mb-4">
-                                    <div class="col-2"><h6><i class='bx bxs-id-card'></i> Employee Number</h6></div>
-                                    <div class="col-5"><?= $User->employee_number; ?></div>
+                                    <div class="col-md-2 col-12"><h6><i class='bx bxs-id-card'></i> Employee Number</h6></div>
+                                    <div class="col-md-5 col-12"><?= $User->employee_number; ?></div>
                                 </div>
                                 <div class="row mb-4">
-                                    <div class="col-2"><h6><i class='bx bxs-user' ></i> Name</h6></div>
-                                    <div class="col-5"><?= $User->FName . ' ' . $User->LName; ?></div>
+                                    <div class="col-md-2 col-12"><h6><i class='bx bxs-user' ></i> Name</h6></div>
+                                    <div class="col-md-5 col-12"><?= $User->FName . ' ' . $User->LName; ?></div>
                                 </div>
                                 <div class="row mb-4">
-                                    <div class="col-2"><h6><i class='bx bxs-envelope' ></i> Email</h6></div>
-                                    <div class="col-9"><?= $User->email; ?></div>
+                                    <div class="col-md-2 col-12"><h6><i class='bx bxs-envelope' ></i> Email</h6></div>
+                                    <div class="col-md-9 col-12"><?= $User->email; ?></div>
                                 </div>
                                 <div class="row mb-4">
-                                    <div class="col-2"><h6><i class='bx bxs-phone' ></i> Phone</h6></div>
-                                    <div class="col-9"><?= $User->phone ? formatPhoneNumber($User->phone) : '---'; ?></div>
+                                    <div class="col-md-2 col-12"><h6><i class='bx bxs-phone' ></i> Phone</h6></div>
+                                    <div class="col-md-9 col-12"><?= $User->phone ? formatPhoneNumber($User->phone) : '---'; ?></div>
                                 </div>
                                 <div class="row mb-4">
-                                    <div class="col-2"><h6><i class='bx bx-mobile' ></i> Mobile</h6></div>
-                                    <div class="col-9"><?= $User->mobile ? formatPhoneNumber($User->mobile) : '---'; ?></div>
+                                    <div class="col-md-2 col-12"><h6><i class='bx bx-mobile' ></i> Mobile</h6></div>
+                                    <div class="col-md-9 col-12"><?= $User->mobile ? formatPhoneNumber($User->mobile) : '---'; ?></div>
                                 </div>                                     
                                 <div class="row mb-4">
-                                    <div class="col-2"><h6><i class='bx bxs-map-pin' ></i> Address</h6></div>
-                                    <div class="col-9">
+                                    <div class="col-md-2 col-12"><h6><i class='bx bxs-map-pin' ></i> Address</h6></div>
+                                    <div class="col-md-9 col-12">
                                             <?= $User->address . ' ' . $User->city . ", " . $User->state . ' ' . $User->postal_code; ?>
                                             
                                     </div>
