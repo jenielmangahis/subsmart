@@ -49,11 +49,30 @@ table.dataTable.no-footer {
     min-width: var(--size);
 }
 </style>
-
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('events/new_event') ?>'">
-        <i class='bx bx-user-plus'></i>
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
+        <i class="bx bx-plus"></i>
     </div>
+    <ul class="nsm-fab-options">        
+        <li onclick="location.href='<?php echo base_url('events/event_add') ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-task"></i>
+            </div>
+            <span class="nsm-fab-label">New Event</span>
+        </li>
+        <li onclick="location.href='<?php echo base_url('events/export_list') ?>'">
+            <div class="nsm-fab-icon">
+                <i class='bx bxs-file-export'></i>
+            </div>
+            <span class="nsm-fab-label">Export</span>
+        </li>
+        <li id="btn-mobile-archived">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-archive'></i>
+            </div>
+            <span class="nsm-fab-label">Archived</span>
+        </li>
+    </ul>
 </div>
 
 <div class="row page-content g-0">
@@ -96,7 +115,7 @@ table.dataTable.no-footer {
                         </div>
                     </div> 
                     <?php if(checkRoleCanAccessModule('events', 'write')){ ?>
-                    <div class="col-6 grid-mb text-end">
+                    <div class="col-12 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
@@ -105,7 +124,7 @@ table.dataTable.no-footer {
                                 <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
                             </ul>
                         </div>
-                        <div class="btn-group">
+                        <div class="btn-group nsm-main-buttons">
                             <button type="button" class="btn btn-nsm" id="btn-new-event"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Event</button>
                             <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span class=""><i class='bx bx-chevron-down' ></i></span>
@@ -136,50 +155,57 @@ table.dataTable.no-footer {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                            if (!empty($events)) {
-                                foreach ($events as $event) {
-                            ?>
-                        <tr>
-                            <td style="text-align:center;"><input class="form-check-input row-select table-select" name="events[]" type="checkbox" name="id_selector" value="<?= $event->id; ?>"></td>
-                            <td>
-                                <div class="table-row-icon">
-                                    <i class='bx bx-calendar-event'></i>
-                                </div>
-                            </td>
-                            <td class="fw-bold nsm-text-primary show">
-                                <a class="btn-view-event" href="javascript:void(0);" data-id="<?= $event->id; ?>" data-event-number="<?= $event->event_number; ?>"><?php echo $event->event_number; ?></a>
-                            </td>
-                            <td><?= date("m/d/Y", strtotime($event->start_date)); ?></td>                            
-                            <td>
-                                <div class="techs">                   
-                                    <?php $attendees = json_decode($event->employee_id); ?>
-                                    <?php foreach($attendees as $eid){ ?>
-                                        <div class="nsm-profile" style="background-image: url('<?= userProfileImage($eid); ?>');"></div>
-                                    <?php } ?>            
-                                </div>
-                            </td>                            
-                            <td>
-                                <div class="nsm-profile" style="background-color:<?= $event->event_color; ?>; width: 40px;"></div>
-                            </td>
-                            <td class="nsm-text-primary"><?php echo $event->event_type; ?></td>
-                            <td class="nsm-text-primary"><?php echo $event->event_tag; ?></td>
-                            <td>
-                                <div class="dropdown table-management">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item btn-view-event" href="javascript:void(0);" data-id="<?= $event->id; ?>" data-event-number="<?= $event->event_number; ?>">View</a></li>
-                                        <?php if(checkRoleCanAccessModule('events', 'write')){ ?>
-                                        <li><a class="dropdown-item" href="<?php echo base_url('events/event_edit/') . $event->id; ?>">Edit</a></li>
-                                        <?php } ?>
-                                        <?php if(checkRoleCanAccessModule('events', 'delete')){ ?>
-                                        <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-event-number="<?= $event->event_number; ?>" data-id="<?php echo $event->id; ?>">Delete</a></li>
-                                        <?php } ?>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php } } ?>
+                        <?php if (!empty($events)) { ?>
+                            <?php foreach ($events as $event) { ?>
+                            <tr>
+                                <td style="text-align:center;"><input class="form-check-input row-select table-select" name="events[]" type="checkbox" name="id_selector" value="<?= $event->id; ?>"></td>
+                                <td>
+                                    <div class="table-row-icon">
+                                        <i class='bx bx-calendar-event'></i>
+                                    </div>
+                                </td>
+                                <td class="fw-bold nsm-text-primary show">
+                                    <a class="btn-view-event" href="javascript:void(0);" data-id="<?= $event->id; ?>" data-event-number="<?= $event->event_number; ?>"><?php echo $event->event_number; ?></a>
+                                </td>
+                                <td><?= date("m/d/Y", strtotime($event->start_date)); ?></td>                            
+                                <td>
+                                    <div class="techs">                   
+                                        <?php $attendees = json_decode($event->employee_id); ?>
+                                        <?php foreach($attendees as $eid){ ?>
+                                            <div class="nsm-profile" style="background-image: url('<?= userProfileImage($eid); ?>');"></div>
+                                        <?php } ?>            
+                                    </div>
+                                </td>                            
+                                <td>
+                                    <div class="nsm-profile" style="background-color:<?= $event->event_color; ?>; width: 40px;"></div>
+                                </td>
+                                <td class="nsm-text-primary"><?php echo $event->event_type; ?></td>
+                                <td class="nsm-text-primary"><?php echo $event->event_tag; ?></td>
+                                <td>
+                                    <div class="dropdown table-management">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item btn-view-event" href="javascript:void(0);" data-id="<?= $event->id; ?>" data-event-number="<?= $event->event_number; ?>">View</a></li>
+                                            <?php if(checkRoleCanAccessModule('events', 'write')){ ?>
+                                            <li><a class="dropdown-item" href="<?php echo base_url('events/event_edit/') . $event->id; ?>">Edit</a></li>
+                                            <?php } ?>
+                                            <?php if(checkRoleCanAccessModule('events', 'delete')){ ?>
+                                            <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-event-number="<?= $event->event_number; ?>" data-id="<?php echo $event->id; ?>">Delete</a></li>
+                                            <?php } ?>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        <?php }else{ ?>
+                            <tr>
+                                <td colspan="9">
+                                    <div class="nsm-empty">
+                                        <span>No results found</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php } ?>
                     </tbody>
                 </table>
                 </form>
@@ -261,7 +287,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#btn-archived').on('click', function(){
+    $('#btn-archived, #btn-mobile-archived').on('click', function(){
         $('#modal-view-archive').modal('show');
 
          $.ajax({
@@ -281,7 +307,7 @@ $(document).ready(function () {
     });
 
     $("#btn-export-list").on("click", function() {
-        location.href = "<?php echo base_url('events/export_list'); ?>";
+        location.href = base_url + 'events/export_list';
     });
 
     $('.btn-view-event').on('click', function(){
@@ -368,13 +394,13 @@ $(document).ready(function () {
             if (result.value) {
                 $.ajax({
                     type: 'POST',
-                    url: base_url + "events/_delete_event",
+                    url: base_url + "event/_delete_event",
                     data: {schedule_id: eid},
                     dataType:"json",
                     success: function(result) {
                         if (result.is_success) {
                             Swal.fire({
-                                title: 'Events',
+                                title: 'Delete Event',
                                 text: "Data deleted successfully!",
                                 icon: 'success',
                                 showCancelButton: false,
