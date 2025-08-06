@@ -61,7 +61,7 @@ table.dataTable.no-footer {
                         </div>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('inventory/services/add') ?>'">
-                                <i class='bx bx-fw bx-plus'></i> Add New Service
+                                <i class='bx bx-fw bx-plus'></i> Service
                             </button>
                         </div>
                     </div>
@@ -73,12 +73,12 @@ table.dataTable.no-footer {
                     <thead>
                         <tr>
                             <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>
-                            <td class="table-icon text-center">
+                            <td class="table-icon text-center show">
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
                             <?php } ?>
-                            <td class="table-icon"></td>
-                            <td data-name="Item">Item</td>
+                            <td class="table-icon show"></td>
+                            <td data-name="Item" class="show">Item</td>
                             <td data-name="Cost">Cost</td>
                             <td data-name="Estimated Time">Estimated Time / Duration</td>
                             <td data-name="Billing Type">Billing Type</td>
@@ -89,13 +89,13 @@ table.dataTable.no-footer {
                         <?php foreach ($items as $item) : ?>
                             <tr>
                                 <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>
-                                <td style="width:1%;">
+                                <td style="width:1%;" class="show">
                                     <div class="table-row-icon table-checkbox">
                                         <input class="form-check-input select-one table-select" type="checkbox" name="items[]" value="<?= $item[3]; ?>" data-id="<?php echo $item[3]; ?>">
                                     </div>
                                 </td>
                                 <?php } ?>
-                                <td style="width:1%;">
+                                <td style="width:1%;" class="show">
                                     <div class="table-row-icon">
                                         <i class='bx bx-notepad'></i>
                                     </div>

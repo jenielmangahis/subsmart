@@ -58,7 +58,7 @@ table.dataTable.no-footer {
                         </div>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" id="btn-add-new">
-                                <i class='bx bx-fw bx-plus'></i> Add New
+                                <i class='bx bx-fw bx-plus'></i> Fees
                             </button>
                         </div>
                     </div>
@@ -69,11 +69,11 @@ table.dataTable.no-footer {
                     <table class="nsm-table" id="FEES_TABLE">
                         <thead>
                             <tr>
-                                <td class="table-icon text-center">
+                                <td class="table-icon text-center show">
                                     <input class="form-check-input select-all table-select" type="checkbox">
                                 </td>
-                                <td class="table-icon"></td>
-                                <td data-name="Item">Item</td>
+                                <td class="table-icon show"></td>
+                                <td data-name="Item" class="show">Item</td>
                                 <td data-name="Billing Type">Billing Type</td>
                                 <td data-name="Cost" style="text-align:right;">Cost</td>
                                 <td data-name="Manage"></td>
@@ -82,17 +82,17 @@ table.dataTable.no-footer {
                         <tbody>
                             <?php foreach ($items as $item) : ?>
                                     <tr>
-                                        <td style="width:1%;">
+                                        <td style="width:1%;" class="show">
                                             <div class="table-row-icon table-checkbox">
                                                 <input class="form-check-input select-one table-select" type="checkbox" name="items[]" value="<?= $item[3]; ?>" data-id="<?php echo $item[3]; ?>">
                                             </div>
                                         </td>
-                                        <td style="width:1%;">
+                                        <td style="width:1%;" class="show">
                                             <div class="table-row-icon">
                                                 <i class='bx bxs-dollar-circle'></i>
                                             </div>
                                         </td>
-                                        <td class="nsm-text-primary" style="width:60%;">
+                                        <td class="nsm-text-primary show" style="width:60%;">
                                             <label class="nsm-link default d-block fw-bold"><?php echo $item[0]; ?></label>
                                             <label class="nsm-link default content-subtitle"><?php echo $item[1]; ?></label>
                                         </td>                                        

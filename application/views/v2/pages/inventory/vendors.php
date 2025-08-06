@@ -55,7 +55,9 @@ table.dataTable.no-footer {
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete_selected">Delete</a></li>
                             </ul>
                         </div>
-                        <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>       
+                        <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>    
+                            
+                            <!-- 
                             <div class="nsm-page-buttons page-button-container">
                                 <button type="button" class="nsm-button" onclick="location.href='<?= url('inventory/vendor/export') ?>'">
                                     <i class='bx bx-fw bx-chart'></i> Export
@@ -64,6 +66,22 @@ table.dataTable.no-footer {
                                     <i class='bx bx-fw bx-plus'></i> Add New
                                 </button>
                             </div>
+                            -->
+
+                            <div class="nsm-page-buttons page-button-container">                            
+
+                                <div class="btn-group" style="margin-bottom: 4px;">
+                                    <button type="button" class="btn btn-nsm btn-nsm-custom" id="btn-add-new-inventory-vendors" onclick="location.href='<?php echo base_url('inventory/vendor/add') ?>'"><strong><i class='bx bx-plus' style="position:relative;top:1px;"></i> Vendor</strong></button>
+                                    <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split btn-nsm-custom" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                    </button>
+                                    <ul class="dropdown-menu">                             
+                                        <li><a class="dropdown-item export-items" id="export-vendors" onclick="location.href='<?= url('inventory/vendor/export') ?>'" href="javascript:void(0);">Export</a></li>       
+                                    </ul>
+                                </div>
+                    
+                            </div>     
+
                         <?php } ?>
                     </div>
                 </div>
@@ -71,9 +89,9 @@ table.dataTable.no-footer {
                     <table class="nsm-table" id="VENDORS_TABLE">
                     <thead>
                         <tr>
-                            <td class="table-icon text-center"><input class="form-check-input select-all table-select" type="checkbox"></td>
-                            <td class="table-icon"></td>
-                            <td data-name="Vendor Name">Vendor Name</td>
+                            <td class="table-icon text-center show"><input class="form-check-input select-all table-select" type="checkbox"></td>
+                            <td class="table-icon show"></td>
+                            <td data-name="Vendor Name" class="show">Vendor Name</td>
                             <td data-name="Phone Number">Mobile Number</td>
                             <td data-name="Phone Number">Phone Number</td>
                             <td data-name="Address">Address</td>
@@ -83,17 +101,17 @@ table.dataTable.no-footer {
                     <tbody>
                         <?php foreach ($vendors as $row) : ?>
                             <tr>
-                                <td style="width:1%;">
+                                <td style="width:1%;" class="show">
                                     <div class="table-row-icon table-checkbox">
                                         <input class="form-check-input select-one table-select" type="checkbox" data-id="<?php echo $row->vendor_id; ?>">
                                     </div>
                                 </td>
-                                <td style="width:1%;">
+                                <td style="width:1%;" class="show">
                                     <div class="nsm-profile">
                                         <span><?= ucwords($row->vendor_name[0]) ?></span>
                                     </div>
                                 </td>
-                                <td class="nsm-text-primary" style="width:40%;">
+                                <td class="nsm-text-primary show" style="width:40%;">
                                     <label class="d-block fw-bold"><?= $row->vendor_name; ?></label>
                                     <label class="nsm-link default content-subtitle">
                                         <i class='bx bxs-envelope' style="position:relative;top:2px;"></i> <?= $row->email; ?>

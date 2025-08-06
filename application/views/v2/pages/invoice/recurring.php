@@ -158,13 +158,13 @@
                             </td>
                             <?php } ?>                            
                             <td class="table-icon"></td>
-                            <td data-name="Invoice Number">Invoice Number</td>
+                            <td data-name="Invoice Number" class="show">Invoice Number</td>
                             <td data-name="Customer">Customer</td>
                             <td data-name="Invoice Date">Invoice Date</td>
                             <td data-name="Start Date">Start Date</td>
                             <td data-name="End Date">End Date</td>                            
-                            <td data-name="Status">Status</td>
-                            <td data-name="Amount" style="text-align:right;">Amount</td>
+                            <td data-name="Status" class="show">Status</td>
+                            <td data-name="Amount" class="show" style="text-align:right;">Amount</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -212,17 +212,17 @@
                                     </td>
                                     <?php } ?>                                      
                                     <td><div class="table-row-icon"><i class='bx bx-calendar-alt'></i></div></td>
-                                    <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('invoice/genview/' . $invoice->id) ?>'"><?= formatInvoiceNumber($invoice->invoice_number) ?></td>
+                                    <td class="fw-bold nsm-text-primary nsm-link default show" onclick="location.href='<?php echo base_url('invoice/genview/' . $invoice->id) ?>'"><?= formatInvoiceNumber($invoice->invoice_number) ?></td>
                                     <td class="nsm-text-primary"><?= $invoice->customer_name; ?></td>
                                     <td><?= date("m/d/Y", strtotime($invoice->date_issued)); ?></td>
                                     <td><?= $invoice->bill_start_date ?></td>
                                     <td><?= $invoice->bill_end_date ?></td>
-                                    <td>
+                                    <td class="show">
                                         <span class="status-label nsm-badge <?= $badge ?>" style="font-size: 13px;">
                                             <?= $invoice->status; ?>
                                         </span>
                                     </td>
-                                    <td style="text-align:right;">$<?= number_format($invoice->grand_total,2,".",","); ?></td>
+                                    <td class="show" style="text-align:right;">$<?= number_format($invoice->grand_total,2,".",","); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
