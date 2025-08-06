@@ -18,26 +18,24 @@
 <table class="nsm-table" id="archived-estimates">
     <thead>
         <tr>
-            <td class="table-icon text-center sorting_disabled">
+            <td class="table-icon text-center sorting_disabled show">
                 <input class="form-check-input table-select" type="checkbox" name="" value="0" id="estimates-archive-select-all">
             </td>
-            <td class="table-icon"></td>
-            <td data-name="Name">Estimate Number</td>
-            <td data-name="DateArchived">Date Archived</td>
-            <td data-name="Action" style="width:5%;"></td>                
+            <td class="table-icon show"></td>
+            <td class="show" data-name="Name">Estimate Number</td>
+            <td class="show" data-name="Action" style="width:5%;"></td>                
         </tr>
     </thead>
     <tbody>
         <?php if ($estimates) { ?>
             <?php foreach($estimates as $estimate){ ?>
                 <tr>
-                    <td class="text-center">
+                    <td class="text-center show">
                         <input class="form-check-input estimates-archive-row-select table-select" name="estimates[]" type="checkbox" value="<?= $estimate->id; ?>">
                     </td>
-                    <td><div class="table-row-icon"><i class="bx bx-receipt"></i></div></td>
-                    <td class="nsm-text-primary"><?= $estimate->estimate_number; ?></td>
-                    <td class="nsm-text-primary" style="width:25%;"><?= date("m/d/Y G:i A", strtotime($estimate->archived_date)); ?></td>
-                    <td style="width:5%;">
+                    <td class="show"><div class="table-row-icon"><i class="bx bx-receipt"></i></div></td>
+                    <td class="fw-bold nsm-text-primary show"><?= $estimate->estimate_number; ?></td>
+                    <td class="show" style="width:5%;">
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -50,7 +48,7 @@
             <?php } ?>
         <?php }else{ ?>
             <tr>
-                <td colspan="5">
+                <td colspan="4">
                     <div class="nsm-empty">
                         <span>No results found</span>
                     </div>
