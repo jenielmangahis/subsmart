@@ -18,24 +18,24 @@
 <table class="nsm-table" id="archived-users">
     <thead>
         <tr>
-            <td class="table-icon text-center sorting_disabled">
+            <td class="table-icon text-center sorting_disabled show">
                 <input class="form-check-input table-select" type="checkbox" name="" value="0" id="users-archive-select-all">
             </td>
-            <td class="table-icon"></td>
-            <td data-name="UserName" style="width:40%;">Name</td>                        
-            <td data-name="Action" style="width:5%;"></td>                
+            <td class="table-icon show"></td>
+            <td class="show" data-name="UserName" style="width:40%;">Name</td>                        
+            <td class="show" data-name="Action" style="width:5%;"></td>                
         </tr>
     </thead>
     <tbody>
         <?php if ($users) { ?>
             <?php foreach($users as $user){ ?>
                 <tr>
-                    <td class="text-center">
+                    <td class="text-center show">
                         <input class="form-check-input users-archive-row-select table-select" name="users[]" type="checkbox" value="<?= $user->id; ?>">
                     </td>
-                    <td><div class="table-row-icon"><i class="bx bx-box"></i></div></td>
-                    <td class="nsm-text-primary"><?= $user->FName . ' ' . $user->LName; ?></td>
-                    <td style="width:5%;">
+                    <td class="show"><div class="table-row-icon"><i class="bx bx-box"></i></div></td>
+                    <td class="fw-bold nsm-text-primary show"><?= $user->FName . ' ' . $user->LName; ?></td>
+                    <td class="show" style="width:5%;">
                         <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>

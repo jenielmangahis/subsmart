@@ -20,7 +20,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#btn-archived').on('click', function(){
+    $('#btn-archived, #btn-mobile-archived').on('click', function(){
         $('#modal-view-archive').modal('show');
 
          $.ajax({
@@ -419,8 +419,8 @@ $(document).ready(function() {
         tableSearch($(this));
     }, 1000));
 
-    $("#btn-export-list").on("click", function() {
-        location.href = "<?php echo base_url('users/export_list'); ?>";
+    $("#btn-export-list, .btn-export-list").on("click", function() {
+        location.href = base_url + 'users/export_list';
     });
 
     $("#employee_username").on("input", debounce(function() {
