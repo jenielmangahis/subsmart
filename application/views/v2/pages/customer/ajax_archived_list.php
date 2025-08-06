@@ -18,31 +18,29 @@
 <table class="nsm-table" id="archived-customers">
     <thead>
         <tr>
-            <td class="table-icon text-center sorting_disabled">
+            <td class="table-icon text-center sorting_disabled show">
                 <input class="form-check-input table-select" type="checkbox" name="" value="0" id="customers-archive-select-all">
             </td>
-            <td class="table-icon"></td>
-            <td data-name="Name">Name</td>
-            <td data-name="Name">Date Deleted</td>
-            <td data-name="Action" style="width:5%;"></td>                
+            <td class="table-icon show"></td>
+            <td class="show" data-name="Name">Name</td>
+            <td class="show" data-name="Action" style="width:5%;"></td>                
         </tr>
     </thead>
     <tbody>
         <?php if ($customers) { ?>
             <?php foreach($customers as $customer){ ?>
                 <tr>
-                    <td class="text-center">
+                    <td class="text-center show">
                         <input class="form-check-input customers-archive-row-select table-select" name="customers[]" type="checkbox" value="<?= $customer->prof_id; ?>">
                     </td>
-                    <td>
+                    <td class="show">
                         <div class="nsm-profile">
                             <?php $initials = ucwords($customer->first_name[0]).ucwords($customer->last_name[0]); ?>
                             <span><?= $initials; ?></span>
                         </div>
                     </td>
-                    <td class="nsm-text-primary"><?= $customer->first_name . ' ' . $customer->last_name; ?></td>
-                    <td class="nsm-text-primary" style="width:25%;"><?= date("m/d/Y G:i A", strtotime($customer->deleted_at)); ?></td>
-                    <td style="width:5%;">
+                    <td class="fw-bold show nsm-text-primary"><?= $customer->first_name . ' ' . $customer->last_name; ?></td>
+                    <td class="show" style="width:5%;">
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                             <ul class="dropdown-menu dropdown-menu-end">

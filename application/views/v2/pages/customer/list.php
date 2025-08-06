@@ -349,12 +349,49 @@
     #customer-list td:nth-child(1) {  
       vertical-align:middle;
     }
+    #customer-list_wrapper{
+        overflow:auto;
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
         <i class="bx bx-plus"></i>
     </div>
 </div>
+<div class="nsm-fab-container">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
+        <i class="bx bx-plus"></i>
+    </div>
+    <?php if(checkRoleCanAccessModule('customers', 'write')){ ?>
+    <ul class="nsm-fab-options">        
+        <li onclick="location.href='<?php echo url('customer/add_advance') ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-user-plus"></i>
+            </div>
+            <span class="nsm-fab-label">Add Customer</span>
+        </li>
+        <li id="btn-mobile-favorites">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-heart-circle'></i>                
+            </div>
+            <span class="nsm-fab-label">Favorites</span>
+        </li> 
+        <li class="btn-export-list">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-export"></i>
+            </div>
+            <span class="nsm-fab-label">Export List</span>
+        </li>
+        <li id="btn-mobile-archived">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-archive'></i>
+            </div>
+            <span class="nsm-fab-label">Archived</span>
+        </li>                    
+    </ul>
+    <?php } ?>      
+</div>
+
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/customer_tabs'); ?>
@@ -441,7 +478,7 @@
                         <?php } ?>
                         <div class="nsm-page-buttons primary page-button-container">                            
                             <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
-                            <div class="btn-group">
+                            <div class="btn-group nsm-main-buttons">
                                 <button type="button" class="btn btn-nsm" id="btn-new-customer"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Customer</button>
                                 <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class=""><i class='bx bx-chevron-down' ></i></span>
@@ -1133,7 +1170,7 @@
             location.href = base_url + 'customer/add_advance';
         });
 
-        $('#btn-export-customer').on('click', function(){
+        $('#btn-export-customer, .btn-export-list').on('click', function(){
             location.href = base_url + 'customer/export_customer';
         });
 
@@ -1141,7 +1178,7 @@
             location.href = base_url + 'customer/import_customer';
         });
 
-        $('#archived-customer-list').on('click', function(){
+        $('#archived-customer-list, #btn-mobile-archived').on('click', function(){
             $('#modal-archived-customers').modal('show');
             $.ajax({
                 type: "POST",
@@ -1155,7 +1192,7 @@
             });
         });
 
-        $('#favorite-customer-list').on('click', function(){
+        $('#favorite-customer-list, #btn-mobile-favorites').on('click', function(){
             $('#modal-favorite-customers').modal('show');
             $.ajax({
                 type: "POST",

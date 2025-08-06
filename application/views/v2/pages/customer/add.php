@@ -40,9 +40,17 @@
     }
 </style>
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
     </div>
+    <ul class="nsm-fab-options">        
+        <li onclick="location.href='<?php echo url('customer') ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-fw bx-user"></i>
+            </div>
+            <span class="nsm-fab-label">List Customer</span>
+        </li>            
+    </ul>  
 </div>
 <div id="overlay">
     <div>
