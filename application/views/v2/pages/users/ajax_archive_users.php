@@ -50,7 +50,7 @@
             <?php } ?>
         <?php }else{ ?>
             <tr>
-                <td colspan="5">
+                <td colspan="4">
                     <div class="nsm-empty">
                         <span>No results found</span>
                     </div>
