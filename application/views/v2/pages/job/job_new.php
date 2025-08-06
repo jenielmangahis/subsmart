@@ -462,12 +462,6 @@
             </div>
             <span class="nsm-fab-label">List Job</span>
         </li>
-        <li class="btn-export-list">
-            <div class="nsm-fab-icon">
-                <i class="bx bx-export"></i>
-            </div>
-            <span class="nsm-fab-label">Export List</span>
-        </li>       
     </ul>   
 </div>
 
