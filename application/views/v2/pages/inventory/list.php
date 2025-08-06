@@ -100,7 +100,7 @@
                         <div class="nsm-page-buttons page-button-container">                            
 
                             <div class="btn-group" style="margin-bottom: 4px;">
-                                <button type="button" class="btn btn-nsm btn-nsm-custom" id="btn-add-new-inventory-item" onclick="location.href='<?php echo base_url('inventory/add') ?>'"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Item</button>
+                                <button type="button" class="btn btn-nsm btn-nsm-custom" id="btn-add-new-inventory-item" onclick="location.href='<?php echo base_url('inventory/add') ?>'"><strong><i class='bx bx-plus' style="position:relative;top:1px;"></i> Item</strong></button>
                                 <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split btn-nsm-custom" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class=""><i class='bx bx-chevron-down' ></i></span>
                                 </button>
@@ -140,10 +140,10 @@
                     <table id="INVENTORY_TABLE" class="nsm-table">
                         <thead>
                             <tr>
-                                <td class="table-icon text-center">
+                                <td class="table-icon text-center show">
                                     <input class="form-check-input select-all table-select" id="select-all" type="checkbox">
                                 </td>
-                                <td class="table-icon"></td>
+                                <td class="table-icon" class="show"></td>
                                 <td data-name="Item" class="show">Item</td>
                                 <td data-name="Model">Model</td>
                                 <td data-name="Brand">Brand</td>
@@ -156,12 +156,12 @@
                         <tbody>
                             <?php foreach ($items as $item) { ?>
                             <tr>
-                                <td style="width:1%;">
+                                <td style="width:1%;" class="show">
                                     <div class="table-row-icon table-checkbox">
                                         <input class="form-check-input select-one row-select table-select" type="checkbox" data-id="<?php echo $item[3]; ?>" name="items[<?= $item[3]; ?>]" value="<?php echo $item[3]; ?>">
                                     </div>
                                 </td>
-                                <td style="width:1%;">
+                                <td style="width:1%;" class="show">
                                     <div class="table-row-icon">
                                         <i class='bx bx-package' ></i>
                                     </div>

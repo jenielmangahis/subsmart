@@ -64,7 +64,7 @@ table.dataTable.no-footer {
                         </div>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" id="btn-add-new-category">
-                                <i class='bx bx-fw bx-plus'></i> Add New Category
+                                <i class='bx bx-fw bx-plus'></i> Category
                             </button>
                         </div>
                     </div>
@@ -73,33 +73,31 @@ table.dataTable.no-footer {
                     <table class="nsm-table" id="ITEMGROUP_TABLE">
                         <thead>
                             <tr>
-                                <td class="table-icon text-center">
-                                        <input class="form-check-input select-all table-select" type="checkbox">
+                                <td class="table-icon text-center show">
+                                    <input class="form-check-input select-all table-select" type="checkbox">
                                 </td>
-                                <td class="table-icon"></td>
-                                <td data-name="Name">Name</td>
-                                <!-- <td data-name="Description">Description</td> -->
+                                <td class="table-icon show"></td>
+                                <td data-name="Name" class="show">Name</td>
                                 <td data-name="Manage"></td>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($item_categories as $item) : ?>
                                 <tr>
-                                    <td>
+                                    <td class="show">
                                         <div class="table-row-icon table-checkbox">
                                             <input class="form-check-input select-one table-select" type="checkbox" data-id="<?php echo $item->item_categories_id; ?>">
                                         </div>
                                     </td>
-                                    <td>
+                                    <td class="show">
                                         <div class="table-row-icon">
                                             <i class='bx bx-cube'></i>
                                         </div>
                                     </td>
-                                    <td class="nsm-text-primary" style="width:60%;">
+                                    <td class="nsm-text-primary show" style="width:60%;">
                                         <label class="d-block fw-bold"><?= $item->name; ?></label>
                                         <span class="text-mute row-item-description"><?= $item->description; ?></span>
                                     </td>
-                                    <!-- <td><?= $item->description; ?></td> -->
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">

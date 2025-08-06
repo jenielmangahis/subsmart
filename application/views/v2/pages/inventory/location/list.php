@@ -66,7 +66,7 @@
                             </div>                            
                             
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('inventory/addInventoryLocation') ?>'">
-                                <i class='bx bx-fw bx-list-plus'></i> New Location
+                                <i class='bx bx-plus' style="position:relative;top:1px;"></i> Location
                             </button>
                             <!-- <button type="button" class="nsm-button btn-share-url">
                                 <i class='bx bx-fw bx-share-alt'></i>
@@ -79,11 +79,11 @@
                     <table id="INV_LOCATION_TBL" class="nsm-table">
                         <thead>
                             <tr>
-                                <td class="table-icon">
+                                <td class="table-icon show">
                                     <input class="form-check-input select-all table-select" type="checkbox">
                                 </td>
-                                <td class="table-icon"></td>
-                                <td data-name="Name">Location</td>
+                                <td class="table-icon show"></td>
+                                <td data-name="Name" class="show">Location</td>
                                 <td data-name="Default">Is Default</td>
                                 <td data-name="Manage"></td>
                             </tr>
@@ -92,17 +92,17 @@
                         <?php foreach ($location as $locations) :?>
 
                             <tr>
-                                <td>
+                                <td class="show">
                                     <div class="table-row-icon table-checkbox">
                                         <input class="form-check-input select-one table-select" type="checkbox" name="storageLocations[]" value="<?= $locations->loc_id; ?>">
                                     </div>
                                 </td>
-                                <td>
+                                <td class="show">
                                     <div class="table-row-icon">
                                         <i class='bx bx-cube'></i>
                                     </div>
                                 </td>
-                                <td><b><?php echo $locations->location_name ?></b></td>
+                                <td class="show"><b><?php echo $locations->location_name ?></b></td>
                                 <td>
                                     <?php if( $locations->default == "true" ){ ?>
                                         <span class="nsm-badge nsm-badge-primary" style="display:block;text-align:center;">

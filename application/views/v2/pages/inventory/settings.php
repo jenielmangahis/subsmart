@@ -52,7 +52,7 @@
                         </div>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#custom-field-modal">
-                                <i class='bx bx-fw bx-list-plus'></i> New Field
+                                <i class='bx bx-plus' style="position:relative;top:1px;"></i> Field
                             </button>
                         </div>
                     </div>
@@ -64,12 +64,12 @@
                         <thead>
                             <tr>
                                 <?php if(checkRoleCanAccessModule('settings', 'write')){ ?>
-                                <td class="table-icon text-center">
+                                <td class="table-icon text-center show">
                                     <input class="form-check-input select-all table-select" type="checkbox">
                                 </td>
                                 <?php } ?>
-                                <td class="table-icon"></td>
-                                <td data-name="Custom Field Name">Custom Field Name</td>                            
+                                <td class="table-icon show"></td>
+                                <td data-name="Custom Field Name" class="show">Custom Field Name</td>                            
                                 <td data-name="Manage"></td>
                             </tr>
                         </thead>
@@ -78,14 +78,14 @@
                                 <?php foreach ($inventoryCustomFields as $field) : ?>
                                     <tr>
                                         <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>
-                                        <td style="width:1%;">
+                                        <td class="show" style="width:1%;">
                                             <div class="table-row-icon table-checkbox">
                                                 <input class="form-check-input select-one table-select" type="checkbox" name="items[]" value="<?= $field->id; ?>" data-id="<?php echo $field->id; ?>">
                                             </div>
                                         </td>
                                         <?php } ?>
-                                        <td><div class="table-row-icon"><i class='bx bx-cube'></i></div></td>
-                                        <td class="f"><?= $field->name ?></td>                                
+                                        <td class="show"><div class="table-row-icon"><i class='bx bx-cube'></i></div></td>
+                                        <td class="show"><?= $field->name ?></td>                                
                                         <td class="text-end">
                                             <div class="dropdown table-management">
                                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
