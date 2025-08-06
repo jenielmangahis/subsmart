@@ -366,13 +366,7 @@ text-align:right !important;
                 <i class='bx bx-fw bx-chart' ></i>
             </div>
             <span class="nsm-fab-label">Estimate List</span>
-        </li>  
-        <li class="btn-export-list">
-            <div class="nsm-fab-icon">
-                <i class="bx bx-export"></i>
-            </div>
-            <span class="nsm-fab-label">Export List</span>
-        </li>           
+        </li>         
         <?php if (isset($estimates) && count($estimates) > 0) { ?>
         <li onclick="location.href='<?php echo base_url('estimate/print'); ?>'">
             <div class="nsm-fab-icon">
