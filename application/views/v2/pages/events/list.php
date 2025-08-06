@@ -74,6 +74,21 @@ table.dataTable.no-footer {
                         </div>
                     </div>
                 </div>
+                <div class="row mb-3">
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter primary h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-calendar'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id=""><?= count($events); ?></h2>
+                                    <span>Total Events</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-12 col-md-6 grid-mb">
                         <div class="nsm-field-group search">

@@ -196,11 +196,6 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-12">
-                                    
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-12">
                                     <h6>Time Zone</h6>
                                     <select required id="inputState" name="timezone" class="form-control">
                                         <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>

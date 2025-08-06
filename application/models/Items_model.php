@@ -1143,6 +1143,37 @@ class Items_model extends MY_Model
         $this->db->where('loc_id', $loc_id);
         return $this->db->update($this->table_storage_location, $data);
     }
+
+    public function deleteItem($id)
+    {
+        $this->db->where('id', $id);
+        $delete = $this->db->delete($this->table);
+        return $delete;
+    }  
+    
+    public function deleteAllArchived($filters = [])
+    {
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->delete($this->table);
+        return $this->db->affected_rows();
+    } 
+
+    public function getArchivedItems($company_id, $type = null)
+    {
+        $this->db->where('company_id', $company_id);
+        if($type != null) {
+            $this->db->where('type', $type);
+        }
+        $this->db->where('is_archived', 1);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }   
+     
 }
 
 

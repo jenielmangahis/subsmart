@@ -493,6 +493,38 @@ $(document).ready(function() {
         _form.submit();
     }, 1500));
 
+    $('#btn-new-standard-estimate').on('click', function(){
+        <?php if( $profile_info ){ ?>
+            location.href = base_url + 'estimate/add?customer=<?= $profile_info->prof_id; ?>';
+        <?php }else{ ?>
+            location.href = base_url + 'estimate/add';
+        <?php } ?>
+    });
+
+    $('#btn-new-with-options-estimate').on('click', function(){
+        <?php if( $profile_info ){ ?>
+            location.href = base_url + 'estimate/addoptions?type=2&customer=<?= $profile_info->prof_id; ?>';
+        <?php }else{ ?>
+            location.href = base_url + 'estimate/addoptions?type=2';
+        <?php } ?>
+    });
+
+    $('#btn-new-with-description-estimate').on('click', function(){
+        <?php if( $profile_info ){ ?>
+            location.href = base_url + 'estimate/add_description?customer=<?= $profile_info->prof_id; ?>';
+        <?php }else{ ?>
+            location.href = base_url + 'estimate/add_description';
+        <?php } ?>
+    });
+
+    $('#btn-new-with-bundle').on('click', function(){
+        <?php if( $profile_info ){ ?>
+            location.href = base_url + 'estimate/addbundle?type=3&customer=<?= $profile_info->prof_id; ?>';
+        <?php }else{ ?>
+            location.href = base_url + 'estimate/addbundle?type=3';
+        <?php } ?>
+    });
+
     $(document).on('change', '#select-all', function(){
         $('.row-select:checkbox').prop('checked', this.checked);  
         let total= $('input[name="estimates[]"]:checked').length;
@@ -1026,6 +1058,10 @@ $(document).ready(function() {
                 });
             }
         });
+    });
+
+    $("#btn-export-list").on("click", function() {
+        location.href = base_url + 'estimates/export_list';
     });
 });
 </script>

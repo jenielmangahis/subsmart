@@ -293,7 +293,7 @@
                                         <input type="hidden" name="center_map_longitude" id="center-lon" value="<?= $mapSetting ? $mapSetting->center_map_longitude : ''; ?>" class="form-control" />
 
                                     <div class="mt-4">
-                                        <h6>Event Type</h6><a class="SHORTCUT_LINK" href="<?php echo base_url('events/event_types'); ?>">+ Manage Event Type</a>
+                                        <h6>Event Type</h6><a class="SHORTCUT_LINK nsm-button btn-sm" href="<?php echo base_url('events/event_types'); ?>">+ Manage Event Type</a>
                                         <select required id="event_type_option" name="event_types" class="form-control">
                                             <option selected hidden disabled value>- Select Event Type -</option>
                                             <?php if(!empty($job_types)): ?>
@@ -304,7 +304,7 @@
                                         </select>
                                     </div>
                                     <div class="mt-4">
-                                        <h6>Event Tag</h6><a class="SHORTCUT_LINK" href="<?php echo base_url('events/event_tags'); ?>">+ Manage Event Tag</a>
+                                        <h6>Event Tag</h6><a class="SHORTCUT_LINK nsm-button btn-sm" href="<?php echo base_url('events/event_tags'); ?>">+ Manage Event Tag</a>
                                         <select required id="event_tags_option" name="tags" class="form-control">
                                             <option selected hidden disabled value>- Select Event Tag -</option>
                                             <?php if(!empty($job_tags)): ?>

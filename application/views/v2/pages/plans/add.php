@@ -212,7 +212,7 @@ label>input {
                                 </div>
                                 <div class="row mt-4">
                                   <div class="col-12">
-                                      <a href="javascript:void(0);" class="nsm-button" id="btn-add-items">Add Items</a>
+                                      <a href="javascript:void(0);" class="nsm-button primary small" id="btn-add-items"><i class="bx bx-plus"></i> Add Item</a>
                                   </div>
                                 </div>
                                 
@@ -222,7 +222,7 @@ label>input {
             </div>
             <div class="row">
                 <div class="col-12 mt-3 text-end">                  
-                    <button type="submit" class="nsm-button" onclick="location.href='<?php echo base_url('plans'); ?>'">Cancel</button>
+                    <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('plans'); ?>'">Cancel</button>
                     <button type="submit" class="nsm-button primary">Save</button>
                 </div>
             </div>
@@ -336,42 +336,51 @@ label>input {
     $('#frm-create-plan').on('submit', function(e){
       e.preventDefault();
 
-      let _this = $(this);
+      let rowCount = $('#plan-item-list > tbody > tr').length;
+      if( rowCount > 0 ){
+        let _this = $(this);
 
-      var url = base_url + "plans/_create_estimate_plan";
-      _this.find("button[type=submit]").html("Saving");
-      _this.find("button[type=submit]").prop("disabled", true);
+        var url = base_url + "plans/_create_estimate_plan";
+        _this.find("button[type=submit]").html("Saving");
+        _this.find("button[type=submit]").prop("disabled", true);
 
-      $.ajax({
-          type: 'POST',
-          url: url,
-          data: _this.serialize(),
-          dataType:"json",
-          success: function(result) {
-              if (result.is_success) {
-                  Swal.fire({
-                      title: 'Estimate Plan',
-                      text: "Plan was has been added successfully.",
-                      icon: 'success',
-                      showCancelButton: false,
-                      confirmButtonText: 'Okay'
-                  }).then((result) => {
-                      //if (result.value) {
-                          location.href= base_url + "plans";
-                      //}
-                  });
-              } else {
-                  Swal.fire({
-                      icon: 'error',
-                      title: 'Error!',
-                      html: result.msg
-                  });
-              }                    
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: _this.serialize(),
+            dataType:"json",
+            success: function(result) {
+                if (result.is_success) {
+                    Swal.fire({
+                        title: 'Estimate Plan',
+                        text: "Plan was has been added successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.href= base_url + "plans";
+                        //}
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: result.msg
+                    });
+                }                    
 
-              _this.find("button[type=submit]").html("Save");
-              _this.find("button[type=submit]").prop("disabled", false);
-          },
-      });
+                _this.find("button[type=submit]").html("Save");
+                _this.find("button[type=submit]").prop("disabled", false);
+            },
+        });
+      }else{
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            html: 'Please select an item'
+        });
+      }
     });
   });
 </script>
