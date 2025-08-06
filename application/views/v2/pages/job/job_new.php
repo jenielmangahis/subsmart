@@ -452,9 +452,23 @@
 <?php endif; ?>
 
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('job/new_job1') ?>'">
-        <i class='bx bx-briefcase'></i>
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
+        <i class="bx bx-plus"></i>
     </div>
+    <ul class="nsm-fab-options">        
+        <li onclick="location.href='<?= base_url('job'); ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-fw bx-message-square-error"></i>
+            </div>
+            <span class="nsm-fab-label">List Job</span>
+        </li>
+        <li class="btn-export-list">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-export"></i>
+            </div>
+            <span class="nsm-fab-label">Export List</span>
+        </li>       
+    </ul>   
 </div>
 
 <div class="row page-content g-0">
@@ -1321,7 +1335,7 @@
                                                             <label>Record all Items used on Jobs</label>
                                                         </div>
                                                         <div class="col-sm-12">
-                                                            <table id="device_audit" class="nsm-table table-sm table-bordered w-100 device_job_items_tbl">
+                                                            <table id="device_audit" class="table-sm table-bordered w-100 device_job_items_tbl">
                                                                 <thead class="bg-light">
                                                                     <tr>
                                                                         <!-- <td style="width: 0% !important;"></td> -->
@@ -1501,10 +1515,12 @@
                                                       <label class="form-check-label" for="SEND_EMAIL_ON_SCHEDULE">
                                                         Send an email after scheduling this job.
                                                       </label>
-                                                    </div>
-                                                    <a href="<?php echo url('job') ?>" class="nsm-button">Cancel</a>
-                                                    <button type="submit" class="nsm-button primary" id="btn-schedule-job"><?= isset($jobs_data) ? 'Save' : 'Schedule'; ?></button>                                                    
+                                                    </div>                                                                                             
                                                 <?php //endif; ?>                                                
+                                            </div>
+                                            <div class="col-sm-12 text-end mt-4">
+                                                <button type="button" id="btn-cancel-job" class="nsm-button">Cancel</button>                                                
+                                                <button type="submit" class="nsm-button primary" id="btn-schedule-job"><?= isset($jobs_data) ? 'Save' : 'Schedule'; ?></button>           
                                             </div>
                                         </div>
                                     </div>
@@ -1566,8 +1582,7 @@
                                         <td data-name="Name"><strong>Name</strong></td>
                                         <td data-name="Type"><strong>Type</strong></td>
                                         <td data-name="Stock"><strong>Stock</strong></td>
-                                        <td data-name="Price"><strong>Price</strong></td>                                        
-                                        <td data-name="Location" class='d-none'><strong>Location</strong></td>
+                                        <td data-name="Price"><strong>Price</strong></td>       
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1604,8 +1619,7 @@
                                                     echo '0.00';
                                                 }                                                
                                             ?>                                                
-                                        </td>                                        
-                                        <td class='d-none'><?php echo $item->location_name; ?></td>
+                                        </td>  
                                     </tr>
                                     <?php } } ?>
                                 </tbody>
@@ -2242,7 +2256,11 @@ $(function() {
             //employee 5
             $('#emp6_id').val($('#employee6').val());
             $('#emp6_txt').val($('#employee6 :selected').text());
-        })
+        });
+
+        $('#btn-cancel-job').on('click', function(){
+            location.href = base_url + 'job';
+        });
     });
     $(function(){
 
