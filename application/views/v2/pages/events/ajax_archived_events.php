@@ -15,15 +15,15 @@
 </div>
 <?php } ?>
 <form id="frm-archive-with-selected">
-<table class="nsm-table" id="archived-events w-100">
+<table class="nsm-table w-100" id="archived-events">
     <thead>
         <tr>
             <td class="table-icon text-center sorting_disabled show">
                 <input class="form-check-input table-select" type="checkbox" name="" value="0" id="events-archive-select-all">
             </td>
-            <td class="table-icon"></td>
-            <td data-name="EventNumber" style="width:40%;">Event Number</td>                        
-            <td data-name="Action" style="width:5%;"></td>                
+            <td class="table-icon show"></td>
+            <td class="show" data-name="EventNumber" style="width:40%;">Event Number</td>                        
+            <td class="show" data-name="Action" style="width:5%;"></td>                
         </tr>
     </thead>
     <tbody>

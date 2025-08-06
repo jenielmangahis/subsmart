@@ -141,11 +141,11 @@ table.dataTable.no-footer {
                 <table id="events-table" class="nsm-table w-100">
                     <thead>
                         <tr>
-                            <td class="table-icon text-center">
+                            <td class="table-icon text-center show">
                                 <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                             </td>
-                            <td class="table-icon"></td>
-                            <td data-name="Event Number" style="width:35%;">Event Number</td>
+                            <td class="table-icon show"></td>
+                            <td class="show" data-name="Event Number" style="width:35%;">Event Number</td>
                             <td data-name="Date">Date</td>                            
                             <td data-name="Employee">Attendees</td>                            
                             <td data-name="Event Color" style="width:8%;">Event Color</td>
@@ -165,7 +165,7 @@ table.dataTable.no-footer {
                                     </div>
                                 </td>
                                 <td class="fw-bold nsm-text-primary show">
-                                    <a class="btn-view-event" href="javascript:void(0);" data-id="<?= $event->id; ?>" data-event-number="<?= $event->event_number; ?>"><?php echo $event->event_number; ?></a>
+                                    <?php echo $event->event_number; ?>
                                 </td>
                                 <td><?= date("m/d/Y", strtotime($event->start_date)); ?></td>                            
                                 <td>
@@ -310,7 +310,7 @@ $(document).ready(function () {
         location.href = base_url + 'events/export_list';
     });
 
-    $('.btn-view-event').on('click', function(){
+    $(document).on('click', '.btn-view-event', function(){
         var event_id = $(this).attr('data-id');
         var event_number = $(this).attr('data-event-number');
         $('#modal-view-event').modal('show');
