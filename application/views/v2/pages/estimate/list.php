@@ -633,14 +633,15 @@ $(document).ready(function() {
 
         $.ajax({
             type: 'POST',
-            url: "<?php echo base_url(); ?>estimate/duplicate_estimate",
+            url: base_url + "estimate/duplicate_estimate",
             data: {
                 est_num: est_num
             },
             success: function(result) {
+                $('#clone_estimate_modal').modal('hide');
                 Swal.fire({
-                    title: 'Good job!',
-                    text: "Data Cloned Successfully!",
+                    title: 'Clone Estimate',
+                    text: "Data cloned successfully!",
                     icon: 'success',
                     showCancelButton: false,
                     confirmButtonText: 'Okay'
