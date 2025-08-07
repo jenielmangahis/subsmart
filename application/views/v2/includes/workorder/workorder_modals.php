@@ -787,15 +787,13 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="modal-archived-workorder" aria-labelledby="modal-archived-workorder-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form method="post" id="quick-add-event-form">   
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title">Archived Jobs</span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                </div>
-                <div class="modal-body" id="workorder-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+    <div class="modal-dialog modal-lg modal-dialog-centered">        
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title">Archived Work Orders</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-        </form>
+            <div class="modal-body" id="workorder-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+        </div>
     </div>
 </div>
