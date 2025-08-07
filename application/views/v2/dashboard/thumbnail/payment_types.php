@@ -7,6 +7,13 @@
     $category = trim($thumbnailsWidgetCard->category);
 ?>
 
+<style>
+    .widget-default-arrow {
+        cursor: default !important;
+        background: #00000008 !important;
+    }
+</style>
+
 <div class='card shadow <?php echo "card_$category$id "; ?>'>
     <div class="card-body">
         <div class="row">
@@ -108,6 +115,7 @@
     function <?php echo "processData_$id"; ?>(category, dateFrom, dateTo, filter3) { 
         $.ajax({
             url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
+            //url: base_url + `/dashboard/thumbnailWidgetRequest`,
             type: "POST",
             data: {
                 category: category,
@@ -135,7 +143,7 @@
                         let dataValue =  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
                         $('.<?php echo "textDatas_$id"; ?>').append(`
                             <div class='col-6 col-md-4 text-nowrap <?php echo "textDataContainer_$id"; ?>'>
-                                <div class='text-center textData'>
+                                <div class='text-center textData widget-default-arrow'>
                                     <small class='text-muted text-uppercase fw-bold'>${key}</small>
                                     <h4>${dataValue}</h4>
                                 </div>
