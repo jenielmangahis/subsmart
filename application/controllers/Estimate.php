@@ -2488,8 +2488,8 @@ class Estimate extends MY_Controller
         $user_id    = logged('id');
         $est_num    = $this->input->post('est_num');
 
-        $datas = $this->estimate_model->getDataByESTID($est_num);
-
+        $datas = $this->estimate_model->getDataByESTID($est_num);        
+        $items = $this->estimate_model->getEstimatesItems($est_num);
         // Generate Estimate Number
         $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
         if ($setting) {
@@ -2573,8 +2573,29 @@ class Estimate extends MY_Controller
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
 
+        //Clone items
+        if( $items ){
+            foreach($items as $i){
+                $items_data = [
+                    'estimates_id' => $addQuery,
+                    'items_id' => $i->items_id,
+                    'qty' => $i->qty,
+                    'cost' => $i->cost,
+                    'tax' => $i->tax,
+                    'discount' => $i->discount,
+                    'total' => $i->total,
+                    'estimate_type' => $i->estimate_type,
+                    'bundle_option_type' => $i->bundle_option_type,
+                    'storage_loc_id' => $i->storage_loc_id,
+                    'item_type' => $i->item_type,
+                ];
+
+                $this->estimate_model->add_estimate_items($items_data);
+            }
+        }
+
         //Activity Logs
-        $activity_name = 'Created Estimate Number ' . $estimate_number . ' - Cloned from Estimated Number ' . $datas->estimate_number; 
+        $activity_name = 'Estimates : Created estimate number ' . $estimate_number . ' - Cloned from estimate number ' . $datas->estimate_number; 
         createActivityLog($activity_name);
 
         // Update estimate setting
