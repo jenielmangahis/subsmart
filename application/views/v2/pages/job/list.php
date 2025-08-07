@@ -291,30 +291,55 @@ foreach ($jobs as $job) {
                         <?php if (!empty($jobs)) { ?>
                             <?php foreach($jobs as $job) { ?>
                                 <?php
+                                    $prio_badge = "";
+                                    switch ($job->priority):
+                                        case "Emergency":
+                                            $prio_badge = "error";
+                                            break;
+                                        case "Low":
+                                            $prio_badge = "secondary";
+                                            break;
+                                        case "Standard":
+                                            $prio_badge = "success";
+                                            break;
+                                        case "Urgent":
+                                            $prio_badge = "primary";
+                                            break;
+                                    endswitch;
+
+                                    $status_badge = "";
                                     switch($job->status):
                                         case "New":
+                                            $status_badge = "success";
                                             $badgeCount = 1;
                                             break;
                                         case "Scheduled":
+                                            $status_badge = "secondary";
                                             $badgeCount = 2;
                                             break;
                                         case "Arrival":
+                                            $status_badge = "secondary";
                                             $badgeCount = 3;
                                             break;          
                                         case "Started":
+                                            $status_badge = "primary";
                                             $badgeCount = 4;
                                             break;
                                         case "Approved":
+                                            $status_badge = "secondary";
                                             $badgeCount = 5;
                                             break;
                                         case "Closed":
+                                            $status_badge = "success";
                                             $badgeCount = 6;
                                             break;
                                         case "Invoiced":
+                                            $status_badge = "success";
                                             $badgeCount = 7;
                                             break;
                                         case "Completed":
                                         case "Finished":
+                                            $status_badge = "success";
                                             $badgeCount = 8;
                                             break;
                                     endswitch;
@@ -376,8 +401,8 @@ foreach ($jobs as $job) {
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </td>
-                                    <td><?php echo $job->priority; ?></td>
-                                    <td class="nsm-text-primary"><?php echo $job->status; ?></td>
+                                    <td><span class="nsm-badge <?= $prio_badge ?>"><?php echo $job->priority; ?></span></td>
+                                    <td class=""><span class="nsm-badge <?= $status_badge ?>"><?php echo $job->status; ?></span></td>
                                     <td style="text-align:right;">
                                         <?php 
                                             $total_job = $job->amount + $job->adjustment_value + $job->program_setup + $job->monthly_monitoring + $job->installation_cost + $job->tax_rate;

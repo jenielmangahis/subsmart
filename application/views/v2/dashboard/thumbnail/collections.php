@@ -7,6 +7,13 @@
     $category = trim($thumbnailsWidgetCard->category);
 ?>
 
+<style>
+    .widget-default-arrow {
+        cursor: default !important;
+        background: #00000008 !important;
+    }
+</style>
+
 <div class='card shadow <?php echo "card_$category$id "; ?>'>
     <div class="card-body">
         <div class="row">
@@ -59,13 +66,13 @@
         </div>
         <div class="row">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center textData">
+                <div class="text-center textData widget-default-arrow">
                     <small class="text-muted text-uppercase fw-bold">TOTAL AMOUNT</small>
                     <h4 class="<?php echo "textData1_$id"; ?>"></h4>
                 </div>
             </div>
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center textData">
+                <div class="text-center textData widget-default-arrow">
                     <small class="text-muted text-uppercase fw-bold">TOTAL COUNT</small>
                     <h4 class="<?php echo "textData2_$id"; ?>"></h4>
                 </div>
@@ -121,6 +128,7 @@
     function <?php echo "processData_$id"; ?>(category, dateFrom, dateTo, filter3) { 
         $.ajax({
             url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
+            //url: base_url + `/dashboard/thumbnailWidgetRequest`,
             type: "POST",
             data: {
                 category: category,

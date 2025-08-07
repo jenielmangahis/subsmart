@@ -292,6 +292,7 @@
             if (requestOnAjax) {
                 $.ajax({
                     type: "POST",
+                    //url: base_url + `/dashboard/showHideThumbnails`,
                     url: `${window.location.origin}/dashboard/showHideThumbnails`,
                     data: {
                         id: option_id,
