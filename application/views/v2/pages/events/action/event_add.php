@@ -109,9 +109,29 @@
     }
 </style>
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('events/new_event') ?>'">
-        <i class='bx bx-user-plus'></i>
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
+        <i class="bx bx-plus"></i>
     </div>
+    <ul class="nsm-fab-options">        
+        <li onclick="location.href='<?php echo base_url('events/event_add') ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-task"></i>
+            </div>
+            <span class="nsm-fab-label">New Event</span>
+        </li>
+        <li onclick="location.href='<?php echo base_url('events/export_list') ?>'">
+            <div class="nsm-fab-icon">
+                <i class='bx bxs-file-export'></i>
+            </div>
+            <span class="nsm-fab-label">Export</span>
+        </li>
+        <li id="btn-mobile-archived">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-archive'></i>
+            </div>
+            <span class="nsm-fab-label">Archived</span>
+        </li>
+    </ul>
 </div>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">

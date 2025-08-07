@@ -40,9 +40,17 @@
     }
 </style>
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
     </div>
+    <ul class="nsm-fab-options">        
+        <li onclick="location.href='<?php echo url('customer') ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-fw bx-user"></i>
+            </div>
+            <span class="nsm-fab-label">List Customer</span>
+        </li>            
+    </ul>  
 </div>
 <div id="overlay">
     <div>
@@ -189,7 +197,7 @@
                                 include viewPath('v2/pages/customer/advance_customer_forms/dynamic_fields/customer_emergency_contacts');
                             ?>
                             <div class="text-end mt-4">
-                                <button type="button" class="nsm-button primary btn-cancel">Cancel</button>
+                                <button type="button" class="nsm-button default btn-cancel">Cancel</button>
                                 <?php if(isset($profile_info)): ?>
                                     <input type="hidden" name="customer_id" id="prof_id" value="<?= $profile_info->prof_id; ?>"/>
                                 <?php endif; ?>

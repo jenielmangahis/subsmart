@@ -310,13 +310,13 @@ echo put_header_assets();
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
     </div>
-    <ul class="nsm-fab-options">
-        <li data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
+    <ul class="nsm-fab-options">        
+        <li onclick="location.href='<?php echo base_url('estimate') ?>'">
             <div class="nsm-fab-icon">
-                <i class="bx bx-chart"></i>
+                <i class='bx bx-fw bx-chart' ></i>
             </div>
-            <span class="nsm-fab-label">Edit Estimate</span>
-        </li>
+            <span class="nsm-fab-label">Estimate List</span>
+        </li>        
         <?php if (isset($estimates) && count($estimates) > 0) { ?>
         <li onclick="location.href='<?php echo base_url('estimate/print'); ?>'">
             <div class="nsm-fab-icon">

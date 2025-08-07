@@ -83,6 +83,12 @@
             <span class="nsm-fab-label">New Estimate</span>
         </li>
         <?php } ?>
+        <li class="btn-export-list">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-export"></i>
+            </div>
+            <span class="nsm-fab-label">Export List</span>
+        </li>           
         <?php if (isset($estimates) && count($estimates) > 0) { ?>
         <li onclick="location.href='<?php echo base_url('estimate/print'); ?>'">
             <div class="nsm-fab-icon">
@@ -91,6 +97,12 @@
             <span class="nsm-fab-label">Print</span>
         </li>
         <?php } ?>
+        <li id="btn-mobile-archived">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-archive'></i>
+            </div>
+            <span class="nsm-fab-label">Archived</span>
+        </li>   
     </ul>
 </div>
 
@@ -236,7 +248,7 @@
                         <?php } ?>
                         <div class="nsm-page-buttons page-button-container">                            
                             <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
-                            <div class="btn-group">
+                            <div class="btn-group nsm-main-buttons">
                                 <button type="button" class="btn btn-nsm" data-bs-toggle="modal" data-bs-target="#new_estimate_modal"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Estimate</button>
                                 <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class=""><i class='bx bx-chevron-down' ></i></span>
@@ -544,7 +556,7 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on('click', '#archived-estimate-list', function(){
+    $(document).on('click', '#archived-estimate-list, #btn-mobile-archived', function(){
         $('#modal-archived-estimates').modal('show');
         $.ajax({
             type: "POST",
@@ -1060,7 +1072,7 @@ $(document).ready(function() {
         });
     });
 
-    $("#btn-export-list").on("click", function() {
+    $("#btn-export-list, .btn-export-list").on("click", function() {
         location.href = base_url + 'estimates/export_list';
     });
 });

@@ -33,10 +33,10 @@
 }
 
 .nsm-badge{
-    padding: 1px 10px;
+    padding: 3px 10px;
     border-radius: 10px;
     width: max-content;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: bold;
 	white-space: nowrap;
 	background-color: #78787824;

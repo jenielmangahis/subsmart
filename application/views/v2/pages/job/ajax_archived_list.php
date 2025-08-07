@@ -18,26 +18,24 @@
 <table class="nsm-table" id="archived-jobs">
     <thead>
         <tr>
-            <td class="table-icon text-center sorting_disabled">
+            <td class="table-icon text-center sorting_disabled show">
                 <input class="form-check-input table-select" type="checkbox" name="" value="0" id="jobs-archive-select-all">
             </td>
-            <td class="table-icon"></td>
-            <td data-name="Name">Job Number</td>
-            <td data-name="DateArchived">Date Archived</td>
-            <td data-name="Action" style="width:5%;"></td>                
+            <td class="table-icon show"></td>
+            <td class="show" data-name="Name">Job Number</td>
+            <td class="show" data-name="Action" style="width:5%;"></td>                
         </tr>
     </thead>
     <tbody>
         <?php if ($jobs) { ?>
             <?php foreach($jobs as $job){ ?>
                 <tr>
-                    <td class="text-center">
+                    <td class="text-center show">
                         <input class="form-check-input jobs-archive-row-select table-select" name="jobs[]" type="checkbox" value="<?= $job->id; ?>">
                     </td>
-                    <td><div class="table-row-icon"><i class="bx bx-receipt"></i></div></td>
-                    <td class="nsm-text-primary"><?= $job->job_number; ?></td>
-                    <td class="nsm-text-primary" style="width:25%;"><?= date("m/d/Y G:i A", strtotime($job->archived_date)); ?></td>
-                    <td style="width:5%;">
+                    <td class="show"><div class="table-row-icon"><i class="bx bx-receipt"></i></div></td>
+                    <td class="fw-bold nsm-text-primary show"><?= $job->job_number; ?></td>
+                    <td class="show" style="width:5%;">
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                             <ul class="dropdown-menu dropdown-menu-end">

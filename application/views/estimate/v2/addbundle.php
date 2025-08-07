@@ -481,6 +481,15 @@ input:checked+.slider:before {
                                     <option value="Lost">Lost</option>
                                 </select>
                             </div>
+
+                            <div class="col-md-6 mt-4">
+                                <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="reminder_14d" value="1" id="reminder14d">
+                                <label class="form-check-label" for="reminder14d">
+                                    <b>Remind me in 14 days</b>
+                                </label>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row mb-3" id="plansItemDiv" style="background-color:white;font-size:16px;">
@@ -653,6 +662,17 @@ input:checked+.slider:before {
                                         <td></td>
                                         <td>$ <span id="total_tax_">0.00</span><input type="hidden" name="total_tax_"
                                                 id="total_tax_input"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="no_tax" type="checkbox" value="1" id="no-tax">
+                                                <label class="form-check-label" for="noTax" style="font-size:15px;">
+                                                    No Tax
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td colspan="2"></td>
                                     </tr>
                                     <tr style="display:;">
                                         <td style="width:250px;"><input type="text" name="adjustment_name"
@@ -879,27 +899,36 @@ input:checked+.slider:before {
                         <br><br>
                         <div class="row mb-3" style="background-color:white;">
                             <div class="col-md-12">
-                                <h6>Request a Deposit</h6>
+                                <label class="bold">Request a Deposit</label>
                                 <span class="help help-sm help-block">You can request an upfront payment on accept
                                     estimate.</span>
                             </div>
-                            <div class="col-md-3 form-group">
+                            <!-- <div class="col-md-3 form-group">
                                 <select name="deposit_request" class="form-control">
-                                    <option value="$" selected="selected">Deposit amount $</option>
-                                    <option value="%">Percentage %</option>
+                                    <option value="1" selected="selected">Deposit amount $</option>
+                                    <option value="2">Percentage %</option>
                                 </select>
-                            </div>
-                            <div class="col-md-3 form-group">
+                            </div> -->
+                            <div class="col-md-2 form-group">
                                 <div class="input-group">
                                     <!-- <div class="input-group-addon bold">$</div> -->
-                                    <!-- <label><h4>$</h4></label> -->
-                                    <input type="text" name="deposit_amount" value="0" class="form-control"
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">%</div>
+                                    </div>
+                                    <input type="number" step="any" name="deposit_amount" id="deposit-percentage"
+                                        value="0" class="form-control" placeholder="Percentage of total amount"
                                         autocomplete="off">
                                 </div>
                             </div>
-                            <!-- <div class="col-md-3 form-group">
-                                    0.00
-                                </div> -->
+                            <div class="col-md-2 form-group">
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">$</div>
+                                    </div>
+                                    <input type="text" id="deposit-total-amount" value="0.00" readonly=""
+                                        disabled="" class="form-control">
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row mb-3" style="background-color:white;">
@@ -1271,34 +1300,7 @@ input:checked+.slider:before {
                 $(document).ready(function() {
                     $('#sel-customer').select2();
                     var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
-
-                    /*$('#customers')
-                        .empty() //empty select
-                        .append($("<option/>") //add option tag in select
-                            .val(customer_id) //set value for option to post it
-                            .text("<?php echo get_customer_by_id($_GET['customer_id'])->contact_name ?>")) //set a text for show in select
-                        .val(customer_id) //select option of select2
-                        .trigger("change"); //apply to select2*/
                 });
-                </script>
-
-                <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script> -->
-                <script async defer
-                    src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly">
-                </script>
-
-                <script>
-                function initialize() {
-                    var input = document.getElementById('job_location');
-                    var autocomplete = new google.maps.places.Autocomplete(input);
-                    google.maps.event.addListener(autocomplete, 'place_changed', function() {
-                        var place = autocomplete.getPlace();
-                        document.getElementById('city2').value = place.name;
-                        document.getElementById('cityLat').value = place.geometry.location.lat();
-                        document.getElementById('cityLng').value = place.geometry.location.lng();
-                    });
-                }
-                google.maps.event.addDomListener(window, 'load', initialize);
                 </script>
 
                 <script>
@@ -1310,6 +1312,58 @@ input:checked+.slider:before {
                 //     })
                 //   })
                 $(document).ready(function() {
+
+                    $('#deposit-percentage').keypress(function() {
+                        computeDepositAmount();
+                    });
+
+                    $('#grand_total_input').change(function() {
+                        computeDepositAmount();
+                        no_tax();
+                    });
+
+                    $('#no-tax').on('change', function(){
+                        computeDepositAmount();
+                        no_tax();
+                    });
+
+                    function no_tax(){
+                        if($('#no-tax').is(':checked')) {
+                            var grand_total = $('#grand_total_input').val();
+                            var total_tax   = $('#total_tax_input').val();
+                            var new_grand_total = parseFloat(grand_total) - parseFloat(total_tax);
+                        }else{            
+                            var grand_total = $('#grand_total_input').val();
+                            var new_grand_total = parseFloat(grand_total);
+                        }
+
+                        if( isNaN(new_grand_total) ){
+                            new_grand_total = 0;
+                        }
+
+                        $('#grand_total').text(new_grand_total.toFixed(2));
+                    }
+
+                    function computeDepositAmount() {
+                        if($('#no-tax').is(':checked')) {
+                            var grand_total = $('#grand_total_input').val();
+                            var total_tax   = $('#total_tax_input').val();
+                            var new_grand_total = parseFloat(grand_total) - parseFloat(total_tax);
+                        }else{            
+                            var grand_total = $('#grand_total_input').val();
+                            var new_grand_total = parseFloat(grand_total);
+                        }
+
+                        var deposit_amount = $('#deposit-percentage').val() / 100;
+                        var total_amount   = new_grand_total;
+
+                        if (total_amount > 0) {
+                            total_amount = total_amount * deposit_amount;
+                            $('#deposit-total-amount').val(total_amount.toFixed(2));
+                        } else {
+                            $('#deposit-total-amount').val('0.00');
+                        }
+                    }
 
                     //iterate through all the divs - get their ids, hide them, then call the on click
                     $(".toggle").each(function() {

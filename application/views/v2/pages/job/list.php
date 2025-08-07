@@ -107,11 +107,32 @@ foreach ($jobs as $job) {
     }
 }
 ?>
-
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('job/new') ?>'">
-        <i class='bx bx-briefcase'></i>
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
+        <i class="bx bx-plus"></i>
     </div>
+    <?php if(checkRoleCanAccessModule('jobs', 'write')){ ?>
+    <ul class="nsm-fab-options">        
+        <li onclick="location.href='<?= base_url('job/new'); ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-user-plus"></i>
+            </div>
+            <span class="nsm-fab-label">Add Job</span>
+        </li>
+        <li class="btn-export-list">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-export"></i>
+            </div>
+            <span class="nsm-fab-label">Export List</span>
+        </li>
+        <li id="btn-mobile-archived">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-archive'></i>
+            </div>
+            <span class="nsm-fab-label">Archived</span>
+        </li>          
+    </ul>
+    <?php } ?>      
 </div>
 
 <div class="row page-content g-0">
@@ -229,7 +250,7 @@ foreach ($jobs as $job) {
                                 <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
                             </ul>
                         </div>
-                        <div class="btn-group">
+                        <div class="btn-group nsm-main-buttons">
                             <button type="button" class="btn btn-nsm" id="btn-new-job"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Job</button>
                             <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span class=""><i class='bx bx-chevron-down' ></i></span>
@@ -267,129 +288,138 @@ foreach ($jobs as $job) {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                            if (!empty($jobs)) {
-                                foreach ($jobs as $job) {
-                                switch($job->status):
-                                    case "New":
-                                        $badgeCount = 1;
-                                        break;
-                                    case "Scheduled":
-                                        $badgeCount = 2;
-                                        break;
-                                    case "Arrival":
-                                        $badgeCount = 3;
-                                        break;          
-                                    case "Started":
-                                        $badgeCount = 4;
-                                        break;
-                                    case "Approved":
-                                        $badgeCount = 5;
-                                        break;
-                                    case "Closed":
-                                        $badgeCount = 6;
-                                        break;
-                                    case "Invoiced":
-                                        $badgeCount = 7;
-                                        break;
-                                    case "Completed":
-                                    case "Finished":
-                                        $badgeCount = 8;
-                                        break;
-                                endswitch;
-                            ?>
-                        <tr>
-                            <?php if(checkRoleCanAccessModule('jobs', 'write')){ ?>
-                            <td>
-                                <input class="form-check-input row-select table-select" name="jobs[]" type="checkbox" value="<?= $job->id; ?>">
-                            </td>
-                            <?php } ?>
-                            <td>
-                                <div class="table-row-icon"><i class='bx bx-briefcase'></i></div>
-                            </td>
-                            <td class="fw-bold show nsm-text-primary">                                
-                                <?= $job->job_number; ?>
-                            </td>
-                            <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
-                            <td><?php echo $job->first_name . ' ' . $job->last_name; ?></td>
-                            <td>
-                                <?php 
-                                    if( $job->FName != '' || $job->LName != '' ){
-                                        echo $job->FName . ' ' . $job->LName; 
-                                    }else{
-                                        echo '---';
-                                    }
-                                ?>
-                            </td>
-                            <td>
+                        <?php if (!empty($jobs)) { ?>
+                            <?php foreach($jobs as $job) { ?>
                                 <?php
-                                    $employeeFields = [
-                                        'employee_id',
-                                        'employee2_id',
-                                        'employee3_id',
-                                        'employee4_id',
-                                        'employee5_id',
-                                        'employee6_id',
-                                    ];
+                                    switch($job->status):
+                                        case "New":
+                                            $badgeCount = 1;
+                                            break;
+                                        case "Scheduled":
+                                            $badgeCount = 2;
+                                            break;
+                                        case "Arrival":
+                                            $badgeCount = 3;
+                                            break;          
+                                        case "Started":
+                                            $badgeCount = 4;
+                                            break;
+                                        case "Approved":
+                                            $badgeCount = 5;
+                                            break;
+                                        case "Closed":
+                                            $badgeCount = 6;
+                                            break;
+                                        case "Invoiced":
+                                            $badgeCount = 7;
+                                            break;
+                                        case "Completed":
+                                        case "Finished":
+                                            $badgeCount = 8;
+                                            break;
+                                    endswitch;
                                 ?>
-                                <?php if(!empty($employees)): ?>
-                                    <div class="techs">
-                                        <?php foreach ($employees as $employee): ?>
-                                            <?php foreach ($employeeFields as $employeeField): ?>
-                                                <?php if ($job->$employeeField == $employee['id']): ?>
-                                                    <?= jobsmodule__getEmployeeAvatar($employee); ?>
+                                <tr>
+                                    <?php if(checkRoleCanAccessModule('jobs', 'write')){ ?>
+                                    <td>
+                                        <input class="form-check-input row-select table-select" name="jobs[]" type="checkbox" value="<?= $job->id; ?>">
+                                    </td>
+                                    <?php } ?>
+                                    <td>
+                                        <div class="table-row-icon"><i class='bx bx-briefcase'></i></div>
+                                    </td>
+                                    <td class="fw-bold show nsm-text-primary">                                
+                                        <?= $job->job_number; ?>
+                                    </td>
+                                    <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
+                                    <td><?php echo $job->first_name . ' ' . $job->last_name; ?></td>
+                                    <td>
+                                        <?php 
+                                            if( $job->FName != '' || $job->LName != '' ){
+                                                echo $job->FName . ' ' . $job->LName; 
+                                            }else{
+                                                echo '---';
+                                            }
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                            $employeeFields = [
+                                                'employee_id',
+                                                'employee2_id',
+                                                'employee3_id',
+                                                'employee4_id',
+                                                'employee5_id',
+                                                'employee6_id',
+                                            ];
+                                        ?>
+                                        <?php if(!empty($employees)): ?>
+                                            <div class="techs">
+                                                <?php foreach ($employees as $employee): ?>
+                                                    <?php foreach ($employeeFields as $employeeField): ?>
+                                                        <?php if ($job->$employeeField == $employee['id']): ?>
+                                                            <?= jobsmodule__getEmployeeAvatar($employee); ?>
+                                                        <?php endif; ?>
+                                                    <?php endforeach; ?>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </td>                          
+                                    <td><?php echo $job->job_type != '' ? $job->job_type : '---'; ?></td>
+                                    <td>
+                                        <?php if(!empty($tags)): ?>
+                                            <?php foreach ($tags as $tag): ?>
+                                                <?php if($job->tags == $tag['name']): ?>
+                                                    <span><?= $tag['name']; ?></span>
+                                                    <?php break; ?>
                                                 <?php endif; ?>
                                             <?php endforeach; ?>
-                                        <?php endforeach; ?>
-                                    </div>
-                                <?php endif; ?>
-                            </td>                          
-                            <td><?php echo $job->job_type != '' ? $job->job_type : '---'; ?></td>
-                            <td>
-                                <?php if(!empty($tags)): ?>
-                                    <?php foreach ($tags as $tag): ?>
-                                        <?php if($job->tags == $tag['name']): ?>
-                                            <span><?= $tag['name']; ?></span>
-                                            <?php break; ?>
                                         <?php endif; ?>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </td>
-                            <td><?php echo $job->priority; ?></td>
-                            <td class="nsm-text-primary"><?php echo $job->status; ?></td>
-                            <td style="text-align:right;">
-                                <?php 
-                                    $total_job = $job->amount + $job->adjustment_value + $job->program_setup + $job->monthly_monitoring + $job->installation_cost + $job->tax_rate;
-                                ?>
-                                $<?php echo number_format((float)$total_job, 2, '.', ',');  ?>
-                            </td>
-                            <td>
-                                <div class="dropdown table-management">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <!-- <a class="dropdown-item" href="<?php echo base_url('job/job_preview/') . $job->id; ?>">Preview</a> -->
-                                            <a class="dropdown-item view-job-row" href="javascript:void(0);" data-id="<?= $job->id; ?>" data-job-number="<?= $job->job_number; ?>">View</a>
-                                        </li>
-                                        
-                                        <?php if(checkRoleCanAccessModule('jobs', 'write')){ ?>
-                                            <li><a class="dropdown-item" href="<?php echo base_url('job/edit/') . $job->id; ?>">Edit</a></li>
-                                        <?php } ?>
+                                    </td>
+                                    <td><?php echo $job->priority; ?></td>
+                                    <td class="nsm-text-primary"><?php echo $job->status; ?></td>
+                                    <td style="text-align:right;">
+                                        <?php 
+                                            $total_job = $job->amount + $job->adjustment_value + $job->program_setup + $job->monthly_monitoring + $job->installation_cost + $job->tax_rate;
+                                        ?>
+                                        $<?php echo number_format((float)$total_job, 2, '.', ',');  ?>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown table-management">
+                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <!-- <a class="dropdown-item" href="<?php echo base_url('job/job_preview/') . $job->id; ?>">Preview</a> -->
+                                                    <a class="dropdown-item view-job-row" href="javascript:void(0);" data-id="<?= $job->id; ?>" data-job-number="<?= $job->job_number; ?>">View</a>
+                                                </li>
+                                                
+                                                <?php if(checkRoleCanAccessModule('jobs', 'write')){ ?>
+                                                    <li><a class="dropdown-item" href="<?php echo base_url('job/edit/') . $job->id; ?>">Edit</a></li>
+                                                <?php } ?>
 
-                                        <?php if(checkRoleCanAccessModule('jobs', 'delete')){ ?>
-                                            <li class="DELETE_ITEM">
-                                                <a class="dropdown-item btn-delete-job" href="javascript:void(0);" data-id="<?= $job->id; ?>" data-jobnumber="<?= $job->job_number; ?>">Delete</a>
-                                            </li>
-                                        <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('jobs', 'delete')){ ?>
+                                                    <li class="DELETE_ITEM">
+                                                        <a class="dropdown-item btn-delete-job" href="javascript:void(0);" data-id="<?= $job->id; ?>" data-jobnumber="<?= $job->job_number; ?>">Delete</a>
+                                                    </li>
+                                                <?php } ?>
 
-                                        <?php if( $user_type == 6 ){ //Field tech ?>
-                                            <li><a class="dropdown-item add-item" href="<?= base_url('job/edit_job_item/' . $job->id); ?>">Add Item</a></li>
-                                        <?php } ?>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php } } ?>
+                                                <?php if( $user_type == 6 ){ //Field tech ?>
+                                                    <li><a class="dropdown-item add-item" href="<?= base_url('job/edit_job_item/' . $job->id); ?>">Add Item</a></li>
+                                                <?php } ?>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        <?php }else{ ?>
+                            <tr>
+                                <td colspan="12">
+                                    <div class="nsm-empty">
+                                        <span>No results found.</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php } ?>
                     </tbody>
                 </table>
                 </form>
@@ -545,7 +575,7 @@ $(document).ready(function() {
         location.href = base_url + 'job/new';
     });
 
-    $("#btn-export-jobs").on("click", function() {
+    $("#btn-export-jobs, .btn-export-list").on("click", function() {
         location.href = "<?php echo base_url('jobs/export_list'); ?>";
     });
 
@@ -834,7 +864,7 @@ $(document).ready(function() {
         }, 500);
     });
 
-    $('#archived-jobs-list').on('click', function(){
+    $('#archived-jobs-list, #btn-mobile-archived').on('click', function(){
         $('#modal-archived-jobs').modal('show');
         $.ajax({
             type: "POST",

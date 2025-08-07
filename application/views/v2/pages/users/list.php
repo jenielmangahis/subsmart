@@ -28,8 +28,8 @@
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
     </div>
-    <ul class="nsm-fab-options">
-        <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
+    <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
+    <ul class="nsm-fab-options">        
         <li data-bs-toggle="modal" data-bs-target="#add_employee_modal">
             <div class="nsm-fab-icon">
                 <i class="bx bx-user-plus"></i>
@@ -42,8 +42,14 @@
             </div>
             <span class="nsm-fab-label">Export List</span>
         </li>
-        <?php } ?>        
+        <li id="btn-mobile-archived">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-archive'></i>
+            </div>
+            <span class="nsm-fab-label">Archived</span>
+        </li>          
     </ul>
+    <?php } ?>      
 </div>
 
 
@@ -81,7 +87,7 @@
                         <?php } ?>
                         <div class="nsm-page-buttons page-button-container">                            
                             <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
-                            <div class="btn-group">
+                            <div class="btn-group nsm-main-buttons">
                                 <button type="button" class="btn btn-nsm" id="btn-add-employee"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Employee</button>
                                 <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class=""><i class='bx bx-chevron-down' ></i></span>
@@ -143,7 +149,7 @@
                                         ?>
                                         <div class="nsm-profile" style="background-image: url('<?php echo userProfileImage($row->id); ?>');" data-img="<?php echo $data_img; ?>"></div>
                                     </td>
-                                    <td class="nsm-text-primary">
+                                    <td class="nsm-text-primary show">
                                         <label class="d-block fw-bold"><?php echo ucwords(strtolower($row->FName)) . ' ' . ucwords(strtolower($row->LName)); ?></label>
                                         
                                         <label class="content-subtitle d-block"><i class='bx bx-envelope' style="position:relative;top:1px;"></i><?php echo $row->email ?></label>
@@ -247,7 +253,7 @@
                         else :
                         ?>
                             <tr>
-                                <td colspan="4">
+                                <td colspan="12">
                                     <div class="nsm-empty">
                                         <span>No results found.</span>
                                     </div>
