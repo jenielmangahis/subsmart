@@ -73,51 +73,26 @@ class Workorder extends MY_Controller
         if ($role == 2 || $role == 3) {
             if (!empty($tab_index)) {
                 $this->page_data['tab_index'] = $tab_index;
-                // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('status' => $tab_index), $company_id);
             } else {
 
-                // search
                 if (!empty(get('search'))) {
-
                     $this->page_data['search'] = get('search');
-                    // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
                 } elseif (!empty(get('order'))) {
-
                     $this->page_data['search'] = get('search');
-                    // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
-
-                } else {
-
-                    // $this->page_data['workorders'] = $this->workorder_model->getAllOrderByCompany($company_id);
                 }
             }
-
-            // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount($company_id);
         }
+
         if ($role == 4) {
-
             if (!empty($tab_index)) {
-
                 $this->page_data['tab_index'] = $tab_index;
-                // $this->page_data['workorders'] = $this->workorder_model->filterBy();
-
             } elseif (!empty(get('order'))) {
-
                 $this->page_data['order'] = get('order');
-                // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
-
             } else {
-
                 if (!empty(get('search'))) {
-
                     $this->page_data['search'] = get('search');
-                    // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
-                } else {
-                    // $this->page_data['workorders'] = $this->workorder_model->getAllByUserId();
-                }
+                } 
             }
-
-            // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount();
         }
 
         $order = $this->input->get();
@@ -6835,7 +6810,7 @@ class Workorder extends MY_Controller
             $msg = '';
 
             //Activity Logs            
-            $activity_name = 'Workorder : Deleted workorder number ' . $workOrder->work_order_number; 
+            $activity_name = 'Workorders : Deleted workorder number ' . $workOrder->work_order_number; 
             createActivityLog($activity_name);
 
             customerAuditLog(logged('id'), $workOrder->customer_id, $workOrder->id, 'Workorder', 'Deleted work order #'.$workOrder->work_order_number);
@@ -13006,7 +12981,7 @@ class Workorder extends MY_Controller
             $this->workorder_model->restoreWorkorder($workorder->id);
 
             //Activity Logs
-            $activity_name = 'Workorder : Restore Workorder Number ' . $workorder->work_order_number; 
+            $activity_name = 'Workorders : Restore Workorder Number ' . $workorder->work_order_number; 
             createActivityLog($activity_name);
 
             $is_success = 1;
@@ -13016,6 +12991,179 @@ class Workorder extends MY_Controller
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
+
+    public function ajax_archive_selected_workorders()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['workorders'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['view_flag' => 1, 'date_updated' => date("Y-m-d H:i:s")];
+            $total_updated = $this->workorder_model->bulkUpdate($post['workorders'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Workorders : Archived ' . $total_updated . ' workorder(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_change_status_selected_workorders()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['workorders'] ){                                    
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['status' => $post['status'], 'date_updated' => date("Y-m-d H:i:s")];
+            $total_updated = $this->workorder_model->bulkUpdate($post['workorders'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Workorders : ' . $total_updated . ' workorder(s) was changed status to ' . $post['status']; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_restore_selected_workorders()
+	{
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['workorders'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['view_flag' => 0, 'date_updated' => date("Y-m-d H:i:s")];
+            $total_updated = $this->workorder_model->bulkUpdate($post['workorders'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Workorders : Restored ' . $total_updated . ' workorder(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_permanently_delete_selected_workorders()
+	{
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['workorders'] ){
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+			$filters[] = ['field' => 'view_flag', 'value' => 1];
+            $total_deleted = $this->workorder_model->bulkDelete($post['workorders'], $filters);
+
+			//Activity Logs
+			$activity_name = 'Workorders : Permanently deleted ' .$total_deleted. ' workorder(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_all_archived_workorders()
+	{
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+		$total_archived = $this->workorder_model->deleteAllArchived($filter);
+
+		//Activity Logs
+		$activity_name = 'Workorders : Permanently deleted ' .$total_archived. ' workorder(s)'; 
+		createActivityLog($activity_name);
+
+		$is_success = 1;
+		$msg    = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_archived_workorder()
+	{
+		$this->load->model('Clients_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+		$workorder = $this->workorder_model->getById($post['workorder_id']);
+        if( $workorder && $workorder->company_id == $company_id ){
+			$this->workorder_model->delete($workorder->id);
+
+			//Activity Logs
+			$activity_name = 'Workorders : Permanently deleted work order number ' . $workorder->work_order_number; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 }
 /* End of file Workorder.php */
 

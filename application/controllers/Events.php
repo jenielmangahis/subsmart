@@ -1951,14 +1951,13 @@ class Events extends MY_Controller
 
         $event = $this->event_model->getEvent($post['schedule_id']);
         if( $event && ($event->company_id == $cid) ){
-            $event_number = $event->event_number;
-            $this->event_model->delete($event->id);
+            $this->event_model->update($event->id, ['is_archived' => 'Yes', 'date_updated' => date("Y-m-d H:i:s")]);
 
             $is_valid = 1;
             $msg = '';
 
             //Activity Logs
-            $activity_name = 'Events : Deleted event ' . $event_number; 
+            $activity_name = 'Events : Deleted event number ' . $event->event_number; 
             createActivityLog($activity_name);
             
         }else{
