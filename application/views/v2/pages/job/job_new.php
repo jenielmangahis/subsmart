@@ -1505,7 +1505,7 @@
                                             <div class="col-sm-12 text-end">
                                                 <?php //if($jobs_data->status == 'Draft' || $jobs_data->status == '0' || $jobs_data->status == '') : ?>
                                                     <div class="form-check float-start">
-                                                      <input class="form-check-input" id="SEND_EMAIL_ON_SCHEDULE" type="checkbox">
+                                                      <input class="form-check-input is_email_jobs" id="SEND_EMAIL_ON_SCHEDULE" name="is_email_jobs" type="checkbox" value="1">
                                                       <label class="form-check-label" for="SEND_EMAIL_ON_SCHEDULE">
                                                         Send an email after scheduling this job.
                                                       </label>

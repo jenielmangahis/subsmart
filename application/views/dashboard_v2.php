@@ -249,6 +249,10 @@
     display: block;
     font-size: 20px;
 }
+
+.widget-header-widget-default-arrow {
+    cursor: default !important;
+}   
 </style>
 
 <div class="nsm-fab-container">
