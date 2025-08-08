@@ -390,11 +390,8 @@
                                             <?php } ?>
                                             <?php if(checkRoleCanAccessModule('estimates', 'write')){ ?>
                                             <li>
-                                                <a class="dropdown-item clone-item" href="javascript:void(0);"
-                                                    data-bs-toggle="modal" data-bs-target="#clone_estimate_modal"
-                                                    data-id="<?php echo $estimate->id; ?>"
-                                                    data-wo_num="<?php echo $estimate->estimate_number; ?>"
-                                                    data-name="WO-00433">Clone Estimate</a>
+                                                <a class="dropdown-item clone-item" href="javascript:void(0);"  data-id="<?php echo $estimate->id; ?>"
+                                                    data-wo_num="<?php echo $estimate->estimate_number; ?>">Clone Estimate</a>
                                             </li>
                                             <?php } ?>
 
@@ -620,12 +617,53 @@ $(document).ready(function() {
     });
 
     $(document).on("click", ".clone-item", function() {
-        let num = $(this).attr("data-wo_num");
-        let id = $(this).attr("data-id");
-        let _modal = $("#clone_estimate_modal");
+        let est_id   = $(this).attr("data-id");
+        let est_num  = $(this).attr("data-wo_num");        
 
-        _modal.find(".work_order_no").text(num);
-        _modal.find("#wo_id").val(id);
+        Swal.fire({
+            title: 'Clone Estimate',
+            html: `You are going create a new Estimate based on Estimate Number <b>${est_num}</b>. Afterwards you can edit the newly created Estimate.`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "estimate/duplicate_estimate",
+                    data: {
+                        est_num: est_id
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                         $('#modal-archived-estimates').modal('hide');
+                        if (result.is_success) {
+                            var estimate_id = result.estimate_id;
+                            Swal.fire({
+                                title: 'Clone Estimate',
+                                html: "Data successfully created!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.href = base_url + 'estimate/edit/' + estimate_id;
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                });
+            }
+        });
     });
 
     $("#clone_workorder").on("click", function() {
