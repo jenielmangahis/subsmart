@@ -2580,7 +2580,7 @@ class Estimate extends MY_Controller
                     'estimates_id' => $addQuery,
                     'items_id' => $i->items_id,
                     'qty' => $i->qty,
-                    'cost' => $i->cost,
+                    'cost' => $i->iCost,
                     'tax' => $i->tax,
                     'discount' => $i->discount,
                     'total' => $i->total,
