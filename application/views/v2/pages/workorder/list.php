@@ -25,25 +25,43 @@ function workordermodule__formatWorkOrderNumber($number) {
 .dataTables_filter, .dataTables_length{
     display: none;
 }
+.swal2-html-container{
+    overflow:hidden;
+}
+.user-change-status{
+    text-align:left;
+}
+.techs > .nsm-profile {
+    border: 2px solid #fff;
+    box-sizing: content-box;
+}
+.nsm-profile {
+    --size: 35px;
+    max-width: var(--size);
+    height: var(--size);
+    min-width: var(--size);
+}
+.nsm-badge{
+    width:90px;
+    display:block;
+    text-align:center;
+}
+#workorder-list th:first-child, td:first-child {
+  text-align:center;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
     </div>
-    <ul class="nsm-fab-options">
-        <!-- <li onclick="location.href='<?php echo base_url('workorder/work_order_templates') ?>'">
-            <div class="nsm-fab-icon">
-                <i class="bx bx-window-alt"></i>
-            </div>
-            <span class="nsm-fab-label">Industry Templates</span>
-        </li> -->
+    <ul class="nsm-fab-options">        
         <li data-bs-toggle="modal" data-bs-target="#new_workorder_modal">
             <div class="nsm-fab-icon">
                 <i class="bx bx-task"></i>
             </div>
             <span class="nsm-fab-label">New Work Order</span>
         </li>
-        <li onclick="location.href='<?php echo base_url('workorder/settings') ?>'">
+        <li onclick="location.href='<?php echo base_url('workorder/settings'); ?>'">
             <div class="nsm-fab-icon">
                 <i class="bx bx-cog"></i>
             </div>
@@ -79,7 +97,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                                     <h2 id=""><?= count($scheduledWorkorders); ?></h2>
-                                    <span>Total Scheduled Workorders</span>
+                                    <span>Total Scheduled Work Orders</span>
                                 </div>
                             </div>
                         </div>
@@ -92,7 +110,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                                     <h2 id=""><?= count($newWorkorders); ?></h2>
-                                    <span>Total New Workorders</span>
+                                    <span>Total New Work Orders</span>
                                 </div>
                             </div>
                         </div>
@@ -102,7 +120,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                 <div class="row  mt-5">
                     <div class="col-12 col-md-4">
                         <div class="nsm-field-group search form-group">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_SEARCHBAR" placeholder="Search Workorder">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Workorder" value="">
                         </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
@@ -144,42 +162,55 @@ function workordermodule__formatWorkOrderNumber($number) {
                                 <li><a class="dropdown-item" href="<?php echo base_url('workorder?status=closed') ?>">Closed</a></li>
                             </ul>
                         </div>
+                        <?php if(checkRoleCanAccessModule('work-orders', 'write')){ ?>
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-change-status" href="javascript:void(0);" data-action="change-status">Change Status</a></li>   
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
+                        </div>
+                        <?php } ?>
                         <div class="nsm-page-buttons page-button-container">
                             <?php if(checkRoleCanAccessModule('work-orders', 'write')){ ?>
-                            <!-- <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('workorder/work_order_templates') ?>'">
-                                <i class='bx bx-fw bx-window-alt'></i> Industry Templates
-                            </button> -->
-                            <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_workorder_modal">
-                                <i class='bx bx-fw bx-task'></i> New Work Order
-                            </button>                            
-                            <?php }else{ ?>
-                            <button type="button" class="nsm-button" id="btn-add-new-workorder">
-                                <i class='bx bx-fw bx-task'></i> New Work Order
-                            </button>  
+                            <div class="btn-group">
+                                <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
+                                    <button type="button" class="btn btn-nsm" data-bs-toggle="modal" data-bs-target="#new_workorder_modal"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Work Order</button>
+                                <?php }else{ ?>
+                                    <button type="button" class="btn btn-nsm" id="btn-add-new-workorder"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Work Order</button>
+                                <?php } ?>
+                                
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                                                    
+                                    <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>  
+                                    <li><a class="dropdown-item" id="btn-export-list" href="javascript:void(0);">Settings</a></li>                     
+                                </ul>
+                            </div>
                             <?php } ?>
-                            <button type="button" class="nsm-button primary" id="archived-workorder-list">
-                                <i class='bx bx-fw bx-trash'></i> Manage Archived
-                            </button>
-                            <?php } ?>
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('workorder/settings') ?>'">
-                                <i class='bx bx-fw bx-cog'></i>
-                            </button>
                         </div>
                     </div>
                 </div>
-                
+                <form id="frm-with-selected">
                 <table class="nsm-table" id="workorder-list">
                     <thead>
                         <tr>
+                            <?php if(checkRoleCanAccessModule('work-orders', 'write')){ ?>
+                            <td class="table-icon text-center sorting_disabled">
+                                <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                            </td>
+                            <?php } ?>
                             <td class="table-icon"></td>
                             <td data-name="Work Order Number">Work Order Number</td>                            
-                            <td data-name="Customer">Customer</td>
-                            <td data-name="Employees">Employees</td>
-                            <td data-name="Total">Amount</td>
-                            <td data-name="Priority">Priority</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="Date Created" style="width:8%;">Date Created</td>
+                            <td data-name="Customer" style="width:20%;">Customer</td>
+                            <td data-name="Date" style="width:10%;">Date</td>                            
+                            <td data-name="CreatdBy" style="width:10%;">Created By</td>                            
+                            <td data-name="Priority" style="width:8%;">Priority</td>
+                            <td data-name="Status" style="width:8%;">Status</td>
+                            <td data-name="Total" style="text-align:right;width:10%;">Amount</td>                            
                             <td data-name="Manage" style="width:3%;"></td>
                         </tr>
                     </thead>
@@ -235,40 +266,49 @@ function workordermodule__formatWorkOrderNumber($number) {
                                 endswitch;
                             ?>
                                 <tr>
+                                    <?php if(checkRoleCanAccessModule('work-orders', 'write')){ ?>
+                                    <td>
+                                        <input class="form-check-input row-select table-select" name="workorders[]" type="checkbox" value="<?= $workorder->id; ?>">
+                                    </td>
+                                    <?php } ?>
                                     <td>
                                         <div class="table-row-icon"><i class='bx bx-briefcase'></i></div>
                                     </td>
-                                    <td class="fw-bold nsm-text-primary" style="width:10%;"><?= workordermodule__formatWorkOrderNumber($workorder->work_order_number) ?></td>
-                                    <td>
-                                        <a href="<?php echo base_url('customer/view/' . $workorder->customer_id) ?>" class="nsm-link">
+                                    <td class="fw-bold nsm-text-primary show" style="width:10%;"><?= $workorder->work_order_number; ?></td>                                    
+                                    <td class="nsm-text-primary">
                                         <?php 
-                                            //echo $workorder->first_name . ' ' .  $workorder->middle_name . ' ' . $workorder->last_name; 
                                             if(empty($workorder->first_name)){
                                                 echo $workorder->contact_name;
                                             }else{
-
-                                                echo $workorder->first_name . ' ' .  $workorder->middle_name . ' ' . $workorder->last_name;
+                                                echo $workorder->first_name . ' ' . $workorder->last_name;
                                             }
-                                        ?></a>
-                                        <label class="d-block">Issued on: 
-                                            <?php //echo date_format($workorder->first_name, 'd M Y H:i:s') 
-                                                if($workorder->work_order_type_id == '4'){
-                                                    echo date("M d Y", strtotime($workorder->date_created));
-                                                }else if($workorder->work_order_type_id == '3')
-                                                {
-                                                    echo date("M d Y", strtotime($workorder->date_created));
-                                                }
-                                                else{
-                                                    echo date("M d Y", strtotime($workorder->date_issued));
-                                                }
-                                            ?>
-                                        </label>
+                                        ?>
                                     </td>
-                                    <td><?php echo get_user_by_id($workorder->employee_id)->FName . ' ' . get_user_by_id($workorder->employee_id)->LName ?></td>
-                                    <td>$<?= number_format($workorder->grand_total, 2); ?></td>
-                                    <td><span class="nsm-badge <?= $prio_badge ?>"><?php echo $workorder->priority; ?></span></td>
-                                    <td><span class="nsm-badge <?= $status_badge ?>"><?php echo $workorder->w_status; ?></span></td>
-                                    <td><?php echo date('m/d/Y', strtotime($workorder->date_created)) ?></td>
+                                    <td>
+                                        <?php 
+                                            if( in_array(logged('company_id'), adi_company_ids()) ){
+                                                if( $workorder->install_date != '' ){
+                                                    echo date('m/d/Y', strtotime($workorder->install_date));
+                                                }else{
+                                                    echo '---';
+                                                }
+                                            }else{
+                                                if( $workorder->date_issued != '' ){
+                                                    echo date('m/d/Y', strtotime($workorder->date_issued));
+                                                }else{
+                                                    echo '---';
+                                                }
+                                            }
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <div class="techs">      
+                                            <div class="nsm-profile" style="background-image: url('<?= userProfileImage($workorder->employee_id); ?>');"></div>
+                                        </div>
+                                    </td>                                    
+                                    <td class="nsm-text-primary"><span class="nsm-badge <?= $prio_badge ?>"><?php echo $workorder->priority; ?></span></td>
+                                    <td class="nsm-text-primary"><span class="nsm-badge <?= $status_badge ?>"><?php echo $workorder->w_status; ?></span></td>
+                                    <td style="text-align:right;">$<?= number_format($workorder->grand_total, 2); ?></td>                                    
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -281,14 +321,14 @@ function workordermodule__formatWorkOrderNumber($number) {
                                                 <?php if(checkRoleCanAccessModule('work-orders', 'write')){ ?>
                                                 <li>
                                                     <?php if($workorder->work_order_type_id == '2'){ ?>
-                                                        <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                        <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>">Edit</a>
                                                     <?php }elseif($workorder->work_order_type_id == '3')
                                                     { ?>
-                                                    <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/editWorkorderSolar/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/editWorkorderSolar/' . $workorder->id) ?>">Edit</a>
                                                     <?php  }elseif($workorder->work_order_type_id == '4'){ ?>
-                                                    <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/editInstallation/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/editInstallation/' . $workorder->id) ?>">Edit</a>
                                                     <?php } else{ ?>
-                                                        <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                        <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>">Edit</a>
                                                     <?php } ?>
                                                 </li>                                                
                                                 <li>
@@ -330,6 +370,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                         ?>
                     </tbody>
                 </table>
+                </form>
             </div>
         </div>
     </div>
@@ -337,22 +378,42 @@ function workordermodule__formatWorkOrderNumber($number) {
 
 <script type="text/javascript">
     $(document).ready(function() {
-        var LIST_TABLE = $("#workorder-list").DataTable({
-            "ordering": false,
-            language: {
-                processing: '<span>Fetching data...</span>'
-            },
+        
+        $("#workorder-list").nsmPagination({itemsPerPage:10});
+        $("#search_field").on("input", debounce(function() {
+            let search = $(this).val();
+            if( search == '' ){
+                $(".nsm-table").nsmPagination();
+                $("#workorder-list").find("tbody .nsm-noresult").remove();
+            }else{
+                tableSearch($(this));        
+            }
+        }, 1000));
+
+        $(document).on('change', '#select-all', function(){
+            $('.row-select:checkbox').prop('checked', this.checked);  
+            let total= $('input[name="workorders[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
         });
 
-        $("#CUSTOM_SEARCHBAR").keyup(function() {
-            LIST_TABLE.search($(this).val()).draw()
+        $(document).on('change', '.row-select', function(){
+            let total= $('input[name="workorders[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
+            }
         });
 
         $('#btn-add-new-workorder').on('click', function(){
             location.href = base_url + 'workorder/new';
         });
 
-        //$("#workorder-list").nsmPagination({itemsPerPage:10});
+        
 
         $("#select-all").on("change", function() {
             let isChecked = $(this).is(":checked");
@@ -363,7 +424,133 @@ function workordermodule__formatWorkOrderNumber($number) {
                 $(".nsm-table").find(".select-one").prop("checked", false);
         });
 
-        <?php if(checkRoleCanAccessModule('work-orders', 'write')){ ?>
+        $(document).on('click', '#with-selected-delete', function(){
+            let total= $('#workorder-list input[name="workorders[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Delete Workorders',
+                    html: `Are you sure you want to delete selected rows?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'workorders/_archive_selected_workorders',
+                            dataType: 'json',
+                            data: $('#frm-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                        title: 'Delete Workorders',
+                                        text: "Data deleted successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        });
+
+        $(document).on('click', '#with-selected-change-status', function(){
+            let total= $('#workorder-list input[name="workorders[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                let html_content = `
+                    <div class="row workorder-change-status">
+                        <div class="col-sm-12">
+                            <label class="mb-2">Status</label>
+                            <div class="input-group mb-3">
+                                <select class="form-select" id="with-selected-status">
+                                    <option value="New">New</option>
+                                    <option value="Draft">Draft</option>
+                                    <option value="Scheduled">Scheduled</option>
+                                    <option value="Started">Started</option>
+                                    <option value="Paused">Paused</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Invoiced">Invoiced</option>
+                                    <option value="Withdrawn">Withdrawn</option>
+                                    <option value="Closed">Closed</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                `; 
+
+                Swal.fire({
+                    title: 'Change Status',
+                    html: html_content,
+                    icon: false,
+                    confirmButtonColor: '#3085d6',
+                    showCancelButton: true,
+                    confirmButtonText: 'Save',                    
+                    cancelButtonText: 'Cancel',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let status  = $('#with-selected-status').val();
+
+                        const form = document.getElementById('frm-with-selected');
+                        const formData = new FormData(form);
+                        formData.append('status', status); 
+
+                        $.ajax({
+                            type: "POST",
+                            url: base_url + "workorders/_change_status_selected_workorders",
+                            data:formData,
+                            processData: false,
+                            contentType: false,
+                            dataType:'json',
+                            success: function(result) {                            
+                                if( result.is_success == 1 ) {
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: 'Change Status',
+                                    text: 'Data was updated successfully.',
+                                    }).then((result) => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }        
+        });
+
         $(document).on("click", ".clone-item", function() {
             let num = $(this).attr('data-wo_num');
             let id = $(this).attr('data-id');
@@ -397,7 +584,7 @@ function workordermodule__formatWorkOrderNumber($number) {
             });
         });
 
-        $('#archived-workorder-list').on('click', function(){
+        $('#btn-archived').on('click', function(){
             $('#modal-archived-workorder').modal('show');
             $.ajax({
                 type: "POST",
@@ -451,9 +638,163 @@ function workordermodule__formatWorkOrderNumber($number) {
                 }
             });
         });
-        <?php } ?>
 
-        <?php if(checkRoleCanAccessModule('work-orders', 'delete')){ ?>
+        $(document).on('click', '#with-selected-restore', function(){
+            let total= $('#archived-workorders input[name="workorders[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Restore Work Orders',
+                    html: `Are you sure you want to restore selected rows?`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'workorders/_restore_selected_workorders',
+                            dataType: 'json',
+                            data: $('#frm-archive-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    $('#modal-archived-workorder').modal('hide');
+                                    Swal.fire({
+                                        title: 'Restore Work Orders',
+                                        text: "Data restored successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        });
+
+        $(document).on('click', '#with-selected-perma-delete', function(){
+            let total = $('#archived-workorders input[name="workorders[]"]:checked').length;
+            if( total <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{
+                Swal.fire({
+                    title: 'Delete Work Orders',
+                    html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'workorders/_permanently_delete_selected_workorders',
+                            dataType: 'json',
+                            data: $('#frm-archive-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    $('#modal-archived-workorder').modal('hide');
+                                    Swal.fire({
+                                        title: 'Delete Work Orders',
+                                        text: "Data deleted successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            //location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }        
+        });
+
+        $(document).on('click', '#btn-empty-archives', function(){        
+            let total = $('#archived-workorders input[name="workorders[]"]').length;        
+            if( total > 0 ){
+                Swal.fire({
+                    title: 'Empty Archived',
+                    html: `Are you sure you want to <b>permanently delete</b> <b>${total}</b> archived workorders? <br/><br/>Note : This cannot be undone.`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            method: 'POST',
+                            url: base_url + 'workorders/_delete_all_archived_workorders',
+                            dataType: 'json',
+                            data: $('#frm-archive-with-selected').serialize(),
+                            success: function(result) {                        
+                                if( result.is_success == 1 ) {
+                                    $('#modal-archived-workorder').modal('hide');
+                                    Swal.fire({
+                                        title: 'Empty Archived',
+                                        text: "Data deleted successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            //location.reload();
+                                        //}
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: result.msg,
+                                    });
+                                }
+                            },
+                        });
+
+                    }
+                });
+            }else{
+                Swal.fire({                
+                    icon: 'error',
+                    title: 'Error',              
+                    html: 'Archived is empty',
+                });
+            }        
+        });
+
         $(document).on("click", ".delete-item", function() {
             let id = $(this).attr('data-work-id');
             let wonum = $(this).attr('data-wo_num');
@@ -498,7 +839,55 @@ function workordermodule__formatWorkOrderNumber($number) {
                 }
             });
         });
-        <?php } ?>
+
+        $(document).on('click', '.btn-permanently-delete-workorder', function(){
+            let workorder_id  = $(this).attr('data-id');
+            let workorder_number = $(this).attr('data-worknumber');
+
+            Swal.fire({
+                title: 'Delete Work Order',
+                html: `Are you sure you want to <b>permanently delete</b> work order number <b>${workorder_number}</b>? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + 'workorders/_delete_archived_workorder',
+                        data: {
+                            workorder_id: workorder_id
+                        },
+                        dataType: "JSON",
+                        success: function(result) {
+                            $('#modal-archived-workorder').modal('hide');
+                            if (result.is_success) {
+                                Swal.fire({
+                                    title: 'Delete Work Order',
+                                    html: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+        });
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

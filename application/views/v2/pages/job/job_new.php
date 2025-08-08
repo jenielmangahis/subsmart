@@ -802,7 +802,7 @@
                                                     <strong>Created By:</strong>&nbsp;<strong style="font-size: 20px;"> <?= ' '.$created_by; ?></strong style="font-size: 17px;">
                                                 </div>
                                                 <div class="col-sm-6">
-                                                     <button type="button" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" class="nsm-button primary small text-end" style="float: right;"><i class='bx bx-fw bx-plus'></i><strong>Add New Customer</strong></button>
+                                                     <button type="button" id="btn-add-new-customer" data-bs-toggle="modal" data-bs-target="#quick-add-customer" class="nsm-button small text-end" style="float: right;"><i class='bx bx-fw bx-plus'></i><strong>Add New Customer</strong></button>
                                                 </div>
                                             </div>
                                         </div>

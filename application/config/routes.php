@@ -1191,6 +1191,10 @@ $route['workorder/_archived_list'] = 'Workorder/ajax_archived_list';
 $route['workorder/_restore_archived'] = 'Workorder/ajax_restore_archived';
 $route['workorders/_archive_selected_workorders'] = 'Workorder/ajax_archive_selected_workorders';
 $route['workorders/_change_status_selected_workorders'] = 'Workorder/ajax_change_status_selected_workorders';
+$route['workorders/_restore_selected_workorders'] = 'Workorder/ajax_restore_selected_workorders';
+$route['workorders/_permanently_delete_selected_workorders'] = 'Workorder/ajax_permanently_delete_selected_workorders';
+$route['workorders/_delete_all_archived_workorders'] = 'Workorder/ajax_delete_all_archived_workorders';
+$route['workorders/_delete_archived_workorder'] = 'Workorder/ajax_delete_archived_workorder';
 
 $route['customer/_get_customer_data'] = 'Customer/ajax_get_customer_data';
 $route['customer/_get_lead_data'] = 'Customer/ajax_get_lead_data';
