@@ -3,308 +3,238 @@ defined('BASEPATH') or exit('No direct script access allowed');
 include viewPath('v2/includes/header');
 echo put_header_assets();
 ?>
-<!-- Script for autosaving form -->
-<!-- <script src="<?= base_url("assets/js/estimate/autosave-standard-update.js") ?>"></script> -->
-
-
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <style>
-    .remove {
-        display: block;
-        width: 38px;
-        float: right;
-    }
-    .show_mobile_view-a{
-        display:none;
-    }
-    label>input {
-        visibility: initial !important;
-        position: initial !important;
-    }
-
-    .but:hover {
-        font-weight: 900;
-        color: black;
-    }
-
-    .but-red:hover {
-        font-weight: 900;
-        color: red;
-    }
-
-    .required:after {
-        content: " *";
-        color: red;
-    }
-
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 60px;
-        height: 34px;
-    }
-
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
+@media only screen and (max-device-width: 600px) {
+    .label-element {
         position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        -webkit-transition: .4s;
-        transition: .4s;
+        top: -8px;
+        left: 25px;
+        font-size: 12px;
+        color: #666;
     }
 
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
+    .input-element {
+        padding: 30px 5px 10px 8px;
+        width: 100%;
+        height: 55px;
+        /* border:1px solid #CCC; */
+        font-weight: bold;
+        margin-top: -15px;
     }
 
-    input:checked+.slider {
-        background-color: #10ab06;
+    .mobile_qty {
+        background: transparent !important;
+        border: none !important;
+        outline: none !important;
+        padding: 0px 0px 0px 0px !important;
+        text-align: center;
     }
 
-    input:focus+.slider {
-        box-shadow: 0 0 1px #10ab06;
+    .select-wrap {
+        border: 2px solid #e0e0e0;
+        margin-top: -10px;
+        padding: 0 5px 5px;
+        width: 100%;
     }
 
-    input:checked+.slider:before {
-        -webkit-transform: translateX(26px);
-        -ms-transform: translateX(26px);
-        transform: translateX(26px);
+    .select-wrap label {
+        font-size: 10px;
+        text-transform: uppercase;
+        color: #777;
+        padding: 2px 8px 0;
     }
 
-    /* Rounded sliders */
-    .slider.round {
-        border-radius: 34px;
+    .m_select {
+        border-color: white !important;
+        border: 0px !important;
+        outline: 0px !important;
     }
 
-    .slider.round:before {
-        border-radius: 50%;
+    .select2 .select2-container .select2-container--default {
+        border-color: white !important;
+        border: 0px !important;
+        outline: 0px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+        background-color: #fff;
+        border: 1px solid #fff !important;
+        border-radius: 4px;
+    }
+
+    .sub_label {
+        font-size: 12px !important;
+    }
+
+    .signature_web {
+        display: none;
     }
 
     .signature_mobile {
+        display: block;
+    }
+
+    .hidden_mobile_view {
         display: none;
     }
 
     .show_mobile_view {
-        display: none;
+        display: block;
     }
 
-    .dataTables_filter, .dataTables_length{
-        display: none;
+    .table_mobile {
+        font-size: 14px;
     }
 
-    .help-block{            
+    div.dropdown-wrapper select {
+        width: 115%
+            /* This hides the arrow icon */
+        ;
+        background-color: transparent
+            /* This hides the background */
+        ;
+        background-image: none;
+        -webkit-appearance: none
+            /* Webkit Fix */
+        ;
+        border: none;
+        box-shadow: none;
+        padding: 0.3em 0.5em;
         font-size: 13px;
-        display: inline-block;
-        margin-left: 3px;
-        font-style: italic;
-    }
-    label.bold{
-        font-weight:bold;
     }
 
-    @media only screen and (max-device-width: 600px) {
-        .label-element {
-            position: absolute;
-            top: -8px;
-            left: 25px;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .input-element {
-            padding: 30px 5px 10px 8px;
-            width: 100%;
-            height: 55px;
-            font-weight: bold;
-            margin-top: -15px;
-        }
-
-        /* .mobile_qty {
-            background: transparent !important;
-            border: none !important;
-            outline: none !important;
-            padding: 0px 0px 0px 0px !important;
-            text-align: center;
-        } */
-
-        .select-wrap {
-            border: 2px solid #e0e0e0;
-            margin-top: -10px;
-            padding: 0 5px 5px;
-            width: 100%;
-        }
-
-        .select-wrap label {
-            font-size: 10px;
-            text-transform: uppercase;
-            color: #777;
-            padding: 2px 8px 0;
-        }
-
-        .m_select {
-            border-color: white !important;
-            border: 0px !important;
-            outline: 0px !important;
-        }
-
-        .select2 .select2-container .select2-container--default {
-            border-color: white !important;
-            border: 0px !important;
-            outline: 0px !important;
-        }
-
-        .select2-container--default .select2-selection--single {
-            background-color: #fff;
-            border: 1px solid #fff !important;
-            border-radius: 4px;
-        }
-
-        .sub_label {
-            font-size: 12px !important;
-        }
-
-        .signature_web {
-            display: none;
-        }
-
-        .signature_mobile {
-            display: block;
-        }
-
-        .hidden_mobile_view {
-            display: none;
-        }
-
-        .show_mobile_view {
-            display: block;
-        }
-
-        .table_mobile {
-            font-size: 14px;
-        }            
-
-        /* div.dropdown-wrapper select {
-            width: 115%;
-            background-color: transparent;
-            background-image: none;
-            -webkit-appearance: none;
-            border: none;
-            box-shadow: none;
-            padding: 0.3em 0.5em;
-            font-size: 13px;
-        } */
-
-        .signature-pad-canvas-wrapper {
-            margin: 15px 0 0;
-            border: 1px solid #cbcbcb;
-            border-radius: 3px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .signature-pad-canvas-wrapper::after {
-            content: 'Name';
-            border-top: 1px solid #cbcbcb;
-            color: #cbcbcb;
-            width: 100%;
-            margin: 0 15px;
-            display: inline-flex;
-            position: absolute;
-            bottom: 10px;
-            font-size: 13px;
-            z-index: -1;
-        }
-
-        .tabs {
-            list-style: none;
-        }
-
-        .tabs li {
-            display: inline;
-        }
-
-        .tabs li a {
-            color: black;
-            float: left;
-            display: block;
-            position: relative;
-            background: #a2a5a3;
-            text-decoration: none;
-        }
-
-        .tabs li a:hover {
-            background: #ccc;
-        }
-
-        .group:after {
-            visibility: hidden;
-            display: block;
-            font-size: 0;
-            content: " ";
-            clear: both;
-            height: 0;
-        }
-
-        .box-wrap {
-            position: relative;
-            min-height: 250px;
-        }
-
-        .tabbed-area div div {
-            background: white;
-            padding: 20px;
-            min-height: 250px;
-            position: absolute;
-            top: -1px;
-            left: 0;
-            width: 100%;
-        }
-
-        .tabbed-area div div,
-        .tabs li a {
-            border: 1px solid #ccc;
-        }
-
-        #box-one:target,
-        #box-two:target,
-        #box-three:target {
-            z-index: 1;
-        }
-
-        .group li.active a,
-        .group li a:hover,
-        .group li.active a:focus,
-        .group li.active a:hover {
-            background-color: #52cc6e;
-            color: black;
-        }
+    .signature-pad-canvas-wrapper {
+        margin: 15px 0 0;
+        border: 1px solid #cbcbcb;
+        border-radius: 3px;
+        overflow: hidden;
+        position: relative;
     }
-    @media (max-width: 768px) {
-        .table-responsive2 {
-            overflow-x: auto;
-        }
-        .table-responsive2 table{
-            width: 1200px;
-        }
+
+    .signature-pad-canvas-wrapper::after {
+        content: 'Name';
+        border-top: 1px solid #cbcbcb;
+        color: #cbcbcb;
+        width: 100%;
+        margin: 0 15px;
+        display: inline-flex;
+        position: absolute;
+        bottom: 10px;
+        font-size: 13px;
+        z-index: -1;
     }
+
+    .tabs {
+        list-style: none;
+    }
+
+    .tabs li {
+        display: inline;
+    }
+
+    .tabs li a {
+        color: black;
+        float: left;
+        display: block;
+        /* padding: 4px 10px;  */
+        /* margin-left: -1px;  */
+        position: relative;
+        /* left: 1px;  */
+        background: #a2a5a3;
+        text-decoration: none;
+    }
+
+    .tabs li a:hover {
+        background: #ccc;
+    }
+
+    .group:after {
+        visibility: hidden;
+        display: block;
+        font-size: 0;
+        content: " ";
+        clear: both;
+        height: 0;
+    }
+
+    .box-wrap {
+        position: relative;
+        min-height: 250px;
+    }
+
+    .tabbed-area div div {
+        background: white;
+        padding: 20px;
+        min-height: 250px;
+        position: absolute;
+        top: -1px;
+        left: 0;
+        width: 100%;
+    }
+
+    .tabbed-area div div,
+    .tabs li a {
+        border: 1px solid #ccc;
+    }
+
+    #box-one:target,
+    #box-two:target,
+    #box-three:target {
+        z-index: 1;
+    }
+
+    .group li.active a,
+    .group li a:hover,
+    .group li.active a:focus,
+    .group li.active a:hover {
+        background-color: #52cc6e;
+        color: black;
+    }
+}
+.add-item-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.select2-container--default .select2-results__option .select2-results__option {
+    padding-left:0px !important;
+}
+.select2-results__group{
+    margin-left: 0px !important;
+}
+#items_table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+#items_table td:nth-child(5){
+text-align:right !important;
+}
+.show_mobile_view {
+    display: none;
+}
+.row-total-amount{
+    text-align:right;
+}
+.row-btn-actions{
+    text-align:center;
+    padding:13px !important;
+}
+.span-input{
+    display: block;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #E9ECEF;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
@@ -316,15 +246,7 @@ echo put_header_assets();
                 <i class='bx bx-fw bx-chart' ></i>
             </div>
             <span class="nsm-fab-label">Estimate List</span>
-        </li>        
-        <?php if (isset($estimates) && count($estimates) > 0) { ?>
-        <li onclick="location.href='<?php echo base_url('estimate/print'); ?>'">
-            <div class="nsm-fab-icon">
-                <i class="bx bx-printer"></i>
-            </div>
-            <span class="nsm-fab-label">Print</span>
-        </li>
-        <?php } ?>
+        </li>   
     </ul>
 </div>
 <div class="row page-content g-0">
@@ -358,30 +280,26 @@ echo put_header_assets();
                                         <div class="col-md-12">
                                             <label for="customers" class="required"><b>Customer</b></label>
                                             <div class="d-flex" style="float: right;">
-                                                <a class="nsm-link d-flex align-items-center btn-quick-add-customer"
-                                                    style="margin-left:5px;" href="javascript:void(0);">
-                                                    <span class="bx bx-plus"></span>New Customer
+                                                <a class="nsm-button btn-small d-flex" data-bs-toggle="modal"
+                                                    data-bs-target="#quick-add-customer" href="javascript:void(0);">
+                                                    Add New Customer
+                                                </a>
+                                                <a class="nsm-button btn-small d-flex d-flex"
+                                                    style="margin-left:5px;" data-bs-toggle="modal"
+                                                    data-bs-target="#quick-add-lead" href="javascript:void(0);">
+                                                    Add New Lead
                                                 </a>
                                             </div>
                                             <div id="sel-customerdiv">
                                                 <select name="customer_id" id="sel-customer" class="form-control" required>
-                                                    <option value="0">Select a customer</option>
-                                                    <?php foreach ($customers as $customer) : ?>
-                                                        <option <?php if (isset($estimate)) {
-                                                                    if ($estimate->customer_id == $customer->prof_id) {
-                                                                        echo "selected";
-                                                                    }
-                                                                } ?> value="<?php echo $customer->prof_id; ?>"><?php echo $customer->contact_name . '' . $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
-                                                                } ?> value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . " " . $customer->last_name; ?> </option>
-                                                    <?php endforeach; ?>
+                                                    <option value="">- Select Customer -</option>
+                                                    <?php if ($default_customer_id > 0) { ?>
+                                                    <option value="<?php echo $default_customer_id; ?>" selected>
+                                                        <?php echo $default_customer_name; ?></option>
+                                                    <?php } ?>
                                                 </select>
                                             </div>
                                         </div>
-                                        <!-- 
-                                        <div class="col-md-6">
-                                            <br><br><a class="link-modal-open nsm-button small btn-quick-add-customer" href="javascript:void(0)"><i class='bx bx-plus-medical'></i> New Customer</a>
-                                        </div>
-                                        -->
                                     </div>
 
                                     <?php
@@ -394,7 +312,7 @@ echo put_header_assets();
                                         }
                                     ?>
 
-                                    <div class="row mb-3">
+                                    <div class="row mb-3 mt-3">
                                         <div class="col-md-6">
                                             <label for="job_name"><b>Customer Email</b></label>
                                             <input id="estimate-customer-email" type="text" class="form-control" name="customer_email" value="<?= !is_null($selectedCustomer) ? $estimate->customer->email : ''; ?>" />
@@ -408,7 +326,7 @@ echo put_header_assets();
                                     
                                     <div class="row mb-3">
                                         <div class="col-md-12">
-                                            <label for="job_location"><b>Job Location</b> </label><a class="btn-use-different-address" data-id="<?php echo $cust->prof_id; ?>" href="javascript:void(0);" style="float: right;">Use Other Address</a>
+                                            <label for="job_location"><b>Job Location</b> </label><a class="nsm-button btn-small btn-use-different-address" id="btn-use-different-address" data-id="0" href="javascript:void(0);" style="float: right;">Use Other Address</a>
                                             <!-- <input
                                                 id="autocomplete"
                                                 placeholder="Enter Location"
@@ -457,8 +375,8 @@ echo put_header_assets();
                                 </div>
                             </div>
                             <hr>
-                            <div class="row mb-3" style="background-color:white;">
-                            <div class="row mb-3" style="background-color:white;">                                
+                            <div class="row mb-3">
+                            <div class="row mb-3">                                
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate#</b></label>
                                     <!-- <input type="text" class="form-control" name="estimate_number" id="estimate_date"
@@ -487,7 +405,7 @@ echo put_header_assets();
                                 </div>
                             </div>
 
-                            <div class="row mb-3" style="background-color:white;">
+                            <div class="row mb-3">
                                 <div class="col-md-3">
                                     <label for="purchase_order_number"><b>Purchase Order# </b><small class="help help-sm">(optional)</small></label>
                                     <input type="text" class="form-control" name="purchase_order_number" id="purchase_order_number" placeholder="Enter Purchase Order#" onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $estimate->purchase_order_number; ?>" />
@@ -553,15 +471,13 @@ echo put_header_assets();
                                 </div>
                             </div>
 
-                            <div class="row mb-3" style="background-color:white;font-size:16px;">
+                            <div class="row mb-3" style="font-size:16px;">
                                 <div class="col-md-3">
-                                    <a href="#" style="color:#02A32C;"><b>Items list</b></a> | <b>Items Summary</b>
                                     <b>Items Summary</b>
                                 </div>
-                                <div class="col-md-6"></div>
                             </div>
 
-                            <div class="row mb-3" style="background-color:white;">
+                            <div class="row mb-3">
                                 <div class=" table-responsive2">
                                     <table class="table table-hover">
                                         <thead style="background-color:#E9E8EA;">
@@ -572,10 +488,10 @@ echo put_header_assets();
                                                 <th width="150px">Quantity</th>
                                                 <!-- <th>Location</th> -->
                                                 <th width="150px">Price</th>
-                                                <th width="150px">Discount</th>
-                                                <th width="150px">Tax (Change in %)</th>
-                                                <th >Total</th>
-                                                <th ></th>
+                                                <th class="hidden_mobile_view" width="150px">Discount</th>
+                                                <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
+                                                <th class="hidden_mobile_view" style="width:8%;text-align:right;">Total</th>
+                                                <th class="hidden_mobile_view" style="width:5%;"></th>
                                             </tr>
                                         </thead>
                                         <tbody id="jobs_items_table_body">
@@ -606,26 +522,27 @@ echo put_header_assets();
                                                         <input type="number" class="form-control quantity " name="quantity[]" data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="quantity_<?= $count; ?>" value="<?php echo $data->qty; ?>">
                                                     </td>
                                                     <td width="10%">
-                                                        <input type="text" class="form-control price " name="price[]" data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $count; ?>" min="0" value="<?php echo $data->costing; ?>">
+                                                        <input type="text" class="form-control price text-end" name="price[]" data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $count; ?>" min="0" value="<?php echo $data->costing; ?>">
                                                         <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $aaa = $data->costing * $data->qty; ?>">
                                                     </td>
                                                     <td  width="10%">
                                                         <input type="number" class="form-control discount" name="discount[]" data-counter="<?php echo $count; ?>" id="discount_<?php echo $count; ?>" min="0" value="<?php echo $data->discount; ?>" />
                                                     </td>
-                                                    <td  width="10%"><input type="text" class="form-control tax_change" name="tax[]" data-counter="<?php echo $count; ?>" id="tax1_<?php echo $count; ?>" min="0" value="<?php echo $data->tax; ?>" readonly>
+                                                    <td  width="10%" class="row-total-amount"><input type="text" class="form-control tax_change text-end" name="tax[]" data-counter="<?php echo $count; ?>" id="tax1_<?php echo $count; ?>" min="0" value="<?php echo number_format($data->tax,2,".",""); ?>" readonly>
                                                         <!-- <span id="span_tax_0">0.0</span> -->
                                                     </td>
-                                                    <td  width="10%">
+                                                    <td class="row-total-amount">
                                                         <?php
                                                         $total_item_price = $data->costing * $data->qty;
                                                         $tax = $data->tax > 0 ? $data->tax : 0;
                                                         $discount = $data->discount > 0 ? $data->discount : 0;
                                                         $total_row_price = ($total_item_price + $tax) - $data->discount;
+                                                        $total_row_price = number_format($total_row_price,2,".","");
                                                         ?>
                                                         <input type="hidden" class="form-control " name="total[]" data-counter="<?php echo $count; ?>" id="item_total_<?php echo $count; ?>" min="0" value="<?php echo $total_row_price; ?>">
-                                                        $<span id="span_total_<?php echo $count; ?>"><?php echo $total_row_price; ?></span>
+                                                        <span class="span-input" id="span_total_<?php echo $count; ?>"><?php echo $total_row_price; ?></span>
                                                     </td>
-                                                    <td><a href="javascript:void(0);" class="remove nsm-button danger"><i class="bx bx-fw bx-trash" aria-hidden="true"></i></a></td>
+                                                    <td class='row-btn-actions'><a href="javascript:void(0);" class="remove nsm-button danger"><i class="bx bx-fw bx-trash" aria-hidden="true"></i></a></td>
                                                 </tr>
                                             <?php $count++;
                                             } ?>
@@ -633,40 +550,35 @@ echo put_header_assets();
 
                                         </tbody>
                                     </table>
-                                    <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
-                                    <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
-                                    <a class="link-modal-open nsm-button primary" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list"><i class='bx bx-plus-medical'></i> Add Items</a> &emsp;
-                                    <!-- <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add By Group</a> -->
+                                    <a class="link-modal-open nsm-button primary" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list"><i class='bx bx-plus-medical'></i> Add Items</a> &emsp;                                    
                                     <hr>
                                 </div>
                             </div>
 
-                            <div class="row mb-3" style="background-color:white;font-size:16px;">
+                            <div class="row mb-3">
                                 <div class="col-md-7">
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label class="bold">Request a deposit <i id="help-popover-request-deposit" class='bx bx-fw bx-help-circle'></i></label>                                            
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            <label class="visually-hidden" for="autoSizingInputGroup">Username</label>
+                                            <div class="input-group">
+                                                <div class="input-group-text">$</div>
+                                                <input type="number" step="any" name="deposit_amount" id="deposit-amount" value="0" class="form-control" autocomplete="off">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="bold">Attachment</label>
+                                            <i id="help-popover-attachment" class='bx bx-fw bx-help-circle'></i></label>                                       
+                                            <input type="file" name="est_contract_upload" id="est_contract_upload"
+                                                class="form-control" />
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-5">
-                                    <!-- <table class="table" style="text-align:left;">
-                                        <tr>
-                                            <td>Subtotal</td>
-                                            <td></td>
-                                            <td>$ <span id="span_sub_total_invoice">0.00</span>
-                                                <input type="hidden" name="sub_total" id="item_total"></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
-                                            <td style="width:150px;">
-                                            <input type="number" name="adjustment_input" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
-                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
-                                            </td>
-                                            <td>0.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Grand Total ($)</b></td>
-                                            <td></td>
-                                            <td><b><span id="grand_total">0.00</span>
-                                                <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
-                                        </tr>
-                                    </table> -->
                                     <table class="table table_mobile" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
@@ -754,111 +666,39 @@ echo put_header_assets();
                                     </table>
                                 </div>
                             </div>
-
-                            <div class="row mb-3" style="background-color:white;">
-                                <div class="col-md-12">
-                                    <h6>Request a Deposit</h6>
-                                    <label class="bold">Request a Deposit</label>
-                                    <span class="help help-sm help-block">You can request an upfront payment on accept estimate.</span>
-                                </div>
-                                <div class="col-md-2 form-group">
-                                    <div class="input-group">
-                                        <!-- <div class="input-group-addon bold">$</div> -->
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">%</div>
-                                        </div>                                        
-                                        <input type="number" step="any" name="deposit_amount" id="deposit-percentage" value="<?= $estimate->deposit_amount; ?>" class="form-control" placeholder="Percentage of total amount" autocomplete="off">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 form-group">
-                                    <div class="input-group mb-2">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">$</div>
-                                        </div>
-                                        <?php 
-                                            $deposit_amount = $estimate->grand_total * ($estimate->deposit_amount/100);
-                                        ?>
-                                        <input type="text" id="deposit-total-amount" value="<?= number_format($deposit_amount,2); ?>" readonly="" disabled="" class="form-control">
-                                    </div>
-                                </div>
-                                <!-- <div class="col-md-3 form-group">
-                                    <select name="deposit_request" class="form-control">
-                                        <option value="1" <?= $estimate->deposit_request == "1" ? "selected" : ""; ?>>Deposit amount $</option>
-                                        <option value="2" <?= $estimate->deposit_request == "2" ? "selected" : ""; ?>>Percentage %</option>
-                                    </select>
-                                </div> -->
-                                <div class="col-md-3 form-group">
-                                    <div class="input-group">
-                                        <!-- <div class="input-group-addon bold">$</div> -->
-                                        <input type="text" name="deposit_amount" value="<?php echo $estimate->deposit_amount; ?>" class="form-control" autocomplete="off">
-                                        <!-- <div class="input-group-addon bold">$</div> -->                                        
-                                        <!-- <input type="text" name="deposit_amount" value="<?php echo $estimate->deposit_amount; ?>" class="form-control" autocomplete="off"> -->
-                                    </div>
-                                </div>
-                                <!-- <div class="col-md-3 form-group">
-                                    0.00
-                                </div> -->
-                            </div>
-
-                            <div class="row mb-3" style="background-color:white;">
+                            <hr />
+                            <div class="row mb-3 mt-5">
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label>
-                                            <h6>Message to Customer</h6>
-                                        </label> <span class="help help-sm help-block">Add a message that will be displayed on the estimate.</span>
-                                        <label class="bold">Message to Customer</label> 
-                                        <span class="help help-sm help-block">Add a message that will be displayed on the estimate.</span>
+                                        <label class="bold">Message to customer</label>
+                                        <i id="help-popover-message-customer" class='bx bx-fw bx-help-circle'></i></label>   
                                         <textarea name="customer_message" id="message_est" cols="40" rows="2" class="form-control"><?php echo $estimate->customer_message; ?></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label>
-                                            <h6>Terms &amp; Conditions</h6>
-                                        </label> <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the estimate.</span>
                                         <label class="bold">Terms & Conditions</label>
-                                        <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the estimate.</span>
+                                        <i id="help-popover-terms-conditions" class='bx bx-fw bx-help-circle'></i></label>
                                         <textarea name="terms_conditions" cols="40" rows="2" class="form-control" id="terms_conditions_est"><?php echo $estimate->terms_conditions; ?></textarea>
                                     </div>
                                 </div>
 
                             </div>
 
-                            <div class="row mb-3" style="background-color:white;">
-                                <div class="col-md-4">
-                                    <label for="billing_date">
-                                        <h6>Attachment</h6>
-                                    </label>
-                                    <label class="bold">Attachment</label>
-                                    <span class="help help-sm help-block">Optionally attach files to this invoice. Allowed type: pdf, doc, dock, png, jpg, gif</span>
-                                    <?php if ($estimate->attachments != '') { ?>
-                                        <a class="btn btn-sm btn-primary" target="_new" style="margin-top:10px; margin-bottom: 10px;" href="<?= base_url('uploads/estimates/' . $estimate->user_id . '/' . $estimate->attachments); ?>"><?= $estimate->attachments; ?></a>
-                                        <a class="btn btn-sm btn-primary" target="_new" style="margin-top:10px; margin-bottom: 10px;" href="<?= base_url('uploads/estimates/' . $estimate->id . '/' . $estimate->attachments); ?>"><?= $estimate->attachments; ?></a>
-                                    <?php } ?>
-
-                                    <input type="file" name="est_contract_upload" id="est_contract_upload" class="form-control" />
-                                </div>
-                            </div>
-
-                            <div class="row mb-3" style="background-color:white;">
+                            <div class="row mb-3">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>
-                                            <h6>Instructions</h6>
-                                        </label><span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
                                         <label class="bold">Instructions</label>
-                                        <span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
+                                        <i id="help-popover-instructions" class='bx bx-fw bx-help-circle'></i></label>         
                                         <textarea name="instructions" cols="40" rows="2" class="form-control" id="instructions_est"><?php echo $estimate->instructions; ?></textarea>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="row" style="background-color:white;">
-                                <div class="col-md-12 form-group">
-                                    <button type="submit" class="nsm-button primary" style="margin: 0; height: 34px;">Update</button>
-                                    <a class="nsm-button primary" href="<?php echo url('estimate/view/' . $estimate->id); ?>" class="btn but-red">Preview</a>
-                                    <!-- <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button> -->
+                            <div class="row">
+                                <div class="col-md-12 text-end">
                                     <a href="<?php echo url('estimate') ?>" class="nsm-button">Cancel</a>
+                                    <button type="submit" class="nsm-button primary" style="margin: 0; height: 34px;">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -978,125 +818,81 @@ echo put_header_assets();
             </div>
 
             <!-- Modal -->
-            <div class="modal fade" id="item_list" tabindex="-1"  aria-labelledby="newcustomerLabel" aria-hidden="true">            
-                <div class="modal-dialog modal-lg" role="document">
+            <div class="modal fade" id="item_list" tabindex="-1"  aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <span class="modal-title content-title" style="font-size: 17px;">Items List</span>
                             <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                         </div>
                         <div class="modal-body">
-                            <div class="row">
-                                <div class="col-sm-12 mb-2">
-                                    <input id="ITEM_CUSTOM_SEARCH" style="width: 200px;" class="form-control" type="text" placeholder="Search Item...">
-                                </div>
-                                <div class="col-sm-12">
-                                    <table id="items_table" class="table table-hover table-sm w-100">                                    
-                                        <thead class="bg-light">
-                                            <tr>
-                                                <td></td>
-                                                <td><strong>Name</strong></td>
-                                                <td><strong>On Hand</strong></td>
-                                                <td><strong>Price</strong></td>
-                                                <td><strong>Type</strong></td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($items as $item) { ?>
+                                <div class="row">                        
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-12 col-md-12 grid-mb">
+                                                <div class="nsm-field-group search">
+                                                    <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" for="items_table" placeholder="Search List">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <table id="items_table" class="nsm-table w-100">
+                                            <thead class="bg-light">
+                                                <tr>
+                                                    <td data-name="Action" style="width: 0% !important;"></td>
+                                                    <td data-name="Name"><strong>Name</strong></td>
+                                                    <td data-name="Type"><strong>Type</strong></td>
+                                                    <td data-name="Stock"><strong>Stock</strong></td>
+                                                    <td data-name="Price"><strong>Price</strong></td>                                        
+                                                    <td data-name="Location" class='d-none'><strong>Location</strong></td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                    if (!empty($items)) {
+                                                        foreach ($items as $item) {
+                                                        $item_qty = get_total_item_qty($item->id);
+                                                ?>
                                                 <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
                                                     <td style="width: 0% !important;">
-                                                        <button type="button" data-bs-dismiss="modal" class='nsm-button primary small select_item2a' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                                        <button type="button" data-bs-dismiss="modal" class='nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-retail="<?= $item->retail; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
                                                     </td>
-                                                    <td><?php echo $item->title; ?></td>
+                                                    <td class="show nsm-text-primary"><?php echo $item->title; ?></td>
+                                                    <td class="nsm-text-primary"><?php echo $item->type; ?></td>
                                                     <td>
                                                         <?php 
-                                                            foreach($itemsLocation as $itemLoc){
-                                                                if($itemLoc->item_id == $item->id){
-                                                                    echo "<div class='data-block'>";
-                                                                    echo $itemLoc->name. " = " .$itemLoc->qty;
-                                                                    echo "</div>";
-                                                                } 
-                                                            }
+                                                        $total_stock = 0;
+                                                        foreach($itemsLocation as $itemLoc){
+                                                            if($itemLoc->item_id == $item->id){
+                                                                $total_stock += $itemLoc->qty;
+                                                                //echo "<div class='data-block'>";
+                                                                //echo $itemLoc->name. " = " .$itemLoc->qty;
+                                                                //echo "</div>";
+                                                            } 
+                                                        }
+                                                        echo $total_stock;
                                                         ?>
                                                     </td>
-                                                    <td><?php echo $item->price; ?></td>
-                                                    <td><?php echo $item->type; ?></td>
-
-                                            <?php } ?>
-                                        </tbody>
-                                    </table>
+                                                    <td>
+                                                        <?php 
+                                                            if( $item->price > 0 ){
+                                                                echo $item->price;
+                                                            }else{
+                                                                echo '0.00';
+                                                            }                                                
+                                                        ?>                                                
+                                                    </td>                                        
+                                                    <td class='d-none'><?php echo $item->location_name; ?></td>
+                                                </tr>
+                                                <?php } } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Modal New Customer -->
-            <div class="modal nsm-modal fade" id="modalNewCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document" style="top: 107px;">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <i class="bx bx-fw bx-x m-0"></i>
-                            </button>
-                        </div>
-                        <div class="modal-body pt-0 pl-3 pb-3"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="nsm-button primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal New Customer -->
-            <div class="modal fade nsm-modal" id="modalQuickAddCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <form id="frm-estimate-quick-add-customer" method="POST">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                    <i class="bx bx-fw bx-x m-0"></i>
-                                </button>
-                            </div>
-                            <div class="modal-body pt-0 pl-3 pb-3"></div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="nsm-button primary">Save changes</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal nsm-modal fade" id="modalAddNewSource" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add New Service Address</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <i class="bx bx-fw bx-x m-0"></i>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="frm_add_new_source" name="modal-form" method="post">
-                                <div class="validation-error" style="display: none;"></div>
-                                <div class="form-group">
-                                    <label>Source Name</label> <span class="form-required">*</span>
-                                    <input type="text" name="source_name" value="" class="form-control" autocomplete="off">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="nsm-button primary save">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- Modal -->
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
@@ -1105,129 +901,16 @@ echo put_header_assets();
 </div>
 
 <?php include viewPath('v2/includes/customer/other_address'); ?>
+<?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
+<?php include viewPath('v2/includes/leads/quick_add'); ?>
 
 <?php echo $file_selection; ?>
 <?php include viewPath('v2/includes/footer'); ?>
-
-<script type="text/javascript">
-    var base_url = "<?php echo base_url(); ?>";
-</script>
 <script src="<?php echo $url->assets ?>js/add.js"></script>
-
 <script>
-    CKEDITOR.replace('terms_conditions_est');
-</script>
-<script>
-    CKEDITOR.replace('message_est');
-</script>
-<script>
-    CKEDITOR.replace('instructions_est');
-</script>
-
-<script>
-    //   $(function() {
-    //     $("#rebatable_toggle").each(function(){
-    //     $(this).change(function() {
-    //     //   $('#console-event').html('Toggle: ' + $(this).prop('checked'))
-    //     alert('yeah');
-    //     })
-    //   })
-
-    function load_customer_data(customer_id) {
-        $.ajax({
-            type: "POST",
-            url: base_url + 'customer/_get_customer_data',
-            data: {
-                customer_id: customer_id
-            },
-            dataType: 'json',
-            beforeSend: function(response) {
-
-            },
-            success: function(response) {
-                setTimeout(function() {
-                    var customer_business_name = response.business_name;
-                    var customer_name = response.first_name + ' ' + response.last_name;
-                    var customer_email = response.email;
-                    var customer_phone = response.phone_h;
-                    var customer_mobile = response.phone_m;
-                    var customer_address = response.mail_add + ', ' + response.city + ', ' +
-                        ' ' + response.state + ' ' + response.zip_code;
-
-                    if (customer_business_name == '') {
-                        customer_business_name = 'Not Specified';
-                    }
-
-                    if (customer_email == '') {
-                        customer_email = 'Not Specified';
-                    }
-
-                    if (customer_phone == '') {
-                        customer_phone = 'Not Specified';
-                    }
-
-                    if (customer_mobile == '') {
-                        customer_mobile = 'Not Specified';
-                    }
-
-                    if(response.prof_id) {
-                        $(".btn-use-different-address").attr("data-id",response.prof_id);
-                    }
-
-                    $("#estimate-customer-email").val(customer_email);
-                    $("#estimate-customer-mobile").val(customer_mobile);
-                    $("#job_location").val(customer_address);
-                    $('#business_name').val(customer_business_name);
-
-                    var map_source = 'http://maps.google.com/maps?q=' + customer_address +
-                        '&output=embed';
-                    var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
-                        '" height="370" width="100%" style=""></iframe>';
-                    $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
-                }, 200);
-            },
-            error: function(e) {
-
-            }
-        });
-    }        
+          
 
     $(document).ready(function() {
-        $('#help-popover-adjustment').popover({
-            placement: 'top',
-            html : true, 
-            trigger: "hover focus",
-            content: function() {
-                return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
-            } 
-        }); 
-        
-        $('#modal_items_list').DataTable({
-            "autoWidth": false,
-            "columnDefs": [{
-                    width: 540,
-                    targets: 0
-                },
-                {
-                    width: 100,
-                    targets: 0
-                },
-                {
-                    width: 100,
-                    targets: 0
-                }
-            ],
-            "ordering": false,
-        });
-
-        var ITEMS_TABLE = $('#items_table').DataTable({
-            "ordering": false,
-        });
-
-        $("#ITEM_CUSTOM_SEARCH").keyup(function() {
-            ITEMS_TABLE.search($(this).val()).draw()
-        });
-
         $('#deposit-percentage').keypress(function(){
             computeDepositAmount();
         });
@@ -1443,20 +1126,17 @@ echo put_header_assets();
         <?php } ?> 
     });
 </script>
-
 <script>
-    function validatecard() {
-        var inputtxt = $('.card-number').val();
-
-        if (inputtxt == 4242424242424242) {
-            $('.require-validation').submit();
-        } else {
-            alert("Not a valid card number!");
-            return false;
-        }
-    }
-
     $(document).ready(function() {
+        CKEDITOR.replace('terms_conditions_est');
+        CKEDITOR.replace('message_est');
+        CKEDITOR.replace('instructions_est');
+        var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
+
+        $("#items_table").nsmPagination({itemsPerPage:10});
+        $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));        
+        }, 1000));
 
         $(document).on('click', '.btn-use-other-address', function(){
             let prof_id = $(this).attr('data-id');
@@ -1471,7 +1151,61 @@ echo put_header_assets();
             var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
                 '" height="370" width="100%" style=""></iframe>';
             $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');               
-        });        
+        });      
+        
+        $('#help-popover-adjustment').popover({
+            placement: 'top',
+            html: true,
+            trigger: "hover focus",
+            content: function() {
+                return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
+            }
+        });
+
+        $('#help-popover-request-deposit').popover({
+            placement: 'top',
+            html: true,
+            trigger: "hover focus",
+            content: function() {
+                return 'You can request an upfront payment on accept estimate.';
+            }
+        });
+
+        $('#help-popover-message-customer').popover({
+            placement: 'top',
+            html: true,
+            trigger: "hover focus",
+            content: function() {
+                return 'Add a message that will be displayed on the estimate.';
+            }
+        });
+
+        $('#help-popover-terms-conditions').popover({
+            placement: 'top',
+            html: true,
+            trigger: "hover focus",
+            content: function() {
+                return `Mention your company's T&amp;C that will appear on the estimate.`;
+            }
+        });
+
+        $('#help-popover-attachment').popover({
+            placement: 'top',
+            html: true,
+            trigger: "hover focus",
+            content: function() {
+                return `Optionally attach files to this invoice.`;
+            }
+        });
+
+        $('#help-popover-instructions').popover({
+            placement: 'top',
+            html: true,
+            trigger: "hover focus",
+            content: function() {
+                return `Optional internal notes, will not appear to customer.`;
+            }
+        });
 
         $('#modalQuickAddCustomer').modal({backdrop: 'static', keyboard: false});
 
@@ -1489,37 +1223,60 @@ echo put_header_assets();
             });
         });
 
-        $('#sel-customer').select2();
-        var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
+        $('#sel-customer').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_customer_lead',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: [{
+                            children: $.map(data, function(item) {
+                                item.text = item.name;
+                                return item;
+                            })
+                        }]
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 0,
+            templateResult: formatRepoCustomer,
+            templateSelection: formatRepoCustomerSelection
+        }); 
+        
+        function formatRepoCustomerSelection(repo) {
+            return repo.text;
+        }
 
-        /*$('#customers')
-            .empty() //empty select
-            .append($("<option/>") //add option tag in select
-                .val(customer_id) //set value for option to post it
+        function formatRepoCustomer(repo) {
+            if (!repo.id) {
+                var $container = $(repo.text);
+                return $container;
+            }
 
-            .val(customer_id) //select option of select2
-            .trigger("change"); //apply to select2*/
-    });
-</script>
+            var $container = $(repo.html);
 
-<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script> -->
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
-<script>
-    /*function initialize() {
-        var input = document.getElementById('job_location');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        google.maps.event.addListener(autocomplete, 'place_changed', function() {
-            var place = autocomplete.getPlace();
-            document.getElementById('city2').value = place.name;
-            document.getElementById('cityLat').value = place.geometry.location.lat();
-            document.getElementById('cityLng').value = place.geometry.location.lng();
-        });
-    }
-    google.maps.event.addDomListener(window, 'load', initialize);*/
-</script>
+            return $container;
+        }
 
-<script>
-    $(document).ready(function() {
+        function validatecard() {
+            var inputtxt = $('.card-number').val();
+
+            if (inputtxt == 4242424242424242) {
+                $('.require-validation').submit();
+            } else {
+                alert("Not a valid card number!");
+                return false;
+            }
+        }
+
         $('.phone_number').keydown(function(e) {
             var key = e.charCode || e.keyCode || 0;
             $text = $(this);
@@ -1867,202 +1624,63 @@ echo put_header_assets();
             }
         });
 
+        function load_customer_data(customer_id) {
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customer/_get_customer_data',
+                data: {
+                    customer_id: customer_id
+                },
+                dataType: 'json',
+                beforeSend: function(response) {
 
+                },
+                success: function(response) {
+                    setTimeout(function() {
+                        var customer_business_name = response.business_name;
+                        var customer_name = response.first_name + ' ' + response.last_name;
+                        var customer_email = response.email;
+                        var customer_phone = response.phone_h;
+                        var customer_mobile = response.phone_m;
+                        var customer_address = response.mail_add + ', ' + response.city + ', ' +
+                            ' ' + response.state + ' ' + response.zip_code;
 
-        //   if(!$(this).data('quantity')){
-        //     // alert($(this).data('quantity'));
-        //     var qty = 0;
-        //   }else{
-        //     // alert('0');
-        //     var qty = $(this).data('quantity');
-        //   }
+                        if (customer_business_name == '') {
+                            customer_business_name = 'Not Specified';
+                        }
 
-        //   var count = parseInt($("#count").val()) + 1;
-        //   $("#count").val(count);
-        //   var total_ = price * qty;
-        //   var tax_ =(parseFloat(total_).toFixed(2) * 7.5) / 100;
-        //   var taxes_t = parseFloat(tax_).toFixed(2);
-        //   var total = parseFloat(total_).toFixed(2);
-        //   var withCommas = Number(total).toLocaleString('en');
-        //   total = '$' + withCommas + '.00';
-        //   // console.log(total);
-        //   // alert(total);
-        //   markup = "<tr id=\"ss\">" +
-        //       "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div></td>\n" +
-        //       "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-        //       "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest2 mobile_qty \"></td>\n" +
-        //       // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-        //       "<td width=\"10%\"><input id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control hidden_mobile_view \" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+idd+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span><input type=\"hidden\" class=\"form-control price\" name=\"price[]\" data-counter=\"0\" id=\"priceM_0\" min=\"0\" value='"+price+"'></div></td>\n" +
-        //       // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
-        //       // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-        //       "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+idd+"'></td>\n" +
-        //       // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-        //       "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+idd+"' min=\"0\" value='"+taxes_t+"'></td>\n" +
-        //       "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+idd+"' class=\"total_per_item\">"+total+
-        //       // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-        //       "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+idd+"' value='"+total+"'></td>" +
-        //       "</tr>";
-        //   tableBody = $("#jobs_items_table_body");
-        //   tableBody.append(markup);
-        //   markup2 = "<tr id=\"sss\">" +
-        //       "<td >"+title+"</td>\n" +
-        //       "<td ></td>\n" +
-        //       "<td ></td>\n" +
-        //       "<td >"+price+"</td>\n" +
-        //       "<td ></td>\n" +
-        //       "<td >"+qty+"</td>\n" +
-        //       "<td ></td>\n" +
-        //       "<td ></td>\n" +
-        //       "<td >0</td>\n" +
-        //       "<td ></td>\n" +
-        //       "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></i></a> <a href=\"javascript:void(0)\" class=\"remove_audit_item_row\"><span class=\"fa fa-trash\"></span></i></a></td>\n" +
-        //       "</tr>";
-        //   tableBody2 = $("#device_audit_datas");
-        //   tableBody2.append(markup2);
-        //   // calculate_subtotal();
-        //   // var counter = $(this).data("counter");
-        //   // calculation(idd);
+                        if (customer_email == '') {
+                            customer_email = 'Not Specified';
+                        }
 
-        // var in_id = idd;
-        // var price = $("#price_" + in_id).val();
-        // var quantity = $("#quantity_" + in_id).val();
-        // var discount = $("#discount_" + in_id).val();
-        // var tax = (parseFloat(price) * 7.5) / 100;
-        // var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-        // 2
-        // );
-        // if( discount == '' ){
-        // discount = 0;
-        // }
+                        if (customer_phone == '') {
+                            customer_phone = 'Not Specified';
+                        }
 
-        // var total = (
-        // (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-        // parseFloat(discount)
-        // ).toFixed(2);
+                        if (customer_mobile == '') {
+                            customer_mobile = 'Not Specified';
+                        }
 
-        // var total_wo_tax = price * quantity;
+                        if(response.prof_id) {
+                            $(".btn-use-different-address").attr("data-id",response.prof_id);
+                        }
 
-        // // alert( 'yeah' + total);
+                        $("#estimate-customer-email").val(customer_email);
+                        $("#estimate-customer-mobile").val(customer_mobile);
+                        $("#job_location").val(customer_address);
+                        $('#business_name').val(customer_business_name);
 
+                        var map_source = 'http://maps.google.com/maps?q=' + customer_address +
+                            '&output=embed';
+                        var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
+                            '" height="370" width="100%" style=""></iframe>';
+                        $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+                    }, 200);
+                },
+                error: function(e) {
 
-        // $("#priceqty_" + in_id).val(total_wo_tax);
-        // $("#span_total_" + in_id).text(total);
-        // $("#sub_total_text" + in_id).val(total);
-        // $("#tax_1_" + in_id).text(tax1);
-        // $("#tax1_" + in_id).val(tax1);
-        // $("#discount_" + in_id).val(discount);
-
-        // if( $('#tax_1_'+ in_id).length ){
-        // $('#tax_1_'+in_id).val(tax1);
-        // }
-
-        // if( $('#item_total_'+ in_id).length ){
-        // $('#item_total_'+in_id).val(total);
-        // }
-
-        // var eqpt_cost = 0;
-        // var total_costs = 0;
-        // var cnt = $("#count").val();
-        // var total_discount = 0;
-        // var pquantity = 0;
-        // for (var p = 0; p <= cnt; p++) {
-        // var prc = $("#price_" + p).val();
-        // var quantity = $("#quantity_" + p).val();
-        // var discount = $("#discount_" + p).val();
-        // var pqty = $("#priceqty_" + p).val();
-        // // var discount= $('#discount_' + p).val();
-        // // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-        // pquantity += parseFloat(pqty);
-        // total_costs += parseFloat(prc);
-        // eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-        // total_discount += parseFloat(discount);
-        // }
-        // //   var subtotal = 0;
-        // // $( total ).each( function(){
-        // //   subtotal += parseFloat( $( this ).val() ) || 0;
-        // // });
-
-        // var total_cost = 0;
-        // // $("#span_total_0").each(function(){
-        // $('*[id^="price_"]').each(function(){
-        // total_cost += parseFloat($(this).val());
-        // });
-
-        // // var totalcosting = 0;
-        // // $('*[id^="span_total_"]').each(function(){
-        // //   totalcosting += parseFloat($(this).val());
-        // // });
-
-
-        // // alert(total_cost);
-
-        // var tax_tot = 0;
-        // $('*[id^="tax1_"]').each(function(){
-        // tax_tot += parseFloat($(this).val());
-        // });
-
-        // over_tax = parseFloat(tax_tot).toFixed(2);
-        // // alert(over_tax);
-
-        // $("#sales_taxs").val(over_tax);
-        // $("#total_tax_input").val(over_tax);
-        // $("#total_tax_").text(over_tax);
-
-
-        // eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-        // total_discount = parseFloat(total_discount).toFixed(2);
-        // stotal_cost = parseFloat(total_cost).toFixed(2);
-        // priceqty = parseFloat(pquantity).toFixed(2);
-        // // var test = 5;
-
-        // var subtotal = 0;
-        // // $("#span_total_0").each(function(){
-        // $('*[id^="span_total_"]').each(function(){
-        // subtotal += parseFloat($(this).text());
-        // });
-        // // $('#sum').text(subtotal);
-
-        // var subtotaltax = 0;
-        // // $("#span_total_0").each(function(){
-        // $('*[id^="tax_1_"]').each(function(){
-        // subtotaltax += parseFloat($(this).text());
-        // });
-
-
-        // var priceqty2 = 0;
-        // $('*[id^="priceqty_"]').each(function(){
-        // priceqty2 += parseFloat($(this).val());
-        // });
-
-        // $("#span_sub_total_invoice").text(priceqty2.toFixed(2));
-        // // $("#span_sub_total_invoice").text(priceqty);
-
-        // $("#eqpt_cost").val(eqpt_cost);
-        // $("#total_discount").val(total_discount);
-        // $("#span_sub_total_0").text(total_discount);
-        // // $("#span_sub_total_invoice").text(stotal_cost);
-        // // $("#item_total").val(subtotal.toFixed(2));
-        // $("#item_total").val(priceqty2.toFixed(2));
-
-        // var s_total = subtotal.toFixed(2);
-        // var adjustment = $("#adjustment_input").val();
-        // var grand_total = s_total - parseFloat(adjustment);
-        // var markup = $("#markup_input_form").val();
-        // var grand_total_w = grand_total + parseFloat(markup);
-
-        // // $("#total_tax_").text(subtotaltax.toFixed(2));
-        // // $("#total_tax_").val(subtotaltax.toFixed(2));
-
-
-
-
-        // $("#grand_total").text(grand_total_w.toFixed(2));
-        // $("#grand_total_input").val(grand_total_w.toFixed(2));
-        // $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-
-        // var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-        // sls = parseFloat(sls).toFixed(2);
-        // $("#sales_tax").val(sls);
-        // cal_total_due();
+                }
+            });
+        }  
     });
 </script>

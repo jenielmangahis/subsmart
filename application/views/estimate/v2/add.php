@@ -3,109 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 include viewPath('v2/includes/header');
 echo put_header_assets();
 ?>
-<!-- Script for autosaving form -->
-<script src="<?php echo base_url('assets/js/estimate/autosave-standard.js'); ?>"></script>
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <style>
-.remove {
-    display: block;
-    width: 38px;
-    float: right;
-}
-
-label>input {
-    visibility: initial !important;
-    position: initial !important;
-}
-
-.but:hover {
-    font-weight: 900;
-    color: black;
-}
-
-.but-red:hover {
-    font-weight: 900;
-    color: red;
-}
-
-.required:after {
-    content: " *";
-    color: red;
-}
-
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-}
-
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-.MAP_LOADER_CONTAINER {
-    min-height: 350px;
-}
-
-input:checked+.slider {
-    background-color: #10ab06;
-}
-
-input:focus+.slider {
-    box-shadow: 0 0 1px #10ab06;
-}
-
-input:checked+.slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-    border-radius: 34px;
-}
-
-.slider.round:before {
-    border-radius: 50%;
-}
-
-.signature_mobile {
-    display: none;
-}
-
-.show_mobile_view {
-    display: none;
-}
-
 @media only screen and (max-device-width: 600px) {
     .label-element {
         position: absolute;
@@ -293,50 +191,6 @@ input:checked+.slider:before {
         color: black;
     }
 }
-
-.is-invalid+.select2-container {
-    border: 1px solid #dc3545;
-    border-radius: 4px;
-}
-
-.dataTables_filter,
-.dataTables_length {
-    display: none;
-}
-
-table.dataTable thead th,
-table.dataTable thead td {
-    padding: 10px 18px;
-    border-bottom: 1px solid lightgray;
-}
-
-table.dataTable.no-footer {
-    border-bottom: 0px !important;
-    margin-bottom: 10px !important;
-}
-
-tbody,
-td,
-tfoot,
-th,
-thead,
-tr {
-    border-color: inherit;
-    border-style: solid;
-    border-color: lightgray;
-    border-width: 0;
-}
-
-.help-block {
-    font-size: 13px;
-    display: inline-block;
-    margin-left: 3px;
-    font-style: italic;
-}
-
-label.bold {
-    font-weight: bold;
-}
 .add-item-container {
     display: flex;
     align-items: center;
@@ -355,6 +209,32 @@ label.bold {
 #items_table td:nth-child(5){
 text-align:right !important;
 }
+.show_mobile_view {
+    display: none;
+}
+.row-total-amount{
+    text-align:right;
+}
+.row-btn-actions{
+    text-align:center;
+    padding:13px !important;
+}
+.span-input{
+    display: block;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #E9ECEF;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
@@ -366,15 +246,7 @@ text-align:right !important;
                 <i class='bx bx-fw bx-chart' ></i>
             </div>
             <span class="nsm-fab-label">Estimate List</span>
-        </li>         
-        <?php if (isset($estimates) && count($estimates) > 0) { ?>
-        <li onclick="location.href='<?php echo base_url('estimate/print'); ?>'">
-            <div class="nsm-fab-icon">
-                <i class="bx bx-printer"></i>
-            </div>
-            <span class="nsm-fab-label">Print</span>
-        </li>
-        <?php } ?>
+        </li> 
     </ul>
 </div>
 <div class="row page-content g-0">
@@ -411,7 +283,7 @@ text-align:right !important;
                                                 <label for="job_name"><b>Customer</b></label>
                                                 <div class="d-flex">
                                                     <a class="nsm-button btn-small d-flex" data-bs-toggle="modal"
-                                                        data-bs-target="#new_customer" href="javascript:void(0);">
+                                                        data-bs-target="#quick-add-customer" href="javascript:void(0);">
                                                         Add New Customer
                                                     </a>
                                                     <a class="nsm-button btn-small d-flex d-flex"
@@ -558,8 +430,8 @@ text-align:right !important;
                                                 <th width="150px">Price</th>
                                                 <th class="hidden_mobile_view" width="150px">Discount</th>
                                                 <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
-                                                <th class="hidden_mobile_view">Total</th>
-                                                <th class="hidden_mobile_view"></th>
+                                                <th class="hidden_mobile_view" style="width:8%;text-align:right;">Total</th>
+                                                <th class="hidden_mobile_view" style="width:5%;"></th>
                                             </tr>
                                         </thead>
                                         <tbody id="jobs_items_table_body">
@@ -576,7 +448,7 @@ text-align:right !important;
 
                             <div class="row mb-3">
                                 <div class="col-md-7">
-                                    <div class="row mb-3" style="background-color:white;">
+                                    <div class="row mb-3">
                                         <div class="col-md-12">
                                             <label class="bold">Request a deposit <i id="help-popover-request-deposit" class='bx bx-fw bx-help-circle'></i></label>                                            
                                         </div>
@@ -685,8 +557,8 @@ text-align:right !important;
                                     </table>
                                 </div>
                             </div>
-                            <br>
-                            <div class="row mb-3" style="background-color:white;">
+                            <hr />
+                            <div class="row mb-3 mt-5">
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label class="bold">Message to customer</label>
@@ -699,7 +571,7 @@ text-align:right !important;
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="bold">Terms &amp; Conditions</label>
+                                        <label class="bold">Terms & Conditions</label>
                                         <i id="help-popover-terms-conditions" class='bx bx-fw bx-help-circle'></i></label>                                           
                                         <textarea name="terms_conditions" cols="40" rows="2" class="form-control"
                                             id="terms_conditions_est">
@@ -998,17 +870,9 @@ text-align:right !important;
 </div>
 
 <?php include viewPath('v2/includes/customer/other_address'); ?>
-
 <?php echo $file_selection; ?>
-<?php include viewPath('v2/pages/job/modals/new_customer'); ?>
+<?php include viewPath('v2/includes/customer/quick_add_customer'); ?>
 <?php include viewPath('v2/includes/leads/quick_add'); ?>
-<?php
-// JS to add only Job module
-add_footer_js([
-    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-]);
-?>
 <?php include viewPath('v2/includes/footer'); ?>
 <script src="<?php echo $url->assets; ?>js/add.js"></script>
 <script>
@@ -1476,38 +1340,6 @@ $(document).ready(function() {
             }
         });
     });
-});
-</script>
-
-<script type="text/javascript">
-// $(window).on('beforeunload', function(){
-//     var c = confirm();
-//     if(c){
-//         return true;
-//     }
-//     else
-//         return false;
-// });
-</script>
-
-<script>
-jQuery(document).ready(function() {
-    $(document).on('click', '#Commercial', function() {
-        $('#business_name_area').show();
-    });
-    $(document).on('click', '#customer_type', function() {
-        $('#business_name_area').hide();
-    });
-    $(document).on('click', '#advance', function() {
-        $('#business_name_area').hide();
-    });
-});
-</script>
-<script>
-$(function() {
-    $("#datepicker_dateissued").datepicker({
-        format: 'M dd, yyyy'
-    });
 
     $('#grand_total_input').change(function() {
         //computeDepositAmount();
@@ -1558,165 +1390,6 @@ $(function() {
     }
 });
 </script>
-<script>
-$('#ssn').keyup(function() {
-    var foo = $(this).val().split("-").join(""); // remove hyphens
-    if (foo.length > 0) {
-        foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
-    }
-    $(this).val(foo);
-});
-
-$('#credit_number').keyup(function() {
-    var foo = $(this).val().split("-").join(""); // remove hyphens
-    if (foo.length > 0) {
-        foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
-    }
-    $(this).val(foo);
-});
-
-$('#credit_number2').keyup(function() {
-    var foo = $(this).val().split("-").join(""); // remove hyphens
-    if (foo.length > 0) {
-        foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
-    }
-    $(this).val(foo);
-});
-
-$('#other_credit_number').keyup(function() {
-    var foo = $(this).val().split("-").join(""); // remove hyphens
-    if (foo.length > 0) {
-        foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
-    }
-    $(this).val(foo);
-});
-$('#spouse_contact_ssn').keyup(function() {
-    var foo = $(this).val().split("-").join(""); // remove hyphens
-    if (foo.length > 0) {
-        foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
-    }
-    $(this).val(foo);
-});
-</script>
-
-<script>
-$(".select_package").click(function() {
-    var idd = this.id;
-    console.log(idd);
-    console.log($(this).data('itemname'));
-    var title = $(this).data('itemname');
-    var price = $(this).data('price');
-
-    if (!$(this).data('quantity')) {
-        // alert($(this).data('quantity'));
-        var qty = 0;
-    } else {
-        // alert('0');
-        var qty = $(this).data('quantity');
-    }
-
-
-    $.ajax({
-        type: 'POST',
-        url: "<?php echo base_url(); ?>workorder/select_package",
-        data: {
-            idd: idd
-        },
-        dataType: 'json',
-        success: function(response) {
-            // alert('Successfully Change');
-            console.log(response['items']);
-
-            // var objJSON = JSON.parse(response['items'][0].title);
-            var inputs = "";
-            var count = parseFloat($("#count").val());
-            var markup, markup2 = "";
-
-            $.each(response['items'], function(i, v) {
-                inputs += v.title;
-                count = count + 1;
-                $("#count").val(count);
-                if (v.units <= 0) {
-                    v.units = 0;
-                }
-                var total_pu = v.price * v.units;
-                var total_tax = (v.price * v.units) * 7.5 / 100;
-                var total_temp = total_pu + total_tax;
-                var total = total_temp.toFixed(2);
-
-
-                markup = "<tr id=\"ss\">" +
-                    "<td width=\"35%\"><input value='" + v.title +
-                    "' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='" +
-                    v.id +
-                    "' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">" +
-                    v.title + "</span></div></td>\n" +
-                    "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-                    "<td width=\"10%\"><input data-itemid='" + v.id + "' id='quantity_" +
-                    count + "' value='" + v.units +
-                    "' type=\"number\" name=\"quantity[]\" data-counter='" + count +
-                    "'  min=\"0\" class=\"form-control quantity mobile_qty \"></td>\n" +
-                    "<td width=\"10%\"><input id='price_" + count + "' value='" + v.price +
-                    "'  type=\"number\" name=\"price[]\" class=\"form-control price hidden_mobile_view \" placeholder=\"Unit Price\" data-counter='" +
-                    count + "'><input type=\"hidden\" class=\"priceqty\" id='priceqty_" + v
-                    .id + "' value='" + total_pu +
-                    "'><div class=\"show_mobile_view\"><span class=\"price\">" + v.price +
-                    "</span><input type=\"hidden\" class=\"form-control price\" name=\"price[]\" data-counter=\"0\" id=\"priceM_0\" min=\"0\" value='" +
-                    v.price + "'></div></td>\n" +
-                    //   "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter=\"0\" id=\"discount_0\" value=\"0\" ></td>\n" +
-                    // //  "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-                    "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_" +
-                    count + "' value=\"0\" data-counter='" + count + "'></td>\n" +
-                    // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                    "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='" +
-                    v.id +
-                    "' class=\"form-control tax_change\" name=\"tax[]\" data-counter='" +
-                    count + "' id='tax1_" + count + "' min=\"0\" readonly value='" +
-                    total_tax + "'></td>\n" +
-                    "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='" +
-                    total + "' id='span_total_" + count + "' class=\"total_per_item\">" +
-                    total +
-                    // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-                    "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text" + v
-                    .id + "' value='" + total + "'></td>" +
-                    "<td>\n" +
-                    '<a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
-                    "</td>\n" +
-                    "</tr>";
-                tableBody = $("#jobs_items_table_body");
-                tableBody.append(markup);
-                markup2 = "<tr id=\"sss\">" +
-                    "<td >"
-                "</td>\n" +
-                "<td ></td>\n" +
-                "<td ></td>\n" +
-                "<td >" + v.price + "</td>\n" +
-                    "<td ></td>\n" +
-                    "<td >" + v.units + "</td>\n" +
-                    "<td ></td>\n" +
-                    "<td ></td>\n" +
-                    "<td >0</td>\n" +
-                    "<td ></td>\n" +
-                    "<td ></td>\n" +
-                    "</tr>";
-
-                calculation(count);
-
-            });
-            // $("#input_container").html(inputs);
-
-            tableBody2 = $("#device_audit_datas");
-            tableBody2.append(markup2);
-            // alert(inputs);
-        },
-        error: function(response) {
-            alert('Error' + response);
-
-        }
-    });
-});
-</script>
-
 <script>
 window.document.addEventListener("DOMContentLoaded", async () => {
     const params = new Proxy(new URLSearchParams(window.location.search), {
