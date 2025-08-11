@@ -2484,146 +2484,165 @@ class Estimate extends MY_Controller
     {
         $this->load->model('EstimateSettings_model');
 
-        $company_id = getLoggedCompanyID();
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        $estimate_id = 0;
+
+        $company_id = logged('company_id');
         $user_id    = logged('id');
         $est_num    = $this->input->post('est_num');
 
-        $datas = $this->estimate_model->getDataByESTID($est_num);        
-        $items = $this->estimate_model->getEstimatesItems($est_num);
-        // Generate Estimate Number
-        $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
-        if ($setting) {
-            $next_num = $setting->estimate_num_next;
-            $prefix = $setting->estimate_num_prefix;
-        } else {
-            $lastInsert = $this->estimate_model->getlastInsertByComp($company_id);
-            if ($lastInsert) {
-                $next_num = $lastInsert->id + 1;
+        $datas = $this->estimate_model->getDataByESTID($est_num);   
+        if( $datas && $datas->company_id == $company_id ){     
+            $items = $this->estimate_model->getEstimatesItems($est_num);
+            // Generate Estimate Number
+            $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
+            if ($setting) {
+                $next_num = $setting->estimate_num_next;
+                $prefix = $setting->estimate_num_prefix;
             } else {
-                $next_num = 1;
+                $lastInsert = $this->estimate_model->getlastInsertByComp($company_id);
+                if ($lastInsert) {
+                    $next_num = $lastInsert->id + 1;
+                } else {
+                    $next_num = 1;
+                }
+                $prefix = 'EST-';
             }
-            $prefix = 'EST-';
-        }
 
-        $estimate_number = str_pad($next_num, 9, '0', STR_PAD_LEFT);
-        $estimate_number = $prefix.$estimate_number;
+            $estimate_number = str_pad($next_num, 9, '0', STR_PAD_LEFT);
+            $estimate_number = $prefix.$estimate_number;
 
-        $curr_date_7 = strtotime('+7 day');
-        $current_date_7 = date('Y-m-d', $curr_date_7);
+            $curr_date_7 = strtotime('+7 day');
+            $current_date_7 = date('Y-m-d', $curr_date_7);
 
-        $new_data = [
-             'user_id' => $user_id,
-             'event_id' => $datas->event_id,
-             'company_id' => $company_id,
-             'customer_id' => $datas->customer_id,
-             'job_location' => $datas->job_location,
-             'job_name' => $datas->job_name,
-             'estimate_number' => $estimate_number,
-             'estimate_type' => $datas->estimate_type,
-             'estimate_value' => $datas->estimate_value,
-             'estimate_date' => date('Y-m-d'),
-             'expiry_date' => $current_date_7,
-             'purchase_order_number' => $datas->purchase_order_number,
-             'plan_id' => $datas->plan_id,
-             'deposit_request' => $datas->deposit_request,
-             'deposit_amount' => $datas->deposit_amount,
-             'customer_message' => $datas->customer_message,
-             'terms_conditions' => $datas->terms_conditions,
-             'attachments' => $datas->attachments,
-             'instructions' => $datas->instructions,
-             'template_id' => $datas->template_id,
-             'status' => $datas->status,
-             'email' => $datas->email,
-             'billing_address' => $datas->billing_address,
-             'ship_via' => $datas->ship_via,
-             'ship_date' => $datas->ship_date,
-             'tracking_no' => $datas->tracking_no,
-             'ship_to' => $datas->ship_to,
-             'decline_reason' => $datas->decline_reason,
-             'is_accepted' => $datas->is_accepted,
-             'accepted_date' => $datas->accepted_date,
-             'is_mail_open' => $datas->is_mail_open,
-             'mail_open_date' => $datas->mail_open_date,
-             'tags' => $datas->tags,
-             'option_message' => $datas->option_message,
-             'option2_message' => $datas->option2_message,
-             'bundle1_message' => $datas->bundle1_message,
-             'bundle2_message' => $datas->bundle2_message,
-             'bundle_discount' => $datas->bundle_discount,
-             'signature' => $datas->signature,
-             'sign_date' => $datas->sign_date,
-             'created_at' => date('Y-m-d H:i:s'),
-             'updated_at' => date('Y-m-d H:i:s'),
-             'remarks' => $datas->remarks,
-             'estimate_eqpt_cost' => $datas->estimate_eqpt_cost,
-             'adjustment_name' => $datas->adjustment_name,
-             'adjustment_value' => $datas->adjustment_value,
-             'markup_type' => $datas->markup_type,
-             'markup_amount' => $datas->markup_amount,
-             'bundle1_total' => $datas->bundle1_total,
-             'bundle2_total' => $datas->bundle2_total,
-             'option1_total' => $datas->option1_total,
-             'option2_total' => $datas->option2_total,
-             'tax1_total' => $datas->tax1_total,
-             'tax2_total' => $datas->tax2_total,
-             'sub_total' => $datas->sub_total,
-             'grand_total' => $datas->grand_total,
-             'view_flag' => $datas->view_flag,
-         ];
-
-        $addQuery = $this->estimate_model->save_estimate($new_data);
-
-        //Clone items
-        if( $items ){
-            foreach($items as $i){
-                $items_data = [
-                    'estimates_id' => $addQuery,
-                    'items_id' => $i->items_id,
-                    'qty' => $i->qty,
-                    'cost' => $i->cost,
-                    'tax' => $i->tax,
-                    'discount' => $i->discount,
-                    'total' => $i->total,
-                    'estimate_type' => $i->estimate_type,
-                    'bundle_option_type' => $i->bundle_option_type,
-                    'storage_loc_id' => $i->storage_loc_id,
-                    'item_type' => $i->item_type,
-                ];
-
-                $this->estimate_model->add_estimate_items($items_data);
-            }
-        }
-
-        //Activity Logs
-        $activity_name = 'Estimates : Created estimate number ' . $estimate_number . ' - Cloned from estimate number ' . $datas->estimate_number; 
-        createActivityLog($activity_name);
-
-        // Update estimate setting
-        if ($setting) {
-            $estimate_setting = ['estimate_num_next' => $next_num + 1];
-            $this->EstimateSettings_model->update($setting->id, $estimate_setting);
-        }else{
-            $default_terms_condition = 'BY SIGNING THIS AGREEMENT, YOU SPECIFICALLY ACKNOWLEDGE AND ACCEPT THE TERMS AND CONDITIONS AND INDICATE YOUR INTENT TO BE LEGALLY BOUND TO THE PROPOSAL AND THIS AGREEMENT. BY SIGNING THIS AGREEMENT, THE CLIENT REPRESENTS THAT THE PERSON SIGNING ON ITS BEHALF HAS THE AUTHORITY TO BIND THE CLIENT TO THIS PROPOSAL AND AGREEMENT';                
-            $data = [
+            $new_data = [
+                'user_id' => $user_id,
+                'event_id' => $datas->event_id,
                 'company_id' => $company_id,
-                'estimate_num_prefix' => $prefix,
-                'estimate_num_next' => $next_num,
-                'residential_message' => '',
-                'residential_terms_and_conditions' => $default_terms_condition,
-                'commercial_message' => '',
-                'commercial_terms_and_conditions' => $default_terms_condition,
-                'is_residential_message_default' => 0,
-                'default_expire_period' => 'weeks',
-                'capture_customer_signature' => 1,
-                'hide_item_price' => 1,
-                'hide_item_qty' => 1,
-                'hide_item_tax' => 1,
-                'hide_item_discount' => 1,
-                'hide_item_total' => 1,
-                'hide_grand_total' => 1,
+                'customer_id' => $datas->customer_id,
+                'job_location' => $datas->job_location,
+                'job_name' => $datas->job_name,
+                'estimate_number' => $estimate_number,
+                'estimate_type' => $datas->estimate_type,
+                'estimate_value' => $datas->estimate_value,
+                'estimate_date' => date('Y-m-d'),
+                'expiry_date' => $current_date_7,
+                'purchase_order_number' => $datas->purchase_order_number,
+                'plan_id' => $datas->plan_id,
+                'deposit_request' => $datas->deposit_request,
+                'deposit_amount' => $datas->deposit_amount,
+                'customer_message' => $datas->customer_message,
+                'terms_conditions' => $datas->terms_conditions,
+                'attachments' => $datas->attachments,
+                'instructions' => $datas->instructions,
+                'template_id' => $datas->template_id,
+                'status' => $datas->status,
+                'email' => $datas->email,
+                'billing_address' => $datas->billing_address,
+                'ship_via' => $datas->ship_via,
+                'ship_date' => $datas->ship_date,
+                'tracking_no' => $datas->tracking_no,
+                'ship_to' => $datas->ship_to,
+                'decline_reason' => $datas->decline_reason,
+                'is_accepted' => $datas->is_accepted,
+                'accepted_date' => $datas->accepted_date,
+                'is_mail_open' => $datas->is_mail_open,
+                'mail_open_date' => $datas->mail_open_date,
+                'tags' => $datas->tags,
+                'option_message' => $datas->option_message,
+                'option2_message' => $datas->option2_message,
+                'bundle1_message' => $datas->bundle1_message,
+                'bundle2_message' => $datas->bundle2_message,
+                'bundle_discount' => $datas->bundle_discount,
+                'signature' => $datas->signature,
+                'sign_date' => $datas->sign_date,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'remarks' => $datas->remarks,
+                'estimate_eqpt_cost' => $datas->estimate_eqpt_cost,
+                'adjustment_name' => $datas->adjustment_name,
+                'adjustment_value' => $datas->adjustment_value,
+                'markup_type' => $datas->markup_type,
+                'markup_amount' => $datas->markup_amount,
+                'bundle1_total' => $datas->bundle1_total,
+                'bundle2_total' => $datas->bundle2_total,
+                'option1_total' => $datas->option1_total,
+                'option2_total' => $datas->option2_total,
+                'tax1_total' => $datas->tax1_total,
+                'tax2_total' => $datas->tax2_total,
+                'sub_total' => $datas->sub_total,
+                'grand_total' => $datas->grand_total,
+                'view_flag' => $datas->view_flag,
             ];
-            $this->EstimateSettings_model->create($data);
+
+            $addQuery = $this->estimate_model->save_estimate($new_data);
+            $estimate_id = $addQuery;
+
+            //Clone items
+            if( $items ){
+                foreach($items as $i){
+                    $items_data = [
+                        'estimates_id' => $addQuery,
+                        'items_id' => $i->items_id,
+                        'qty' => $i->qty,
+                        'cost' => $i->iCost,
+                        'tax' => $i->tax,
+                        'discount' => $i->discount,
+                        'total' => $i->total,
+                        'estimate_type' => $i->estimate_type,
+                        'bundle_option_type' => $i->bundle_option_type,
+                        'storage_loc_id' => $i->storage_loc_id,
+                        'item_type' => $i->item_type,
+                    ];
+
+                    $this->estimate_model->add_estimate_items($items_data);
+                }
+            }
+
+            //Activity Logs
+            $activity_name = 'Estimates : Created estimate number ' . $estimate_number . ' - Cloned from estimate number ' . $datas->estimate_number; 
+            createActivityLog($activity_name);
+
+            // Update estimate setting
+            if ($setting) {
+                $estimate_setting = ['estimate_num_next' => $next_num + 1];
+                $this->EstimateSettings_model->update($setting->id, $estimate_setting);
+            }else{
+                $default_terms_condition = 'BY SIGNING THIS AGREEMENT, YOU SPECIFICALLY ACKNOWLEDGE AND ACCEPT THE TERMS AND CONDITIONS AND INDICATE YOUR INTENT TO BE LEGALLY BOUND TO THE PROPOSAL AND THIS AGREEMENT. BY SIGNING THIS AGREEMENT, THE CLIENT REPRESENTS THAT THE PERSON SIGNING ON ITS BEHALF HAS THE AUTHORITY TO BIND THE CLIENT TO THIS PROPOSAL AND AGREEMENT';                
+                $data = [
+                    'company_id' => $company_id,
+                    'estimate_num_prefix' => $prefix,
+                    'estimate_num_next' => $next_num,
+                    'residential_message' => '',
+                    'residential_terms_and_conditions' => $default_terms_condition,
+                    'commercial_message' => '',
+                    'commercial_terms_and_conditions' => $default_terms_condition,
+                    'is_residential_message_default' => 0,
+                    'default_expire_period' => 'weeks',
+                    'capture_customer_signature' => 1,
+                    'hide_item_price' => 1,
+                    'hide_item_qty' => 1,
+                    'hide_item_tax' => 1,
+                    'hide_item_discount' => 1,
+                    'hide_item_total' => 1,
+                    'hide_grand_total' => 1,
+                ];
+                $this->EstimateSettings_model->create($data);
+            }
+
+            $is_success = 1;
+            $msg = '';
+        
         }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'estimate_id' => $estimate_id
+        ];
+
+        echo json_encode($return);
     }
 
     public function estimate_settings()

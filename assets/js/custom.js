@@ -787,13 +787,16 @@ $(".select_item").click(function () {
   var title = $(this).data("itemname");
   var price = $(this).data("price");
 
-  if (!$(this).data("quantity")) {
-    // alert($(this).data('quantity'));
-    var qty = 1;
-  } else {
-    // alert('0');
-    var qty = $(this).data("quantity");
-  }
+  // if (!$(this).data("quantity")) {
+  //   var qty = 1;
+  // } else {
+  //   var qty = $(this).data("quantity");
+  // }
+  
+  var qty = 0;
+  if( $(this).data("quantity") > 0 ){
+    qty = 1;
+  }  
 
   var count = parseInt($("#count").val()) + 1;
   $("#count").val(count);
@@ -803,12 +806,12 @@ $(".select_item").click(function () {
   if( $('#default-tax').length ){
     tax_rate = parseFloat($('#default-tax').val());
   }
-
+  
   var tax_ = (parseFloat(total_).toFixed(2) * tax_rate) / 100;
   var taxes_t = parseFloat(tax_).toFixed(2);
   var total = parseFloat(total_).toFixed(2);
   var withCommas = Number(total).toLocaleString("en");
-  total = "$" + withCommas + ".00";
+  total = withCommas + ".00";
   // console.log(total);
   // alert(total);
   markup =
@@ -863,11 +866,11 @@ $(".select_item").click(function () {
     "'  min=\"0\" value='" +
     taxes_t +
     "'></td>\n" +
-    '<td style="text-align: center" class="hidden_mobile_view"><span class="span-input" data-subtotal=\'' +
+    '<td class="row-total-amount hidden_mobile_view"><span data-subtotal=\'' +
     total_ +
     "' id='span_total_" +
     count +
-    '\' class="total_per_item">' +
+    '\' class="span-input total_per_item">test' +
     total +
     // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
     '</span> <input type="hidden" name="total[]" id=\'sub_total_text' +
@@ -875,7 +878,7 @@ $(".select_item").click(function () {
     "' value='" +
     total +
     "'></td>" +
-    "<td>\n" +
+    "<td class='row-btn-actions'>\n" +
     '<a href="#" class="remove nsm-button danger" id=\'' +
     idd +
     '\'><i class="bx bx-fw bx-trash"></i></a>\n' +
@@ -888,20 +891,20 @@ $(".select_item").click(function () {
     "<td >" +
     title +
     "</td>\n" +
-    "<td ></td>\n" +
-    "<td ></td>\n" +
-    "<td >" +
+    "<td></td>\n" +
+    "<td></td>\n" +
+    "<td>" +
     price +
     "</td>\n" +
     "<td ></td>\n" +
     "<td >" +
     qty +
     "</td>\n" +
-    "<td ></td>\n" +
-    "<td ></td>\n" +
-    "<td >0</td>\n" +
-    "<td ></td>\n" +
-    '<td ><a href="#" data-name=\'' +
+    "<td></td>\n" +
+    "<td></td>\n" +
+    "<td>0</td>\n" +
+    "<td></td>\n" +
+    '<td><a href="#" data-name=\'' +
     title +
     "' data-price='" +
     price +

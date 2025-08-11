@@ -100,8 +100,7 @@ class Autocomplete extends MY_Controller
         $resultCustomers = array(); 
         foreach($customers as $c){            
             $c->id   = $c->prof_id;
-
-            $n = ucwords($c->first_name[0]) . ucwords($c->last_name[0]);
+            $n = ucwords(ltrim($c->first_name)[0]) . ucwords(ltrim($c->last_name)[0]);  
             $name_acro = "<div class='nsm-profile'><span>".$n."</span></div>";
 
             if( $c->phone_m == '' ){
@@ -129,7 +128,7 @@ class Autocomplete extends MY_Controller
             }
 
             $text = $c->first_name.' '.$c->last_name;
-            $html = '<div class="contact-acro">'.$name_acro.'</div><div class="contact-info"><i class="bx bx-user-pin"></i> '.$c->first_name.' '.$c->last_name.'<br><small><i class="bx bx-mobile"></i> '.$phone.' / <i class="bx bx-envelope"></i> '.$email.'</small></div>';
+            $html = '<div class="contact-acro">'.$name_acro.'</div><div class="contact-info"><i class="bx bx-user-pin"></i> '.$text.'<br><small><i class="bx bx-mobile"></i> '.$phone.' / <i class="bx bx-envelope"></i> '.$email.'</small></div>';
             $resultCustomers[] = [
                 'id' => $c->prof_id.'/'.'Customer',
                 'html' => $html,

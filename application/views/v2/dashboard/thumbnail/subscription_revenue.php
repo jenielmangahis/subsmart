@@ -7,12 +7,23 @@
     $category = trim($thumbnailsWidgetCard->category);
 ?>
 
+<style>
+    .widget-default-arrow {
+        cursor: default !important;
+        background: #00000008 !important;
+    }
+
+    .thumb-header-widget-default-arrow {
+        cursor: default !important;
+    }
+</style>
+
 <div class='card shadow <?php echo "card_$category$id "; ?>'>
     <div class="card-body">
         <div class="row">
             <div class="col-md-12">
                 <h5 class="mt-0 fw-bold">
-                    <a role="button" class="text-decoration-none" href="javascript:void(0)" style="color:#6a4a86 !important">
+                    <a role="button" class="text-decoration-none thumb-header-widget-default-arrow" href="javascript:void(0)" style="color:#6a4a86 !important">
                         <?php echo "<i class='$icon'></i>&nbsp;&nbsp;$title"; ?> <span class="badge bg-secondary position-absolute opacity-25"><?php echo ucfirst($type); ?></span>
                     </a>
                     <div class="dropdown float-end thumbnailDropdownMenu display_none">
@@ -67,7 +78,7 @@
         </div>
         <div class="row">
             <div class="col-12 col-md text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center textData">
+                <div class="text-center textData widget-default-arrow">
                     <small class="text-muted text-uppercase fw-bold">TOTAL REVENUE</small>
                     <br>
                     <div class='<?php echo "container1_$id"; ?>' style='display: -webkit-inline-box; align-items: center;'>
@@ -77,7 +88,7 @@
                 </div>
             </div>
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center textData">
+                <div class="text-center textData widget-default-arrow">
                     <small class="text-muted text-uppercase fw-bold">TOTAL SUBSCRIBERS</small>
                     <br>
                     <div class='<?php echo "container2_$id"; ?>' style='display: -webkit-inline-box; align-items: center;'>
@@ -137,6 +148,7 @@
     function <?php echo "processData_$id"; ?>(category, dateFrom, dateTo, filter3) { 
         $.ajax({
             url: `${window.location.origin}/dashboard/thumbnailWidgetRequest`,
+            //url: base_url + `/dashboard/thumbnailWidgetRequest`,
             type: "POST",
             data: {
                 category: category,
