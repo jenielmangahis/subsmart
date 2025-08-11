@@ -2472,7 +2472,7 @@ class Job extends MY_Controller
         $user_login = logged('FName') . ' ' . logged('LName');
 
         $is_enable_mail_sending  = true;
-        $is_live_mail_credential = false;
+        $is_live_mail_credential = true;
 
         $is_success = 1;
         $msg        = '';
