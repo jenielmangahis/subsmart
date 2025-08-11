@@ -438,28 +438,17 @@ class Login extends CI_Controller
         $is_success = 0;
         $user = $this->users_model->getUserByUsernname(post('user_id'));
         if ($user) {
-            /*if ($user->postal_code == post('user_zipcode')) {
-                $is_success = 1;
-                $msg = '';
-            } else {
-                $msg = 'User ID not found';
-            }*/
-
             //Save token
             $token = $this->users_model->generate_verification_token($user->id);
             $this->users_model->update($user->id, [
                 'reset_token'  =>  $token
             ]);
 
-            //Send email            
-            $url   = url('login/forget?token=' . $token);
-            $body = "<p>Hi <b>".$user->FName."</b></p>";
-            $body .= "<p>Please click link below to reset your password.</p>";
-            $body .= "<p><a href='".$url."'>Reset Your Password</a></p><br />";
-            $body .= "<p>Thank you</p>";
-            $body .= "<p>nSmarTrac Team</p>";
-
             //Send email notification
+            $email_data['name'] = $user->FName;
+            $email_data['reset_url'] = url('login/forget?token=' . $token);      
+            $body = $this->load->view('v2/emails/reset_password', $email_data, true);
+
             $mail = email__getInstance();
             $mail->FromName = 'nSmarTrac';
             $recipient_name = $user->FName . ' ' . $user->LName;
@@ -488,44 +477,28 @@ class Login extends CI_Controller
         } else {
             $user = $this->users_model->getResetToken(post('reset_token'));
             if ($user) {
-                /*if ($user->postal_code == post('user_zipcode')) {
-                    $this->users_model->update($user->id, [
-                        'password'	=>	hash("sha256", post('new_password')),
-                        'password_plain' => post('new_password'),
-                        'reset_token'	=>	''
-                    ]);
-                    $is_success = 1;
-                    $msg = 'You password was successfully changed. Redirecting to login page...';
-                } else {
-                    $msg = 'User ID not found';
-                }*/
                 $this->users_model->update($user->id, [
                     'password'  =>  hash("sha256", post('new_password')),
                     'password_plain' => post('new_password'),
                     'reset_token'   =>  ''
-                ]);
+                ]);                
+
+                //Send email notification
+                $email_data['name'] = $user->FName;
+                $email_data['new_password'] = post('new_password');      
+                $body = $this->load->view('v2/emails/reset_password_receipt', $email_data, true);
+
+                $mail = email__getInstance();
+                $mail->FromName = 'nSmarTrac';
+                $recipient_name = $user->FName . ' ' . $user->LName;
+                $mail->addAddress($user->email, $recipient_name);
+                $mail->isHTML(true);
+                $mail->Subject = "nSmartrac: Your new password";
+                $mail->Body = $body;
+                $mail->Send();
+
                 $is_success = 1;
                 $msg = 'You password was successfully changed. Redirecting to login page...';
-
-                //Send email
-                $subject = 'nSmarTrac : Password Reset';
-                $to   = $user->email;
-                $body = "<p>Hi <b>".$user->FName."</b></p>";
-                $body .= "<p>Your password has been changed. Below is your new password.</p>";
-                $body .= "<p>New Password : ".post('new_password')."</p><br />";
-                $body .= "<p>Thank you</p>";
-                $body .= "<p>nSmarTrac Team</p>";
-
-                $data = [
-                    'to' => $to, 
-                    'subject' => $subject, 
-                    'body' => $body,
-                    'cc' => '',
-                    'bcc' => '',
-                    'attachment' => ''
-                ];
-
-                $isSent = sendEmail($data);
                                 
             } else {
                 $msg = 'User not found';
