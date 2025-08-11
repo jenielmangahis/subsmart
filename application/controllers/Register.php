@@ -256,6 +256,7 @@ class Register extends MYF_Controller {
                 }
 
                 if($edata_business){ 
+                    $msg = 'Business name already registered';
                     $is_authentic = 0;                    
                 }
 
@@ -1130,7 +1131,7 @@ class Register extends MYF_Controller {
                 $this->CompanySubscriptionPayments_model->update($sid, $or_data);
 
                 //Send invoice
-                $this->send_invoice_email($cid, $sid);
+                $this->send_welcome_email($cid, $sid);
             }else{
                 $is_success = false;
                 $msg = 'Invalid captcha';
@@ -1143,7 +1144,7 @@ class Register extends MYF_Controller {
         echo json_encode($json_data);
     }
 
-    public function send_invoice_email($cid, $payment_id){
+    public function send_welcome_email($cid, $payment_id){
         $this->load->model('CompanySubscriptionPayments_model');
         $this->load->model('Business_model');
         $this->load->model('Clients_model');
@@ -1153,24 +1154,20 @@ class Register extends MYF_Controller {
         $company    = $this->Business_model->getByCompanyId($payment->company_id);
         $client     = $this->Clients_model->getById($cid);
 
-        $this->page_data['payment'] = $payment;     
-        $this->page_data['client']  = $client; 
-        $body    = $this->load->view('mycrm/email_template/registration_invoice', $this->page_data, true);
+        $email_data['name'] = $client->first_name;
         $attachment = $this->create_attachment_invoice($payment_id);
+        $body = $this->load->view('v2/emails/registration', $email_data, true);
 
-        $subject = 'nSmarTrac: Registration';
-        $to   = 'webtestcustomer@nsmartrac.com';
+        $mail = email__getInstance();
+        $mail->FromName = 'nSmarTrac';
+        $recipient_name = $client->first_name . ' ' . $client->last_name;
+        $mail->addAddress($client->email_address, $recipient_name);
+        $mail->isHTML(true);
+        $mail->Subject = "Welcome to nSmartrac";
+        $mail->Body = $body;
+        $mail->addAttachment($attachment);
+        $mail->Send();     
 
-        $data = [
-            'to' => 'webtestcustomer@nsmartrac.com', 
-            'subject' => $subject, 
-            'body' => $body,
-            'cc' => '',
-            'bcc' => '',
-            'attachment' => $attachment
-        ];
-
-        $isSent = sendEmail($data);
         return true;
     }
 

@@ -3237,6 +3237,78 @@ class Debug extends MY_Controller {
         $pusher = new Pusher\Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_APPID, $options);
         $pusher->trigger('nsmart-company', 'force-logout', ['company_id' => logged('company_id')]);
     }
+
+    public function debugRegistrationEmailTemplate()
+    {
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('Business_model');
+        $this->load->model('Clients_model');
+
+        $cid = 16179;
+        $payment_id = 84;
+
+        $payment    = $this->CompanySubscriptionPayments_model->getById($payment_id);
+        $company    = $this->Business_model->getByCompanyId($payment->company_id);
+        $client     = $this->Clients_model->getById($cid);
+
+        $email_data['name'] = $client->first_name;
+        $attachment = $this->create_attachment_invoice_v2($payment_id);
+        $body = $this->load->view('v2/emails/registration', $email_data, true);
+
+        $mail = email__getInstance();
+        $mail->FromName = 'nSmarTrac';
+        $recipient_name = $client->first_name . ' ' . $client->last_name;
+        $mail->addAddress($client->email_address, $recipient_name);
+        $mail->isHTML(true);
+        $mail->Subject = "Welcome to nSmartrac";
+        $mail->Body = $body;
+        $mail->addAttachment($attachment);
+        $mail->Send();  
+
+        echo 'Done sending';
+    }
+
+    public function create_attachment_invoice_v2($payment_id){
+
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('Business_model');
+        $this->load->model('Clients_model');
+        
+        $payment    = $this->CompanySubscriptionPayments_model->getById($payment_id);
+        $company    = $this->Clients_model->getById($payment->company_id);
+        $this->page_data['payment']   = $payment;
+        $this->page_data['company'] = $company;
+        $content = $this->load->view('mycrm/registration_subscription_invoice_pdf_template_a', $this->page_data, TRUE);  
+
+        $this->load->library('Reportpdf');
+        $title = 'subscription_invoice';
+
+        $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        //$obj_pdf->SetDefaultMonospacedFont('helvetica');
+        $obj_pdf->SetMargins(10, 5, 10, 0, true);
+        $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+        //$obj_pdf->SetFont('courierI', '', 9);
+        $obj_pdf->setFontSubsetting(false);
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+            require_once(dirname(__FILE__) . '/lang/eng.php');
+            $obj_pdf->setLanguageArray($l);
+        }
+        $obj_pdf->AddPage('P');
+        $html = '';
+        $obj_pdf->writeHTML($html . $content, true, false, true, false, '');
+        ob_clean();
+        $obj_pdf->lastPage();
+        // $obj_pdf->Output($title, 'I');
+        $filename = strtolower($payment->order_number) . ".pdf";
+        $file     = dirname(__DIR__, 2) . '/uploads/subscription_invoice/' . $filename;
+        $obj_pdf->Output($file, 'F');
+        //$obj_pdf->Output($file, 'F');
+        return $file;
+    }
 }
 /* End of file Debug.php */
 

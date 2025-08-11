@@ -34,6 +34,64 @@ class Job extends MY_Controller
 
     public function index()
     {
+                /*
+                $is_live_credential = false;
+                if($is_live_credential) {
+
+                    $job_id = 2261;
+
+                    $mail = email__getInstance();
+                    $mail->FromName = 'NsmarTrac';
+                    $customerName = 'Customer Sample 01';
+                    $mail->addAddress('sample@test.com', $customerName);
+                    $mail->isHTML(true);
+                    $mail->Subject = "nSmartrac: 2354 Invoice";
+                    $mail->Body = $this->generateJobScheduledHTML($job_id);
+
+                    if(!$mail->Send()) {
+                        echo 'Cannot send email';
+                        exit;
+                    }
+
+                } else {
+                    $host     = 'smtp.mailtrap.io';
+                    $port     = 2525;
+                    $username = 'd7c92e3b5e901d';
+                    $password = '203aafda110ab7';
+                    $from     = 'noreply@nsmartrac.com';
+
+                    $mail = new PHPMailer;
+                    $mail->isSMTP();
+                    $mail->Host = $host;
+                    $mail->SMTPAuth = true;
+                    $mail->Username = $username;
+                    $mail->Password = $password;
+                    $mail->SMTPSecure = 'tls';
+                    $mail->Port = $port;
+
+                    $job_id = 2261;
+
+                    //exit;
+
+                    // Sender and recipient settings
+                    $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+                    $customerName = 'Customer Sample 01';
+                    $mail->addAddress('sample@test.com', $customerName);
+
+                    $mail->IsHTML(true);
+                    
+                    $mail->Subject = "nSmartrac: Job Details";
+                    $mail->Body    = $this->generateJobScheduledHTML($job_id);  
+                    
+                    if(!$mail->send()){
+                        $is_success = 0;
+                        $msg = 'Cannot send email local.';
+                    }
+
+                } 
+
+                exit;*/
+
         $this->isAllowedModuleAccess(15);
         if(!checkRoleCanAccessModule('jobs', 'read')){
 			show403Error();
@@ -2404,16 +2462,20 @@ class Job extends MY_Controller
     //     echo "</pre>";
     // }
 
-
     public function save_job()
     {
         $this->load->helper(array('hashids_helper'));
         $this->load->model('JobTags_model');
         $this->load->model('JobSettings_model');
         $this->load->model('Invoice_model');
+
         $user_login = logged('FName') . ' ' . logged('LName');
+
+        $is_enable_mail_sending  = true;
+        $is_live_mail_credential = true;
+
         $is_success = 1;
-        $msg = '';
+        $msg        = '';
 
         $input = $this->input->post();
 
@@ -2955,7 +3017,6 @@ class Job extends MY_Controller
                 );
                 $this->general->add_($jobs_approval_data, 'jobs_approval');                
                 
-
                 // insert / update job settings 
                 if( $job_settings ){
                     $jobs_settings_data = ['job_num_next' =>  $next_num + 1, 'job_account_next_num' => $account_next_num + 1];
@@ -3148,6 +3209,117 @@ class Job extends MY_Controller
         createAutomationQueueV2('send_email', 'job', 'created', '', $jobs_id);
         createAutomationQueueV2('send_email', 'job', 'has_status', 'Scheduled', $jobs_id);
 
+        /**
+         * Todo: insert scheduled job mail sending 
+         */
+        
+        if(isset($input['is_email_jobs']) && $input['is_email_jobs'] == 1) {
+            if($is_enable_mail_sending) {
+                if($is_live_mail_credential) {
+
+                    if($customer) {
+                        $mail = email__getInstance();
+                        $mail->FromName = 'NsmarTrac';
+                        $customerName = $customer->first_name . " " . $customer->last_name;
+                        //$mail->addAddress($customer->email, $customerName);
+                        $mail->addAddress('jeniel.mangahis@nsmartrac.com', $customerName);
+                        $mail->isHTML(true);
+                        $mail->Subject = "nSmartrac: Job Details";
+                        $mail->Body = $this->generateJobScheduledHTML($jobs_id);
+
+                        if(!$mail->Send()) {
+                            echo 'Cannot send email';
+                            exit;
+                        }
+                    }
+
+                    if($input['employee_id']) {
+                        $employee_email = getUserEmail($input['employee_id']);
+                        $mail = email__getInstance();
+                        $mail->FromName = 'NsmarTrac';
+                        //$mail->addAddress($employee_email, $employee_email);
+                        $mail->addAddress('bryann.revina@gmail.com', $employee_email);
+                        $mail->isHTML(true);
+                        $mail->Subject = "nSmartrac: Job Details";
+                        $mail->Body = $this->generateJobScheduledHTML($jobs_id);
+
+                        if(!$mail->Send()) {
+                            echo 'Cannot send email';
+                            exit;
+                        }
+                    }                    
+
+                } else {
+                    $host     = 'smtp.mailtrap.io';
+                    $port     = 2525;
+                    $username = 'd7c92e3b5e901d';
+                    $password = '203aafda110ab7';
+                    $from     = 'noreply@nsmartrac.com';
+
+                    if($customer) {
+                        $mail = new PHPMailer;
+                        $mail->isSMTP();
+                        $mail->Host = $host;
+                        $mail->SMTPAuth = true;
+                        $mail->Username = $username;
+                        $mail->Password = $password;
+                        $mail->SMTPSecure = 'tls';
+                        $mail->Port = $port;
+                        
+
+                        // Sender and recipient settings
+                        $mail->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+                        $customerName = $customer->first_name . " " . $customer->last_name;
+                        $mail->addAddress($customer->email, $customerName);
+
+                        $mail->IsHTML(true);
+                        
+                        $mail->Subject = "nSmartrac: Job Details";
+                        $mail->Body    = $this->generateJobScheduledHTML($jobs_id);  
+                        
+                        if(!$mail->send()){
+                            $is_success = 0;
+                            $msg = 'Cannot send email local.';
+                        }
+                    }
+
+                    if($input['employee_id']) {
+                        $employee_email = getUserEmail($input['employee_id']);
+
+                        $mail2 = new PHPMailer;
+                        $mail2->isSMTP();
+                        $mail2->Host = $host;
+                        $mail2->SMTPAuth = true;
+                        $mail2->Username = $username;
+                        $mail2->Password = $password;
+                        $mail2->SMTPSecure = 'tls';
+                        $mail2->Port = $port;
+                        
+
+                        // Sender and recipient settings
+                        $mail2->setFrom('noreply@nsmartrac.com', 'nSmartrac');
+                        $mail2->addAddress($employee_email, $employee_email);
+
+                        $mail2->IsHTML(true);
+                        
+                        $mail2->Subject = "nSmartrac: Job Details";
+                        $mail2->Body    = $this->generateJobScheduledHTML($jobs_id);  
+                        
+                        if(!$mail2->send()){
+                            $is_success = 0;
+                            $msg = 'Cannot send email local.';
+                        }                        
+                    }                    
+
+                }  
+            }
+        }
+
+        /**
+         * Todo: insert scheduled job mail end 
+         */
+        
+
         $return = [
             'is_success' => $is_success,
             'msg' => $msg,
@@ -3201,6 +3373,24 @@ class Job extends MY_Controller
 
         echo json_encode($return);
     }
+
+    public function generateJobScheduledHTML($job_id)
+    {
+        $jobs_data = $this->jobs_model->get_specific_job($job_id);  
+        $jobs_data_items = $this->jobs_model->get_specific_job_items($job_id);            
+        
+        $subtotal = 0;
+        foreach ($jobs_data_items as $item){            
+            $subtotal += $item->cost;            
+        }
+
+        $job_total_amount = $subtotal + $jobs_data->tax_rate + $jobs_data->adjustment_value + $jobs_data->program_setup + $jobs_data->monthly_monitoring + $jobs_data->installation_cost;        
+
+        $this->page_data['jobs_data'] = $jobs_data;
+        $this->page_data['jobs_data_items'] = $jobs_data_items;
+        $this->page_data['job_total_amount'] = $job_total_amount;
+        return $this->load->view('v2/pages/job/mail-job-schedule-template', $this->page_data, true);
+    }    
 
     public function testController() {
 

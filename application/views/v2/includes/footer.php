@@ -4,7 +4,7 @@
               <div class="row">
                   <div class="col-md-12">
                       <span class="content-subtitle">
-                          <center>Copyright © 2023 nSmarTrac. All rights reserved.</center>
+                          <center>Copyright © <?= date('Y'); ?> nSmarTrac. All rights reserved.</center>
                       </span>
                   </div>
               </div>
