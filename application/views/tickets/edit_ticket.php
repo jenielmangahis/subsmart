@@ -812,7 +812,7 @@ a.btn-primary.btn-md {
 
 <?php echo form_close(); ?>
 <div class="modal fade" id="quick-add-item" tabindex="-1"  aria-labelledby="quickAddServiceTicketLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md" style="margin-top:5%;margin-left:31%;">
+    <div class="modal-dialog modal-lg" style="margin-top:5%;margin-left:31%;">
         <div class="modal-content" style="width:700px !important;">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Items List</span>
