@@ -130,8 +130,6 @@ if (!function_exists('companySignature')) {
     }
 }
 
-
-
 if (!function_exists('userProfileImage')) {
 
     function userProfileImage($id)
@@ -171,6 +169,23 @@ if (!function_exists('userProfilePicture')) {
                 $url = urlUpload('users/default.png');
             }
             return $url;
+        } 
+        
+        return NULL;
+    }
+}
+
+if (!function_exists('userFullName')) {
+
+    
+    function userFullName($id)
+    {
+        $CI = &get_instance();
+        $user = $CI->users_model->getUser($id);
+
+        if ($user->FName) {
+            $full_name = $user->FName . " " . $user->LName;
+            return $full_name;
         } 
         
         return NULL;
