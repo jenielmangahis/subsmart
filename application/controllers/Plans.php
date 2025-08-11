@@ -358,6 +358,33 @@ class Plans extends MY_Controller {
         echo json_encode($return);
     }
 
+	public function ajax_delete_plan()
+	{
+		$this->load->model('Plans_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+		$cid  = logged('company_id');
+        $post = $this->input->post();
+
+		$plan = $this->Plans_model->getByIdAndCompanyId($post['plan_id'], $cid);
+		if( $plan ){
+			$this->Plans_model->delete($post['plan_id']);
+
+			$is_success = 1;
+        	$msg = '';
+
+			//Activity Logs
+			$activity_name = 'Estimate Plans : Deleted plan ' . $plan->plan_name; 
+			createActivityLog($activity_name);
+
+		}
+
+		$return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+	}
+
 }
 
 
