@@ -41,24 +41,20 @@ class Taskhub extends MY_Controller {
 		$cid = logged('company_id');
 		$selected_customer_id = 0;
 
-		$filter = 'All';
+		$status_filter = 'All';
         if( $this->input->get('status') && $this->input->get('cus_id') ){
-			$filter = $this->input->get('status');
+			$status_filter = $this->input->get('status');
 			$selected_customer_id = $this->input->get('cus_id');
 			$task_data = $this->taskhub_model->getAllTasksByCustomerIdAndStatusId($this->input->get('cus_id'), $this->input->get('status'));
 		}else{
 			$filters[] = ['field' => 'is_archived', 'value' => 'No'];
-			if($this->input->get('status') != '' && $this->input->get('status') != 'All') {				
-				$task_data = $this->taskhub_model->getAllByCompanyIdAndStatus($cid, $this->input->get('status'), $filters);	
+			if($this->input->get('status') != '' && $this->input->get('status') != 'All') {		
+				$status_filter = $this->input->get('status');
+				$task_data = $this->taskhub_model->getAllByCompanyIdAndStatus($cid, $status_filter, [], $filters);	
 			} else {
 				$task_data = $this->taskhub_model->getAllByCompanyId($cid, [], $filters);	
 			}
 		}	
-
-		$this->page_data['tasks'] = $task_data;
-		$this->page_data['status'] = $this->input->get('status');
-
-
 
 		$task_status_data[] = 'Backlog';
 		$task_status_data[] = 'Doing';
@@ -67,8 +63,6 @@ class Taskhub extends MY_Controller {
 		$task_status_data[] = 'Review';
 		$task_status_data[] = 'Done';
 		$task_status_data[] = 'Closed';
-		$this->page_data['status_selection'] = $task_status_data;		
-		//$this->page_data['status_selection'] = $this->taskhub_status_model->get();
 
 		$total_backlog    = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Backlog');
 		$total_task_doing = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Doing');
@@ -78,6 +72,9 @@ class Taskhub extends MY_Controller {
 		$total_task_done   = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Done');
 		$total_task_closed = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Closed');
 		
+		$this->page_data['status_selection'] = $task_status_data;
+		$this->page_data['tasks'] = $task_data;
+		$this->page_data['status'] = $this->input->get('status');
 		$this->page_data['total_backlog']           = count($total_backlog);
 		$this->page_data['total_task_doing']        = count($total_task_doing);
 		$this->page_data['total_task_review_fail']  = count($total_task_review_fail);
@@ -85,7 +82,7 @@ class Taskhub extends MY_Controller {
 		$this->page_data['total_task_review']       = count($total_task_review);
 		$this->page_data['total_task_done']         = count($total_task_done);
 		$this->page_data['total_task_closed']       = count($total_task_closed);
-		$this->page_data['filter']					= $filter;
+		$this->page_data['filter']					= $status_filter;
 		$this->page_data['selected_customer_id'] = $selected_customer_id;		
 		$this->load->view('v2/pages/workcalender/taskhub/list', $this->page_data);
 	}
@@ -1128,14 +1125,6 @@ class Taskhub extends MY_Controller {
 				'assigned_employee_ids' => !empty($post_encode_assigned_to) ? $post_encode_assigned_to : json_encode($assigned_to, JSON_NUMERIC_CHECK),
 				'list_id' => $list_id,
 				'status' => $post['status'],
-
-				'subject' => isset($post['subject']) ? $post['subject'] : $post['title'],
-				'description' => $post['ContentFromEditor'],
-				'estimated_date_complete' => !empty($post['estimated_date_complete']) ? date('Y-m-d', strtotime($post['estimated_date_complete'])) : null,
-				'actual_date_complete' => null,
-				'task_color' => null,
-				'status_id' => null, 
-				'prof_id' => $prof_id,
             ];
 
             $taskId = $this->Taskhub_model->create($task_data);
@@ -1525,26 +1514,21 @@ class Taskhub extends MY_Controller {
         	if( $taskHub->status_id == 6 && ($taskHub->status == 'Closed')){
         		$msg = 'Task is already completed!';
         	}else{
-        		$data = ['status_id' => 6, 'date_completed' => date('Y-m-d'), 'status' => 'Closed',];
+        		$data = ['date_completed' => date('Y-m-d'), 'status' => 'Done',];
 	        	$this->Taskhub_model->updateByTaskId($taskHub->task_id, $data);
 
 				//Activity Logs
-				$activity_name = 'Completed Task ' . $taskHub->subject; 
+				$activity_name = 'Taskhub : Completed Task ' . $taskHub->title; 
 				createActivityLog($activity_name);
 
 	        	//SMS Notification
-	        	$taskStatus   = $this->taskhub_status_model->getById(6);
 	        	$taskAssigned = $this->taskhub_participants_model->getIsAssignedByTaskId($taskHub->task_id);
 	        	if( $taskAssigned ){
-	        		createCronAutoSmsNotification($cid, $taskHub->task_id, 'taskhub', $taskStatus->status_text, $taskHub->created_by, $taskAssigned->user_id);
+	        		createCronAutoSmsNotification($cid, $taskHub->task_id, 'taskhub', $taskHub->status, $taskHub->created_by, $taskAssigned->user_id);
 	        	}else{
-	        		createCronAutoSmsNotification($cid, $taskHub->task_id, 'taskhub', $taskStatus->status_text, $taskHub->created_by);
+	        		createCronAutoSmsNotification($cid, $taskHub->task_id, 'taskhub', $taskHub->status, $taskHub->created_by);
 	        	}
-
-				//Activity Logs
-                $activity_name = 'Taskhub : ' . $activity_name; 
-                createActivityLog($activity_name);
-
+				
 	        	$msg = '';
 	        	$is_success = 1;
         	}        	
@@ -1675,10 +1659,11 @@ class Taskhub extends MY_Controller {
         $taskHub = $this->Taskhub_model->getById($post['tsid']);
 
         if( $taskHub && $taskHub->company_id == $cid ){
-			$this->Taskhub_model->deleteByTaskId($taskHub->id);
+			$data = ['is_archived' => 'Yes', 'date_updated' => date("Y-m-d H:i:s")];
+			$this->Taskhub_model->updateByTaskId($taskHub->task_id, $data);
 
 			//Activity Logs
-			$activity_name = 'Taskhub : Deleted task ' . $taskHub->subject; 
+			$activity_name = 'Taskhub : Deleted task ' . $taskHub->title; 
 			createActivityLog($activity_name);
 
         	$msg ='';
@@ -1965,8 +1950,6 @@ class Taskhub extends MY_Controller {
 
 	public function ajax_permanently_delete_selected_tasks()
 	{
-		$this->load->model('Clients_model');
-
 		$is_success = 0;
         $msg    = 'Please select data';
 
@@ -1976,7 +1959,7 @@ class Taskhub extends MY_Controller {
         if( $post['tasks'] ){
             $filters[] = ['field' => 'company_id', 'value' => $company_id];
 			$filters[] = ['field' => 'is_archived', 'value' => 'Yes'];
-            $total_deleted = $this->taskhub_model->bulkDelete($post['users'], $filters);
+            $total_deleted = $this->taskhub_model->bulkDelete($post['tasks'], $filters);
 
 			//Activity Logs
 			$activity_name = 'Taskhub : Permanently deleted ' .$total_deleted. ' task(s)'; 
@@ -1992,6 +1975,150 @@ class Taskhub extends MY_Controller {
         ];
 
         echo json_encode($return);
+	}
+
+	public function ajax_delete_all_archived_tasks()
+	{
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+		$total_archived = $this->taskhub_model->deleteAllArchived($filter);
+
+		//Activity Logs
+		$activity_name = 'Taskhub : Permanently deleted ' .$total_archived. ' task(s)'; 
+		createActivityLog($activity_name);
+
+		$is_success = 1;
+		$msg    = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+	public function ajax_restore_task()
+	{
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $task = $this->taskhub_model->getById($post['task_id']);
+		if( $task && $task->company_id == $company_id ){
+			$data = ['is_archived' => 'No', 'date_updated' => date("Y-m-d H:i:s")];
+			$this->taskhub_model->updateByTaskId($task->task_id, $data);
+
+			//Activity Logs
+			$name = $user->FName . ' ' . $user->LName;
+			$activity_name = 'Taskhub : Restored task ' . $task->title; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+	public function ajax_delete_archived_task()
+	{
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+		$task = $this->taskhub_model->getById($post['task_id']);
+        if( $task && $task->company_id == $company_id ){			
+
+			$this->taskhub_model->deleteByTaskId($task->task_id);
+
+			//Activity Logs
+			$activity_name = 'Users : Permanently deleted task ' . $task->title; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+	public function task_export()
+	{
+		$role_id = logged('role');
+		$cid     = logged('company_id');
+		$tasks = $this->taskhub_model->getAllByCompanyId($cid);
+
+		$delimiter = ",";
+		$time      = time();
+		$filename  = "taskhub_list_" . $time . ".csv";
+
+		$f = fopen('php://memory', 'w');
+
+		$fields = array('Title', 'Assigned to', 'Priority', 'Status', 'Due Date', 'Completion Date', 'Is Archived', 'Date Created');
+		fputcsv($f, $fields, $delimiter);
+
+		if (!empty($tasks)) {
+			foreach ($tasks as $t) {
+				$data_assignees = json_decode($t->assigned_employee_ids);
+
+				$assignees = '---';
+				$a_assignees = [];
+				if( $data_assignees ){
+					foreach($data_assignees as $uid){
+						$user = $this->users_model->getUser($uid);
+						if( $user ){
+							$a_assignees[] = $user->FName . ' ' . $user->LName;
+						}
+					}
+				}
+
+				if( $a_assignees ){
+					$assignees = implode(",", $a_assignees);
+				}
+
+				$csvData = array(
+					$t->title,
+					$assignees,
+					$t->priority,
+					$t->status,
+					$t->date_due != '' ? date("m/d/Y", strtotime($t->date_due)) : '---',
+					$t->date_completed != '' ? date("m/d/Y", strtotime($t->date_completed)) : '---',
+					$t->is_archived,
+					date("m/d/Y H:i:s",strtotime($t->date_created))
+				);
+				fputcsv($f, $csvData, $delimiter);
+			}
+		} else {
+			$csvData = array('');
+			fputcsv($f, $csvData, $delimiter);
+		}
+
+		fseek($f, 0);
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		fpassthru($f);
 	}
 }
 ?>
