@@ -3,7 +3,7 @@ $(document).ready(function() {
 
     $(document).on('change', '#select-all', function(){
         $('.row-select:checkbox').prop('checked', this.checked);  
-        let total= $('input[name="users[]"]:checked').length;
+        let total= $('#tbl-users-list input[name="users[]"]:checked').length;
         if( total > 0 ){
             $('#num-checked').text(`(${total})`);
         }else{
@@ -12,7 +12,7 @@ $(document).ready(function() {
     });
 
     $(document).on('change', '.row-select', function(){
-        let total= $('input[name="users[]"]:checked').length;
+        let total= $('#tbl-users-list input[name="users[]"]:checked').length;
         if( total > 0 ){
             $('#num-checked').text(`(${total})`);
         }else{
@@ -391,7 +391,7 @@ $(document).ready(function() {
                                 confirmButtonText: 'Okay'
                             }).then((result) => {
                                 //if (result.value) {
-                                    location.reload();
+                                    //location.reload();
                                 //}
                             });
                         } else {
