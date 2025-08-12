@@ -145,20 +145,31 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: 'POST',
-                        url: "<?php echo base_url(); ?>plans/delete_plan_v2",
+                        url: base_url + "plans/_delete",
                         data: {
-                            id: plan_id
+                            plan_id: plan_id
                         },
-                        success: function(result) {
-                            Swal.fire({
-                                //title: 'Good job!',
-                                text: "Plan has been deleted successfully.",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            }).then((result) => {
-                                location.reload();
-                            });
+                        dataType:'json',
+                        success: function(o) {
+                            if( o.is_success == 1 ){                   
+                                Swal.fire({                    
+                                    title: 'Delete Plan',
+                                    text: "Data has been deleted successfully.",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            }else{
+                                Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: o.msg
+                                });
+                            }
                         },
                     });
                 }                
