@@ -1855,6 +1855,9 @@ $route['taskhub/_save_taskhub_task'] = 'Taskhub/ajax_save_taskhub_task';
 $route['taskhub/_update_taskhub_task'] = 'Taskhub/ajax_update_taskhub_task';
 $route['taskhub/_archive_selected_tasks'] = 'Taskhub/ajax_archive_selected_tasks';
 $route['taskhub/_change_status_selected_tasks'] = 'Taskhub/ajax_change_status_selected_tasks';
+$route['taskhub/_archived_list'] = 'Taskhub/ajax_archived_list';
+$route['taskhub/_restore_selected_tasks'] = 'Taskhub/ajax_restore_selected_tasks';
+$route['taskhub/_permanently_delete_selected_tasks'] = 'Taskhub/ajax_permanently_delete_selected_tasks';
 
 $route['taskhub/_task_mark_completed'] = 'Taskhub/ajax_complete_task';
 $route['taskhub/_mark_all_completed'] = 'Taskhub/ajax_company_complete_all_tasks';

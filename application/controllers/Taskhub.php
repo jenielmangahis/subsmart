@@ -1921,5 +1921,77 @@ class Taskhub extends MY_Controller {
 
         echo json_encode($return);
     }
+
+	public function ajax_archived_list()
+	{
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+		$filters[] = ['field' => 'is_archived', 'value' => 'Yes'];
+		$tasks = $this->taskhub_model->getAllByCompanyId($company_id, [], $filters);	
+		
+        $this->page_data['tasks'] = $tasks;
+        $this->load->view('v2/pages/workcalender/taskhub/ajax_archive_list', $this->page_data);
+	}
+
+	public function ajax_restore_selected_tasks()
+	{
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['tasks'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archived' => 'No', 'date_updated' => date("Y-m-d H:i:s")];
+            $total_updated = $this->taskhub_model->bulkUpdate($post['tasks'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Taskhub : Restored ' . $total_updated . ' task(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+	public function ajax_permanently_delete_selected_tasks()
+	{
+		$this->load->model('Clients_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['tasks'] ){
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+			$filters[] = ['field' => 'is_archived', 'value' => 'Yes'];
+            $total_deleted = $this->taskhub_model->bulkDelete($post['users'], $filters);
+
+			//Activity Logs
+			$activity_name = 'Taskhub : Permanently deleted ' .$total_deleted. ' task(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 }
 ?>
