@@ -985,7 +985,17 @@
                                 </div>
                             </div>
                         </div>
-
+                        <hr />
+                        <div class="col-sm-12 text-end">
+                            <?php //if($jobs_data->status == 'Draft' || $jobs_data->status == '0' || $jobs_data->status == '') : ?>
+                                <div class="form-check float-start">
+                                    <input class="form-check-input is_email_jobs" id="send_email_on_schedule" name="is_email_jobs" type="checkbox" value="1">
+                                    <label class="form-check-label" for="send_email_on_schedule">
+                                    Send an email after scheduling this job.
+                                    </label>
+                                </div>                                                                                             
+                            <?php //endif; ?>                                                
+                        </div>
                     </div>                            
                 </div>
             
