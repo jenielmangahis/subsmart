@@ -40,8 +40,8 @@
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item btn-restore-task" data-id="<?= $task->task_id; ?>" data-name="<?= $task->title; ?>" href="javascript:void(0);">Restore</a></li>   
-                                <li><a class="dropdown-item btn-permanently-delete-task" data-id="<?= $task->task_id; ?>" data-name="<?= $task->title; ?>" href="javascript:void(0);">Permanently Delete</a></li>   
+                                <li><a class="dropdown-item btn-restore-task" data-id="<?= $task->task_id; ?>" data-title="<?= $task->title; ?>" href="javascript:void(0);">Restore</a></li>   
+                                <li><a class="dropdown-item btn-permanently-delete-task" data-id="<?= $task->task_id; ?>" data-title="<?= $task->title; ?>" href="javascript:void(0);">Permanently Delete</a></li>   
                             </ul>
                         </div>
                         <?php } ?>

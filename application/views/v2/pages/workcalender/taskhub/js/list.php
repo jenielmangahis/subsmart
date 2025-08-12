@@ -13,8 +13,13 @@ $(function(){
     }, 1000));
 
     $('.filter-task').on('click', function(){
-        var task_status = $(this).attr('data-status');
-        location.href = base_url + 'taskhub?status=' + task_status;
+        let task_status = $(this).attr('data-status');
+        if( task_status != 'All' ){
+            location.href = base_url + 'taskhub?status=' + task_status;
+        }else{
+            location.href = base_url + 'taskhub';
+        }
+        
     }); 
 
     $(document).on('change', '#select-all', function(){
@@ -38,6 +43,10 @@ $(function(){
 
     $('#btn-add-task').on('click', function(){
         location.href = base_url + 'taskhub/create';
+    });
+
+    $("#btn-export-list, .btn-export-list").on("click", function() {
+        location.href = base_url + 'taskhub/export_list';
     });
 
     $('#btn-archived, #btn-mobile-archived').on('click', function(){
@@ -283,14 +292,66 @@ $(function(){
             });
         }        
     });
-    
-    $(document).on("click", ".btn-complete-task", function() {
-        let id = $(this).attr('data-id');
-        let title = $(this).attr("data-title");
+
+    $(document).on('click', '#btn-empty-archives', function(){        
+        let total = $('#archived-tasks input[name="tasks[]"]').length;        
+        if( total > 0 ){
+            Swal.fire({
+                title: 'Empty Archived',
+                html: `Are you sure you want to <b>permanently delete</b> <b>${total}</b> archived tasks? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'taskhub/_delete_all_archived_tasks',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Empty Archived',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }else{
+            Swal.fire({                
+                icon: 'error',
+                title: 'Error',              
+                html: 'Archived is empty',
+            });
+        }        
+    });
+
+    $(document).on('click', '.btn-restore-task', function(){
+        let task_id    = $(this).attr('data-id');
+        let task_title = $(this).attr('data-title');
 
         Swal.fire({
-            title: 'Complete Task',
-            text: "Are you sure you want to mark as completed task: " + title + "?",
+            title: 'Restore Task',
+            html: `Are you sure you want to restore task <b>${task_title}</b>?`,
             icon: 'question',
             confirmButtonText: 'Proceed',
             showCancelButton: true,
@@ -299,7 +360,105 @@ $(function(){
             if (result.value) {
                 $.ajax({
                     type: 'POST',
-                    url: "<?php echo base_url('taskhub/_task_mark_completed'); ?>",
+                    url: base_url + 'taskhub/_restore_task',
+                    data: {
+                        task_id: task_id
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-view-archive').modal('hide');
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Restore Task',
+                                html: "Data updated successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.btn-permanently-delete-task', function(){
+        let task_id    = $(this).attr('data-id');
+        let task_title = $(this).attr('data-title');
+
+        Swal.fire({
+            title: 'Delete Task',
+            html: `Are you sure you want to <b>permanently delete</b> task <b>${task_title}</b>? <br/><br/>Note : This cannot be undone.`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + 'taskhub/_delete_archived_task',
+                    data: {
+                        task_id: task_id
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-view-archive').modal('hide');
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Delete Task',
+                                html: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    //location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    });
+    
+    $(document).on("click", ".btn-complete-task", function() {
+        let id = $(this).attr('data-id');
+        let title = $(this).attr("data-title");
+
+        Swal.fire({
+            title: 'Complete Task',
+            html: "Are you sure you want to mark as completed task <b>" + title + "</b>?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "taskhub/_task_mark_completed",
                     dataType: 'json',
                     data: {
                         tsid: id
@@ -308,15 +467,15 @@ $(function(){
                         console.log(result);
                         if (result.is_success == 1) {
                             Swal.fire({
-                                title: 'Update Successful!',
-                                text: "Taskhub data is successfully updated!",
+                                title: 'Complete Task',
+                                text: "Data is successfully updated!",
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
                             }).then((result) => {
-                                if (result.value) {
+                                //if (result.value) {
                                     location.reload();
-                                }
+                                //}
                             });
                         } else {
                             Swal.fire({
@@ -329,6 +488,54 @@ $(function(){
                                 if (result.value) {
                                     location.reload();
                                 }
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    });
+
+    $(document).on("click", ".btn-delete-task", function() {
+        let tsid = $(this).attr('data-id');
+        let title = $(this).attr('data-title');
+
+        Swal.fire({
+            title: 'Delete Task',
+            html: `Are you sure you want to delete task <b>${title}</b>?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "taskhub/_delete_task",
+                    data: {
+                        tsid: tsid
+                    },
+                    dataType: "json",
+                    success: function(result) {
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Delete Task',
+                                text: "Data was successfully deleted.",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Failed',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
                             });
                         }
                     },

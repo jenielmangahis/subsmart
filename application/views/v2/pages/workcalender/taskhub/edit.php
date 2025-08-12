@@ -204,7 +204,7 @@ if (isset($selected_participants)) {
                     </div>
 
                     <div class="col-12 mt-3 text-end">
-                        <button type="button" name="btn_back" class="nsm-button" onclick="location.href='<?php echo url('taskhub') ?>'">Go Back to TaskHub List</button>
+                        <button type="button" name="btn_back" class="nsm-button" onclick="location.href='<?php echo url('taskhub') ?>'">Cancel</button>
                         <button type="submit" name="btn_save" class="nsm-button primary">Save</button>
                     </div>
                 </div>
@@ -405,30 +405,30 @@ if (isset($selected_participants)) {
                 dataString += '&a_to_multiple=' + a_to_multiple;                
 
             let _this = $(this);
-            var url = "<?php echo base_url('taskhub/_update_taskhub_task'); ?>";
+            var url = base_url + "taskhub/_update_taskhub_task";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
             $.ajax({
                 type: 'POST',
                 url: url,
-                data: dataString, //_this.serialize()
+                data: dataString, 
                 success: function(result) {
                     var res = JSON.parse(result);
                     if(res.is_success == 1) {
                         Swal.fire({
-                            title: 'Save Successful!',
-                            text: res.message,
+                            title: 'Update Task',
+                            html: "Data has been updated successfully",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((o) => {
-                            location.href = "<?php echo base_url('taskhub'); ?>";   
+                            location.href = base_url + "taskhub";   
                         });                        
                     } else {
                         Swal.fire({
                         icon: 'error',
-                        title: 'Cannot Update Task',
+                        title: 'Error',
                         text: res.msg
                         }); 
                     }
