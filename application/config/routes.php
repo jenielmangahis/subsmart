@@ -963,6 +963,7 @@ $route['nsmart_plans/delete_plan'] = 'Nsmart_Plans/delete_plan';
 $route['plans/delete'] = 'Plans/delete_plan';
 $route['plans/_create_estimate_plan'] = 'Plans/ajax_create_estimate_plan';
 $route['plans/_update_estimate_plan'] = 'Plans/ajax_update_estimate_plan';
+$route['plans/_delete'] = 'Plans/ajax_delete_plan';
 
 $route['nsmart_addons/index'] = 'Nsmart_Addons/index';
 $route['nsmart_addons/add_new_addon'] = 'Nsmart_Addons/add_new_addon';
@@ -1852,6 +1853,8 @@ $route['taskhub/_add_new_task'] = 'Taskhub/ajax_add_new_task';
 $route['taskhub/_save_task'] = 'Taskhub/ajax_save_task';
 $route['taskhub/_save_taskhub_task'] = 'Taskhub/ajax_save_taskhub_task';
 $route['taskhub/_update_taskhub_task'] = 'Taskhub/ajax_update_taskhub_task';
+$route['taskhub/_archive_selected_tasks'] = 'Taskhub/ajax_archive_selected_tasks';
+$route['taskhub/_change_status_selected_tasks'] = 'Taskhub/ajax_change_status_selected_tasks';
 
 $route['taskhub/_task_mark_completed'] = 'Taskhub/ajax_complete_task';
 $route['taskhub/_mark_all_completed'] = 'Taskhub/ajax_company_complete_all_tasks';

@@ -42,29 +42,23 @@ class Taskhub extends MY_Controller {
 		$selected_customer_id = 0;
 
 		$filter = 'All';
-		$keyword = '';
-        if(!empty(get('search'))) {
-			$keyword = get('search');
-            $this->page_data['search'] = $keyword;
-
-			$task_data = $this->taskhub_model->getCompanyTasksWithFilter($cid,$keyword, $this->input->get('status'), []);
-        } else {
-			if( $this->input->get('status') && $this->input->get('cus_id') ){
-				$filter = $this->input->get('status');
-				$selected_customer_id = $this->input->get('cus_id');
-				$task_data = $this->taskhub_model->getAllTasksByCustomerIdAndStatusId($this->input->get('cus_id'), $this->input->get('status'));
-			}else{
-				if($this->input->get('status') != '' && $this->input->get('status') != 'All') {
-					$filter = $this->input->get('status');
-					$task_data = $this->taskhub_model->getAllByCompanyIdAndStatus($cid, $this->input->get('status'));	
-				} else {
-					$task_data = $this->taskhub_model->getAllByCompanyId($cid);	
-				}
-			}			
-		}
+        if( $this->input->get('status') && $this->input->get('cus_id') ){
+			$filter = $this->input->get('status');
+			$selected_customer_id = $this->input->get('cus_id');
+			$task_data = $this->taskhub_model->getAllTasksByCustomerIdAndStatusId($this->input->get('cus_id'), $this->input->get('status'));
+		}else{
+			$filters[] = ['field' => 'is_archived', 'value' => 'No'];
+			if($this->input->get('status') != '' && $this->input->get('status') != 'All') {				
+				$task_data = $this->taskhub_model->getAllByCompanyIdAndStatus($cid, $this->input->get('status'), $filters);	
+			} else {
+				$task_data = $this->taskhub_model->getAllByCompanyId($cid, [], $filters);	
+			}
+		}	
 
 		$this->page_data['tasks'] = $task_data;
 		$this->page_data['status'] = $this->input->get('status');
+
+
 
 		$task_status_data[] = 'Backlog';
 		$task_status_data[] = 'Doing';
@@ -1864,5 +1858,68 @@ class Taskhub extends MY_Controller {
 
 		echo json_encode($return);
 	}
+
+	public function ajax_archive_selected_tasks()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['tasks'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archived' => 'Yes', 'date_updated' => date("Y-m-d H:i:s")];
+            $total_updated = $this->taskhub_model->bulkUpdate($post['tasks'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Taskhub : Archived ' . $total_updated . ' task(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+	public function ajax_change_status_selected_tasks()
+    {
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['tasks'] ){                                    
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+			if( $post['status'] == 'Done' || $post['status'] == 'Closed' ){
+				$data     = ['status' => $post['status'], 'date_completed' => date("Y-m-d"), 'date_updated' => date("Y-m-d H:i:s")];
+			}else{
+				$data     = ['status' => $post['status'], 'date_updated' => date("Y-m-d H:i:s")];
+			}
+
+            $total_updated = $this->taskhub_model->bulkUpdate($post['tasks'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Taskhub : ' . $total_updated . ' task(s) was changed status to ' . $post['status']; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
 }
 ?>
