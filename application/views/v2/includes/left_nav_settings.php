@@ -186,7 +186,7 @@
                         <i class='bx bx-fw bx-task'></i> Work Orders
                     </a>
                 </li>                        
-                <li class="<?php if ($page->title == 'Tickets') {
+                <li class="<?php if ($page->title == 'Service Tickets') {
                     echo 'selected';
                 } ?>">
                     <a href="<?php echo base_url('customer/ticketslist'); ?>">
@@ -246,7 +246,7 @@
                         <i class='bx bx-fw bx-group'></i> Customer Groups
                     </a>
                 </li>
-                <li class="<?php if ($page->title == 'Leads Manager List') {
+                <li class="<?php if ($page->title == 'Leads') {
                     echo 'selected';
                 } ?>">
                     <a href="<?php echo base_url('customer/leads'); ?>">
@@ -581,13 +581,13 @@
                 <i class='bx bx-fw bx-bar-chart-square'></i> Marketing <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
             </a>
             <ul class="mt-3">                
-                <li class="<?php if ($page->title == 'SMS Blast') {
+                <!-- <li class="<?php if ($page->title == 'SMS Blast') {
                     echo 'selected';
                 } ?>">
                     <a href="<?php echo base_url('sms_campaigns'); ?>">
                         <i class='bx bx-fw bx-chat'></i> SMS Blast
                     </a>
-                </li>
+                </li> -->
                 <li class="<?php if ($page->title == 'Survey Wizard') {
                     echo 'selected';
                 } ?>">
@@ -609,13 +609,13 @@
                         <i class='bx bx-fw bx-envelope'></i> Email Blast
                     </a>
                 </li> -->
-                <li class="<?php if ($page->title == 'Email Broadcast') {
+                <!-- <li class="<?php if ($page->title == 'Email Broadcast') {
                     echo 'selected';
                 } ?>">
                     <a href="<?php echo base_url('email_broadcasts'); ?>">
                         <i class='bx bx-fw bx-envelope'></i> Email Broadcast
                     </a>
-                </li>
+                </li> -->
                 <!-- <li class="<?php if ($page->title == 'Email Automation') {
                     echo 'selected';
                 } ?>">
