@@ -405,13 +405,13 @@ echo 'active';
         <i class='bx bx-fw bx-bar-chart-square'></i> Marketing <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
     </a>
     <ul class="mt-3">        
-        <li class="<?php if ($page->title == 'SMS Blast') {
+        <!-- <li class="<?php if ($page->title == 'SMS Blast') {
             echo 'selected';
         } ?>">
             <a href="<?php echo base_url('sms_campaigns'); ?>">
                 <i class='bx bx-fw bx-chat'></i> SMS Blast
             </a>
-        </li>
+        </li> -->
         <li class="<?php if ($page->title == 'Survey Wizard') {
             echo 'selected';
         } ?>">
@@ -433,13 +433,13 @@ echo 'active';
                 <i class='bx bx-fw bx-envelope'></i> Email Blast
             </a>
         </li> -->
-        <li class="<?php if ($page->title == 'Email Broadcast') {
+        <!-- <li class="<?php if ($page->title == 'Email Broadcast') {
                     echo 'selected';
                 } ?>">
             <a href="<?php echo base_url('email_broadcasts'); ?>">
                 <i class='bx bx-fw bx-envelope'></i> Email Broadcast
             </a>
-        </li>
+        </li> -->
         <!-- <li class="<?php if ($page->title == 'Email Automation') {
             echo 'selected';
         } ?>">
