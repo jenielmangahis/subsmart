@@ -1,12 +1,17 @@
 <?php include viewPath('v2/includes/header'); ?>
-<?php include viewPath('v2/includes/calendar/calendar_modals'); ?>
+<?php include viewPath('v2/includes/taskhub/modals'); ?>
 <style>
 .nsm-profile-name{
   margin-top:9px;  
 }
-.taskhub-list .nsm-badge{
+#taskhub-list .nsm-badge{
     font-size:14px;
-
+}
+.swal2-html-container{
+    overflow:hidden;
+}
+.task-change-status{
+    text-align:left;
 }
 </style>
 <div class="nsm-fab-container">
@@ -156,14 +161,10 @@
                 </div>
  
                 <div class="row">
-
-             
                     <div class="col-12 col-md-4 grid-mb">
-                        <form action="<?php echo base_url('taskhub') ?>" method="get">
-                            <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search task" value="<?php echo (!empty($search)) ? $search : '' ?>">
-                            </div>
-                        </form>
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Task" value="">
+                        </div>
                     </div>   
 
                     <div class="col-12 col-md-8 grid-mb text-end">
@@ -178,47 +179,44 @@
                                 <?php } ?>
                             </ul>
                         </div>
-                        <div class="nsm-page-buttons page-button-container">                            
-                            <?php if( checkRoleCanAccessModule('taskhub', 'write') ){ ?>  
-                            <div class="dropdown d-inline-block">
-                                <input type="hidden" class="nsm-field form-control" id="selected_ids">
+                        <?php if( checkRoleCanAccessModule('taskhub', 'write') ){ ?>  
+                            <div class="dropdown d-inline-block show">
                                 <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                    <span>
-                                        With Selected
-                                    </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                    <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                    <li><a class="dropdown-item dropdown-item-mark-ongoing disabled" href="javascript:void(0);" id="btn-mark-ongoing"><i class='bx bx-fw bx-pen'></i> Mark Ongoing</a></li>                                                               
-                                    <li><a class="dropdown-item dropdown-item-mark-complete disabled" href="javascript:void(0);" id="btn-mark-completed"><i class='bx bx-fw bx-check'></i> Mark Completed</a></li>
-                                    <li><a class="dropdown-item dropdown-item-delete disabled" href="javascript:void(0);" id="btn-delete-tasks"><i class='bx bx-fw bx-trash'></i> Delete</a></li>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item btn-with-selected" id="with-selected-change-status" href="javascript:void(0);" data-action="change-status">Change Status</a></li>   
+                                    <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                                </ul>
+                            </div>
+                        <?php } ?>
+                        <div class="nsm-page-buttons page-button-container">                            
+                            <?php if( checkRoleCanAccessModule('taskhub', 'write') ){ ?>                              
+                            <div class="btn-group nsm-main-buttons">
+                                <button type="button" class="btn btn-nsm" id="btn-add-task"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Task</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                                                    
+                                    <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>                               
+                                    <li><a class="dropdown-item" id="btn-export-list" href="javascript:void(0);">Export</a></li>                               
                                 </ul>
                             </div>
                             <?php } ?>
-                            
-                            <!-- <button name="btn_clear" type="button" class="nsm-button btn-clear-all">
-                                <i class='bx bx-fw bx-check'></i> Clear All
-                            </button> -->
-                            <?php if( checkRoleCanAccessModule('taskhub', 'write') ){ ?>  
-                            <button name="btn_add" type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('taskhub/create'); ?>'">
-                                <i class='bx bx-fw bx-plus'></i> Add New
-                            </button>
-                            <?php } ?>
-                            <!-- <button name="btn_search" type="button" class="nsm-button">
-                                <i class='bx bx-fw bx-search'></i> Search Task
-                            </button> -->
-                            
                         </div>
                     </div>
                 </div>
                 
                 <div class="nsm-widget-table">
-                    <form id="frm-taskhub" method="POST">
-                    <table class="nsm-table taskhub-list">
+                    <form id="frm-with-selected">
+                    <table class="nsm-table" id="taskhub-list">
                         <thead>
                             <tr>
-                                <td class="table-icon text-center">
-                                    <input class="form-check-input table-select select-all-tasks check-input-all-tasks" id="check-input-all-tasks" type="checkbox">
+                                <?php if(checkRoleCanAccessModule('taskhub', 'write')){ ?>
+                                <td class="table-icon text-center sorting_disabled">
+                                    <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                                 </td>
+                                <?php } ?>
                                 <td class="table-icon"></td>
                                 <td data-name="Title" style="width:30%;">Task</td>     
                                 <td data-name="Assigned" style="width:15%;">Assigned To</td>           
@@ -234,17 +232,17 @@
                             <?php if (count($tasks) > 0) : ?>
                                 <?php foreach ($tasks as $key => $row) : ?>
                                     <tr>
-                                        <td>
-                                            <div class="table-row-icon table-checkbox">
-                                                <input class="form-check-input select-one table-select check-input-task" id="check-input-task" name="taskId[]" type="checkbox" value="<?=$row->task_id?>">
-                                            </div>
+                                        <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
+                                        <td class="show">
+                                            <input class="form-check-input row-select table-select" name="tasks[]" type="checkbox" value="<?= $row->task_id; ?>">
                                         </td>
-                                        <td>
+                                        <?php } ?>
+                                        <td class="show">
                                             <div class="table-row-icon">
                                                 <i class='bx bx-task'></i>
                                             </div>
                                         </td>
-                                        <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo url('taskhub/view/' . $row->task_id) ?>'">
+                                        <td class="fw-bold nsm-text-primary default show">
                                             <?php echo $row->title; ?>
                                         </td>   
                                         <td>
@@ -279,7 +277,7 @@
                                                 ?>                                       
                                             </div>                                            
                                         </td>                                       
-                                        <td>
+                                        <td class="nsm-text-primary">
                                             <?php
                                             switch ($row->priority):
                                                 case 'High':
@@ -295,7 +293,7 @@
                                             ?>
                                             <span class="nsm-badge <?= $class_priority ?>"><?php echo ucwords($row->priority); ?></span>
                                         </td>
-                                        <td>
+                                        <td class="nsm-text-primary">
                                         <?php
                                             switch ($row->status):
                                                 case 'Backlog':
@@ -379,7 +377,7 @@
                                 <?php endforeach; ?>
                             <?php else : ?>
                                 <tr>
-                                    <td colspan="9">
+                                    <td colspan="10">
                                         <div class="nsm-empty">
                                             <span>No results found.</span>
                                         </div>
@@ -397,14 +395,6 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $(".nsm-table").nsmPagination({itemsPerPage:10});
-
-        $("#search_field").on("input", debounce(function() {
-            let _form = $(this).closest("form");
-
-            _form.submit();
-        }, 1000));        
-
         <?php if( checkRoleCanAccessModule('taskhub', 'write') ){ ?>  
         $("#btn-mark-completed").on("click", function() {
 
@@ -552,121 +542,8 @@
             });
         });        
         <?php } ?>
-
-        <?php if( checkRoleCanAccessModule('taskhub', 'write') ){ ?>  
-        $(document).on("click", ".btn-complete-task", function() {
-            let id = $(this).attr('data-id');
-            let title = $(this).attr("data-title");
-
-            Swal.fire({
-                title: 'Complete Task',
-                text: "Are you sure you want to mark as completed task: " + title + "?",
-                icon: 'question',
-                confirmButtonText: 'Proceed',
-                showCancelButton: true,
-                cancelButtonText: "Cancel"
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        type: 'POST',
-                        url: "<?php echo base_url('taskhub/_task_mark_completed'); ?>",
-                        dataType: 'json',
-                        data: {
-                            tsid: id
-                        },
-                        success: function(result) {
-                            console.log(result);
-                            if (result.is_success == 1) {
-                                Swal.fire({
-                                    title: 'Update Successful!',
-                                    text: "Taskhub data is successfully updated!",
-                                    icon: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Okay'
-                                }).then((result) => {
-                                    if (result.value) {
-                                        location.reload();
-                                    }
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'An Error Occured',
-                                    text: result.msg,
-                                    icon: 'error',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Okay'
-                                }).then((result) => {
-                                    if (result.value) {
-                                        location.reload();
-                                    }
-                                });
-                            }
-                        },
-                    });
-                }
-            });
-        });
-        <?php } ?>
-
-        <?php if( checkRoleCanAccessModule('taskhub', 'delete') ){ ?>  
-        $(document).on("click", ".btn-delete-task", function() {
-            let id = $(this).attr('data-id');
-            let title = $(this).attr("data-title");
-
-            Swal.fire({
-                title: 'Delete Task',
-                html: "Are you sure you want to delete task: <b>" + title + "</b>?",
-                icon: 'question',
-                confirmButtonText: 'Proceed',
-                showCancelButton: true,
-                cancelButtonText: "Cancel"
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        type: 'POST',
-                        url: "<?php echo base_url('taskhub/_delete_task'); ?>",
-                        dataType: 'json',
-                        data: {
-                            tsid: id
-                        },
-                        success: function(result) {
-                            console.log(result);
-                            if (result.is_success == 1) {
-                                Swal.fire({
-                                    title: 'Delete Successful!',
-                                    text: "Taskhub data is successfully updated!",
-                                    icon: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Okay'
-                                }).then((result) => {
-                                    //if (result.value) {
-                                        location.reload();
-                                    //}
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'An Error Occured',
-                                    text: result.msg,
-                                    icon: 'error',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Okay'
-                                }).then((result) => {
-                                    if (result.value) {
-                                        //location.reload();
-                                    }
-                                });
-                            }
-                        },
-                    });
-                }
-            });
-        });
-        <?php } ?>
-        $('.filter-task').on('click', function(){
-            var task_status = $(this).attr('data-status');
-            location.href = base_url + 'taskhub?status=' + task_status;
-
-        }); 
+        
     });        
 </script>
+<?php include viewPath('v2/pages/workcalender/taskhub/js/list'); ?>
 <?php include viewPath('v2/includes/footer'); ?>

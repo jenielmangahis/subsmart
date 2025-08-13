@@ -42,7 +42,7 @@ if (isset($selected_participants)) {
 ?>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/taskhub_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/calendar_tabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
@@ -67,25 +67,56 @@ if (isset($selected_participants)) {
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-card primary">
+                            <div class="nsm-card-header">
+                                <div class="nsm-card-title">
+                                    <span>Task Info</span>
+                                </div>
+                            </div>
                             <div class="nsm-card-content">
                                 <div class="row g-3">
                                     <div class="col-12 col-md-4">
-                                        <?php if ((set_value('title') == '') && (isset($task))) {
-                                            $title = $taskHub->title;
+                                        <?php if ((set_value('subject') == '') && (isset($task))) {
+                                            $subject = $taskHub->subject;
                                         } else {
-                                            $title = set_value('title');
+                                            $subject = set_value('subject');
                                         } ?>
-                                        <label class="content-subtitle fw-bold d-block mb-2">Title</label>
-                                        <input type="text" name="title" class="nsm-field form-control" value="<?= $title ?>" required>
+                                        <label class="content-subtitle fw-bold d-block mb-2">Subject</label>
+                                        <input type="text" name="subject" class="nsm-field form-control" value="<?= $subject ?>" required>
+                                    </div>
+
+                                    <div class="col-12 col-md-4">
+                                        <label class="content-subtitle fw-bold d-block mb-2">Customer <small>(optional)</small></label>
+                                        <select class="nsm-field form-select" name="customer_id" id="customer_id">
+                                            <?php if ($customer) { ?>
+                                                <option value="<?= $customer->prof_id; ?>"><?= $customer->first_name . ' ' . $customer->last_name; ?></option>
+                                            <?php } ?>
+                                            <?php if ($task) { ?>
+                                                <option value="<?= $taskHub->prof_id; ?>"><?= $taskHub->customer_name; ?></option>
+                                            <?php } ?>
+                                        </select>
                                     </div>
 
                                     <?php if (isset($status_selection)) { ?>
                                         <div class="col-12 col-md-4">
                                             <label class="content-subtitle fw-bold d-block mb-2">Status</label>
                                             <select name="status" id="status-select" class="nsm-field form-select status-select">
-                                                <?php foreach($status_selection as $status) { ?>
-                                                    <option <?php echo $status == $taskHub->status ? 'selected="selected"' : ''; ?> value="<?php echo $status; ?>"><?php echo $status; ?></option>
-                                                <?php } ?>
+                                                <?php
+                                                if ((empty(set_value('status'))) && (isset($task))) {
+                                                    $sel_status = $taskHub->status_id;
+                                                } else {
+                                                    $sel_status = set_value('status');
+                                                }
+
+                                                foreach ($status_selection as $row) {
+                                                    $tag = '';
+                                                    $sfx = '';
+                                                    if ($row->status_id == $sel_status) {
+                                                        $tag = ' selected';
+                                                        $sfx = ' - Current';
+                                                    }
+                                                    echo '<option value="' . $row->status_id . '"' . $tag . '>' . $row->status_text . $sfx . '</option>';
+                                                }
+                                                ?>
                                             </select>
                                         </div>
                                     <?php } ?>
@@ -110,15 +141,13 @@ if (isset($selected_participants)) {
                                                         $hidden = '';
                                                         echo '<option value="' . $row->id . '"' . $tag . $hidden . '>' . $row->name . '</option>';
                                                     }*/
-                                                    /*if (set_value('assigned_to') != '') {
+                                                    if (set_value('assigned_to') != '') {
                                                         $sel_assigned_to = set_value('assigned_to');
-                                                    }*/                                                 
+                                                    }                                                   
                                                 ?>
-                                            </select> -->                                                                                     
-                                            <select name="assigned_to" id="taskhub-user-id" class="nsm-field mb-2 form-control" multiple="multiple" required="">     
-                                                <?php foreach($default_assigned_users as $assigned_id => $assigned_name) { ?>
-                                                        <option value="<?php echo $assigned_id; ?>" selected="selected"><?php echo $assigned_name; ?></option> 
-                                                <?php } ?>                        
+                                            </select> -->                                                                                       
+                                            <select name="assigned_to" id="taskhub-user-id" class="nsm-field mb-2 form-control" required="">      
+                                                <option value="0" selected="selected">My Self</option>                                          
                                             </select>
                                         </div>
                                     <?php } ?>
@@ -164,38 +193,39 @@ if (isset($selected_participants)) {
                                     <div class="col-12 col-md-4">
                                         <?php
                                         $date = date("m/d/Y");
-                                        if (isset($taskHub->date_due)) {                                            
-                                            $date = date("m/d/Y",strtotime($taskHub->date_due));
+                                        if (isset($taskHub->estimated_date_complete)) {                                            
+                                            $date = date("m/d/Y",strtotime($taskHub->estimated_date_complete));
                                         }
                                         ?>
-                                        <label class="content-subtitle fw-bold d-block mb-2">Due Date</label>
-                                        <input type="text" name="date_due" class="nsm-field form-control due-date-datepicker" id="due-date-datepicker" value="<?= $date ?>" required>
+                                        <label class="content-subtitle fw-bold d-block mb-2">Estimated Date of Completion</label>
+                                        <input type="text" name="estimated_date_complete" class="nsm-field form-control estimate-date-complete-datepicker" id="estimate-date-complete-datepicker" value="<?= $date ?>" required>
                                     </div>
 
                                     <div class="col-12 col-md-4">
-                                            <label class="content-subtitle fw-bold d-block mb-2">Select a group for this task</label>
-                                            <select name="group" id="group-select" class="nsm-field form-select group-select" required>
-                                                <option value="0">Select a Group</option>
-                                                <?php foreach($taskslists as $row) { ?>
-                                                    <option <?php echo $taskHub->list_id == $row->id ? 'selected="selected"' : ''; ?> value="<?php echo $row->id; ?>"><?php echo $row->name; ?></option>
-                                                <?php } ?>
-                                            </select>
-                                    </div>                                  
+                                        <?php
+                                        $date = date("m/d/Y");
+                                        if (isset($taskHub->date_started)) {                                            
+                                            $date_started = date("m/d/Y",strtotime($taskHub->date_started));
+                                        }
+                                        ?>
+                                        <label class="content-subtitle fw-bold d-block mb-2">Date Started</label>
+                                        <input type="text" name="date_started" class="nsm-field form-control date-started-datepicker" value="<?= $date_started ?>" required>
+                                    </div>                                    
 
                                     <div class="col-12">
-                                        <label class="content-subtitle fw-bold d-block mb-2">Notes</label>
-                                        <textarea name="notes" class="nsm-field form-control ckeditortaskhub" id="ckeditortaskhub" placeholder="Enter Notes" required>
-                                            <?php
-                                                if ((set_value('notes') == '') && (isset($taskHub))) {
-                                                    if(!empty($taskHub->notes)) {
-                                                        echo $taskHub->notes;
-                                                    } else {
-                                                        echo $taskHub->description;
-                                                    }
-                                                } else {
-                                                    echo set_value('notes');
-                                                }
-                                            ?>
+                                        <label class="content-subtitle fw-bold d-block mb-2">Description</label>
+                                        <textarea name="description" class="nsm-field form-control ckeditortaskhub" id="ckeditortaskhub" placeholder="Enter Description" required>
+                                        <?php
+                                        if ((set_value('description') == '') && (isset($taskHub))) {
+                                            if(!empty($taskHub->notes)) {
+                                                echo $taskHub->notes;
+                                            } else {
+                                                echo $taskHub->description;
+                                            }
+                                        } else {
+                                            echo set_value('description');
+                                        }
+                                        ?>
                                         </textarea>
                                     </div>
                                 </div>
@@ -204,7 +234,7 @@ if (isset($selected_participants)) {
                     </div>
 
                     <div class="col-12 mt-3 text-end">
-                        <button type="button" name="btn_back" class="nsm-button" onclick="location.href='<?php echo url('taskhub') ?>'">Cancel</button>
+                        <button type="button" name="btn_back" class="nsm-button" onclick="location.href='<?php echo url('taskhub') ?>'">Go Back to TaskHub List</button>
                         <button type="submit" name="btn_save" class="nsm-button primary">Save</button>
                     </div>
                 </div>
@@ -249,9 +279,9 @@ if (isset($selected_participants)) {
             minimumInputLength: 0,
             templateResult: formatRepoUser,
             templateSelection: formatRepoSelectionUser,
-            /*initSelection: function(element, callback) {
+            initSelection: function(element, callback) {
                 callback({id: default_assigned_to, text: default_assigned_to_text });
-            }*/
+            }
         });  
 
     });
@@ -263,7 +293,7 @@ if (isset($selected_participants)) {
         }
         $('#participants').children('option[value="' + prev_assigned_to + '"]').prop('hidden', true);
 
-        $('#due-date-datepicker').datepicker({
+        $('#estimate-date-complete-datepicker').datepicker({
             format: 'mm/dd/yyyy',
             autoclose: true,
         });     
@@ -398,37 +428,35 @@ if (isset($selected_participants)) {
         $("#taskhub_entry").on("submit", function(e) {            
             e.preventDefault();
 
-            var a_to_multiple = $("#taskhub-user-id").val();
             var ContentFromEditor = CKEDITOR.instances.ckeditortaskhub.getData();
             var dataString = $("#taskhub_entry").serialize();
-                dataString += '&ContentFromEditor='+ContentFromEditor;   
-                dataString += '&a_to_multiple=' + a_to_multiple;                
+                dataString += '&ContentFromEditor='+ContentFromEditor;              
 
             let _this = $(this);
-            var url = base_url + "taskhub/_update_taskhub_task";
+            var url = "<?php echo base_url('taskhub/_update_taskhub_task'); ?>";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
             $.ajax({
                 type: 'POST',
                 url: url,
-                data: dataString, 
+                data: dataString, //_this.serialize()
                 success: function(result) {
                     var res = JSON.parse(result);
                     if(res.is_success == 1) {
                         Swal.fire({
-                            title: 'Update Task',
-                            html: "Data has been updated successfully",
+                            title: 'Save Successful!',
+                            text: res.message,
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((o) => {
-                            location.href = base_url + "taskhub";   
+                            location.href = "<?php echo base_url('taskhub'); ?>";   
                         });                        
                     } else {
                         Swal.fire({
                         icon: 'error',
-                        title: 'Error',
+                        title: 'Cannot Update Task',
                         text: res.msg
                         }); 
                     }

@@ -354,11 +354,17 @@ class Taskhub_model extends MY_Model {
         return $options;
     }
 
-    public function getAllByCompanyId($cid, $date_range = [])
+    public function getAllByCompanyId($cid, $date_range = [], $filters = [])
     {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $cid);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
 
         if( !empty($date_range) ){
             $date_start = $date_range['from'] . ' 00:00:00';
@@ -366,6 +372,8 @@ class Taskhub_model extends MY_Model {
             $this->db->where("date_created >= ", $date_start);
             $this->db->where("date_created <= ", $date_end);
         }
+
+        $this->db->order_by('task_id','DESC');
 
         $query = $this->db->get();
         return $query->result();
@@ -406,12 +414,18 @@ class Taskhub_model extends MY_Model {
         return $query->result();
     }  
 
-    public function getAllByCompanyIdAndStatus($cid, $status, $date_range = [])
+    public function getAllByCompanyIdAndStatus($cid, $status, $date_range = [], $filters = [])
     {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $cid);
         $this->db->where('status', $status);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
 
         if( !empty($date_range) ){
             $date_start = $date_range['from'] . ' 00:00:00';
@@ -446,5 +460,49 @@ class Taskhub_model extends MY_Model {
     public function deleteByTaskListId($task_id){
         $this->db->delete($this->table_task_list, array('tasks_lists.id' => $task_id));
     }
-        
+
+    public function bulkUpdate($ids = [], $data = [], $filters = [])
+    {
+        $this->db->where_in('task_id', $ids);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->update($this->table, $data);
+        return $this->db->affected_rows();
+    }     
+    
+    public function bulkDelete($ids = [], $filters = [])
+    {
+        if( count($ids) > 0 ){
+            $this->db->where_in('task_id', $ids);
+
+            if( $filters ){
+                foreach( $filters as $filter ){
+                    $this->db->where($filter['field'], $filter['value']);
+                }
+            }
+
+            $this->db->delete($this->table);
+        }        
+
+        return $this->db->affected_rows();
+    }
+
+    public function deleteAllArchived($filters = [])
+    {
+        $this->db->where('is_archived', 'Yes');
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->delete($this->table);
+        return $this->db->affected_rows();
+    }
 }
