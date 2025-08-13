@@ -172,7 +172,7 @@ echo 'active';
                 <i class='bx bx-fw bx-task'></i> Work Orders
             </a>
         </li>                        
-        <li class="<?php if ($page->title == 'Tickets') {
+        <li class="<?php if ($page->title == 'Service Tickets') {
             echo 'selected';
         } ?>">
             <a href="<?php echo base_url('customer/ticketslist'); ?>">
@@ -227,7 +227,7 @@ echo 'active';
                 <i class='bx bx-fw bx-group'></i> Customer Groups
             </a>
         </li>
-        <li class="<?php if ($page->title == 'Leads Manager List') {
+        <li class="<?php if ($page->title == 'Leads') {
             echo 'selected';
         } ?>">
             <a href="<?php echo base_url('customer/leads'); ?>">

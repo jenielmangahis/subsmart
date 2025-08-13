@@ -8,16 +8,16 @@
 </style>
 <!-- New Customer Modal -->
 <div class="modal fade nsm-modal" id="quick-add-customer" role="dialog" data-bs-backdrop="static" aria-labelledby="newcustomerLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header mb-0">
                 <span id="newcustomerLabel" class="modal-title content-title">Add New Customer</span>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
-            </div>
-            <form id="frm-quick-add-customer">
-                <input type="hidden" id="target-id-dropdown" value="" />
-                <input type="hidden" id="origin-modal-id" value="" />
-                <div class="modal-body">                     
+            </div>            
+            <div class="modal-body">                     
+                <form id="frm-quick-add-customer">
+                    <input type="hidden" id="target-id-dropdown" value="" />
+                    <input type="hidden" id="origin-modal-id" value="" />
                     <div class="row">  
                         <div class="col-md-12">
                             <div class="nsm-card primary" style="overflow-y:auto;max-height:600px;">                                
@@ -43,13 +43,13 @@
                     <div class="row mt-2">
                         <div class="col-12">
                             <div class="d-flex justify-content-end">
-                                <button type="submit" class="nsm-button primary" id="btn-quick-add-customer">Save</button>
+                                <button type="submit" class="nsm-button primary" id="btn-quick-add-customer" form="frm-quick-add-customer">Save</button>
                                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
