@@ -223,9 +223,17 @@ a.btn-primary.btn-md {
 }
 </style>
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">
-        <i class="bx bx-note"></i>
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
+        <i class="bx bx-plus"></i>
     </div>
+    <ul class="nsm-fab-options">        
+        <li onclick="location.href='<?= base_url('customer/ticketslist'); ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-fw bx-message-square-error"></i>
+            </div>
+            <span class="nsm-fab-label">List Service Ticket</span>
+        </li>     
+    </ul>   
 </div>
 <input type="hidden" id="siteurl" value="<?=base_url();?>">
 <div class="row page-content g-0">
@@ -806,11 +814,11 @@ a.btn-primary.btn-md {
                                     <table id="quick-add-items-list" class="nsm-table">
                                         <thead>
                                         <tr>
-                                            <td data-name="Add" style="width: 5% !important;"></td>
-                                            <td data-name="Name"><strong>Name</strong></td>
-                                            <td data-name="Type"><strong>Type</strong></td>
-                                            <td data-name="Qty"><strong>Stock</strong></td>
-                                            <td data-name="Price" style="text-align:right;"><strong>Price</strong></td>                                    
+                                            <td class="show" data-name="Add" style="width: 5% !important;"></td>
+                                            <td class="show" data-name="Name"><strong>Name</strong></td>
+                                            <td class="show" data-name="Type"><strong>Type</strong></td>
+                                            <td class="show" data-name="Qty"><strong>Stock</strong></td>
+                                            <td class="show" data-name="Price" style="text-align:right;"><strong>Price</strong></td>                                   
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -818,13 +826,13 @@ a.btn-primary.btn-md {
                                             <?php $item_qty = get_total_item_qty($item->id); ?>
                                             <?php //if ($item_qty[0]->total_qty > 0) { ?>
                                                 <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
-                                                    <td class="nsm-text-primary">
-                                                        <button type="button" data-bs-dismiss="modal" class='nsm nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
+                                                    <td class="nsm-text-primary show">
+                                                        <button type="button"  data-bs-dismiss="modal" class='nsm nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="1" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
                                                     </td>
-                                                    <td class="show fw-bold nsm-text-primary"><?php echo $item->title; ?></td>
-                                                    <td class="nsm-text-primary"><?php echo $item->type; ?></td>
-                                                    <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : "0"; ?></td>
-                                                    <td style="text-align:right;"><?php echo $item->price; ?></td>                                            
+                                                    <td class="nsm-text-primary show"><?php echo $item->title; ?></td>
+                                                    <td class="nsm-text-primary show"><?php echo $item->type; ?></td>
+                                                    <td class="show"><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : "0"; ?></td>
+                                                    <td class="show" style="text-align:right;"><?php echo $item->price; ?></td>                                            
                                                 </tr>
                                             <?php //} ?>
                                         <?php } ?>
