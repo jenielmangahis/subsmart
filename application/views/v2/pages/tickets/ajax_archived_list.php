@@ -23,7 +23,6 @@
             </td>
             <td class="table-icon"></td>
             <td data-name="Name">Service Ticket Number</td>
-            <td data-name="Name">Date Deleted</td>
             <td data-name="Action" style="width:5%;"></td>                
         </tr>
     </thead>
@@ -36,7 +35,6 @@
                     </td>
                     <td><div class="table-row-icon"><i class="bx bx-receipt"></i></div></td>
                     <td class="nsm-text-primary"><?= $ticket->ticket_no; ?></td>
-                    <td class="nsm-text-primary" style="width:25%;"><?= date("m/d/Y G:i A", strtotime($ticket->archived_date)); ?></td>
                     <td style="width:5%;">
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
