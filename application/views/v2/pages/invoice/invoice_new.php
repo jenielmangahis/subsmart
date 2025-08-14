@@ -201,7 +201,7 @@
                     </div>
                 </div>
                 <form id="frm-with-selected">
-                    <table class="nsm-table">
+                    <table class="nsm-table" id="tbl-invoices">
                         <thead>
                             <tr>
                                 <?php if(checkRoleCanAccessModule('invoices', 'write')){ ?>
@@ -374,21 +374,23 @@
             
             <!-- Modal Record Payment -->
             <div class="modal fade nsm-modal fade" id="modalRecordPaymentForm" tabindex="-1" aria-labelledby="modalRecordPaymentForm_label" aria-hidden="true">
-                <div class="modal-dialog modal-md">
-                    <form id="frm-record-payment" method="POST">
-                        <input type="hidden" name="invoice_id" id="record_payment_invoice_id" value="" />
-                        <div class="modal-content" style="width:560px;">
-                            <div class="modal-header">
-                                <span class="modal-title content-title">Record Payment</span>
-                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                            </div>
-                            <div class="modal-body"></div>
-                            <div class="modal-footer">                    
-                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" id="btn-record-payment" class="nsm-button primary">Save</button>
-                            </div>
+                <div class="modal-dialog modal-md modal-dialog-centered">                    
+                    <div class="modal-content" style="width:580px;">
+                        <div class="modal-header">
+                            <span class="modal-title content-title">Record Payment</span>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                         </div>
-                    </form>
+                        <div class="modal-body">
+                            <form id="frm-record-payment" method="POST">
+                                <input type="hidden" name="invoice_id" id="record_payment_invoice_id" value="" />
+                                <div id="record-payment-container"></div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">                    
+                            <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" id="btn-record-payment" class="nsm-button primary" form="frm-record-payment">Save</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -481,8 +483,8 @@
     $(document).ready(function() {
 
         $(document).on('change', '#select-all', function(){
-            $('.row-select:checkbox').prop('checked', this.checked);  
-            let total= $('input[name="invoice[]"]:checked').length;
+            $('#tbl-invoices .row-select:checkbox').prop('checked', this.checked);  
+            let total= $('#tbl-invoices input[name="invoice[]"]:checked').length;
             if( total > 0 ){
                 $('#num-checked').text(`(${total})`);
             }else{
@@ -491,7 +493,7 @@
         });
 
         $(document).on('change', '.row-select', function(){
-            let total= $('input[name="invoice[]"]:checked').length;
+            let total= $('#tbl-invoices input[name="invoice[]"]:checked').length;
             if( total > 0 ){
                 $('#num-checked').text(`(${total})`);
             }else{
@@ -920,7 +922,7 @@
                 });   
             }else{
                 $('#modalRecordPaymentForm').modal('show');
-                showLoader($("#modalRecordPaymentForm .modal-body")); 
+                showLoader($("#modalRecordPaymentForm #record-payment-container")); 
                 $('#record_payment_invoice_id').val(invoice_id);
 
                 $.ajax({
@@ -930,7 +932,7 @@
                         invoice_id: invoice_id
                     },
                     success: function (response) {
-                        $("#modalRecordPaymentForm .modal-body").html(response);
+                        $("#modalRecordPaymentForm #record-payment-container").html(response);
                     },
                 });
             }
