@@ -1,5 +1,5 @@
 <?php include viewPath('v2/includes/header'); ?>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-bs5/1.13.1/dataTables.bootstrap5.min.css">
 <script src="https://cdn.datatables.net/2.0.6/js/dataTables.js"></script>
 <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 <style>
@@ -350,7 +350,7 @@
                     $('.addPresetModal').modal('hide');
                     addPresetData.find("input").val(null);
                     CKEDITOR.instances.addResponseContent.setData('');
-                    quickresponse_table.ajax.reload();
+                    quickresponse_table.ajax.reload(null, false);
                     formDisabler(addPresetData, false);
                     CKEDITOR.instances.addResponseContent.setReadOnly(false);
                 }
@@ -397,7 +397,7 @@
                         success: function(response) {
                             Swal.close();
                             $('.editPresetModal').modal('hide');
-                            quickresponse_table.ajax.reload();
+                            quickresponse_table.ajax.reload(null, false);
                             formDisabler(editPresetData, false);
                             CKEDITOR.instances.editResponseContent.setReadOnly(false);
                         }
@@ -460,7 +460,7 @@
                         success: function(response) {
                             Swal.close();
                             console.log(response);
-                            quickresponse_table.ajax.reload();
+                            quickresponse_table.ajax.reload(null, false);
                         }
                     });
                 }

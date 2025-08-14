@@ -647,7 +647,7 @@
             });
         });        
 
-        $(document).on('click', '#btn-empty-item-archives', function(){        
+        $(document).on('click', '#btn-empty-item-archives', function(){       
             let total_records = $('#archived-items input[name="archived_items[]"]').length;                         
             if( total_records > 0 ){
                 Swal.fire({

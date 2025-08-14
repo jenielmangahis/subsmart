@@ -593,7 +593,7 @@
 <div class="modal fade duplicateRemoverModal" aria-modal="true"  role="dialog">
     <div class="modal-dialog modal-fullscreen modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-body"><span class="duplicateManagementContentLoader">Please wait while fetching duplicates...</span></div>
+            <div class="modal-body"><span class="duplicateManagementContentLoader">Please wait while fetching the tool content...</span></div>
         </div>
     </div>
 </div>
@@ -612,7 +612,7 @@
                 <div class="modal-title content-title" style="font-size: 17px;"><i class="fas fa-history"></i>&nbsp;&nbsp;Update History</div>
                 <i class="fas fa-times" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
-            <div class="modal-body"></div>
+            <div class="modal-body pt-2"></div>
         </div>
     </div>
 </div>

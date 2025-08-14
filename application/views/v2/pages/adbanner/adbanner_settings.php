@@ -1,5 +1,5 @@
 <?php include viewPath('v2/includes/header'); ?>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-bs5/1.13.1/dataTables.bootstrap5.min.css">
 <script src="https://cdn.datatables.net/2.0.6/js/dataTables.js"></script>
 <style>
     .fw-xnormal {
@@ -339,7 +339,7 @@
                     if (response.success) {
                         $('#addBannerForm')[0].reset();
                         $('.addBannerModal').modal('hide'); 
-                        bannerlist_table.ajax.reload();
+                        bannerlist_table.ajax.reload(null, false);
                         Swal.fire({
                             icon: "success",
                             title: "Entry Saved!",
@@ -394,7 +394,7 @@
                 },
                 success: function (response) {
                     if (response.success) {
-                        bannerlist_table.ajax.reload();
+                        bannerlist_table.ajax.reload(null, false);
                         $('.editBannerModal').modal('hide'); 
                         Swal.fire({
                             icon: "success",
@@ -482,7 +482,7 @@
                         data: "id=" + presetID,
                         dataType: "JSON",
                         success: function (response) {
-                            bannerlist_table.ajax.reload();
+                            bannerlist_table.ajax.reload(null, false);
                             Swal.fire({
                                 icon: "success",
                                 title: "Banner Removed!",

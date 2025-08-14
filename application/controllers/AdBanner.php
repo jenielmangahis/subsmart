@@ -57,6 +57,16 @@ class AdBanner extends MY_Controller
             if ($getDatas->company_id == $company_id) {
                 
                 $duration = isset($duration_alias[$getDatas->duration]) ? $duration_alias[$getDatas->duration] : $getDatas->duration;
+                $menuActions = "
+                    <div class='dropdown'>
+                        <button class='btn dropdown-toggle text-muted' type='button' id='checkMenuButton' data-bs-toggle='dropdown' aria-expanded='false'><i class='fas fa-ellipsis-v'></i></button>
+                        <ul class='dropdown-menu' aria-labelledby='checkMenuButton'>
+                            <li><a class='dropdown-item viewBannerFileButton' href='javascript:void(0);' data-id='$getDatas->id' data-filename='$getDatas->file' data-bs-toggle='modal' data-bs-target='.viewBannerFileModal'>View</a></li>
+                            <li><a class='dropdown-item editBannerButton' href='javascript:void(0);' data-id='$getDatas->id'>Edit</a></li>
+                            <li><a class='dropdown-item removeBannerButton' href='javascript:void(0);' data-id='$getDatas->id' data-title='$getDatas->title'>Delete</a></li>
+                        </ul>
+                    </div>
+                ";
 
                 $data[] = array(
                     $getDatas->title,
@@ -64,11 +74,7 @@ class AdBanner extends MY_Controller
                     "<code>$getDatas->link</code>",
                     $getDatas->url_alias,
                     $duration,
-                    "<div class='btn-group' role='group' style='height: 28px;'>
-                        <button style='color: #00000085; font-weight: 600; font-size: smaller; border: 1px solid #00000021 !important;' class='text-nowrap viewBannerFileButton' data-id='$getDatas->id' data-filename='$getDatas->file' data-bs-toggle='modal' data-bs-target='.viewBannerFileModal'><i class='fas fa-eye'></i> VIEW</button>
-                        <button style='color: #0000ff8c; font-weight: 600; font-size: smaller; border: 1px solid #00000021 !important;' class='text-nowrap editBannerButton' data-id='$getDatas->id' data-bs-toggle='modal' data-bs-target='.editPresetModal'><i class='fas fa-edit'></i> EDIT</button>
-                        <button style='color: #ff00008c; font-weight: 600; font-size: smaller; border: 1px solid #00000021 !important;' class='text-nowrap removeBannerButton' data-id='$getDatas->id' data-title='$getDatas->title'><i class='fas fa-trash'></i> REMOVE</button>
-                    </div>",
+                    $menuActions,
                 );
                 $i++;
             }

@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-12 col-md-12 grid-mb text-end">
-    <?php //if(checkRoleCanAccessModule('invoice', 'delete')){ ?>
+    <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>
         <div class="dropdown d-inline-block">
             <button type="button" class="nsm-button primary" id="btn-empty-item-archives">Empty Archived</button>
             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
@@ -11,18 +11,18 @@
                 <li><a class="dropdown-item btn-with-selected" id="with-selected-permanent-delete" href="javascript:void(0);" data-action="delete">Permanent Delete</a></li>                              
             </ul>
         </div>   
-    <?php //} ?>          
+    <?php } ?>          
     </div>
 </div>
 <form id="frm-with-selected-archived">
     <table class="nsm-table archived-items" id="archived-items">
         <thead>
             <tr>
-                <?php //if(checkRoleCanAccessModule('invoice', 'delete')){ ?>
+                <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>
                 <td class="table-icon text-center sorting_disabled">
                     <input class="form-check-input select-all-archived table-select" type="checkbox" name="id_selector" value="0" id="select-all-archived">
                 </td>
-                <?php //} ?>            
+                <?php } ?>            
                 <td data-name="Item">Item</td>
                 <td data-name="Model">Model</td>
                 <td data-name="Brand">Brand</td>
@@ -34,14 +34,17 @@
             <?php if ($items) { ?>
                 <?php foreach($items as $item){ ?>
                     <tr>
+                        <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>
                         <td>
                             <input class="form-check-input row-select-archived table-select" name="archived_items[]" type="checkbox" value="<?= $item->id; ?>">
                         </td>
+                        <?php } ?>
                         <td class="nsm-text-primary"><?= $item->title; ?></td>
                         <td class="nsm-text-primary"><?= $item->model != null ? $item->model : '---'; ?></td>
                         <td class="nsm-text-primary"><?= $item->brand != null ? $item->brand : '---'; ?></td>
                         <td class="nsm-text-primary"><?= $item->price != null ? $item->price : '---'; ?></td>
                         <td style="width:5%;">
+                            <?php if(checkRoleCanAccessModule('inventory', 'write')){ ?>
                             <div class="dropdown table-management">
                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                 <ul class="dropdown-menu dropdown-menu-end">
@@ -49,6 +52,7 @@
                                     <li><a class="dropdown-item btn-permanent-delete-item" data-id="<?= $item->id; ?>" data-title="<?= $item->title; ?>" href="javascript:void(0);"><i class='bx bx-trash'></i> Permanent Delete</a></li>     
                                 </ul>
                             </div>
+                            <?php } ?>
                         </td>
                     </tr>
                 <?php } ?>

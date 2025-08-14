@@ -2334,3 +2334,21 @@ $route['customer_deals/export'] = 'CustomerDeal/exportData';
 //Customer Other Address
 $route['customer/_other_address'] = 'Customer/ajax_other_address';
 $route['customer/_quick_add_other_address'] = 'Customer/ajax_quick_add_other_address';
+
+// Accounting Check v2
+$route['accounting/v2/check']['GET'] = 'accounting_controllers/v2/Check/index';
+$route['accounting/v2/check/getChecksServerside']['POST'] = 'accounting_controllers/v2/Check/getChecksServerside';
+$route['accounting/v2/check/getRecentChecksServerside']['POST'] = 'accounting_controllers/v2/Check/getChecksServerside';
+$route['accounting/v2/check/updateAccountCategory']['POST'] = 'accounting_controllers/v2/Check/updateAccountCategory';
+$route['accounting/v2/check/getAccountDetails/(:any)']['POST'] = 'accounting_controllers/v2/Check/getAccountDetails/$1';
+$route['accounting/v2/check/getPayeeDetails/(:any)']['POST'] = 'accounting_controllers/v2/Check/getPayeeDetails/$1';
+$route['accounting/v2/check/getTagDetails']['POST'] = 'accounting_controllers/v2/Check/getTagDetails';
+$route['accounting/v2/check/getItemDetails/(:any)']['POST'] = 'accounting_controllers/v2/check/getItemDetails/$1';
+$route['accounting/v2/check/getLastSettings']['POST'] = 'accounting_controllers/v2/Check/getLastSettings';
+$route['accounting/v2/check/checkAddModal']['POST'] = 'accounting_controllers/v2/Check/checkAddModal';
+$route['accounting/v2/check/checkEditModal']['POST'] = 'accounting_controllers/v2/Check/checkEditModal';
+$route['accounting/v2/check/addCheck']['POST'] = 'accounting_controllers/v2/Check/addCheck';
+$route['accounting/v2/check/voidCheck']['POST'] = 'accounting_controllers/v2/Check/voidCheck';
+$route['accounting/v2/check/deleteCheck']['POST'] = 'accounting_controllers/v2/Check/deleteCheck';
+$route['accounting/v2/check/voidMultipleChecks']['POST'] = 'accounting_controllers/v2/Check/voidMultipleChecks';
+$route['accounting/v2/check/deleteMultipleChecks']['POST'] = 'accounting_controllers/v2/Check/deleteMultipleChecks';
