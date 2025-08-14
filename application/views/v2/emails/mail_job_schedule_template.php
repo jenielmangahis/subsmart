@@ -348,124 +348,168 @@
 <body>
     <div class="container">
         <div class="main" style="background-color:#ffffff;">        
-            
-            <table style="width: 80% !important;">
-                <tr class="tbl-header">
-                    <td colspan="2"><b style="font-size: 18px; color: white;">CUSTOMER</b></td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Name</b><br />
-                        <?= $jobs_data->first_name .' '. $jobs_data->last_name; ?>
-                    </td>
-                    <td>
-                        <b>Address</b><br />
-                        <?= $jobs_data->job_location; ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Phone Number</b><br />
-                        <?= $jobs_data->phone_m !="" || $jobs_data->phone_m !=null ? formatPhoneNumber($jobs_data->phone_m) : 'N/A'; ?>
-                    </td>
-                    <td>
-                        <b>Email</b><br />
-                        <?= $jobs_data->cust_email != "" ? $jobs_data->cust_email : "N/A"; ?>
-                    </td>
-                </tr>
-            </table><br />  
 
-            <div class="clear"></div>
-
-            <table style="width: 80% !important;">
-                <tr class="tbl-header">
-                    <td colspan="3"><b style="font-size: 18px; color: white;">JOB INFORMATION</b></td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>JOB NUMBER</b><br />
-                        <?= $jobs_data->job_number; ?><br />
-                    </td>
-                    <td>
-                        <b>JOB TAGS</b><br />
-                        <?= $jobs_data->tags != '' ? $jobs_data->tags : '---';  ?><br />
-                    </td>
-                    <td>
-                        <b>JOB TYPE</b><br />
-                        <?= $jobs_data->job_type != '' ? $jobs_data->job_type : '---';  ?><br />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>JOB LOCATION</b><br />
-                        <?= $jobs_data->job_location != '' ? $jobs_data->job_location : '---'; ?><br />
-                    </td>
-                    <td>
-                        <b>AMOUNT</b><br />
-                        <?= number_format($job_total_amount,2,'.',','); ?><br />
-                    </td>
-                    <td>
-                        <b>ASSIGNED USERS</b><br />
-                        <?php 
-                            $assigned_employees = array();
-                            if( $jobs_data->employee2_id > 0 ){
-                                $assigned_employees[] = $jobs_data->employee2_id;
-                            }
-                            if( $jobs_data->employee3_id > 0 ){
-                                $assigned_employees[] = $jobs_data->employee3_id;
-                            }
-                            if( $jobs_data->employee4_id > 0 ){
-                                $assigned_employees[] = $jobs_data->employee4_id;
-                            }
-                            if( $jobs_data->employee5_id > 0 ){
-                                $assigned_employees[] = $jobs_data->employee5_id;
-                            }
-                            if( $jobs_data->employee6_id > 0 ){
-                                $assigned_employees[] = $jobs_data->employee6_id;
-                            }
-                        ?>
-                        <div class="techs">
-                            <?php foreach($assigned_employees as $eid){ ?>
-                                <?php echo userFullName($eid); ?><br />
-                            <?php } ?>
-                        </div>
-                    </td>
-                </tr>
-                <?php if($jobs_data_items) { ?>
+            <div class="body" style="border-top: 1px solid #eaeaea; padding-top: 20px; color: #999;">
+                
+                <table style="width: 80% !important; margin: 0 auto;">
                     <tr>
-                        <td colspan="3">
+                        <td>
+                            <?php 
+                                $company_logo = FCPATH . 'uploads/users/business_profile/' . $company->id . '/' . $company->business_image;                       
+                            ?>
+                            <?php if( file_exists($company_logo) ) {?>
+                                <?php $company_logo = base_url('uploads/users/business_profile/' . $company->id . '/' . $company->business_image); ?>
+                                <!-- <image src="<?php echo $company_logo; ?>" style="width:206px;margin-bottom:28px;" /> -->
+                            <?php } else { ?>
+                                <!-- <image src="https://nsmartrac.com/assets/frontend/images/logo.png" style="width:206px;margin-bottom:28px;" /> -->
+                            <?php } ?>
 
-                            <b style="margin-top: 15px; margin-bottom: 5px;">Job Item Listing: </b><hr />
-                            <table style="width: 100% !important">
-                                <tr class="">
-                                    <td><b>Item Name</b></td>
-                                    <td><b>Qty</b></td>
-                                    <td><b>Item Price</b></td>
-                                    <td><b>Item Type</b></td>
-                                    <td><b>Amount</b></td>
-                                </tr>
-                                <?php foreach($jobs_data_items as $jobs_data_item) { ?>
-                                <tr>
-                                    <td><?php echo $jobs_data_item->title; ?></td>
-                                    <td><?php echo number_format($jobs_data_item->qty,2); ?></td>
-                                    <td><?php echo number_format($jobs_data_item->price,2); ?></td>
-                                    <td><?php echo $jobs_data_item->type; ?></td>
-                                    <td><?php echo number_format($jobs_data_item->total,2); ?></td>
-                                </tr>
-                                <?php } ?>
-                            </table>
+                            <?php $default_company_logo = companyInvoiceLogo($jobs_data->company_id); ?>
+                            <image src="<?php echo $default_company_logo; ?>" style="height:110px;margin-bottom:28px;" />
+                            
+                            <?php if($user_type = 'customer') { ?>
+                                <p>Hi <?= $jobs_data->first_name .' '. $jobs_data->last_name; ?>, <br /><br />A job order number <?= $jobs_data->job_number; ?> has been created. Below are the details: </p>
+                            <?php } elseif($user_type = 'sales_rep') { ?>
+                                <p>Hi <?php echo userFullName($jobs_data->employee_id); ?>, <br /><br />You have been assigned to job number <?= $jobs_data->job_number; ?>. Below are the details: </p>
+                            <?php } ?>                            
                         </td>
                     </tr>
-                <?php } ?>
-            </table><br />  
+                </table>
+                
+                <table style="width: 80% !important; margin: 0 auto;">
+                    <tr class="tbl-header">
+                        <td colspan="2"><div style="font-size: 18px; color: white;">CUSTOMER</div></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Name</b><br />
+                            <?= $jobs_data->first_name .' '. $jobs_data->last_name; ?>
+                        </td>
+                        <td>
+                            <b>Address</b><br />
+                            <?= $jobs_data->job_location; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Phone Number</b><br />
+                            <?= $jobs_data->phone_m !="" || $jobs_data->phone_m !=null ? formatPhoneNumber($jobs_data->phone_m) : 'N/A'; ?>
+                        </td>
+                        <td>
+                            <b>Email</b><br />
+                            <?= $jobs_data->cust_email != "" ? $jobs_data->cust_email : "N/A"; ?>
+                        </td>
+                    </tr>
+                </table><br />  
 
-            <div class="clear"></div>
+                <div class="clear"></div>
 
-            <!-- Closing Remarks -->
-            <p>
-                Regards,<br>
-                <a href="https://nsmartrac.com" target="_blank" style="color: #6C70DC; font-weight: 500;">The nSmarTrac Team</a>
-            </p>
+                <table style="width: 80% !important; margin: 0 auto;">
+                    <tr class="tbl-header">
+                        <td colspan="3"><div style="font-size: 18px; color: white;">JOB INFORMATION</div></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>JOB NUMBER</b><br />
+                            <?= $jobs_data->job_number; ?><br />
+                        </td>
+                        <td>
+                            <b>JOB TAGS</b><br />
+                            <?= $jobs_data->tags != '' ? $jobs_data->tags : '---';  ?><br />
+                        </td>
+                        <td>
+                            <b>JOB TYPE</b><br />
+                            <?= $jobs_data->job_type != '' ? $jobs_data->job_type : '---';  ?><br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>JOB LOCATION</b><br />
+                            <?= $jobs_data->job_location != '' ? $jobs_data->job_location : '---'; ?><br />
+                        </td>
+                        <td>
+                            <b>AMOUNT</b><br />
+                            <?= number_format($job_total_amount,2,'.',','); ?><br />
+                        </td>
+                        <td>
+                            <b>ASSIGNED USERS</b><br />
+                            <?php 
+                                $assigned_employees = array();
+                                if( $jobs_data->employee2_id > 0 ){
+                                    $assigned_employees[] = $jobs_data->employee2_id;
+                                }
+                                if( $jobs_data->employee3_id > 0 ){
+                                    $assigned_employees[] = $jobs_data->employee3_id;
+                                }
+                                if( $jobs_data->employee4_id > 0 ){
+                                    $assigned_employees[] = $jobs_data->employee4_id;
+                                }
+                                if( $jobs_data->employee5_id > 0 ){
+                                    $assigned_employees[] = $jobs_data->employee5_id;
+                                }
+                                if( $jobs_data->employee6_id > 0 ){
+                                    $assigned_employees[] = $jobs_data->employee6_id;
+                                }
+                            ?>
+                            <div class="techs">
+                                <?php foreach($assigned_employees as $eid){ ?>
+                                    <?php echo userFullName($eid); ?><br />
+                                <?php } ?>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="padding-top: 20px;"><hr /></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>Subtotal:</td>
+                        <td>$<?php echo number_format($job_sub_total_amount,2); ?></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>Tax Rate:</td>
+                        <td>$<?php echo number_format($jobs_data->tax_rate,2); ?></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>Installation Cost:</td>
+                        <td>$<?php echo number_format($jobs_data->installation_cost,2); ?></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>One time (Program and Setup):</td>
+                        <td>$<?php echo number_format($jobs_data->program_setup,2); ?></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>Monthly Monitoring:</td>
+                        <td>$<?php echo number_format($jobs_data->monthly_monitoring,2); ?></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td><b>Total:</b></td>
+                        <td>$<?php echo number_format($job_total_amount,2); ?></td>
+                    </tr>
+                </table><br />  
+
+                <div class="clear"></div>
+
+                <!-- Closing Remarks -->
+
+                <br /><br />
+                <table style="width: 80% !important; margin: 0 auto;">
+                    <tr>
+                        <td>
+                            <p>
+                                Regards,<br>
+                                <a href="https://nsmartrac.com" target="_blank" style="color: #6C70DC; font-weight: 500;">The nSmarTrac Team</a>
+                            </p>                          
+                        </td>
+                    </tr>
+                </table>                
+
+            </div>
 
             <div class="footer" style="border-top: 1px solid #eaeaea; padding-top: 20px; text-align: center; margin-top: 40px; font-size: 14px; color: #999;">
                 <p>Copyright &copy; <?= date('Y'); ?> nSmarTrac. All rights reserved.</p>

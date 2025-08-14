@@ -18,9 +18,11 @@
 <table class="nsm-table" id="archived-users">
     <thead>
         <tr>
+            <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
             <td class="table-icon text-center sorting_disabled show">
                 <input class="form-check-input table-select" type="checkbox" name="" value="0" id="users-archive-select-all">
             </td>
+            <?php } ?>
             <td class="table-icon show"></td>
             <td class="show" data-name="UserName" style="width:40%;">Name</td>                        
             <td class="show" data-name="Action" style="width:5%;"></td>                
@@ -30,9 +32,11 @@
         <?php if ($users) { ?>
             <?php foreach($users as $user){ ?>
                 <tr>
+                    <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
                     <td class="text-center show">
                         <input class="form-check-input users-archive-row-select table-select" name="users[]" type="checkbox" value="<?= $user->id; ?>">
                     </td>
+                    <?php } ?>
                     <td class="show"><div class="table-row-icon"><i class="bx bx-box"></i></div></td>
                     <td class="fw-bold nsm-text-primary show"><?= $user->FName . ' ' . $user->LName; ?></td>
                     <td class="show" style="width:5%;">

@@ -11,9 +11,31 @@
 }
 </style>
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('invoice/add') ?>'">
-        <i class="bx bx-receipt"></i>
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
+        <i class="bx bx-plus"></i>
     </div>
+    <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
+    <ul class="nsm-fab-options">     
+        <li onclick="location.href='<?= base_url('invoice/add'); ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-fw bx-receipt"></i>
+            </div>
+            <span class="nsm-fab-label">Add Invoice</span>
+        </li>
+        <li class="btn-export-list">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-export"></i>
+            </div>
+            <span class="nsm-fab-label">Export List</span>
+        </li>
+        <li id="btn-mobile-archived">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-archive'></i>
+            </div>
+            <span class="nsm-fab-label">Archived</span>
+        </li>          
+    </ul>
+    <?php } ?>      
 </div>
 
 <div class="row page-content g-0">
@@ -93,17 +115,7 @@
                                 <li><a class="dropdown-item" href="<?php echo base_url('customer') ?>">Source</a></li>
                                 <li><a class="dropdown-item" href="<?php echo base_url('customer?type=residential') ?>">Residential</a></li>
                             </ul>
-                        </div> -->
-                        <?php if(checkRoleCanAccessModule('invoice', 'delete')){ ?>
-                            <div class="dropdown d-inline-block">
-                                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                    <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end select-filter"> 
-                                    <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
-                                </ul>
-                            </div>   
-                        <?php } ?>                     
+                        </div> -->                                   
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Sort by <?= $sort_by; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
@@ -116,7 +128,7 @@
                                 <li><a class="dropdown-item" href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=grand_total-desc') : base_url('invoice?order=grand_total-asc') ?>">Amount: Lowest</a></li>
                                 <li><a class="dropdown-item" href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=grand_total-asc') : base_url('invoice?order=grand_total-desc') ?>">Amount: Highest</a></li>
                             </ul>
-                        </div>
+                        </div>                         
                         <div class="dropdown d-inline-block">
                             <?php
                             switch ($tab) {
@@ -153,11 +165,20 @@
                                 <li><a class="dropdown-item" data-id="filter_unpaid" href="<?php echo base_url('invoice/tab/unpaid') ?>">Unpaid</a></li>
                             </ul>
                         </div>
-
+                        <?php if(checkRoleCanAccessModule('invoices', 'write')){ ?>
+                            <div class="dropdown d-inline-block">
+                                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                    <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end select-filter"> 
+                                    <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                                </ul>
+                            </div>   
+                        <?php } ?>         
                         <div class="nsm-page-buttons page-button-container">                            
                             <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-nsm btn-nsm-custom" id="btn-add-new-invoice"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Add Invoice</button>
+                                <button type="button" class="btn btn-nsm btn-nsm-custom" id="btn-add-new-invoice"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Invoice</button>
                                 <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split btn-nsm-custom" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class=""><i class='bx bx-chevron-down' ></i></span>
                                 </button>
@@ -183,19 +204,19 @@
                     <table class="nsm-table">
                         <thead>
                             <tr>
-                                <?php if(checkRoleCanAccessModule('invoice', 'delete')){ ?>
+                                <?php if(checkRoleCanAccessModule('invoices', 'write')){ ?>
                                 <td class="table-icon text-center sorting_disabled">
                                     <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                                 </td>
                                 <?php } ?>
                                 <td class="table-icon"></td>
-                                <td data-name="Invoice Number" class="show">Invoice Number</td>
+                                <td data-name="Invoice Number">Invoice Number</td>
                                 <td data-name="Job Number">Job Number</td>
                                 <td data-name="Date Issued">Date Issued</td>
                                 <td data-name="Date Due">Date Due</td>                            
                                 <td data-name="Customer">Customer</td>
-                                <td data-name="Status" class="show">Status</td>
-                                <td data-name="Amount" class="show" style="text-align:right;">Amount</td>
+                                <td data-name="Status">Status</td>
+                                <td data-name="Amount" style="text-align:right;">Amount</td>
                                 <td data-name="Amount" style="text-align:right;">Balance</td>
                                 <td data-name="Manage"></td>
                             </tr>
@@ -244,7 +265,7 @@
                                     endswitch;
                                 ?>
                                     <tr>
-                                        <?php if(checkRoleCanAccessModule('invoice', 'delete')){ ?>
+                                        <?php if(checkRoleCanAccessModule('invoices', 'write')){ ?>
                                         <td>
                                             <input class="form-check-input row-select table-select" name="invoice[]" type="checkbox" value="<?= $invoice->id; ?>">
                                         </td>
@@ -254,7 +275,7 @@
                                                 <i class='bx bx-receipt'></i>
                                             </div>
                                         </td>
-                                        <td class="fw-bold nsm-text-primary nsm-link default show" onclick="location.href='<?php echo base_url('invoice/genview/' . $invoice->id) ?>'"><?= formatInvoiceNumber($invoice->invoice_number) ?>
+                                        <td class="fw-bold nsm-text-primary nsm-link default show"><?= $invoice->invoice_number; ?>
                                         </td>
                                         <td class="nsm-text-primary nsm-link default view-job-row" data-id="<?= $invoice->job_id; ?>">
                                                 <?php echo $invoice->jobnumber != '' ? $invoice->jobnumber : '---';  ?>
@@ -274,7 +295,7 @@
                                             ?>
                                             </label>
                                         </td>
-                                        <td class="show">
+                                        <td>
                                             <span class="status-label nsm-badge <?= $badge ?>">
                                                 <?php 
                                                     if( $invoice->status == '' ){
@@ -285,7 +306,7 @@
                                                 ?>                                            
                                             </span>
                                         </td>
-                                        <td class="show" style="text-align:right;">$<?php echo number_format((float)$invoice->grand_total,2); ?></td>
+                                        <td style="text-align:right;">$<?php echo number_format((float)$invoice->grand_total,2); ?></td>
                                         <td style="text-align:right;">$<?php echo number_format((float)$invoice->balance,2); ?></td>
                                         <td>
                                             <div class="dropdown table-management">
@@ -440,17 +461,15 @@
                 </div>
             </div>
 
-            <div class="modal fade nsm-modal fade" id="modal-archived-invoices" aria-labelledby="modal-archived-invoices-label" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <form method="post" id="quick-add-event-form">   
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <span class="modal-title content-title">Archived Invoices</span>
-                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                            </div>
-                            <div class="modal-body" id="invoices-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+            <div class="modal fade" id="modal-archived-invoices" data-bs-backdrop="static" role="dialog">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title" style="font-size: 17px;">Archived Invoices</span>
+                            <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                         </div>
-                    </form>
+                        <div class="modal-body" id="invoices-archived-list-container"></div>            
+                    </div>
                 </div>
             </div>
 
@@ -490,7 +509,7 @@
                 });
             }else{
                 Swal.fire({
-                    title: 'Delete Invoice',
+                    title: 'Delete Invoices',
                     html: `Are you sure you want to delete selected invoices?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
                     icon: 'question',
                     confirmButtonText: 'Proceed',
@@ -506,7 +525,7 @@
                             success: function(result) {                        
                                 if( result.is_success == 1 ) {
                                     Swal.fire({
-                                        title: 'Delete Invoice',
+                                        title: 'Delete Invoices',
                                         text: "Data deleted successfully!",
                                         icon: 'success',
                                         showCancelButton: false,
@@ -532,27 +551,8 @@
         });   
              
         //For Achived Modal List - Start
-        $(document).on('change', '#select-all-archived', function(){
-            $('.row-select-archived:checkbox').prop('checked', this.checked);  
-            let total= $('input[name="invoice[]"]:checked').length;
-            if( total > 0 ){
-                $('#num-checked-arhived').text(`(${total})`);
-            }else{
-                $('#num-checked-arhived').text('');
-            }
-        });
-
-        $(document).on('change', '.row-select-archived', function(){
-            let total= $('input[name="invoice[]"]:checked').length;
-            if( total > 0 ){
-                $('#num-checked-arhived').text(`(${total})`);
-            }else{
-                $('#num-checked-arhived').text('');
-            }
-        });
-        
         $(document).on('click', '#with-selected-restore', function(){
-            let total= $('input[name="invoice[]"]:checked').length;
+            let total= $('#archived-invoices input[name="invoice[]"]:checked').length;
             if( total <= 0 ){
                 Swal.fire({
                     icon: 'error',
@@ -576,9 +576,10 @@
                             data: $('#frm-with-selected-archived').serialize(),
                             success: function(result) {                        
                                 if( result.is_success == 1 ) {
+                                    $('#modal-archived-invoices').modal('hide');
                                     Swal.fire({
-                                        title: 'Restore Invoice',
-                                        text: "Data restore successfully!",
+                                        title: 'Restore Invoices',
+                                        text: "Data restored successfully!",
                                         icon: 'success',
                                         showCancelButton: false,
                                         confirmButtonText: 'Okay'
@@ -603,7 +604,7 @@
         }); 
 
         $(document).on('click', '#with-selected-permanent-delete', function(){
-            let total= $('input[name="invoice[]"]:checked').length;
+            let total= $('#archived-invoices input[name="invoice[]"]:checked').length;
             if( total <= 0 ){
                 Swal.fire({
                     icon: 'error',
@@ -612,8 +613,8 @@
                 });
             }else{
                 Swal.fire({
-                    title: 'Delete Invoices Permanently',
-                    html: `Would you like to permanently delete the selected invoices? You will no longer recover this data.`,
+                    title: 'Delete Invoices',
+                    html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
                     icon: 'question',
                     confirmButtonText: 'Proceed',
                     showCancelButton: true,
@@ -627,15 +628,16 @@
                             data: $('#frm-with-selected-archived').serialize(),
                             success: function(result) {                        
                                 if( result.is_success == 1 ) {
+                                    $('#modal-archived-invoices').modal('hide');
                                     Swal.fire({
-                                        title: 'Permanently Delete Invoice',
-                                        text: "Data permanently delete successfully!",
+                                        title: 'Delete Invoices',
+                                        text: "Data deleted successfully!",
                                         icon: 'success',
                                         showCancelButton: false,
                                         confirmButtonText: 'Okay'
                                     }).then((result) => {
                                         //if (result.value) {
-                                            location.reload();
+                                            //location.reload();
                                         //}
                                     });
                                 } else {
@@ -1067,7 +1069,7 @@
             });
         });
 
-        $('#archived-invoice-list').on('click', function(){
+        $('#archived-invoice-list, #btn-mobile-archived').on('click', function(){
             $('#modal-archived-invoices').modal('show');
             $.ajax({
                 type: "POST",
@@ -1179,8 +1181,8 @@
             var invoice_number = $(this).attr('data-invoicenumber');
 
             Swal.fire({
-                title: 'Permanent Delete Invoice Data',
-                html: `Would you like to permanently delete the invoice <b>#${invoice_number}</b>? You will no longer recover this data.`,
+                title: 'Delete Invoice',
+                html: `Are you sure you want to <b>permanently delete</b> invoice number <b>${invoice_number}</b>? <br/><br/>Note : This cannot be undone.`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
@@ -1197,10 +1199,10 @@
                                 $('#modal-archived-invoices').modal('hide');
                                 Swal.fire({
                                 icon: 'success',
-                                title: 'Success',
-                                text: 'Invoice data was successfully deleted permanently.',
+                                title: 'Delete Invoice',
+                                html: "Data deleted successfully!",
                                 }).then((result) => {
-                                    location.reload();
+                                    //location.reload();
                                 });
                             } else {
                                 Swal.fire({
@@ -1216,11 +1218,11 @@
         });
 
         $(document).on("click", "#btn-add-new-invoice", function(){
-            let url = "<?php echo base_url('invoice/add'); ?>";
+            let url = base_url + "invoice/add";
             location.href = url;            
         });
 
-        $("#export-invoice-list").on("click", function() {
+        $("#export-invoice-list, .btn-export-list").on("click", function() {
             location.href = "<?php echo base_url('invoice/export_list'); ?>";
         });
 

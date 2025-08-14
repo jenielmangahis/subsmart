@@ -1,5 +1,5 @@
 <?php include viewPath('v2/includes/header'); ?>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-bs5/1.13.1/dataTables.bootstrap5.min.css">
 <script src="https://cdn.datatables.net/2.0.6/js/dataTables.js"></script>
 <style>
     .fw-xnormal {
@@ -296,7 +296,7 @@
                     if (response.success) {
                         $('#addVideoForm')[0].reset();
                         $('.addVideoModal').modal('hide'); 
-                        videolist_table.ajax.reload();
+                        videolist_table.ajax.reload(null, false);
                         Swal.fire({
                             icon: "success",
                             title: "Entry Saved!",
@@ -351,7 +351,7 @@
                 },
                 success: function (response) {
                     if (response.success) {
-                        videolist_table.ajax.reload();
+                        videolist_table.ajax.reload(null, false);
                         $('.editVideoModal').modal('hide'); 
                         Swal.fire({
                             icon: "success",
@@ -439,7 +439,7 @@
                         data: "id=" + presetID,
                         dataType: "JSON",
                         success: function (response) {
-                            videolist_table.ajax.reload();
+                            videolist_table.ajax.reload(null, false);
                             Swal.fire({
                                 icon: "success",
                                 title: "Video Removed!",

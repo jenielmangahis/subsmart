@@ -647,7 +647,7 @@
             });
         });        
 
-        $(document).on('click', '#btn-empty-item-archives', function(){        
+        $(document).on('click', '#btn-empty-item-archives', function(){       
             let total_records = $('#archived-items input[name="archived_items[]"]').length;                         
             if( total_records > 0 ){
                 Swal.fire({
@@ -911,6 +911,7 @@
         }, 1000));
 
         $("#select-all").on("change", function() {
+
             let isChecked = $(this).is(":checked");
 
             if (isChecked) {
@@ -919,6 +920,23 @@
             } else {
                 $(".nsm-table").find(".select-one").prop("checked", false);
                 $(".batch-actions").find("a.dropdown-item").addClass("disabled");
+            }
+
+            const checkedBoxes = document.querySelectorAll('#INVENTORY_TABLE input[type="checkbox"]:checked');
+            if(checkedBoxes.length > 0) {
+                $('#num-checked-items').text(`(${checkedBoxes.length})`);        
+            } else {
+                $('#num-checked-items').text(``);  
+            }
+                
+        });
+
+        $(".row-select").on("change", function() {
+            const checkedBoxes = document.querySelectorAll('#INVENTORY_TABLE input[type="checkbox"]:checked');
+            if(checkedBoxes.length > 0) {
+                $('#num-checked-items').text(`(${checkedBoxes.length})`);   
+            } else {
+                $('#num-checked-items').text(``);  
             }
         });
 
