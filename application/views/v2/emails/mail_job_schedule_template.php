@@ -497,7 +497,7 @@
             </table>
         </div>      
         
-        <div class="content">
+        <div class="content" style="width: 80% !important; margin: 0 auto !important;">
             <br /><br />
             <p>If you have any questions, feel free to email us at <a href="mailto:support@nsmartrac.com" class="text-rg-green-light">support@nsmartrac.com</a></p>
             <p>

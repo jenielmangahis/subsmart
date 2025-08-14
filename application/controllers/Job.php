@@ -3165,7 +3165,7 @@ class Job extends MY_Controller
                         $mail = email__getInstance();
                         $mail->FromName = 'nSmarTrac';
                         $customerName = $customer->first_name . " " . $customer->last_name;
-                        $mail->addAddress($customer->email, $customerName);
+                        $mail->addAddress($customer->email);
 
                         if($input['employee_id']) {
                             $employee_email = getUserEmail($input['employee_id']);
@@ -3331,11 +3331,13 @@ class Job extends MY_Controller
         $this->load->model('Invoice_settings_model');
         
         $jobs_data = $this->jobs_model->get_specific_job($job_id);  
-        $jobs_data_items = $this->jobs_model->get_specific_job_items($job_id);            
-        
+        $jobs_data_items = $this->jobs_model->get_specific_job_items($job_id);        
+                
+        $job_total_amount = 0;
         $subtotal = 0;
+
         foreach ($jobs_data_items as $item){            
-            $subtotal += $item->cost;            
+            $subtotal += $item->total;            
         }
 
         $job_total_amount = $subtotal + $jobs_data->tax_rate + $jobs_data->adjustment_value + $jobs_data->program_setup + $jobs_data->monthly_monitoring + $jobs_data->installation_cost;        
@@ -5566,7 +5568,7 @@ class Job extends MY_Controller
                         $mail = email__getInstance();
                         $mail->FromName = 'NsmarTrac';
                         $customerName = $customer->first_name . " " . $customer->last_name;
-                        $mail->addAddress($customer->email, $customerName);
+                        $mail->addAddress($customer->email);
 
                         if($input['employee_id']) {
                             $employee_email = getUserEmail($input['employee_id']);
