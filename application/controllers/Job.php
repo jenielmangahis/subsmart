@@ -3165,7 +3165,7 @@ class Job extends MY_Controller
                         $mail = email__getInstance();
                         $mail->FromName = 'nSmarTrac';
                         $customerName = $customer->first_name . " " . $customer->last_name;
-                        $mail->addAddress($customer->email, $customerName);
+                        $mail->addAddress($customer->email);
 
                         if($input['employee_id']) {
                             $employee_email = getUserEmail($input['employee_id']);
@@ -3328,24 +3328,30 @@ class Job extends MY_Controller
 
     public function generateJobScheduledHTML($job_id, $user_type)
     {
-        $jobs_data = $this->jobs_model->get_specific_job($job_id);  
-        $jobs_data_items = $this->jobs_model->get_specific_job_items($job_id);            
+        $this->load->model('Invoice_settings_model');
         
+        $jobs_data = $this->jobs_model->get_specific_job($job_id);  
+        $jobs_data_items = $this->jobs_model->get_specific_job_items($job_id);        
+                
+        $job_total_amount = 0;
         $subtotal = 0;
+
         foreach ($jobs_data_items as $item){            
-            $subtotal += $item->cost;            
+            $subtotal += $item->total;            
         }
 
         $job_total_amount = $subtotal + $jobs_data->tax_rate + $jobs_data->adjustment_value + $jobs_data->program_setup + $jobs_data->monthly_monitoring + $jobs_data->installation_cost;        
 
-        $company = $this->business_model->getByCompanyId($jobs_data->company_id);    
+        $company = $this->business_model->getByCompanyId($jobs_data->company_id);  
+        $industrySpecificFields = $this->Invoice_settings_model->industrySpecificFields(logged('industry_type'));   
+
         $this->page_data['company'] = $company;
         $this->page_data['user_type'] = $user_type;
         $this->page_data['jobs_data'] = $jobs_data;
         $this->page_data['jobs_data_items'] = $jobs_data_items;
         $this->page_data['job_total_amount'] = $job_total_amount;
         $this->page_data['job_sub_total_amount'] = $subtotal;
-        
+        $this->page_data['industrySpecificFields'] = $industrySpecificFields;
         return $this->load->view('v2/emails/mail_job_schedule_template', $this->page_data, true);
     }    
 
@@ -5562,7 +5568,7 @@ class Job extends MY_Controller
                         $mail = email__getInstance();
                         $mail->FromName = 'NsmarTrac';
                         $customerName = $customer->first_name . " " . $customer->last_name;
-                        $mail->addAddress($customer->email, $customerName);
+                        $mail->addAddress($customer->email);
 
                         if($input['employee_id']) {
                             $employee_email = getUserEmail($input['employee_id']);
