@@ -14,33 +14,7 @@
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
     </div>
-    <ul class="nsm-fab-options">        
-        <li onclick="location.href='<?php echo base_url('invoice/add') ?>'">
-            <div class="nsm-fab-icon">
-                <i class="bx bx-task"></i>
-            </div>
-            <span class="nsm-fab-label">New Invoice</span>
-        </li>
-        <li onclick="location.href='<?php echo base_url('events/export_list') ?>'">
-            <div class="nsm-fab-icon">
-                <i class='bx bxs-file-export'></i>
-            </div>
-            <span class="nsm-fab-label">Export</span>
-        </li>
-        <li id="btn-mobile-archived">
-            <div class="nsm-fab-icon">
-                <i class='bx bx-archive'></i>
-            </div>
-            <span class="nsm-fab-label">Archived</span>
-        </li>
-    </ul>
-</div>
-
-<div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
-        <i class="bx bx-plus"></i>
-    </div>
-    <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
+    <?php if(checkRoleCanAccessModule('invoices', 'write')){ ?>
     <ul class="nsm-fab-options">     
         <li onclick="location.href='<?= base_url('invoice/add'); ?>'">
             <div class="nsm-fab-icon">
@@ -202,7 +176,7 @@
                             </div>   
                         <?php } ?>         
                         <div class="nsm-page-buttons page-button-container">                            
-                            <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
+                            <?php if(checkRoleCanAccessModule('invoices', 'write')){ ?>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-nsm btn-nsm-custom" id="btn-add-new-invoice"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Invoice</button>
                                 <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split btn-nsm-custom" data-bs-toggle="dropdown" aria-expanded="false">
