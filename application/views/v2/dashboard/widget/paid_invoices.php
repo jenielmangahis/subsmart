@@ -59,13 +59,13 @@
         </div>
         <div class="row">
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center textData tile-paid-invoices">
+                <div class="text-center textData">
                     <small class="text-muted text-uppercase fw-bold">TOTAL AMOUNT</small>
                     <h4 class="<?php echo "textData1_$id"; ?>"></h4>
                 </div>
             </div>
             <div class="col text-nowrap <?php echo "textDataContainer_$id"; ?>">
-                <div class="text-center textData tile-paid-invoices">
+                <div class="text-center textData">
                     <small class="text-muted text-uppercase fw-bold">TOTAL COUNT</small>
                     <h4 class="<?php echo "textData2_$id"; ?>"></h4>
                 </div>
@@ -151,6 +151,9 @@
 
                     let categories = Object.keys(filteredGraphData).map(month => month.split(' ')[1]);
                     let values = Object.values(filteredGraphData);
+
+                    $('.<?php echo "textData1_$id"; ?>').parent().parent().attr(`onclick`, `window.open('${window.origin}/invoice/tab/paid', '_blank')`);
+                    $('.<?php echo "textData2_$id"; ?>').parent().parent().attr(`onclick`, `window.open('${window.origin}/invoice/tab/paid', '_blank')`);
 
                     if (values.length === 0) {
                         $('.<?php echo "textDataContainer_$id"; ?>').hide();
@@ -281,9 +284,5 @@
                 $('.<?php echo "graphDataContainer_$id"; ?>').hide();
             }
         }
-    });
-
-    $(document).on('click', '.tile-paid-invoices', function(){
-        location.href = base_url + 'invoice/tab/paid';
     });
 </script>
