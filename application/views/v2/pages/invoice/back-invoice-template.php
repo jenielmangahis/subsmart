@@ -6,9 +6,6 @@ $due_date = 'Due on receipt';
 if ($invoice->due_date > date('Y-m-d')) {
     $due_date = date('m/d/Y', strtotime($invoice->due_date));
 }
-
-//$payment_link = base_url('/invoice/pay_now_form_fr_email/' . $invoice->id);
-//$payment_link = base_url('/invoice/customer_view/' . $invoice->id);
 $payment_link = base_url('customer_invoice/'.$company_info->profile_slug.'/' . $invoice->hash_id);
 ?>
 
@@ -28,7 +25,7 @@ $payment_link = base_url('customer_invoice/'.$company_info->profile_slug.'/' . $
 
         .container {
             padding: 16px;
-            background-color: #f5f5f5;
+            background-color: #f5f5f5;            
         }
 
         .main {
@@ -90,7 +87,7 @@ $payment_link = base_url('customer_invoice/'.$company_info->profile_slug.'/' . $
 </head>
 
 <body>
-    <div class="container" style="background-color:#ffffff;">
+    <div class="container" style="background-color:#ffffff;overflow:auto;">
         <div class="main" style="width:1000px;">
             <table>
                 <tr>

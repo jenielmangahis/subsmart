@@ -58,6 +58,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
         color: #ffffff;
     }
 </style>
+<div class="nsm-fab-container">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
+        <i class="bx bx-plus"></i>
+    </div>
+    <ul class="nsm-fab-options">        
+        <li onclick="location.href='<?= base_url('invoice'); ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-receipt"></i>
+            </div>
+            <span class="nsm-fab-label">List Invoice</span>
+        </li>
+    </ul>   
+</div>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">

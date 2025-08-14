@@ -18,7 +18,7 @@
     <ul class="nsm-fab-options">     
         <li onclick="location.href='<?= base_url('invoice/add'); ?>'">
             <div class="nsm-fab-icon">
-                <i class="bx bx-fw bx-receipt"></i>
+                <i class="bx bx-receipt"></i>
             </div>
             <span class="nsm-fab-label">Add Invoice</span>
         </li>
