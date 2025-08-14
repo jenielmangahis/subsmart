@@ -60,7 +60,7 @@ table.dataTable.no-footer {
             </div>
             <span class="nsm-fab-label">New Event</span>
         </li>
-        <li onclick="location.href='<?php echo base_url('events/export_list') ?>'">
+        <li class="btn-export-list">
             <div class="nsm-fab-icon">
                 <i class='bx bxs-file-export'></i>
             </div>
@@ -306,7 +306,7 @@ $(document).ready(function () {
         location.href = base_url + 'events/event_add';
     });
 
-    $("#btn-export-list").on("click", function() {
+    $("#btn-export-list, .btn-export-list").on("click", function() {
         location.href = base_url + 'events/export_list';
     });
 
