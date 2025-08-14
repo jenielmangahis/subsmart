@@ -570,8 +570,8 @@
             var item_title = $(this).attr('data-title');
 
             Swal.fire({
-                title: 'Permanent Delete Item Data',
-                html: `Would you like to permanently delete the item <b>#${item_title}</b>? You will no longer recover this data.`,
+                title: 'Delete Item',
+                html: `Are you sure you want to <b>permanently delete</b> item <b>#${item_title}</b>? <br /><br />Note : This cannot be undone.`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
