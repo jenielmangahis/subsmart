@@ -458,7 +458,7 @@
     <ul class="nsm-fab-options">        
         <li onclick="location.href='<?= base_url('job'); ?>'">
             <div class="nsm-fab-icon">
-                <i class="bx bx-fw bx-message-square-error"></i>
+                <i class="bx bx-message-square-error"></i>
             </div>
             <span class="nsm-fab-label">List Job</span>
         </li>
