@@ -36,12 +36,10 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-4 grid-mb">
-                        <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Employee...">
-                        </div>
+                    <div class="col-md-6">
+                        <input type="text" class="nsm-field nsm-search form-control mb-2 w-25" id="search_field" placeholder="Search Employee...">
                     </div>
-                    <div class="col-12 col-md-8 grid-mb text-end">
+                    <div class="col-md-6 text-end">
                         <div class="d-inline-block me-2">
                             <select id="status_filter" class="form-select w-auto">
                                 <option value="">All Employees</option>
@@ -57,8 +55,7 @@
                                 <option value="Missing">Missing</option>
                             </select>
                         </div>
-
-                        <!-- <div class="d-inline-block me-2">
+                        <div class="d-inline-block me-2">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>More actions</span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
@@ -67,30 +64,12 @@
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="bonus-only">Bonus only</a></li>
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="commission-only">Commission only</a></li>
                             </ul>
-                        </div> -->
-
-                        <!-- <div class="d-inline-block me-2">
+                        </div>
+                        <div class="d-inline-block me-2">
                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add_employee_modal">
                                 <i class='bx bx-fw bx-list-plus'></i> Add an employee
                             </button>
-                        </div> -->
-
-                        <div class="nsm-page-buttons page-button-container">                            
-                            <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
-                            <div class="btn-group nsm-main-buttons" style="margin-bottom: 4px !important;">
-                                <button type="button" class="btn btn-nsm" data-bs-toggle="modal" data-bs-target="#add_employee_modal"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Employee</button>
-                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                    <li><a class="dropdown-item" href="javascript:void(0);" id="run-payroll">Run payroll</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);" id="bonus-only">Bonus only</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);" id="commission-only">Commission only</a></li>
-                                </ul>
-                            </div>
-                            <?php } ?>
                         </div>
-
                         <!-- <div class="d-inline-block">
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
                                 <i class="bx bx-fw bx-cog"></i>
@@ -151,16 +130,13 @@
 <?php include viewPath('v2/includes/footer'); ?>
 
 <script>
-    var emp_url = `${base_url}accounting/employees/_get_employees`;
-
     // DataTable Configuration ===============
     var employee_table = $('#employeeTable').DataTable({
         "processing": true,
         "serverSide": true,
         "ordering": false,
         "ajax": {
-            //"url": "<?php //echo base_url('accounting_controllers/employees/getEmployeeServerside/'); ?>",
-            "url": emp_url,
+            "url": "<?php echo base_url('accounting_controllers/employees/getEmployeeServerside/'); ?>",
             "type": "POST",
         },
         "language": {
