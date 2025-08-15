@@ -4,7 +4,7 @@
         <div class="dropdown d-inline-block">
             <button type="button" class="nsm-button primary" id="btn-empty-invoice-archives">Empty Archived</button>
             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                <span id="num-checked-arhived"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                <span id="num-checked-archived"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
             </button>
             <ul class="dropdown-menu dropdown-menu-end select-filter"> 
                 <li><a class="dropdown-item btn-with-selected" id="with-selected-restore" href="javascript:void(0);" data-action="delete">Restore</a></li> 
@@ -72,18 +72,18 @@ $(function(){
         $('.row-select-archived:checkbox').prop('checked', this.checked);  
         let total= $('#archived-invoices input[name="invoice[]"]:checked').length;
         if( total > 0 ){
-            $('#num-checked-arhived').text(`(${total})`);
+            $('#num-checked-archived').text(`(${total})`);
         }else{
-            $('#num-checked-arhived').text('');
+            $('#num-checked-archived').text('');
         }
     });
 
     $(document).on('change', '.row-select-archived', function(){
         let total= $('#archived-invoices input[name="invoice[]"]:checked').length;
         if( total > 0 ){
-            $('#num-checked-arhived').text(`(${total})`);
+            $('#num-checked-archived').text(`(${total})`);
         }else{
-            $('#num-checked-arhived').text('');
+            $('#num-checked-archived').text('');
         }
     });
 });

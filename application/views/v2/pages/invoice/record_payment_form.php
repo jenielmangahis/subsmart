@@ -38,7 +38,7 @@
         <div class="row">
             <div class="col-sm-6">
                 <label>Invoice Amount</label>
-                <div class="help help-block help-sm">Amount received for invoice</div>
+                <i id="help-popover-invoice-amount" class='bx bx-fw bx-help-circle'></i></label>  
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
@@ -49,7 +49,7 @@
 
             <div class="col-sm-6">
                 <label>Tip </label> <span class="help">(optional)</span>
-                <div class="help help-block help-sm">Will be added to Invoice Amount</div>
+                <i id="help-popover-tip" class='bx bx-fw bx-help-circle'></i></label>  
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">$</span>
@@ -101,3 +101,24 @@
     </label> -->
     </div>
 </div>
+<script>
+$(function(){
+    $('#help-popover-invoice-amount').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Amount received for invoice';
+        }
+    });
+
+    $('#help-popover-tip').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Will be added to Invoice Amount';
+        }
+    });
+});
+</script>

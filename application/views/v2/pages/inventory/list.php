@@ -137,7 +137,7 @@
                     </div>
                 </div>
                 <form id="frm-list-inventory">
-                    <table id="INVENTORY_TABLE" class="nsm-table">
+                    <table id="INVENTORY_TABLE" class="nsm-table inventory-table">
                         <thead>
                             <tr>
                                 <td class="table-icon text-center show">
@@ -476,7 +476,7 @@
             }else{
                 Swal.fire({
                     title: 'Restore Items',
-                    html: `Are you sure you want to restore the selected items?`,
+                    html: `Are you sure you want to restore the selected rows?`,
                     icon: 'question',
                     confirmButtonText: 'Proceed',
                     showCancelButton: true,
@@ -526,8 +526,8 @@
                 });
             }else{
                 Swal.fire({
-                    title: 'Delete Items Permanently',
-                    html: `Would you like to permanently delete the selected items? You will no longer recover this data.`,
+                    title: 'Delete Items',
+                    html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
                     icon: 'question',
                     confirmButtonText: 'Proceed',
                     showCancelButton: true,
@@ -570,8 +570,8 @@
             var item_title = $(this).attr('data-title');
 
             Swal.fire({
-                title: 'Permanent Delete Item Data',
-                html: `Would you like to permanently delete the item <b>#${item_title}</b>? You will no longer recover this data.`,
+                title: 'Delete Item',
+                html: `Are you sure you want to <b>permanently delete</b> item <b>#${item_title}</b>? <br /><br />Note : This cannot be undone.`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
@@ -1010,45 +1010,53 @@
         });
 
         $("#delete_selected").on("click", function() {
-
-            Swal.fire({
-                title: 'Delete Selected Items',
-                text: "Are you sure you want to delete the selected items?",
-                icon: 'question',
-                confirmButtonText: 'Proceed',
-                showCancelButton: true,
-                cancelButtonText: "Cancel"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        type: "POST",
-                        url: "<?php echo base_url('inventory/deleteMultiple') ?>",
-                        data: $('#frm-list-inventory').serialize(),
-                        dataType:'json',
-                        success: function(response) {
-                            if( response.is_success == 1 ){
-                                Swal.fire({
-                                    title: 'Delete Inventory Item',
-                                    text: "Selected data has been deleted successfully!",
-                                    icon: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Okay'
-                                }).then((result) => {
-                                    //if (result.value) {
-                                        location.reload();
-                                    //}
-                                });
-                            }else{
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: response.msg,
-                                });  
+            const checkedBoxes = document.querySelectorAll('#INVENTORY_TABLE input[type="checkbox"]:checked');
+            if( checkedBoxes.length <= 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select rows',
+                });
+            }else{            
+                Swal.fire({
+                    title: 'Delete Items',
+                    html: "Are you sure you want to delete the selected rows? <br /><br /><small>Deleted data can be restored via archived list.</small>",
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: "<?php echo base_url('inventory/deleteMultiple') ?>",
+                            data: $('#frm-list-inventory').serialize(),
+                            dataType:'json',
+                            success: function(response) {
+                                if( response.is_success == 1 ){
+                                    Swal.fire({
+                                        title: 'Delete Inventory Item',
+                                        text: "Selected data has been deleted successfully!",
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        //if (result.value) {
+                                            location.reload();
+                                        //}
+                                    });
+                                }else{
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: response.msg,
+                                    });  
+                                }
                             }
-                        }
-                    });
-                }
-            });
+                        });
+                    }
+                });
+            }
         });
 
         $(document).on("click", ".delete-item", function() {

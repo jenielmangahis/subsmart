@@ -2226,6 +2226,7 @@ $route['customers/_permanently_delete_archived_customer'] = 'Customer/ajax_perma
 $route['customers/_archive_selected_customers'] = 'Customer/ajax_archive_selected_customers';
 $route['customers/_with_selected_add_to_favorites'] = 'Customer/ajax_with_selected_add_to_favorites';
 $route['customers/_delete_all_archived_customers'] = 'Customer/ajax_delete_all_archived_customers';
+$route['customer/leads/export_list'] = 'Customer/customer_leads_export';
 
 //Benchmark for Testing
 $route['benchmark/test_customer_subscription'] = 'Benchmark/test_customer_subscription';

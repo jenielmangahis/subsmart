@@ -205,7 +205,7 @@ class Invoice extends MY_Controller
         $this->page_data['default_late_fee'] = $this->invoice_model->defaultLateFee();
         $this->page_data['page_title'] = "Invoices & Payments";
         $this->page_data['page']->title = 'Invoices & Payments';
-        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['page']->parent = 'Accounting';
         $this->page_data['sort_by'] = $sort_by;
         $this->load->view('v2/pages/invoice/invoice_new', $this->page_data);
     }
@@ -344,7 +344,7 @@ class Invoice extends MY_Controller
         $this->page_data['w_items']    = $w_items;
         $this->page_data['page_title'] = "Invoice Add";
         $this->page_data['page']->title = 'Invoices & Payments';
-        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['page']->parent = 'Accounting';
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['tags'] = $this->JobTags_model->getAllByCompanyId($company_id);        
         $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
@@ -537,7 +537,7 @@ class Invoice extends MY_Controller
         $setting = $this->invoice_settings_model->getByCompanyId($company_id);
 
         $this->page_data['page']->title = 'Invoice Settings';
-        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['page']->parent = 'Accounting';
         $this->page_data['setting'] = null;        
         $this->page_data['setting'] = $setting;
         $this->page_data['industrySpecificFields'] = $industrySpecificFields;
@@ -1261,7 +1261,7 @@ class Invoice extends MY_Controller
             $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($comp_id);
             $this->page_data['page_title'] = "Invoices & Payments";
             $this->page_data['page']->title = 'Invoices & Payments';
-            $this->page_data['page']->parent = 'Sales';
+            $this->page_data['page']->parent = 'Accounting';
             $this->load->view('v2/pages/invoice/invoice_edit', $this->page_data);
         }else{
             redirect('invoice');
@@ -1734,7 +1734,7 @@ class Invoice extends MY_Controller
         $this->page_data['onlinePaymentAccount'] = $companyOnlinePaymentAccount;
         $this->page_data['page_title'] = "View Invoice";
         $this->page_data['page']->title = 'Invoices & Payments';
-        $this->page_data['page']->parent = 'Sales';        
+        $this->page_data['page']->parent = 'Accounting';        
 
         $this->load->view('v2/pages/invoice/genview', $this->page_data);
         //$this->load->view('invoice/genview', $this->page_data);

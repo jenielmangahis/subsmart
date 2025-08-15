@@ -3169,7 +3169,7 @@ class Job extends MY_Controller
 
                         if($input['employee_id']) {
                             $employee_email = getUserEmail($input['employee_id']);
-                            $mail->addBcc($employee_email);
+                            $mail->addCC($employee_email, $employee_email);
                         }
 
                         $mail->isHTML(true);
@@ -3331,11 +3331,13 @@ class Job extends MY_Controller
         $this->load->model('Invoice_settings_model');
         
         $jobs_data = $this->jobs_model->get_specific_job($job_id);  
-        $jobs_data_items = $this->jobs_model->get_specific_job_items($job_id);            
-        
+        $jobs_data_items = $this->jobs_model->get_specific_job_items($job_id);        
+                
+        $job_total_amount = 0;
         $subtotal = 0;
+
         foreach ($jobs_data_items as $item){            
-            $subtotal += $item->cost;            
+            $subtotal += $item->total;            
         }
 
         $job_total_amount = $subtotal + $jobs_data->tax_rate + $jobs_data->adjustment_value + $jobs_data->program_setup + $jobs_data->monthly_monitoring + $jobs_data->installation_cost;        
@@ -5308,6 +5310,36 @@ class Job extends MY_Controller
                 $user_docfile_template_id = $this->input->post('esign_template');
             }
 
+            $get_job_tax = array(
+                'where' => array(
+                    'company_id' => $comp_id,
+                    'is_default' => 1
+                ),            
+                'table' => 'tax_rates',
+                'select' => '*',
+            );            
+
+            $default_tax_percentage = null;
+            $total_tax_rate = 0;
+
+            $defaultTaxRate = $this->general->get_data_with_param($get_job_tax);                
+            if( $defaultTaxRate ){
+
+                $tax_percentage = $defaultTaxRate[0]->rate;
+
+                $total_amount_to_tax = 0;
+                if (isset($input['item_id'])) {
+                    $devices = count($input['item_id']);                
+                    for ($xx = 0; $xx < $devices; $xx++) {
+                        $total_amount_to_tax = $total_amount_to_tax + ($input['item_qty'][$xx] * $input['item_price'][$xx]);
+                    }
+                }      
+                
+                $default_tax_percentage = $tax_percentage;
+                $total_tax_rate = ($total_amount_to_tax * $tax_percentage) / 100;
+
+            }        
+            
             $jobs_data = array(
                 'job_number' => $job_number,
                 'customer_id' => $input['customer_id'],
@@ -5338,7 +5370,8 @@ class Job extends MY_Controller
                 'date_created' => date('Y-m-d H:i:s'),
                 //'notes' => $input['notes'],
                 'attachment' => '',
-                'tax_rate' => '0',
+                'tax_percentage' => $default_tax_percentage,
+                'tax_rate' => $total_tax_rate,
                 'job_type' => $input['job_type'],
                 'date_issued' => $input['start_date'],
                 'user_docfile_template_id' => $user_docfile_template_id,
@@ -5564,13 +5597,13 @@ class Job extends MY_Controller
 
                     if($customer) {
                         $mail = email__getInstance();
-                        $mail->FromName = 'NsmarTrac';
+                        $mail->FromName = 'nSmarTrac';
                         $customerName = $customer->first_name . " " . $customer->last_name;
                         $mail->addAddress($customer->email, $customerName);
 
                         if($input['employee_id']) {
                             $employee_email = getUserEmail($input['employee_id']);
-                            $mail->addBcc($employee_email);
+                            $mail->addCC($employee_email, $employee_email);
                         }
                         
                         $mail->isHTML(true);
@@ -5587,7 +5620,7 @@ class Job extends MY_Controller
                         $employee_email = getUserEmail($input['employee_id']);
                         if($employee_email) {
                             $mail2 = email__getInstance();
-                            $mail2->FromName = 'NsmarTrac';
+                            $mail2->FromName = 'nSmarTrac';
                             $mail2->addAddress($employee_email, $employee_email);
                             $mail2->isHTML(true);
                             $mail2->Subject = "nSmartrac: Job Details";

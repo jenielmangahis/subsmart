@@ -13323,4 +13323,50 @@ class Customer extends MY_Controller
 
         echo json_encode($return);
     }
+
+    public function customer_leads_export()
+	{
+        $this->load->model('Lead_model');
+
+		$cid     = logged('company_id');
+		$leads = $this->Lead_model->getAllByCompanyId($cid);
+
+		$delimiter = ",";
+		$time      = time();
+		$filename  = "leads_list_" . $time . ".csv";
+
+		$f = fopen('php://memory', 'w');
+
+		$fields = array('Name', 'Address', 'City', 'State', 'Zip', 'Lead Type', 'Source', 'Status', 'Is Archived', 'Date Created');
+		fputcsv($f, $fields, $delimiter);
+
+		if (!empty($leads)) {
+			foreach ($leads as $l) {
+				$name = $l->firstname . ' ' . $l->lastname;
+				$csvData = array(
+                    $name,
+                    $l->address != '' ? $l->address : '---',
+                    $l->city != '' ? $l->city : '---',
+                    $l->state != '' ? $l->state : '---',
+                    $l->zip != '' ? $l->zip : '---',
+                    $l->lead_name != '' ? $l->lead_name : '---',
+                    $l->source != '' ? $l->source : '---',
+                    $l->status,
+                    $l->is_archive == 1 ? 'Yes' : 'No',
+                    date("m/d/Y",strtotime($l->date_created))
+				);
+				fputcsv($f, $csvData, $delimiter);
+			}
+		} else {
+			$csvData = array('');
+			fputcsv($f, $csvData, $delimiter);
+		}
+
+		fseek($f, 0);
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		fpassthru($f);
+	}
 }

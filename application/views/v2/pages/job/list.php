@@ -115,7 +115,7 @@ foreach ($jobs as $job) {
     <ul class="nsm-fab-options">        
         <li onclick="location.href='<?= base_url('job/new'); ?>'">
             <div class="nsm-fab-icon">
-                <i class="bx bx-user-plus"></i>
+                <i class="bx bx-message-square-error"></i>
             </div>
             <span class="nsm-fab-label">Add Job</span>
         </li>
