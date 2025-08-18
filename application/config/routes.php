@@ -2352,3 +2352,5 @@ $route['accounting/v2/check/voidCheck']['POST'] = 'accounting_controllers/v2/Che
 $route['accounting/v2/check/deleteCheck']['POST'] = 'accounting_controllers/v2/Check/deleteCheck';
 $route['accounting/v2/check/voidMultipleChecks']['POST'] = 'accounting_controllers/v2/Check/voidMultipleChecks';
 $route['accounting/v2/check/deleteMultipleChecks']['POST'] = 'accounting_controllers/v2/Check/deleteMultipleChecks';
+
+$route['activity_logs/export'] = 'Activity_logs/exportData';
