@@ -161,3 +161,40 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade nsm-modal" id="contractor-modal-update" tabindex="-1" role="dialog" aria-labelledby="contractor-modal-update-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <?php echo form_open_multipart(null, ['id' => 'form-update-contractor-field', 'class' => 'form-validate form-update-contractor-field', 'autocomplete' => 'off']); ?>
+                <input type="hidden" id="contractor_id" name="contractor_id" value="" />
+                <div class="modal-header">
+                    <span class="modal-title content-title" id="contractor-modal-label">Update Contractor</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row gy-3">
+                        <div class="col-12">
+                            <label for="name">Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control nsm-field" name="name" id="name" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="email">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control nsm-field" name="email" id="email" required>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal-body -->
+                <div class="modal-footer">
+                    <div class="row w-100">
+                        <div class="col-12 col-md-6">
+                            <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                        <div class="col-12 col-md-6 text-end">
+                            <button type="submit" name="save" class="nsm-button success">Update</button>
+                        </div>
+                    </div>
+                </div>
+            <?php echo form_close(); ?>
+        </div>
+    </div>
+</div>
