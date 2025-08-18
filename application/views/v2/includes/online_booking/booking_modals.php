@@ -219,15 +219,15 @@
             </div>
             <div class="col-6 mt-2">
               <label>Valid From</label>
-              <input type="date" name="valid_from" value=""  class="form-control coupon_valid_from" required="" id="coupon_valid_from" autocomplete="off" />
+              <input type="date" name="valid_from" value="<?= date("Y-m-d"); ?>"  class="form-control coupon_valid_from" required="" id="coupon_valid_from" autocomplete="off" />
             </div>
             <div class="col-6 mt-2">
               <label>Valid To</label>
-              <input type="date" name="valid_to" value=""  class="form-control coupon_valid_to" required="" id="coupon_valid_to" autocomplete="off" />
+              <input type="date" name="valid_to" value="<?= date("Y-m-d"); ?>"  class="form-control coupon_valid_to" required="" id="coupon_valid_to" autocomplete="off" />
             </div>
             <div class="col-6 mt-2">
               <label>Max usage</label>
-              <input type="number" name="uses_max" value="" required="" class="form-control" autocomplete="off" />
+              <input type="number" name="uses_max" value="1" required="" class="form-control" autocomplete="off" />
             </div>
             <div class="col-6 mt-2">
               <label>Status</label>
