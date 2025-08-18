@@ -367,6 +367,39 @@ class Contractors extends MY_Controller {
         redirect($_SERVER['HTTP_REFERER']);
     }
 
+    public function ajax_update_contractor()
+    {
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        if( $post['name'] != '' && $post['email'] != '' ){
+
+            $details = [
+                'display_name' => $post['name'],
+                'email' => $post['email']
+            ];
+
+            $update = $this->vendors_model->update_contractor($post['contractor_id'], $details);
+
+            if($update) {
+                $is_success = 1;
+                $msg = '';
+            } else {
+                $msg = 'Cannot find data';
+            }
+            
+        }else{
+            $msg = 'Please specify custom field name';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+        exit;    
+    }    
+
     public function set_status($contractorId, $status)
     {
         if($status === 'inactive') {

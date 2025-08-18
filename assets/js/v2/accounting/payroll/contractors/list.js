@@ -108,7 +108,7 @@ $('#contractor-modal form').validate({
     }
 });
 
-$(".edit-contractor").on('click', function(e) {
+$(".edit-contractorBackup").on('click', function(e) {
     e.preventDefault();
 
     var row = $(this).closest('tr');
@@ -116,7 +116,8 @@ $(".edit-contractor").on('click', function(e) {
 
     $.get(base_url + `accounting/get-vendor-details/${id}`, function(res) {
         var vendor = JSON.parse(res);
-
+        
+        $('#contractor-modal #contractor-modal-label').html("Update Contractor");
         $('#contractor-modal #name').val(vendor.display_name);
         $('#contractor-modal #email').val(vendor.email);
 
@@ -125,10 +126,28 @@ $(".edit-contractor").on('click', function(e) {
     });
 });
 
+$(".edit-contractor").on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var id = row.data().id;
+
+    $.get(base_url + `accounting/get-vendor-details/${id}`, function(res) {
+        var vendor = JSON.parse(res);
+        
+        $('#contractor-modal-update #name').val(vendor.display_name);
+        $('#contractor-modal-update #email').val(vendor.email);
+        $('#contractor-modal-update #contractor_id').val(vendor.id);
+
+        $('#contractor-modal-update').modal('show');
+    });
+});
+
 $('#contractor-modal').on('hidden.bs.modal', function() {
     $('#contractor-modal form').attr('action', base_url + `accounting/contractors/add`);
     $('#contractor-modal #name').val('');
     $('#contractor-modal #email').val('');
+    $('#contractor-modal #contractor-modal-label').html("Add a contractor");
 });
 
 $('.delete-contractor').on('click', function(e) {
@@ -419,3 +438,44 @@ function initializeFields() {
         autoclose: true
     });
 }
+
+    $('.form-update-contractor-field').on('submit', function(e){      
+        e.preventDefault();   
+        let _this = $(this);
+        
+        var url = base_url + "accounting/contractors/_update_contractor";
+        _this.find("button[type=submit]").html("Saving");
+        _this.find("button[type=submit]").prop("disabled", true);
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: _this.serialize(),
+            dataType:'json',
+            success: function(result) {
+                if (result.is_success === 1) {
+                    $("#form-update-contractor-field").modal('hide');
+                    _this.trigger("reset");
+                    
+                    Swal.fire({
+                        title: 'Save Successful!',
+                        text: "Contractor has been upated successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: result.msg
+                    });
+                }
+                
+                _this.find("button[type=submit]").html("Save");
+                _this.find("button[type=submit]").prop("disabled", false);
+            },
+        });
+    });   

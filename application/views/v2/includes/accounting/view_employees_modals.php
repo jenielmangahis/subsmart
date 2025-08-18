@@ -1598,7 +1598,8 @@
         function fetchSettings() {
             $.ajax({
                 type: 'POST',
-                url: `${window.origin}/payscale/getPayscaleCommissionSettings`,
+                //url: `${window.origin}/payscale/getPayscaleCommissionSettings`,
+                url: base_url + `payscale/getPayscaleCommissionSettings`,
                 data: { employee_id: <?php echo $employee->id; ?> },
                 dataType: 'json',
                 success: function(response) {
@@ -1835,7 +1836,8 @@
             "serverSide": true,
             "ordering": false,
             "ajax": {
-                "url": `${window.origin}/Payscale/getPayscaleSummaryServerside/<?php echo $employee->id; ?>`,
+                //"url": `${window.origin}/Payscale/getPayscaleSummaryServerside/<?php echo $employee->id; ?>`,
+                "url": base_url + `Payscale/getPayscaleSummaryServerside/<?php echo $employee->id; ?>`,
                 "type": "POST",
             },
             "language": {
@@ -1848,7 +1850,8 @@
             "serverSide": true,
             "ordering": false,
             "ajax": {
-                "url": `${window.origin}/Payscale/getCommissionSummaryServerside/<?php echo $employee->id; ?>`,
+                //"url": `${window.origin}/Payscale/getCommissionSummaryServerside/<?php echo $employee->id; ?>`,
+                "url": base_url + `Payscale/getCommissionSummaryServerside/<?php echo $employee->id; ?>`,
                 "type": "POST",
             },
             "language": {
@@ -1861,7 +1864,8 @@
             "serverSide": true,
             "ordering": false,
             "ajax": {
-                "url": `${window.origin}/Payscale/getPayrollSummaryServerside/<?php echo $employee->id; ?>`,
+                //"url": `${window.origin}/Payscale/getPayrollSummaryServerside/<?php echo $employee->id; ?>`,
+                "url": base_url + `Payscale/getPayrollSummaryServerside/<?php echo $employee->id; ?>`,
                 "type": "POST",
             },
             "language": {
@@ -2024,7 +2028,8 @@ $(function() {
 
         $.ajax({
             type: "POST",
-            url: window.origin + "/accounting/employees/update_employee_data/tax_withholding",
+            //url: window.origin + "/accounting/employees/update_employee_data/tax_withholding",
+            url: base_url + "accounting/employees/update_employee_data/tax_withholding",
             data: form.serialize(),
             beforeSend: function() {
                 formDisabler(form, true);
@@ -2067,7 +2072,8 @@ $(function() {
 
         $.ajax({
             type: "POST",
-            url: window.origin + "/accounting/employees/update_employee_data/employee_notes",
+            //url: window.origin + "/accounting/employees/update_employee_data/employee_notes",
+            url: base_url + "accounting/employees/update_employee_data/employee_notes",
             data: {
                 notes: notes,
                 user_id: <?php echo $employee->id; ?>,

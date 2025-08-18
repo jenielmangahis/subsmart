@@ -190,7 +190,6 @@ class Employees extends MY_Controller
         $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));
         $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
 
-    
         $employees = $this->get_employees($filters);
         $this->page_data['employees'] = $employees;
         $this->page_data['commission_pays'] = $this->users_model->getPayDetailsByPayType('commission');
@@ -2847,6 +2846,68 @@ class Employees extends MY_Controller
         $postData = $this->input->post();
         $saveDetails = $this->employment_details_model->saveEmployeeData($postData, $updateType);
         echo json_encode($saveDetails);
+    }
+
+    public function ajax_get_employees()
+    {
+        $company_id = logged('company_id');
+
+        // Initialize Table Information
+        $initializeTable = $this->serverside_table->initializeTable(
+            "accounting_employee_view", 
+            array('employee', 'email', 'phone', 'pay_method', 'status'),
+            array('employee', 'email', 'phone', 'pay_method', 'status'),
+            null,  
+            array(
+                'company_id' => $company_id,
+            ),
+        );
+
+        // Define the where condition
+        $whereCondition = array('company_id' => $company_id);
+        $getData = $this->serverside_table->getRows($this->input->post(), $whereCondition);
+
+        $data = $row = array();
+        $i = $this->input->post('start');
+        
+        foreach($getData as $getDatas){
+            if ($getDatas->company_id == $company_id) {
+
+                $employee_id = $getDatas->employee_id;
+                $employee = (!empty($getDatas->employee)) ? $getDatas->employee : "<small class='text-muted fst-italic'>Not Specified</small>";
+                $payscale_name = !empty($getDatas->payscale_name) ? ucwords(str_replace('_', ' ', $getDatas->payscale_name)) : "Not Specified";
+                $payscale_amount = !empty($getDatas->payscale_amount) ? $getDatas->payscale_amount : null;
+                $payscale_formatted = ($payscale_name != "Not Specified")
+                    ? ($getDatas->payscale_name == "commission_only"
+                        ? "{$payscale_name}"
+                        : "{$payscale_name} <small class='text-muted'>(\${$payscale_amount})</small>")
+                    : "<small class='text-muted fst-italic'>Not Specified</small>";
+                $pay_method = (!empty($getDatas->pay_method)) ? $getDatas->pay_method : "<small class='text-muted fst-italic'>Not Specified</small>";
+                $status = ($getDatas->status == "Active") ? "<span class='badge bg-success'>Active</span>" : "<span class='badge bg-danger'>Inactive</span>";
+                $email = (!empty($getDatas->email)) ? $getDatas->email : "<small class='text-muted fst-italic'>Not Specified</small>";
+                $phone = (!empty($getDatas->phone)) ? $getDatas->phone : "<small class='text-muted fst-italic'>Not Specified</small>";
+
+                $data[] = array(
+                    "<strong class='fw-bold nsm-text-primary nsm-link' onclick='location.href=`".base_url('accounting/employees/view/').$employee_id."`'>$employee</strong>",
+                    "$payscale_formatted",
+                    "$pay_method",
+                    "$status",
+                    "$email",
+                    "$phone",
+                );
+                $i++;
+            }
+        }
+
+        $output = array(
+            "draw" => $this->input->post('draw'),
+            "recordsTotal" => $this->serverside_table->countAll(),
+            "recordsFiltered" => $this->serverside_table->countFiltered($this->input->post()),
+            "data" => $data,
+        );
+        
+        // Output to JSON format
+        echo json_encode($output);
     }
 
     public function getEmployeeServerside()

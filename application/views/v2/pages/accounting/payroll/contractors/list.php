@@ -65,6 +65,7 @@
                             </ul>
                         </div> -->
 
+                        <!-- 
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-file'></i> Prepare 1099s
@@ -76,12 +77,28 @@
                                 <i class='bx bx-fw bx-dollar-circle'></i> Pay contractors
                             </button>
                         </div>
+-->
+
+                        <div class="nsm-page-buttons page-button-container">                            
+                            <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
+                            <div class="btn-group nsm-main-buttons" style="margin-bottom: 4px !important;">
+                                <button type="button" class="btn btn-nsm" data-bs-toggle="modal" data-bs-target="#contractor-modal"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Contractor</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end batch-actions">
+                                    <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#pay-contractors-modal">Run payroll</a></li>
+                                </ul>
+                            </div>
+                            <?php } ?>
+                        </div>                        
                     </div>
                 </div>
                 <table class="nsm-table" id="contractors-table">
                     <thead>
                         <tr>
-                            <td style="width: 85%;" data-name="Name">NAME</td>
+                            <td style="" data-name="Name">NAME</td>
+                            <td style=" data-name="Name">Email</td>
                             <td data-name="Status">STATUS</td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -91,6 +108,7 @@
 						<?php foreach($contractors as $contractor) : ?>
                         <tr data-id="<?=$contractor->id?>" data-name="<?=$contractor->display_name?>">
                             <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/contractors/view/' . $contractor->id) ?>'"><?=$contractor->display_name?></td>
+                            <td><?= $contractor->email; ?></td>
                             <td><?=$contractor->status === '0' ? 'Inactive' : 'Active'?></td>
                             <td>
                                 <div class="dropdown table-management">
