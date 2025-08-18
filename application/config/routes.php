@@ -773,6 +773,8 @@ $route['accounting/employees/delete-deductions-and-contributions'] = 'accounting
 $route['accounting/employees/_employee_commission_settings'] = 'accounting_controllers/employees/ajax_employee_commission_settings';
 $route['accounting/employees/_update_employee_pay_type'] = 'accounting_controllers/employees/ajax_update_employee_pay_type';
 
+$route['accounting/employees/_get_employees'] = 'accounting_controllers/employees/ajax_get_employees';
+
 $route['accounting/worksites'] = 'accounting_controllers/worksites/index';
 $route['accounting/worksites/add-work-location'] = 'accounting_controllers/worksites/add';
 $route['accounting/worksites/get-details/(:any)'] = 'accounting_controllers/worksites/get_details/$1';

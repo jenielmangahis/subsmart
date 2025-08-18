@@ -502,8 +502,11 @@
         });   
         
         $(document).on('click', '#with-selected-delete', function(){
-            let total= $('input[name="invoice[]"]:checked').length;
-            if( total <= 0 ){
+
+            let checkedBoxes = document.querySelectorAll('#tbl-invoices input[name="invoice[]"]:checked');
+            //let total= $('input[name="invoice[]"]:checked').length;
+
+            if( checkedBoxes.length <= 0 ){
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
