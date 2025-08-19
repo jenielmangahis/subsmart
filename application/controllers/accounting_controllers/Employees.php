@@ -689,7 +689,6 @@ class Employees extends MY_Controller
             'base_monthly' => $payscale->pay_type === 'Monthly' ? $this->input->post('salary_rate') : '',
             'base_salary' => $payscale->pay_type === 'Daily' ? $this->input->post('salary_rate') : '',
             'base_yearly' => $payscale->pay_type === 'Yearly' ? $this->input->post('salary_rate') : '',
-            'employee_number' => $this->input->post('employee_number'),
             'date_hired' => date('Y-m-d', strtotime($this->input->post('hire_date'))),
             'phone' => $this->input->post('phone'),
             'mobile' => $this->input->post('mobile'),
@@ -2860,6 +2859,7 @@ class Employees extends MY_Controller
             null,  
             array(
                 'company_id' => $company_id,
+                'is_archived' => 'No'
             ),
         );
 
@@ -2894,6 +2894,16 @@ class Employees extends MY_Controller
                     "$status",
                     "$email",
                     "$phone",
+                    '<div class="dropdown table-management">
+                        <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item delete-employee-item" data-name="' . $employee . '" name="btn_delete" href="javascript:void(0);" data-id="' . $employee_id . '">Delete</a>
+                            </li>
+                        </ul>
+                    </div>'
                 );
                 $i++;
             }
@@ -3050,5 +3060,53 @@ class Employees extends MY_Controller
 
         echo json_encode($return);
     }
+
+	public function employee_export()
+	{
+        $company_id = logged('company_id');
+
+        // Initialize Table Information
+        $getEmployeeView = array(
+            'select' => '*',
+            'table' => 'accounting_employee_view',
+            'where' => array('company_id' => $company_id),
+        );
+        
+        $getEmployeeDatas = $this->general_model->get_data_with_param($getEmployeeView, true);
+
+		$delimiter = ",";
+		$time      = time();
+		$filename  = "employee_list_" . $time . ".csv";
+
+		$f = fopen('php://memory', 'w');
+
+		$fields = array('Name', 'Pay Scale', 'Pay Method', 'Status', 'Email', 'Phone', 'Is Archived');
+		fputcsv($f, $fields, $delimiter);
+
+		if (!empty($getEmployeeDatas)) {
+			foreach ($getEmployeeDatas as $u) {
+				$csvData = array(
+					$u->employee,
+					$u->payscale_name,
+					$u->pay_method,
+					$u->status,
+					$u->email,
+					$u->phone,
+					$u->is_archived
+				);
+				fputcsv($f, $csvData, $delimiter);
+			}
+		} else {
+			$csvData = array('');
+			fputcsv($f, $csvData, $delimiter);
+		}
+
+		fseek($f, 0);
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		fpassthru($f);
+	}    
 
 }
