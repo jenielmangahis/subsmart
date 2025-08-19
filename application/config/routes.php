@@ -759,6 +759,7 @@ $route['accounting/contractors/load']['post'] = 'accounting_controllers/contract
 $route['accounting/contractors/add']['post'] = 'accounting_controllers/contractors/add';
 $route['accounting/contractors/view/(:any)'] = 'accounting_controllers/contractors/view/$1';
 $route['accounting/contractors/(:any)/update-details']['post'] = 'accounting_controllers/contractors/update_details/$1';
+$route['accounting/contractors/(:any)/update']['post'] = 'accounting_controllers/contractors/update/$1';
 $route['accounting/contractors/set-status/(:any)/(:any)'] = 'accounting_controllers/contractors/set_status/$1/$2';
 $route['accounting/contractors/(:any)/load-payments']['post'] = 'accounting_controllers/contractors/load_contractor_payments/$1';
 $route['accounting/contractors/(:any)/get-payments-total']['post'] = 'accounting_controllers/contractors/get_payments_total/$1';
@@ -769,6 +770,7 @@ $route['accounting/employees/edit-deductions-and-contributions'] = 'accounting_c
 $route['accounting/employees/update-deductions-and-contributions'] = 'accounting_controllers/employees/update_deductions_and_contributions';
 $route['accounting/employees/get-deductions-and-contributions'] = 'accounting_controllers/employees/get_deductions_and_contributions';
 $route['accounting/employees/delete-deductions-and-contributions'] = 'accounting_controllers/employees/delete_deductions_and_contributions';
+$route['accounting/contractors/_update_contractor'] = 'accounting_controllers/contractors/ajax_update_contractor';
 
 $route['accounting/employees/_employee_commission_settings'] = 'accounting_controllers/employees/ajax_employee_commission_settings';
 $route['accounting/employees/_update_employee_pay_type'] = 'accounting_controllers/employees/ajax_update_employee_pay_type';
@@ -2354,3 +2356,5 @@ $route['accounting/v2/check/voidCheck']['POST'] = 'accounting_controllers/v2/Che
 $route['accounting/v2/check/deleteCheck']['POST'] = 'accounting_controllers/v2/Check/deleteCheck';
 $route['accounting/v2/check/voidMultipleChecks']['POST'] = 'accounting_controllers/v2/Check/voidMultipleChecks';
 $route['accounting/v2/check/deleteMultipleChecks']['POST'] = 'accounting_controllers/v2/Check/deleteMultipleChecks';
+
+$route['activity_logs/export'] = 'Activity_logs/exportData';

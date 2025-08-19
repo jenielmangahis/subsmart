@@ -49,27 +49,27 @@ include viewPath('v2/includes/header'); ?>
 
                 <div class="row g-3">
                     <div class="col-3">
-                        <div class="nsm-counter h-100" role="button" onclick="location.href='<?php echo base_url('more/addon/booking/coupons/coupon_tab/active'); ?>'">
+                        <div class="nsm-counter success h-100" role="button" onclick="location.href='<?php echo base_url('more/addon/booking/coupons/coupon_tab/active'); ?>'">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
                                     <i class="bx bx-check-circle"></i>
                                 </div>
                                 <div class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
                                     <span>Total Active Coupons</span>
-                                    <h2><?= $total_active; ?></h2>
+                                    <h2><?= $total_active->total; ?></h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-3">
-                        <div class="nsm-counter success h-100" role="button" onclick="location.href='<?php echo base_url('more/addon/booking/coupons/coupon_tab/closed'); ?>'">
+                        <div class="nsm-counter error h-100" role="button" onclick="location.href='<?php echo base_url('more/addon/booking/coupons/coupon_tab/closed'); ?>'">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
-                                    <i class="bx bx-check-circle"></i>
+                                    <i class='bx bx-x-circle'></i>
                                 </div>
                                 <div class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
                                     <span>Total Closed Coupons</span>
-                                    <h2><?= $total_closed; ?></h2>
+                                    <h2><?= $total_closed->total; ?></h2>
                                 </div>
                             </div>
                         </div>
@@ -106,53 +106,63 @@ include viewPath('v2/includes/header'); ?>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach( $coupons as $c ){ ?>
-                                    <tr>
-                                        <td>
-                                            <div class="table-row-icon"><i class='bx bxs-coupon'></i></div>
-                                        </td>
-                                        <td class="fw-bold nsm-text-primary"><?php echo $c->coupon_name; ?></td>
-                                        <td><?php echo $c->coupon_code; ?></td>
-                                        <td><?php echo date("m/d/Y", strtotime($c->date_valid_from)) . ' to ' . date("m/d/Y", strtotime($c->date_valid_to)) ?></td>
-                                        <?php $discount_type = ""; ?>
-                                        <?php $discount_type = $c->discount_from_total_type == 1 ? '%' : '$'; ?>
-                                        <td><?php echo number_format($c->discount_from_total,2,'.',',') . " " . $discount_type; ?></td>
-                                        <td>
-                                            <?php if( $c->status == 1 ){ ?>
-                                                <?php 
-                                                    $date = date("Y-m-d");
-                                                    $is_expired = 0;
-                                                    if( $date > $c->date_valid_to ){
-                                                        $is_expired = 1;
-                                                    }
-                                                ?>
-                                                <?php if( $is_expired == 1 ){ ?>    
-                                                    <span class="nsm-badge danger">Expired</span>
+                                <?php if($coupons){ ?>
+                                    <?php foreach( $coupons as $c ){ ?>
+                                        <tr>
+                                            <td>
+                                                <div class="table-row-icon"><i class='bx bxs-coupon'></i></div>
+                                            </td>
+                                            <td class="fw-bold nsm-text-primary"><?php echo $c->coupon_name; ?></td>
+                                            <td><?php echo $c->coupon_code; ?></td>
+                                            <td><?php echo date("m/d/Y", strtotime($c->date_valid_from)) . ' to ' . date("m/d/Y", strtotime($c->date_valid_to)) ?></td>
+                                            <?php $discount_type = ""; ?>
+                                            <?php $discount_type = $c->discount_from_total_type == 1 ? '%' : '$'; ?>
+                                            <td><?php echo number_format($c->discount_from_total,2,'.',',') . " " . $discount_type; ?></td>
+                                            <td>
+                                                <?php if( $c->status == 1 ){ ?>
+                                                    <?php 
+                                                        $date = date("Y-m-d");
+                                                        $is_expired = 0;
+                                                        if( $date > $c->date_valid_to ){
+                                                            $is_expired = 1;
+                                                        }
+                                                    ?>
+                                                    <?php if( $is_expired == 1 ){ ?>    
+                                                        <span class="nsm-badge danger">Expired</span>
+                                                    <?php }else{ ?>
+                                                        <span class="nsm-badge success">Active</span>
+                                                    <?php } ?>
+                                                    
                                                 <?php }else{ ?>
-                                                    <span class="nsm-badge success">Active</span>
+                                                    <span class="nsm-badge secondary">Closed</span>
                                                 <?php } ?>
-                                                
-                                            <?php }else{ ?>
-                                                <span class="nsm-badge secondary">Closed</span>
-                                            <?php } ?>
-                                        </td>
-                                        <td class="text-right">
-                                            <div class="dropdown table-management">
-                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                </a>
-                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                    <?php if(checkRoleCanAccessModule('online-booking', 'write')){ ?>
-                                                    <li role="presentation">
-                                                        <a class="dropdown-item coupon__edit margin-right-sec" data-id="<?php echo $c->id; ?>" href="javascript:void(0);">Edit</a>
-                                                    </li>
-                                                    <?php } ?>
-                                                    <?php if(checkRoleCanAccessModule('online-booking', 'delete')){ ?>
-                                                    <li role="presentation">
-                                                        <a class="dropdown-item coupon__delete" data-id="<?php echo $c->id; ?>" data-name="<?php echo $c->coupon_name; ?>" href="javascript:void(0);"><span class="fa fa-trash-o icon"></span> Delete</a>
-                                                    </li>
-                                                    <?php } ?>
-                                                </ul>
+                                            </td>
+                                            <td class="text-right">
+                                                <div class="dropdown table-management">
+                                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu dropdown-menu-end">
+                                                        <?php if(checkRoleCanAccessModule('online-booking', 'write')){ ?>
+                                                        <li role="presentation">
+                                                            <a class="dropdown-item coupon__edit margin-right-sec" data-id="<?php echo $c->id; ?>" href="javascript:void(0);">Edit</a>
+                                                        </li>
+                                                        <?php } ?>
+                                                        <?php if(checkRoleCanAccessModule('online-booking', 'delete')){ ?>
+                                                        <li role="presentation">
+                                                            <a class="dropdown-item coupon__delete" data-id="<?php echo $c->id; ?>" data-name="<?php echo $c->coupon_name; ?>" href="javascript:void(0);"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                                        </li>
+                                                        <?php } ?>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+                                <?php }else{ ?>
+                                    <tr>
+                                        <td colspan="7">
+                                            <div class="nsm-empty">
+                                                <span>No data found.</span>
                                             </div>
                                         </td>
                                     </tr>

@@ -60,11 +60,14 @@
                             </ul>
                         </div>                        
 
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add-worksite-modal">
-                                <i class='bx bx-fw bx-list-plus'></i> Add Worksite
-                            </button>
+                        <div class="nsm-page-buttons page-button-container">                            
+                            <?php //if(checkRoleCanAccessModule('users', 'write')){ ?>
+                            <div class="btn-group nsm-main-buttons" style="margin-bottom: 4px !important;">
+                                <button type="button" class="btn btn-nsm" data-bs-toggle="modal" data-bs-target="#add-worksite-modal"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Worksite</button>
+                            </div>
+                            <?php //} ?>
                         </div>
+
                     </div>
                 </div>
                 <form id="frm-with-selected">

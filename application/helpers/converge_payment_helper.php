@@ -13,7 +13,7 @@ function convergeSendSale($data)
         'merchant_id' => CONVERGE_MERCHANTID,
         'user_id' => CONVERGE_MERCHANTUSERID,
         'pin' => CONVERGE_MERCHANTPIN,
-        'demo' => true,
+        'demo' => false,
     ]);
     $createSale = $converge->request('ccsale', [
         'ssl_card_number' => $data['card_number'],
