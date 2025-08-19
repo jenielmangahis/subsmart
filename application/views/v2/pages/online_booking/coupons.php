@@ -150,7 +150,7 @@ include viewPath('v2/includes/header'); ?>
                                                         <?php } ?>
                                                         <?php if(checkRoleCanAccessModule('online-booking', 'delete')){ ?>
                                                         <li role="presentation">
-                                                            <a class="dropdown-item coupon__delete" data-id="<?php echo $c->id; ?>" data-name="<?php echo $c->coupon_name; ?>" href="javascript:void(0);"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                                            <a class="dropdown-item coupon__delete" data-id="<?php echo $c->id; ?>" data-name="<?php echo $c->coupon_name; ?>" href="javascript:void(0);">Delete</a>
                                                         </li>
                                                         <?php } ?>
                                                     </ul>

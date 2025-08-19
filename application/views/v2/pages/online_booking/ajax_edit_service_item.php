@@ -4,7 +4,7 @@
         <div class="row g-3">
             <div class="col-12">
                 <label class="content-subtitle fw-bold d-block mb-2">Category</label>
-                <select class="nsm-field form-control" id="category_id" name="category_id" required>
+                <select class="nsm-field form-select" id="category_id_edit" name="category_id" required>
                     <option value="" disabled>Select Category</option>
                     <?php foreach( $category as $cat ): ?>
                         <option <?= $service_item->category_id == $cat->id ? 'selected=""' : ''; ?> value="<?= $cat->id; ?>"><?= $cat->name; ?></option>
@@ -21,11 +21,11 @@
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold d-block mb-2">Price ($)</label>
-                <input type="text" name="price" id="price" value="0" class="nsm-field form-control" required value="<?= $service_item->price; ?>" />
+                <input type="number" step="any" name="price" id="price" class="nsm-field form-control" required value="<?= $service_item->price; ?>" />
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold d-block mb-2">Price Unit</label>
-                <select class="nsm-field form-control" id="price_unit" name="price_unit" required>
+                <select class="nsm-field form-select" id="price_unit_edit" name="price_unit" required>
                     <option value="" disabled>Select Price Unit</option>
                     <option <?= $service_item->price_unit == 'each' ? 'selected=""' : ''; ?> value="each">each</option>
                     <option <?= $service_item->price_unit == 'sq. ft.' ? 'selected=""' : ''; ?> value="sq. ft.">sq. ft.</option>
@@ -53,7 +53,18 @@
         <label class="content-subtitle fw-bold d-block mb-2">Image</label>
         <div class="nsm-img-upload" style="background-image: url('<?php echo $service_item_thumb_img; ?>')">
             <span class="nsm-upload-label disable-select">Drop or click image to upload</span>
-            <input type="file" name="product-image" class="nsm-upload" accept="image/*">
+            <input type="file" name="product_image" class="nsm-upload" accept="image/*">
         </div>
     </div>
 </div>
+<script>
+$(function(){
+    $('#category_id_edit').select2({
+        dropdownParent: $('#edit_service_item_modal')
+    });
+
+    $('#price_unit_edit').select2({
+        dropdownParent: $('#edit_service_item_modal')
+    });
+});
+</script>
