@@ -1857,16 +1857,7 @@ class Pages extends MYF_Controller {
 					$subject = 'nSmarTrac : Online Lead Inquiry';
 					$from = 'nSmarTrac';    
 					$to   = $leadForm->email_notification_recipient;
-					$body = "
-						<p>Hi,</p>
-						<p>Someone made an inquiry. Below are the details.</p>
-						<ul>
-							<li>Name : " . $post['first_name'] . " " . $post['last_name'] . "</li>
-							<li>Phone : " . $post['phone'] . "</li>
-							<li>Email : " . $post['email'] . "</li>
-							<li>Message : " . $post['message'] . "</li>
-						</ul>
-					";
+					$body = $this->load->view('v2/emails/online_lead_contact', $post, true);
 
 					$mail = email__getInstance(['subject' => $subject]);
                     $mail->FromName = $from;
