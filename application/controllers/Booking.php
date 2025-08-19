@@ -116,6 +116,61 @@ class Booking extends MY_Controller {
 		$this->load->view('v2/pages/online_booking/form', $this->page_data);
 	}
 
+	public function ajax_update_custom_booking_form()
+	{
+		$is_success = 0;
+		$msg = 'Cannot save data.';
+
+		$company_id = logged('company_id');
+		$user_id    = logged('id');
+		$post = $this->input->post();
+		
+		$this->BookingForms_model->deleteAllByCompanyId($company_id);
+
+		$defaultFormFields = $this->BookingForms_model->defaultFormFields();
+
+		$sort = 1;
+		foreach( $post['is_field'] as $key => $value ){
+			$field_name  = $key;
+			$field_label = $value;
+			$type = 1;
+			if( $key == 'full_name' || $key == 'contact_number' || $key == 'email' ){
+				$is_required = 1;
+				$is_visible  = 1;
+			}else{
+				$is_required = $post['is_required'][$key] ?? 0;
+				$is_visible  = $post['is_visible'][$key] ?? 0;
+			}
+			$is_default  = array_key_exists($value, $defaultFormFields) ? 1 : 0;
+
+			$data = [
+				'company_id' => $company_id,
+				'user_id' => $user_id,
+				'field_name' => $field_name,
+				'label' => $field_label,
+				'type' => $type,
+				'is_required' => $is_required,
+				'is_visible' => $is_visible,
+				'is_default' => $is_default,
+				'sort' => $sort, 
+				'date_created' => date("Y-m-d H:i:s")
+			];
+
+			$this->BookingForms_model->create($data);
+			$sort++;
+		}
+
+		$is_success = 1;
+		$msg = '';
+		
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
 	public function ajax_create_form_field()
 	{
 		$is_success = 0;
@@ -1866,6 +1921,20 @@ class Booking extends MY_Controller {
         ];
 
         echo json_encode($return);
+	}
+
+	public function ajax_load_custom_booking_form_preview()
+	{
+		$company_id = logged('company_id');
+
+		$sort['field'] = 'sort';
+		$sort['order'] = 'ASC';
+		$booking_forms = $this->BookingForms_model->getAllByCompanyId($company_id, $sort);
+		$default_form_fields  = $this->BookingForms_model->defaultFormFields();	
+
+		$this->page_data['default_form_fields'] = $default_form_fields;
+		$this->page_data['booking_forms'] = $booking_forms;
+        $this->load->view('v2/pages/online_booking/ajax_load_custom_booking_form_preview', $this->page_data);
 	}
 
 }
