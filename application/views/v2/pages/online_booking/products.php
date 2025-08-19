@@ -376,7 +376,7 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: "<?php echo base_url(); ?>booking/delete_category",
+                        url: base_url + "booking/delete_category",
                         data: {
                             cat_id: id,
                         },
