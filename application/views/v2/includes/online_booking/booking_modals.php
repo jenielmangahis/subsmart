@@ -231,7 +231,7 @@
             </div>
             <div class="col-6 mt-2">
               <label>Status</label>
-              <select name="status" class="form-control" autocomplete="off">
+              <select name="status" class="form-select" autocomplete="off">
                 <option value="1">Active</option>
                 <option value="0">Closed</option>
               </select>
