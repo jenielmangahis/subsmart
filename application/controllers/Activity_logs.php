@@ -32,7 +32,7 @@ class Activity_logs extends MY_Controller {
 	}
 
 	public function index()
-	{
+	{		
 		$cid = logged('company_id');   
 		$activityLogs = $this->activity_model->getActivityLogs($cid); 
 		
@@ -48,6 +48,43 @@ class Activity_logs extends MY_Controller {
 		$this->page_data['activity'] = $this->activity_model->getById($id);
 		$this->load->view('activity_logs/view', $this->page_data);
 
+	}
+
+	public function exportData()
+	{
+		$cid     = logged('company_id');
+		$activityLogs = $this->activity_model->getActivityLogs($cid); 
+
+		$delimiter = ",";
+		$time      = time();
+		$filename  = "activity_logs_" . $time . ".csv";
+
+		$f = fopen('php://memory', 'w');
+
+		$fields = array('Name', 'Activity', 'Date');
+		fputcsv($f, $fields, $delimiter);
+
+		if (!empty($activityLogs)) {
+			foreach ($activityLogs as $log) {
+				$name = $log->first_name . ' ' . $log->last_name;
+				$csvData = array(
+					$name,
+					$log->activity_name,
+					date("m/d/Y h:i:s A",strtotime($log->created_at))
+				);
+				fputcsv($f, $csvData, $delimiter);
+			}
+		} else {
+			$csvData = array('');
+			fputcsv($f, $csvData, $delimiter);
+		}
+
+		fseek($f, 0);
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		fpassthru($f);
 	}
 
 }
