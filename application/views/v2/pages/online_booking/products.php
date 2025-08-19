@@ -3,7 +3,7 @@
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/upgrades_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/online_booking_tabs'); ?>
     </div>
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/online_booking_subtabs'); ?>
@@ -21,13 +21,16 @@
                 </div>
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#add_category_modal">
-                                <i class="bx bx-fw bx-plus"></i> Add New Category
-                            </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#add_service_item_modal">
-                                <i class="bx bx-fw bx-plus"></i> Add New Item / Service
-                            </button>
+                        <div class="nsm-page-buttons page-button-container"> 
+                            <div class="btn-group nsm-main-buttons">
+                                <button type="button" class="btn btn-nsm" data-bs-toggle="modal" data-bs-target="#add_service_item_modal"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Product / Service</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                                                    
+                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#add_category_modal" href="javascript:void(0);">Add Category</a></li>                            
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -61,7 +64,7 @@
                                                             <a class="dropdown-item edit-category" href="javascript:void(0);" data-id="<?php echo $cat->id; ?>">Edit</a>
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item delete-category" href="javascript:void(0);" data-id="<?php echo $cat->id; ?>">Delete</a>
+                                                            <a class="dropdown-item delete-category" href="javascript:void(0);" data-name="<?= $cat->name; ?>" data-id="<?php echo $cat->id; ?>">Delete</a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -194,12 +197,77 @@
                         });
                     }   
                     
-                    _this.find("button[type=submit]").html("Save");
-                    _this.find("button[type=submit]").prop("disabled", false);
+                    $('#btn-add-product-service').html("Save");
+                    $('#btn-add-product-service').prop("disabled", false);
                 },
-                beforeSubmit: function(){
-                    _this.find("button[type=submit]").html("Saving");
-                    _this.find("button[type=submit]").prop("disabled", true);
+                beforeSend: function(){
+                    $('#btn-add-product-service').html('<span class="bx bx-loader bx-spin"></span>');
+                    $('#btn-add-product-service').prop("disabled", true);
+                },
+                error: function() {
+                    Swal.fire({
+                        title: 'Error',
+                        text: "Something went wrong, please try again later.",
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            //location.reload();
+                        //}
+                    });
+                },
+            });
+
+        });
+
+        $(document).on("submit", "#frm-booking-update-item-service", function(e){
+            e.preventDefault();
+
+            var formData = new FormData($("#frm-booking-update-item-service")[0]);
+
+            $.ajax({
+                type: 'POST',
+                url: base_url + "booking/_update_service_item",
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'json',                
+                success: function(result) {
+                    if( result.is_success === 1 ){
+                        $('#edit_service_item_modal').modal('hide');
+                        Swal.fire({
+                            title: 'Edit Product / Service',
+                            text: 'Product / Service has been updated successfully.',
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                //location.reload();
+                            //}
+                        });
+                    }   
+                    
+                    $('#btn-update-product-service').html("Save");
+                    $('#btn-update-product-service').prop("disabled", false);
+                },
+                beforeSend: function(){
+                    $('#btn-update-product-service').html('<span class="bx bx-loader bx-spin"></span>');
+                    $('#btn-update-product-service').prop("disabled", true);
                 },
                 error: function() {
                     Swal.fire({
@@ -220,13 +288,13 @@
         
         $(document).on("submit", "#frm-booking-create-category", function(e){
             e.preventDefault();
-
             $.ajax({
                 type: 'POST',
                 url: base_url + "booking/_save_booking_category",
                 data: $('#frm-booking-create-category').serialize(),
                 dataType: 'json',
                 success: function(result) {
+                    $('#btn-add-category').html('Save');
                     if( result.is_success === 1 ){
                         $('#add_category_modal').modal('hide');
                         Swal.fire({
@@ -253,6 +321,9 @@
                             //}
                         });
                     }                    
+                },
+                beforeSend: function(){
+                    $('#btn-add-category').html('<span class="bx bx-loader bx-spin"></span>');
                 },
                 error: function() {
                     Swal.fire({
@@ -292,10 +363,11 @@
 
         $(document).on("click", ".delete-category", function() {
             let id = $(this).attr('data-id');
+            let name = $(this).attr('data-name');
 
             Swal.fire({
                 title: 'Delete Category',
-                text: "Delete selected category & associated services/items?",
+                html: `Are you sure you want to delete category <b>${name}</b>? Products / Services associated with it will be deleted as well. <br/><br/>Note : This cannot be undone.`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -361,10 +433,11 @@
 
         $(document).on("click", ".delete-service", function() {
             let id = $(this).attr('data-id');
+            let name = $(this).attr('data-name');
 
             Swal.fire({
-                title: 'Delete Service',
-                text: "Delete selected services/items?",
+                title: 'Delete Product / Service',
+                html: `Are you sure you want to delete product / service <b>${name}</b>? <br/><br/>Note : This cannot be undone.`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -373,21 +446,20 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: "<?php echo base_url(); ?>booking/delete_service_item",
-                        data: {
-                            siid: id,
-                        },
+                        url: base_url + "booking/_delete_service_item",
+                        data: {id: id},
+                        dataType: 'json',
                         success: function(result) {
                             Swal.fire({
-                                title: 'Success!',
-                                text: "Service item has been deleted succesfully.",
+                                title: 'Delete Product / Service',
+                                text: "Product / Service has been deleted succesfully.",
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
                             }).then((result) => {
-                                if (result.value) {
+                                //if (result.value) {
                                     location.reload();
-                                }
+                                //}
                             });
                         },
                         error: function() {

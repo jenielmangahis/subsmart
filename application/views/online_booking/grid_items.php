@@ -58,10 +58,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                       if(file_exists('uploads/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
                                           
                                           $service_item_thumb_img = base_url('/assets/dashboard/images/online-booking.png');
-                                          if(file_exists('uploads/service_item/' . $service_item_thumb) == FALSE || $service_item_thumb == null) {
+                                          if(file_exists('uploads/service_item/'.$p->company_id.'/'.$service_item_thumb) == FALSE || $service_item_thumb == null) {
                                               $service_item_thumb_img = base_url('/assets/dashboard/images/online-booking.png');
                                           } else {
-                                              $service_item_thumb_img = base_url('uploads/service_item/'.$service_item_thumb);
+                                              $service_item_thumb_img = base_url('uploads/service_item/'.$p->company_id.'/'.$service_item_thumb);
                                           }
 
 
