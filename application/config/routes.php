@@ -776,6 +776,7 @@ $route['accounting/employees/_employee_commission_settings'] = 'accounting_contr
 $route['accounting/employees/_update_employee_pay_type'] = 'accounting_controllers/employees/ajax_update_employee_pay_type';
 
 $route['accounting/employees/_get_employees'] = 'accounting_controllers/employees/ajax_get_employees';
+$route['accounting/employees/export_list'] = 'accounting_controllers/employees/employee_export';
 
 $route['accounting/worksites'] = 'accounting_controllers/worksites/index';
 $route['accounting/worksites/add-work-location'] = 'accounting_controllers/worksites/add';

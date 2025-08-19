@@ -46,7 +46,7 @@
                             <select id="status_filter" class="form-select w-auto">
                                 <option value="">All Employees</option>
                                 <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
+                                <option value="Disabled">Inactive</option>
                             </select>
                         </div>
                         <div class="d-inline-block me-2">
@@ -86,6 +86,8 @@
                                     <li><a class="dropdown-item" href="javascript:void(0);" id="run-payroll">Run payroll</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0);" id="bonus-only">Bonus only</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0);" id="commission-only">Commission only</a></li>
+                                    <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>                               
+                                    <li><a class="dropdown-item" id="btn-export-list" href="javascript:void(0);">Export</a></li>                                        
                                 </ul>
                             </div>
                             <?php } ?>
@@ -137,6 +139,7 @@
                                         <th>STATUS</th>
                                         <th>EMAIL</th>
                                         <th>PHONE NO.</th>
+                                        <th>&nbsp;</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -174,7 +177,7 @@
     });
 
     $(document).on('change', '#status_filter', function() {
-        employee_table.column(6).search($(this).val()).draw();
+        employee_table.column(4).search($(this).val()).draw();
     });
 
     $(document).on('change', '#pay_method_filter', function() {
@@ -226,5 +229,326 @@
                 break;
         }
     });
+
+    $(document).on("click", ".delete-employee-item", function() {
+        let id = $(this).attr('data-id');
+        let name = $(this).attr('data-name');
+
+        Swal.fire({
+            title: 'Delete Employee',
+            html: `Are you sure you want to delete employee <b>${name}</b>?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "users/_delete_user",
+                    data: {
+                        eid: id
+                    },
+                    dataType: "json",
+                    success: function(result) {
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Delete Employee',
+                                text: "Data was successfully deleted.",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Failed',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    });    
+
+    $('#btn-archived, #btn-mobile-archived').on('click', function(){
+        $('#modal-view-archive').modal('show');
+
+         $.ajax({
+            type: "POST",
+            url: base_url + "users/_archived_list",
+            success: function(html) {    
+                $('#users-archived-container').html(html);
+            },
+            beforeSend: function() {
+                $('#users-archived-container').html('<div class="col"><span class="bx bx-loader bx-spin"></span></div>');
+            }
+        });
+    });   
+    
+    $(document).on('click', '#with-selected-restore', function(){
+        let total= $('#archived-users input[name="users[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Restore Employees',
+                html: `Are you sure you want to restore selected rows?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'users/_restore_selected_users',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Restore Employees',
+                                    text: "Data restored successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    }); //Ok
+
+    $(document).on('click', '#with-selected-perma-delete', function(){
+        let total = $('#archived-users input[name="users[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Employees',
+                html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'users/_permanently_delete_selected_users',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Delete Employees',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    }); //Ok 
+
+    $(document).on('click', '#btn-empty-archives', function(){        
+        let total = $('#archived-users input[name="users[]"]').length;        
+        if( total > 0 ){
+            Swal.fire({
+                title: 'Empty Archived',
+                html: `Are you sure you want to <b>permanently delete</b> <b>${total}</b> archived employees? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'users/_delete_all_archived_users',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Empty Archived',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }else{
+            Swal.fire({                
+                icon: 'error',
+                title: 'Error',              
+                html: 'Archived is empty',
+            });
+        }        
+    }); //Ok
+
+    $(document).on('click', '.btn-restore-user', function(){
+        let user_id   = $(this).attr('data-id');
+        let user_name = $(this).attr('data-name');
+
+        Swal.fire({
+            title: 'Restore Employee',
+            html: `Are you sure you want to restore user <b>${user_name}</b>?`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + 'users/_restore_user',
+                    data: {
+                        user_id: user_id
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-view-archive').modal('hide');
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Restore Employee',
+                                html: "Data updated successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    }); //Ok
+
+    $(document).on('click', '.btn-permanently-delete-user', function(){
+        let user_id   = $(this).attr('data-id');
+        let user_name = $(this).attr('data-name');
+
+        Swal.fire({
+            title: 'Delete Employee',
+            html: `Are you sure you want to <b>permanently delete</b> employee <b>${user_name}</b>? <br/><br/>Note : This cannot be undone.`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + 'users/_delete_archived_user',
+                    data: {
+                        user_id: user_id
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-view-archive').modal('hide');
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Delete Employee',
+                                html: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    //location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    });    
+
+    $("#btn-export-list, .btn-export-list").on("click", function() {
+        location.href = base_url + 'accounting/employees/export_list';
+    });    
 
 </script>
