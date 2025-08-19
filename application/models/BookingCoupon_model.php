@@ -149,10 +149,9 @@ class BookingCoupon_model extends MY_Model
 
     public function totalActive( $filters = array() )
     {
-        $id = logged('id');
-
-        $this->db->select('*');
+        $this->db->select('COALESCE(COUNT(id),0) AS total');
         $this->db->from($this->table);
+        $this->db->where('status', $this->status_active);
 
         if( !empty($filter) ){
             foreach( $filters as $filter ){
@@ -160,18 +159,15 @@ class BookingCoupon_model extends MY_Model
             }
         }
         
-        $this->db->where('status', $this->status_active);
-
-        $num_rows = $this->db->count_all_results();
-        return $num_rows;
+        $query = $this->db->get()->row();
+        return $query;
     }
 
     public function totalClosed( $filters = array() )
     {
-        $id = logged('id');
-
-        $this->db->select('*');
+        $this->db->select('COALESCE(COUNT(id),0) AS total');
         $this->db->from($this->table);
+        $this->db->where('status', $this->status_closed);
 
         if( !empty($filter) ){
             foreach( $filters as $filter ){
@@ -179,10 +175,8 @@ class BookingCoupon_model extends MY_Model
             }
         }
 
-        $this->db->where('status', $this->status_closed);
-
-        $num_rows = $this->db->count_all_results();
-        return $num_rows;
+        $query = $this->db->get()->row();
+        return $query;
     }
 
     public function isActive(){
