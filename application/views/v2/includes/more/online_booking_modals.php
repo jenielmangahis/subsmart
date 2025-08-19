@@ -2,22 +2,22 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form id="frm-booking-create-category">            
-            <div class="modal-header">
-                <span class="modal-title content-title">Add Category</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>
-            <div class="modal-body">
-                <div class="row g-3">
-                    <div class="col-12">
-                        <label class="content-subtitle fw-bold d-block mb-2">Category Name</label>
-                        <input type="text" placeholder="Name" name="category_name" id="category_name" class="nsm-field form-control" required />
+                <div class="modal-header">
+                    <span class="modal-title content-title">Add Category</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="content-subtitle fw-bold d-block mb-2">Category Name</label>
+                            <input type="text" placeholder="Name" name="category_name" id="category_name" class="nsm-field form-control" required />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="nsm-button primary">Add</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="nsm-button primary" id="btn-add-category">Save</button>
+                </div>
             </form>
         </div>        
     </div>    
@@ -47,7 +47,7 @@
         <div class="modal-content">
             <form id="frm-booking-add-item-service">
                 <div class="modal-header">
-                    <span class="modal-title content-title">Add Service/Item</span>
+                    <span class="modal-title content-title">Add Product / Service</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
@@ -104,7 +104,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="nsm-button primary">Save</button>
+                    <button type="submit" class="nsm-button primary" id="btn-add-product-service">Save</button>
                 </div>
             </form>
         </div>
@@ -114,18 +114,18 @@
 <div class="modal fade nsm-modal fade" id="edit_service_item_modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="edit_service_item_modal_label" aria-hidden="true">    
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <?php echo form_open_multipart('booking/update_service_item', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
-            <div class="modal-header">
-                <span class="modal-title content-title">Edit Service/Item</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-            </div>
-            <div class="modal-body" id="edit_service_container">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="nsm-button primary">Update</button>
-            </div>
-            <?php echo form_close(); ?>
+            <form id="frm-booking-update-item-service">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Edit Product / Service</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="edit_service_container">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="nsm-button primary" id="btn-update-product-service">Save</button>
+                </div>
+            </form>
         </div>
     </div>    
 </div>
