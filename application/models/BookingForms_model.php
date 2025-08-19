@@ -125,6 +125,12 @@ class BookingForms_model extends MY_Model
 
     }
 
+    public function deleteAllByCompanyId($company_id){
+
+        $this->db->delete($this->table, array('company_id' => $company_id));
+
+    }
+
     public function isCouponCodeExists($coupon_code)
     {
         $is_exists = false;
