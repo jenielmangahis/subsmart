@@ -154,7 +154,7 @@ class BookingCoupon_model extends MY_Model
         $this->db->from($this->table);
         $this->db->where('status', $this->status_active);
 
-        if( !empty($filter) ){
+        if( !empty($filters) ){
             foreach( $filters as $filter ){
                 $this->db->where($filter['field'], $filter['value']);
             }
@@ -170,7 +170,7 @@ class BookingCoupon_model extends MY_Model
         $this->db->from($this->table);
         $this->db->where('status', $this->status_closed);
 
-        if( !empty($filter) ){
+        if( !empty($filters) ){
             foreach( $filters as $filter ){
                 $this->db->where($filter['field'], $filter['value']);
             }
