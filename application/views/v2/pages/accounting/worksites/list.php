@@ -46,7 +46,7 @@
 
                         <form action="<?php echo base_url('accounting/worksites') ?>" method="get">
                             <input type="text" class="nsm-field nsm-search form-control mb-2" name="search" id="search_field" placeholder="Find a worksites" value="<?=!empty($search) ? $search : ''?>" style="width:90%; display:inline-block;">                     
-                            <button class="nsm-button primary" id="btn-search-list" type="submit"><i class='bx bx-search-alt-2'></i></button>
+                            <!-- <button class="nsm-button primary" id="btn-search-list" type="submit"><i class='bx bx-search-alt-2'></i></button> -->
                         </form>                        
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">

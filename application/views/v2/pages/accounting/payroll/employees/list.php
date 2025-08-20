@@ -42,6 +42,16 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
+                        <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">  
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
+                        </div>
+                        <?php } ?>                        
                         <div class="d-inline-block me-2">
                             <select id="status_filter" class="form-select w-auto">
                                 <option value="">All Employees</option>
@@ -130,9 +140,15 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-12">
-                            <table id="employeeTable" class="nsm-table w-100">
+                            <form id="frm-with-selected">
+                            <table id="employeeTable" class="nsm-table w-100 tbl-users-list">
                                 <thead>
                                     <tr>
+                                        <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
+                                        <th class="table-icon text-center sorting_disabled">
+                                            <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                                        </th>
+                                        <?php } ?>                                        
                                         <th>NAME</th>
                                         <th>PAY SCALE</th>
                                         <th>PAY METHOD</th>
@@ -143,6 +159,7 @@
                                     </tr>
                                 </thead>
                             </table>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -549,6 +566,74 @@
 
     $("#btn-export-list, .btn-export-list").on("click", function() {
         location.href = base_url + 'accounting/employees/export_list';
+    });    
+
+    $(document).on('click', '#with-selected-delete', function(){
+        let total= $('.tbl-users-list input[name="users[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Employees',
+                html: `Are you sure you want to delete selected rows?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'users/_archive_selected_users',
+                        dataType: 'json',
+                        data: $('#frm-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                    title: 'Delete Employees',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });   
+    
+    $(document).on('change', '#select-all', function(){
+        $('.row-select:checkbox').prop('checked', this.checked);  
+        let total= $('.tbl-users-list input[name="users[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
+    });
+
+    $(document).on('change', '.row-select', function(){
+        let total= $('.tbl-users-list input[name="users[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
+        }
     });    
 
 </script>
