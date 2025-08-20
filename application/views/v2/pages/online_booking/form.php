@@ -39,221 +39,173 @@ include viewPath('v2/includes/header'); ?>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-6" id="app-builder">
-                    <?php if( checkRoleCanAccessModule('online-booking', 'write') ){ ?>  
-                    <form name="booking_component" id="booking_component" action="<?php echo base_url()."booking/save_form"; ?>" method="post">
-                    <?php } ?>
-                        <div class="margin-bottom">
-                            <div class="col-12">
-                                <div class="nsm-card primary">
-                                    <div class="nsm-card-content">
-                                    <div class="col-md-12" style="margin-top: 20px;">
-                                        <div class="text-ter margin-bottom-sec fw-bold">Customize Form Fields</div>
-                                        <div class="col-md-12 mb-4">
-                                            Select the fields that will be part of the form and required ones.
-
-                                            <?php if( checkRoleCanAccessModule('online-booking', 'write') ){ ?>  
-                                                <a class="nsm-button btn-small float-end" id="btn-add-new-form-field" href="javascript:void(0);" data-toggle="modal" data-target="#modalAddFormField">
+                    <div class="col-md-12 col-12">
+                        <form name="booking_component" id="frm-booking-form" action="<?php echo base_url('booking/save_form'); ?>" method="post">
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <div class="nsm-card primary">
+                                        <div class="nsm-card-header d-block">
+                                            <div class="nsm-card-title">
+                                                <span><i class='bx bx-fw bx-list-ol'></i> Customize Form Fields <span class="bx bx-fw bx-help-circle" id="popover-customize-form-fields"></span></span>
+                                                <?php if( checkRoleCanAccessModule('online-booking', 'write') ){ ?>  
+                                                <a class="nsm-button btn-small float-end mb-4" id="btn-add-new-form-field" href="javascript:void(0);" data-toggle="modal" data-target="#modalAddFormField">
                                                     <i class='bx bx-plus'></i> Add Form Field
                                                 </a>                                            
                                             <?php } ?>
+                                            </div>
                                         </div>
-                                        <?php 
-                                            $disabled = '';
-                                            if( !checkRoleCanAccessModule('online-booking', 'write') ){
-                                                $disabled = 'disabled=""';
-                                            }
-                                        ?>
-                                        <table class="nsm-table" style="clear:both;margin-top: 20px;">
-                                            <thead>
-                                                <tr>
-                                                    <th width="40%" scope="col"><strong>Field</strong></th>
-                                                    <th width="20%" scope="col"><strong>Visible</strong></th>
-                                                    <th width="20%" scope="col"><strong>Required</strong></th>
-                                                    <th width="20%" scope="col"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php if(!isset($booking_forms)) { ?>                                       
-                                                    <?php foreach($default_form_fields as $dff_key => $default_form_field) { ?>
+                                        <div class="nsm-card-content">
+                                        <div class="col-md-12" style="margin-top: 20px;">                                           
+                                            <?php 
+                                                $disabled = '';
+                                                if( !checkRoleCanAccessModule('online-booking', 'write') ){
+                                                    $disabled = 'disabled=""';
+                                                }
+                                            ?>
+                                            <table class="nsm-table" style="clear:both;margin-top: 20px;">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="40%" scope="col"><strong></strong></th>
+                                                        <th width="20%" scope="col"><strong>Visible</strong></th>
+                                                        <th width="20%" scope="col"><strong>Required</strong></th>
+                                                        <th width="20%" scope="col"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php if(!$booking_forms) { ?>                                       
+                                                        <?php foreach($default_form_fields as $dff_key => $default_form_field) { ?>
+                                                            <?php 
+                                                                $is_required = "";
+                                                                $is_visible = "checked=''";
+
+                                                                $is_required_disabled = "";
+                                                                $is_visible_disabled = "";
+
+                                                                if($default_form_field == 'full_name' || $default_form_field == 'contact_number' || $default_form_field == 'email') {
+                                                                    $is_required = "checked=''";
+                                                                    $is_visible = "checked=''";
+
+                                                                    $is_required_disabled = "disabled=''";
+                                                                    $is_visible_disabled = "disabled=''";
+                                                                }
+                                                            ?>
+                                                            <tr>
+                                                                <td width="60%">
+                                                                    <?php echo $dff_key; ?>
+                                                                    <input type="hidden" id="is_field[<?php echo $default_form_field; ?>][]" name="is_field[<?php echo $default_form_field; ?>]" value="<?php echo $dff_key; ?>">
+                                                                </td>
+                                                                <td width="20%">
+                                                                    <div class="checkbox checkbox-sm">
+                                                                        <input type="checkbox" name="is_visible[<?php echo $default_form_field; ?>]" value="1" class="checkbox-select form-check-input select-form-field-visible" data-field-name="<?php echo $default_form_field; ?>" id="is_visible_<?php echo $default_form_field; ?>" <?= $is_visible ; ?> <?= $is_visible_disabled; ?> >
+                                                                        <label for="is_visible_<?php echo $default_form_field; ?>"></label>
+                                                                    </div>
+                                                                </td>
+                                                                <td width="20%" style="">
+                                                                    <div class="checkbox checkbox-sm">
+                                                                        <input type="checkbox" name="is_required[<?php echo $default_form_field; ?>]" value="1" data-id="is_required[<?php echo $default_form_field; ?>][]" class="form-check-input checkbox-select select-form-field-required" id="is_required_<?php echo $default_form_field; ?>" <?= $is_required ; ?> <?= $is_required_disabled; ?> >
+                                                                        <label for="is_required_<?php echo $default_form_field; ?>"></label>
+                                                                    </div>
+                                                                </td>
+                                                                <td></td>
+                                                            </tr>
+                                                        <?php } ?> 
+
+                                                    <?php } else { ?>
+                                                        <?php $row_count = 1; ?>
+                                                        <?php foreach($booking_forms as $dff_key => $booking_form) { ?>
                                                         <?php 
-                                                            $is_required = "";
-                                                            $is_visible = "checked=''";
+                                                            if($booking_form->is_required ==1) {
+                                                                $is_required = "checked=''";
+                                                            }else{
+                                                                $is_required = "";
+                                                            }    
+
+                                                            if($booking_form->is_visible ==1) {
+                                                                $is_visible = "checked=''";
+                                                            }else{
+                                                                $is_visible = "";
+                                                            }
 
                                                             $is_required_disabled = "";
                                                             $is_visible_disabled = "";
 
-                                                            if($default_form_field == 'full_name' || $default_form_field == 'contact_number') {
+                                                            if($booking_form->field_name == 'full_name' || $booking_form->field_name == 'contact_number' || $booking_form->field_name  == 'email') {
                                                                 $is_required = "checked=''";
                                                                 $is_visible = "checked=''";
 
                                                                 $is_required_disabled = "disabled=''";
                                                                 $is_visible_disabled = "disabled=''";
+                                                                //$disabled = '';
                                                             }
                                                         ?>
-                                                        <tr>
+                                                        <?php if($booking_form->is_default==1){ ?> 
+                                                        <tr>                
+                                                        <?php }else{ ?>
+                                                        <tr class="custom-row-<?php echo $row_count; ?>">
+                                                        <?php } ?>
                                                             <td width="60%">
-                                                                <?php echo $dff_key; ?>
-                                                                <input type="hidden" id="is_field[<?php echo $default_form_field; ?>][]" name="is_field[<?php echo $default_form_field; ?>][]" value="<?php echo $dff_key; ?>">
+                                                                <?php echo $booking_form->label; ?>
+                                                                <input type="hidden" name="is_field[<?php echo $booking_form->field_name; ?>]" id="is_field[<?php echo $booking_form->field_name; ?>][]" value="<?php echo $booking_form->label; ?>">
                                                             </td>
                                                             <td width="20%">
-                                                                <div class="checkbox checkbox-sm">
-                                                                    <input type="checkbox" name="is_visible[<?php echo $default_form_field; ?>][]" value="1" class="checkbox-select select-form-field-visible" data-field-name="<?php echo $default_form_field; ?>" id="is_visible_<?php echo $default_form_field; ?>" <?= $is_visible ; ?> <?= $is_visible_disabled; ?> >
-                                                                    <label for="is_visible_<?php echo $default_form_field; ?>"></label>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" name="is_visible[<?php echo $booking_form->field_name; ?>]" value="1" class="form-check-input select-form-field-visible" data-field-name="<?php echo $booking_form->field_name; ?>" id="is_visible_<?php echo $booking_form->field_name; ?>" <?= $is_visible ; ?> <?= $is_visible_disabled; ?> <?= $disabled; ?>>
+                                                                    <label for="is_visible_<?php echo $booking_form->field_name; ?>"></label>
                                                                 </div>
                                                             </td>
                                                             <td width="20%" style="">
-                                                                <div class="checkbox checkbox-sm">
-                                                                    <input type="checkbox" name="is_required[<?php echo $default_form_field; ?>][]" value="1" data-id="is_required[<?php echo $default_form_field; ?>][]" class="checkbox-select select-form-field-required" id="is_required_<?php echo $default_form_field; ?>" <?= $is_required ; ?> <?= $is_required_disabled; ?> >
-                                                                    <label for="is_required_<?php echo $default_form_field; ?>"></label>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" name="is_required[<?php echo $booking_form->field_name; ?>]" value="1" data-id="is_required[<?php echo $booking_form->field_name; ?>][]" class="form-check-input select-form-field-required" id="is_required_<?php echo $booking_form->field_name; ?>" <?= $is_required ; ?> <?= $is_required_disabled; ?> <?= $disabled; ?>>
+                                                                    <label for="is_required_<?php echo $booking_form->field_name; ?>"></label>
                                                                 </div>
                                                             </td>
-                                                            <td></td>
+                                                            <?php if( checkRoleCanAccessModule('online-booking', 'delete') ){ ?>  
+                                                                <td width="20%">
+                                                                    <?php if($booking_form->is_default==1){ ?> 
+                                                                            &nbsp;
+                                                                    <?php }else{ ?>
+                                                                        <a href="javascript:void(0);" class="nsm-button btn-small delete-custom-field" data-field-name="<?php echo $booking_form->field_name; ?>" data-row="<?php echo $row_count; ?>"><i class="fa fa-trash"></i></a>          
+                                                                    <?php }?>
+                                                                </td>
+                                                            <?php } ?>
                                                         </tr>
-                                                    <?php } ?> 
-
-                                                <?php } else { ?>
-                                                    <?php $row_count = 1; ?>
-                                                    <?php foreach($booking_forms as $dff_key => $booking_form) { ?>
-                                                    <?php 
-                                                        if($booking_form->is_required ==1) {
-                                                            $is_required = "checked=''";
-                                                        }else{
-                                                            $is_required = "";
-                                                        }    
-
-                                                        if($booking_form->is_visible ==1) {
-                                                            $is_visible = "checked=''";
-                                                        }else{
-                                                            $is_visible = "";
-                                                        }
-
-                                                        $is_required_disabled = "";
-                                                        $is_visible_disabled = "";
-
-                                                        if($booking_form->field_name == 'full_name' || $booking_form->field_name == 'contact_number') {
-                                                            $is_required = "checked=''";
-                                                            $is_visible = "checked=''";
-
-                                                            $is_required_disabled = "disabled=''";
-                                                            $is_visible_disabled = "disabled=''";
-                                                            //$disabled = '';
-                                                        }
-                                                    ?>
-                                                    <?php if($booking_form->is_default==1){ ?> 
-                                                       <tr>                
-                                                    <?php }else{ ?>
-                                                       <tr class="custom-row-<?php echo $row_count; ?>">
-                                                    <?php } ?>
-                                                        <td width="60%">
-                                                            <?php echo $booking_form->label; ?>
-                                                            <input type="hidden" name="is_field[<?php echo $booking_form->field_name; ?>][]" id="is_field[<?php echo $booking_form->field_name; ?>][]" value="<?php echo $booking_form->label; ?>">
-                                                        </td>
-                                                        <td width="20%">
-                                                            <div class="form-check">
-                                                                <input type="checkbox" name="is_visible[<?php echo $booking_form->field_name; ?>][]" value="1" class="form-check-input select-form-field-visible" data-field-name="<?php echo $booking_form->field_name; ?>" id="is_visible_<?php echo $booking_form->field_name; ?>" <?= $is_visible ; ?> <?= $is_visible_disabled; ?> <?= $disabled; ?>>
-                                                                <label for="is_visible_<?php echo $booking_form->field_name; ?>"></label>
-                                                            </div>
-                                                        </td>
-                                                        <td width="20%" style="">
-                                                            <div class="form-check">
-                                                                <input type="checkbox" name="is_required[<?php echo $booking_form->field_name; ?>][]" value="1" data-id="is_required[<?php echo $booking_form->field_name; ?>][]" class="form-check-input select-form-field-required" id="is_required_<?php echo $booking_form->field_name; ?>" <?= $is_required ; ?> <?= $is_required_disabled; ?> <?= $disabled; ?>>
-                                                                <label for="is_required_<?php echo $booking_form->field_name; ?>"></label>
-                                                            </div>
-                                                        </td>
-                                                        <?php if( checkRoleCanAccessModule('online-booking', 'delete') ){ ?>  
-                                                            <td width="20%">
-                                                                <?php if($booking_form->is_default==1){ ?> 
-                                                                        &nbsp;
-                                                                <?php }else{ ?>
-                                                                    <a href="javascript:void(0);" class="nsm-button btn-small delete-custom-field" data-field-name="<?php echo $booking_form->field_name; ?>" data-row="<?php echo $row_count; ?>"><i class="fa fa-trash"></i></a>          
-                                                                <?php }?>
-                                                            </td>
-                                                        <?php } ?>
-                                                    </tr>
-                                                 <?php  $row_count++; }
-                                                  } ?>
-                                              </tbody>
-                                        </table>
-                                        <?php if( checkRoleCanAccessModule('online-booking', 'write') ){ ?>  
-                                            <hr class="card-hr"> 
-                                            <button class="nsm-button primary">Save</button>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <?php if( checkRoleCanAccessModule('online-booking', 'write') ){ ?>  
-                    </form>
-                    <?php } ?>
-                </div>
-                <div class="col-lg-6" id="app-builder">
-                    <div class="margin-bottom">
-                        <div class="col-12">
-                            <div class="nsm-card primary">
-                                <div class="nsm-card-content">
-                                    <h3 class="weight-medium margin-bottom">Form Preview</h3> 
-                                    <div>
-                                        <div id="app" class="markate-widget-contact">
-                                            <form name="widget-contact" method="post">
-                                                <div class="form-fileds-container">
-                                                    <div class="form-group form-group-full_name">
-                                                        <label>Full Name</label> <span class="form-required">*</span> 
-                                                        <input type="text" id="full_name" name="full_name" class="form-control">
+                                                    <?php  $row_count++; }
+                                                    } ?>
+                                                </tbody>
+                                            </table>
+                                            <?php if( checkRoleCanAccessModule('online-booking', 'write') ){ ?> 
+                                                <div class="row mt-4">
+                                                    <div class="col-12">
+                                                        <button type="submit" id="btn-update-booking-form" class="nsm-button primary">Save</button>
                                                     </div>
-                                                    <div class="form-group form-group-contact_number">
-                                                        <label>Contact Number</label> <span class="form-required">*</span> 
-                                                        <input type="tel" id="contact_number" name="contact_number" class="form-control">
-                                                    </div>
-                                                    <div class="form-group form-group-email">
-                                                        <label>Email</label>
-                                                        <input type="text" id="email" name="email" class="form-control">
-                                                    </div>
-                                                    <div class="form-group form-group-address">
-                                                        <label>Address</label>
-                                                        <input type="text" id="address" name="address" placeholder="" class="form-control pac-target-input" autocomplete="off">
-                                                    </div>
-                                                    <div class="form-group form-group-message">
-                                                        <label>Message</label>
-                                                        <textarea style="min-height: 100px;" name="message" id="message" rows="2" class="form-control"></textarea>
-                                                    </div>
-                                                    <div class="form-group form-group-preferred_time_to_contact">
-                                                        <label>Preferred time to contact</label>
-                                                        <select name="preferred_time_to_contact" id="preferred_time_to_contact" class="form-control">
-                                                            <option value="0" selected="selected">Any time</option> 
-                                                            <option value="1">7am to 10am</option> 
-                                                            <option value="2">10am to Noon</option> 
-                                                            <option value="3">Noon to 4pm</option> 
-                                                            <option value="4">4pm to 7pm</option>
-                                                        </select>
-                                                    </div>                                                        
-                                                    <div class="form-group form-group-how_did_you_hear_about_us">
-                                                        <label>How did you hear about us</label>
-                                                        <input type="text" name="how_did_you_hear_about_us" id="how_did_you_hear_about_us" class="form-control">
-                                                    </div>
-                                                    <?php foreach($booking_forms_custom as $form_custom) { ?>
-                                                        <div class="form-group form-group-<?php echo $form_custom->field_name; ?>">
-                                                            <label><?php echo $form_custom->label; ?></label>
-                                                            <input type="text" name="<?php echo $form_custom->field_name; ?>" id="<?php echo $form_custom->field_name; ?>" class="form-control">
-                                                        </div>
-                                                    <?php } ?>
                                                 </div>
-                                            </form> 
-                                            <hr class="card-hr"> 
-                                            <div class="widget-contact-submit"><button class="nsm-button primary">Book Now</button></div>
+                                            <?php } ?>
                                         </div>
                                     </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-md-6 col-12">
+                        <div class="row">
+                            <div class="col-md-12 col-12">
+                                <div class="nsm-card primary">
+                                    <div class="nsm-card-header d-block">
+                                        <div class="nsm-card-title">
+                                            <span><i class='bx bx-search-alt-2'></i> Form Preview</span>
+                                        </div>
+                                    </div>
+                                    <div class="nsm-card-content">
+                                        <div id="form-preview-container"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
             <!-- end custom form -->
-
-
         </div>
     </div>
 </div>
@@ -262,10 +214,10 @@ include viewPath('v2/includes/header'); ?>
 
 <?php include viewPath('v2/includes/online_booking/booking_modals'); ?>   
 <?php include viewPath('v2/includes/footer'); ?>
-<?php //include viewPath('includes/footer_booking'); ?>
 <script>
 $(function(){
-    var base_url = "<?php echo base_url(); ?>";
+
+    load_booking_form_preview();
 
     $('#btn-add-new-form-field').on('click', function(){
         $('#modalAddFormField').modal('show');
@@ -287,6 +239,67 @@ $(function(){
            $(".form-group-" + field_name).hide();    
         }
     });  
+
+    $('#frm-booking-form').on('submit', function(e){
+        e.preventDefault();
+
+        var formData = new FormData($("#frm-booking-form")[0]);
+
+        $.ajax({
+            type: 'POST',
+            url: base_url + "booking/_update_custom_booking_form",
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            dataType: 'json',                
+            success: function(result) {
+                if( result.is_success === 1 ){
+                    Swal.fire({
+                        title: 'Booking Form',
+                        text: 'Booking form has been updated successfully.',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            load_booking_form_preview();
+                        //}
+                    });
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: result.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            //location.reload();
+                        //}
+                    });
+                }   
+                
+                $('#btn-update-booking-form').html("Save");
+            },
+            beforeSend: function(){
+                $('#btn-update-booking-form').html('<span class="bx bx-loader bx-spin"></span>');
+            },
+            error: function() {
+                Swal.fire({
+                    title: 'Error',
+                    text: "Something went wrong, please try again later.",
+                    icon: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+                    //if (result.value) {
+                        //location.reload();
+                    //}
+                });
+            },
+        });
+    });
     
     $('#frm-booking-add-field').on('submit', function(e){
         e.preventDefault();
@@ -318,6 +331,20 @@ $(function(){
             }
         });
     });
+
+    function load_booking_form_preview()
+    {
+        $.ajax({
+            method: 'POST',
+            url: base_url + 'booking/_load_custom_booking_form_preview',
+            success: function(o) {                        
+                $('#form-preview-container').html(o);
+            },
+            beforeSend: function(){
+                $('#form-preview-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    }
 
 });
 </script>

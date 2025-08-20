@@ -9,7 +9,7 @@
         <?php else : ?>
         <form action="<?= base_url('accounting/vendors/'.$vendorDetails->id.'/update'); ?>" method="post" class="form-validate" enctype="multipart/form-data">
         <?php endif; ?>
-<div id="vendor-modal" class="modal fade modal-fluid nsm-modal" role="dialog">
+<div id="vendor-modal" class="modal fade modal-fluid nsm-modal" data-bs-backdrop="" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-xl ">
         <!-- Modal content-->
         <div class="modal-content">

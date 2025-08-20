@@ -7,6 +7,7 @@ class BookingCoupon_model extends MY_Model
     public $status_active = 1;
     public $status_closed = 0;
 
+
     public function getAll($filters=array())
     {
         $id = logged('id');
@@ -153,14 +154,14 @@ class BookingCoupon_model extends MY_Model
         $this->db->from($this->table);
         $this->db->where('status', $this->status_active);
 
-        if( !empty($filter) ){
+        if( !empty($filters) ){
             foreach( $filters as $filter ){
                 $this->db->where($filter['field'], $filter['value']);
             }
         }
         
-        $query = $this->db->get()->row();
-        return $query;
+        $query = $this->db->get();
+        return $query->row();
     }
 
     public function totalClosed( $filters = array() )
@@ -169,14 +170,14 @@ class BookingCoupon_model extends MY_Model
         $this->db->from($this->table);
         $this->db->where('status', $this->status_closed);
 
-        if( !empty($filter) ){
+        if( !empty($filters) ){
             foreach( $filters as $filter ){
                 $this->db->where($filter['field'], $filter['value']);
             }
         }
 
-        $query = $this->db->get()->row();
-        return $query;
+        $query = $this->db->get();
+        return $query->row();
     }
 
     public function isActive(){
@@ -207,6 +208,7 @@ class BookingCoupon_model extends MY_Model
         return $is_exists;
     }
 }
+
 
 /* End of file BookingCoupon_model.php */
 /* Location: ./application/models/BookingCoupon_model.php */

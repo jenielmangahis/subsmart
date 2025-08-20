@@ -162,6 +162,7 @@ class CompanyRoleAccessModule_model extends MY_Model
             'chatbot-settings' => 'Chatbot Settings',
             'automation' => 'Automation',
             'lead-contact-form' => 'Lead Contact Form',
+            'activity-logs' => 'Activity Logs',
         ];  
 
         return $modules;
