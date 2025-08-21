@@ -533,6 +533,8 @@ $route['accounting/download-refund-receipt-pdf/(:any)'] = 'accounting_modals/dow
 $route['accounting/preview-and-print-sample']['post'] = 'accounting_modals/preview_and_print_sample';
 $route['accounting/save-print-checks-settings']['post'] = 'accounting_modals/save_print_checks_settings';
 
+$route['accounting/get-employee-modal'] = 'accounting_modals/get_employee_modal';
+
 $route['accounting/print-sales-transactions']['post'] = 'accounting_modals/print_sales_transactions';
 $route['accounting/send-sales-transactions']['post'] = 'accounting_modals/send_sales_transactions';
 $route['accounting/send-invoice-reminders']['post'] = 'accounting_modals/send_invoice_reminders';

@@ -752,7 +752,7 @@ $(function () {
     $(document).on('click', '#payrollModal #add-employee-button', function (e) {
         e.preventDefault();
 
-        $.get('/accounting/get-employee-modal', function (res) {
+        $.get(base_url + 'accounting/get-employee-modal', function (res) {
             if ($('#modal-container #employee-modal').length > 0) {
                 $('#modal-container #employee-modal').remove();
             }

@@ -1593,7 +1593,7 @@ class Employees extends MY_Controller
         });
 
         $this->page_data['start_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
-        $this->page_data['end_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));
+        $this->page_data['end_date'] = date("m/d/Y", strtotime($paychecks[0]->pay_date));     
 
         if (!empty(get('employee'))) {
             $selectedEmployees = explode(',', get('employee')); // Convert comma-separated string to array
@@ -1622,12 +1622,21 @@ class Employees extends MY_Controller
             return strtotime($v->pay_date) >= strtotime($dateFilter['start_date']) && strtotime($v->pay_date) <= strtotime($dateFilter['end_date']);
         }, ARRAY_FILTER_USE_BOTH);
 
+
+
         foreach ($paychecks as $paycheck) {
             $employee = $this->users_model->getUser($paycheck->employee_id);
 
+            $status = "--";
+
             $checkNo = $paycheck->check_no;
             if ($paycheck->status === '4') {
+                $status  = 'Void';
                 $checkNo = 'Void';
+            }
+
+            if ($paycheck->status === '1') {
+                $status = "Active";
             }
 
             if ($paycheck->pay_method === 'Adjustment' && $paycheck->status !== '4') {
@@ -1643,7 +1652,7 @@ class Employees extends MY_Controller
                 'net_pay' => number_format(floatval(str_replace(',', '', $paycheck->net_pay)), 2),
                 'pay_method' => $paycheck->pay_method,
                 'check_number' => $checkNo,
-                'status' => '-'
+                'status' => $status
             ];
         }
 

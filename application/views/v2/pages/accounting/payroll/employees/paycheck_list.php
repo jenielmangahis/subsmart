@@ -21,21 +21,22 @@
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button void-paychecks-button">
-                                Voided Paychecks
-                            </button>
-                        </div>
-                        <div class="dropdown d-inline-block">
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>
-                                    Batch Actions
+                                    With Selected
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="batch-delete">Delete</a></li>
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="batch-void">Void</a></li>
+                                <li><a class="dropdown-item print-paychecks-button" disabled>Print</a></li>
                             </ul>
+                        </div>
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button void-paychecks-button">
+                                Voided Paychecks
+                            </button>
                         </div>
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
@@ -107,7 +108,21 @@
                                 </div>
                             </ul>
                         </div>
-                        <div class="nsm-page-buttons page-button-container">
+
+                        <div class="nsm-page-buttons page-button-container">                            
+                            <div class="btn-group nsm-main-buttons" style="margin-bottom: 4px !important;">
+                                <button type="button" class="btn btn-nsm"><span>Share</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end batch-actions">
+                                    <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-excel">Export to Excel</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);" id="print-save-pdf" data-bs-toggle="modal" data-bs-target="#print-save-pdf-modal">Print or save PDF</a></li>
+                                </ul>
+                            </div>
+                        </div>                        
+
+                        <!-- <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Share <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
@@ -118,7 +133,7 @@
                             <button type="button" class="dropdown-toggle nsm-button print-paychecks-button" disabled>
                                 Print
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <table class="nsm-table" id="paycheck-table">
@@ -152,7 +167,8 @@
                                     <td><?= isset($paycheck['net_pay']) ? str_replace('$-', '-$', '$' . $paycheck['net_pay']) : '0' ?></td>
                                     <td><?= isset($paycheck['pay_method']) ? $paycheck['pay_method'] : 'No payment method' ?></td>
                                     <td><?= !in_array($paycheck['check_number'], ['-', 'Void']) ? '<input type="text" name="check_number[]" class="form-control nsm-field" value="' . $paycheck['check_number'] . '">' : $paycheck['check_number'] ?></td>
-                                    <td><?= $paycheck['status'] ?></td>
+                                    <?php $status_badge = $paycheck['status'] == 'Active' ? 'bg-success' : 'bg-danger'; ?>
+                                    <td><span class='badge <?php echo $status_badge; ?>'><?= $paycheck['status'] ?></span></td>
                                     <td>
                                         <div class="dropdown float-end">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
