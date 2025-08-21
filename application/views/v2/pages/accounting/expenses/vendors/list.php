@@ -328,84 +328,46 @@
                         <div class="dropdown d-inline-block">
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>
-                                    Batch Actions
-                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                    <span id="num-checked"></span> With Selected <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
                                 <li><a class="dropdown-item dropdown-email  disabled" href="javascript:void(0);" id="email">Email</a></li>
-                                <li><a class="dropdown-item dropdown-make-inactive disabled" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>
+                                <?php if( $filter == 'Active' ){ ?>
+                                    <li><a class="dropdown-item dropdown-update-status disabled" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>
+                                <?php }else{ ?>
+                                    <li><a class="dropdown-item dropdown-update-status disabled" href="javascript:void(0);" id="make-inactive">Make active</a></li>
+                                <?php } ?>
                                 <li><a class="dropdown-item dropdown-delete-vendor disabled" href="javascript:void(0);" id="delete-vendor">Delete</a></li>
                             </ul>
                         </div>
 
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>
-                                    Other Actions
-                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span>Filter : <?= $filter; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="print-checks">Print checks</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="pay-bills">Pay bills</a></li>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item filter-status" data-status="active" href="javascript:void(0);">Active</a></li>
+                                <li><a class="dropdown-item filter-status" data-status="inactive" href="javascript:void(0);">Inactive</a></li>
                             </ul>
                         </div>
 
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#import-vendors-modal">
-                                <i class='bx bx-fw bx-import'></i> Import
-                            </button>
-                            <button type="button" class="nsm-button" id="add-vendor-button">
-                                <i class='bx bx-fw bx-list-plus'></i> New
-                            </button>
-                            <button type="button" class="nsm-button export-items">
-                                <i class='bx bx-fw bx-export'></i> Export
-                            </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_vendors_modal">
-                                <i class='bx bx-fw bx-printer'></i>
-                            </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
-                                <i class="bx bx-fw bx-cog"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
-                                <p class="m-0">Columns</p>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="col_chk" id="address_chk" class="form-check-input">
-                                    <label for="address_chk" class="form-check-label">Address</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="col_chk" id="attachments_chk" class="form-check-input">
-                                    <label for="attachments_chk" class="form-check-label">Attachments</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="col_chk" id="phone_chk" class="form-check-input">
-                                    <label for="phone_chk" class="form-check-label">Phone</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="col_chk" id="email_chk" class="form-check-input">
-                                    <label for="email_chk" class="form-check-label">Email</label>
-                                </div>
-                                <p class="m-0">Other</p>
-                                <div class="form-check">
-                                    <input type="checkbox" <?=$status === 'all' ? 'checked' : ''?> id="inc_inactive" value="1" class="form-check-input">
-                                    <label for="inc_inactive" class="form-check-label">Include Inactive</label>
-                                </div>
-                                <p class="m-0">Rows</p>
-                                <div class="dropdown d-inline-block">
-                                    <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                        <span>
-                                            50
-                                        </span> <i class='bx bx-fw bx-chevron-down'></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
-                                        <li><a class="dropdown-item active" href="javascript:void(0);">50</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
-                                    </ul>
-                                </div>
-                            </ul>
+                        <div class="nsm-page-buttons page-button-container">                            
+                            <?php if(checkRoleCanAccessModule('accounting-vendors', 'write')){ ?>
+                            <div class="btn-group nsm-main-buttons">
+                                <button type="button" class="btn btn-nsm" id="add-vendor-button"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Vendor</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                            
+                                    <li><a class="dropdown-item" href="javascript:void(0);" id="print-checks">Print checks</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);" id="pay-bills">Pay bills</a></li>                                        
+                                    <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>                               
+                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#import-vendors-modal" href="javascript:void(0);">Import</a></li>
+                                    <li><a class="dropdown-item export-items" id="btn-export-list" href="javascript:void(0);">Export</a></li>
+                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#print_vendors_modal" href="javascript:void(0);">Print</a></li>                               
+                                </ul>
+                            </div>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
@@ -419,11 +381,8 @@
                             <td data-name="Address">ADDRESS</td>
                             <td data-name="Phone">PHONE</td>
                             <td data-name="Email">EMAIL</td>
-                            <td class="table-icon text-center" data-name="Attachments">
-                                <i class='bx bx-paperclip'></i>
-                            </td>
-                            <td data-name="Open Balance">OPEN BALANCE</td>
-                            <td data-name="Manage"></td>
+                            <td data-name="Open Balance" style="text-align:right;">OPEN BALANCE</td>
+                            <td data-name="Manage" style="width:5%;"></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -432,7 +391,7 @@
                         <tr data-status="<?=$vendor->status === '0' ? 'inactive' : 'active'?>">
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$vendor->id?>">
+                                    <input class="form-check-input select-one table-select" name="vendors[]" type="checkbox" value="<?=$vendor->id?>">
                                 </div>
                             </td>
                             <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/vendors/view/' . $vendor->id) ?>'">
@@ -452,36 +411,8 @@
                                 ?>
                             </td>
                             <td><?= $vendor->phone != '' || $vendor->phone != null ?  formatPhoneNumber($vendor->phone) : 'Not Specified'; ?></td>
-                            <td><?=$vendor->email?></td>
-                            <td class="overflow-visible">
-                                <?php $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendor->id) ?>
-                                <?php if(count($attachments) > 0) : ?>
-                                <div class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                        <i class="bx bx-fw"><?=count($attachments)?></i>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end" style="min-width: 300px">
-                                        <?php foreach($attachments as $attachment) : ?>
-                                        <li>
-                                            <a href="#" class="dropdown-item view-attachment" data-href="/uploads/accounting/attachments/<?=$attachment->stored_name?>">
-                                                <div class="row">
-                                                    <div class="col-5 pr-0">
-                                                        <?=in_array($attachment->file_extension, ['jpg', 'jpeg', 'png']) ? "<img src='/uploads/accounting/attachments/$attachment->stored_name' class='m-auto w-100'>" : "<div class='bg-muted text-center d-flex justify-content-center align-items-center h-100 text-white'><p class='m-0'>NO PREVIEW AVAILABLE</p></div>"?>
-                                                    </div>
-                                                    <div class="col-7">
-                                                        <div class="d-flex align-items-center h-100 w-100">
-                                                            <span class="text-truncate"><?=$attachment->uploaded_name.'.'.$attachment->file_extension?></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <?php endforeach; ?>
-                                    </ul>
-                                </div>
-                                <?php endif; ?>
-                            </td>
-                            <td>
+                            <td><?= $vendor->email != '' ? $vendor->email : 'Not Specified'; ?></td>
+                            <td style="text-align:right;">
                                 <?php
                                     $balance = '$'.number_format(floatval($vendor->opening_balance), 2, '.', ',');
                                     echo str_replace('$-', '-$', $balance);
@@ -495,10 +426,10 @@
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <?php if($vendor->status === '0') : ?>
                                         <li>
-                                            <a class="dropdown-item make-active" href="javascript:void(0);">Make active</a>
+                                            <a class="dropdown-item make-active" href="javascript:void(0);" data-name="<?=  $vendor->f_name . ' ' . $vendor->l_name; ?>">Make active</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item delete-vendor" href="javascript:void(0);">Delete</a>
+                                            <a class="dropdown-item delete-vendor" href="javascript:void(0);" data-name="<?=  $vendor->f_name . ' ' . $vendor->l_name; ?>">Delete</a>
                                         </li>
                                         <?php else : ?>
                                         <li>
@@ -514,10 +445,10 @@
                                             <a class="dropdown-item create-purchase-order" href="javascript:void(0);">Create purchase order</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item make-inactive" href="javascript:void(0);">Make inactive</a>
+                                            <a class="dropdown-item make-inactive" href="javascript:void(0);" data-name="<?=  $vendor->f_name . ' ' . $vendor->l_name; ?>">Make inactive</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item delete-vendor" href="javascript:void(0);">Delete</a>
+                                            <a class="dropdown-item delete-vendor" href="javascript:void(0);" data-name="<?=  $vendor->f_name . ' ' . $vendor->l_name; ?>">Delete</a>
                                         </li>
                                         <?php endif; ?>
                                     </ul>
@@ -542,6 +473,7 @@
 </div>
 <script>
 $(function(){   
+    $("#vendors-table").nsmPagination();
     $(".select-all").click(function(){
         var count_vendor_list_check = $('.select-all').filter(':checked').length;
         if(count_vendor_list_check > 0) {
@@ -552,6 +484,16 @@ $(function(){
             $(".dropdown-email").addClass("disabled");
         }             
     }); 
+
+    $('.filter-status').on('click', function(){
+        let status = $(this).attr('data-status');
+        if( status == 'active' ){
+            location.href = base_url + 'accounting/vendors';
+        }else{
+            location.href = base_url + 'accounting/vendors?status='+ status;
+        }
+    });
+
 });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

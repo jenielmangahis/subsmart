@@ -131,16 +131,25 @@ class Vendors extends MY_Controller
         $checks = $this->expenses_model->get_company_check_transactions($paymentsFilter);
         $creditCardPayments = $this->expenses_model->get_company_cc_payment_transactions($paymentsFilter);
 
-        $status = [
-            1
-        ];
+        if (!empty(get('status') && get('status') === 'inactive') ) {
+            $filter = 'Inactive';
+            $status = [
+                0
+            ];
+        }else{
+            $filter = 'Active';
+            $status = [
+                1
+            ];
+        }
 
         if (!empty(get('status') && get('status') === 'all') ) {
             array_push($status, 0);
         }
 
+        $filters[] = ['field' => 'is_archived', 'value' => 'No'];
         if (empty(get('transaction'))) {
-            $vendors = $this->vendors_model->getAllByCompany($status);
+            $vendors = $this->vendors_model->getAllByCompany($status, $filters);
         } else {
             switch (get('transaction')) {
                 case 'purchase-orders':
@@ -188,6 +197,7 @@ class Vendors extends MY_Controller
         $this->page_data['cogsAccs'] = $this->chart_of_accounts_model->get_cogs_accounts();
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['vendors'] = $vendors;
+        $this->page_data['filter']  = $filter;
         $this->page_data['page_title'] = "Vendors";
         $this->load->view('v2/pages/accounting/expenses/vendors/list', $this->page_data);
     }
@@ -558,23 +568,26 @@ class Vendors extends MY_Controller
         $msg = '';
         $is_success = 0;
 
-        $vendors = $this->input->post('vendors');
-        $total_deleted = 0;
+        $post  = $this->input->post();
+        $company_id = logged('company_id');
         
-        $data = [];
-        foreach ($vendors as $vendorId) {
-            $this->vendors_model->delete($vendorId);
-            $total_deleted++;
-        }
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+        $data     = ['is_archived' => 'Yes', 'updated_at' => date("Y-m-d H:i:s")];
+        $total_updated = $this->vendors_model->bulkUpdate($post['vendors'], $data, $filter);
 
-        if( $total_deleted > 0 ){
+        if( $total_updated > 0 ){
             $msg = '';
             $is_success = 1;
+
+            //Activity Logs
+			$activity_name = 'Vendors : Deleted ' . $total_updated . ' vendor(s)'; 
+			createActivityLog($activity_name);
+
         }else{
             $msg = 'Vendor data not found';
         }
 
-        $data = ['msg' => $msg, 'is_success' => $is_success, 'total_deleted' => $total_deleted];
+        $data = ['msg' => $msg, 'is_success' => $is_success, 'total_deleted' => $total_updated];
 		echo json_encode($data);
     }
 
@@ -3092,4 +3105,131 @@ class Vendors extends MY_Controller
 
         echo json_encode($return);
     }
+
+    public function ajax_archived_list()
+	{
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+		$filters[] = ['field' => 'is_archived', 'value' => 'Yes'];
+        $vendors = $this->vendors_model->getAllByCompany([0,1], $filters);
+        $this->page_data['vendors'] = $vendors;
+        $this->load->view('v2/pages/accounting/expenses/vendors/ajax_archive_vendors', $this->page_data);
+	}
+
+    public function ajax_restore_selected_vendors()
+	{
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['vendors'] ){
+            $filter[] = ['field' => 'company_id', 'value' => $company_id];
+            $data     = ['is_archived' => 'No', 'updated_at' => date("Y-m-d H:i:s")];
+            $total_updated = $this->vendors_model->bulkUpdate($post['vendors'], $data, $filter);
+
+			//Activity Logs
+			$activity_name = 'Vendors : Restored ' . $total_updated . ' vendor(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_permanently_delete_selected_users()
+	{
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['vendors'] ){
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+			$filters[] = ['field' => 'is_archived', 'value' => 'Yes'];
+            $total_deleted = $this->vendors_model->bulkDelete($post['vendors'], $filters);
+
+			//Activity Logs
+			$activity_name = 'Vendors : Permanently deleted ' .$total_deleted. ' vendor(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_all_archived_vendors()
+	{
+		$this->load->model('Clients_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+		$total_archived = $this->vendors_model->deleteAllArchived($filter);
+
+		//Activity Logs
+		$activity_name = 'Vendors : Permanently deleted ' .$total_archived. ' vendor(s)'; 
+		createActivityLog($activity_name);
+
+		$is_success = 1;
+		$msg    = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_restore_vendor()
+	{
+        $is_success = 0;
+        $msg    = 'Cannot find data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $vendor = $this->vendors_model->getById($post['vendor_id']);
+		if( $vendor && $vendor->company_id == $company_id ){
+			$data     = ['is_archived' => 'No', 'updated_at' => date("Y-m-d H:i:s")];
+			$this->vendors_model->update($vendor->id, $data);
+
+			//Activity Logs
+			$name = $vendor->f_name . ' ' . $vendor->l_name;
+			$activity_name = 'Vendors : Restored vendor ' . $name; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 }
