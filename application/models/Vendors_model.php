@@ -10,10 +10,17 @@ class Vendors_model extends MY_Model {
 		parent::__construct();
 	}
 
-	public function getAllByCompany($status = [1]) {
+	public function getAllByCompany($status = [1], $filters = []) {
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('f_name !=', '');
 		$this->db->where_in('status', $status);
+
+		if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
 		$this->db->order_by('f_name', 'asc');
 		$query = $this->db->get($this->table);
 
@@ -1108,4 +1115,59 @@ class Vendors_model extends MY_Model {
 
         return $query->row();
 	}
+
+	public function bulkUpdate($ids = [], $data = [], $filters = [])
+    {
+        $this->db->where_in('id', $ids);
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->update($this->table, $data);
+        return $this->db->affected_rows();
+    }
+
+    public function bulkDelete($ids = [], $filters = [])
+    {
+        if( count($ids) > 0 ){
+            $this->db->where_in('id', $ids);
+
+            if( $filters ){
+                foreach( $filters as $filter ){
+                    $this->db->where($filter['field'], $filter['value']);
+                }
+            }
+
+            $this->db->delete($this->table);
+        }        
+
+        return $this->db->affected_rows();
+    }
+
+	public function deleteAllArchived($filters = [])
+    {
+        $this->db->where('is_archived', 'Yes');
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->delete($this->table);
+        return $this->db->affected_rows();
+    }
+
+	public function getById($id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('id', $id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
