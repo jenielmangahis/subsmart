@@ -10,5 +10,12 @@
                 <span>Paycheck list</span>
             </a>
         </li>
+        <?php if (logged('user_type') == 7) { ?>
+        <li class="<?php if($page->title == 'Payscale'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('users/pay_scale') ?>'">
+            <a class="nsm-page-link" href="javascript:void(0);">
+                <span>Payscale</span>
+            </a>
+        </li>
+        <?php } ?>
     </ul>
 </div>
