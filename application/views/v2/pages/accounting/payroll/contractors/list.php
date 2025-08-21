@@ -109,7 +109,8 @@
                         <tr data-id="<?=$contractor->id?>" data-name="<?=$contractor->display_name?>">
                             <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/contractors/view/' . $contractor->id) ?>'"><?=$contractor->display_name?></td>
                             <td><?= $contractor->email; ?></td>
-                            <td><?=$contractor->status === '0' ? 'Inactive' : 'Active'?></td>
+                            <?php $status_badge = $contractor->status == 0 ? 'bg-danger' : 'bg-success'; ?>
+                            <td><span class='badge <?php echo $status_badge; ?>'><?=$contractor->status === '0' ? 'Inactive' : 'Active'?></span></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">

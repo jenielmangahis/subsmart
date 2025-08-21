@@ -2888,6 +2888,7 @@ class Employees extends MY_Controller
                 $phone = (!empty($getDatas->phone)) ? $getDatas->phone : "<small class='text-muted fst-italic'>Not Specified</small>";
 
                 $data[] = array(
+                    checkRoleCanAccessModule('users', 'write') ? '<td><input class="form-check-input row-select table-select" name="users[]" type="checkbox" value="'. $employee_id .'"></td>' : '',
                     "<strong class='fw-bold nsm-text-primary nsm-link' onclick='location.href=`".base_url('accounting/employees/view/').$employee_id."`'>$employee</strong>",
                     "$payscale_formatted",
                     "$pay_method",
