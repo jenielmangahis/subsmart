@@ -122,6 +122,8 @@ class Employees extends MY_Controller
             "assets/js/v2/accounting/payroll/employees/list.js"
         ));
 
+        $cid   = logged('company_id');
+
         $accounts = $this->chart_of_accounts_model->select();
         $accounts = array_filter($accounts, function ($v, $k) {
             return $v->account_id === 3 || $v->account_id === "3";
@@ -172,16 +174,16 @@ class Employees extends MY_Controller
         }
 
         $role_id = logged('role');
+        
         if ($role_id == 1 || $role_id == 2) {
-            $this->page_data['payscale'] = $this->PayScale_model->getAll();
+            $this->page_data['payscales'] = $this->PayScale_model->getAll();
         } else {
-            $this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
+            $this->page_data['payscales'] = $this->PayScale_model->getAllByCompanyId($cid);
         }
 
         $usedPaySched = $this->users_model->getPayScheduleUsed();
         $nextPayDate = $this->get_next_pay_date($usedPaySched);
-
-        $cid   = logged('company_id');
+        
         $roles = $this->users_model->getRoles($cid);
         $this->page_data['roles'] = $roles;
         $this->session->set_userdata('roles', $roles);
