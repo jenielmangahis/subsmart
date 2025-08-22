@@ -211,6 +211,28 @@ $(function () {
     $(document).on('click', 'div#payrollModal div.modal-footer button#continue-payroll', function () {
         payroll.paySchedule = $('#payrollModal [name="payscale"]:checked').val();
         payroll.paySchedForm = $('div#payrollModal div.modal-body').html();
+
+        if(payroll.paySchedule == undefined) {
+            payroll.paySchedule = $('#payrollModal [name="pay_schedule"]:checked').val();
+
+            let count_emp = $('#payrollModal [name="pay_schedule"]:checked').attr("data-total-emp");
+            if(count_emp <= 0) {
+
+                Swal.fire({
+                    text: "No employee(s) data for the selected payscale, please select another payscale.",
+                    icon: 'warning',
+                    showCloseButton: true,
+                    confirmButtonColor: '#2ca01c',
+                    confirmButtonText: 'OK',
+                    timer: 5000
+                });     
+                
+                return false;
+
+            }
+    
+        }
+
         var paySchedName = $('#payrollModal [name="payscale"]:checked').next().find('.payscale_name').html();
         if (payroll.paySchedule !== "" && payroll.paySchedule !== undefined || true) {
             $.get(base_url + 'accounting/get-payroll-form/' + payroll.paySchedule, function (res) {
