@@ -112,11 +112,11 @@
                 </tr>
                 <tr>
                     <td colspan="8">
-                        <div class="nsm-page-buttons page-buttons-container">
+                        <!-- <div class="nsm-page-buttons page-buttons-container">
                             <button type="button" class="nsm-button" id="add-employee-button">
                                 Add an employee
                             </button>
-                        </div>
+                        </div> -->
                     </td>
                 </tr>
             </tfoot>
