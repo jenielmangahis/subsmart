@@ -2164,7 +2164,7 @@ class Users extends MY_Controller
 			return false;
 		}
 
-		$this->page_data['page']->title = 'Pay Scale';
+		$this->page_data['page']->title = 'Payscale';
         $this->page_data['page']->parent = 'Company';
 		
 		$this->hasAccessModule(63);
