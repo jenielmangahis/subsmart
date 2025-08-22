@@ -9,7 +9,7 @@
                 <div class="modal-body" style="overflow-x: auto;max-height: 800px;">
                     <div class="row gy-3 mb-4">
                         <div class="col-12">
-                            <label class="content-title">Basic Details</label>
+                            <label class="content-title custom-header">Basic Details</label>
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Employee Number</label>
@@ -44,7 +44,7 @@
                     </div>
                     <div class="row gy-3 mb-4">
                         <div class="col-12">
-                            <label class="content-title">nSmart App Login Details</label>
+                            <label class="content-title custom-header">Login Details</label>
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Email</label>
@@ -68,7 +68,7 @@
                     <?php if(isSolarCompany() == 1){ ?>
                     <div class="row gy-3 mb-4">
                         <div class="col-12">
-                            <label class="content-title">ADT Sales App Login Details</label>
+                            <label class="content-title custom-header">ADT Sales App Login Details</label>
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Username</label>
@@ -92,7 +92,7 @@
                     <?php } ?>
                     <div class="row gy-3 mb-4">
                         <div class="col-12">
-                            <label class="content-title">Other Details</label>
+                            <label class="content-title custom-header">Other Details</label>
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Address</label>
@@ -239,10 +239,10 @@
                     </div>
                     <div class="row gy-3 mb-4">
                         <div class="col-12 col-md-12 mt-5">
-                            <label class="content-title" style="display:inline-block;">Commission Settings</label>
-                            <a class="nsm-button primary small btn-add-new-commision" href="javascript:void(0);"><i class='bx bx-plus'></i> Add New</a>
+                            <label class="content-title custom-header">Commission Settings</label>                            
                         </div>
                         <div class="col-12 col-md-12">
+                            <a class="nsm-button primary small btn-add-new-commision float-end" href="javascript:void(0);"><i class='bx bx-plus'></i> Add New</a>
                             <table class="table" id="commission-settings">
                                 <thead>
                                 <tr>

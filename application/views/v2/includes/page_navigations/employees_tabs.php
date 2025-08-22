@@ -43,6 +43,7 @@
                         <?php if( logged('user_type') == 7 ){ //Admin only ?>
                             <li><a class="dropdown-item" href="<?php echo base_url('users/role_access_modules') ?>">Roles Access Modules</a></li>
                             <li><a class="dropdown-item" href="<?php echo base_url('timesheet/settings') ?>">Timesheet Settings</a></li>
+                            <li><a class="dropdown-item" href="<?php echo base_url('leave_types') ?>">Leave Types</a></li>
                         <?php } ?>
                     <?php endif; ?>
                 </ul>
@@ -55,23 +56,6 @@
                 <span>Track Location</span>
             </a>
         </li>
-        <?php if (logged('user_type') == 7) {
-        ?>
-            <li class="<?php if ($page->title == 'Pay Scale'): echo 'active';
-                        endif; ?>">
-                <a class="nsm-page-link" href="<?php echo base_url('users/pay_scale') ?>">
-                    <i class='bx bx-fw bx-cog'></i>
-                    <span>Pay Scale</span>
-                </a>
-            </li>
-            <li class="<?php if ($page->title == 'Leave Types'): echo 'active';
-                        endif; ?>">
-                <a class="nsm-page-link" href="<?php echo base_url('leave_types') ?>">
-                    <i class='bx bx-fw bx-cog'></i>
-                    <span>Leave Types</span>
-                </a>
-            </li>
-        <?php } ?>
         <!-- Do not remove the last li -->
         <li><label></label></li>
     </ul>

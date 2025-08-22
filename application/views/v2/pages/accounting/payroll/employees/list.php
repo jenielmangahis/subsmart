@@ -1,6 +1,7 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/accounting/employees_modals'); ?>
 <?php include viewPath('v2/includes/accounting/modal_forms/payroll_modal'); ?>
+<?php //include viewPath('v2/includes/accounting/modal_forms/employee_modal'); ?>
 <style>
     table.dataTable thead th, 
     table.dataTable thead td {
@@ -15,6 +16,13 @@
     .dataTables_length,
     .dataTables_filter {
         display: none;
+    }
+    .custom-header{
+        background-color: #6a4a86;
+        color: #ffffff;
+        font-size: 15px;
+        padding: 10px;
+        display:block;
     }
 </style>
 <div class="row page-content g-0">

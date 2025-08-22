@@ -9,7 +9,10 @@
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/employees_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/accounting/tabs/payroll'); ?>
+    </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/accounting/subtabs/employees_subtabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
@@ -31,7 +34,7 @@
                     <div class="col-8 grid-mb text-end">                        
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">                          
                                 <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
@@ -45,7 +48,7 @@
                     </div>
                 </div>
                 <form id="frm-with-selected">           
-                <table class="nsm-table">
+                <table class="nsm-table" id="tbl-payscale-list">
                     <thead>
                         <tr>
                             <td><input type="checkbox" class="form-check-input" id="chk-all-row" /></td>
@@ -110,10 +113,21 @@
         }, 1000));
 
         $('#chk-all-row').on('change', function(){
-            if( $(this).prop('checked') ){
-                $('.chk-row').prop('checked',true);
+            $('#tbl-payscale-list .chk-row:checkbox').prop('checked', this.checked);  
+            let total= $('#tbl-payscale-list input[name="row_selected[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
             }else{
-                $('.chk-row').prop('checked',false);
+                $('#num-checked').text('');
+            }
+        });
+
+        $(document).on('change', '.chk-row', function(){
+            let total= $('#tbl-payscale-list input[name="row_selected[]"]:checked').length;
+            if( total > 0 ){
+                $('#num-checked').text(`(${total})`);
+            }else{
+                $('#num-checked').text('');
             }
         });
 

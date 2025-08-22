@@ -533,6 +533,8 @@ $route['accounting/download-refund-receipt-pdf/(:any)'] = 'accounting_modals/dow
 $route['accounting/preview-and-print-sample']['post'] = 'accounting_modals/preview_and_print_sample';
 $route['accounting/save-print-checks-settings']['post'] = 'accounting_modals/save_print_checks_settings';
 
+$route['accounting/get-employee-modal'] = 'accounting_modals/get_employee_modal';
+
 $route['accounting/print-sales-transactions']['post'] = 'accounting_modals/print_sales_transactions';
 $route['accounting/send-sales-transactions']['post'] = 'accounting_modals/send_sales_transactions';
 $route['accounting/send-invoice-reminders']['post'] = 'accounting_modals/send_invoice_reminders';
@@ -813,6 +815,11 @@ $route['accounting/vendors/import-vendors-data']['post'] = 'accounting_controlle
 $route['accounting/vendor/_bill_mark_paid']['post'] = 'accounting_controllers/vendors/ajax_bill_mark_paid';
 $route['accounting/vendors/export_transactions/(:any)'] = 'accounting_controllers/vendors/export_transactions/$1';
 $route['accounting/vendors/_save_vendor'] = 'accounting_controllers/vendors/ajax_save_vendor';
+$route['accounting/vendors/_archived_list'] = 'accounting_controllers/vendors/ajax_archived_list';
+$route['accounting/vendors/_restore_selected_vendors'] = 'accounting_controllers/vendors/ajax_restore_selected_vendors';
+$route['accounting/vendors/_permanently_delete_selected_vendors'] = 'accounting_controllers/vendors/ajax_permanently_delete_selected_users';
+$route['accounting/vendors/_delete_all_archived_vendors'] = 'accounting_controllers/vendors/ajax_delete_all_archived_vendors';
+$route['accounting/vendors/_restore_vendor'] = 'accounting_controllers/vendors/ajax_restore_vendor';
 
 $route['accounting/expenses'] = 'accounting_controllers/expenses/index';
 $route['accounting/expenses/get-expense-transactions']['post'] = 'accounting_controllers/expenses/get_expense_transactions';

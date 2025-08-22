@@ -72,7 +72,7 @@ $('#export-to-excel').on('click', function (e) {
     e.preventDefault();
 
     if ($('#export-form').length < 1) {
-        $('body').append(`<form action="/accounting/employees/paycheck-list/export" method="post" id="export-form"></form>`);
+        $('body').append(`<form action="${base_url}accounting/employees/paycheck-list/export" method="post" id="export-form"></form>`);
     }
 
     $('#export-form').append(`<input type="hidden" name="type" value="excel">`);
@@ -99,7 +99,7 @@ $('#print-save-pdf-modal #save-as-pdf').on('click', function (e) {
     e.preventDefault();
 
     if ($('#export-form').length < 1) {
-        $('body').append(`<form action="/accounting/employees/paycheck-list/export" method="post" id="export-form"></form>`);
+        $('body').append(`<form action="${base_url}accounting/employees/paycheck-list/export" method="post" id="export-form"></form>`);
     }
 
     $('#export-form').append(`<input type="hidden" name="type" value="pdf">`);
@@ -186,7 +186,7 @@ $(document).on('click', '#print-paychecks', function (e) {
     e.preventDefault();
 
     if ($('#print-paycheck-form').length < 1) {
-        $('body').append(`<form action="/accounting/print-multiple" method="post" id="print-paycheck-form" target="_blank"></form>`);
+        $('body').append(`<form action="${base_url}accounting/print-multiple" method="post" id="print-paycheck-form" target="_blank"></form>`);
     }
 
     $('#paycheck-table .select-one:checked').each(function () {
@@ -227,7 +227,7 @@ $('#paycheck-table .print-paycheck').on('click', function (e) {
     var id = row.find('.select-one').val();
 
     if ($('#print-paycheck-form').length < 1) {
-        $('body').append(`<form action="/accounting/print-paycheck" method="post" id="print-paycheck-form" target="_blank"></form>`);
+        $('body').append(`<form action="${base_url}accounting/print-paycheck" method="post" id="print-paycheck-form" target="_blank"></form>`);
     }
 
     $('#print-paycheck-form').append(`<input type="hidden" name="paycheck_id" value="${id}">`);
@@ -286,7 +286,7 @@ $('#paycheck-table .void-paycheck').on('click', function (e) {
         confirmButtonText: 'Confirm'
     }).then((result) => {
         if (result.isConfirmed) {
-            $.get(`/accounting/void-paycheck/${id}`, function (res) {
+            $.get(base_url + `accounting/void-paycheck/${id}`, function (res) {
                 var result = JSON.parse(res);
                 Swal.fire({
                     title: result.success ? 'Void Successful!' : 'Failed!',
@@ -643,8 +643,8 @@ $(document).ready(function () {
                         <td>${paycheck.total_pay ? `$${paycheck.total_pay}` : '0'}</td>
                         <td>${paycheck.net_pay ? `$${paycheck.net_pay}` : '0'}</td>
                         <td>${paycheck.pay_method || 'No payment method'}</td>
-                        <td>${paycheck.check_number !== '-' && paycheck.check_number !== 'Void' ? `<input type="text" name="check_number[]" class="form-control nsm-field" value="${paycheck.check_number}">` : 'Void'}</td>
-                        <td>-</td>
+                        <td>${paycheck.check_number !== '-' && paycheck.check_number !== 'Void' ? `<input type="text" name="check_number[]" class="form-control nsm-field" value="${paycheck.check_number}">` : '--'}</td>
+                        <td><span class='badge bg-danger'>${paycheck.status || '-'}</span></td>
                         <td>
                             <div class="dropdown float-end">
                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">

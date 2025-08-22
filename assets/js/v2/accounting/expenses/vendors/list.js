@@ -2,9 +2,9 @@ $('.dropdown-menu.table-settings').on('click', function(e) {
     e.stopPropagation();
 });
 
-$("#vendors-table").nsmPagination({
-    itemsPerPage: parseInt($('#table-rows li a.active').html().trim())
-});
+// $("#vendors-table").nsmPagination({
+//     itemsPerPage: parseInt($('#table-rows li a.active').html().trim())
+// });
 
 $('.dropdown-menu#table-rows a.dropdown-item').on('click', function() {
     var count = $(this).html();
@@ -59,6 +59,274 @@ $("#search_field").on("input", debounce(function() {
     _form.submit();
 }, 1500));
 
+$('#btn-archived, #btn-mobile-archived').on('click', function(){
+    $('#modal-view-archive').modal('show');
+        $.ajax({
+        type: "POST",
+        url: base_url + "accounting/vendors/_archived_list",
+        success: function(html) {    
+            $('#vendors-archived-container').html(html);
+        },
+        beforeSend: function() {
+            $('#vendors-archived-container').html('<div class="col"><span class="bx bx-loader bx-spin"></span></div>');
+        }
+    });
+});
+
+$(document).on('click', '#with-selected-restore', function(){
+    let total= $('#archived-vendors input[name="vendors[]"]:checked').length;
+    if( total <= 0 ){
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Please select rows',
+        });
+    }else{
+        Swal.fire({
+            title: 'Restore Vendors',
+            html: `Are you sure you want to restore selected rows?`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    method: 'POST',
+                    url: base_url + 'accounting/vendors/_restore_selected_vendors',
+                    dataType: 'json',
+                    data: $('#frm-archive-with-selected').serialize(),
+                    success: function(result) {                        
+                        if( result.is_success == 1 ) {
+                            $('#modal-view-archive').modal('hide');
+                            Swal.fire({
+                                title: 'Restore Vendors',
+                                text: "Data restored successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    },
+                });
+
+            }
+        });
+    }        
+});
+
+$(document).on('click', '#with-selected-perma-delete', function(){
+    let total = $('#archived-vendors input[name="vendors[]"]:checked').length;
+    if( total <= 0 ){
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Please select rows',
+        });
+    }else{
+        Swal.fire({
+            title: 'Delete Vendors',
+            html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    method: 'POST',
+                    url: base_url + 'accounting/vendors/_permanently_delete_selected_vendors',
+                    dataType: 'json',
+                    data: $('#frm-archive-with-selected').serialize(),
+                    success: function(result) {                        
+                        if( result.is_success == 1 ) {
+                            $('#modal-view-archive').modal('hide');
+                            Swal.fire({
+                                title: 'Delete Vendors',
+                                text: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    //location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    },
+                });
+
+            }
+        });
+    }        
+});
+
+$(document).on('click', '#btn-empty-archives', function(){        
+    let total = $('#archived-vendors input[name="vendors[]"]').length;        
+    if( total > 0 ){
+        Swal.fire({
+            title: 'Empty Archived',
+            html: `Are you sure you want to <b>permanently delete</b> <b>${total}</b> archived vendors? <br/><br/>Note : This cannot be undone.`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    method: 'POST',
+                    url: base_url + 'accounting/vendors/_delete_all_archived_vendors',
+                    dataType: 'json',
+                    data: $('#frm-archive-with-selected').serialize(),
+                    success: function(result) {                        
+                        if( result.is_success == 1 ) {
+                            $('#modal-view-archive').modal('hide');
+                            Swal.fire({
+                                title: 'Empty Archived',
+                                text: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    //location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    },
+                });
+
+            }
+        });
+    }else{
+        Swal.fire({                
+            icon: 'error',
+            title: 'Error',              
+            html: 'Archived is empty',
+        });
+    }        
+});
+
+$(document).on('click', '.btn-restore-vendor', function(){
+    let vendor_id   = $(this).attr('data-id');
+    let vendor_name = $(this).attr('data-name');
+
+    Swal.fire({
+        title: 'Restore Vendor',
+        html: `Are you sure you want to restore vendor <b>${vendor_name}</b>?`,
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: base_url + 'accounting/vendors/_restore_vendor',
+                data: {
+                    vendor_id: vendor_id
+                },
+                dataType: "JSON",
+                success: function(result) {
+                    $('#modal-view-archive').modal('hide');
+                    if (result.is_success) {
+                        Swal.fire({
+                            title: 'Restore Vendor',
+                            html: "Data updated successfully!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                },
+            });
+        }
+    });
+});
+
+$(document).on('click', '.btn-permanently-delete-vendor', function(){
+    let vendor_id   = $(this).attr('data-id');
+    let vendor_name = $(this).attr('data-name');
+
+    Swal.fire({
+        title: 'Delete Vendor',
+        html: `Are you sure you want to <b>permanently delete</b> vendor <b>${vendor_name}</b>? <br/><br/>Note : This cannot be undone.`,
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: base_url + 'users/_delete_archived_user',
+                data: {
+                    vendor_id: vendor_id
+                },
+                dataType: "JSON",
+                success: function(result) {
+                    $('#modal-view-archive').modal('hide');
+                    if (result.is_success) {
+                        Swal.fire({
+                            title: 'Delete Vendor',
+                            html: "Data deleted successfully!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                //location.reload();
+                            //}
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                },
+            });
+        }
+    });
+});
+
 $('#inc_inactive').on('change', function() {
     var currUrl = window.location.href;
     var urlSplit = currUrl.split('/');
@@ -112,7 +380,7 @@ $('#export-form').on('submit', function(e) {
 });
 
 $('#add-vendor-button').on('click', function(e) {
-    e.preventDefault();
+    e.preventDefault();    
 
     $.get( base_url + 'accounting/get-add-vendor-details-modal', function(result) {
         if ($('#modal-container').length > 0) {
@@ -180,29 +448,46 @@ $('#add-vendor-button').on('click', function(e) {
 
 $('#print-checks').on('click', function(e) {
     e.preventDefault();
-
-    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="print_checks_modal"]').trigger('click');
+    $('#createEntryShortcut ul li.ajax-modal[data-view="print_checks_modal"]').trigger('click');
 });
 
 $('#pay-bills').on('click', function(e) {
     e.preventDefault();
 
-    $('.nsm-sidebar-menu #new-popup ul li a.ajax-modal[data-view="pay_bills_modal"]').trigger('click');
+    $('#createEntryShortcut ul li.ajax-modal[data-view="pay_bills_modal"]').trigger('click');
 });
 
 $('#vendors-table .select-all').on('change', function() {
+    $('.table-select:checkbox').prop('checked', this.checked);  
+    let total= $('#vendors-table input[name="vendors[]"]:checked').length;
+
+    if( total > 0 ){
+        $('#num-checked').text(`(${total})`);
+    }else{
+        $('#num-checked').text('');
+    }
+
     if($(this).prop('checked')) {
         $('#vendors-table tbody input.select-one').prop('checked', true);
         $('#delete-vendor').removeClass('disabled');
+        $('.dropdown-update-status').removeClass('disabled');
     } else {
         $('#vendors-table tbody input.select-one').prop('checked', false);
         $('#delete-vendor').addClass('disabled');
+        $('.dropdown-update-status').addClass('disabled');
     }
 });
 
 $('#vendors-table .select-one').on('change', function() {
     var checked = $('#vendors-table tbody tr:visible input.select-one:checked');
     var totalrows = $('#vendors-table tbody tr:visible input.select-one').length;
+
+    let total= $('#vendors-table input[name="vendors[]"]:checked').length;
+    if( total > 0 ){
+        $('#num-checked').text(`(${total})`);
+    }else{
+        $('#num-checked').text('');
+    }
 
     $('#vendors-table .select-all').prop('checked', checked.length === totalrows);
 
@@ -223,10 +508,10 @@ $('#vendors-table .select-one').on('change', function() {
     }
 
     if(checked.length > 0) {
-        $('#make-inactive').removeClass('disabled');
+        $('.dropdown-update-status').removeClass('disabled');
         $('#delete-vendor').removeClass('disabled');
     } else {
-        $('#make-inactive').addClass('disabled');
+        $('.dropdown-update-status').addClass('disabled');
         $('#delete-vendor').addClass('disabled');
     }
     $('#email').attr('href', href);
@@ -265,11 +550,13 @@ $('#vendors-table .make-inactive').on('click', function(e) {
     e.preventDefault();
 
     var row = $(this).closest('tr');
+    var name = $(this).attr('data-name');
     var data = new FormData();
     data.set('vendors[]', row.find('.select-one').val());
 
     Swal.fire({            
-        html: "Change the selected vendor status to <b>inactive</b>?",
+        title: "Update Vendor Status",          
+        html: `Change vendor <b>${name}</b> status to <b>inactive</b>?`,
         icon: 'question',
         confirmButtonText: 'Proceed',
         showCancelButton: true,
@@ -278,6 +565,37 @@ $('#vendors-table .make-inactive').on('click', function(e) {
         if (result.value) {
             $.ajax({
                 url: base_url + 'accounting/vendors/make-inactive',
+                data: data,
+                type: 'post',
+                processData: false,
+                contentType: false,
+                success: function(result) {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
+
+$('#vendors-table .make-active').on('click', function(e) {
+    e.preventDefault();
+
+    var row = $(this).closest('tr');
+    var name = $(this).attr('data-name');
+    var data = new FormData();
+    data.set('vendors[]', row.find('.select-one').val());
+
+    Swal.fire({  
+        title: "Update Vendor Status",          
+        html: `Change vendor <b>${name}</b> status to <b>active</b>?`,
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: base_url + 'accounting/vendors/make-active',
                 data: data,
                 type: 'post',
                 processData: false,
@@ -299,8 +617,9 @@ $('#delete-vendor').on('click', function(e) {
         data.append('vendors[]', $(this).val());
     });
 
-    Swal.fire({            
-        html: "Are you sure you want to delete selected vendors?",
+    Swal.fire({         
+        title: 'Delete Vendors',   
+        html: `Are you sure you want to delete selected rows?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
         icon: 'question',
         confirmButtonText: 'Proceed',
         showCancelButton: true,
@@ -323,14 +642,15 @@ $('#delete-vendor').on('click', function(e) {
                         }                        
 
                         Swal.fire({
+                            title: 'Delete Vendors',   
                             text: "Selected "+ text_vendor +" was deleted successfully",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 location.reload();
-                            }
+                            //}
                         });
                     }else{
                         Swal.fire({
@@ -349,11 +669,13 @@ $('#vendors-table .delete-vendor').on('click', function(e) {
     e.preventDefault();
 
     var row = $(this).closest('tr');
+    var name = $(this).attr('data-name');
     var data = new FormData();
     data.set('vendors[]', row.find('.select-one').val());
 
-    Swal.fire({            
-        html: "Are you sure you want to delete selected vendor?",
+    Swal.fire({
+        title: 'Delete Vendor',            
+        html: `Are you sure you want to delete vendor <b>${name}</b>?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
         icon: 'question',
         confirmButtonText: 'Proceed',
         showCancelButton: true,
@@ -371,48 +693,30 @@ $('#vendors-table .delete-vendor').on('click', function(e) {
                     if (result.is_success == 1) {
                         if( result.total_deleted == 1 ){
                             var text_vendor = 'vendor';
-                        }else if( result.total_deleted  > 1 ){
+                        }else{
                             var text_vendor = 'vendors';                            
                         }                        
 
                         Swal.fire({
-                            text: "Selected "+ text_vendor +" was deleted successfully",
+                            title: 'Delete Vendor',   
+                            text: "Selected "+ text_vendor +" was successfully deleted",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 location.reload();
-                            }
+                            //}
                         });
                     }else{
                         Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        html: o.msg
+                        html: result.msg
                         });
                     }
                 }
             });
-        }
-    });
-});
-
-$('#vendors-table .make-active').on('click', function(e) {
-    e.preventDefault();
-
-    var row = $(this).closest('tr');
-    var data = new FormData();
-    data.set('vendors[]', row.find('.select-one').val());
-
-    $.ajax({
-        url: '/accounting/vendors/make-active',
-        data: data,
-        type: 'post',
-        processData: false,
-        contentType: false,
-        success: function(result) {
-            location.reload();
         }
     });
 });
