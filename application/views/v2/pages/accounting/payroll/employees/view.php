@@ -44,6 +44,14 @@
     left: 90px;
     top: 85px;
 }
+.custom-header{
+    background-color: #6a4a86;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 10px;
+    display:block;
+    width:100%;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
