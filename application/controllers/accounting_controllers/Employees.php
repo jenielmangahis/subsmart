@@ -174,27 +174,23 @@ class Employees extends MY_Controller
         }
 
         $role_id = logged('role');
-        
-        if ($role_id == 1 || $role_id == 2) {
-            $this->page_data['payscales'] = $this->PayScale_model->getAll();
-        } else {
-            $this->page_data['payscales'] = $this->PayScale_model->getAllByCompanyId($cid);
-        }
-
         $usedPaySched = $this->users_model->getPayScheduleUsed();
         $nextPayDate = $this->get_next_pay_date($usedPaySched);
         
         $roles = $this->users_model->getRoles($cid);
+        $employees = $this->get_employees($filters);
+        $payscales = $this->PayScale_model->getAllByCompanyId($cid);
+
         $this->page_data['roles'] = $roles;
         $this->session->set_userdata('roles', $roles);
         $this->page_data['nextPayDate'] = $nextPayDate;
         $this->page_data['nextPayPeriodEnd'] = date('m/d/Y', strtotime("wednesday"));
         $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));
         $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
-
-        $employees = $this->get_employees($filters);
+        $this->page_data['roles']  = $this->users_model->userRolesList();
         $this->page_data['employees'] = $employees;
         $this->page_data['commission_pays'] = $this->users_model->getPayDetailsByPayType('commission');
+        $this->page_data['payscales'] = $payscales;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         // $this->load->view('accounting/employees/index', $this->page_data);
         $this->load->view('v2/pages/accounting/payroll/employees/list', $this->page_data);
@@ -750,8 +746,8 @@ class Employees extends MY_Controller
 
         echo json_encode([
             'success' => $last_id ? true : false,
-            'title' => $last_id ? "Save Successful!" : "Failed",
-            'message' => $last_id ? "New employee source has been added successfully." : "Something is wrong in the process."
+            'title' => $last_id ? "Add Employee" : "Failed",
+            'message' => $last_id ? "New employee has been added successfully." : "Something is wrong in the process."
         ]);
     }
 
