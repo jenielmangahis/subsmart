@@ -142,7 +142,11 @@
                             <div class="col-md-4">
                                 <strong class="text-muted">HIRE DATE</strong>
                                 <p class="text_value">
-                                    <span id="emp-hire-date"><?php echo date("m/d/Y", strtotime($employee->date_hired)); ?></span>
+                                    <?php if($employee->date_hired != null && $employee->date_hired != '0000-00-00') { ?>
+                                        <span id="emp-hire-date"><?php echo date("m/d/Y", strtotime($employee->date_hired)); ?></span>
+                                    <?php } else { ?>
+                                        <span id="emp-hire-date">--</span>
+                                    <?php }  ?>
                                 </p>
                             </div>
                             <div class="col-md-4">

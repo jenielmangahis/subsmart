@@ -663,20 +663,20 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Pay scale settings</span>
+                <span class="modal-title content-title" style="font-size: 17px;">Payscale settings</span>
                 <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
             </div>
             <div class="modal-body pt-3">
                 <form class="payscale_form">
                     <div class="row">
                         <div class="col-md-12">
-                            <h6>Setup pay scale for employee <u class="fw-bold"><?php echo "$employee->FName $employee->LName"; ?></u></h6>
+                            <h6>Setup payscale for employee <u class="fw-bold"><?php echo "$employee->FName $employee->LName"; ?></u></h6>
                         </div>
                         <div class="col-md-12 d-none">
                             <input type="text" name="employee_id" class="form-control hideInput" value="<?php echo $employee->id; ?>">
                         </div>
                         <div class="col-md-6 mt-2">
-                            <label class="mb-1" for="">Pay scale</label>
+                            <label class="mb-1" for="">Payscale</label>
                             <select class="form-select payscale_select" name="payscale_option" required>
                                 <option value="none">Not Specified</option>
                                 <option value="commission_only">Commission Only</option>
@@ -750,7 +750,7 @@
                     <div class="col-md-12">
                         <ul class="nav nav-pills" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="payscale_tab" data-bs-toggle="tab" data-bs-target="#payscale_container" type="button" role="tab" aria-controls="home" aria-selected="true">Pay scale</button>
+                                <button class="nav-link active" id="payscale_tab" data-bs-toggle="tab" data-bs-target="#payscale_container" type="button" role="tab" aria-controls="home" aria-selected="true">Payscale</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="commission_tab" data-bs-toggle="tab" data-bs-target="#commission_container" type="button" role="tab" aria-controls="profile" aria-selected="false">Commission</button>
