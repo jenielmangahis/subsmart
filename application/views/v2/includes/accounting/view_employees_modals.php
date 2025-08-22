@@ -1898,6 +1898,27 @@ $('select > option[data-custom="form_2019"], .form_2019_input').hide();
 $('.form_2019_input > input').hide().attr('disabled', '');
 
 $(function() {
+
+    function formDisabler(selector, state) {
+        const element = $(selector);
+        const submitButton = element.find('button[type="submit"]');
+        element.find("input, button, textarea, select").prop('disabled', state);
+
+        if (state) {
+            element.find('a').hide();
+            if (!submitButton.data('original-content')) {
+                submitButton.data('original-content', submitButton.html());
+            }
+            submitButton.prop('disabled', true).html('Processing...');
+        } else {
+            element.find('a').show();
+            const originalContent = submitButton.data('original-content');
+            if (originalContent) {
+                submitButton.prop('disabled', false).html(originalContent);
+            }
+        }
+    }    
+
     $('input[name="withholding_certificate"]').change(function(e) {
         const value = $(this).val();
         if (value == "form_2020") {
@@ -1946,7 +1967,6 @@ $(function() {
         }
     });
 
-
     $('#futa_checkbox').change(function(e) {
         e.preventDefault();
         if ($(this).prop('checked') == true) {
@@ -1980,16 +2000,14 @@ $(function() {
 
         $.ajax({
             type: "POST",
-            url: base_url +
-                "/accounting/employees/update_employee_data/personal_information",
+            url: base_url + "accounting/employees/update_employee_data/personal_information",
             data: form.serialize(),
             beforeSend: function() {
                 formDisabler(form, true);
             },
             success: function(response) {
                 formDisabler(form, false);
-                const name = $('input[name="FName"]').val() + " " + $('input[name="LName"]')
-                    .val();
+                const name = $('input[name="FName"]').val() + " " + $('input[name="LName"]').val();
                 const email = $('input[name="email"]').val();
                 const birthdate = moment($('input[name="birthdate"]').val()).format('L');
                 const address = $('input[name="address"]').val();
@@ -1997,8 +2015,7 @@ $(function() {
                 const postalCode = $('input[name="postal_code"]').val();
                 const formattedAddress = `${address},<br>${state} ${postalCode}`;
                 const phone = $('input[name="email"]').val();
-                const status = ($('select[name="status"]').val() == 1) ? "Active" :
-                    "Inactive";
+                const status = ($('select[name="status"]').val() == 1) ? "Active" : "Inactive";
 
                 $('.name_text').text(name);
                 $('.email_text').text(email);
@@ -2015,6 +2032,9 @@ $(function() {
                     showCloseButton: false,
                 });
             },
+
+            //$('#edit_employee_modal').modal('hide');
+
             error: function(xhr, status, error) {
                 formDisabler(form, false);
                 console.error("Request failed:", status, error);
