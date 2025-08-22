@@ -176,8 +176,7 @@ class Employees extends MY_Controller
         $role_id = logged('role');
         $usedPaySched = $this->users_model->getPayScheduleUsed();
         $nextPayDate = $this->get_next_pay_date($usedPaySched);
-        
-        $roles = $this->users_model->getRoles($cid);
+
         $employees = $this->get_employees($filters);
         $payscales = $this->PayScale_model->getAllByCompanyId($cid);
 
@@ -430,14 +429,12 @@ class Employees extends MY_Controller
         $this->page_data['employee'] = $employee;
         $this->page_data['pay_details'] = $empPayDetails;
         $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
-
-       
-
+        $this->page_data['roles']  = $this->users_model->userRolesList();
         $this->page_data['dc_data'] =  $this->Deductions_and_contribution_model->getByUser($id);
 
         $cid   = logged('company_id');
-        $roles = $this->users_model->getRoles($cid);
-        $this->page_data['roles'] = $roles;
+        $userTitles = $this->users_model->getRoles($cid);
+        $this->page_data['userTitles'] = $userTitles;
 
         // $role_id = logged('role');
         // if( $role_id == 1 || $role_id == 2 ){
@@ -535,6 +532,8 @@ class Employees extends MY_Controller
             'table' => 'accounting_tax_withholding',
             'where' => array('company_id' => $company_id, 'employee_id' => $id,),
         );
+
+        $roles = $this->users_model->getRolesBySearch($role_title, $cid);
         
         $this->page_data['taxWithholdingData'] = $this->general_model->get_data_with_param($getTaxWithholding, false);
         $this->page_data['userType'] = $user_type;
