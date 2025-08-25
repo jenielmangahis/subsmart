@@ -157,12 +157,12 @@
                                             <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                                         </th>
                                         <?php } ?>                                        
-                                        <th>NAME</th>
-                                        <th>PAY SCALE</th>
-                                        <th>PAY METHOD</th>
-                                        <th>STATUS</th>
-                                        <th>EMAIL</th>
-                                        <th>PHONE NO.</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Payscale</th>
+                                        <th>Pay Method</th>                                        
+                                        <th>Status</th>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
