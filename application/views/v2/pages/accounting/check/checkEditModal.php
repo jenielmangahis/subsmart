@@ -1,26 +1,5 @@
 <?php include viewPath('v2/pages/accounting/check/checkModal.css'); ?>
 <?php include viewPath('v2/pages/accounting/check/checkModal.js'); ?>
-<?php 
-$id              = $check_data->id;
-$company_id      = $check_data->company_id;
-$payee_type      = $check_data->payee_type;
-$payee_id        = $check_data->payee_id;
-$bank_account_id = $check_data->bank_account_id;
-$mailing_address = $check_data->mailing_address;
-$payment_date    = $check_data->payment_date;
-$check_no        = $check_data->check_no;
-$to_print        = ($check_data->to_print == 1) ? true : false;
-$permit_no       = $check_data->permit_no;
-$tags            = $check_data->tags;
-$memo            = $check_data->memo;
-$total_amount    = $check_data->total_amount;
-$recurring       = $check_data->recurring;
-$status          = $check_data->status;
-$created_at      = $check_data->created_at;
-$updated_at      = $check_data->updated_at;
-$last_check_no   = $check_data->last_check_no;
-?>
-
 <div class="container">
     <div class="row checkEditModalContent">
         <div class="col-lg-12">
@@ -37,22 +16,22 @@ $last_check_no   = $check_data->last_check_no;
                     </div>   
                 </div>
             </div>
-            <button class="border-0 rounded mx-1 modalExitButton" data-bs-dismiss="modal"><i class="fas fa-times m-0 text-muted"></i></button>
+            <button type="button" class="border-0 rounded mx-1 editCheckModalExitButton" data-bs-dismiss="modal"><i class="fas fa-times m-0 text-muted"></i></button>
         </div>
         <div class="col-lg-12">
             <ul class="nav nav-pills mb-3" id="checkEditTemplateStyleTab" role="tablist">
                 <li class="nav-item historyNavItem" role="presentation">
-                    <button class="btn btn-light position-relative checkEditHistory" data-bs-toggle="offcanvas" data-bs-target="#checkEditRecentTransactionsOffCanvas" aria-controls="checkEditRecentTransactionsOffCanvas" type="button">
+                    <button type="button" class="btn btn-light position-relative checkEditHistory" data-bs-toggle="offcanvas" data-bs-target="#checkEditRecentTransactionsOffCanvas" aria-controls="checkEditRecentTransactionsOffCanvas" type="button">
                         <i class="fas fa-history text-muted"></i>
                         <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle checkEditNotificationDot"></span>
                     </button>
                 </li>
                 <div class="vr navPillSepator"></div>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="checkEditStandardTab" data-bs-toggle="pill" data-bs-target="#checkEditStandardPill" type="button" role="tab" aria-controls="checkEditStandardPill" aria-selected="true">Standard</button>
+                    <button type="button" class="nav-link active" id="checkEditStandardTab" data-bs-toggle="pill" data-bs-target="#checkEditStandardPill" type="button" role="tab" aria-controls="checkEditStandardPill" aria-selected="true">Standard</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="checkEditVirtualTab" data-bs-toggle="pill" data-bs-target="#checkEditVirtualPill" type="button" role="tab" aria-controls="checkEditVirtualPill" aria-selected="false">Virtual</button>
+                    <button type="button" class="nav-link" id="checkEditVirtualTab" data-bs-toggle="pill" data-bs-target="#checkEditVirtualPill" type="button" role="tab" aria-controls="checkEditVirtualPill" aria-selected="false">Virtual</button>
                 </li>
             </ul>
                 <div class="tab-content" id="checkEditTemplateStyleTabContent">
@@ -61,43 +40,45 @@ $last_check_no   = $check_data->last_check_no;
                             <div class="row">
                                 <div class="col-lg-3 mb-3">
                                     <label class="form-label fw-xnormal">Check No.</label>
-                                    <label class="text-muted float-end highlightTextDisable"><input class="form-check-input checkEditPrintLater" type="checkbox">&ensp;Print Later</label>
-                                    <input type="number" class="form-control checkEditNo" value="0000" min="0" required>
+                                    <label class="text-muted float-end highlightTextDisable"><input class="form-check-input checkEditPrintLater" name="checkEditPrintLater" type="checkbox">&ensp;Print Later</label>
+                                    <input type="number" class="form-control checkEditNo" name="checkEditNo" value="0000" min="0" required>
+                                    <input type="hidden" class="form-control checkEditID" name="checkEditID">
                                 </div>
                                 <div class="col-lg-2 mb-3">
                                     <label class="form-label fw-xnormal">Permit No.</label>
-                                    <input type="number" class="form-control checkEditPermitNo" value="0000" min="0" required>
+                                    <input type="number" class="form-control checkEditPermitNo" name="checkEditPermitNo" value="0000" min="0" required>
                                 </div>
                                 <div class="col-lg-3 mb-3">
                                     <label class="form-label fw-xnormal">Payee</label>
                                     <a class="text-decoration-none float-end checkEditViewPayeeInfo" href="javascript:void(0);">View Info</a>
-                                    <select class="form-select checkEditPayee" required></select>
-                                    <input class="checkEditPayeeType" type="hidden">
+                                    <select class="form-select checkEditPayee" name="checkEditPayee" required></select>
+                                    <input type="hidden" class="form-control checkEditPayeeType" name="checkEditPayeeType">
                                 </div>
                                 <div class="col-lg-4 mb-3">
                                     <label class="form-label fw-xnormal">Bank Account</label>&ensp;<span class="text-muted checkEditBankAccountBalance">$0.00</span>
                                     <label class="text-muted float-end highlightTextDisable"></label>
-                                    <select class="form-select checkEditBankAccount" required></select>
+                                    <select class="form-select checkEditBankAccount" name="checkEditBankAccount" required></select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-2 mb-3">
                                     <label class="form-label fw-xnormal">Payment Date</label>
-                                    <input type="date" class="form-control checkEditPaymentDate" value="<?php echo date('Y-m-d'); ?>" required>
+                                    <input type="date" class="form-control checkEditPaymentDate" name="checkEditPaymentDate" value="<?php echo date('Y-m-d'); ?>" required>
                                 </div>
                                 <div class="col-lg-10 mb-3">
                                     <label class="form-label fw-xnormal">Tags</label>
-                                    <select class="form-select checkEditTag" required></select>
+                                    <a class="text-decoration-none float-end checkEditClearTags" href="javascript:void(0);">Clear Tags</a>
+                                    <select class="form-select checkEditTag" name="checkEditTag[]" required></select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-6 mb-3">
                                     <label class="form-label fw-xnormal">Mailing Address</label>
-                                    <textarea class=" form-control checkEditMailingAddress" placeholder="Payee's Mailing Address..." required></textarea>
+                                    <textarea class=" form-control checkEditMailingAddress" name="checkEditMailingAddress" placeholder="Payee's Mailing Address..." required></textarea>
                                 </div>
                                 <div class="col-lg-6 mb-3">
                                     <label class="form-label fw-xnormal">Memo</label>
-                                    <textarea class=" form-control checkEditMemo" placeholder="Check's memo..."></textarea>
+                                    <textarea class=" form-control checkEditMemo" name="checkEditMemo" placeholder="Check's memo..."></textarea>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -105,7 +86,7 @@ $last_check_no   = $check_data->last_check_no;
                                     <div class="accordion">
                                         <div class="accordion-item border-0">
                                             <h2 class="accordion-header" id="checkEditCategoryDetails_panel">
-                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkEditCategoryDetails_collapse" aria-expanded="true" aria-controls="checkEditCategoryDetails_collapse"> 
+                                                <button type="button" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkEditCategoryDetails_collapse" aria-expanded="true" aria-controls="checkEditCategoryDetails_collapse"> 
                                                     <strong>CATEGORY DETAILS</strong>
                                                 </button>
                                             </h2>
@@ -127,13 +108,13 @@ $last_check_no   = $check_data->last_check_no;
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td><select class="form-select checkEditCategoryOptionsRow" required></select></td> 
-                                                                        <td><input type="text" class="form-control checkEditCategoryDescriptionRow"></td> 
-                                                                        <td><input type="number" class="form-control checkEditCategoryAmountRow" step="any" required></td> 
-                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkEditCategoryBillableRow"></td> 
-                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkEditCategoryTaxRow"></td> 
-                                                                        <td><select class="form-select checkEditCategoryCustomerRow" required></select></td> 
-                                                                        <td><button class="border-0 checkEditDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
+                                                                        <td><select class="form-select checkEditCategoryOptionsRow" name="checkEditCategoryOptionsRow[]" required></select></td> 
+                                                                        <td><input type="text" class="form-control checkEditCategoryDescriptionRow" name="checkEditCategoryDescriptionRow[]"></td> 
+                                                                        <td><input type="number" class="form-control checkEditCategoryAmountRow" name="checkEditCategoryAmountRow[]" min="0" step="any" required></td> 
+                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkEditCategoryBillableRow" name="checkEditCategoryBillableRow[]"></td> 
+                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkEditCategoryTaxRow" name="checkEditCategoryTaxRow[]"></td> 
+                                                                        <td><select class="form-select checkEditCategoryCustomerRow" name="checkEditCategoryCustomerRow[]" required></select></td> 
+                                                                        <td><button type="button" class="border-0 checkEditDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -142,8 +123,8 @@ $last_check_no   = $check_data->last_check_no;
                                                     <div class="row">
                                                         <div class="col-lg-12">
                                                             <div class="input-group">
-                                                                <button class="btn btn-primary checkEditCategoryLine" type="button">Add</button>
-                                                                <button class="btn btn-light checkEditClearCategoryLine" type="button">Clear</button>
+                                                                <button type="button" class="btn btn-primary checkEditCategoryLine" type="button">Add</button>
+                                                                <button type="button" class="btn btn-light checkEditClearCategoryLine" type="button">Clear</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -152,11 +133,11 @@ $last_check_no   = $check_data->last_check_no;
                                         </div>
                                         <div class="accordion-item border-0">
                                             <h2 class="accordion-header" id="checkEditItemDetails_panel">
-                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkEditItemDetails_collapse" aria-expanded="true" aria-controls="checkEditItemDetails_collapse">
+                                                <button type="button" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkEditItemDetails_collapse" aria-expanded="true" aria-controls="checkEditItemDetails_collapse">
                                                     <strong>ITEM DETAILS</strong>
                                                 </button>
                                             </h2>
-                                            <div id="checkEditItemDetails_collapse" class="accordion-collapse collapse " aria-labelledby="checkEditItemDetails_panel">
+                                            <div id="checkEditItemDetails_collapse" class="accordion-collapse collapse show" aria-labelledby="checkEditItemDetails_panel">
                                                 <div class="accordion-body p-0 pt-3 pb-3">
                                                     <div class="row">
                                                         <div class="col-lg-12">
@@ -176,15 +157,15 @@ $last_check_no   = $check_data->last_check_no;
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td><select class="form-select checkEditItemOptionsRow"></select></td> 
-                                                                        <td><input type="text" class="form-control checkEditItemDescriptionRow"></td>
-                                                                        <td><input type="number" class="form-control checkEditItemQtyRow"></td>
-                                                                        <td><input type="number" class="form-control checkEditItemRateRow" step="any"></td>
-                                                                        <td><input type="number" class="form-control checkEditItemAmountRow" step="any"></td>
-                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkEditItemBillableRow"></td>
-                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkEditItemTaxRow"></td>
-                                                                        <td><select class="form-select checkEditItemCustomerRow"></select></td>
-                                                                        <td><button class="border-0 checkEditDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
+                                                                        <td><select class="form-select checkEditItemOptionsRow" name="checkEditItemOptionsRow[]"></select></td> 
+                                                                        <td><input type="text" class="form-control checkEditItemDescriptionRow" name="checkEditItemDescriptionRow[]"></td>
+                                                                        <td><input type="number" class="form-control checkEditItemQtyRow" name="checkEditItemQtyRow[]" min="0"></td>
+                                                                        <td><input type="number" class="form-control checkEditItemRateRow" name="checkEditItemRateRow[]" min="0" step="any"></td>
+                                                                        <td><input type="number" class="form-control checkEditItemAmountRow" name="checkEditItemAmountRow[]" min="0" step="any"></td>
+                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkEditItemBillableRow" name="checkEditItemBillableRow[]"></td>
+                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkEditItemTaxRow" name="checkEditItemTaxRow[]"></td>
+                                                                        <td><select class="form-select checkEditItemCustomerRow" name="checkEditItemCustomerRow[]"></select></td>
+                                                                        <td><button type="button" class="border-0 checkEditDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -193,8 +174,8 @@ $last_check_no   = $check_data->last_check_no;
                                                     <div class="row">
                                                         <div class="col-lg-12">
                                                             <div class="input-group">
-                                                                <button class="btn btn-primary checkEditItemLine" type="button">Add</button>
-                                                                <button class="btn btn-light checkEditClearItemLine" type="button">Clear</button>
+                                                                <button type="button" class="btn btn-primary checkEditItemLine" type="button">Add</button>
+                                                                <button type="button" class="btn btn-light checkEditClearItemLine" type="button">Clear</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -207,12 +188,12 @@ $last_check_no   = $check_data->last_check_no;
                             <div class="row">
                                 <div class="col-lg-12">
                                     <label class="form-label fw-xnormal">Attachments</label>
-                                    <input type="file" class="form-control checkEditAttachments" multiple>
+                                    <input type="file" class="form-control checkEditAttachments" name="checkEditAttachments[]" multiple>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <button type="submit" class="btn btn-primary fw-bold float-end">Save</button>
+                                    <button type="submit" class="btn btn-primary fw-bold float-end"><i class="fas fa-file-import"></i>&ensp;Update</button>
                                 </div>
                             </div>
                         </form>
@@ -227,7 +208,7 @@ $last_check_no   = $check_data->last_check_no;
 <div class="offcanvas offcanvas-start" tabindex="-1" id="checkEditRecentTransactionsOffCanvas" aria-labelledby="checkEditRecentTransactionsOffCanvasLabel">
     <div class="offcanvas-header">
         <h4 class="offcanvas-title fw-bold" id="checkEditRecentTransactionsOffCanvasLabel">Recent Transactions</h4>
-        <button class="border-0 rounded mx-1" data-bs-dismiss="offcanvas"><i class="fas fa-times m-0 text-muted"></i></button>
+        <button type="button" class="border-0 rounded mx-1" data-bs-dismiss="offcanvas"><i class="fas fa-times m-0 text-muted"></i></button>
     </div>
     <div class="offcanvas-body pt-0">
         <div class="row">
@@ -261,7 +242,33 @@ $last_check_no   = $check_data->last_check_no;
     </div>
 </div>
 <script>
-    var recentEditCheckTable;
+    function getCheckEditCategoryRowHtml() {
+        return `<tr>
+            <td><select class="form-select checkEditCategoryOptionsRow" name="checkEditCategoryOptionsRow[]" required></select></td>
+            <td><input type="text" class="form-control checkEditCategoryDescriptionRow" name="checkEditCategoryDescriptionRow[]"></td>
+            <td><input type="number" class="form-control checkEditCategoryAmountRow" name="checkEditCategoryAmountRow[]" min="0" step="any" required></td>
+            <td class="text-center"><input type="checkbox" class="form-check-input checkEditCategoryBillableRow" name="checkEditCategoryBillableRow[]"></td>
+            <td class="text-center"><input type="checkbox" class="form-check-input checkEditCategoryTaxRow" name="checkEditCategoryTaxRow[]"></td>
+            <td><select class="form-select checkEditCategoryCustomerRow" name="checkEditCategoryCustomerRow[]" required></select></td>
+            <td><button type="button" class="border-0 checkEditDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
+        </tr>`;
+    }
+
+    function getCheckEditItemRowHtml() {
+        return `
+            <tr>
+                <td><select class="form-select checkEditItemOptionsRow" name="checkEditItemOptionsRow[]"></select></td>
+                <td><input type="text" class="form-control checkEditItemDescriptionRow" name="checkEditItemDescriptionRow[]"></td>
+                <td><input type="number" class="form-control checkEditItemQtyRow" name="checkEditItemQtyRow[]" min="0"></td>
+                <td><input type="number" class="form-control checkEditItemRateRow" name="checkEditItemRateRow[]" min="0" step="any"></td>
+                <td><input type="number" class="form-control checkEditItemAmountRow" name="checkEditItemAmountRow[]" min="0" step="any"></td>
+                <td class="text-center"><input type="checkbox" class="form-check-input checkEditItemBillableRow" name="checkEditItemBillableRow[]"></td>
+                <td class="text-center"><input type="checkbox" class="form-check-input checkEditItemTaxRow" name="checkEditItemTaxRow[]"></td>
+                <td><select class="form-select checkEditItemCustomerRow" name="checkEditItemCustomerRow[]"></select></td>
+                <td><button type="button" class="border-0 checkEditDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
+            </tr>
+        `;
+    }
 
     initSelectizeWithCache({
         selector: '.checkEditPayee',
@@ -415,7 +422,7 @@ $last_check_no   = $check_data->last_check_no;
 
     $('.accordion').on('click', '.checkEditCategoryLine', function() {
         let $tbody = $(this).closest('.accordion-body').find('table tbody');
-        let $newRow = $(getCategoryRowHtml());
+        let $newRow = $(getCheckEditCategoryRowHtml());
         $tbody.append($newRow);
 
         initSelectizeWithCache({
@@ -451,7 +458,7 @@ $last_check_no   = $check_data->last_check_no;
             confirmButtonText: 'Proceed',
         }).then((result) => {
             if (result.isConfirmed) {
-                const $newRow = $(getCategoryRowHtml());
+                const $newRow = $(getCheckEditCategoryRowHtml());
                 $tbody.html($newRow);
 
                 initSelectizeWithCache({
@@ -503,7 +510,7 @@ $last_check_no   = $check_data->last_check_no;
 
     $('.accordion').on('click', '.checkEditItemLine', function() {
         let $tbody = $(this).closest('.accordion-body').find('table tbody');
-        let $newRow = $(getItemRowHtml());
+        let $newRow = $(getCheckEditItemRowHtml());
         $tbody.append($newRow);
 
         initSelectizeWithCache({
@@ -539,7 +546,7 @@ $last_check_no   = $check_data->last_check_no;
             confirmButtonText: 'Proceed',
         }).then((result) => {
             if (result.isConfirmed) {
-                const $newRow = $(getItemRowHtml());
+                const $newRow = $(getCheckEditItemRowHtml());
                 $tbody.html($newRow);
 
                 initSelectizeWithCache({
@@ -618,6 +625,8 @@ $last_check_no   = $check_data->last_check_no;
     });
 
     $(document).ready(function() {
+        var recentEditCheckTable;
+
         recentEditCheckTable = $('.recentEditCheckTable').DataTable({
             "processing": true,
             "serverSide": true,
@@ -645,8 +654,11 @@ $last_check_no   = $check_data->last_check_no;
     FilePond.registerPlugin(
         FilePondPluginFileEncode,
         FilePondPluginFileValidateType,
-        FilePondPluginImagePreview
+        FilePondPluginImagePreview,
+        FilePondPluginGetFile,
     );
+
+    FilePond.registerPlugin();
 
     FilePond.setOptions({
         dropOnPage: true,
@@ -657,7 +669,7 @@ $last_check_no   = $check_data->last_check_no;
         FilePond.create(el, {
             credits: false,
             allowFilePoster: false,
-            allowImageEditor: false
+            allowImageEditor: false,
         });
     });
 
@@ -689,108 +701,334 @@ $last_check_no   = $check_data->last_check_no;
         }
     });
 
-    $('.checkEditForm').on('submit', function (e) {
-        e.preventDefault();
+$('.checkEditForm').on('submit', function (e) {
+    e.preventDefault();
 
-        $.ajax({
-            type: "POST",
-            url: `${window.origin}/accounting/v2/check/addCheck`,
-            data: {
-                payee_id: $('.checkEditPayee').val(),
-                payee_type: $('.checkEditPayeeType').val(),
-                bank_account_id: $('.checkEditBankAccount').val(),
-                mailing_address: $('.checkEditMailingAddress').val(),
-                payment_date: $('.checkEditPaymentDate').val(),
-                check_no: $('.checkEditNo').val(),
-                to_print: $('.checkEditPrintLater').is(':checked') ? 1 : 0,
-                permit_no: $('.checkEditPermitNo').val(),
-                tags: $('.checkEditTag').val(),
-                memo: $('.checkEditMemo').val(),
-                total_amount: $('.checkEditCategoryAmountRow, .checkEditItemAmountRow').toArray().reduce((t, el) => t + (parseFloat($(el).val()) || 0), 0)
-            },
-            beforeSend: function() {
+    let checkEditFormData = new FormData(this);
+    
+    const pond = FilePond.find(document.querySelector('.checkEditAttachments'));
+    if (pond && pond.getFiles().length > 0) {
+        pond.getFiles().forEach((fileItem, index) => {
+            if (fileItem.file) {
+                checkEditFormData.append(`checkEditAttachments[]`, fileItem.file);
+            }
+        });
+    }
+
+    checkEditFormData.append('check_id', $('.checkEditID').val());
+
+    $.ajax({
+        type: "POST",
+        url: `${window.origin}/accounting/v2/check/editCheck`,
+        data: checkEditFormData,
+        processData: false,
+        contentType: false,
+        beforeSend: function () {
+            Swal.fire({
+                icon: "info",
+                title: "Updating Entry!",
+                html: "Please wait while the update process is running...",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => { Swal.showLoading(); },
+            });
+        },
+        success: function (response) {
+            console.log(response);
+            
+            if (response == 1 || (typeof response === 'object' && response.status === 'success')) {
                 Swal.fire({
-                    icon: "info",
-                    title: "Adding Entry!",
-                    html: "Please wait while the uploading process is running...",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    },
-                });
-            },
-            success: function(response) {
-                if (response == 1) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Entry Saved!",
-                        html: "Check has been added successfully.",
-                        showConfirmButton: true,
-                        confirmButtonText: "Okay",
-                    });
+                    icon: "success",
+                    title: "Entry Updated!",
+                    html: "Check has been updated successfully.",
+                    showConfirmButton: true,
+                    confirmButtonText: "Okay",
+                }).then((result) => {
                     try {
                         recentAddCheckTable.draw(false);
                         recentEditCheckTable.draw(false);
                         checkTable.draw(false);
                     } catch (error) {}
                     $('.checkEditNotificationDot').show();
-                    checkEditResetForm();
-                    setLastSettings();
-                } else {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Save entry Failed!",
-                        html: response.message || "An error occurred while saving the entry.",
-                        showConfirmButton: true,
-                        confirmButtonText: "Okay",
-                    });
-                }
-            },
-            error: function(xhr, status, error) {
+                    $('.checkEditModal').modal('hide');
+                });
+            } else if (typeof response === 'object' && response.status === 'partial') {
                 Swal.fire({
-                    icon: "error",
-                    title: "Error!",
-                    html: "An unexpected error occurred: " + error,
+                    icon: "warning",
+                    title: "Partial Success!",
+                    html: response.message + "<br><br>Errors: " + response.errors.join(', '),
                     showConfirmButton: true,
                     confirmButtonText: "Okay",
                 });
+            } else {
+                let errorMessage = "An error occurred while updating the entry.";
+                if (typeof response === 'object' && response.message) {
+                    errorMessage = response.message;
+                }
+                Swal.fire({
+                    icon: "error",
+                    title: "Update Failed!",
+                    html: errorMessage,
+                    showConfirmButton: true,
+                    confirmButtonText: "Okay",
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            Swal.fire({
+                icon: "error",
+                title: "Error!",
+                html: "An unexpected error occurred: " + error,
+                showConfirmButton: true,
+                confirmButtonText: "Okay",
+            });
+        },
+    });
+});
+
+    function getCheckDetails(check_id) {
+        $.ajax({
+            type: "POST",
+            data: { check_id: check_id },
+            url: `${window.origin}/accounting/v2/check/getCheckDetails`,
+            success: function(response) {
+                let check_data = JSON.parse(response).check;
+                let category_data = JSON.parse(response).category;
+                let items_data = JSON.parse(response).items;
+                let attachments_data = JSON.parse(response).attachments;
+
+                function populateFilePondAttachments(attachments_data) {
+                    const pond = FilePond.find(document.querySelector('.checkEditAttachments'));
+                    if (pond && attachments_data.length > 0) {
+                        pond.removeFiles();
+                     
+                        attachments_data.forEach(attachment => {
+                            fetch(attachment.source).then(res => res.blob()).then(blob => {
+                                const file = new File([blob], attachment.options.file.stored_name, {
+                                    type: attachment.options.file.type
+                                });
+                                pond.addFile(file, {
+                                    type: 'local',
+                                    metadata: attachment.options.metadata
+                                });
+                            });
+                        });
+                    }
+                }
+
+                function renderCheckCategoryAndItemRows(category_data, items_data) {
+                    const categoryContainer = $(".checkEditCategoryTable > tbody");
+                    const itemContainer = $(".checkEditItemTable > tbody");
+
+                    categoryContainer.empty();
+                    itemContainer.empty();
+
+                    if (category_data.length > 0) {
+                        category_data.forEach((cat, index) => {
+                            const $row = $(getCheckEditCategoryRowHtml());
+                            categoryContainer.append($row);
+
+                            initSelectizeWithCache({
+                                selector: $row.find('.checkEditCategoryOptionsRow'),
+                                url: `${window.origin}/accounting/v2/check/getAccountDetails/all`,
+                                valueField: 'value',
+                                labelField: 'text',
+                                searchField: 'text',
+                                optgroupField: 'optgroup',
+                                placeholder: 'Select Category...',
+                                renderOptionAttr: 'balance',
+                                onReady: function(selectize) {
+                                    if (cat.expense_account_id) {
+                                        selectize.setValue(cat.expense_account_id);
+                                    }
+                                }
+                            });
+
+                            initSelectizeWithCache({
+                                selector: $row.find('.checkEditCategoryCustomerRow'),
+                                url: `${window.origin}/accounting/v2/check/getPayeeDetails/customer`,
+                                valueField: 'id',
+                                labelField: 'payee_name',
+                                searchField: 'payee_name',
+                                optgroupField: 'payee_type',
+                                placeholder: 'Select Customer...',
+                                renderOptionAttr: 'payee_type',
+                                onReady: function(selectize) {
+                                    if (cat.customer_id) {
+                                        selectize.setValue(cat.customer_id);
+                                    }
+                                }
+                            });
+
+                            $row.find(".checkEditCategoryDescriptionRow").val(cat.description || "").change();
+                            $row.find(".checkEditCategoryAmountRow").val(cat.amount || "").change();
+                            $row.find(".checkEditCategoryBillableRow").prop("checked", cat.billable == "1").change();
+                            $row.find(".checkEditCategoryTaxRow").prop("checked", cat.tax == "1").change();
+                        });
+                    } else {
+                        const $newRow = $(getCheckEditCategoryRowHtml());
+                        categoryContainer.html($newRow);
+
+                        initSelectizeWithCache({
+                            selector: $newRow.find('.checkEditCategoryOptionsRow'),
+                            url: `${window.origin}/accounting/v2/check/getAccountDetails/all`,
+                            valueField: 'value',
+                            labelField: 'text',
+                            searchField: 'text',
+                            optgroupField: 'optgroup',
+                            placeholder: 'Select Category...',
+                            renderOptionAttr: 'balance',
+                        });
+
+                        initSelectizeWithCache({
+                            selector: $newRow.find('.checkEditCategoryCustomerRow'),
+                            url: `${window.origin}/accounting/v2/check/getPayeeDetails/customer`,
+                            valueField: 'id',
+                            labelField: 'payee_name',
+                            searchField: 'payee_name',
+                            optgroupField: 'payee_type',
+                            placeholder: 'Select Customer...',
+                            renderOptionAttr: 'payee_type',
+                        });
+                    }
+
+                    if (items_data.length > 0) {
+                        items_data.forEach((item, index) => {
+                            const $row = $(getCheckEditItemRowHtml());
+                            itemContainer.append($row);
+
+                            initSelectizeWithCache({
+                                selector: $row.find('.checkEditItemOptionsRow'),
+                                url: `${window.origin}/accounting/v2/check/getItemDetails/all`,
+                                valueField: 'id',
+                                labelField: 'item_name',
+                                searchField: 'item_name',
+                                optgroupField: 'item_type',
+                                placeholder: 'Select Product/Service...',
+                                renderOptionAttr: 'item_type',
+                                onReady: function(selectize) {
+                                    if (item.item_id) {
+                                        selectize.setValue(item.item_id);
+                                        $row.find(".checkEditItemQtyRow").val(item.quantity || "").change();
+                                        $row.find(".checkEditItemRateRow").val(item.rate || "").change();
+                                        $row.find(".checkEditItemAmountRow").val(item.total || "").change();
+                                    }
+                                }
+                            });
+
+                            initSelectizeWithCache({
+                                selector: $row.find('.checkEditItemCustomerRow'),
+                                url: `${window.origin}/accounting/v2/check/getPayeeDetails/customer`,
+                                valueField: 'id',
+                                labelField: 'payee_name',
+                                searchField: 'payee_name',
+                                optgroupField: 'payee_type',
+                                placeholder: 'Select Customer...',
+                                renderOptionAttr: 'payee_type',
+                                onReady: function(selectize) {
+                                    if (item.customer_id) {
+                                        selectize.setValue(item.customer_id);
+                                    }
+                                }
+                            });
+
+                            $row.find(".checkEditItemDescriptionRow").val(item.description || "").change();
+                            $row.find(".checkEditItemBillableRow").prop("checked", item.isBillable == "1").change();
+                            $row.find(".checkEditItemTaxRow").prop("checked", item.isTax == "1").change();
+                        });
+                    } else {
+                        const $newRow = $(getCheckEditItemRowHtml());
+                        itemContainer.html($newRow);
+
+                        initSelectizeWithCache({
+                            selector: $newRow.find('.checkEditItemOptionsRow'),
+                            url: `${window.origin}/accounting/v2/check/getItemDetails/all`,
+                            valueField: 'id',
+                            labelField: 'item_name',
+                            searchField: 'item_name',
+                            optgroupField: 'item_type',
+                            placeholder: 'Select Product/Service...',
+                            renderOptionAttr: 'item_type',
+                        });
+
+                        initSelectizeWithCache({
+                            selector: $newRow.find('.checkEditItemCustomerRow'),
+                            url: `${window.origin}/accounting/v2/check/getPayeeDetails/customer`,
+                            valueField: 'id',
+                            labelField: 'payee_name',
+                            searchField: 'payee_name',
+                            optgroupField: 'payee_type',
+                            placeholder: 'Select Customer...',
+                            renderOptionAttr: 'payee_type',
+                        });
+                    }
+
+                    console.log(`Rendered ${category_data.length || 1} category rows and ${items_data.length || 1} item rows.`);
+                }
+
+                function applyCheckData() {
+                    const selectizeReady =
+                        $(".checkEditPayee")[0]?.selectize &&
+                        $(".checkEditBankAccount")[0]?.selectize &&
+                        $(".checkEditTag")[0]?.selectize &&
+                        $(".checkEditCategoryOptionsRow")[0]?.selectize &&
+                        $(".checkEditCategoryCustomerRow")[0]?.selectize &&
+                        $(".checkEditItemOptionsRow")[0]?.selectize &&
+                        $(".checkEditItemCustomerRow")[0]?.selectize;
+
+                    const filepondReady = $(".filepond--root").length > 0;
+
+                    if (selectizeReady && filepondReady) {
+                        let check_no = (check_data.check_no !== null && check_data.check_no != 0) ? parseInt(check_data.check_no) : parseInt(check_data.last_check_no) + 1;
+                        let permit_no = (check_data.permit_no !== null && check_data.permit_no != 0) ? parseInt(check_data.permit_no) : parseInt(check_data.last_permit_no) + 1;
+                        let tags = (check_data.tags || '').split(',').filter(Boolean);
+                        let selectedTags = $(".checkEditTag")[0].selectize;
+                        selectedTags.setValue(null);
+                        tags.forEach(t => selectedTags.options[t] ? selectedTags.addItem(t, true) : selectedTags.createItem(t, false, true));
+
+                        $(".checkEditID").val(check_data.id).change();
+                        if (check_data.to_print == 1) {
+                            $(".checkEditNo").attr("min", check_no).val(check_no).change();
+                            $(".checkEditPrintLater").prop("checked", true).change();
+                        } else {
+                            $(".checkEditPrintLater").prop("checked", false).change();
+                            $(".checkEditNo").attr("min", check_no).val(check_no).change();
+                        }
+                        $(".checkEditPermitNo").attr("min", permit_no).val(permit_no).change();
+                        $(".checkEditPayee")[0].selectize.setValue(check_data.payee_id);
+                        $(".checkEditPayeeType").val(check_data.payee_type).change();
+                        $(".checkEditBankAccount")[0].selectize.setValue(check_data.bank_account_id);
+                        $(".checkEditPaymentDate").val(check_data.payment_date).change();
+                        $(".checkEditMemo").val(check_data.memo).change();
+
+                        populateFilePondAttachments(attachments_data);
+
+                        return true;
+                    }
+                    return false;
+                }
+
+                if (applyCheckData()) {
+                    renderCheckCategoryAndItemRows(category_data, items_data);
+                    $(".checkEditModalContent").fadeIn("fast");
+                    Swal.close();
+                    $('.checkEditModal').modal('show');
+                    return;
+                }
+
+                const observer = new MutationObserver((mutations, obs) => {
+                    if (applyCheckData()) {
+                        obs.disconnect();
+                    }
+                });
+
+                observer.observe(document.querySelector(".checkEditModal .modal-body"), {
+                    childList: true,
+                    subtree: true,
+                });
             },
         });
-    });
+    }
 </script>
 
-<script>
-    function fillForm() {
-        if (!$(".checkEditPayee")[0]?.selectize || 
-            !$(".checkEditBankAccount")[0]?.selectize || 
-            !$(".checkEditTag")[0]?.selectize) {
-            return setTimeout(fillForm, 50);
-        }
-
-        var check_no        = "<?php echo $check_no; ?>";
-        var permit_no       = "<?php echo $permit_no; ?>";
-        var payee_id        = "<?php echo $payee_id; ?>";
-        var payee_type      = "<?php echo $payee_type; ?>";
-        var bank_account_id = "<?php echo $bank_account_id; ?>";
-        var payment_date    = "<?php echo $payment_date; ?>";
-        var tags            = "<?php echo $tags; ?>";
-        var mailing_address = `<?php echo $mailing_address; ?>`;
-        var memo            = `<?php echo $memo; ?>`;
-        var to_print        = "<?php echo $to_print; ?>";
-
-        $(".checkEditPrintLater").prop("checked", to_print == 1).change();
-        $('.checkEditNo').attr('min', check_no).val(check_no).change();
-        $('.checkEditPermitNo').attr('min', permit_no).val(permit_no).change();
-        $(".checkEditPayee")[0].selectize.setValue(payee_id);
-        $(".checkEditPayeeType").val(payee_type).change();
-        $(".checkEditBankAccount")[0].selectize.setValue(bank_account_id);
-        $(".checkEditPaymentDate").val(payment_date).change();
-        $(".checkEditTag")[0].selectize.setValue(tags.split(','));
-        $(".checkEditMailingAddress").val(mailing_address).change();
-        $(".checkEditMemo").val(memo).change();
-        $('.checkEditContentLoader').remove();
-        $('.checkEditModalContent').fadeIn('fast');
-    };
-    fillForm();
-</script>
+    
