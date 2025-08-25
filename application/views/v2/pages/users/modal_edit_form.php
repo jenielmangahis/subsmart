@@ -30,9 +30,9 @@
                 <input type="text" class="form-control edit_phone_number" maxlength="12" value="<?= $user->phone; ?>" placeholder="xxx-xxx-xxxx" name="phone" id="phone" />
             </div>   
             <div class="col-12 col-md-6">
-                <label class="content-subtitle fw-bold d-block mb-2">Title</label>
+                <label class="content-subtitle fw-bold d-block mb-2">Job Title</label>
                 <select class="nsm-field form-select" name="user_type" id="employee_role" required>
-                    <option value="">Select Title</option>
+                    <option value="">Select Job Title</option>
                     <?php foreach ($userTypes as $t) { ?>
                         <option value="<?= $t->id; ?>" <?= $t->id == $user->user_type ? 'selected="selected"' : ''; ?>><?= $t->title; ?></option>
                     <?php } ?>

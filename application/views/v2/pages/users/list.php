@@ -116,7 +116,7 @@
                             <?php if ($show_pass == 1) : ?>
                                 <td data-name="Password">Password</td>
                             <?php endif; ?>
-                            <td data-name="Title">Title</td>
+                            <td data-name="Title">Job Title</td>
                             <td data-name="Rights">Role</td>
                             <td data-name="Last Login">Last Login</td>
                             <td data-name="Status" style="width:5%;">Status</td>
