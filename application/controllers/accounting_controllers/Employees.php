@@ -178,10 +178,10 @@ class Employees extends MY_Controller
         $nextPayDate = $this->get_next_pay_date($usedPaySched);
 
         $employees = $this->get_employees($filters);
-        $payscales = $this->PayScale_model->getAllByCompanyId($cid);
+        $payscales = $this->PayScale_model->getAllByCompanyId($cid);     
 
-        $this->page_data['roles'] = $roles;
-        $this->session->set_userdata('roles', $roles);
+        //$this->page_data['roles'] = $roles;
+        //$this->session->set_userdata('roles', $roles);
         $this->page_data['nextPayDate'] = $nextPayDate;
         $this->page_data['nextPayPeriodEnd'] = date('m/d/Y', strtotime("wednesday"));
         $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));

@@ -167,6 +167,26 @@ $(document).ready(function() {
             },
         });        
     });
+
+    $('.add-emp-payscale').change(function() {
+    var psid = $(this).val();
+    var url  = base_url + 'payscale/_get_details'
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: {psid:psid},
+        dataType: "json",
+        success: function(result) {
+            if( result.pay_type == 'Commission Only' ){
+                $('.add-pay-type-container').hide();
+            }else{
+                var rate_label = result.pay_type + ' Rate';
+                $('.add-pay-type-container').show();
+                $('.add-payscale-pay-type').html(rate_label);
+            }                
+        },
+    });
+});
 });
 
 </script>
