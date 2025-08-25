@@ -1,7 +1,7 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/accounting/employees_modals'); ?>
 <?php include viewPath('v2/includes/accounting/modal_forms/payroll_modal'); ?>
-<?php //include viewPath('v2/includes/accounting/modal_forms/employee_modal'); ?>
+
 <style>
     table.dataTable thead th, 
     table.dataTable thead td {

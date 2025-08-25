@@ -1,6 +1,6 @@
 <div class="modal fade nsm-modal fade" id="employee-modal" tabindex="-1" aria-hidden="true" style="z-index: 1050;">
     <div class="modal-dialog modal-lg">
-        <form method="POST" id="add_employee_form">
+        <form method="POST" id="add_employee_form" class="add-employee-form">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Add Employee</span>

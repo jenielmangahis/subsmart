@@ -129,6 +129,50 @@
 <?php include viewPath('v2/includes/accounting/modal_forms/employee_modal'); ?>
 
 <script>
+
+$(document).ready(function() {
+    $('.add-employee-form').on('submit', function(event) {
+        event.preventDefault();
+
+        let _this = $(this);
+
+        var url = base_url + "accounting/employees/create";
+        _this.find("button[type=submit]").html("Saving");
+        _this.find("button[type=submit]").prop("disabled", true);
+
+        var data = new FormData(this);
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: data,
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            success: function(result) {
+                Swal.fire({
+                    title: result.title,
+                    html: result.message,
+                    icon: result.success ? 'success' : 'error',
+                    showCloseButton: false,
+                    showCancelButton: false,
+                    confirmButtonColor: '#2ca01c',
+                    confirmButtonText: 'Okay'
+                }).then((res) => {
+                    if(res.isConfirmed) {
+                        if(result.success) {
+                            window.location = base_url+"accounting/employees";
+                        }
+                    }
+                });
+            },
+        });        
+    });
+});
+
+</script>
+
+
+<script>
   $(document).ready(function() {
     var today = new Date().toISOString().slice(0, 10);
     

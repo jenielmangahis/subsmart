@@ -1359,8 +1359,11 @@ class Employees extends MY_Controller
         $accounts = array_filter($accounts, function ($v, $k) {
             return $v->account_id === 3 || $v->account_id === "3";
         }, ARRAY_FILTER_USE_BOTH);
-        $roles = $this->session->userdata('roles');
-        $this->page_data['roles'] = $roles;
+
+        $cid   = logged('company_id');
+		$roles = $this->users_model->getRoles($cid);
+        $this->page_data['roles'] = $roles;    
+
         $cid = logged('company_id');
         $this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
         $this->page_data['bonusPayType'] = $bonusPayType;
