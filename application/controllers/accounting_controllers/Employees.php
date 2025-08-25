@@ -2896,11 +2896,11 @@ class Employees extends MY_Controller
                 $data[] = array(
                     checkRoleCanAccessModule('users', 'write') ? '<td><input class="form-check-input row-select table-select" name="users[]" type="checkbox" value="'. $employee_id .'"></td>' : '',
                     "<strong class='fw-bold nsm-text-primary nsm-link' onclick='location.href=`".base_url('accounting/employees/view/').$employee_id."`'>$employee</strong>",
-                    "$payscale_formatted",
-                    "$pay_method",
-                    "$status",
                     "$email",
                     "$phone",
+                    "$payscale_formatted",
+                    "$pay_method",
+                    "$status",                    
                     '<div class="dropdown table-management">
                         <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bx bx-fw bx-dots-vertical-rounded"></i>
