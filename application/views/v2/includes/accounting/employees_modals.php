@@ -38,9 +38,9 @@
                                     <input type="text" class="form-control phone-number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone" id="phone" value="" />
                                 </div>   
                                 <div class="col-12 col-md-6">
-                                    <label class="content-subtitle fw-bold d-block mb-2">Title</label>
+                                    <label class="content-subtitle fw-bold d-block mb-2">Job Title</label>
                                     <select class="nsm-field form-select" name="user_type" id="employee_role" required>
-                                        <option value="" selected="selected" disabled>Select Title</option>
+                                        <option value="" selected="selected" disabled>Select Job Title</option>
                                     </select>
                                 </div>
                                 <div class="col-12 col-md-6">
