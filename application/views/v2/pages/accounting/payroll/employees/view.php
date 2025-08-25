@@ -44,6 +44,14 @@
     left: 90px;
     top: 85px;
 }
+.custom-header{
+    background-color: #6a4a86;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 10px;
+    display:block;
+    width:100%;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -142,7 +150,11 @@
                             <div class="col-md-4">
                                 <strong class="text-muted">HIRE DATE</strong>
                                 <p class="text_value">
-                                    <span id="emp-hire-date"><?php echo date("m/d/Y", strtotime($employee->date_hired)); ?></span>
+                                    <?php if($employee->date_hired != null && $employee->date_hired != '0000-00-00') { ?>
+                                        <span id="emp-hire-date"><?php echo date("m/d/Y", strtotime($employee->date_hired)); ?></span>
+                                    <?php } else { ?>
+                                        <span id="emp-hire-date">--</span>
+                                    <?php }  ?>
                                 </p>
                             </div>
                             <div class="col-md-4">

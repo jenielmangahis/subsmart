@@ -122,6 +122,8 @@ class Employees extends MY_Controller
             "assets/js/v2/accounting/payroll/employees/list.js"
         ));
 
+        $cid   = logged('company_id');
+
         $accounts = $this->chart_of_accounts_model->select();
         $accounts = array_filter($accounts, function ($v, $k) {
             return $v->account_id === 3 || $v->account_id === "3";
@@ -172,27 +174,22 @@ class Employees extends MY_Controller
         }
 
         $role_id = logged('role');
-        if ($role_id == 1 || $role_id == 2) {
-            $this->page_data['payscale'] = $this->PayScale_model->getAll();
-        } else {
-            $this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
-        }
-
         $usedPaySched = $this->users_model->getPayScheduleUsed();
         $nextPayDate = $this->get_next_pay_date($usedPaySched);
 
-        $cid   = logged('company_id');
-        $roles = $this->users_model->getRoles($cid);
+        $employees = $this->get_employees($filters);
+        $payscales = $this->PayScale_model->getAllByCompanyId($cid);
+
         $this->page_data['roles'] = $roles;
         $this->session->set_userdata('roles', $roles);
         $this->page_data['nextPayDate'] = $nextPayDate;
         $this->page_data['nextPayPeriodEnd'] = date('m/d/Y', strtotime("wednesday"));
         $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));
         $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
-
-        $employees = $this->get_employees($filters);
+        $this->page_data['roles']  = $this->users_model->userRolesList();
         $this->page_data['employees'] = $employees;
         $this->page_data['commission_pays'] = $this->users_model->getPayDetailsByPayType('commission');
+        $this->page_data['payscales'] = $payscales;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         // $this->load->view('accounting/employees/index', $this->page_data);
         $this->load->view('v2/pages/accounting/payroll/employees/list', $this->page_data);
@@ -432,14 +429,12 @@ class Employees extends MY_Controller
         $this->page_data['employee'] = $employee;
         $this->page_data['pay_details'] = $empPayDetails;
         $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
-
-       
-
+        $this->page_data['roles']  = $this->users_model->userRolesList();
         $this->page_data['dc_data'] =  $this->Deductions_and_contribution_model->getByUser($id);
 
         $cid   = logged('company_id');
-        $roles = $this->users_model->getRoles($cid);
-        $this->page_data['roles'] = $roles;
+        $userTitles = $this->users_model->getRoles($cid);
+        $this->page_data['userTitles'] = $userTitles;
 
         // $role_id = logged('role');
         // if( $role_id == 1 || $role_id == 2 ){
@@ -537,6 +532,8 @@ class Employees extends MY_Controller
             'table' => 'accounting_tax_withholding',
             'where' => array('company_id' => $company_id, 'employee_id' => $id,),
         );
+
+        $roles = $this->users_model->getRolesBySearch($role_title, $cid);
         
         $this->page_data['taxWithholdingData'] = $this->general_model->get_data_with_param($getTaxWithholding, false);
         $this->page_data['userType'] = $user_type;
@@ -748,8 +745,8 @@ class Employees extends MY_Controller
 
         echo json_encode([
             'success' => $last_id ? true : false,
-            'title' => $last_id ? "Save Successful!" : "Failed",
-            'message' => $last_id ? "New employee source has been added successfully." : "Something is wrong in the process."
+            'title' => $last_id ? "Add Employee" : "Failed",
+            'message' => $last_id ? "New employee has been added successfully." : "Something is wrong in the process."
         ]);
     }
 

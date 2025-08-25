@@ -23,11 +23,16 @@
                                                 <?php $payscaleEmps = $this->PayScale_model->get_company_employees_using_payscale($payscale->id); ?>
                                                 <?php if ($payscaleEmps !== null && count($payscaleEmps) > 0) : ?>
                                                     <div class="form-check mb-3">
-                                                        <input type="radio" name="pay_schedule" id="<?= "payscale_$payscale->id" ?>" class="form-check-input" value="<?= $payscale->id ?>" <?= $i === 0 ? 'checked' : '' ?>>
+                                                        <input type="radio" name="pay_schedule" id="<?= "payscale_$payscale->id" ?>" class="form-check-input" data-total-emp="<?php echo count($payscaleEmps); ?>" value="<?= $payscale->id ?>" <?= $i === 0 ? 'checked' : '' ?>>
                                                         <label for="<?= "payscale_$payscale->id" ?>" class="form-check-label"><span class="payscale_name"><?= $payscale->payscale_name ?></span> (<?= count($payscaleEmps) ?> <?= count($payscaleEmps) > 1 ? 'employees' : 'employee' ?>) </label>
                                                     </div>
-                                                <?php $i++;
-                                                endif; ?>
+                                                <?php $i++; ?>
+                                                <?php else: ?>
+                                                    <div class="form-check mb-3">
+                                                        <input type="radio" name="pay_schedule" id="<?= "payscale_$payscale->id" ?>" class="form-check-input" data-total-emp="0" value="<?= $payscale->id ?>">
+                                                        <label for="<?= "payscale_$payscale->id" ?>" class="form-check-label"><span class="payscale_name"><?= $payscale->payscale_name ?></span> (0 employee) </label>
+                                                    </div>
+                                                <?php endif; ?>
                                             <?php endforeach; ?>
                                         <?php else : ?>
                                             <p>No pay scales available.</p>

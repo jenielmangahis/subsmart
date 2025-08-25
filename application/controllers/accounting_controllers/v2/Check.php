@@ -7,6 +7,186 @@ class Check extends MY_Controller
         $this->load->model('Serversidetable_model', 'serverside_table');
     }
 
+    private function saveCheckCategories($check_id, $prefix)
+    {
+        $category_ids = $this->input->post($prefix . 'CategoryOptionsRow');
+        $descriptions = $this->input->post($prefix . 'CategoryDescriptionRow');
+        $amounts = $this->input->post($prefix . 'CategoryAmountRow');
+        $billables = $this->input->post($prefix . 'CategoryBillableRow') ?? [];
+        $taxes = $this->input->post($prefix . 'CategoryTaxRow') ?? [];
+        $customer_ids = $this->input->post($prefix . 'CategoryCustomerRow');
+
+        if (!is_array($category_ids)) return;
+
+        foreach ($category_ids as $i => $category_id) {
+            if (!empty($category_id)) {
+                $this->db->insert('accounting_vendor_transaction_categories', [
+                    'transaction_type' => 'Check',
+                    'transaction_id' => $check_id,
+                    'expense_account_id' => $category_id,
+                    'description' => $descriptions[$i] ?? '',
+                    'amount' => $amounts[$i] ?? 0,
+                    'billable' => isset($billables[$i]) ? 1 : 0,
+                    'tax' => isset($taxes[$i]) ? 1 : 0,
+                    'customer_id' => $customer_ids[$i] ?? null
+                ]);
+            }
+        }
+    }
+
+    private function saveCheckItems($check_id, $prefix)
+    {
+        $item_ids = $this->input->post($prefix . 'ItemOptionsRow');
+        $descriptions = $this->input->post($prefix . 'ItemDescriptionRow');
+        $quantities = $this->input->post($prefix . 'ItemQtyRow');
+        $rates = $this->input->post($prefix . 'ItemRateRow');
+        $amounts = $this->input->post($prefix . 'ItemAmountRow');
+        $billables = $this->input->post($prefix . 'ItemBillableRow') ?? [];
+        $taxes = $this->input->post($prefix . 'ItemTaxRow') ?? [];
+        $customer_ids = $this->input->post($prefix . 'ItemCustomerRow');
+
+        if (!is_array($item_ids)) return;
+
+        foreach ($item_ids as $i => $item_id) {
+            if (!empty($item_id)) {
+                $this->db->insert('accounting_vendor_transaction_items', [
+                    'transaction_type' => 'Check',
+                    'transaction_id' => $check_id,
+                    'item_id' => $item_id,
+                    'quantity' => $quantities[$i] ?? 0,
+                    'rate' => $rates[$i] ?? 0,
+                    'total' => $amounts[$i] ?? 0,
+                    'isTax' => isset($taxes[$i]) ? 1 : 0,
+                    'isBillable' => isset($billables[$i]) ? 1 : 0,
+                    'customer_id' => $customer_ids[$i] ?? null,
+                    'description' => $descriptions[$i] ?? ''
+                ]);
+            }
+        }
+    }
+
+    private function saveCheckAttachments($check_id, $prefix, $is_update = false)
+    {
+        $company_id = logged('company_id');
+        $upload_dir = $is_update ? 'uploads/accounting/checks/' : 'uploads/accounting/expenses/';
+        $file_input = $prefix . 'Attachments';
+        
+        $result = [
+            'success' => [],
+            'errors' => []
+        ];
+
+        if (!is_dir($upload_dir)) {
+            if (!mkdir($upload_dir, 0777, true)) {
+                $result['errors'][] = 'Failed to create upload directory.';
+                return $result;
+            }
+        }
+
+        if ($is_update) {
+            $existing_sql = "
+                SELECT aa.id, aa.stored_name 
+                FROM accounting_attachments aa
+                INNER JOIN accounting_attachment_links aal ON aa.id = aal.attachment_id
+                WHERE aal.type = 'Check' AND aal.linked_id = ?
+            ";
+            
+            $existing = $this->db->query($existing_sql, [$check_id])->result();
+            
+            foreach ($existing as $attachment) {
+                $file_path = $upload_dir . $attachment->stored_name;
+                if (file_exists($file_path)) {
+                    unlink($file_path);
+                }
+            }
+            
+            $this->db->where('type', 'Check');
+            $this->db->where('linked_id', $check_id);
+            $this->db->delete('accounting_attachment_links');
+            
+            foreach ($existing as $attachment) {
+                $this->db->where('id', $attachment->id);
+                $this->db->delete('accounting_attachments');
+            }
+        }
+
+        if (!isset($_FILES[$file_input]) || empty($_FILES[$file_input]['name'][0])) {
+            return $result;
+        }
+
+        $attachments = $_FILES[$file_input];
+        $total_files = count($attachments['name']);
+        
+        for ($i = 0; $i < $total_files; $i++) {
+            $error_code = $attachments['error'][$i];
+            
+            if ($error_code !== UPLOAD_ERR_OK) {
+                $error_messages = [
+                    UPLOAD_ERR_INI_SIZE => 'File exceeds upload_max_filesize directive',
+                    UPLOAD_ERR_FORM_SIZE => 'File exceeds MAX_FILE_SIZE directive',
+                    UPLOAD_ERR_PARTIAL => 'File was only partially uploaded',
+                    UPLOAD_ERR_NO_FILE => 'No file was uploaded',
+                    UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary folder',
+                    UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
+                    UPLOAD_ERR_EXTENSION => 'File upload stopped by extension'
+                ];
+                $error_msg = $error_messages[$error_code] ?? 'Unknown upload error';
+                $result['errors'][] = "File '{$attachments['name'][$i]}' failed to upload: $error_msg";
+                continue;
+            }
+
+            $tmp_name = $attachments['tmp_name'][$i];
+            $original_name = $attachments['name'][$i];
+            $file_size = $attachments['size'][$i];
+            $file_extension = strtolower(pathinfo($original_name, PATHINFO_EXTENSION));
+            
+            $stored_name = ($is_update ? '' : "CHECK{$check_id}_") . substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 8) . '.' . $file_extension;
+            $target_path = $upload_dir . $stored_name;
+
+            if (!move_uploaded_file($tmp_name, $target_path)) {
+                $result['errors'][] = "Failed to move file '{$original_name}' to target directory.";
+                continue;
+            }
+
+            $attachment_data = [
+                'company_id' => $company_id,
+                'type' => 'Check',
+                'uploaded_name' => $original_name,
+                'stored_name' => $stored_name,
+                'file_extension' => $file_extension,
+                'size' => $file_size,
+                'linked_to_count' => 1,
+                'status' => 1
+            ];
+
+            if (!$this->db->insert('accounting_attachments', $attachment_data)) {
+                $result['errors'][] = "Failed to insert attachment metadata for '{$original_name}' into database.";
+                unlink($target_path);
+                continue;
+            }
+
+            $attachment_id = $this->db->insert_id();
+
+            $link_data = [
+                'type' => 'Check',
+                'attachment_id' => $attachment_id,
+                'linked_id' => $check_id,
+                'order_no' => $i + 1
+            ];
+
+            if (!$this->db->insert('accounting_attachment_links', $link_data)) {
+                $result['errors'][] = "Failed to link attachment '{$original_name}' to check.";
+                unlink($target_path);
+                $this->db->delete('accounting_attachments', ['id' => $attachment_id]);
+                continue;
+            }
+
+            $result['success'][] = $original_name;
+        }
+
+        return $result;
+    }
+
     public function index()
     {      
         $this->page_data['page']->title = "Check";
@@ -414,14 +594,21 @@ class Check extends MY_Controller
                     FROM accounting_check
                     WHERE company_id = {$company_id} AND check_no != ''
                     ORDER BY created_at DESC
-                    LIMIT 1), ''), '1') AS check_no,
+                    LIMIT 1), ''), '1') AS last_check_no,
 
                 COALESCE(NULLIF(
                     (SELECT permit_no
                     FROM accounting_check
                     WHERE company_id = {$company_id} AND permit_no != ''
                     ORDER BY created_at DESC
-                    LIMIT 1), ''), '1') AS permit_no,
+                    LIMIT 1), ''), '1') AS last_permit_no,
+
+                COALESCE(NULLIF(
+                    (SELECT tags
+                    FROM accounting_check
+                    WHERE company_id = {$company_id} AND tags != ''
+                    ORDER BY created_at DESC
+                    LIMIT 1), ''), '1') AS tags,
 
                 (SELECT to_print
                 FROM accounting_check
@@ -436,6 +623,106 @@ class Check extends MY_Controller
         echo json_encode($data);
     }
 
+    public function getCheckDetails()
+    {
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+        $check_id = $post['check_id'];
+
+        if (!$check_id) { 
+            return; 
+        }
+
+        $sql = "
+            SELECT 
+                ac.*, 
+                (
+                    SELECT check_no 
+                    FROM accounting_check 
+                    WHERE company_id = {$company_id} AND check_no != '' AND check_no != '0' 
+                    ORDER BY created_at DESC 
+                    LIMIT 1
+                ) AS last_check_no,
+                (
+                    SELECT permit_no 
+                    FROM accounting_check 
+                    WHERE company_id = {$company_id} AND permit_no != '' AND permit_no != '0' 
+                    ORDER BY created_at DESC 
+                    LIMIT 1
+                ) AS last_permit_no
+            FROM accounting_check ac
+            WHERE ac.company_id = {$company_id} AND ac.id = {$check_id}
+            LIMIT 1
+        ";
+
+        $check_data = $this->db->query($sql)->row();
+
+        if (!$check_data) { 
+            return; 
+        }
+
+        $categories = $this->db
+            ->where('transaction_type', 'Check')
+            ->where('transaction_id', $check_id)
+            ->get('accounting_vendor_transaction_categories')
+            ->result();
+
+        $items = $this->db
+            ->where('transaction_type', 'Check')
+            ->where('transaction_id', $check_id)
+            ->get('accounting_vendor_transaction_items')
+            ->result();
+
+        $attachments_sql = "
+            SELECT 
+                aa.id,
+                aa.uploaded_name,
+                aa.stored_name,
+                aa.file_extension,
+                aa.size,
+                aal.order_no
+            FROM accounting_attachments aa
+            INNER JOIN accounting_attachment_links aal ON aa.id = aal.attachment_id
+            WHERE aal.type = 'Check' 
+            AND aal.linked_id = {$check_id}
+            AND aa.status = 1
+            ORDER BY aal.order_no ASC
+        ";
+        
+        $attachments = $this->db->query($attachments_sql)->result();
+
+        $formatted_attachments = [];
+        foreach ($attachments as $attachment) {
+            $file_path = 'uploads/accounting/expenses/' . $attachment->stored_name;
+            $full_path = FCPATH . $file_path;
+            
+            $formatted_attachments[] = [
+                'id' => $attachment->id,
+                'source' => base_url("uploads/accounting/expenses/$attachment->stored_name"),
+                'options' => [
+                    'type' => 'local',
+                    'file' => [
+                        'name' => $attachment->uploaded_name,
+                        'stored_name' => $attachment->stored_name,
+                        'size' => $attachment->size,
+                        'type' => file_exists($full_path) ? mime_content_type($full_path) : 'application/octet-stream'
+                    ],
+                    'metadata' => [
+                        'poster' => base_url($file_path)
+                    ]
+                ]
+            ];
+        }
+
+        $response = [
+            "check"       => $check_data,
+            "category"    => $categories,
+            "items"       => $items,
+            "attachments" => $formatted_attachments
+        ];
+
+        echo json_encode($response);
+    }
 
     public function updateAccountCategory()
     {
@@ -459,30 +746,132 @@ class Check extends MY_Controller
         }
     }
 
+
+
+
+
+
     public function addCheck()
     {
         $company_id = logged('company_id');
-    
+
         $data = [
-            'company_id'      => $company_id,
-            'payee_id'        => $this->input->post('payee_id'),
-            'payee_type'      => $this->input->post('payee_type'),
-            'bank_account_id' => $this->input->post('bank_account_id'),
-            'mailing_address' => $this->input->post('mailing_address'),
-            'payment_date'    => $this->input->post('payment_date'),
-            'check_no'        => $this->input->post('check_no'),
-            'to_print'        => $this->input->post('to_print'),
-            'permit_no'       => $this->input->post('permit_no'),
-            'tags'            => is_array($this->input->post('tags')) ? implode(',', $this->input->post('tags')) : $this->input->post('tags'),
-            'memo'            => $this->input->post('memo'),
-            'total_amount'    => $this->input->post('total_amount'),
-            'status'          => 1
+            'company_id' => $company_id,
+            'payee_id' => $this->input->post('checkAddPayee'),
+            'payee_type' => $this->input->post('checkAddPayeeType'),
+            'bank_account_id' => $this->input->post('checkAddBankAccount'),
+            'mailing_address' => $this->input->post('checkAddMailingAddress'),
+            'payment_date' => $this->input->post('checkAddPaymentDate'),
+            'check_no' => $this->input->post('checkAddNo'),
+            'permit_no' => $this->input->post('checkAddPermitNo'),
+            'to_print' => $this->input->post('checkAddPrintLater') ? 1 : 0,
+            'tags' => implode(',', array_map('trim', (array) $this->input->post('checkAddTag'))),
+            'memo' => $this->input->post('checkAddMemo'),
+            'total_amount' => array_sum((array) $this->input->post('checkAddItemAmountRow')) + array_sum((array) $this->input->post('checkAddCategoryAmountRow')),
+            'status' => 1
         ];
-    
-        $process = $this->db->insert('accounting_check', $data);
-    
-        echo $process;
+
+        if ($this->db->insert('accounting_check', $data)) {
+            $check_id = $this->db->insert_id();
+
+            $this->saveCheckCategories($check_id, 'checkAdd');
+            $this->saveCheckItems($check_id, 'checkAdd');
+            $attachment_result = $this->saveCheckAttachments($check_id, 'checkAdd');
+
+            if (!empty($attachment_result['errors'])) {
+                echo json_encode([
+                    'status' => 'partial',
+                    'message' => 'Check saved successfully, but some attachments failed to upload.',
+                    'errors' => $attachment_result['errors'],
+                    'successful_attachments' => $attachment_result['success']
+                ]);
+            } else {
+                echo 1;
+            }
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Failed to save check.'
+            ]);
+        }
     }
+
+    public function editCheck()
+    {
+        $company_id = logged('company_id');
+        $check_id = $this->input->post('check_id');
+
+        if (!$check_id) {
+            echo json_encode(["status" => "error", "message" => "Missing check ID"]);
+            return;
+        }
+
+        $tags = $this->input->post('checkEditTag');
+        if (is_array($tags)) {
+            $tags = implode(',', array_map('trim', $tags));
+        } else {
+            $tags = $tags ? trim($tags) : '';
+        }
+
+        $category_amounts = array_sum((array) $this->input->post('checkEditCategoryAmountRow'));
+        $item_amounts = array_sum((array) $this->input->post('checkEditItemAmountRow'));
+
+        $check_data = [
+            'payee_id' => $this->input->post('checkEditPayee'),
+            'payee_type' => $this->input->post('checkEditPayeeType'),
+            'bank_account_id' => $this->input->post('checkEditBankAccount'),
+            'mailing_address' => $this->input->post('checkEditMailingAddress'),
+            'payment_date' => $this->input->post('checkEditPaymentDate'),
+            'check_no' => $this->input->post('checkEditNo'),
+            'to_print' => $this->input->post('checkEditPrintLater') ? 1 : 0,
+            'permit_no' => $this->input->post('checkEditPermitNo'),
+            'tags' => $tags,
+            'memo' => $this->input->post('checkEditMemo'),
+            'total_amount' => $category_amounts + $item_amounts,
+            'updated_at' => date("Y-m-d H:i:s"),
+        ];
+
+        $this->db->where('company_id', $company_id);
+        $this->db->where('id', $check_id);
+        if (!$this->db->update('accounting_check', $check_data)) {
+            echo json_encode(["status" => "error", "message" => "Failed to update check"]);
+            return;
+        }
+
+        $this->db->where('transaction_type', 'Check');
+        $this->db->where('transaction_id', $check_id);
+        $this->db->delete('accounting_vendor_transaction_categories');
+
+        $this->db->where('transaction_type', 'Check');
+        $this->db->where('transaction_id', $check_id);
+        $this->db->delete('accounting_vendor_transaction_items');
+
+        $this->saveCheckCategories($check_id, 'checkEdit');
+        $this->saveCheckItems($check_id, 'checkEdit');
+        $attachment_result = $this->saveCheckAttachments($check_id, 'checkEdit', true);
+
+        if (!empty($attachment_result['errors'])) {
+            echo json_encode([
+                'status' => 'partial',
+                'message' => 'Check updated successfully, but some attachments failed.',
+                'errors' => $attachment_result['errors']
+            ]);
+        } else {
+            echo 1;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function voidCheck()
     {
@@ -582,40 +971,7 @@ class Check extends MY_Controller
         $company_id = logged('company_id');
         $post = $this->input->post();
         $check_id = $post['check_id'] ?? null;
-
-        if (!$check_id) {
-            show_error('Check ID is required', 400);
-            return;
-        }
-
-        $check_data = $this->db
-            ->where('company_id', $company_id)
-            ->where('id', $check_id)
-            ->get('accounting_check')
-            ->row();
-
-        if (!$check_data) {
-            show_error('Check not found', 404);
-            return;
-        }
-
-        $check_data->last_check_no = $check_data->check_no;
-
-        if ((empty($check_data->check_no) || $check_data->check_no == '0') && $check_data->to_print == 1) {
-            $last_check_no = $this->db->select('check_no')
-                ->from('accounting_check')
-                ->where('company_id', $company_id)
-                ->where('check_no !=', '')
-                ->where('check_no !=', '0')
-                ->order_by('created_at', 'DESC')
-                ->limit(1)
-                ->get()
-                ->row('check_no');
-
-            $check_data->last_check_no = $last_check_no ?: '1';
-        }
-
-        $this->page_data['check_data'] = $check_data;
+        $this->page_data['check_id'] = $check_id;
         $this->load->view('v2/pages/accounting/check/checkEditModal', $this->page_data);
     }
 

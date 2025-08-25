@@ -10,7 +10,8 @@
         color: #ff000094;
     }
 
-    .modalExitButton {
+    .addCheckModalExitButton,
+    .editCheckModalExitButton {
         position: absolute;
         top: 25px;
         right: 35px;

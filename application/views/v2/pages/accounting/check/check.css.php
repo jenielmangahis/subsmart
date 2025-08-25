@@ -89,4 +89,9 @@
     .selectize-dropdown .option {
         padding: 8px 10px;
     }
+
+    .filepond--download-icon {
+        margin-right: 5px;
+        margin-bottom: 2px;
+    }
 </style>
