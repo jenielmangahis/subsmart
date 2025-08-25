@@ -178,10 +178,10 @@ class Employees extends MY_Controller
         $nextPayDate = $this->get_next_pay_date($usedPaySched);
 
         $employees = $this->get_employees($filters);
-        $payscales = $this->PayScale_model->getAllByCompanyId($cid);
+        $payscales = $this->PayScale_model->getAllByCompanyId($cid);     
 
-        $this->page_data['roles'] = $roles;
-        $this->session->set_userdata('roles', $roles);
+        //$this->page_data['roles'] = $roles;
+        //$this->session->set_userdata('roles', $roles);
         $this->page_data['nextPayDate'] = $nextPayDate;
         $this->page_data['nextPayPeriodEnd'] = date('m/d/Y', strtotime("wednesday"));
         $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));
@@ -698,9 +698,9 @@ class Employees extends MY_Controller
             if (!empty($this->input->post('commission_setting_id'))) {
                 foreach ($this->input->post('commission_setting_id') as $key => $csid) {
                     $employee_commission_setting = [
-                        'user_id' => $last_id,
+                        'employee_id' => $last_id,
                         'company_id' => logged('company_id'),
-                        'commission_setting_id' => $csid,
+                        //'commission_setting_id' => $csid,
                         'commission_type' => $this->input->post('commission_setting_type')[$key],
                         'commission_value' => $this->input->post('commission_setting_value')[$key]
                     ];
@@ -1359,8 +1359,11 @@ class Employees extends MY_Controller
         $accounts = array_filter($accounts, function ($v, $k) {
             return $v->account_id === 3 || $v->account_id === "3";
         }, ARRAY_FILTER_USE_BOTH);
-        $roles = $this->session->userdata('roles');
-        $this->page_data['roles'] = $roles;
+
+        $cid   = logged('company_id');
+		$roles = $this->users_model->getRoles($cid);
+        $this->page_data['roles'] = $roles;    
+
         $cid = logged('company_id');
         $this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
         $this->page_data['bonusPayType'] = $bonusPayType;

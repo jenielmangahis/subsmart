@@ -196,24 +196,47 @@
     });
 
     $(document).on('click', '.checkAdd', function() {
-        // const content = $('.checkAddModal').find('.checkAddModalContent').length;
-        $('.checkAddModal').modal('show');
-        // if (content == 0) {
+        Swal.fire({
+            icon: "info",
+            title: "Fetching content!",
+            html: "Please wait while the process is running...",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
+
+        const content = $('.checkAddModal').find('.checkAddModalContent').length;
+        if (content == 0) {
             $.ajax({
                 type: "POST",
                 url: `${window.origin}/accounting/v2/check/checkAddModal`,
                 success: function(response) {
                     $('.checkAddModal').find('.modal-body').append(response);
+                    setLastSettings();
                 },
             });
-        // }
+        } else {
+            setLastSettings();
+        }
     });
 
     $(document).on('click', '.editCheck', function() {
+        Swal.fire({
+            icon: "info",
+            title: "Fetching content!",
+            html: "Please wait while the process is running...",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
+
         const check_id = $(this).attr('data-check_id');
-        // const content = $('.checkEditModal').find('.checkEditModalContent').length;
-        $('.checkEditModal').modal('show');
-        // if (content == 0) {
+        const content = $('.checkEditModal').find('.checkEditModalContent').length;
+        if (content == 0) {
             $.ajax({
                 type: "POST",
                 data: {
@@ -222,9 +245,12 @@
                 url: `${window.origin}/accounting/v2/check/checkEditModal`,
                 success: function(response) {
                     $('.checkEditModal').find('.modal-body').append(response);
+                    getCheckDetails(check_id);
                 },
             });
-        // }
+        } else {
+            getCheckDetails(check_id);
+        }
     });
 
     $(document).on('click', '.voidCheck', function() {

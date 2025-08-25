@@ -1,4 +1,4 @@
-<div class="modal fade nsm-modal fade" id="employee-modal" tabindex="-1" aria-hidden="true" style="z-index: 1050;">
+<div class="modal fade nsm-modal fade" id="employee-modal-commision-only" tabindex="-1" aria-hidden="true" style="z-index: 1050;">
     <div class="modal-dialog modal-lg">
         <form method="POST" id="add_employee_form" class="add-employee-form">
             <div class="modal-content">
@@ -106,7 +106,7 @@
                             <label class="content-subtitle fw-bold d-block mb-2">Title</label>
                             <select class="nsm-field form-select" name="role" id="employee_role" required>
                                 <option value="" disabled>Select Title</option>
-                                <?php foreach ($roles as $r) : ?>
+                                <?php foreach ($roles_selection as $r) : ?>
                                     <?php var_dump($r); ?>
                                     <option value="<?= $r->id; ?>"><?= $r->title; ?></option>
                                 <?php endforeach; ?>
@@ -147,7 +147,7 @@
                                     <label class="content-subtitle fw-bold d-block mb-2">Payscale</label>
                                     <select class="nsm-field form-select add-emp-payscale" name="empPayscale" required>
                                         <option value="" selected="selected" disabled>Select payscale</option>
-                                        <?php foreach ($payscale as $p) : ?>
+                                        <?php foreach ($payscales as $p) : ?>
                                             <option value="<?= $p->id; ?>"><?= $p->payscale_name; ?></option>
                                         <?php endforeach; ?>
                                     </select>

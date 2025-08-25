@@ -13,7 +13,8 @@
         placeholder = 'Select an option...',
         renderOptionAttr = null,
         multiple = false,
-        create = false
+        create = false,
+        onReady = null // ✅ new
     }) {
         if (selectizeCache[url]) {
             applySelectize(selectizeCache[url].data, selectizeCache[url].optgroups);
@@ -70,62 +71,48 @@
                         item[searchField].toLowerCase().includes(query.toLowerCase())
                     );
                     callback(filtered);
+                },
+                onInitialize: function() {
+                    if (typeof onReady === 'function') {
+                        onReady(this);
+                    }
                 }
             });
         }
     }
 
-    function setLastSettings() {
-        $.ajax({
-            type: "POST",
-            url: `${window.origin}/accounting/v2/check/getLastSettings`,
-            dataType: "JSON",
-            success: function(response) {
-                let nextCheckNo = parseInt(response.check_no) + 1;
-                let nextPermitNo = parseInt(response.permit_no) + 1;
 
-                $('.checkAddNo').attr('min', nextCheckNo).val(nextCheckNo).change();
+    // $(document).on('shown.bs.modal', '.checkAddModal', function () {
+    //     // for future development
+    //     // alert(true);
+    // });
 
-                if (response.to_print == 1) {
-                    $('.checkAddPrintLater').prop('checked', true).change();
-                } else {
-                    // $('.checkAddPrintLater').prop('checked', false).change();
-                }
-                
-                $('.checkAddBankAccount')[0].selectize.setValue(response.bank_account_id);
-                $('.checkAddPermitNo').attr('min', nextPermitNo).val(nextPermitNo).change();
-                
-                $('.checkAddContentLoader').remove();
-                $('.checkAddModalContent').fadeIn('fast');
-            }
-        });
-    }
+    // $(document).on('hidden.bs.modal', '.checkAddModal', function () {
+    //     $('.checkAddModalContent').hide();
+    // });
 
-    function getCategoryRowHtml() {
-        return `<tr>
-            <td><select class="form-select checkAddCategoryOptionsRow" required></select></td>
-            <td><input type="text" class="form-control checkAddCategoryDescriptionRow"></td>
-            <td><input type="number" class="form-control checkAddCategoryAmountRow" step="any" required></td>
-            <td class="text-center"><input type="checkbox" class="form-check-input checkAddCategoryBillableRow"></td>
-            <td class="text-center"><input type="checkbox" class="form-check-input checkAddCategoryTaxRow"></td>
-            <td><select class="form-select checkAddCategoryCustomerRow" required></select></td>
-            <td><button class="border-0 checkAddDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
-        </tr>`;
-    }
+    // $(document).on('shown.bs.modal', '.checkEditModal', function () {
+    // //    for future development
+    // // alert(false);
+    // });
 
-    function getItemRowHtml() {
-        return `
-            <tr>
-                <td><select class="form-select checkAddItemOptionsRow"></select></td>
-                <td><input type="text" class="form-control checkAddItemDescriptionRow"></td>
-                <td><input type="number" class="form-control checkAddItemQtyRow"></td>
-                <td><input type="number" class="form-control checkAddItemRateRow" step="any"></td>
-                <td><input type="number" class="form-control checkAddItemAmountRow" step="any"></td>
-                <td class="text-center"><input type="checkbox" class="form-check-input checkAddItemBillableRow"></td>
-                <td class="text-center"><input type="checkbox" class="form-check-input checkAddItemTaxRow"></td>
-                <td><select class="form-select checkAddItemCustomerRow"></select></td>
-                <td><button class="border-0 checkAddDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
-            </tr>
-        `;
-    }
+    // $(document).on('hidden.bs.modal', '.checkEditModal', function () {
+    //     $('.checkEditModalContent').hide();
+    // });
+
+    $(document).on('click', '.addCheckModalExitButton', function () {
+        $('.checkAddModalContent').hide();
+    });
+
+    $(document).on('click', '.editCheckModalExitButton', function () {
+        $('.checkEditModalContent').hide();
+    });
+
+    $(document).on('click', '.checkAddClearTags', function () {
+        $(".checkAddTag")[0].selectize.setValue(null);
+    }); 
+
+    $(document).on('click', '.checkEditClearTags', function () {
+        $(".checkEditTag")[0].selectize.setValue(null);
+    });
 </script>

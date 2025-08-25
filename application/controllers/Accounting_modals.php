@@ -1030,6 +1030,14 @@ class Accounting_modals extends MY_Controller
         $this->page_data['payPeriods'] = $payPeriod;
         $this->page_data['accounts'] = $accounts;
 
+        $cid   = logged('company_id');
+
+		$roles = $this->users_model->getRoles($cid);
+        $this->page_data['roles'] = $roles;    
+
+        $payscales = $this->PayScale_model->getAllByCompanyId($cid);
+        $this->page_data['payscale'] = $payscales;
+
         $this->load->view('v2/includes/accounting/modal_forms/payroll_form', $this->page_data);
     }
 

@@ -80,14 +80,14 @@
 <div class="modal fade checkAddModal" data-bs-backdrop="static" data-bs-keyboard="false" aria-modal="true"  role="dialog">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
-            <div class="modal-body pt-3"><span class="checkAddContentLoader">Please wait while fetching the content...</span></div>
+            <div class="modal-body pt-3"></div>
         </div>
     </div>
 </div>
 <div class="modal fade checkEditModal" data-bs-backdrop="static" data-bs-keyboard="false" aria-modal="true"  role="dialog">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
-            <div class="modal-body pt-3"><span class="checkEditContentLoader">Please wait while fetching the content...</span></div>
+            <div class="modal-body pt-3"></div>
         </div>
     </div>
 </div>

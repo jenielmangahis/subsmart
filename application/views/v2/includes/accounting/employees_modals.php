@@ -370,12 +370,7 @@
                                         <td><?=str_replace('$-', '-$', '$'.number_format(array_sum(array_column($employees, 'commission')), 2))?></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="6">
-                                            <div class="nsm-page-buttons page-buttons-container">
-                                                <button type="button" class="nsm-button">
-                                                    Add an employee
-                                                </button>
-                                            </div>
+                                        <td colspan="6">                                      
                                         </td>
                                     </tr>
                                 </tfoot>

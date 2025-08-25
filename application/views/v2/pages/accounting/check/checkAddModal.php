@@ -16,22 +16,22 @@
                     </div>   
                 </div>
             </div>
-            <button class="border-0 rounded mx-1 modalExitButton" data-bs-dismiss="modal"><i class="fas fa-times m-0 text-muted"></i></button>
+            <button type="button" class="border-0 rounded mx-1 addCheckModalExitButton" data-bs-dismiss="modal"><i class="fas fa-times m-0 text-muted"></i></button>
         </div>
         <div class="col-lg-12">
             <ul class="nav nav-pills mb-3" id="checkAddTemplateStyleTab" role="tablist">
                 <li class="nav-item historyNavItem" role="presentation">
-                    <button class="btn btn-light position-relative checkAddHistory" data-bs-toggle="offcanvas" data-bs-target="#checkAddRecentTransactionsOffCanvas" aria-controls="checkAddRecentTransactionsOffCanvas" type="button">
+                    <button type="button" class="btn btn-light position-relative checkAddHistory" data-bs-toggle="offcanvas" data-bs-target="#checkAddRecentTransactionsOffCanvas" aria-controls="checkAddRecentTransactionsOffCanvas" type="button">
                         <i class="fas fa-history text-muted"></i>
                         <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle checkAddNotificationDot"></span>
                     </button>
                 </li>
                 <div class="vr navPillSepator"></div>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="checkAddStandardTab" data-bs-toggle="pill" data-bs-target="#checkAddStandardPill" type="button" role="tab" aria-controls="checkAddStandardPill" aria-selected="true">Standard</button>
+                    <button type="button" class="nav-link active" id="checkAddStandardTab" data-bs-toggle="pill" data-bs-target="#checkAddStandardPill" type="button" role="tab" aria-controls="checkAddStandardPill" aria-selected="true">Standard</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="checkAddVirtualTab" data-bs-toggle="pill" data-bs-target="#checkAddVirtualPill" type="button" role="tab" aria-controls="checkAddVirtualPill" aria-selected="false">Virtual</button>
+                    <button type="button" class="nav-link" id="checkAddVirtualTab" data-bs-toggle="pill" data-bs-target="#checkAddVirtualPill" type="button" role="tab" aria-controls="checkAddVirtualPill" aria-selected="false">Virtual</button>
                 </li>
             </ul>
                 <div class="tab-content" id="checkAddTemplateStyleTabContent">
@@ -40,43 +40,44 @@
                             <div class="row">
                                 <div class="col-lg-3 mb-3">
                                     <label class="form-label fw-xnormal">Check No.</label>
-                                    <label class="text-muted float-end highlightTextDisable"><input class="form-check-input checkAddPrintLater" type="checkbox">&ensp;Print Later</label>
-                                    <input type="number" class="form-control checkAddNo" value="0000" min="0" required>
+                                    <label class="text-muted float-end highlightTextDisable"><input class="form-check-input checkAddPrintLater" name="checkAddPrintLater" type="checkbox">&ensp;Print Later</label>
+                                    <input type="number" class="form-control checkAddNo" name="checkAddNo" value="0000" min="0" required>
                                 </div>
                                 <div class="col-lg-2 mb-3">
                                     <label class="form-label fw-xnormal">Permit No.</label>
-                                    <input type="number" class="form-control checkAddPermitNo" value="0000" min="0" required>
+                                    <input type="number" class="form-control checkAddPermitNo" name="checkAddPermitNo" value="0000" min="0" required>
                                 </div>
                                 <div class="col-lg-3 mb-3">
                                     <label class="form-label fw-xnormal">Payee</label>
                                     <a class="text-decoration-none float-end checkAddViewPayeeInfo" href="javascript:void(0);">View Info</a>
-                                    <select class="form-select checkAddPayee" required></select>
-                                    <input class="checkAddPayeeType" type="hidden">
+                                    <select class="form-select checkAddPayee" name="checkAddPayee" required></select>
+                                    <input class="checkAddPayeeType" name="checkAddPayeeType" type="hidden">
                                 </div>
                                 <div class="col-lg-4 mb-3">
                                     <label class="form-label fw-xnormal">Bank Account</label>&ensp;<span class="text-muted checkAddBankAccountBalance">$0.00</span>
                                     <label class="text-muted float-end highlightTextDisable"></label>
-                                    <select class="form-select checkAddBankAccount" required></select>
+                                    <select class="form-select checkAddBankAccount" name="checkAddBankAccount" required></select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-2 mb-3">
                                     <label class="form-label fw-xnormal">Payment Date</label>
-                                    <input type="date" class="form-control checkAddPaymentDate" value="<?php echo date('Y-m-d'); ?>" required>
+                                    <input type="date" class="form-control checkAddPaymentDate" name="checkAddPaymentDate" value="<?php echo date('Y-m-d'); ?>" required>
                                 </div>
                                 <div class="col-lg-10 mb-3">
                                     <label class="form-label fw-xnormal">Tags</label>
-                                    <select class="form-select checkAddTag" required></select>
+                                    <a class="text-decoration-none float-end checkAddClearTags" href="javascript:void(0);">Clear Tags</a>
+                                    <select class="form-select checkAddTag" name="checkAddTag[]" multiple required></select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-6 mb-3">
                                     <label class="form-label fw-xnormal">Mailing Address</label>
-                                    <textarea class=" form-control checkAddMailingAddress" placeholder="Payee's Mailing Address..." required></textarea>
+                                    <textarea class=" form-control checkAddMailingAddress" name="checkAddMailingAddress" placeholder="Payee's Mailing Address..." required></textarea>
                                 </div>
                                 <div class="col-lg-6 mb-3">
                                     <label class="form-label fw-xnormal">Memo</label>
-                                    <textarea class=" form-control checkAddMemo" placeholder="Check's memo..."></textarea>
+                                    <textarea class=" form-control checkAddMemo" name="checkAddMemo" placeholder="Check's memo..."></textarea>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -84,7 +85,7 @@
                                     <div class="accordion">
                                         <div class="accordion-item border-0">
                                             <h2 class="accordion-header" id="checkAddCategoryDetails_panel">
-                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkAddCategoryDetails_collapse" aria-expanded="true" aria-controls="checkAddCategoryDetails_collapse"> 
+                                                <button type="button" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkAddCategoryDetails_collapse" aria-expanded="true" aria-controls="checkAddCategoryDetails_collapse"> 
                                                     <strong>CATEGORY DETAILS</strong>
                                                 </button>
                                             </h2>
@@ -106,13 +107,13 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td><select class="form-select checkAddCategoryOptionsRow" required></select></td> 
-                                                                        <td><input type="text" class="form-control checkAddCategoryDescriptionRow"></td> 
-                                                                        <td><input type="number" class="form-control checkAddCategoryAmountRow" step="any" required></td> 
-                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkAddCategoryBillableRow"></td> 
-                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkAddCategoryTaxRow"></td> 
-                                                                        <td><select class="form-select checkAddCategoryCustomerRow" required></select></td> 
-                                                                        <td><button class="border-0 checkAddDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
+                                                                        <td><select class="form-select checkAddCategoryOptionsRow" name="checkAddCategoryOptionsRow[]" required></select></td> 
+                                                                        <td><input type="text" class="form-control checkAddCategoryDescriptionRow" name="checkAddCategoryDescriptionRow[]"></td> 
+                                                                        <td><input type="number" class="form-control checkAddCategoryAmountRow" name="checkAddCategoryAmountRow[]" min="0" step="any" required></td> 
+                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkAddCategoryBillableRow" name="checkAddCategoryBillableRow[]"></td> 
+                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkAddCategoryTaxRow" name="checkAddCategoryTaxRow[]"></td> 
+                                                                        <td><select class="form-select checkAddCategoryCustomerRow" name="checkAddCategoryCustomerRow[]" required></select></td> 
+                                                                        <td><button type="button" class="border-0 checkAddDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -121,8 +122,8 @@
                                                     <div class="row">
                                                         <div class="col-lg-12">
                                                             <div class="input-group">
-                                                                <button class="btn btn-primary checkAddCategoryLine" type="button">Add</button>
-                                                                <button class="btn btn-light checkAddClearCategoryLine" type="button">Clear</button>
+                                                                <button type="button" class="btn btn-primary checkAddCategoryLine" type="button">Add</button>
+                                                                <button type="button" class="btn btn-light checkAddClearCategoryLine" type="button">Clear</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -131,11 +132,11 @@
                                         </div>
                                         <div class="accordion-item border-0">
                                             <h2 class="accordion-header" id="checkAddItemDetails_panel">
-                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkAddItemDetails_collapse" aria-expanded="true" aria-controls="checkAddItemDetails_collapse">
+                                                <button type="button" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#checkAddItemDetails_collapse" aria-expanded="true" aria-controls="checkAddItemDetails_collapse">
                                                     <strong>ITEM DETAILS</strong>
                                                 </button>
                                             </h2>
-                                            <div id="checkAddItemDetails_collapse" class="accordion-collapse collapse " aria-labelledby="checkAddItemDetails_panel">
+                                            <div id="checkAddItemDetails_collapse" class="accordion-collapse collapse show" aria-labelledby="checkAddItemDetails_panel">
                                                 <div class="accordion-body p-0 pt-3 pb-3">
                                                     <div class="row">
                                                         <div class="col-lg-12">
@@ -155,15 +156,15 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td><select class="form-select checkAddItemOptionsRow"></select></td> 
-                                                                        <td><input type="text" class="form-control checkAddItemDescriptionRow"></td>
-                                                                        <td><input type="number" class="form-control checkAddItemQtyRow"></td>
-                                                                        <td><input type="number" class="form-control checkAddItemRateRow" step="any"></td>
-                                                                        <td><input type="number" class="form-control checkAddItemAmountRow" step="any"></td>
-                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkAddItemBillableRow"></td>
-                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkAddItemTaxRow"></td>
-                                                                        <td><select class="form-select checkAddItemCustomerRow"></select></td>
-                                                                        <td><button class="border-0 checkAddDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
+                                                                        <td><select class="form-select checkAddItemOptionsRow" name="checkAddItemOptionsRow[]"></select></td> 
+                                                                        <td><input type="text" class="form-control checkAddItemDescriptionRow" name="checkAddItemDescriptionRow[]"></td>
+                                                                        <td><input type="number" class="form-control checkAddItemQtyRow" name="checkAddItemQtyRow[]" min="0"></td>
+                                                                        <td><input type="number" class="form-control checkAddItemRateRow" name="checkAddItemRateRow[]" min="0" step="any"></td>
+                                                                        <td><input type="number" class="form-control checkAddItemAmountRow" name="checkAddItemAmountRow[]" min="0" step="any"></td>
+                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkAddItemBillableRow" name="checkAddItemBillableRow[]"></td>
+                                                                        <td class="text-center"><input type="checkbox" class="form-check-input checkAddItemTaxRow" name="checkAddItemTaxRow[]"></td>
+                                                                        <td><select class="form-select checkAddItemCustomerRow" name="checkAddItemCustomerRow[]"></select></td>
+                                                                        <td><button type="button" class="border-0 checkAddDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -172,8 +173,8 @@
                                                     <div class="row">
                                                         <div class="col-lg-12">
                                                             <div class="input-group">
-                                                                <button class="btn btn-primary checkAddItemLine" type="button">Add</button>
-                                                                <button class="btn btn-light checkAddClearItemLine" type="button">Clear</button>
+                                                                <button type="button" class="btn btn-primary checkAddItemLine" type="button">Add</button>
+                                                                <button type="button" class="btn btn-light checkAddClearItemLine" type="button">Clear</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -186,12 +187,12 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <label class="form-label fw-xnormal">Attachments</label>
-                                    <input type="file" class="form-control checkAddAttachments" multiple>
+                                    <input type="file" class="form-control checkAddAttachments" name="checkAddAttachments[]" multiple>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <button type="submit" class="btn btn-primary fw-bold float-end">Save</button>
+                                    <button type="submit" class="btn btn-primary fw-bold float-end"><i class="fas fa-file-import"></i>&ensp;Save</button>
                                 </div>
                             </div>
                         </form>
@@ -206,7 +207,7 @@
 <div class="offcanvas offcanvas-start" tabindex="-1" id="checkAddRecentTransactionsOffCanvas" aria-labelledby="checkAddRecentTransactionsOffCanvasLabel">
     <div class="offcanvas-header">
         <h4 class="offcanvas-title fw-bold" id="checkAddRecentTransactionsOffCanvasLabel">Recent Transactions</h4>
-        <button class="border-0 rounded mx-1" data-bs-dismiss="offcanvas"><i class="fas fa-times m-0 text-muted"></i></button>
+        <button type="button" class="border-0 rounded mx-1" data-bs-dismiss="offcanvas"><i class="fas fa-times m-0 text-muted"></i></button>
     </div>
     <div class="offcanvas-body pt-0">
         <div class="row">
@@ -241,6 +242,34 @@
 </div>
 <script>
     var recentAddCheckTable;
+
+    function getCheckAddCategoryRowHtml() {
+        return `<tr>
+            <td><select class="form-select checkAddCategoryOptionsRow" name="checkAddCategoryOptionsRow[]" required></select></td>
+            <td><input type="text" class="form-control checkAddCategoryDescriptionRow" name="checkAddCategoryDescriptionRow[]"></td>
+            <td><input type="number" class="form-control checkAddCategoryAmountRow" name="checkAddCategoryAmountRow[]" min="0" step="any" required></td>
+            <td class="text-center"><input type="checkbox" class="form-check-input checkAddCategoryBillableRow" name="checkAddCategoryBillableRow[]"></td>
+            <td class="text-center"><input type="checkbox" class="form-check-input checkAddCategoryTaxRow" name="checkAddCategoryTaxRow[]"></td>
+            <td><select class="form-select checkAddCategoryCustomerRow" name="checkAddCategoryCustomerRow[]" required></select></td>
+            <td><button type="button" class="border-0 checkAddDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
+        </tr>`;
+    }
+
+    function getCheckAddItemRowHtml() {
+        return `
+            <tr>
+                <td><select class="form-select checkAddItemOptionsRow" name="checkAddItemOptionsRow[]"></select></td>
+                <td><input type="text" class="form-control checkAddItemDescriptionRow" name="checkAddItemDescriptionRow[]"></td>
+                <td><input type="number" class="form-control checkAddItemQtyRow" name="checkAddItemQtyRow[]" min="0"></td>
+                <td><input type="number" class="form-control checkAddItemRateRow" name="checkAddItemRateRow[]" min="0" step="any"></td>
+                <td><input type="number" class="form-control checkAddItemAmountRow" name="checkAddItemAmountRow[]" min="0" step="any"></td>
+                <td class="text-center"><input type="checkbox" class="form-check-input checkAddItemBillableRow" name="checkAddItemBillableRow[]"></td>
+                <td class="text-center"><input type="checkbox" class="form-check-input checkAddItemTaxRow" name="checkAddItemTaxRow[]"></td>
+                <td><select class="form-select checkAddItemCustomerRow" name="checkAddItemCustomerRow[]"></select></td>
+                <td><button type="button" class="border-0 checkAddDeleteLine"><i class="fas fa-minus text-danger"></i></button></td>
+            </tr>
+        `;
+    }
 
     initSelectizeWithCache({
         selector: '.checkAddPayee',
@@ -394,7 +423,7 @@
 
     $('.accordion').on('click', '.checkAddCategoryLine', function() {
         let $tbody = $(this).closest('.accordion-body').find('table tbody');
-        let $newRow = $(getCategoryRowHtml());
+        let $newRow = $(getCheckAddCategoryRowHtml());
         $tbody.append($newRow);
 
         initSelectizeWithCache({
@@ -430,7 +459,7 @@
             confirmButtonText: 'Proceed',
         }).then((result) => {
             if (result.isConfirmed) {
-                const $newRow = $(getCategoryRowHtml());
+                const $newRow = $(getCheckAddCategoryRowHtml());
                 $tbody.html($newRow);
 
                 initSelectizeWithCache({
@@ -482,7 +511,7 @@
 
     $('.accordion').on('click', '.checkAddItemLine', function() {
         let $tbody = $(this).closest('.accordion-body').find('table tbody');
-        let $newRow = $(getItemRowHtml());
+        let $newRow = $(getCheckAddItemRowHtml());
         $tbody.append($newRow);
 
         initSelectizeWithCache({
@@ -518,7 +547,7 @@
             confirmButtonText: 'Proceed',
         }).then((result) => {
             if (result.isConfirmed) {
-                const $newRow = $(getItemRowHtml());
+                const $newRow = $(getCheckAddItemRowHtml());
                 $tbody.html($newRow);
 
                 initSelectizeWithCache({
@@ -624,7 +653,8 @@
     FilePond.registerPlugin(
         FilePondPluginFileEncode,
         FilePondPluginFileValidateType,
-        FilePondPluginImagePreview
+        FilePondPluginImagePreview,
+        FilePondPluginGetFile
     );
 
     FilePond.setOptions({
@@ -636,7 +666,7 @@
         FilePond.create(el, {
             credits: false,
             allowFilePoster: false,
-            allowImageEditor: false
+            allowImageEditor: false,
         });
     });
 
@@ -675,7 +705,7 @@
         $('.checkAddMemo').val('');
 
         const $catTbody = $('.checkAddCategoryTable tbody');
-        const $newCatRow = $(getCategoryRowHtml());
+        const $newCatRow = $(getCheckAddCategoryRowHtml());
         $catTbody.html($newCatRow);
 
         initSelectizeWithCache({
@@ -700,9 +730,8 @@
             renderOptionAttr: 'payee_type',
         });
 
-        // Reset Item Table
         const $itemTbody = $('.checkAddItemTable tbody');
-        const $newItemRow = $(getItemRowHtml());
+        const $newItemRow = $(getCheckAddItemRowHtml());
         $itemTbody.html($newItemRow);
 
         initSelectizeWithCache({
@@ -726,32 +755,41 @@
             placeholder: 'Select Customer...',
             renderOptionAttr: 'payee_type',
         });
+    
+        $('.checkAddAttachments').each(function() {
+            const pond = FilePond.find(this);
+            if (pond) {
+                pond.removeFiles();
+            }
+        });
     }
 
     $('.checkAddForm').on('submit', function (e) {
         e.preventDefault();
 
+        let checkAddFormData = new FormData(this);
+        
+        const pond = FilePond.find(document.querySelector('.checkAddAttachments'));
+        
+        if (pond && pond.getFiles().length > 0) {
+            pond.getFiles().forEach((fileItem, index) => {
+                if (fileItem.file) {
+                    checkAddFormData.append(`checkAddAttachments[]`, fileItem.file);
+                }
+            });
+        }
+
         $.ajax({
             type: "POST",
             url: `${window.origin}/accounting/v2/check/addCheck`,
-            data: {
-                payee_id: $('.checkAddPayee').val(),
-                payee_type: $('.checkAddPayeeType').val(),
-                bank_account_id: $('.checkAddBankAccount').val(),
-                mailing_address: $('.checkAddMailingAddress').val(),
-                payment_date: $('.checkAddPaymentDate').val(),
-                check_no: $('.checkAddNo').val(),
-                to_print: $('.checkAddPrintLater').is(':checked') ? 1 : 0,
-                permit_no: $('.checkAddPermitNo').val(),
-                tags: $('.checkAddTag').val(),
-                memo: $('.checkAddMemo').val(),
-                total_amount: $('.checkAddCategoryAmountRow, .checkAddItemAmountRow').toArray().reduce((t, el) => t + (parseFloat($(el).val()) || 0), 0)
-            },
-            beforeSend: function() {
+            data: checkAddFormData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
                 Swal.fire({
                     icon: "info",
                     title: "Adding Entry!",
-                    html: "Please wait while the uploading process is running...",
+                    html: "Please wait while the adding process is running...",
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                     didOpen: () => {
@@ -759,7 +797,9 @@
                     },
                 });
             },
-            success: function(response) {
+            success: function (response) {
+                console.log(response);
+                
                 if (response == 1) {
                     Swal.fire({
                         icon: "success",
@@ -767,15 +807,16 @@
                         html: "Check has been added successfully.",
                         showConfirmButton: true,
                         confirmButtonText: "Okay",
+                    }).then((result) => {
+                        try {
+                            checkTable.draw(false);
+                            recentAddCheckTable.draw(false);
+                            recentEditCheckTable.draw(false);
+                        } catch (error) {}
+                        $('.checkAddNotificationDot').show();
+                        checkAddResetForm();
+                        setLastSettings(); 
                     });
-                    try {
-                        checkTable.draw(false);
-                        recentAddCheckTable.draw(false);
-                        recentEditCheckTable.draw(false);
-                    } catch (error) {}
-                    $('.checkAddNotificationDot').show();
-                    checkAddResetForm();
-                    setLastSettings();
                 } else {
                     Swal.fire({
                         icon: "error",
@@ -786,7 +827,7 @@
                     });
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 Swal.fire({
                     icon: "error",
                     title: "Error!",
@@ -797,6 +838,33 @@
             },
         });
     });
+ 
+    function setLastSettings() {
+        $.ajax({
+            type: "POST",
+            url: `${window.origin}/accounting/v2/check/getLastSettings`,
+            dataType: "JSON",
+            success: function(response) {
+                let check_no = parseInt(response.last_check_no) + 1;
+                let permit_no = parseInt(response.last_permit_no) + 1;
+                let tags = (response.tags || '').split(',').filter(Boolean);
+                let selectedTags = $(".checkAddTag")[0].selectize;
+                selectedTags.setValue(null);
+                tags.forEach(t => selectedTags.options[t] ? selectedTags.addItem(t, true) : selectedTags.createItem(t, false, true));
 
-    setLastSettings();
+                if (response.to_print == 1) {
+                    $(".checkAddNo").attr("min", check_no).val(check_no).change();
+                    $(".checkAddPrintLater").prop("checked", true).change();
+                } else {
+                    $(".checkAddPrintLater").prop("checked", false).change();
+                    $(".checkAddNo").attr("min", check_no).val(check_no).change();
+                }
+                $('.checkAddBankAccount')[0].selectize.setValue(response.bank_account_id);
+                $('.checkAddPermitNo').attr('min', permit_no).val(permit_no).change();
+                $('.checkAddModalContent').fadeIn('fast');
+                Swal.close();
+                $('.checkAddModal').modal('show');
+            }
+        });
+    }
 </script>
