@@ -24,6 +24,10 @@
         padding: 10px;
         display:block;
     }
+    #employeeTable .badge{
+        width:80px;
+        display:block;
+    }
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
