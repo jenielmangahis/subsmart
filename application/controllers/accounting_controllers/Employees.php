@@ -698,9 +698,9 @@ class Employees extends MY_Controller
             if (!empty($this->input->post('commission_setting_id'))) {
                 foreach ($this->input->post('commission_setting_id') as $key => $csid) {
                     $employee_commission_setting = [
-                        'user_id' => $last_id,
+                        'employee_id' => $last_id,
                         'company_id' => logged('company_id'),
-                        'commission_setting_id' => $csid,
+                        //'commission_setting_id' => $csid,
                         'commission_type' => $this->input->post('commission_setting_type')[$key],
                         'commission_value' => $this->input->post('commission_setting_value')[$key]
                     ];
