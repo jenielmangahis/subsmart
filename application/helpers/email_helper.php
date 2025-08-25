@@ -9,8 +9,8 @@ function email__getInstance($config = [])
 
     $host = 'smtp.gmail.com';
     $port = 465;
-    $username = 'sales@nsmartrac.com';
-    $password = 'bysebhxwxgheiryb';
+    $username = 'noreply@nsmartrac.com';
+    $password = 'UoU!WhbSxALB1z7)';
     $from = $username;
     $subject = $config['subject'];
 
