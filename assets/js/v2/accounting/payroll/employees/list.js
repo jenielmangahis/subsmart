@@ -161,6 +161,20 @@ $('#run-payroll').on('click', function(e) {
     
 });
 
+$(document).on('click', '#payrollModal #trigger-add-employee-modal', function (e) {
+    $('#payrollModal').modal('hide');
+    setTimeout(function() {
+        $('#add_employee_modal').modal('show');
+    }, 200);    
+});
+
+$(document).on('click', '#bonus-payroll-modal #trigger-add-employee-modal', function (e) {
+    $('#bonus-payroll-modal').modal('hide');
+    setTimeout(function() {
+        $('#add_employee_modal').modal('show');
+    }, 200);    
+});
+
 $('#bonus-only').on('click', function(e) {
     e.preventDefault();
 

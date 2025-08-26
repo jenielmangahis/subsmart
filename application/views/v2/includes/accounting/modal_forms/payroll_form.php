@@ -78,7 +78,7 @@
                         </div>
                     </td>
                     <td>
-                        <a href="#" class="text-decoration-none"><?=$employee->LName.', '.$employee->FName?></a>
+                        <div class="text-decoration-none"><?=$employee->LName.', '.$employee->FName?></div>
                         <p class="m-0"><?=$employee->pay_rate?></p>
                     </td>
                     <td><?=$employee->pay_details->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check'?></td>
@@ -118,21 +118,26 @@
                             </button>
                         </div> -->
                         <div class="nsm-page-buttons page-buttons-container">
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#employee-modal">
+                            <button type="button" class="nsm-button" id="trigger-add-employee-modal">
                                 Add an employee
                             </button>
                         </div>
+                        <!-- <div class="nsm-page-buttons page-buttons-container">
+                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#employee-modal">
+                                Add an employee
+                            </button>
+                        </div> -->
                     </td>
                 </tr>
             </tfoot>
         </table>
     </div>
 </div>
-<?php include viewPath('v2/includes/accounting/modal_forms/employee_modal'); ?>
+<?php //include viewPath('v2/includes/accounting/modal_forms/employee_modal'); ?>
 
 <script>
 
-$(document).ready(function() {
+/*$(document).ready(function() {
     $('.add-employee-form').on('submit', function(event) {
         event.preventDefault();
 
@@ -171,24 +176,24 @@ $(document).ready(function() {
     });
 
     $('.add-emp-payscale').change(function() {
-    var psid = $(this).val();
-    var url  = base_url + 'payscale/_get_details'
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: {psid:psid},
-        dataType: "json",
-        success: function(result) {
-            if( result.pay_type == 'Commission Only' ){
-                $('.add-pay-type-container').hide();
-            }else{
-                var rate_label = result.pay_type + ' Rate';
-                $('.add-pay-type-container').show();
-                $('.add-payscale-pay-type').html(rate_label);
-            }                
-        },
+        var psid = $(this).val();
+        var url  = base_url + 'payscale/_get_details'
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {psid:psid},
+            dataType: "json",
+            success: function(result) {
+                if( result.pay_type == 'Commission Only' ){
+                    $('.add-pay-type-container').hide();
+                }else{
+                    var rate_label = result.pay_type + ' Rate';
+                    $('.add-pay-type-container').show();
+                    $('.add-payscale-pay-type').html(rate_label);
+                }                
+            },
+        });
     });
-});
-});
+});*/
 
 </script>
