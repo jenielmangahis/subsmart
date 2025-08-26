@@ -1301,7 +1301,11 @@ $route['users/_delete_all_archived_users'] = 'Users/ajax_delete_all_archived_use
 $route['users/_restore_user'] = 'Users/ajax_restore_user';
 $route['users/_delete_archived_user'] = 'Users/ajax_delete_archived_user';
 
-$route['users/titles'] = 'Roles/index';
+//Job Titles
+$route['users/job_titles'] = 'Roles/index';
+$route['users/_save_job_title'] = 'Roles/ajax_save_role';
+$route['users/_update_job_title'] = 'Roles/ajax_update_job_title';
+$route['users/_delete_job_title'] = 'Roles/ajax_delete_job_title';
 
 $route['company/download_w9_form']  = 'Users/download_company_w9_form';
 
