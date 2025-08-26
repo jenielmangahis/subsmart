@@ -7,21 +7,164 @@ class Roles extends MY_Controller {
 	{
 		parent::__construct();
 		$this->checkLogin();
-		$this->page_data['page']->title = 'Roles Management';
-		$this->page_data['page']->menu = 'roles';
+		$this->page_data['page']->title = 'Job Titles';
+		$this->page_data['page']->menu = 'job title';
 	}
 
 	public function index()
 	{
-		ifPermissions('roles_list');
-		$this->page_data['roles'] = $this->roles_model->get();
-		$this->load->view('roles/list', $this->page_data);
+		$this->load->model('Roles_model');
+
+		$company_id = logged('company_id');
+
+		$roles = $this->Roles_model->getRolesByCompanyId($company_id);
+
+		$this->page_data['roles'] = $roles;
+		$this->load->view('v2/pages/roles/list', $this->page_data);
 	}
 
 	public function add()
 	{
 		ifPermissions('roles_add');
 		$this->load->view('roles/add', $this->page_data);
+	}
+
+	public function ajax_save_role()
+	{
+		$this->load->model('Roles_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
+		$company_id  = logged('company_id');
+        $post = $this->input->post();
+
+		$isExists = $this->Roles_model->getByTitleAndCompanyId($post['job_title'], $company_id);
+		if( $isExists ){
+			$msg = 'Job title ' . $post['job_title'] . ' already exists';
+		}else{
+			$data = [
+				'company_id' => $company_id,
+				'title' => $post['job_title'],
+				'date_created' => date("Y-m-d H:i:s")
+			];
+
+			$this->Roles_model->create($data);
+
+			$is_success = 1;
+        	$msg = '';
+
+			//Activity Logs
+			$activity_name = 'Job Title : Created job title ' . $post['job_title']; 
+			createActivityLog($activity_name);
+		}
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+	public function ajax_update_job_title()
+	{
+		$this->load->model('Roles_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+		$company_id = logged('company_id');
+        $post = $this->input->post();
+
+		$isExists = $this->Roles_model->getByTitleAndCompanyId($post['job_title'], $company_id);
+		if( $isExists && $isExists->id != $post['jtid'] ){
+			$msg = 'Job title ' . $post['job_title'] . ' already exists';
+		}else{
+			$role = $this->Roles_model->getById($post['jtid']);
+			if( $role && $role->company_id == $company_id ){
+				$data = [
+					'title' => $post['job_title'],
+					'date_updated' => date("Y-m-d H:i:s")
+				];
+
+				$this->Roles_model->update($role->id, $data);
+
+				$is_success = 1;
+				$msg = '';
+
+				//Activity Logs
+				$activity_name = 'Job Title : Updated job title ' . $role->title . ' changed title to ' . $post['job_title']; 
+				createActivityLog($activity_name);
+			}
+		}
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+	public function ajax_delete_job_title()
+    {
+        $this->load->model('Roles_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $role = $this->Roles_model->getById($post['job_title_id']);
+		if( $role && $role->company_id == $company_id ){
+			$this->Roles_model->delete($role->id);
+
+            $is_success = 1;
+            $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Job Title : Deleted job title ' . $role->title; 
+            createActivityLog($activity_name);
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+	public function ajax_delete_selected_job_titles()
+	{
+		$this->load->model('Roles_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['roles'] ){
+
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->Roles_model->bulkDelete($post['roles'], $filters);
+
+			//Activity Logs
+			$activity_name = 'Job Title : Deleted ' .$total_deleted. ' job title(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
 	}
 
 	public function save()
