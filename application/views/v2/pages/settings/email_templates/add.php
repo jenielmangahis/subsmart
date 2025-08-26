@@ -48,35 +48,35 @@
                             </div>
                             <div class="nsm-card-content">
                                 <div class="row g-3">
-                                    <div class="col-12 col-md-12">
-                                        <label class="content-subtitle fw-bold d-block mb-2">Template Name</label>
-                                        <input type="text" name="title" value=""  class="nsm-field form-control" required="" autocomplete="off" />
-                                    </div>
-                                    <div class="col-12 col-md-12">
-                                        <label class="content-subtitle fw-bold d-block mb-2">Subject</label>
-                                        <input type="text" name="subject" value=""  class="nsm-field form-control" required="" autocomplete="off" />
-                                    </div>
-                                    <div class="col-12 col-md-12">
-                                        <label class="content-subtitle fw-bold d-block mb-2">Body</label>
-                                        <textarea id="summernote" name="email_body" class="nsm-field form-control" required=""></textarea>
-                                    </div>
-                                    <div class="col-12 col-md-12">
+                                    <div class="col-12 col-md-6">
                                         <label class="content-subtitle fw-bold d-block mb-2">Template Type</label>
                                         <select class="form-control nsm-field" data-style="btn-white" name="type_id" required>
                                             <option  value="1">Invoice</option>
                                             <option  value="2">Estimate</option>
                                             <option  value="3">Schedule</option>
-                                            <option  value="4">Review</option>
-                                            <option  value="5">Notes</option>
+                                            <!-- <option  value="4">Review</option> -->
+                                            <!-- <option  value="5">Notes</option> -->
                                         </select>
-                                    </div>        
-                                    <div class="col-12 col-md-12">
+                                    </div>   
+                                    <div class="col-12 col-md-6">
+                                        <label class="content-subtitle fw-bold d-block mb-2">Template Name</label>
+                                        <input type="text" name="title" value=""  class="nsm-field form-control" required="" autocomplete="off" />
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label class="content-subtitle fw-bold d-block mb-2">Subject</label>
+                                        <input type="text" name="subject" value=""  class="nsm-field form-control" required="" autocomplete="off" />
+                                    </div>
+                                    <!-- <div class="col-12 col-md-6">
                                         <label class="content-subtitle fw-bold d-block mb-2">Details</label>
                                         <select class="form-control nsm-field" data-style="btn-white" name="details" required>
                                             <option  value="1">Default Template</option>
                                             <option  value="2">Custom Template</option>
                                         </select>
-                                    </div>                                    
+                                    </div>                                        -->
+                                    <div class="col-12 col-md-12">
+                                        <label class="content-subtitle fw-bold d-block mb-2">Body</label>
+                                        <textarea id="summernote" name="email_body" class="nsm-field form-control" required=""></textarea>
+                                    </div>                                                                                                              
                                 </div>
                             </div>
                         </div>
@@ -100,39 +100,39 @@ $(function(){
     $("#frm-add-email-template").submit(function(e){
         e.preventDefault();
         var url = base_url + 'settings/_create_email_template';
-        $(".btn-create-email-template").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
-        setTimeout(function () {
-            $.ajax({
-                 type: "POST",
-                 url: url,
-                 data: $("#frm-add-email-template").serialize(),
-                 dataType: 'json',
-                 success: function(o)
-                 {
-                    if( o.is_success == 1 ){
-                        Swal.fire({
-                            title: 'Success',
-                            text: 'Email template was successfully created.',
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonColor: '#32243d',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Ok'
-                        }).then((result) => {
-                            location.href = base_url + "/settings/email_templates"; 
-                        });
-                    }else{
-                        Swal.fire({
-                          icon: 'error',
-                          title: 'Cannot save data.',
-                          text: o.msg
-                        });
-                    }
-
-                    $(".btn-create-email-template").html('Save');
-                 }
-            });
-        }, 300);        
+        
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: $("#frm-add-email-template").serialize(),
+            dataType: 'json',
+            success: function(o)
+            {
+                $(".btn-create-email-template").html('Save');
+                if( o.is_success == 1 ){
+                    Swal.fire({
+                        title: 'Email Template',
+                        text: 'Email template was successfully created.',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#32243d',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        location.href = base_url + "settings/email_templates"; 
+                    });
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: o.msg
+                    });
+                }
+            },
+            beforeSend: function(){
+                $(".btn-create-email-template").html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });   
     });
 });
 </script>

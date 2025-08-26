@@ -21,20 +21,27 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-12 col-md-4 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div>
+                    </div>
+                    <?php if(checkRoleCanAccessModule('settings-email-templates', 'write')){ ?>
+                    <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button name="btn_link" type="button" class="nsm-button primary" onclick="location.href='<?= base_url('settings/email_templates_create') ?>'">
-                                <i class='bx bx-fw bx-envelope'></i> Add New Email Template
+                                <i class='bx bx-plus'></i> Add New
                             </button>
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
                 <table class="nsm-table">
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
-                            <td data-name="Template Name">Template Name</td>
-                            <td data-name="Details">Details</td>
+                            <td data-name="Template Name" style="width:70%;">Template Name</td>
+                            <td data-name="Type">Template Type</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -70,31 +77,26 @@
                                     </td>
                                     <td class="nsm-text-primary">
                                         <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('settings/email_templates_edit/') . $invoice_template->id; ?>'"><?= $invoice_template->title; ?></label>
-                                        <label class="content-subtitle fst-italic d-block"><?php echo $type_name; ?></label>
                                     </td>
-                                    <td><?= $invoice_template->details == 1 ? 'Default Template' : 'Custom Template'; ?></td>
+                                    <td><?= $type_name; ?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" name="dropdown_edit" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item delete-item" name="dropdown_delete" href="javascript:void(0);" data-id="<?php echo $invoice_template->id; ?>" data-name="<?= $invoice_template->title; ?>">Delete</a>
-                                                </li>
+                                                <?php if(checkRoleCanAccessModule('settings-email-templates', 'write')){ ?>
+                                                    <li><a class="dropdown-item" name="dropdown_edit" href="<?= base_url('settings/email_templates_edit/').$invoice_template->id; ?>">Edit</a></li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('settings-email-templates', 'delete')){ ?>
+                                                    <li><a class="dropdown-item delete-item" name="dropdown_delete" href="javascript:void(0);" data-id="<?php echo $invoice_template->id; ?>" data-name="<?= $invoice_template->title; ?>">Delete</a></li>
+                                                <?php } ?>
                                             </ul>
                                         </div>
                                     </td>
                                 </tr>
-                            <?php
-                            endforeach;
-                            ?>
-                        <?php
-                        else :
-                        ?>
+                            <?php endforeach; ?>
+                        <?php else : ?>
                             <tr>
                                 <td colspan="4">
                                     <div class="nsm-empty">
@@ -115,6 +117,9 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
+        $("#search_field").on("input", debounce(function() {
+            tableSearch($(this));        
+        }, 1000));
 
         $(document).on("click", ".delete-item", function() {
             let id = $(this).attr('data-id');
@@ -137,8 +142,8 @@
                         success: function(result) {
                             if( result.is_success == 1 ){
                                 Swal.fire({
-                                    //title: 'Good job!',
-                                    text: "Email Template Deleted Successfully!",
+                                    title: 'Email Template',
+                                    text: "Email template has been added successfully.",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'

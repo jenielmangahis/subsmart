@@ -11,9 +11,31 @@
 }
 </style>
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
     </div>
+    <?php if(checkRoleCanAccessModule('taskhub', 'write')){ ?>
+    <ul class="nsm-fab-options">        
+        <li onclick="location.href='<?= base_url('customer/add_lead'); ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bxs-contact"></i>
+            </div>
+            <span class="nsm-fab-label">Add Lead</span>
+        </li>
+        <li class="btn-export-list">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-export"></i>
+            </div>
+            <span class="nsm-fab-label">Export List</span>
+        </li>
+        <li id="btn-mobile-archived">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-archive'></i>
+            </div>
+            <span class="nsm-fab-label">Archived</span>
+        </li>          
+    </ul>
+    <?php } ?>      
 </div>
 
 <div class="row page-content g-0">
@@ -38,17 +60,6 @@
                         </div>
                     </div>                    
                     <div class="col-12 col-md-8 grid-mb text-end">
-                        <?php if(checkRoleCanAccessModule('leads', 'write')){ ?>
-                        <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a class="dropdown-item btn-with-selected" id="with-selected-change-status" href="javascript:void(0);" data-action="status">Change Status</a></li>                                
-                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
-                            </ul>
-                        </div>
-                        <?php } ?>
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 Filter by Status: <span><?= $filter; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
@@ -63,6 +74,17 @@
                             </ul>
                         </div>
                         <?php if(checkRoleCanAccessModule('leads', 'write')){ ?>
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-change-status" href="javascript:void(0);" data-action="status">Change Status</a></li>                                
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
+                        </div>
+                        <?php } ?>                        
+                        <?php if(checkRoleCanAccessModule('leads', 'write')){ ?>
                         <div class="nsm-page-buttons primary page-button-container">                            
                             <?php if( checkRoleCanAccessModule('customers', 'write') ){ ?>
                             <div class="btn-group">
@@ -72,7 +94,7 @@
                                 </button>
                                 <ul class="dropdown-menu">      
                                     <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>   
-                                    <li><a class="dropdown-item" id="btn-export-leads" href="javascript:void(0);">Export</a></li>                            
+                                    <li><a class="dropdown-item" id="btn-export-list" href="javascript:void(0);">Export</a></li>                            
                                 </ul>
                             </div>
                             <?php } ?>
@@ -127,11 +149,11 @@
                             ?>
                                 <tr>
                                     <?php if(checkRoleCanAccessModule('leads', 'write')){ ?>
-                                    <td>
+                                    <td class="show">
                                         <input class="form-check-input row-select table-select" name="leads[]" type="checkbox" value="<?= $lead->leads_id; ?>">
                                     </td>
                                     <?php } ?>
-                                    <td>
+                                    <td class="show">
                                         <?php 
                                             $n = ucwords($lead->firstname[0]) . ucwords($lead->lastname[0]);
                                         ?>
@@ -139,7 +161,7 @@
                                             <div class='nsm-profile'><span><?= $n; ?></span></div>
                                         </div>
                                     </td>
-                                    <td class="fw-bold nsm-text-primary">
+                                    <td class="fw-bold nsm-text-primary show">
                                         <?= $lead->firstname.' '.$lead->lastname; ?><br />
                                         <small class="text-muted"><i class='bx bx-envelope'></i> <?=  $lead->email_add; ?></small>
                                     </td>
@@ -338,7 +360,7 @@
             location.href = base_url + 'customer/add_lead';
         });
 
-        $('#btn-archived').on('click', function(){
+        $('#btn-archived, #btn-mobile-archived').on('click', function(){
             $('#modal-view-archived').modal('show');
 
             $.ajax({
@@ -351,6 +373,10 @@
                     $('#leads-archived-container').html('<div class="col"><span class="bx bx-loader bx-spin"></span></div>');
                 }
             });
+        });
+
+        $("#btn-export-list, .btn-export-list").on("click", function() {
+            location.href = base_url + 'customer/leads/export_list';
         });
 
         $(document).on('click', '.btn-permanently-delete-lead', function(){

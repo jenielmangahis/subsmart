@@ -323,7 +323,7 @@
                                 </div>
                                 <div class="row g-3 mt-5">
                                     <div class="col-12">
-                                        <button type="submit" class="nsm-button primary" style="float: right;">Save</button>
+                                        <button type="submit" class="nsm-button primary" id="btn-save-settings" style="float: right;">Save</button>
                                     </div>                    
                                 </div>
                             </div>
@@ -539,9 +539,6 @@
             e.preventDefault();
 
             var url = base_url + "settings/_update_calendar_settings";
-            _this.find("button[type=submit]").html("Saving Changes");
-            _this.find("button[type=submit]").prop("disabled", true);
-
             $.ajax({
                 type: 'POST',
                 url: url,
@@ -560,9 +557,11 @@
                         }*/
                     });
 
-                    _this.find("button[type=submit]").html("Save Changes");
-                    _this.find("button[type=submit]").prop("disabled", false);
+                    $('#btn-save-settings').html('Save');                     
                 },
+                beforeSend:function(){
+                    $('#btn-save-settings').html('<div class="col"><span class="bx bx-loader bx-spin"></span></div>'); 
+                }
             });
         });
     });
