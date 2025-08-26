@@ -953,60 +953,50 @@ if ($this->session->userdata('usertimezone') == null) {
                             <i class="bx bx-plus"></i>
                         </div>
                         <ul class="nsm-fab-options">
-                            <li>
+                            <li onclick="location.href='<?= base_url('invoice/add'); ?>'">
                                 <div class="nsm-fab-icon">
                                     <i class="bx bx-receipt"></i>
                                 </div>
                                 <span class="nsm-fab-label">Add Invoice</span>
                             </li>
-                            <li>
-                                <div class="nsm-fab-icon">
-                                    <i class="bx bx-money"></i>
-                                </div>
-                                <span class="nsm-fab-label">Receive Payment</span>
-                            </li>
-                            <li>
+                            <li onclick="location.href='<?= base_url('accounting/expenses'); ?>'">
                                 <div class="nsm-fab-icon">
                                     <i class="bx bx-book-content"></i>
                                 </div>
-                                <span class="nsm-fab-label">Add Expense</span>
+                                <span class="nsm-fab-label">Expenses</span>
                             </li>
-                            <li>
+                            <li onclick="location.href='<?= base_url('accounting/deposits'); ?>'">
                                 <div class="nsm-fab-icon">
-                                    <i class="bx bx-book-content"></i>
+                                    <i class='bx bx-list-ol' ></i>
                                 </div>
-                                <span class="nsm-fab-label">Add Check</span>
+                                <span class="nsm-fab-label">Deposits</span>
                             </li>
-                            <li>
+                            <li onclick="location.href='<?= base_url('accounting/vendors'); ?>'">
                                 <div class="nsm-fab-icon">
-                                    <i class="bx bx-receipt"></i>
+                                    <i class='bx bxs-user-account'></i>
                                 </div>
-                                <span class="nsm-fab-label">Add Bill</span>
+                                <span class="nsm-fab-label">Vendors</span>
                             </li>
-                            <li>
+                            <li onclick="location.href='<?= base_url('accounting/v2/check'); ?>'">
                                 <div class="nsm-fab-icon">
-                                    <i class="bx bx-money"></i>
+                                    <i class='bx bx-credit-card-front'></i>
                                 </div>
-                                <span class="nsm-fab-label">Pay bills</span>
+                                <span class="nsm-fab-label">Checks</span>
                             </li>
-                            <li>
-                                <div class="nsm-fab-icon">
-                                    <i class="bx bx-time"></i>
-                                </div>
-                                <span class="nsm-fab-label">Single time activity</span>
-                            </li>
-                            <li>
-                                <div class="nsm-fab-icon">
-                                    <i class="bx bx-file"></i>
-                                </div>
-                                <span class="nsm-fab-label">Bank Deposit</span>
-                            </li>
-                            <li>
-                                <div class="nsm-fab-icon">
-                                    <i class="bx bx-transfer"></i>
-                                </div>
-                                <span class="nsm-fab-label">Transfer</span>
-                            </li>
+                            <?php if (logged('user_type') == 7) { ?>
+                                <li onclick="location.href='<?= base_url('users/job_titles'); ?>'">
+                                    <div class="nsm-fab-icon">
+                                        <i class='bx bx-cog'></i>
+                                    </div>
+                                    <span class="nsm-fab-label">Job Titles</span>
+                                </li>
+                                <li onclick="location.href='<?= base_url('users/pay_scale'); ?>'">
+                                    <div class="nsm-fab-icon">
+                                        <i class='bx bx-cog'></i>
+                                    </div>
+                                    <span class="nsm-fab-label">Payscales</span>
+                                </li>
+                            <?php } ?>
                         </ul>
                     </div>
 
