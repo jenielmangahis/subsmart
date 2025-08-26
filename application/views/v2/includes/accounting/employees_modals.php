@@ -139,7 +139,7 @@
                             <select class="nsm-field form-select add-emp-payscale" name="empPayscale" required>
                                 <option value="" selected="selected" disabled>Select payscale</option>
                                 <?php foreach ($payscales as $p) : ?>
-                                    <option value="<?= $p->id; ?>"><?= $p->payscale_name; ?></option>
+                                    <option value="<?= $p->payscale_name; ?>"><?= $p->payscale_name; ?></option>
                                 <?php endforeach; ?>
                             </select>
                             <div class="mt-4 add-pay-type-container" style="display:none;">
