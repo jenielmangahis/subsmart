@@ -89,11 +89,16 @@
                     </tr>
                     <tr>
                         <td colspan="6">
-                            <div class="nsm-page-buttons page-buttons-container">
+                            <!-- <div class="nsm-page-buttons page-buttons-container">
                                 <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#employee-modal">
                                     Add an employee
                                 </button>
-                            </div>
+                            </div> -->
+                            <div class="nsm-page-buttons page-buttons-container">
+                                <button type="button" class="nsm-button" id="trigger-add-employee-modal">
+                                    Add an employee
+                                </button>
+                            </div>                            
                         </td>
                     </tr>
                 </tfoot>
@@ -126,11 +131,11 @@
         </div>
     </div>
 </div>
-<?php include viewPath('v2/includes/accounting/modal_forms/employee_modal'); ?>
+<?php //include viewPath('v2/includes/accounting/modal_forms/employee_modal'); ?>
 
 <script>
 
-$(document).ready(function() {
+/*$(document).ready(function() {
     $('.add-employee-form').on('submit', function(event) {
         event.preventDefault();
 
@@ -169,25 +174,25 @@ $(document).ready(function() {
     });
 
     $('.add-emp-payscale').change(function() {
-    var psid = $(this).val();
-    var url  = base_url + 'payscale/_get_details'
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: {psid:psid},
-        dataType: "json",
-        success: function(result) {
-            if( result.pay_type == 'Commission Only' ){
-                $('.add-pay-type-container').hide();
-            }else{
-                var rate_label = result.pay_type + ' Rate';
-                $('.add-pay-type-container').show();
-                $('.add-payscale-pay-type').html(rate_label);
-            }                
-        },
+        var psid = $(this).val();
+        var url  = base_url + 'payscale/_get_details'
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {psid:psid},
+            dataType: "json",
+            success: function(result) {
+                if( result.pay_type == 'Commission Only' ){
+                    $('.add-pay-type-container').hide();
+                }else{
+                    var rate_label = result.pay_type + ' Rate';
+                    $('.add-pay-type-container').show();
+                    $('.add-payscale-pay-type').html(rate_label);
+                }                
+            },
+        });
     });
-});
-});
+});*/
 
 </script>
 
