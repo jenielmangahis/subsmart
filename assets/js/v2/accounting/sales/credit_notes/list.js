@@ -410,15 +410,19 @@ var ref_no = $(row.find("td")[refnumIndex]).text().trim();
 var id = row.find(".select-one").val();
 var email = $(row.find("td")[emailIndex]).text().trim();
 var customerName = $(row.find("td")[customerIndex]).text().trim();
-var companyName = '';
+var companyName = $(this).attr('data-company');
 
 $("#send-transaction-email span.modal-title").html(
-    "Send email for " + ref_no
+    "Send email to " + customerName
 );
 $("#send-transaction-email #email-to").val(email);
-$("#send-transaction-email #email-subject").val(
-    `Credit Memo #${ref_no} from ${companyName}`
-);
+
+if( ref_no != '---' ){
+    var subject = `Credit Memo #${ref_no} from ${companyName}`;
+}else{
+    var subject = `Credit Memo from ${companyName}`
+}
+$("#send-transaction-email #email-subject").val(subject);
 $("#send-transaction-email #email-message").val(`Dear ${customerName.trim()},
 
 Your credit memo is attached.  We have reduced your account balance by the amount shown on the credit memo.

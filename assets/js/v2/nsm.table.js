@@ -15,7 +15,6 @@ $(document).ready(function () {
             if (withIcon) {
                 _this.find("td:nth-child(1)").addClass("table-icon");
                 _table.find("thead td:nth-child(1)").addClass("table-icon");
-
                 _table.find("thead td:nth-child(1)").addClass("show");
                 _table.find("thead td:nth-child(2)").addClass("show");
                 _this.find("td:nth-child(2)").addClass("show");
@@ -37,7 +36,9 @@ $(document).ready(function () {
             $.each(_this.find("td:not(.show)"), function (tdIdx, tdObj) {
                 rowCollapse += '<div class="row">';
                 rowCollapse += '<div class="col-12 col-sm-2">';
+                if( tdIdx > 0 ){
                 rowCollapse += '<label class="content-subtitle fw-bold">' + _headCols.eq(tdIdx + headColIndex).data("name") + ':</label>';
+                }
                 rowCollapse += '</div>';
                 rowCollapse += '<div class="col-12 col-sm-10">';
                 rowCollapse += '<label class="content-subtitle">' + getCollapsedColumns($(this)) + '</label>';
