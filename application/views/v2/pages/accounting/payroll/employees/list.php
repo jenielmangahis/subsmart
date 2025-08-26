@@ -1,7 +1,7 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/accounting/employees_modals'); ?>
 <?php include viewPath('v2/includes/accounting/modal_forms/payroll_modal'); ?>
-<?php //include viewPath('v2/includes/accounting/modal_forms/employee_modal'); ?>
+
 <style>
     table.dataTable thead th, 
     table.dataTable thead td {
@@ -22,6 +22,10 @@
         color: #ffffff;
         font-size: 15px;
         padding: 10px;
+        display:block;
+    }
+    #employeeTable .badge{
+        width:80px;
         display:block;
     }
 </style>
@@ -157,12 +161,12 @@
                                             <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                                         </th>
                                         <?php } ?>                                        
-                                        <th>NAME</th>
-                                        <th>PAY SCALE</th>
-                                        <th>PAY METHOD</th>
-                                        <th>STATUS</th>
-                                        <th>EMAIL</th>
-                                        <th>PHONE NO.</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Payscale</th>
+                                        <th>Pay Method</th>                                        
+                                        <th>Status</th>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>

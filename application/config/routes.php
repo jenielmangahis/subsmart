@@ -1301,6 +1301,8 @@ $route['users/_delete_all_archived_users'] = 'Users/ajax_delete_all_archived_use
 $route['users/_restore_user'] = 'Users/ajax_restore_user';
 $route['users/_delete_archived_user'] = 'Users/ajax_delete_archived_user';
 
+$route['users/titles'] = 'Roles/index';
+
 $route['company/download_w9_form']  = 'Users/download_company_w9_form';
 
 //Business
