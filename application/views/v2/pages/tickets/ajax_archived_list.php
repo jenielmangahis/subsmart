@@ -18,24 +18,24 @@
 <table class="nsm-table" id="archived-tickets">
     <thead>
         <tr>
-            <td class="table-icon text-center sorting_disabled">
+            <td class="table-icon text-center sorting_disabled show">
                 <input class="form-check-input table-select" type="checkbox" name="" value="0" id="ticket-archive-select-all">
             </td>
-            <td class="table-icon"></td>
-            <td data-name="Name">Service Ticket Number</td>
-            <td data-name="Action" style="width:5%;"></td>                
+            <td class="table-icon show"></td>
+            <td class="show" data-name="Name">Service Ticket Number</td>
+            <td class="show" data-name="Action" style="width:5%;"></td>                
         </tr>
     </thead>
     <tbody>
         <?php if ($tickets) { ?>
             <?php foreach($tickets as $ticket){ ?>
                 <tr>
-                    <td class="text-center">
+                    <td class="table-icon text-center sorting_disabled show">
                         <input class="form-check-input ticket-archive-row-select table-select" name="tickets[]" type="checkbox" value="<?= $ticket->id; ?>">
                     </td>
-                    <td><div class="table-row-icon"><i class="bx bx-receipt"></i></div></td>
-                    <td class="nsm-text-primary"><?= $ticket->ticket_no; ?></td>
-                    <td style="width:5%;">
+                    <td class="table-icon show"><div class="table-row-icon"><i class="bx bx-receipt"></i></div></td>
+                    <td class="nsm-text-primary show"><?= $ticket->ticket_no; ?></td>
+                    <td class="show" style="width:5%;">
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                             <ul class="dropdown-menu dropdown-menu-end">

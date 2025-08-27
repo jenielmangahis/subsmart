@@ -27,9 +27,31 @@
 }
 </style>
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">
-        <i class="bx bx-note"></i>
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
+        <i class="bx bx-plus"></i>
     </div>
+    <?php if(checkRoleCanAccessModule('service-tickets', 'write')){ ?>
+    <ul class="nsm-fab-options">        
+        <li onclick="location.href='<?= base_url('customer/addTicket'); ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-note"></i>
+            </div>
+            <span class="nsm-fab-label">Add Service Ticket</span>
+        </li>
+        <li class="btn-export-list">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-export"></i>
+            </div>
+            <span class="nsm-fab-label">Export List</span>
+        </li>
+        <li id="btn-mobile-archived">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-archive'></i>
+            </div>
+            <span class="nsm-fab-label">Archived</span>
+        </li>          
+    </ul>
+    <?php } ?>      
 </div>
 
 <div class="row page-content g-0">
@@ -148,7 +170,7 @@
                                     <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
                                 </td>
                                 <td class="table-icon"></td>
-                                <td data-name="Work Order Number">Service Ticket Number</td>
+                                <td class="show" data-name="Work Order Number">Service Ticket Number</td>
                                 <td data-name="AssignedTech">Assigned Tech</td>
                                 <td data-name="Customer">Customer</td>                                
                                 <td data-name="Date Issued">
@@ -344,7 +366,7 @@
     });
 
     <?php if(checkRoleCanAccessModule('service-tickets', 'write')){ ?>
-    $('#archived-ticket-list').on('click', function(){
+    $('#archived-ticket-list, #btn-mobile-archived').on('click', function(){
         $('#modal-archived-tickets').modal('show');
         $.ajax({
             type: "POST",
@@ -362,7 +384,7 @@
         location.href = base_url + 'ticket/add';
     });
 
-    $("#btn-export-list").on("click", function() {
+    $("#btn-export-list, .btn-export-list").on("click", function() {
         location.href = "<?php echo base_url('tickets/export'); ?>";
     });
 

@@ -930,7 +930,7 @@ class Users_model extends MY_Model
     {
         $roles = [
             7 => ['name' => 'Admin', 'description' => 'All Access'],
-            1 => ['name' => 'Office Manager', 'description' => 'ALL except high security file vault'],
+            1 => ['name' => 'Office Manager', 'description' => 'All except high security file vault'],
             2 => ['name' => 'Partner', 'description' => 'ALL base on plan type'],
             3 => ['name' => 'Team Leader', 'description' => 'No accounting or any changes to company profile or deletion'],
             4 => ['name' => 'Standard User', 'description' => 'Can not add or delete employees, can not manage subscriptions'],

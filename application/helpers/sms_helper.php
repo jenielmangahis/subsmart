@@ -329,6 +329,63 @@ function twilioReadReplies($twilio, $to_number)
     return $replies;
 }
 
+function crexendoAccessToken()
+{
+    $post = [
+        'grant_type' => 'password',
+        'client_id' => 'dsfsd',
+        'client_secret' => 'dsf',
+        'username' => 'sdf',
+        'password' => 'dfsfa'
+    ];
+
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, 'https://portal.crexendovip.com/ns-api/v2/tokens');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+
+    $headers = array();
+    $headers[] = 'Accept: application/json';
+    $headers[] = 'Content-Type: application/json';
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+    $result = curl_exec($ch);
+    echo "<pre>";
+    print_r($result);
+    print_r($response);
+
+}
+
+function crexendoRefreshToken()
+{
+    $post = [
+        'grant_type' => 'refresh_token',
+        'client_id' => 'dsfsd',
+        'client_secret' => 'dsf',
+        'refresh_token' => 'sdf',
+    ];
+
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, 'https://portal.crexendovip.com/ns-api/v2/tokens');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+
+    $headers = array();
+    $headers[] = 'Accept: application/json';
+    $headers[] = 'Content-Type: application/json';
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+    $result = curl_exec($ch);
+    echo "<pre>";
+    print_r($result);
+    print_r($response);
+
+}
+
 function smsReplaceSmartTags($message, $cid){
 
     $CI =& get_instance();

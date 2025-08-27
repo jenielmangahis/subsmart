@@ -30,12 +30,12 @@
         <?php if ($leads) { ?>
             <?php foreach($leads as $lead){ ?>
                 <tr>
-                    <td class="text-center">
+                    <td class="text-center show">
                         <input class="form-check-input leads-archive-row-select table-select" name="leads[]" type="checkbox" value="<?= $lead->leads_id; ?>">
                     </td>
-                    <td><div class="table-row-icon"><i class="bx bx-box"></i></div></td>
-                    <td class="nsm-text-primary"><?= $lead->firstname . ' ' . $lead->lastname; ?></td>
-                    <td style="width:5%;">
+                    <td class="show"><div class="table-row-icon"><i class="bx bx-box"></i></div></td>
+                    <td class="nsm-text-primary show"><?= $lead->firstname . ' ' . $lead->lastname; ?></td>
+                    <td class="show" style="width:5%;">
                         <?php if(checkRoleCanAccessModule('leads', 'write')){ ?>
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>

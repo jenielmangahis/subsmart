@@ -18,28 +18,28 @@
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
     </div>
-    <ul class="nsm-fab-options">
-        <li>
+    <?php if(checkRoleCanAccessModule('taskhub', 'write')){ ?>
+    <ul class="nsm-fab-options">        
+        <li onclick="location.href='<?= base_url('taskhub/create'); ?>'">
             <div class="nsm-fab-icon">
-                <i class="bx bx-check"></i>
-            </div>
-            <span class="nsm-fab-label">Clear All</span>
-        </li>
-        <!-- <li>
-            <div class="nsm-fab-icon">
-                <i class="bx bx-search"></i>
-            </div>
-            <span class="nsm-fab-label">Search Task</span>
-        </li> -->
-        <?php if( checkRoleCanAccessModule('taskhub', 'write') ){ ?>  
-        <li onclick="location.href='<?php echo base_url('taskhub/create') ?>'">
-            <div class="nsm-fab-icon">
-                <i class="bx bx-user-plus"></i>
+                <i class="bx bx-fw bx-task"></i>
             </div>
             <span class="nsm-fab-label">Add Task</span>
         </li>
-        <?php } ?>
+        <li class="btn-export-list">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-export"></i>
+            </div>
+            <span class="nsm-fab-label">Export List</span>
+        </li>
+        <li id="btn-mobile-archived">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-archive'></i>
+            </div>
+            <span class="nsm-fab-label">Archived</span>
+        </li>          
     </ul>
+    <?php } ?>      
 </div>
 
 <div class="row page-content g-0">

@@ -86,6 +86,14 @@
                   </label>
                 </div>
             </li>
+            <li class="edit-grp-send-customer" style="<?= $autoSms->module_name == 'estimate' || $autoSms->module_name == 'job' || $autoSms->module_name == 'workorder' ? 'display: inline-block;' : 'display: none'; ?>">
+                <div class="form-check">
+                  <input <?= $autoSms->send_to_customer == 1 ? 'checked="checked"' : ''; ?> class="form-check-input" type="checkbox" value="all" name="send_customer" id="edit-chk-customer">
+                  <label class="form-check-label" for="edit-chk-customer">
+                    Send to Customer
+                  </label>
+                </div>
+            </li>
         </ul>   
     </div>
     <div class="col-md-12 mt-3">
@@ -190,6 +198,12 @@ $(document).on('change', '#edit-module-name', function(e){
         //$('.edit-grp-send-assigned-user').css('display', 'inline-block');
     }else{
         $('.edit-grp-send-assigned-user').hide();
+    }
+
+    if( module_name == 'workorder' || module_name == 'estimate' || module_name == 'job' ){
+        $('.edit-grp-send-customer').show();
+    }else{
+        $('.edit-grp-send-customer').hide();
     }
 
     if( module_name == 'lead' || module_name == 'workorder' ){

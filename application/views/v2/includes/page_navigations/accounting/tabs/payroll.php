@@ -6,7 +6,7 @@
                 <span>Overview</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Employees' || $page->title == 'Payscale' || $page->title == 'Paycheck list'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Employees' || $page->title == 'Payscale' || $page->title == 'Paycheck list' || $page->title == 'Job Titles'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url(); ?>accounting/employees">
                 <i class='bx bx-fw bx-message-square-error'></i>
                 <span>Employees</span>

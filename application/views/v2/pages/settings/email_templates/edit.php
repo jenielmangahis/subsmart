@@ -49,35 +49,35 @@
                             </div>
                             <div class="nsm-card-content">
                                 <div class="row g-3">
-                                    <div class="col-12 col-md-12">
+                                    <div class="col-12 col-md-6">
+                                        <label class="content-subtitle fw-bold d-block mb-2">Template Type</label>
+                                        <select class="form-control nsm-field" data-style="btn-white" name="type_id" required>
+                                            <option <?php echo $template->type_id == 1 ? 'selected="selected"' : ''; ?> value="1">Invoice</option>
+                                            <option <?php echo $template->type_id == 2 ? 'selected="selected"' : ''; ?> value="2">Estimate</option>
+                                            <option <?php echo $template->type_id == 3 ? 'selected="selected"' : ''; ?> value="3">Schedule</option>
+                                            <!-- <option <?php echo $template->type_id == 4 ? 'selected="selected"' : ''; ?> value="4">Review</option>
+                                            <option <?php echo $template->type_id == 5 ? 'selected="selected"' : ''; ?> value="5">Notes</option> -->
+                                        </select>
+                                    </div>    
+                                    <div class="col-12 col-md-6">
                                         <label class="content-subtitle fw-bold d-block mb-2">Template Name</label>
                                         <input type="text" name="title" value="<?= $template->title; ?>"  class="nsm-field form-control" required="" autocomplete="off" />
                                     </div>
-                                    <div class="col-12 col-md-12">
+                                    <div class="col-12 col-md-6">
                                         <label class="content-subtitle fw-bold d-block mb-2">Subject</label>
                                         <input type="text" name="subject" value="<?= $template->subject; ?>"  class="nsm-field form-control" required="" autocomplete="off" />
                                     </div>
                                     <div class="col-12 col-md-12">
                                         <label class="content-subtitle fw-bold d-block mb-2">Body</label>
                                         <textarea id="summernote" name="email_body" class="nsm-field form-control" required=""><?= $template->email_body; ?></textarea>
-                                    </div>
-                                    <div class="col-12 col-md-12">
-                                        <label class="content-subtitle fw-bold d-block mb-2">Template Type</label>
-                                        <select class="form-control nsm-field" data-style="btn-white" name="type_id" required>
-                                            <option <?php echo $template->type_id == 1 ? 'selected="selected"' : ''; ?> value="1">Invoice</option>
-                                            <option <?php echo $template->type_id == 2 ? 'selected="selected"' : ''; ?> value="2">Estimate</option>
-                                            <option <?php echo $template->type_id == 3 ? 'selected="selected"' : ''; ?> value="3">Schedule</option>
-                                            <option <?php echo $template->type_id == 4 ? 'selected="selected"' : ''; ?> value="4">Review</option>
-                                            <option <?php echo $template->type_id == 5 ? 'selected="selected"' : ''; ?> value="5">Notes</option>
-                                        </select>
-                                    </div>        
-                                    <div class="col-12 col-md-12">
+                                    </div>                                        
+                                    <!-- <div class="col-12 col-md-12">
                                         <label class="content-subtitle fw-bold d-block mb-2">Details</label>
                                         <select class="form-control nsm-field" data-style="btn-white" name="details" required>
                                             <option <?php echo $template->details == 1 ? 'selected="selected"' : ''; ?> value="1">Default Template</option>
                                             <option <?php echo $template->details == 2 ? 'selected="selected"' : ''; ?> value="2">Custom Template</option>
                                         </select>
-                                    </div>                                    
+                                    </div>                                     -->
                                 </div>
                             </div>
                         </div>
@@ -101,18 +101,18 @@ $(function(){
     $("#frm-update-email-template").submit(function(e){
         e.preventDefault();
         var url = base_url + 'settings/_update_email_template';
-        $(".btn-update-email-template").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
-        setTimeout(function () {
-            $.ajax({
-                 type: "POST",
-                 url: url,
-                 data: $("#frm-update-email-template").serialize(),
-                 dataType: 'json',
-                 success: function(o)
-                 {
+        $.ajax({
+                type: "POST",
+                url: url,
+                data: $("#frm-update-email-template").serialize(),
+                dataType: 'json',
+                success: function(o)
+                {
+                    $(".btn-update-email-template").html('Save');
+
                     if( o.is_success == 1 ){
                         Swal.fire({
-                            title: 'Success',
+                            title: 'Email Template',
                             text: 'Email template was successfully updated.',
                             icon: 'success',
                             showCancelButton: false,
@@ -120,20 +120,20 @@ $(function(){
                             cancelButtonColor: '#d33',
                             confirmButtonText: 'Ok'
                         }).then((result) => {
-                            location.href = base_url + "/settings/email_templates"; 
+                            location.href = base_url + "settings/email_templates"; 
                         });
                     }else{
                         Swal.fire({
-                          icon: 'error',
-                          title: 'Cannot save data.',
-                          text: o.msg
+                            icon: 'error',
+                            title: 'Error!',
+                            text: o.msg
                         });
                     }
-
-                    $(".btn-update-email-template").html('Save');
-                 }
-            });
-        }, 300);        
+                },
+                beforeSend: function(){
+                    $(".btn-update-email-template").html('<span class="bx bx-loader bx-spin"></span>');
+                }
+        });      
     });
 });
 </script>

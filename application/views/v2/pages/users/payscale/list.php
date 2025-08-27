@@ -26,12 +26,12 @@
                     </div>
                 </div>
                 <div class="row mt-4">
-                    <div class="col-12 col-md-4 grid-mb">
+                    <div class="col-12 col-md-6 grid-mb">
                         <div class="nsm-field-group search">
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search List">
                         </div>
                     </div>   
-                    <div class="col-8 grid-mb text-end">                        
+                    <div class="col-12 col-md-6 grid-mb text-end">             
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
@@ -40,7 +40,7 @@
                                 <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
                             </ul>
                         </div>
-                        <div class="nsm-page-buttons page-button-container">
+                        <div class="nsm-page-buttons page-button-container">        
                             <?php if(checkRoleCanAccessModule('user-payscale', 'write')){ ?>
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#add_payscale_modal"><i class='bx bx-fw bx-plus'></i> Create Payscale</button>  
                             <?php } ?>                         
@@ -51,9 +51,9 @@
                 <table class="nsm-table" id="tbl-payscale-list">
                     <thead>
                         <tr>
-                            <td><input type="checkbox" class="form-check-input" id="chk-all-row" /></td>
-                            <td data-name="Pay Scale" style="width:70%;">Pay Scale</td>
-                            <td data-name="Pay Type" style="width:30%;">Pay Type</td>
+                            <td class="table-icon text-center show"><input type="checkbox" class="form-check-input" id="chk-all-row" /></td>
+                            <td class="table-icon show"></td>
+                            <td class="show" data-name="Payscale" style="width:80%;">Payscale</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -61,16 +61,20 @@
                         <?php if (!empty($payscale)) : ?>
                             <?php foreach ($payscale as $p) : ?>
                                 <tr>
-                                    <td>
+                                    <td class="show">
                                         <?php if( $p->company_id > 0 ){ ?>
                                         <input type="checkbox" name="row_selected[]" class="form-check-input chk-row" value="<?= $lt->id; ?>" />
                                         <?php } ?>
                                     </td>
-                                    <td class="nsm-text-primary"><?= $p->payscale_name; ?></td>
-                                    <td class="nsm-text-primary"><?= $p->pay_type; ?></td>
+                                    <td>
+                                        <div class="table-row-icon">
+                                        <i class='bx bx-briefcase-alt-2'></i>
+                                        </div>
+                                    </td>
+                                    <td class="nsm-text-primary show"><?= $p->payscale_name; ?></td>
                                     <td>
                                         <?php if( $p->company_id > 0 ){ ?>
-                                        <div class="dropdown table-management">                                            
+                                        <div class="dropdown table-management">                                    
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                             </a>                                            
@@ -79,7 +83,7 @@
                                                     <li><a class="dropdown-item edit-item" href="javascript:void(0);" data-id="<?= $p->id ?>" data-name="<?= $p->payscale_name; ?>" data-type="<?= $p->pay_type; ?>">Edit</a></li>
                                                 <?php } ?>
                                                 <?php if(checkRoleCanAccessModule('user-payscale', 'delete')){ ?>
-                                                    <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $p->id ?>">Delete</a></li>
+                                                    <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $p->id ?>" data-name="<?= $p->payscale_name; ?>">Delete</a></li>
                                                 <?php } ?>
                                             </ul>
                                         </div>
@@ -89,7 +93,7 @@
                             <?php endforeach; ?>
                         <?php else : ?>
                             <tr>
-                                <td colspan="3">
+                                <td colspan="5">
                                     <div class="nsm-empty">
                                         <span>No results found.</span>
                                     </div>
@@ -198,8 +202,8 @@
                 success: function(result) {
                     if (result.is_success) {
                         Swal.fire({
-                            title: 'Save Successful!',
-                            text: "New pay scale has been added successfully.",
+                            title: 'Add Payscale',
+                            text: "New payscale has been added successfully.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -258,8 +262,8 @@
                     console.log(result);
                     if (result.is_success) {
                         Swal.fire({
-                            title: 'Save Successful!',
-                            text: "Pay scale was successfully updated.",
+                            title: 'Edit Payscale',
+                            text: "Payscale was successfully updated.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
@@ -289,10 +293,11 @@
 
         $(document).on("click", ".delete-item", function() {
             let id = $(this).attr('data-id');
+            let payscale = $(this).attr('data-name');
 
             Swal.fire({
-                title: 'Delete Pay Scale',
-                text: "Are you sure you want to delete this pay scale?",
+                title: 'Delete Payscale',
+                html: `Are you sure you want to delete payscale <b>${payscale}</b>?<br/><br/>Note : This cannot be undone.`,
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -309,8 +314,8 @@
                         success: function(result) {
                             if (result.is_success) {
                                 Swal.fire({
-                                    title: 'Delete Success',
-                                    text: "Pay scale was successfully deleted.",
+                                    title: 'Delete Payscale',
+                                    text: "Payscale was successfully deleted.",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
