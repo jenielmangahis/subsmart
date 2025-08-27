@@ -2944,9 +2944,10 @@ class Users extends MY_Controller
 
 		$comp_id = logged('company_id');
 		$commissionSettings = $this->CommissionSetting_model->getAllByCompanyId($comp_id);
+		$optionCommissionTypes = $this->CommissionSetting_model->optionCommissionTypes();  
 
 		$this->page_data['commissionSettings'] = $commissionSettings; 
-		$this->page_data['optionCommissionTypes'] = $this->CommissionSetting_model->optionCommissionTypes();       
+		$this->page_data['optionCommissionTypes'] = $optionCommissionTypes;  
 	    $this->load->view('v2/pages/users/ajax_add_commission_form', $this->page_data);
 	}
 
