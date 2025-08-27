@@ -178,8 +178,8 @@ class Employees extends MY_Controller
         $nextPayDate = $this->get_next_pay_date($usedPaySched);
 
         $employees = $this->get_employees($filters);
-        $payscales = $this->PayScale_model->getAllByCompanyId($cid);     
-
+        $payscales = $this->PayScale_model->getAllByCompanyId($cid);  
+        
         //$this->page_data['roles'] = $roles;
         //$this->session->set_userdata('roles', $roles);
         $this->page_data['nextPayDate'] = $nextPayDate;
@@ -535,6 +535,7 @@ class Employees extends MY_Controller
 
         $roles = $this->users_model->getRolesBySearch($role_title, $cid);
         
+        $this->page_data['payscales'] = $this->PayScale_model->getAllByCompanyId($cid);
         $this->page_data['taxWithholdingData'] = $this->general_model->get_data_with_param($getTaxWithholding, false);
         $this->page_data['userType'] = $user_type;
         $this->page_data['commissionSettings'] = $this->CommissionSetting_model->getAllByCompanyId(logged('company_id'));
@@ -695,6 +696,33 @@ class Employees extends MY_Controller
         $last_id = $this->users_model->addNewEmployee($data);
 
         if ($last_id) {
+
+            if(!empty($this->input->post('empPayscale')) && !empty($this->input->post('salary_rate'))) {
+
+                $existing = $this->db->get_where('employee_payscale_settings', [
+                    'company_id'  => logged('company_id'),
+                    'employee_id' => $last_id
+                ])->row();
+
+                $payscale_settings_data = [
+                    'company_id'     => logged('company_id'),
+                    'employee_id'    => $last_id,
+                    'payscale_name'  => $this->input->post('empPayscale'),
+                    'payscale_amount'=> $this->input->post('salary_rate'),
+                    'date_updated'   => date("Y-m-d H:i:s")
+                ];
+
+                if ($existing) {
+                    $this->db->update('employee_payscale_settings', $payscale_settings_data, [
+                        'id' => $existing->id
+                    ]);
+                } else {
+                    $payscale_settings_data['date_created'] = date("Y-m-d H:i:s");
+                    $this->db->insert('employee_payscale_settings', $payscale_settings_data);
+                } 
+
+            }
+
             if (!empty($this->input->post('commission_setting_id'))) {
                 foreach ($this->input->post('commission_setting_id') as $key => $csid) {
                     $employee_commission_setting = [

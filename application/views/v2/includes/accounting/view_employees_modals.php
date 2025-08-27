@@ -595,25 +595,28 @@
                             <label class="mb-1" for="">Payscale</label>
                             <select class="form-select payscale_select" name="payscale_option" required>
                                 <option value="none">Not Specified</option>
+                                <?php if($payscales) { ?>
+                                    <?php foreach($payscales as $payscale) { ?>
+                                        <?php 
+                                            if($payscale->payscale_name == $employee->payscale_name) {
+                                                $selected = "selected";
+                                            } else { $selected = ""; }  
+                                        ?>
+                                        <option <?php echo $selected; ?> value="<?php echo $payscale->payscale_name; ?>"><?php echo $payscale->payscale_name; ?></option>
+                                    <?php } ?>
+                                <?php } ?>
+                                <!-- 
                                 <option value="commission_only">Commission Only</option>
                                 <option value="base_hourly_rate">Base Hourly Rate</option>
                                 <option value="base_daily_rate">Base Daily Rate</option>
                                 <option value="base_weekly_rate">Base Weekly Rate</option>
                                 <option value="yearly_salary">Yearly Salary</option>
                                 <option value="monthly_salary">Monthly Salary</option>
-
-                                <!-- removed: redundancy -->
-                                <!-- <option value="compensation_hourly_rate">Compensation Hourly Rate</option> -->
-                                <!-- <option value="compensation_flat_amount">Compensation Flat Amount</option> -->
-
                                 <option value="part_time_hourly">Part Time Hourly</option>
                                 <option value="temp_services">Temp Services</option>
-                                
-                                <!-- removed: Needs 3rd party to Pay which is difficult to implement for now-->
-                                <!-- <option value="outside_source_payroll">Outside Source Payroll</option> -->
-
                                 <option value="job_type_base_install">Job Type Base Install</option>
                                 <option value="job_type_base_service">Job Type Base Service</option>
+                                -->
                             </select>
                         </div>
                         <div class="col-md-6 mt-2 payscaleValueContainer display_none">
@@ -626,7 +629,7 @@
                         <div class="col-md-12 mt-4 commissionSettingsContainer display_none">
                             <label class="mb-1" for="">Commission Settings</label>
                             <button type="button" class="btn btn-sm btn-primary addCommissionOption fw-bold float-end"><i class="fas fa-plus"></i>&nbsp;Add</button>
-                            <table class="commissionTable table table-hover table-bordered w-100">
+                            <table id="commissionTable" class="commissionTable table table-hover table-bordered w-100">
                                 <thead style="background: #00000008;">
                                     <tr>
                                         <th class="fw-normal">Name</th>
@@ -1491,13 +1494,16 @@
             "base_weekly_rate",
             "yearly_salary",
             "monthly_salary",
-            // "compensation_hourly_rate", removed bcoz of redundancy
-            // "compensation_flat_amount", removed bcoz of redundancy
             "part_time_hourly",
             "temp_services",
             "outside_source_payroll",
             "job_type_base_install",
             "job_type_base_service",
+
+            "Base (Monthly Rate)",
+            "Base (Hourly Rate)",
+            "Base (Weekly Rate)",
+            "Base (Daily Rate)"
         ];
 
         const commissionNameOptions = `
@@ -1658,7 +1664,19 @@
             }
         });
 
-        $(document).on('click', '.addCommissionOption', function() {
+        $(document).on('click', '.addCommissionOptionOngoing', function(e){ //Ongoing dated Aug 8, 2025
+            $('.unspecified_commission').remove();
+            let url = base_url + "user/_add_commission_form";
+            $.ajax({
+                type: 'POST',
+                url: url,
+                success: function(o) {
+                    $("#commissionTable tbody").append(o).children(':last').hide().fadeIn(400);                
+                },
+            });
+        });        
+
+        $(document).on('click', '.addCommissionOption', function() { //todo
             const unspecified_commission = $('.unspecified_commission').length;
             const optionContent = `
                 <tr>

@@ -1007,12 +1007,12 @@ $(document).on('click', '.btn-add-new-commision', function(e){
         success: function(o) {
             $("#commission-settings tbody").append(o).children(':last').hide().fadeIn(400);
             $("#commission-settings tbody tr:last-child select").each(function() {
-                $(this).select2({
+                /*$(this).select2({
                     minimumResultsForSearch: -1,
                     dropdownParent: $("#employee-modal")
                 }).on('select2:open', function() {
                     $('.select2-dropdown').css('z-index', 1000);
-                });
+                });*/
             });
         },
     });
