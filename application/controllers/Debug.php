@@ -3309,6 +3309,13 @@ class Debug extends MY_Controller {
         //$obj_pdf->Output($file, 'F');
         return $file;
     }
+
+    public function smsCrexendo()
+    {
+        $this->load->helper(array('sms_helper'));
+
+        $token = crexendoAccessToken();
+    }
 }
 /* End of file Debug.php */
 

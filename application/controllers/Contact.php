@@ -12,9 +12,9 @@ class Contact extends MYF_Controller {
 	}
 
 	public function index(){		
-		$user_agent = $this->agent->agent_string();
+		/*$user_agent = $this->agent->agent_string();
         $ip_address = $this->input->ip_address();
-        $this->Business_model->customerDeviceLookup("business_contact_visit", $ip_address, $user_agent);
+        $this->Business_model->customerDeviceLookup("business_contact_visit", $ip_address, $user_agent);*/
 		$this->load->view('contact', $this->page_data);
 	}
 
@@ -23,52 +23,31 @@ class Contact extends MYF_Controller {
 	}
 
 	public function ajax_support_send_email(){
-		$is_sent = 0;
+		$is_success = 0;
+		$msg = 'Cannot send email';
+		
 		$post    = $this->input->post();
 
-		if( $post['ns_input'] != '' ){
-			$is_sent = 0;
-		}else{
-			$subject = 'NsmartTrac : Support';
-	        //$to   = 'bryann.revina03@gmail.com';
-	        $to   = 'support@nsmartrac.com';    
-	        $cc   = 'jpabanil@icloud.com';
-	        $body = 'Someone send a support ticket via our app. Below are the details.';
-	        $body .= '<table>';
-	        	$body .= '<tr>';
-	        		$body .='<td>Firstname</td><td>'.$post['support_firstname'].'</td>';
-	        	$body .= '</tr>';
-	        	$body .= '<tr>';
-	        		$body .='<td>Lastname</td><td>'.$post['support_lastname'].'</td>';
-	        	$body .= '</tr>';
-	        	$body .= '<tr>';
-	        		$body .='<td>Email</td><td>'.$post['support_email'].'</td>';
-	        	$body .= '</tr>';
-	        	$body .= '<tr>';
-	        		$body .='<td>Subject</td><td>'.$post['support_subject'].'</td>';
-	        	$body .= '</tr>';
-	        	$body .= '<tr>';
-	        		$body .='<td>Message</td><td>'.$post['support_message'].'</td>';
-	        	$body .= '</tr>';
-	        $body .= '</table>';
+		if( !$post['contact_chk'] ){
+			$subject = 'nSmartTrac : Inquiry';
+	        //$to   = 'bryannrevina@nsmartrac.com';
+	        $to   = 'websupport@nsmartrac.com';    
+	        //$cc   = 'jpabanil@icloud.com';
 
-	        $data = [
-	            'to' => $to, 
-	            'subject' => $subject, 
-	            'body' => $body,
-	            'cc' => $cc,
-	            'bcc' => '',
-	            'attachment' => ''
-	        ];
+			$body = $this->load->view('v2/emails/contact_us', $post, true);
+			$mail = email__getInstance();
+			$mail->FromName = 'nSmarTrac';
+			$mail->addAddress($to, $to);
+			$mail->isHTML(true);
+			$mail->Subject = $subject;
+			$mail->Body = $body;
+			$mail->Send();  
 
-	        $isSent = sendEmail($data);
-	        if( $isSent['is_valid'] ){
-	            $is_sent = 1;
-	        }
+			$is_success = 1;
+			$msg = '';
 		}
-		
 
-        $json = ['is_sent' => $is_sent];
+        $json = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json);
 	}
 }
