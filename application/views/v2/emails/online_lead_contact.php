@@ -359,7 +359,7 @@
                     <li>Message : <?= $message; ?></li>
                 </ul>
                 <br /><br />
-                <p>If you have any questions, feel free to email us at <a href="mailto:support@nsmartrac.com" class="text-rg-green-light">support@nsmartrac.com</a></p>
+                <p>If you have any questions, feel free to email us at <a href="mailto:websupport@nsmartrac.com" class="text-rg-green-light">websupport@nsmartrac.com</a></p>
                 <p>
                     Regards,<br>
                     <a href="https://nsmartrac.com" target="_blank" style="color: #6C70DC; font-weight: 500;">The nSmarTrac Team</a>

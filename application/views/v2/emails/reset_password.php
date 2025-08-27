@@ -360,7 +360,7 @@
             <p>If you did not request a password reset, no further action is required.</p>
             <p>If you're having trouble clicking the 'Reset Password' button, copy and paste the URL below into your web browser:</p>
             <p><a href="<?= $reset_url; ?>"><?= $reset_url; ?></a></p>
-            <p>Or feel free to email us at <a href="mailto:support@nsmartrac.com" class="text-rg-green-light">support@nsmartrac.com</a></p>
+            <p>Or feel free to email us at <a href="mailto:websupport@nsmartrac.com" class="text-rg-green-light">websupport@nsmartrac.com</a></p>
 
             <!-- Closing Remarks -->
             <p>
