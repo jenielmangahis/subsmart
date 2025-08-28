@@ -1808,18 +1808,15 @@ class Pages extends MYF_Controller {
 		$company = $this->Business_model->getByProfileSlug($slug);
 		if( $company ){
 			$customizeLeadForms = $this->Inquiry_model->getAllCustomizeLeadFormByCompany($company->id, 'lead_form');
-			if( $customizeLeadForms ){
-				$customizeLeadFormsDefault = $this->Inquiry_model->getAllCustomizeLeadFormByDefault();
-				$leadForm = $this->Inquiry_model->getLeadFormByCompanyId($company->id);
+			$customizeLeadFormsDefault = $this->Inquiry_model->getAllCustomizeLeadFormByDefault();
+			$leadForm = $this->Inquiry_model->getLeadFormByCompanyId($company->id);
 
-				$this->page_data['slug'] = $slug;
-				$this->page_data['leadForm'] = $leadForm;
-				$this->page_data['customizeLeadForms'] = $customizeLeadForms;
-				$this->page_data['customizeLeadFormsDefault'] = $customizeLeadFormsDefault;
-				$this->load->view('pages/front_lead_contact_form', $this->page_data);
-			}else{
-				return redirect('/');
-			}
+			$this->page_data['slug'] = $slug;
+			$this->page_data['leadForm'] = $leadForm;
+			$this->page_data['customizeLeadForms'] = $customizeLeadForms;
+			$this->page_data['customizeLeadFormsDefault'] = $customizeLeadFormsDefault;
+			$this->load->view('pages/front_lead_contact_form', $this->page_data);
+			
 		}else{
 			return redirect('/');
 		}

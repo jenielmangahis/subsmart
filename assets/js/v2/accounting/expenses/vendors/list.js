@@ -773,7 +773,7 @@ $('#vendors-table .create-bill').on('click', function(e) {
 
         modalName = '#billModal';
         initModalFields('billModal');
-
+        
         $('#billModal').modal('show');
     });
 });
