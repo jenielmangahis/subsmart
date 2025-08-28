@@ -12,7 +12,7 @@
     margin-bottom:1px;
 }
 </style>
-<div class="row" style="max-height:600px;overflow: auto;">
+<div class="row">
     <div class="col-12">
         <h3 class="inquiry-label">Booking Info</h3>
         <table class="table inquiry-details">

@@ -207,7 +207,7 @@ $(function(){
         
         $.ajax({
             type: "POST",
-            url: base_url + '/booking/_view_inquiry_details',
+            url: base_url + 'booking/_view_inquiry_details',
             data: {iid:iid},
             success: function(o)
             {
