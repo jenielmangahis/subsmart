@@ -58,9 +58,6 @@ $(function(){
         type: "POST",
         dataType: "json",
         data: $('#frm-contact-us').serialize(),
-        cache: false,
-        contentType: false,
-        processData: false, 
         success: function(data) {
             $("#btn-send-contact-us").prop('disabled', false);
             $('#btn-send-contact-us').html('Send');

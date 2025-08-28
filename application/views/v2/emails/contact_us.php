@@ -345,9 +345,7 @@
 
             <!-- Greetings -->
             <div style="margin: auto; text-align: center; padding: 20px;">
-                <h1 style="text-align: center; font-size: 36px; margin-bottom: 0;">
-                    Hi,
-                </h1>
+                <image src="https://nsmartrac.com/assets/frontend/images/logo.png" style="width:206px;margin-bottom:28px;" />
             </div>
 
             <div class="content">
