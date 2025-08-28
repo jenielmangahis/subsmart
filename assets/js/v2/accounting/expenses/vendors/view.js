@@ -291,11 +291,11 @@ $('#new-time-activity').on('click', function(e) {
         }
 
         $('#singleTimeModal #person_tracking').html(`<option value="vendor-${vendorId}">${vendorName}</option>`).trigger('change');
-
         modalName = '#singleTimeModal';
         initModalFields('singleTimeModal');
 
         $('#singleTimeModal').modal('show');
+        $('#cc-credit-attachments').attr('data-id', vendorId);
     });
 });
 
