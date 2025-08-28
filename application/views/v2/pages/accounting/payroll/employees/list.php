@@ -202,6 +202,7 @@
     });
 
     populateEmployeeRoles();
+    populateEmployeeRolesV2();
 
     $(document).on('keyup', '#search_field', function() {
         employee_table.search($(this).val()).draw();
@@ -653,6 +654,22 @@
     function populateEmployeeRoles() {
         let _container = $("#employee_role");
         let url = "<?php echo base_url('users/getRoles'); ?>";
+
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            success: function(result) {
+                $.each(result, function(i, obj) {
+                    _container.append("<option value=" + obj.id + ">" + obj.text + "</option>");
+                });
+            }
+        });
+    }
+
+    function populateEmployeeRolesV2() {        
+        let _container = $("#employee-role");
+        let url = "<?php echo base_url('users/_get_roles_by_default_company'); ?>";
 
         $.ajax({
             type: "GET",

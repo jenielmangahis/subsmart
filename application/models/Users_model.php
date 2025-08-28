@@ -614,6 +614,7 @@ class Users_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
     public function getUsersByName($search)
     {
         $this->db->like('FName', $search);
@@ -621,6 +622,7 @@ class Users_model extends MY_Model
         $qry = $this->db->get($this->table);
         return $qry->result();
     }
+
     public function getRoles($company_id = 0)
     {
         if ($company_id != 1) {
@@ -630,6 +632,7 @@ class Users_model extends MY_Model
         $qry = $this->db->get('roles');
         return $qry->result();
     }
+
     public function getRolesBySearch($search, $company_id = 0)
     {
         $this->db->like('title', $search);
@@ -637,6 +640,21 @@ class Users_model extends MY_Model
             $this->db->where('id <>', 1);
             $this->db->where('id <>', 2);
         }
+        $qry = $this->db->get('roles')->result();
+        return $qry;
+    }
+
+    public function getRolesByCompanyAndDefault($company_id = null, $search = null)
+    {
+        if($search) {
+            $this->db->like('title', $search);
+        }
+
+        $this->db->where('company_id', 0);
+        if ($company_id != null) {
+            $this->db->or_where('company_id', $company_id);
+        }        
+        
         $qry = $this->db->get('roles')->result();
         return $qry;
     }

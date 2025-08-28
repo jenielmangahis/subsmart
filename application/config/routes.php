@@ -1300,6 +1300,7 @@ $route['users/_permanently_delete_selected_users'] = 'Users/ajax_permanently_del
 $route['users/_delete_all_archived_users'] = 'Users/ajax_delete_all_archived_users';
 $route['users/_restore_user'] = 'Users/ajax_restore_user';
 $route['users/_delete_archived_user'] = 'Users/ajax_delete_archived_user';
+$route['users/_get_roles_by_default_company'] = 'Users/ajax_get_roles_by_default_company';
 
 //Job Titles
 $route['users/job_titles'] = 'Roles/index';
