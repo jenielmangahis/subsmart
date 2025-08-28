@@ -354,7 +354,7 @@
             <p style="font-size: 16px;">
                 Your password has been changed. Your new password is <?= $new_password; ?>
             </p>
-            <p>If you're still having trouble resetting your password feel free to email us at <a href="mailto:support@nsmartrac.com" class="text-rg-green-light">support@nsmartrac.com</a></p>
+            <p>If you're still having trouble resetting your password feel free to email us at <a href="mailto:websupport@nsmartrac.com" class="text-rg-green-light">websupport@nsmartrac.com</a></p>
 
             <!-- Closing Remarks -->
             <p>

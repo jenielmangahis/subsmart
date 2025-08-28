@@ -353,10 +353,11 @@
             <div class="content">
                 <p>Someone made an inquiry. Below are the details.</p>
                 <ul>
-                    <li>Name : <?= $first_name . " " . $last_name; ?></li>
-                    <li>Phone : <?= $phone; ?></li>
-                    <li>Email : <?= $email; ?></li>
-                    <li>Message : <?= $message; ?></li>
+                    <li>Name : <?= $contact_us_name; ?></li>
+                    <li>Phone : <?= $contact_us_phone; ?></li>
+                    <li>Email : <?= $contact_us_email; ?></li>
+                    <li>Address : <?= $contact_us_address; ?></li>
+                    <li>Message : <?= $contact_us_message; ?></li>
                 </ul>
                 <br /><br />
                 <p>If you have any questions, feel free to email us at <a href="mailto:websupport@nsmartrac.com" class="text-rg-green-light">websupport@nsmartrac.com</a></p>
