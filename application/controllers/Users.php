@@ -939,6 +939,22 @@ class Users extends MY_Controller
 		}
 		echo json_encode($data);
 	}
+
+	public function ajax_get_roles_by_default_company()
+	{
+		$cid = logged('company_id');
+		$roles = $this->users_model->getRolesByCompanyAndDefault($cid);
+		$data = array();
+		foreach ($roles as $role) {
+			$data[] = array(
+				'id' => $role->id,
+				'text' => $role->title,
+				'selected' => true
+			);
+		}
+		echo json_encode($data);
+	}	
+
 	public function checkEmailExist()
 	{
 		$email = $this->input->get('email');
@@ -946,12 +962,14 @@ class Users extends MY_Controller
 
 		echo json_encode($check);
 	}
+
 	public function checkUsername()
 	{
 		$username = $this->input->get('username');
 		$check = $this->db->get_where('users', array('username' => $username))->num_rows();
 		echo json_encode($check);
 	}
+
 	public function addNewEmployee()
 	{
 		$this->load->model('IndustryType_model');
@@ -2944,9 +2962,10 @@ class Users extends MY_Controller
 
 		$comp_id = logged('company_id');
 		$commissionSettings = $this->CommissionSetting_model->getAllByCompanyId($comp_id);
+		$optionCommissionTypes = $this->CommissionSetting_model->optionCommissionTypes();  
 
 		$this->page_data['commissionSettings'] = $commissionSettings; 
-		$this->page_data['optionCommissionTypes'] = $this->CommissionSetting_model->optionCommissionTypes();       
+		$this->page_data['optionCommissionTypes'] = $optionCommissionTypes;  
 	    $this->load->view('v2/pages/users/ajax_add_commission_form', $this->page_data);
 	}
 

@@ -4,7 +4,7 @@ $(document).ready(function () {
     $(document).on('change', '#vendor', function () {
         var vendor_id = $(this).val();
         $(`.attachments .dropzone`).attr('data-id', vendor_id);
-        modalAttachments.destroy();
+        //modalAttachments.destroy();
         initializeDropzone();
     });
 
@@ -26,7 +26,7 @@ $(document).ready(function () {
     $(document).on('change', '#expenseModal #payee', function () {
         var split = $(this).val().split('-');
         vendorIdTemp = split[1]
-        modalAttachments.destroy();
+        //modalAttachments.destroy();
         initializeDropzone();
 
     });

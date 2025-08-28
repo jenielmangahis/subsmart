@@ -39,7 +39,7 @@
                                 </div>   
                                 <div class="col-12 col-md-6">
                                     <label class="content-subtitle fw-bold d-block mb-2">Job Title</label>
-                                    <select class="nsm-field form-select" name="user_type" id="employee_role" required>
+                                    <select class="nsm-field form-select employee-role" name="user_type" id="employee-role" required>
                                         <option value="" selected="selected" disabled>Select Job Title</option>
                                     </select>
                                 </div>
@@ -205,7 +205,7 @@
                             <label class="content-title">How do you want to pay this employee?</label>
                         </div>
                         <div class="col-12 col-md-4">
-                            <select name="pay_method" id="pay-method" class="form-select nsm-field">
+                            <select name="pay_method" id="pay-method" class="nsm-field form-select">
                                 <option value="direct-deposit">Direct deposit</option>
                                 <option value="paper-check">Paper check</option>
                             </select>

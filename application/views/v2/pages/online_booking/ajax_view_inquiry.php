@@ -12,7 +12,7 @@
     margin-bottom:1px;
 }
 </style>
-<div class="row" style="max-height:600px;overflow: auto;">
+<div class="row">
     <div class="col-12">
         <h3 class="inquiry-label">Booking Info</h3>
         <table class="table inquiry-details">
@@ -96,14 +96,13 @@
                 <td class="td-label">Schedule Date / Time</td>
                 <td>
                     <?php 
-                        if( $inquiry->schedule_time_from != '' && strotime($inquiry->schedule_time_from) > 0 ){
+                        if( $inquiry->schedule_time_from != '' && strtotime($inquiry->schedule_time_from) > 0 ){
                             echo date("m/d/Y", strtotime($inquiry->schedule_date)) . ' : ' . $inquiry->schedule_time_from . ' to ' . $inquiry->schedule_time_to; 
                         }elseif( strtotime($inquiry->schedule_date) > 0 ){
                             echo date("m/d/Y", strtotime($inquiry->schedule_date)); 
                         }else{
                             echo '---';
                         }
-                        
                     ?>
                 </td>
             </tr>
