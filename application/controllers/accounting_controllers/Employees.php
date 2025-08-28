@@ -179,6 +179,9 @@ class Employees extends MY_Controller
 
         $employees = $this->get_employees($filters);
         $payscales = $this->PayScale_model->getAllByCompanyId($cid);  
+
+        $is_show_modal = get('show_modal') != null ? get('show_modal') : '';
+        $this->page_data['is_show_modal'] = $is_show_modal;
         
         //$this->page_data['roles'] = $roles;
         //$this->session->set_userdata('roles', $roles);

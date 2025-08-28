@@ -182,6 +182,14 @@
 
 <?php include viewPath('v2/includes/footer'); ?>
 
+<?php if($is_show_modal && $is_show_modal == 'add_employee') { ?>
+        <script>
+            $(document).ready(function() {
+                $('#add_employee_modal').modal('show');            
+            });   
+        </script>
+<?php } ?>
+
 <script>
     var emp_url = `${base_url}accounting/employees/_get_employees`;
 

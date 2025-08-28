@@ -625,6 +625,13 @@
             $('#new-popup .ajax-modal[data-view="payroll_modal"]').trigger('click');
         });
 
+        $(document).on('click', '#payrollModal #trigger-add-employee-modal', function (e) {
+            $('#payrollModal').modal('hide');
+            setTimeout(function() {
+                window.location.href = base_url + "accounting/employees?show_modal=add_employee";
+            }, 100);    
+        });        
+
         $('#employeeTable').DataTable({
             "searching": true,
             "sort": false
