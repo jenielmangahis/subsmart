@@ -178,7 +178,12 @@ class Employees extends MY_Controller
         $nextPayDate = $this->get_next_pay_date($usedPaySched);
 
         $employees = $this->get_employees($filters);
-        $payscales = $this->PayScale_model->getAllByCompanyId($cid);  
+
+        //$payscales = $this->PayScale_model->getAllByCompanyId($cid);  
+        $payscales = $this->PayScale_model->getAllByDefault();
+
+        $is_show_modal = get('show_modal') != null ? get('show_modal') : '';
+        $this->page_data['is_show_modal'] = $is_show_modal;
         
         //$this->page_data['roles'] = $roles;
         //$this->session->set_userdata('roles', $roles);
@@ -535,7 +540,7 @@ class Employees extends MY_Controller
 
         $roles = $this->users_model->getRolesBySearch($role_title, $cid);
         
-        $this->page_data['payscales'] = $this->PayScale_model->getAllByCompanyId($cid);
+        $this->page_data['payscales'] = $this->PayScale_model->getAllByDefault();
         $this->page_data['taxWithholdingData'] = $this->general_model->get_data_with_param($getTaxWithholding, false);
         $this->page_data['userType'] = $user_type;
         $this->page_data['commissionSettings'] = $this->CommissionSetting_model->getAllByCompanyId(logged('company_id'));

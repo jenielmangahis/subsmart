@@ -593,7 +593,7 @@
                         </div>
                         <div class="col-md-6 mt-2">
                             <label class="mb-1" for="">Payscale</label>
-                            <select class="form-select payscale_select" name="payscale_option" required>
+                            <select class="form-select payscale_select" name="payscale_option" id="payscale_option" required>
                                 <option value="none">Not Specified</option>
                                 <?php if($payscales) { ?>
                                     <?php foreach($payscales as $payscale) { ?>
@@ -601,23 +601,59 @@
                                             if($payscale->payscale_name == $employee->payscale_name) {
                                                 $selected = "selected";
                                             } else { $selected = ""; }  
+
+                                            /**
+                                             * To add:
+                                             * - yearly_salary
+                                             * - part_time_hourly
+                                             * - temp_services
+                                             * - outside_source_payroll
+                                             * - job_type_base_install
+                                             * - job_type_base_service
+                                             *  */ 
+
+                                            $payscale_name_value = "";
+                                            switch ($payscale->payscale_name) {
+                                                case "Base (Hourly Rate)":
+                                                    $payscale_name_value = "base_hourly_rate";
+                                                    break;
+                                                case "Base (Weekly Rate)":
+                                                    $payscale_name_value = "base_weekly_rate";
+                                                    break;
+                                                case "Base (Monthly Rate)":
+                                                    $payscale_name_value = "monthly_salary";
+                                                    break;
+                                                case "Base (Daily Rate)":
+                                                    $payscale_name_value = "base_daily_rate";
+                                                    break;
+                                                case "Commission Only":
+                                                    $payscale_name_value = "commission_only";
+                                                    break;
+                                                default:
+                                                    $payscale_name_value = $payscale->payscale_name;
+                                                    break;
+                                            }                                            
                                         ?>
-                                        <option <?php echo $selected; ?> value="<?php echo $payscale->payscale_name; ?>"><?php echo $payscale->payscale_name; ?></option>
+                                        <option <?php echo $selected; ?> data-id="<?php echo $payscale->id; ?>" value="<?php echo $payscale_name_value; ?>"><?php echo $payscale->payscale_name; ?></option>
                                     <?php } ?>
-                                <?php } ?>
+                                <?php } ?>                              
+
                                 <!-- 
                                 <option value="commission_only">Commission Only</option>
                                 <option value="base_hourly_rate">Base Hourly Rate</option>
                                 <option value="base_daily_rate">Base Daily Rate</option>
                                 <option value="base_weekly_rate">Base Weekly Rate</option>
-                                <option value="yearly_salary">Yearly Salary</option>
                                 <option value="monthly_salary">Monthly Salary</option>
+                                
+                                <option value="yearly_salary">Yearly Salary</option>
                                 <option value="part_time_hourly">Part Time Hourly</option>
                                 <option value="temp_services">Temp Services</option>
                                 <option value="job_type_base_install">Job Type Base Install</option>
                                 <option value="job_type_base_service">Job Type Base Service</option>
-                                -->
+                                -->     
+
                             </select>
+                            <input type="hidden" name="default_payscale_id" id="default_payscale_id" value=""> 
                         </div>
                         <div class="col-md-6 mt-2 payscaleValueContainer display_none">
                             <label class="mb-1" for="">Amount</label>
@@ -1498,12 +1534,7 @@
             "temp_services",
             "outside_source_payroll",
             "job_type_base_install",
-            "job_type_base_service",
-
-            "Base (Monthly Rate)",
-            "Base (Hourly Rate)",
-            "Base (Weekly Rate)",
-            "Base (Daily Rate)"
+            "job_type_base_service"
         ];
 
         const commissionNameOptions = `
@@ -1832,6 +1863,11 @@ $('select > option[data-custom="form_2019"], .form_2019_input').hide();
 $('.form_2019_input > input').hide().attr('disabled', '');
 
 $(function() {
+
+    $('#payscale_option').on('change', function() {
+        let selected_payscale_id = $('#payscale_option option:selected').data('id');
+        $("#default_payscale_id").val(selected_payscale_id);
+    });    
 
     function formDisabler(selector, state) {
         const element = $(selector);

@@ -54,6 +54,17 @@ class PayScale_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByDefault()
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->or_where('company_id', 0);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }    
+
     public function getById($id)
     {
         $this->db->select('*');
@@ -87,6 +98,20 @@ class PayScale_model extends MY_Model
 
         return $options;
     }
+
+    public function getCompanyEmployeesUsingPayscale($payscale_name) 
+    {        
+        $company_id = logged('company_id');
+        
+        $this->db->select('accounting_employee_view.*');
+        $this->db->where('company_id', $company_id);
+        $this->db->where('payscale_name', $payscale_name);
+        $this->db->where('is_archived', 'No');
+        $this->db->from('accounting_employee_view');
+
+        $query = $this->db->get();
+        return $query->result();  
+    }            
 
     public function get_company_employees_using_payscale($payscaleId)
     {

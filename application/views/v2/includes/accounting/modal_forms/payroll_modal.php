@@ -20,7 +20,30 @@
                                         <?php $i = 0; ?>
                                         <?php if (isset($payscales) && is_array($payscales) && count($payscales) > 0) : ?>
                                             <?php foreach ($payscales as $payscale) : ?>
-                                                <?php $payscaleEmps = $this->PayScale_model->get_company_employees_using_payscale($payscale->id); ?>
+                                                <?php 
+                                                    switch ($payscale->payscale_name) {
+                                                        case "Base (Hourly Rate)":
+                                                            $payscale_name_value = "base_hourly_rate";
+                                                            break;
+                                                        case "Base (Weekly Rate)":
+                                                            $payscale_name_value = "base_weekly_rate";
+                                                            break;
+                                                        case "Base (Monthly Rate)":
+                                                            $payscale_name_value = "monthly_salary";
+                                                            break;
+                                                        case "Base (Daily Rate)":
+                                                            $payscale_name_value = "base_daily_rate";
+                                                            break;
+                                                        case "Commission Only":
+                                                            $payscale_name_value = "commission_only";
+                                                            break;
+                                                        default:
+                                                            $payscale_name_value = $p->payscale_name;
+                                                            break;
+                                                    }                                                    
+                                                ?>
+                                                <?php $payscaleEmps = $this->PayScale_model->getCompanyEmployeesUsingPayscale($payscale_name_value); ?>
+                                                <?php //$payscaleEmps = $this->PayScale_model->get_company_employees_using_payscale($payscale->id); ?>
                                                 <?php if ($payscaleEmps !== null && count($payscaleEmps) > 0) : ?>
                                                     <div class="form-check mb-3">
                                                         <input type="radio" name="pay_schedule" id="<?= "payscale_$payscale->id" ?>" class="form-check-input" data-total-emp="<?php echo count($payscaleEmps); ?>" value="<?= $payscale->id ?>" <?= $i === 0 ? 'checked' : '' ?>>
