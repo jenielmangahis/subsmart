@@ -1,33 +1,26 @@
 <div class="modal fade nsm-modal" id="contractor-modal" tabindex="-1" role="dialog" aria-labelledby="contractor-modal-label" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content">
             <form action="<?php echo base_url() ?>accounting/contractors/add" method="post" class="form-validate" novalidate="novalidate">
                 <div class="modal-header">
-                    <span class="modal-title content-title" id="contractor-modal-label">Add a contractor</span>
+                    <span class="modal-title content-title" id="contractor-modal-label">Add Contractor</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="row gy-3">
                         <div class="col-12">
-                            <label for="name">Name <span class="text-danger">*</span></label>
+                            <label class="content-subtitle fw-bold d-block mb-2" for="name">Name <span class="text-danger">*</span></label>
                             <input type="text" class="form-control nsm-field" name="name" id="name" required>
                         </div>
                         <div class="col-12">
-                            <label for="email">Email <span class="text-danger">*</span></label>
+                            <label class="content-subtitle fw-bold d-block mb-2" for="email">Email <span class="text-danger">*</span></label>
                             <input type="email" class="form-control nsm-field" name="email" id="email" required>
                         </div>
                     </div>
                 </div>
-                <!-- end modal-body -->
                 <div class="modal-footer">
-                    <div class="row w-100">
-                        <div class="col-12 col-md-6">
-                            <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
-                        </div>
-                        <div class="col-12 col-md-6 text-end">
-                            <button type="submit" name="save" class="nsm-button success">Save</button>
-                        </div>
-                    </div>
+                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="btn_modal_save" class="nsm-button primary" form="add_employee_form">Save</button>
                 </div>
             </form>
         </div>
