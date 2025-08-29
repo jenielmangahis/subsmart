@@ -63,6 +63,15 @@ class Payscale extends MY_Controller
             $this->db->insert('employee_payscale_settings', $payscale_settings_data);
         }
 
+        //Updating payscale id on users table
+        if( $this->input->post('default_payscale_id') != "" ) {
+            $updateEmpPayscale = $this->users_model->updateUserPayscaleId($employee_id, $this->input->post('default_payscale_id'));
+
+            if($updateEmpPayscale) {
+                //success true
+            }           
+        }        
+
         $this->db->delete('employee_commission_settings', [
             'company_id'  => $company_id,
             'employee_id' => $employee_id

@@ -593,7 +593,7 @@
                         </div>
                         <div class="col-md-6 mt-2">
                             <label class="mb-1" for="">Payscale</label>
-                            <select class="form-select payscale_select" name="payscale_option" required>
+                            <select class="form-select payscale_select" name="payscale_option" id="payscale_option" required>
                                 <option value="none">Not Specified</option>
                                 <?php if($payscales) { ?>
                                     <?php foreach($payscales as $payscale) { ?>
@@ -634,7 +634,7 @@
                                                     break;
                                             }                                            
                                         ?>
-                                        <option <?php echo $selected; ?> value="<?php echo $payscale_name_value; ?>"><?php echo $payscale->payscale_name; ?></option>
+                                        <option <?php echo $selected; ?> data-id="<?php echo $payscale->id; ?>" value="<?php echo $payscale_name_value; ?>"><?php echo $payscale->payscale_name; ?></option>
                                     <?php } ?>
                                 <?php } ?>                              
 
@@ -651,8 +651,9 @@
                                 <option value="job_type_base_install">Job Type Base Install</option>
                                 <option value="job_type_base_service">Job Type Base Service</option>
                                 -->     
-                                                           
+
                             </select>
+                            <input type="hidden" name="default_payscale_id" id="default_payscale_id" value=""> 
                         </div>
                         <div class="col-md-6 mt-2 payscaleValueContainer display_none">
                             <label class="mb-1" for="">Amount</label>
@@ -1862,6 +1863,11 @@ $('select > option[data-custom="form_2019"], .form_2019_input').hide();
 $('.form_2019_input > input').hide().attr('disabled', '');
 
 $(function() {
+
+    $('#payscale_option').on('change', function() {
+        let selected_payscale_id = $('#payscale_option option:selected').data('id');
+        $("#default_payscale_id").val(selected_payscale_id);
+    });    
 
     function formDisabler(selector, state) {
         const element = $(selector);
