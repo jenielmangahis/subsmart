@@ -13235,8 +13235,12 @@ const initModalFields = (modalName, data = {}) => {
 
     if ($(`#${modalName} .attachments`).length > 0) {
         var attachmentContId = $(`#${modalName} .attachments .dropzone`).attr('id');
+        var vendorId = $(`#${modalName} .attachments .dropzone`).attr('data-id');
+        if( $('#vendor-id').length ){
+            vendorId = $('#vendor-id').val();
+        }
         modalAttachments = new Dropzone(`#${attachmentContId}`, {
-            url: '/accounting/attachments/attach',
+            url: base_url + 'accounting/attachments/attach/' + vendorId,
             maxFilesize: 20,
             uploadMultiple: true,
             // maxFiles: 1,

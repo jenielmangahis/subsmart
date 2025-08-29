@@ -35,6 +35,7 @@
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/expenses'); ?>
     </div>
+    <input type="hidden" id="vendor-id" value="<?= $vendorDetails->id; ?>" />
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -45,7 +46,7 @@
                                 <div class="row">
                                     <div class="col-12 col-md-6">
                                         <h3 class="m-0">
-                                            <span id="vendor-display-name"><?=$vendorDetails->display_name?> <?=$vendorDetails->status === '0' ? '(deleted)' : ''?></span>
+                                            <span id="vendor-display-name"><?= $vendorDetails->f_name . ' ' . $vendorDetails->l_name; ?> <?=$vendorDetails->status === '0' ? '(deleted)' : ''?></span>
                                             <?php if($vendorDetails->email !== "" && $vendorDetails->email !== null) : ?>
                                             <small><a href="mailto: <?=$vendorDetails->email?>" class="text-muted"><i class="fa fa-envelope-o"></i></a></small>
                                             <?php endif; ?>
