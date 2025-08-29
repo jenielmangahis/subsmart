@@ -601,22 +601,57 @@
                                             if($payscale->payscale_name == $employee->payscale_name) {
                                                 $selected = "selected";
                                             } else { $selected = ""; }  
+
+                                            /**
+                                             * To add:
+                                             * - yearly_salary
+                                             * - part_time_hourly
+                                             * - temp_services
+                                             * - outside_source_payroll
+                                             * - job_type_base_install
+                                             * - job_type_base_service
+                                             *  */ 
+
+                                            $payscale_name_value = "";
+                                            switch ($payscale->payscale_name) {
+                                                case "Base (Hourly Rate)":
+                                                    $payscale_name_value = "base_hourly_rate";
+                                                    break;
+                                                case "Base (Weekly Rate)":
+                                                    $payscale_name_value = "base_weekly_rate";
+                                                    break;
+                                                case "Base (Monthly Rate)":
+                                                    $payscale_name_value = "monthly_salary";
+                                                    break;
+                                                case "Base (Daily Rate)":
+                                                    $payscale_name_value = "base_daily_rate";
+                                                    break;
+                                                case "Commission Only":
+                                                    $payscale_name_value = "commission_only";
+                                                    break;
+                                                default:
+                                                    $payscale_name_value = $payscale->payscale_name;
+                                                    break;
+                                            }                                            
                                         ?>
-                                        <option <?php echo $selected; ?> value="<?php echo $payscale->payscale_name; ?>"><?php echo $payscale->payscale_name; ?></option>
+                                        <option <?php echo $selected; ?> value="<?php echo $payscale_name_value; ?>"><?php echo $payscale->payscale_name; ?></option>
                                     <?php } ?>
-                                <?php } ?>
+                                <?php } ?>                              
+
                                 <!-- 
                                 <option value="commission_only">Commission Only</option>
                                 <option value="base_hourly_rate">Base Hourly Rate</option>
                                 <option value="base_daily_rate">Base Daily Rate</option>
                                 <option value="base_weekly_rate">Base Weekly Rate</option>
-                                <option value="yearly_salary">Yearly Salary</option>
                                 <option value="monthly_salary">Monthly Salary</option>
+                                
+                                <option value="yearly_salary">Yearly Salary</option>
                                 <option value="part_time_hourly">Part Time Hourly</option>
                                 <option value="temp_services">Temp Services</option>
                                 <option value="job_type_base_install">Job Type Base Install</option>
                                 <option value="job_type_base_service">Job Type Base Service</option>
-                                -->
+                                -->     
+                                                           
                             </select>
                         </div>
                         <div class="col-md-6 mt-2 payscaleValueContainer display_none">
@@ -1498,12 +1533,7 @@
             "temp_services",
             "outside_source_payroll",
             "job_type_base_install",
-            "job_type_base_service",
-
-            "Base (Monthly Rate)",
-            "Base (Hourly Rate)",
-            "Base (Weekly Rate)",
-            "Base (Daily Rate)"
+            "job_type_base_service"
         ];
 
         const commissionNameOptions = `

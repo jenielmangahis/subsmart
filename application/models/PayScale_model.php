@@ -54,6 +54,17 @@ class PayScale_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByDefault()
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->or_where('company_id', 0);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }    
+
     public function getById($id)
     {
         $this->db->select('*');

@@ -139,7 +139,42 @@
                             <select class="nsm-field form-select add-emp-payscale" name="empPayscale" required>
                                 <option value="" selected="selected" disabled>Select payscale</option>
                                 <?php foreach ($payscales as $p) : ?>
-                                    <option value="<?= $p->payscale_name; ?>"><?= $p->payscale_name; ?></option>
+
+                                    <?php 
+                                        /**
+                                         * To add:
+                                         * - yearly_salary
+                                         * - part_time_hourly
+                                         * - temp_services
+                                         * - outside_source_payroll
+                                         * - job_type_base_install
+                                         * - job_type_base_service
+                                         *  */ 
+
+                                        $payscale_name_value = "";
+                                        switch ($p->payscale_name) {
+                                            case "Base (Hourly Rate)":
+                                                $payscale_name_value = "base_hourly_rate";
+                                                break;
+                                            case "Base (Weekly Rate)":
+                                                $payscale_name_value = "base_weekly_rate";
+                                                break;
+                                            case "Base (Monthly Rate)":
+                                                $payscale_name_value = "monthly_salary";
+                                                break;
+                                            case "Base (Daily Rate)":
+                                                $payscale_name_value = "base_daily_rate";
+                                                break;
+                                            case "Commission Only":
+                                                $payscale_name_value = "commission_only";
+                                                break;
+                                            default:
+                                                $payscale_name_value = $p->payscale_name;
+                                                break;
+                                        }                                            
+                                    ?>
+
+                                    <option value="<?= $payscale_name_value; ?>"><?= $p->payscale_name; ?>-<?php echo $payscale_name_value; ?></option>
                                 <?php endforeach; ?>
                             </select>
                             <div class="mt-4 add-pay-type-container" style="display:none;">
