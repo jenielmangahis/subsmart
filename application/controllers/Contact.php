@@ -7,6 +7,7 @@ class Contact extends MYF_Controller {
 		parent::__construct();
 		//$this->checkLogin(1);
 		$this->page_data['page']->title = 'nSmart - Contact';
+		$this->page_data['nav'] = 'contact';
 		$this->load->library('user_agent');
 		$this->load->model('Business_model');
 	}
