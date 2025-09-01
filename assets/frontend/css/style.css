@@ -4430,6 +4430,15 @@ ul.account-menu li a {
   color: white;
   font-size: 13px;
 }
+
+.site-nav-menu ul li.active{
+  background-color: #34134D;  
+  padding: 10px;
+}
+
+.site-nav-menu ul li.active a{
+  color:#ffffff;
+}
 @media(max-width:1180px) {
   ul.account-menu {
     float: left;
