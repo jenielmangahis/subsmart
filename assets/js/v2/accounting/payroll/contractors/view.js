@@ -164,7 +164,7 @@ $('#edit-contractor-modal [name="contractor_type"]').on('change', function() {
             </div>
             <div class="col-12">
                 <label for="social_sec_num">Social Security number <span class="text-danger">*</span></label>
-                <input type="text" name="social_sec_num" id="social_sec_num" class="form-control nsm-field" value="${num}">
+                <input type="text" name="social_sec_num" id="social_sec_num" class="form-control nsm-field" value="">
             </div>`).insertAfter($(this).parent().parent());
         } else {
             var num = formData.get('social_sec_num');
@@ -186,7 +186,7 @@ $('#edit-contractor-modal [name="contractor_type"]').on('change', function() {
             </div>
             <div class="col-12">
                 <label for="emp_id_num">Employer Identification Number <span class="text-danger">*</span></label>
-                <input type="text" name="emp_id_num" id="emp_id_num" class="form-control nsm-field" value="${num}">
+                <input type="text" name="emp_id_num" id="emp_id_num" class="form-control nsm-field" value="">
             </div>`).insertAfter($(this).parent().parent());
         }
     }

@@ -245,6 +245,9 @@
     .vendor-company-name{
         font-size:11px;
     }
+    .select-filter-card:hover{
+        cursor:pointer;
+    }
 </style>
 
 <div class="row page-content g-0">
@@ -264,52 +267,52 @@
                 </div>
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-md-3">
-                        <div class="nsm-counter primary h-100 mb-2 <?=$transaction === 'purchase-orders' ? 'selected' : ''?>" id="purchase-orders">
+                        <div class="nsm-counter primary select-filter-card h-100 mb-2 <?=$transaction === 'purchase-orders' ? 'selected' : ''?>" id="purchase-orders">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year"><?=$purchaseOrders?></h2>
+                                    <h2 id="total_this_year"><?=$purchaseOrders;?></h2>
                                     <span>PURCHASE ORDERS</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-counter error h-100 mb-2 <?=$transaction === 'overdue-bills' ? 'selected' : ''?>" id="overdue-bills">
+                        <div class="nsm-counter error select-filter-card h-100 mb-2 <?=$transaction === 'overdue-bills' ? 'selected' : ''?>" id="overdue-bills">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year"><?=$overdueBills?></h2>
+                                    <h2 id="total_this_year"><?=$overdueBills; ?></h2>
                                     <span>OVERDUE</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-counter h-100 mb-2 <?=$transaction === 'open-bills' ? 'selected' : ''?>" id="open-bills">
+                        <div class="nsm-counter h-100 select-filter-card mb-2 <?=$transaction === 'open-bills' ? 'selected' : ''?>" id="open-bills">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="pending_total"><?=$openBills?></h2>
+                                    <h2 id="pending_total"><?=$openBills;?></h2>
                                     <span>OPEN BILLS</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-counter success h-100 mb-2 <?=$transaction === 'payments' ? 'selected' : ''?>" id="payments">
+                        <div class="nsm-counter success select-filter-card h-100 mb-2 <?=$transaction === 'payments' ? 'selected' : ''?>" id="payments">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="paid_total"><?=$paidTransactions?></h2>
+                                    <h2 id="paid_total"><?=$paidTransactions;?></h2>
                                     <span>PAID LAST 30 DAYS</span>
                                 </div>
                             </div>

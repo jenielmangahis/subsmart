@@ -417,7 +417,7 @@ $('#new-vendor-credit').on('click', function(e) {
 $('#new-cc-payment').on('click', function(e) {
     e.preventDefault();
 
-    $.get('/accounting/get-other-modals/pay_down_credit_card_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/pay_down_credit_card_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {

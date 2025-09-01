@@ -127,6 +127,7 @@ class Contractors extends MY_Controller {
             break;
             default :
                 $status = [
+                    0,
                     1
                 ];
             break;

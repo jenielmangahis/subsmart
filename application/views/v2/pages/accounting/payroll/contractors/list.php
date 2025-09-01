@@ -52,35 +52,18 @@
                                         </button>
                                     </div>
                                 </div>
-                            </ul>                          
-
-						<!-- <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span><?=empty($status) || $status === 'active' ? 'Active' : ucfirst($status)?> <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end" id="status-filter" style="width: max-content">
-                                <li><a class="dropdown-item <?=empty($status) || $status === 'active' ? 'active' : ''?>" href="javascript:void(0);" id="active">Active</a></li>
-                                <li><a class="dropdown-item <?=!empty($status) && $status === 'inactive' ? 'active' : ''?>" href="javascript:void(0);" id="inactive">Inactive</a></li>
-                                <li><a class="dropdown-item <?=!empty($status) && $status === 'all' ? 'active' : ''?>" href="javascript:void(0);" id="all">All</a></li>
-                            </ul>
-                        </div> -->
-
-                        <!-- 
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button">
-                                <i class='bx bx-fw bx-file'></i> Prepare 1099s
-                            </button>
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#contractor-modal">
-                                <i class='bx bx-fw bx-list-plus'></i> Add a contractor
-                            </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#pay-contractors-modal">
-                                <i class='bx bx-fw bx-dollar-circle'></i> Pay contractors
-                            </button>
-                        </div>
--->
+                            </ul>       
 
                         <div class="nsm-page-buttons page-button-container">                            
-                            <?php if(checkRoleCanAccessModule('users', 'write')){ ?>
+                            <?php if(checkRoleCanAccessModule('accounting-contractors', 'write')){ ?>
+                            <div class="dropdown d-inline-block">
+                                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                    <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                                </ul>
+                            </div>
                             <div class="btn-group nsm-main-buttons" style="margin-bottom: 4px !important;">
                                 <button type="button" class="btn btn-nsm" data-bs-toggle="modal" data-bs-target="#contractor-modal"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Contractor</button>
                                 <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
@@ -97,9 +80,13 @@
                 <table class="nsm-table" id="contractors-table">
                     <thead>
                         <tr>
-                            <td style="" data-name="Name">NAME</td>
-                            <td style=" data-name="Name">Email</td>
-                            <td data-name="Status">STATUS</td>
+                            <td class="table-icon text-center show">
+                                <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                            </td>
+                            <td class="table-icon show"></td>
+                            <td class="show" data-name="Name">Name</td>
+                            <td data-name="Email">Email</td>
+                            <td data-name="Status">Status</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -107,6 +94,12 @@
                         <?php if(count($contractors) > 0) : ?>
 						<?php foreach($contractors as $contractor) : ?>
                         <tr data-id="<?=$contractor->id?>" data-name="<?=$contractor->display_name?>">
+                            <td style="text-align:center;"><input class="form-check-input row-select table-select" name="contractors[]" type="checkbox" name="id_selector" value="<?= $contractor->id; ?>"></td>
+                            <td>
+                                <div class="table-row-icon">
+                                    <i class='bx bx-user-circle'></i>
+                                </div>
+                            </td>
                             <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/contractors/view/' . $contractor->id) ?>'"><?=$contractor->display_name?></td>
                             <td><?= $contractor->email; ?></td>
                             <?php $status_badge = $contractor->status == 0 ? 'bg-danger' : 'bg-success'; ?>
@@ -139,7 +132,7 @@
                         <?php endforeach; ?>
 						<?php else : ?>
 						<tr>
-							<td colspan="14">
+							<td colspan="6">
 								<div class="nsm-empty">
 									<span>No results found.</span>
 								</div>
@@ -153,8 +146,7 @@
     </div>
 </div>
 
-<script>
-
+<script type="text/javascript">
 $(document).ready(function() {
     $('#apply-filter-contractor-button').on('click', function() {
         var filterType = $('.filter-contractor-status').val();            
@@ -165,8 +157,7 @@ $(document).ready(function() {
         }
         location.href = url;
     });
-})
-
+});
 </script>
 
 <?php include viewPath('v2/includes/footer'); ?>

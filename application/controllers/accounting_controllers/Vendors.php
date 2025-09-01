@@ -123,9 +123,9 @@ class Vendors extends MY_Controller
             'company_id' => logged('company_id')
         ];
 
-        $openBills = $this->expenses_model->get_open_bills(['bill-date-start' => date("Y-m-d", strtotime("-365 days"))]);
-        $overdueBills = $this->expenses_model->get_overdue_bills(['bill-date-start' => date("Y-m-d", strtotime("-365 days"))]);
-        $openPurchaseOrders = $this->expenses_model->get_unbilled_purchase_orders(['start-date' => date("Y-m-d", strtotime("-365 days"))]);
+        //$openBills = $this->expenses_model->get_open_bills(['bill-date-start' => date("Y-m-d", strtotime("-365 days"))]);
+        //$overdueBills = $this->expenses_model->get_overdue_bills(['bill-date-start' => date("Y-m-d", strtotime("-365 days"))]);
+        //$openPurchaseOrders = $this->expenses_model->get_unbilled_purchase_orders(['start-date' => date("Y-m-d", strtotime("-365 days"))]);
         $billPayments = $this->expenses_model->get_company_bill_payment_items($paymentsFilter);
         $expenses = $this->expenses_model->get_company_expense_transactions($paymentsFilter);
         $checks = $this->expenses_model->get_company_check_transactions($paymentsFilter);
@@ -146,6 +146,11 @@ class Vendors extends MY_Controller
         if (!empty(get('status') && get('status') === 'all') ) {
             array_push($status, 0);
         }
+
+        $openPurchaseOrders = $this->vendors_model->get_vendors_with_unbilled_po($status);
+        $overdueBills = $this->vendors_model->get_vendors_with_open_bills($status);
+        $openBills = $this->vendors_model->get_vendors_with_open_bills($status);
+        $payments  = $this->vendors_model->get_vendors_with_payments($status);
 
         $filters[] = ['field' => 'is_archived', 'value' => 'No'];
         if (empty(get('transaction'))) {
@@ -187,7 +192,8 @@ class Vendors extends MY_Controller
         if(!empty(get('transaction'))) {
             $this->page_data['transaction'] = get('transaction');
         }
-        $this->page_data['paidTransactions'] = count($billPayments) + count($expenses) + count($checks) + count($creditCardPayments);
+        //$this->page_data['paidTransactions'] = count($billPayments) + count($expenses) + count($checks) + count($creditCardPayments);
+        $this->page_data['paidTransactions'] = count($payments);
         $this->page_data['purchaseOrders'] = count($openPurchaseOrders);
         $this->page_data['openBills'] = count($openBills);
         $this->page_data['overdueBills'] = count($overdueBills);
