@@ -12078,11 +12078,13 @@ class Accounting_modals extends MY_Controller
         }
 
         if ($search !== null && $search !== '') {
-            usort($return['results'], function ($a, $b) use ($search) {
-                $indexA = stripos($a['text'], "<strong>$search</strong>") === false ? PHP_INT_MAX : stripos($a['text'], "<strong>$search</strong>");
-                $indexB = stripos($b['text'], "<strong>$search</strong>") === false ? PHP_INT_MAX : stripos($b['text'], "<strong>$search</strong>");
-                return $indexA - $indexB;
-            });
+            if( $return['results'] ){
+                usort($return['results'], function ($a, $b) use ($search) {
+                    $indexA = stripos($a['text'], "<strong>$search</strong>") === false ? PHP_INT_MAX : stripos($a['text'], "<strong>$search</strong>");
+                    $indexB = stripos($b['text'], "<strong>$search</strong>") === false ? PHP_INT_MAX : stripos($b['text'], "<strong>$search</strong>");
+                    return $indexA - $indexB;
+                });
+            }
 
             if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking' || $field === 'transaction-contact') {
                 $results = $return['results'];
@@ -12168,9 +12170,19 @@ class Accounting_modals extends MY_Controller
                 } else {
                     $text_label = "+ Add New";      
                 }
-                array_unshift($return['results'], ['id' => 'add-new', 'text' => $text_label]);
+
+                if( $return['results'] ){
+                    array_unshift($return['results'], ['id' => 'add-new', 'text' => $text_label]);
+                }else{
+                    $return['results'][] = ['id' => 'add-new', 'text' => $text_label];
+                }            
             }
         }
+
+        // if( $field == 'service' ){
+        //     $text_label = "+ Add New";   
+        //     array_unshift($return['results'], ['id' => 'add-new', 'text' => $text_label]);
+        // }
 
         if($field === 'product' && count($selected) > 0 ||
         $field === 'account' && $this->input->get('modal') === 'pay-contractors-modal' ||
