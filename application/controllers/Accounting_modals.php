@@ -69,6 +69,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('PayScale_model');
         $this->load->model('LeaveRequest_model');
         $this->load->model('Deductions_and_contribution_model','deduction_contribution');
+        $this->load->model('EmployeePayscaleSetting_model');
 
         $this->load->library('form_validation');
         
@@ -912,7 +913,6 @@ class Accounting_modals extends MY_Controller
         $this->page_data['payDate'] = $payDate;
 
         $employees = $this->users_model->getPayScheduleEmployees($paySchedId);
-       
 
         foreach($employees as $index => $employee)
         {
@@ -964,17 +964,25 @@ class Accounting_modals extends MY_Controller
             $employees[$index]->total_hrs = $totalHrs;
             $employees[$index]->total_overtime = $totalOVertimeHrs;
 
-            if($employees[$index]->pay_scale->pay_type === 'Hourly') {
-                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_hourly)), 2, '.', ',')).'</span>/hour';
+            $payscale_amount = 0;
+            $emp_payscale    = $this->EmployeePayscaleSetting_model->getByEmployeeIdAndCompanyId($employee->id, logged('company_id'));
+            if($emp_payscale) {
+                $payscale_amount = $emp_payscale->payscale_amount;
+            }            
 
-                $perHourPay = floatval(str_replace(',', '', $employee->base_hourly));
+            if($employees[$index]->pay_scale->pay_type === 'Hourly') {
+                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $payscale_amount)), 2, '.', ',')).'</span>/hour';
+
+                //$perHourPay = floatval(str_replace(',', '', $employee->base_hourly));
+                $perHourPay = floatval(str_replace(',', '', $payscale_amount));
                 $totalPay = floatval(str_replace(',', '', $employee->base_hourly)) * $totalHrs;
             }
 
             if($employees[$index]->pay_scale->pay_type === 'Daily') {
-                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_daily)), 2, '.', ',')).'</span>/day';
+                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $payscale_amount)), 2, '.', ',')).'</span>/day';
 
-                $dailyPay = floatval(str_replace(',', '', $employee->base_daily));
+                //$dailyPay = floatval(str_replace(',', '', $employee->base_daily));
+                $dailyPay = floatval(str_replace(',', '', $payscale_amount));
                 $hoursPerDay = 8.00;
                 $perHourPay = $dailyPay / $hoursPerDay;
 
@@ -982,9 +990,10 @@ class Accounting_modals extends MY_Controller
             }
 
             if($employees[$index]->pay_scale->pay_type === 'Weekly') {
-                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_weekly)), 2, '.', ',')).'</span>/week';
+                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $payscale_amount)), 2, '.', ',')).'</span>/week';
 
-                $weeklyPay = floatval(str_replace(',', '', $employee->base_weekly));
+                //$weeklyPay = floatval(str_replace(',', '', $employee->base_weekly));
+                $weeklyPay = floatval(str_replace(',', '', $payscale_amount));
                 $hoursPerWeek = 40.00;
                 $perHourPay = $weeklyPay / $hoursPerWeek;
 
@@ -992,9 +1001,10 @@ class Accounting_modals extends MY_Controller
             }
 
             if($employees[$index]->pay_scale->pay_type === 'Monthly') {
-                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'</span>/month';
+                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $payscale_amount)), 2, '.', ',')).'</span>/month';
 
-                $monthlyPay = floatval(str_replace(',', '', $employee->base_monthly));
+                //$monthlyPay = floatval(str_replace(',', '', $employee->base_monthly));
+                $monthlyPay = floatval(str_replace(',', '', $payscale_amount));
                 $hoursPerWeek = 40.00;
                 $hoursPerMonth = $hoursPerWeek * 4;
                 $perHourPay = $monthlyPay / $hoursPerMonth;
@@ -1003,9 +1013,10 @@ class Accounting_modals extends MY_Controller
             }
 
             if($employees[$index]->pay_scale->pay_type === 'Yearly') {
-                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_yearly)), 2, '.', ',')).'</span>/year';
+                $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $payscale_amount)), 2, '.', ',')).'</span>/year';
 
-                $yearlyPay = floatval(str_replace(',', '', $employee->base_yearly));
+                //$yearlyPay = floatval(str_replace(',', '', $employee->base_yearly));
+                $yearlyPay = floatval(str_replace(',', '', $payscale_amount));
                 $hoursPerWeek = 40.00;
                 $hoursPerMonth = $hoursPerWeek * 4;
                 $hoursPerYear = $hoursPerMonth * 12;
