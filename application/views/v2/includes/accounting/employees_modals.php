@@ -172,7 +172,7 @@
                                                 $payscale_name_value = $p->payscale_name;
                                                 break;
                                         }                                            
-                                    ?>
+                                    ?>                              
 
                                     <option value="<?= $payscale_name_value; ?>"><?= $p->payscale_name; ?>-<?php echo $payscale_name_value; ?></option>
                                 <?php endforeach; ?>
