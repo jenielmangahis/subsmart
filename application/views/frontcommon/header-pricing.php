@@ -50,18 +50,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   					<div class="col-md-9 desktop-only">
   						<p>GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5 pl-4 sc-33">CALL US AT <span class="blink">(844) 406-7286</span></b> FOR BETTER COMPANY AUTOMATION</p>
   					</div>
-            <div class="col-md-10 mobile-only">
-              <p>GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5 sc-33">CALL US AT <span class="blink">(844) 406-7286</span></b> FOR BETTER COMPANY AUTOMATION</p>
-            </div>
+					<div class="col-md-10 mobile-only">
+						<p>GROW YOUR BUSINESS WITH THE TOOL BUILT FOR YOU! <b class="ml-5 sc-33">CALL US AT <span class="blink">(844) 406-7286</span></b> FOR BETTER COMPANY AUTOMATION</p>
+					</div>
   					<div class="col-md-3 text-md-right desktop-only">
-              <ul class="account-menu">
-                <li><a href="<?php echo url('/login') ?>">LOGIN</a></li>
-                <li class="no-break"><a href="<?php echo url('/registration') ?>" class="">SIGN UP</a></li>
-              </ul>
-  						<div class="footer-social text-right">
+						<ul class="account-menu">
+							<li><a href="<?php echo url('/login') ?>">LOGIN</a></li>
+							<li class="no-break"><a href="<?php echo url('/registration') ?>" class="">SIGN UP</a></li>
+						</ul>
+  						<!-- <div class="footer-social text-right">
   							<a href=""><i class="fa fa-facebook"></i></a>
   							<a href=""><i class="fa fa-twitter"></i></a>
-  						</div>
+  						</div> -->
   					</div>
   				</div>
   			</div>
@@ -91,7 +91,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   									<li class=""><a href="<?php echo url('/') ?>">HOME</a></li>
                     <li class=""><a href="<?php echo url('/about') ?>">ABOUT US</a></li>
   									<li><a href="<?php echo url('/features') ?>">FEATURES</a></li>
-  									<li><a href="<?php echo url('/pricing') ?>">PRICING </a></li>
+  									<li class="active"><a href="<?php echo url('/pricing') ?>">PRICING </a></li>
   									<li><a href="<?php echo url('/contact') ?>">CONTACT</a></li>
                     <!-- <li><a href="<?php echo url('/find-pros') ?>">FIND PRO</a></li> -->
   									<li class=""><a href="<?php echo url('/demo') ?>" class="no-break">DEMO</a></li>
