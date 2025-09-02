@@ -251,7 +251,7 @@
                                         </div>
 
                                         <div class="col-12 col-md-6">
-                                            <label class="content-subtitle fw-bold d-block mb-2">Hire date</label>
+                                            <label class="content-subtitle fw-bold d-block mb-2">Hired date</label>
                                             <div class="nsm-field-group calendar">
                                                 <input type="text" class="form-control nsm-field date" id="hire-date"
                                                     name="hire_date"
