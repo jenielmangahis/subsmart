@@ -234,27 +234,21 @@ h3.sc-title {
                         </div>
                     </div>
                     <div class="card mb-0">
-                        <h4>Time Off / Unavailability</h3>
-                        <p>Please set your unavailable timings and time-off.</p>
+                        <h4>Unavailable Date</h3>
+                        <p>Please set your unavailable date.</p>
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-lg-4 times-availability">
-                                    <label>Time Off From</label>
+                                    <label>From</label>
                                     <div class="input-group mb-3">
-                                        <input type="text" name="timeoff_from" id="timeoff_date_from" value="<?= $profiledata->start_time_of_day; ?>" class="form-control default-datepicker">
-                                        <div class="input-group-append" data-for="timeoff_date_from">
-                                            <span class="input-group-text"><span class="fa fa-calendar"></span></span>
-                                        </div>
+                                        <input type="date" name="timeoff_from" id="timeoff_date_from" value="<?= $profiledata && $profiledata->working_off_from != '' ? date("Y-m-d", strtotime($profiledata->working_off_from)) : date("Y-m-d"); ?>" class="form-control">
                                     </div>
                                     <span class="validation-error-field" style="display: none;"></span>
                                 </div>
                                 <div class="col-lg-4 times-availability">
-                                    <label>Time Off To</label>
+                                    <label>To</label>
                                     <div class="input-group mb-3">
-                                        <input type="text" name="timeoff_to" id="timeoff_date_to" value="<?= $profiledata->end_time_of_day; ?>" class="form-control default-datepicker">
-                                        <div class="input-group-append" data-for="timeoff_date_to">
-                                            <span class="input-group-text"><span class="fa fa-calendar"></span></span>
-                                        </div>
+                                        <input type="date" name="timeoff_to" id="timeoff_date_to" value="<?= $profiledata && $profiledata->working_off_to != '' ? date("Y-m-d", strtotime($profiledata->working_off_to)) : date("Y-m-d"); ?>" class="form-control">
                                     </div>
                                     <span class="validation-error-field" style="display: none;"></span>
                                 </div>
