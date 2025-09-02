@@ -1,6 +1,14 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/business/business_modals'); ?>
-
+<style>
+.custom-header {
+    background-color: #6a4a86;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 10px;
+    display: block;
+}
+</style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/business_tabs'); ?>
@@ -9,8 +17,8 @@
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row mt-3 mb-3">
-                    <div class="col-12">
-                        <label class="content-title">Selected Services:</label>
+                    <div class="col-12 mb-2">
+                        <label class="content-title custom-header">Selected Services:</label>
                     </div>
                     <div class="col-12">
                         <?php if (count($selectedCategories) > 0) : ?>
@@ -113,9 +121,9 @@
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
                             }).then((result) => {
-                                if (result.value) {
-                                    //location.reload();
-                                }
+                                //if (result.value) {
+                                    location.reload();
+                                //}
                             });
                         }else{
                             Swal.fire({
