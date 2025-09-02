@@ -134,21 +134,22 @@
                                 <strong class="text-muted">SOCIAL SECURITY NO.</strong>
                                 <p class="text_value phone_text"><?php echo ($employee->ssn) ? $employee->ssn : '<i>Not specified</i>'; ?></p>
                             </div>
+                            <div class="col-md-4">
+                                <strong class="text-muted">STATUS</strong>
+                                <p class="text_value status_text"><span id="emp-details-status"><?php echo $employee->status_text; ?></span></p>
+                            </div>
                         </div>
                     </div>
                     <div class="nsm-card mb-3">
                         <div class="row">
                             <div class="col-md-12">
-                                <h4 class="float-start fw-bold">Employment details</h4>
+                                <h4 class="float-start fw-bold">Employment Details</h4>
                                 <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal"
                                     data-bs-target="#edit-employment-details-modal">Edit</a>
                             </div>
+                            
                             <div class="col-md-4">
-                                <strong class="text-muted">STATUS</strong>
-                                <p class="text_value status_text"><span id="emp-details-status"><?php echo $employee->status_text; ?></span></p>
-                            </div>
-                            <div class="col-md-4">
-                                <strong class="text-muted">HIRE DATE</strong>
+                                <strong class="text-muted">HIRED DATE</strong>
                                 <p class="text_value">
                                     <?php if($employee->date_hired != null && $employee->date_hired != '0000-00-00') { ?>
                                         <span id="emp-hire-date"><?php echo date("m/d/Y", strtotime($employee->date_hired)); ?></span>
@@ -170,15 +171,21 @@
                                         echo "<p class='text_value' style='margin-bottom: 0px !important'><i class='bx bx-buildings'></i>" . $workLocation->street . ' ' . $workLocation->city . ', ' . $workLocation->state . ' ' . $workLocation->zipcode . "</p>";
                                     } 
                                 ?>
-                            </div>
+                            </div>                            
                             <div class="col-md-4">
-                                <strong class="text-muted">TITLE</strong>
+                                <strong class="text-muted">JOB TITLE</strong>
                                 <p class="text_value">
                                     <span id="emp-details-employee-title"><?php echo ($employee->title && $employee->title != "-") ? $employee->title : '<i>Not specified</i>'; ?></span>
                                 </p>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">WORKER'S COMPANY CLASS</strong>
+                                <strong class="text-muted">ROLE</strong>
+                                <p class="text_value">
+                                    <span id="emp-details-employee-role"><?php echo ($employee->role_name && $employee->role_name != "-") ? $employee->role_name : '<i>Not specified</i>'; ?></span>
+                                </p>
+                            </div>
+                            <div class="col-md-4">
+                                <strong class="text-muted">EMPLOYMENT STATUS</strong>
                                 <p class="text_value">
                                     <?php 
                                         $emp_details = isset($employmentDetails[0]) ? $employmentDetails[0] : $employmentDetails; 
@@ -197,7 +204,7 @@
                     <div class="nsm-card mb-3">
                         <div class="row">
                             <div class="col-md-12">
-                                <h4 class="float-start fw-bold">Tax withholdings</h4>
+                                <h4 class="float-start fw-bold">Tax Withholdings</h4>
                                 <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal" data-bs-target="#edit-tax-withholdings-modal">Edit</a>
                             </div>
                             <div class="col-md-4">

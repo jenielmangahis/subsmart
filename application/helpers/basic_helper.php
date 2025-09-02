@@ -5728,19 +5728,23 @@ function checkRoleCanAccessModule($module, $action){
         $allow_access = true;   
     }else{
         $permission   = $CI->CompanyRoleAccessModule_model->getCompanyRoleModulePermission($cid, $rid, $module);
-        if( $action == 'write' ){
-            if( $permission && $permission->allow_write == 1 ){
-                $allow_access = true;
+        if( $permission ){
+            if( $action == 'write' ){
+                if( $permission && $permission->allow_write == 1 ){
+                    $allow_access = true;
+                }
+            }elseif( $action == 'read' ){
+                if( $permission && $permission->allow_read == 1 ){
+                    $allow_access = true;
+                }
+            }elseif( $action == 'delete' ){
+                if( $permission && $permission->allow_delete == 1 ){
+                    $allow_access = true;
+                }
             }
-        }elseif( $action == 'read' ){
-            if( $permission && $permission->allow_read == 1 ){
-                $allow_access = true;
-            }
-        }elseif( $action == 'delete' ){
-            if( $permission && $permission->allow_delete == 1 ){
-                $allow_access = true;
-            }
-        }
+        }else{
+            $allow_access = true;
+        }         
     }
 
     return $allow_access;

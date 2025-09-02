@@ -102,5 +102,19 @@ class Accounting_user_employment_details_model extends MY_Model {
                 break;
         }
     }
+
+    public function optionEmploymentStatus()
+    {
+        $options = [ 
+            'Full-Time' => 'Full-Time',
+            'Part-Time' => 'Part-Time',
+            'On-call' => 'On-call',
+            'Contractual Employee' => 'Contractual Employee',
+            'Seasonal Employee' => 'Seasonal Employee',
+            'Leased Employee' => 'Leased Employee'
+        ];
+
+        return $options;
+    }
     
 }
