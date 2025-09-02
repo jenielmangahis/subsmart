@@ -146,7 +146,7 @@
                                 <div class="nsm-card">
                                     <div class="nsm-card-header">
                                         <div class="nsm-card-title">
-                                            <span>Residential Services Offered</span>
+                                            <span>Services Offered</span>
                                         </div>
                                         <div class="nsm-card-controls align-items-baseline">
                                             <button type="button" class="nsm-button btn-sm"
@@ -157,7 +157,7 @@
                                     </div>
                                     <div class="nsm-card-content">
                                         <?php foreach ($selectedCategories as $s) : ?>
-                                        <span class="nsm-badge primary"><?= $s->service_name ?></span>
+                                        <span class="nsm-badge primary" style="display:inline-block; margin-top:10px;"><?= $s->service_name ?></span>
                                         <?php endforeach; ?>
                                     </div>
                                 </div>
@@ -579,22 +579,26 @@
                                     <div class="col-12 col-md-6 text-end">
                                         <label class="content-subtitle d-block">Business since
                                             <b><?php echo $profiledata->year_est; ?></b></label>
-                                        <label class="content-subtitle d-block mt-1"><?php echo $profiledata->employee_count > 1 ? '<b>' . $profiledata->employee_count . '</b> employees': '<b>' . $profiledata->employee_count . '</b> employee' ; ?></label>
-                                        <label class="content-subtitle d-block mt-1">Works with other businesses or
-                                            sub-contractors</label>
-                                    </div>
-                                    <div class="col-12">
-                                        <hr>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="content-subtitle fw-bold">Availability</label>
-                                    </div>
-                                    <div class="col-12 col-md-6 text-end">
-                                        <button type="button" class="nsm-button btn-sm"
-                                            onclick="location.href='<?php echo url('users/availability'); ?>'">
-                                            <i class='bx bx-fw bx-edit'></i> Edit
-                                        </button>
-                                    </div>
+                                        <label class="content-subtitle d-block mt-1"><?php echo $profiledata->employee_count > 1 ? '<b>' . $profiledata->employee_count . '</b> employees': '<b>' . $profiledata->employee_count . '</b> employee' ; ?></label>                                        
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="nsm-card primary mt-4">
+                            <div class="nsm-card-header">
+                                <div class="nsm-card-title">
+                                    <span>Availability</span>
+                                </div>
+                                <div class="nsm-card-controls">
+                                    <button type="button" class="nsm-button btn-sm"
+                                        onclick="location.href='<?php echo url('users/availability'); ?>'">
+                                        <i class='bx bx-fw bx-edit'></i> Edit
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="nsm-card-content">
+                                <div class="row">
                                     <div class="col-12 col-md-6">
                                         <label class="content-subtitle fw-bold">Working Days</label>
                                     </div>
@@ -611,24 +615,16 @@
                                         ?>
                                         <label class="content-subtitle d-block"><?= count($days) ? implode(' - ', $days) : '---'; ?></label>
                                     </div>
-                                    <div class="col-12 col-md-6">
-                                        <label class="content-subtitle fw-bold">Time Off</label>
+                                    <div class="col-12 col-md-6 mt-2">
+                                        <label class="content-subtitle fw-bold">Time Off Days</label>
                                     </div>
-                                    <div class="col-12 col-md-6 text-end">
-                                        <?php
-                                        $start_date = str_replace('-', '/', $profiledata->start_time_of_day);
-                                        $end_date = str_replace('-', '/', $profiledata->end_time_of_day);
-                                        ?>
-                                        <?php if (strtotime($start_date) > 0 && strtotime($end_date) > 0) { ?>
-                                        <label
-                                            class="content-subtitle d-block"><?= date('F j, Y', strtotime($start_date)) . ' to ' . date('F j, Y', strtotime($end_date)) ?></label>
-                                        <?php } else { ?>
-                                        <label class="content-subtitle d-block">---</label>
-                                        <?php } ?>
+                                    <div class="col-12 col-md-6 mt-2 text-end">
+                                        <label class="content-subtitle d-block"><?= count($timeOffDays) ? implode(' - ', $timeOffDays) : '---'; ?></label>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <?php if(checkRoleCanAccessModule('company-link-accounts', 'read')){ ?>    
                         <div class="nsm-card primary mt-4">
                             <div class="nsm-card-header">
@@ -657,36 +653,36 @@
 
     <div class="modal fade nsm-modal fade" id="modal-add-multi-account" tabindex="-1"
         aria-labelledby="modal-add-multi-account-label" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <form id="add-multi-account-form" method="POST">
-                <div class="modal-content" style="width:78% !important;">
-                    <div class="modal-header">
-                        <span class="modal-title content-title"><i class='bx bx-link-alt'></i> Link a company account
-                            to <?= $profiledata->business_name ?></span>
-                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i
-                                class='bx bx-fw bx-x m-0'></i></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Please enter the login and password for the company you would like to link to this login</p>
-                        <div class="row">
-                            <div class="col-12">
-                                <label class="content-subtitle fw-bold d-block mb-2">Email</label>
-                                <input type="email" class="form-control" name="multi_email" id="multi-email"
-                                    required="">
-                            </div>
-                            <div class="col-12 mt-3">
-                                <label class="content-subtitle fw-bold d-block mb-2">Password</label>
-                                <input type="password" class="form-control" name="multi_password"
-                                    id="multi-password" required="">
-                            </div>
+        <div class="modal-dialog modal-lg modal-dialog-centered">            
+            <div class="modal-content" style="width:78% !important;">
+                <div class="modal-header">
+                    <span class="modal-title content-title"><i class='bx bx-link-alt'></i> Link a company account
+                        to <?= $profiledata->business_name ?></span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i
+                            class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-multi-account-form" method="POST">
+                    <p>Please enter the login and password for the company you would like to link to this login</p>
+                    <div class="row">
+                        <div class="col-12">
+                            <label class="content-subtitle fw-bold d-block mb-2">Email</label>
+                            <input type="email" class="form-control" name="multi_email" id="multi-email"
+                                required="">
+                        </div>
+                        <div class="col-12 mt-3">
+                            <label class="content-subtitle fw-bold d-block mb-2">Password</label>
+                            <input type="password" class="form-control" name="multi_password"
+                                id="multi-password" required="">
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="nsm-button primary" id="btn-add-multi-account">Add</button>
-                    </div>
+                    </form>
                 </div>
-            </form>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary" id="btn-add-multi-account" form="add-multi-account-form">Add</button>
+                </div>
+            </div>
         </div>
     </div>
 

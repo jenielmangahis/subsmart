@@ -132,8 +132,8 @@
                         <div class="nsm-card primary">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title">
-                                    <span>Time off / Unavailability</span>
-                                    <label class="content-subtitle d-block">Please set your unavailable timings and time-off.</label>
+                                    <span>Unavailable Date</span>
+                                    <label class="content-subtitle d-block">Please set your unavailable date.</label>
                                 </div>
                             </div>
                             <div class="nsm-card-content">
