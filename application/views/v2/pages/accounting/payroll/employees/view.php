@@ -143,7 +143,7 @@
                     <div class="nsm-card mb-3">
                         <div class="row">
                             <div class="col-md-12">
-                                <h4 class="float-start fw-bold">Employment details</h4>
+                                <h4 class="float-start fw-bold">Employment Details</h4>
                                 <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal"
                                     data-bs-target="#edit-employment-details-modal">Edit</a>
                             </div>
@@ -181,11 +181,11 @@
                             <div class="col-md-4">
                                 <strong class="text-muted">ROLE</strong>
                                 <p class="text_value">
-                                    <span id="emp-details-employee-title"><?php echo ($employee->role_name && $employee->role_name != "-") ? $employee->role_name : '<i>Not specified</i>'; ?></span>
+                                    <span id="emp-details-employee-role"><?php echo ($employee->role_name && $employee->role_name != "-") ? $employee->role_name : '<i>Not specified</i>'; ?></span>
                                 </p>
                             </div>
                             <div class="col-md-4">
-                                <strong class="text-muted">WORKER'S COMPANY CLASS</strong>
+                                <strong class="text-muted">EMPLOYMENT STATUS</strong>
                                 <p class="text_value">
                                     <?php 
                                         $emp_details = isset($employmentDetails[0]) ? $employmentDetails[0] : $employmentDetails; 
@@ -204,7 +204,7 @@
                     <div class="nsm-card mb-3">
                         <div class="row">
                             <div class="col-md-12">
-                                <h4 class="float-start fw-bold">Tax withholdings</h4>
+                                <h4 class="float-start fw-bold">Tax Withholdings</h4>
                                 <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal" data-bs-target="#edit-tax-withholdings-modal">Edit</a>
                             </div>
                             <div class="col-md-4">
