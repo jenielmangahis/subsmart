@@ -452,8 +452,11 @@ class Employees extends MY_Controller
         $this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
         // }
 
-        $employmentDetails = $this->employment_details_model->get_all_employment_details($id);        
+        $employmentDetails = $this->employment_details_model->get_all_employment_details($id);  
+        $optionEmploymentStatus = $this->employment_details_model->optionEmploymentStatus();
+
         $this->page_data['employmentDetails'] = $employmentDetails;
+        $this->page_data['optionEmploymentStatus'] = $optionEmploymentStatus;
         $this->page_data['worksites'] = $this->accounting_worksites_model->get_company_worksites(logged('company_id'));
 
         $address = '';
@@ -890,7 +893,7 @@ class Employees extends MY_Controller
         }
         if (isset($employmentDetails)) {
             if ($this->employment_details_model->get_employment_details($id)) {
-                $this->employment_details_model->update_employment_details($id, $employmentDetails);
+                $this->employment_detaimls_odel->update_employment_details($id, $employmentDetails);
 
                 //Activity Logs
                 $activity_name = 'Employees : Update Employment Details'; 
@@ -2857,7 +2860,10 @@ class Employees extends MY_Controller
                 }
             }        
     
-            $update = $this->users_model->update($employee_id, $data);
+            $update   = $this->users_model->update($employee_id, $data);
+            $roleList = $this->users_model->userRolesList(); 
+
+            $role_name = $roleList[$post['role']];
     
             if($update) {
 
@@ -2905,6 +2911,7 @@ class Employees extends MY_Controller
                     'hire_date' => $post['hire_date'],
                     'employee_status' => $employee_status,
                     'employee_title' => $employee_title,
+                    'employee_role' => $role_name['name'],
                     'worker_company_class' => $worker_company_class, 
                     'pay_method' => $post['pay_method']
                 ];
