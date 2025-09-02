@@ -887,8 +887,9 @@ $(document).on("click", "#print-paychecks", function (e) {
     e.preventDefault();
 
     if ($("#print-paycheck-form").length < 1) {
+        let url = base_url + "accounting/print-multiple";
         $("body").append(
-            `<form action="/accounting/print-multiple" method="post" id="print-paycheck-form" target="_blank"></form>`
+            `<form action="${url}" method="post" id="print-paycheck-form" target="_blank"></form>`
         );
     }
 
@@ -949,23 +950,38 @@ $("#transactions-table .delete-paycheck").on("click", function (e) {
     var row = $(this).closest("tr");
     var id = row.find(".select-one").val();
 
-    $.get(`/accounting/delete-paycheck/${id}`, function (res) {
-        var result = JSON.parse(res);
-        Swal.fire({
-            title: result.success ? "Delete Successful!" : "Failed!",
-            text: result.success
-                ? "Paycheck has been successfully deleted."
-                : "Something is wrong in the process.",
-            icon: result.success ? "success" : "error",
-            showCancelButton: false,
-            confirmButtonText: "Okay",
-        }).then((r) => {
-            if (r.value) {
-                if (result.success) {
-                    location.reload();
+    Swal.fire({
+        title: 'Delete Paycheck',
+        html: `Are you sure you want to delete selected paycheck? <br/><br/>Note : This cannot be undone.`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: "POST",
+                url: base_url + 'accounting/delete-paycheck/' + id,
+                dataType:'json',
+                success: function(result) {
+                    if( result.success ) {
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'Delete Paycheck',
+                        text: 'Paycheck was successfully deleted.',
+                        }).then((result) => {
+                            location.reload();                            
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something is wrong in the process.',
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
     });
 });
 
@@ -975,23 +991,38 @@ $("#transactions-table .void-paycheck").on("click", function (e) {
     var row = $(this).closest("tr");
     var id = row.find(".select-one").val();
 
-    $.get(`/accounting/void-paycheck/${id}`, function (res) {
-        var result = JSON.parse(res);
-        Swal.fire({
-            title: result.success ? "Void Successful!" : "Failed!",
-            text: result.success
-                ? "Paycheck has been successfully voided."
-                : "Something is wrong in the process.",
-            icon: result.success ? "success" : "error",
-            showCancelButton: false,
-            confirmButtonText: "Okay",
-        }).then((r) => {
-            if (r.value) {
-                if (result.success) {
-                    location.reload();
+    Swal.fire({
+        title: 'Void Paycheck',
+        html: `Are you sure you want to void selected paycheck? <br/><br/>Note : This cannot be undone.`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: "POST",
+                url: base_url + 'accounting/void-paycheck/' + id,
+                dataType:'json',
+                success: function(result) {
+                    if( result.success ) {
+                        Swal.fire({
+                        icon: 'success',
+                        title: 'Void Paycheck',
+                        text: 'Paycheck was successfully voided.',
+                        }).then((result) => {
+                            location.reload();                            
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something is wrong in the process.',
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
     });
 });
 
