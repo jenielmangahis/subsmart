@@ -68,7 +68,7 @@ class Check extends MY_Controller
     private function saveCheckAttachments($check_id, $prefix, $is_update = false)
     {
         $company_id = logged('company_id');
-        $upload_dir = $is_update ? 'uploads/accounting/checks/' : 'uploads/accounting/expenses/';
+        $upload_dir = 'uploads/accounting/expenses/';
         $file_input = $prefix . 'Attachments';
         
         $result = [
@@ -746,11 +746,6 @@ class Check extends MY_Controller
         }
     }
 
-
-
-
-
-
     public function addCheck()
     {
         $company_id = logged('company_id');
@@ -860,18 +855,6 @@ class Check extends MY_Controller
             echo 1;
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
     public function voidCheck()
     {

@@ -385,7 +385,7 @@
                     }
                 });
             }
-            $('#checkBatchActions').attr('disabled', 'disabled');
+            // $('#checkBatchActions').attr('disabled', 'disabled');
         });
     });
 
@@ -433,7 +433,211 @@
                     }
                 });
             }
-            $('#checkBatchActions').attr('disabled', 'disabled');
         });
+    });
+
+    $(document).on('click', '.checkBatchPrint', function () {
+        function fileID(length) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+
+        const filename = `[${fileID(6)}] Selected Checks`;
+        const originalTable = document.querySelector('.checkTable');
+        if (!originalTable) {
+            alert("No table found to export.");
+            return;
+        }
+
+        const clonedTable = originalTable.cloneNode(true);
+
+        clonedTable.querySelectorAll('tbody tr').forEach(row => {
+            const checkbox = row.querySelector('.checkEntryCheckbox');
+            if (!checkbox || !checkbox.checked) {
+                row.remove();
+            }
+        });
+
+        const removeColumns = (row) => {
+            const cells = row.children;
+            if (cells.length >= 3) {
+                cells[0].remove(); 
+                cells[cells.length - 2].remove();
+                cells[cells.length - 1].remove();
+            }
+        };
+        clonedTable.querySelectorAll('tr').forEach(removeColumns);
+
+        const left = (screen.width - 1280) / 2;
+        const top = (screen.height - 720) / 2;
+        const win = window.open("", "Selected Checks", `width=1280,height=720,top=${top},left=${left}`);
+
+        const baseStyle = `
+            <style>
+                table { width: 100% !important; }
+                * { font-family: SEGOE UI; }
+
+                table, th, td {
+                    border: solid 1px gray;
+                    border-collapse: collapse;
+                    padding: 3px 5px;
+                    text-align: left;
+                    font-size: 15px;
+                }
+
+                th, h2, h4 {
+                    text-transform: uppercase;
+                }
+                h4 {
+                    font-size: 15px !important;
+                    margin: -20px 0px 15px 0px;
+                    font-weight: normal;
+                }
+
+                .checkTable>tbody>tr>td,
+                .checkTable>thead>tr>th {
+                    font-family: SEGOE UI !important;
+                }
+            </style>
+        `;
+
+        win.document.write(`<h2><strong>NSMARTRAC</strong></h2>`);
+        win.document.write(`<h4>Selected Check Entries</h4>`);
+        win.document.write(clonedTable.outerHTML);
+        win.document.write(baseStyle);
+        win.document.title = filename;
+
+        setTimeout(() => {
+            win.print();
+            win.close();
+        }, 500);
+    });
+
+    $(document).on('click', '.checkExportPDF', function() {
+        function fileID(length) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+
+        const filename = `[${fileID(6)}] Check list`;
+        const originalTable = document.querySelector('.checkTable');
+        if (!originalTable) {
+            alert("No table found to export.");
+            return;
+        }
+
+        const clonedTable = originalTable.cloneNode(true);
+        const removeColumns = (row) => {
+            const cells = row.children;
+            if (cells.length >= 3) {
+                cells[0].remove();
+                cells[cells.length - 2].remove();
+                cells[cells.length - 1].remove();
+            }
+        };
+
+        clonedTable.querySelectorAll('tr').forEach(removeColumns);
+
+        const left = (screen.width - 1280) / 2;
+        const top = (screen.height - 720) / 2;
+        const win = window.open("", "Check List", `width=1280,height=720,top=${top},left=${left}`);
+        const baseStyle = `
+            <style>
+                table { width: 100% !important; }
+                * { font-family: SEGOE UI; }
+
+                table, th, td {
+                    border: solid 1px gray;
+                    border-collapse: collapse;
+                    padding: 3px 5px;
+                    text-align: left;
+                    font-size: 15px;
+                }
+
+                th, h2, h4 {
+                    text-transform: uppercase;
+                }
+                h4 {
+                    font-size: 15px !important;
+                    margin: -20px 0px 15px 0px;
+                    font-weight: normal;
+                }
+
+                .checkTable>tbody>tr>td,
+                .checkTable>thead>tr>th {
+                    font-family: SEGOE UI !important;
+                }
+            </style>
+        `;
+
+        win.document.write(`<h2><strong>NSMARTRAC</strong></h2>`);
+        win.document.write(`<h4>Check list</h4>`);
+        win.document.write(clonedTable.outerHTML);
+        win.document.write(baseStyle);
+        win.document.title = filename;
+
+        setTimeout(() => {
+            win.print();
+            win.close();
+        }, 500);
+    });
+
+    $(document).on('click', '.checkExportXLSX', function() {
+        function fileID(length) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+
+        const filename = `[${fileID(6)}] Check list.xlsx`;
+        const originalTable = document.querySelector('.checkTable');
+        if (!originalTable) {
+            alert("No table found to export.");
+            return;
+        }
+
+        const clonedTable = originalTable.cloneNode(true);
+        const removeColumns = (row) => {
+            const cells = row.children;
+            if (cells.length >= 3) {
+                cells[0].remove();
+                cells[cells.length - 2].remove();
+                cells[cells.length - 1].remove();
+            }
+        };
+        clonedTable.querySelectorAll('tr').forEach(removeColumns);
+
+        clonedTable.querySelectorAll('select').forEach(select => {
+            const selectedOption = select.selectedOptions[0];
+            const text = selectedOption ? selectedOption.textContent : '';
+            const cell = select.closest('td');
+            if (cell) {
+                cell.textContent = text;
+            }
+        });
+
+        const headerRow = clonedTable.querySelector('thead tr');
+        if (headerRow) {
+            headerRow.querySelectorAll('th').forEach(th => {
+                th.style.fontSize = '13px';
+                th.style.fontWeight = 'bold';
+            });
+        }
+
+        const worksheet = XLSX.utils.table_to_sheet(clonedTable);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Check List");
+        XLSX.writeFile(workbook, filename);
     });
 </script>

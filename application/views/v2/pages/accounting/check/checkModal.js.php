@@ -81,24 +81,49 @@
         }
     }
 
+    function formDisabler(selector, state) {
+        const element = $(selector);
+        const submitButton = element.find('button[type="submit"]');
+        element.find("input, button, textarea, select").prop('disabled', state);
 
-    // $(document).on('shown.bs.modal', '.checkAddModal', function () {
-    //     // for future development
-    //     // alert(true);
-    // });
+        if (state) {
+            element.find('a').hide();
+            if (!submitButton.data('original-content')) {
+                submitButton.data('original-content', submitButton.html());
+            }
+            submitButton.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin-pulse"></i> Processing...');
+        } else {
+            element.find('a').show();
+            const originalContent = submitButton.data('original-content');
+            if (originalContent) {
+                submitButton.prop('disabled', false).html(originalContent);
+            }
+        }
+    }
 
-    // $(document).on('hidden.bs.modal', '.checkAddModal', function () {
-    //     $('.checkAddModalContent').hide();
-    // });
+    function virtualNumberToWords(amount) {
+        const numbersToWords = (num) => {
+            const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+            const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+            const teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
 
-    // $(document).on('shown.bs.modal', '.checkEditModal', function () {
-    // //    for future development
-    // // alert(false);
-    // });
+            if (num < 10) return ones[num];
+            if (num < 20) return teens[num - 10];
+            if (num < 100) return tens[Math.floor(num / 10)] + (num % 10 !== 0 ? " " + ones[num % 10] : "");
+            if (num < 1000) return ones[Math.floor(num / 100)] + " Hundred" + (num % 100 !== 0 ? " " + numbersToWords(num % 100) : "");
+            if (num < 1000000) return numbersToWords(Math.floor(num / 1000)) + " Thousand" + (num % 1000 !== 0 ? " " + numbersToWords(num % 1000) : "");
+            if (num < 1000000000) return numbersToWords(Math.floor(num / 1000000)) + " Million" + (num % 1000000 !== 0 ? " " + numbersToWords(num % 1000000) : "");
+            if (num < 1000000000000) return numbersToWords(Math.floor(num / 1000000000)) + " Billion" + (num % 1000000000 !== 0 ? " " + numbersToWords(num % 1000000000) : "");
+            return "Amount Too Large";
+        };
 
-    // $(document).on('hidden.bs.modal', '.checkEditModal', function () {
-    //     $('.checkEditModalContent').hide();
-    // });
+        const dollars = Math.floor(amount);
+        const cents = Math.round((amount - dollars) * 100);
+        const dollarText = dollars > 0 ? numbersToWords(dollars) : "";
+        const centText = cents > 0 ? `${cents}/100` : "";
+
+        return dollarText + (dollars > 0 && cents > 0 ? " and " : "") + centText;
+    }
 
     $(document).on('click', '.addCheckModalExitButton', function () {
         $('.checkAddModalContent').hide();

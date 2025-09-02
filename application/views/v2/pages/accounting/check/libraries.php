@@ -11,9 +11,4 @@
 <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/filepond-plugin-get-file@latest/dist/filepond-plugin-get-file.min.js"></script>
 <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
-
-
-
-<!-- https://nielsboogaard.github.io/filepond-plugin-get-file/dist/filepond-plugin-get-file.css -->
-
-<!-- https://nielsboogaard.github.io/filepond-plugin-get-file/dist/filepond-plugin-get-file.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
