@@ -912,8 +912,42 @@ class Accounting_modals extends MY_Controller
         }
 
         $this->page_data['payDate'] = $payDate;
+
+
+        $payScaleData = $this->PayScale_model->getById($paySchedId);
+        if($payScaleData) {
+            switch ($payScaleData->payscale_name) {
+                case "Base (Hourly Rate)":
+                    $payscale_name_value = "base_hourly_rate";
+                    break;
+                case "Base (Weekly Rate)":
+                    $payscale_name_value = "base_weekly_rate";
+                    break;
+                case "Base (Monthly Rate)":
+                    $payscale_name_value = "monthly_salary";
+                    break;
+                case "Base (Daily Rate)":
+                    $payscale_name_value = "base_daily_rate";
+                    break;
+                case "Commission Only":
+                    $payscale_name_value = "commission_only";
+                    break;
+                default:
+                    $payscale_name_value = $p->payscale_name;
+                    break;
+            } 
+        }
+
+        $employee_ids = [];
+        $employee_with_payscales_ids = $this->PayScale_model->getCompanyEmployeeIdsUsingPayscale($payscale_name_value);
+        if($employee_with_payscales_ids) {
+            foreach($employee_with_payscales_ids as $employee_with_payscales_id) {
+                $employee_ids[] = $employee_with_payscales_id->user_id;
+            }
+        }
         
-        $employees = $this->users_model->getPayScheduleEmployees($paySchedId);
+        //$employees = $this->users_model->getPayScheduleEmployees($paySchedId);
+        $employees = $this->users_model->getActiveEmployeeByIds($employee_ids);
 
         foreach($employees as $index => $employee)
         {

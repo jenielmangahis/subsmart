@@ -111,7 +111,20 @@ class PayScale_model extends MY_Model
 
         $query = $this->db->get();
         return $query->result();  
-    }            
+    }    
+    
+    public function getCompanyEmployeeIdsUsingPayscale($payscale_name) 
+    {        
+        $company_id = logged('company_id');
+        $this->db->select('accounting_employee_view.employee_id as user_id');
+        $this->db->where('company_id', $company_id);
+        $this->db->where('payscale_name', $payscale_name);
+        $this->db->where('is_archived', 'No');
+        $this->db->from('accounting_employee_view');
+
+        $query = $this->db->get();
+        return $query->result();  
+    }   
 
     public function get_company_employees_using_payscale($payscaleId)
     {
