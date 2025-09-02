@@ -230,10 +230,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <li><a href="<?php echo url('/login') ?>">LOGIN</a></li>
                             <li class="no-break"><a href="<?php echo url('/registration') ?>" class="">SIGN UP</a></li>
                         </ul>
-                        <div class="footer-social text-right">
+                        <!-- <div class="footer-social text-right">
                             <a href=""><i class="fa fa-facebook"></i></a>
                             <a href=""><i class="fa fa-twitter"></i></a>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -297,7 +297,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 									<li class="no-break"><a href="<?php echo url('/registration') ?>" class="">SIGN UP</a></li>
 								</ul> -->
                                 <ul class="over-write-menu" style="margin-top:8px;">
-                                    <li class=""><a href="<?php echo url('/') ?>">HOME</a></li>
+                                    <li class="active"><a href="<?php echo url('/') ?>">HOME</a></li>
                                     <li class=""><a href="<?php echo url('/about') ?>">ABOUT US</a></li>
                                     <li><a href="<?php echo url('/features') ?>">FEATURES</a></li>
                                     <li><a href="<?php echo url('/pricing') ?>">PRICING </a></li>

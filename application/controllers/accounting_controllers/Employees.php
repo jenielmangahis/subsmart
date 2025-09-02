@@ -340,6 +340,8 @@ class Employees extends MY_Controller
         $this->load->model('LeaveType_model');
         $this->load->model('EmployeeLeaveCredit_model');
         $this->load->model('Deductions_and_contribution_model');
+        $this->load->model('EmployeePayDetails_model');
+
         $company_id = logged('company_id');
         $user_type = logged('user_type');
 
@@ -539,6 +541,14 @@ class Employees extends MY_Controller
         );
 
         $roles = $this->users_model->getRolesBySearch($role_title, $cid);
+
+        $payDetails = $this->EmployeePayDetails_model->getByUserIdAndCompanyId($id, $cid);
+        $pay_method = 'Not Specified';
+        if( $payDetails && $payDetails->pay_method != '' ){
+            $pay_method = str_replace("-", "", $payDetails->pay_method);
+            $pay_method = strtolower($payDetails->pay_method);
+            $pay_method = ucwords($payDetails->pay_method);
+        }
         
         $this->page_data['payscales'] = $this->PayScale_model->getAllByDefault();
         $this->page_data['taxWithholdingData'] = $this->general_model->get_data_with_param($getTaxWithholding, false);
@@ -550,6 +560,7 @@ class Employees extends MY_Controller
         $this->page_data['nextPayPeriodEnd'] = date('m/d/Y', strtotime("wednesday"));
         $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));
         $this->page_data['empWorksite'] = $address;
+        $this->page_data['pay_method'] = $pay_method;
         $this->page_data['paychecks'] = $this->get_emp_paychecks($paychecksFilter);
         $this->load->view('v2/pages/accounting/payroll/employees/view', $this->page_data);
     }
@@ -2792,6 +2803,8 @@ class Employees extends MY_Controller
 
     public function ajax_update_employment_details() 
     {
+        $this->load->model('EmployeePayDetails_model');
+
         $is_success = 0;
         $msg = 'Record not found';
 
@@ -2820,7 +2833,7 @@ class Employees extends MY_Controller
                     $this->employment_details_model->update_employment_details($employee_id, $employmentDetails);
     
                     //Activity Logs
-                    $activity_name = 'Employees : Update Employment Details'; 
+                    $activity_name = 'Employees : Updated Employment Details'; 
                     createActivityLog($activity_name);                
     
                 } else {
@@ -2859,12 +2872,39 @@ class Employees extends MY_Controller
                 $employee_title = ($employee->role) ? ucfirst($this->roles_model->getById($employee->role)->title) : '-';
                 $worker_company_class = $post['workers_comp_class'];
 
+                //Update pay method
+                $employeePayDetails = $this->EmployeePayDetails_model->getByUserIdAndCompanyId($employee_id, $cid);
+                if( $employeePayDetails ){
+                    $employee_pay_details = [
+                        'pay_method' => $post['pay_method'],
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+                    $this->EmployeePayDetails_model->update($employeePayDetails->id,$employee_pay_details);
+                }else{
+                    $employee_pay_details = [
+                        'user_id' => $employee_id,
+                        'company_id' => $cid,
+                        'pay_schedule_id' => 1,
+                        'pay_type' => 'monthly',
+                        'pay_rate' => 0,
+                        'hours_per_day' => 8,
+                        'days_per_week' => 5,
+                        'salary_frequency' => 'week',
+                        'pay_method' => $post['pay_method'],
+                        'status' => 1,
+                        'created_at' => date("Y-m-d H:i:s")
+                    ];
+                    $this->EmployeePayDetails_model->save($employee_pay_details);
+
+                }
+
                 $employee_details[] = [
                     'employee_number' => $post['employee_number'], 
                     'hire_date' => $post['hire_date'],
                     'employee_status' => $employee_status,
                     'employee_title' => $employee_title,
-                    'worker_company_class' => $worker_company_class
+                    'worker_company_class' => $worker_company_class, 
+                    'pay_method' => $post['pay_method']
                 ];
 
                 $is_success = 1;

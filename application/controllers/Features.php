@@ -5,6 +5,7 @@ class Features extends MYF_Controller {
 	public function __construct(){
 		parent::__construct();
 		//$this->checkLogin(1);
+		$this->page_data['nav'] = 'features';
 		$this->page_data['page']->title = 'nSmart - Front End Features';
 	}
 	public function index(){

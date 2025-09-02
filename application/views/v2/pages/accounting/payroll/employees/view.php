@@ -186,6 +186,12 @@
                                     <span id="emp-details-worker-company-class"><?php echo !empty($emp_details->workers_comp_class) ? $emp_details->workers_comp_class : '<i>Not specified</i>'; ?></span>
                                 </p>
                             </div>
+                            <div class="col-md-4">
+                                <strong class="text-muted">PAYMENT METHOD</strong>
+                                <p class="text_value">
+                                    <span id="emp-pay-details-class"><?= $pay_method; ?></span>
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <div class="nsm-card mb-3">
@@ -458,7 +464,7 @@
     </div>
 </div>
 <script>
-<?php if ($userType != 7) { echo "$('.pointerCursor, .employee_image_profile_edit , .edit-deductions-and-contributions').remove();"; } ?>
+<?php //if ($userType != 7) { echo "$('.pointerCursor, .employee_image_profile_edit , .edit-deductions-and-contributions').remove();"; } ?>
 $('a[data-bs-target="#edit-tax-withholdings-modal"]').click(function (e) { 
     const formType = "<?php echo "$taxWithholdingData->withholding_certificate" ?>";
     if (formType == "form_2020") {

@@ -489,7 +489,7 @@ $(function () {
             data.set('pay_period', payPeriod);
 
             $.ajax({
-                url: '/accounting/get-employee-pay-details',
+                url: base_url + 'accounting/get-employee-pay-details',
                 data: data,
                 type: 'post',
                 processData: false,
@@ -10156,7 +10156,7 @@ const addEmployeeToPayroll = (email) => {
     data.set('pay_period', payPeriod);
 
     $.ajax({
-        url: '/accounting/get-employee-pay-details',
+        url: base_url + 'accounting/get-employee-pay-details',
         data: data,
         type: 'post',
         processData: false,

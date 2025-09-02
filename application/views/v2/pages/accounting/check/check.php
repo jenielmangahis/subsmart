@@ -45,8 +45,8 @@
                                     <i class="fas fa-cog"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="checkSettings">
-                                    <li><a class="dropdown-item" href="javascript:void(0);">Export as .pdf</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);">Export as .xlsx</a></li>
+                                    <li><a class="dropdown-item checkExportPDF" href="javascript:void(0);">Export as .pdf</a></li>
+                                    <li><a class="dropdown-item checkExportXLSX" href="javascript:void(0);">Export as .xlsx</a></li>
                                 </ul>
                             </div>
                         </div>

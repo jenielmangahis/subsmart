@@ -199,7 +199,338 @@
                         </form>
                     </div>
                     <div class="tab-pane fade" id="checkEditVirtualPill" role="tabpanel" aria-labelledby="checkEditVirtualTab">
-                        <p>Use the virtual check template here.</p>
+                        
+
+
+
+
+                    <style>
+    .virtualCheckEditContainer {
+        background-color: #f9f9f9;
+        border: 2px solid #000;
+        border-radius: 10px;
+        font-family: Arial, sans-serif;
+        height: 360px;
+        margin: auto;
+        padding: 20px;
+        position: relative;
+        top: 5px;
+        width: 1299px;
+    }
+
+    .virtualCheckEditSection {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .virtualCheckEditNumberSection {
+        right: 0;
+    }
+
+    .virtualPrintLaterSection {
+        right: 70px;
+        top: 55px;
+    }
+
+    .virtualCheckEditDateSection {
+        right: 26px;
+        top: 100px;
+    }
+
+    .virtualCheckEditPayeeSection {
+        top: 150px;
+    }
+
+    .virtualCheckEditAmountSection {
+        right: 26px;
+        top: 150px;
+    }
+
+    .virtualCheckEditWrittenAmountSection {
+        top: 200px;
+    }
+
+    .virtualCheckEditBankNameSection {
+        top: 250px;
+    }
+
+    .virtualCheckEditCategoryNameSection {
+        left: 290px;
+        top: 250px;
+        width: 170px;
+    }
+
+    .virtualCheckEditExpenseAccountSection {
+        left: 560px;
+        top: 250px;
+        width: 240px;
+    }
+
+    .virtualCheckEditMemoSection {
+        bottom: 20px;
+    }
+
+    .virtualTopSection {
+        margin-top: -18px;
+        position: absolute;
+    }
+
+    #virtualCheckEditDateInput {
+        width: 180px;
+    }
+
+    #virtualCheckEditAmountInput {
+        width: 150px;
+    }
+
+    #virtualCheckEditMemoInput {
+        background: unset;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        border-radius: 0;
+        width: 1010px;
+    }
+
+    #virtualCheckEditNumberInput {
+        width: 59%;
+    }
+
+    .virtualCheckEditPayeeSelect {
+        width: 925px;
+    }
+
+    .virtualCheckEditBankNameSelect,
+    .virtualCheckEditCategorySelect,
+    .virtualCheckEditExpenseAccountSelect {
+        width: 260px !important;
+    }
+
+    #virtualCheckEditWrittenText {
+        letter-spacing: 4px;
+    }
+</style>
+
+<form class="virtualCheckEditForm">
+    <div class="virtualCheckEditContainer">
+        <div class="virtualCheckEditSection">
+            <div class="virtualCheckEditPayerInfoSection position-absolute d-none">
+                <strong class="virtualCheckEditPayerNameText">{PAYER_NAME}</strong><br>
+                <span class="virtualCheckEditPayerAddressText">{ADDRESS}</span>
+            </div>
+            <div class="virtualPrintLaterSection position-absolute">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="virtualCheckEditPrintLater">
+                    <label class="form-check-label text-muted" for="virtualCheckEditPrintLater">Print Later</label>
+                </div>
+            </div>
+            <div class="virtualCheckEditNumberSection position-absolute">
+                <div class="d-flex align-items-center">
+                    <label for="virtualCheckEditNumberInput" class="me-2">Check No.</label>
+                    <input type="number" id="virtualCheckEditNumberInput" class="form-control form-control-sm" required>
+                </div>
+            </div>
+            <div class="virtualCheckEditDateSection position-absolute">
+                <div class="d-flex align-items-center">
+                    <label for="virtualCheckEditDateInput" class="me-2">Date</label>
+                    <input type="date" id="virtualCheckEditDateInput" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+                </div>
+            </div>
+            <div class="virtualCheckEditPayeeSection position-absolute">
+                <div class="d-flex align-items-center">
+                    <strong for="virtualCheckEditPayeeSelect" class="me-2 text-nowrap">Pay to the Order of</strong>
+                    <select id="virtualPayee" name="virtualPayee" class="form-select virtualCheckEditPayeeSelect" required>
+                        <option value="" selected disabled>Select payee...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="virtualCheckEditAmountSection position-absolute">
+                <div class="input-group">
+                    <div class="input-group-text" id="virtualBtnGroupAddon"><strong>$</strong></div>
+                    <input id="virtualCheckEditAmountInput" type="number" class="form-control" placeholder="0.00" step="any" required>
+                </div>
+            </div>
+            <div class="virtualCheckEditWrittenAmountSection position-absolute">
+                <div class="d-flex align-items-center">
+                    <span id="virtualCheckEditWrittenText" class="me-2 text-nowrap">{WRITTEN_AMOUNT}</span>
+                    <strong class="me-2 text-nowrap">Dollars</strong>
+                </div>
+            </div>
+            <div class="virtualCheckEditBankNameSection position-absolute">
+                <select id="virtualBankAccount" name="virtualBankAccount" class="form-select virtualCheckEditBankNameSelect" required>
+                    <option value="" selected disabled>Select Bank...</option>
+                </select>
+            </div>
+            <div class="virtualCheckEditCategoryNameSection position-absolute">
+                <select name="virtualCategory[]" class="form-select virtualCheckEditCategorySelect" required>
+                    <option value="" selected disabled>Select Category...</option>
+                </select>
+            </div>
+            <div class="virtualCheckEditMemoSection position-absolute">
+                <div class="d-flex align-items-center">
+                    <strong for="virtualCheckEditMemoInput" class="me-2 text-nowrap">Memo</strong>
+                    <input type="text" id="virtualCheckEditMemoInput" class="form-control text-muted" placeholder="Specify notes...">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <!-- <div class="col-lg-12 virtualCheckEditAttachmentSection"></div> -->
+        <div class="col-lg-12">
+            <div class="float-end">
+                <button type="submit" class="btn btn-primary fw-bold float-end"><i class="fas fa-file-import"></i>&ensp;Save</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    $('#virtualCheckEditPrintLater').on('change', function() {
+        const value = $(this).prop('checked');
+        if (value) {
+            $('.checkEditPrintLater').prop('checked', true).change();
+            $('#virtualCheckEditNumberInput').val(null).prop('disabled', true);
+        } else {
+            $('.checkEditPrintLater').prop('checked', false).change();
+            $('#virtualCheckEditNumberInput').prop('disabled', false);
+            const checkEditNo = $('.checkEditNo').val();
+            $('#virtualCheckEditNumberInput').val(checkEditNo).change();
+        }
+    });
+
+    $('#virtualCheckEditNumberInput').on('input change', function() {
+        const value = $(this).val();
+        $('.checkEditNo').val(value).change();
+    });
+
+    $(document).on('change', '.virtualCheckEditPayeeSelect', function() {
+        const selectize = $(this)[0].selectize;
+        const id = selectize.getValue();
+        const data = selectize.options[id];
+        $(".checkEditPayee")[0].selectize.setValue(id);
+        $('.checkEditPayeeType').val(data.payee_type).change();
+    });
+
+    $(document).on('change', '.virtualCheckEditBankNameSelect', function() {
+        const selectize = $(this)[0].selectize;
+        const id = selectize.getValue();
+        const data = selectize.options[id];
+        $('.checkEditBankAccount')[0].selectize.setValue(data.value);
+    });
+
+    $(document).on('change', '#virtualCheckEditDateInput', function() {
+        const value = $(this).val();
+        $('.checkEditPaymentDate').val(value).change();
+    });
+
+    $('#virtualCheckEditMemoInput').on('input change', function() {
+        const value = $(this).val();
+        $('.checkEditMemo').val(value).change();
+    });
+
+    $(document).on('change', '.virtualCheckEditCategorySelect', function() {
+        const selectize = $(this)[0].selectize;
+        const id = selectize.getValue();
+        const data = selectize.options[id];
+        $('.checkEditCategoryOptionsRow').eq(0)[0].selectize.setValue(data.value);
+    });
+
+    $('#virtualCheckEditAmountInput').on('input change', function() {
+        const rawValue = $(this).val().trim();
+        const value = parseFloat(rawValue);
+
+        if (!isNaN(value)) {
+            window.totalAmountInVirtualCheck = value;
+            const writtenAmount = virtualNumberToWords(value);
+            $('#virtualCheckEditWrittenText').text(writtenAmount);
+            $('.checkEditCategoryAmountRow').eq(0).val(value).change();
+        } else {
+            window.totalAmountInVirtualCheck = 0;
+            $('#virtualCheckEditWrittenText').text("{WRITTEN_AMOUNT}");
+            $('.checkEditCategoryAmountRow').eq(0).val('').change();
+        }
+    });
+
+    $(document).on('click', '#checkEditStandardTab, #checkEditVirtualTab', function() {
+        const checkEditPrintLater = $('.checkEditPrintLater').prop('checked');
+        const checkEditNo = $('.checkEditNo').val();
+        const checkEditNoMinimum = $('.checkEditNo').attr('min');
+        const checkEditPayee = $('.checkEditPayee').val();
+        const checkEditBankAccount = $('.checkEditBankAccount').val();
+        const checkEditPaymentDate = $('.checkEditPaymentDate').val();
+        const checkEditMemo = $('.checkEditMemo').val();
+        const checkEditCategoryOptionsRow = $('.checkEditCategoryOptionsRow').eq(0).val();
+        const checkEditCategoryAmountRow = $('.checkEditCategoryAmountRow').eq(0).val();
+
+        if (checkEditPrintLater) {
+            $('#virtualCheckEditPrintLater').prop('checked', true);
+            $('#virtualCheckEditNumberInput').val(null).attr('min', checkEditNoMinimum).prop('disabled', true);
+        } else {
+            $('#virtualCheckEditNumberInput').prop('disabled', false).attr('min', checkEditNo).val(checkEditNo);
+            $('#virtualCheckEditPrintLater').prop('checked', false);
+        }
+
+        $(".virtualCheckEditPayeeSelect")[0].selectize.setValue(checkEditPayee);
+        $(".virtualCheckEditBankNameSelect")[0].selectize.setValue(checkEditBankAccount);
+        $('#virtualCheckEditDateInput').val(checkEditPaymentDate);
+        $('#virtualCheckEditMemoInput').val(checkEditMemo);
+        $(".virtualCheckEditCategorySelect")[0].selectize.setValue(checkEditCategoryOptionsRow);
+        $('#virtualCheckEditAmountInput').val(checkEditCategoryAmountRow).change();
+    });
+
+    $(document).on('submit', '.virtualCheckEditForm', function(e) {
+        e.preventDefault();
+        const virtualCheckEditForm = $(this);
+        formDisabler(virtualCheckEditForm, true);
+        $('.checkEditForm').submit();
+    });
+
+    initSelectizeWithCache({
+        selector: '.virtualCheckEditPayeeSelect',
+        url: `${window.origin}/accounting/v2/check/getPayeeDetails/all`,
+        valueField: 'id',
+        labelField: 'payee_name',
+        searchField: 'payee_name',
+        optgroupField: 'payee_type',
+        placeholder: 'Select Customer...',
+        renderOptionAttr: 'payee_type',
+    });
+
+    initSelectizeWithCache({
+        selector: '.virtualCheckEditBankNameSelect',
+        url: `${window.origin}/accounting/v2/check/getAccountDetails/Bank`,
+        valueField: 'value',
+        labelField: 'text',
+        searchField: 'text',
+        optgroupField: 'optgroup',
+        placeholder: 'Select Bank Account...',
+        renderOptionAttr: 'balance',
+    });
+
+    initSelectizeWithCache({
+        selector: '.virtualCheckEditCategorySelect',
+        url: `${window.origin}/accounting/v2/check/getAccountDetails/all`,
+        valueField: 'value',
+        labelField: 'text',
+        searchField: 'text',
+        optgroupField: 'optgroup',
+        placeholder: 'Select Category...',
+        renderOptionAttr: 'balance',
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+                    
                     </div>
                 </div>
         </div>
@@ -703,7 +1034,7 @@
 
 $('.checkEditForm').on('submit', function (e) {
     e.preventDefault();
-
+    const checkEditForm = $(this);
     let checkEditFormData = new FormData(this);
     
     const pond = FilePond.find(document.querySelector('.checkEditAttachments'));
@@ -724,17 +1055,11 @@ $('.checkEditForm').on('submit', function (e) {
         processData: false,
         contentType: false,
         beforeSend: function () {
-            Swal.fire({
-                icon: "info",
-                title: "Updating Entry!",
-                html: "Please wait while the update process is running...",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => { Swal.showLoading(); },
-            });
+            formDisabler(checkEditForm, true);
         },
         success: function (response) {
-            console.log(response);
+            formDisabler($('.virtualCheckEditForm'), false);
+            formDisabler(checkEditForm, false);
             
             if (response == 1 || (typeof response === 'object' && response.status === 'success')) {
                 Swal.fire({
@@ -775,6 +1100,7 @@ $('.checkEditForm').on('submit', function (e) {
             }
         },
         error: function (xhr, status, error) {
+            formDisabler($('.virtualCheckEditForm'), false);
             Swal.fire({
                 icon: "error",
                 title: "Error!",
@@ -797,11 +1123,17 @@ $('.checkEditForm').on('submit', function (e) {
                 let items_data = JSON.parse(response).items;
                 let attachments_data = JSON.parse(response).attachments;
 
+                $('.checkEditAttachments').each(function() {
+                    const pond = FilePond.find(this);
+                    if (pond) {
+                        pond.removeFiles();
+                    }
+                });
+
                 function populateFilePondAttachments(attachments_data) {
                     const pond = FilePond.find(document.querySelector('.checkEditAttachments'));
+
                     if (pond && attachments_data.length > 0) {
-                        pond.removeFiles();
-                     
                         attachments_data.forEach(attachment => {
                             fetch(attachment.source).then(res => res.blob()).then(blob => {
                                 const file = new File([blob], attachment.options.file.stored_name, {
@@ -1012,6 +1344,7 @@ $('.checkEditForm').on('submit', function (e) {
                     renderCheckCategoryAndItemRows(category_data, items_data);
                     $(".checkEditModalContent").fadeIn("fast");
                     Swal.close();
+                    $('#checkEditStandardTab').click();
                     $('.checkEditModal').modal('show');
                     return;
                 }
