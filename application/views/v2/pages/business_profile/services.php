@@ -15,7 +15,7 @@
                     <div class="col-12">
                         <?php if (count($selectedCategories) > 0) : ?>
                             <?php foreach ($selectedCategories as $s) { ?>
-                                <span class="nsm-badge primary"><?= $s->service_name; ?></span>
+                                <span class="nsm-badge primary" style="display:inline-block;margin-top:5px;"><?= $s->service_name; ?></span>
                             <?php } ?>
                         <?php else : ?>
                             <label class="content-subtitle">No selected services found.</label>
