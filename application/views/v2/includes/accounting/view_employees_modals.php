@@ -280,23 +280,30 @@
                                         </div><br />
                                         <div class="col-12 col-md-6">
                                             <label class="content-subtitle fw-bold d-block mb-2">Title</label>
-                                            <select class="nsm-field form-select" name="role" id="employee_role" required>
+                                            <select class="nsm-field form-select" name="user_type" id="user-type-id" required>
                                                 <?php foreach ($userTitles as $r) : ?>
                                                 <option value="<?= $r->id; ?>"
-                                                    <?= $r->id == $employee->role ? 'selected' : ''; ?>><?= $r->title; ?>
+                                                    <?= $r->id == $employee->user_type ? 'selected' : ''; ?>><?= $r->title; ?>
                                                 </option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
                                         <div class="col-12 col-md-6">
                                             <label class="content-subtitle fw-bold d-block mb-2">Role</label>
-                                            <select class="nsm-field form-select" name="role" id="role" required>
+                                            <select class="nsm-field form-select" name="role" id="role-id" required>
                                                 <?php foreach($roles as $key => $value){ ?>
-                                                <option value="<?= $key; ?>" <?= $employee->user_type == $key ? 'selected="selected"' : ''; ?>><?= $value['name']; ?></option>
+                                                <option value="<?= $key; ?>" <?= $employee->role == $key ? 'selected="selected"' : ''; ?>><?= $value['name']; ?></option>
                                                 <?php } ?>
                                             </select>
                                         </div> 
-                                        <div class="col-12 mt-2">
+                                        <div class="col-12 col-md-6 mt-2">
+                                            <label class="content-subtitle fw-bold d-block mb-2">Payment Method</label>
+                                            <select name="pay_method" id="" class="form-select">
+                                                <option value="direct-deposit">Direct Deposit</option>
+                                                <option value="paper-check">Paper check</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-md-6 mt-2">
                                             <label class="content-subtitle fw-bold d-block mb-2">Workers' comp class</label>
                                             <input type="text" class="nsm-field form-control" id="workers-comp-class"
                                                 name="workers_comp_class"
