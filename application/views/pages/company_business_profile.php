@@ -333,7 +333,7 @@
                     <li><a class="a-default" href="#profile-nav-credentials">Credentials</a></li>
                     <li><a class="a-default" href="#profile-nav-deals">Deals</a></li>
                     <li><a class="a-default" href="#profile-nav-portfolio">Portfolio</a></li>
-                    <li><a class="a-default" href="#profile-nav-reviews">Reviews</a></li>
+                    <!-- <li><a class="a-default" href="#profile-nav-reviews">Reviews</a></li> -->
                 </ul>
             </div>
             <div class="col-4 left">
@@ -398,9 +398,10 @@
                         <a class="share-circle share-pinterest pinterest-color" href="<?= $profiledata->sm_pinterest ?>"
                             target="_blank"><span class="fa fa-pinterest"></span></a>
                         <?php } ?>
-
-                        <a class="share-circle share-mail email-color" href="#" target="_blank"><span
+                        <?php if( $profiledata->business_email ){ ?>
+                        <a class="share-circle share-mail email-color" href="mailto:<?= $profiledata->business_email; ?>"><span
                                 class="fa fa-envelope"></span></a>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -605,7 +606,7 @@
                 </div>
             </div>
 
-            <div class="col-md-8" style="margin-bottom: 52px; ">
+            <div class="col-md-8" style="margin-bottom: 52px;" id="profile-nav-deals">
                 <div class="col-sm-12 pl-0 left">
                     <h3 class="page-title pl-0 mb-2">Deals</h3>
                     <section class="content mr-23 mb-5">
@@ -650,7 +651,7 @@
                 </div>
             </div>
 
-            <div class="col-md-8" style="margin-bottom: 52px; ">
+            <div class="col-md-8" style="margin-bottom: 52px;" id="profile-nav-portfolio">
                 <div class="col-sm-12 pl-0 left">
                     <h3 class="page-title pl-0 mb-2">Portfolio</h3>
                     <section class="content mr-23 mb-5">
