@@ -499,8 +499,8 @@ class Employees extends MY_Controller
         }
 
         $paychecksFilter = [
-            'start_date' => $this->page_data['filter_from'],
-            'end_date' => $this->page_data['filter_to'],
+            'start_date' => '',
+            'end_date' => '',
             'employee_id' => $id
         ];
 
@@ -555,6 +555,8 @@ class Employees extends MY_Controller
             $pay_method = ucwords($payDetails->pay_method);
         }
         
+        $paychecks = $this->get_emp_paychecks($paychecksFilter);
+
         $this->page_data['payscales'] = $this->PayScale_model->getAllByDefault();
         $this->page_data['taxWithholdingData'] = $this->general_model->get_data_with_param($getTaxWithholding, false);
         $this->page_data['userType'] = $user_type;
@@ -566,7 +568,7 @@ class Employees extends MY_Controller
         $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));
         $this->page_data['empWorksite'] = $address;
         $this->page_data['pay_method'] = $pay_method;
-        $this->page_data['paychecks'] = $this->get_emp_paychecks($paychecksFilter);
+        $this->page_data['paychecks'] = $paychecks;
         $this->load->view('v2/pages/accounting/payroll/employees/view', $this->page_data);
     }
 
@@ -575,7 +577,7 @@ class Employees extends MY_Controller
         $data = [];
         $paychecks = $this->accounting_paychecks_model->get_by_employee_id($filter['employee_id']);
 
-        foreach ($paychecks as $paycheck) {
+        foreach ($paychecks as $paycheck) {            
             $emp = $this->users_model->getUser($paycheck->employee_id);
 
             $checkNo = $paycheck->check_no;
@@ -599,9 +601,9 @@ class Employees extends MY_Controller
             ];
         }
 
-        $data = array_filter($data, function ($v, $k) use ($filter) {
-            return strtotime($v['pay_date']) > strtotime($filter['start_date']) && strtotime($v['pay_date']) < strtotime($filter['end_date']);
-        }, ARRAY_FILTER_USE_BOTH);
+        // $data = array_filter($data, function ($v, $k) use ($filter) {
+        //     return strtotime($v['pay_date']) > strtotime($filter['start_date']) && strtotime($v['pay_date']) < strtotime($filter['end_date']);
+        // }, ARRAY_FILTER_USE_BOTH);
 
         usort($data, function ($a, $b) {
             return strtotime($a['pay_date']) < strtotime($b['pay_date']);
