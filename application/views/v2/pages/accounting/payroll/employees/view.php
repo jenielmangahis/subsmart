@@ -52,6 +52,16 @@
     display:block;
     width:100%;
 }
+.nav-tabs .nav-link{
+    border:none !important;
+}
+.nav-tabs .nav-link.active {
+    border: 1px solid !important; 
+    border-color:#dee2e6 #dee2e6 #fff !important;
+}
+.nav-tabs .nav-link:hover{
+    text-decoration:none !important;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -84,7 +94,7 @@
             </div>
             <div class="float-end"></div>
         </div>
-        <div class="col-md-12 mb-3">
+        <div class="col-md-12 mb-3 mt-4">
             <nav class="mb-3">
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab"
