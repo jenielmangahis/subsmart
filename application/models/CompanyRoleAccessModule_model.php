@@ -148,6 +148,7 @@ class CompanyRoleAccessModule_model extends MY_Model
             'accounting-receipts' => 'Accounting Receipts',
             'accounting-customers' => 'Accounting Customers',
             'accounting-vendors' => 'Accounting Vendors',
+            'accounting-contractors' => 'Accounting Contracts',
             'api-connectors' => 'API Connectors',
             'esign' => 'eSign',
             'my-library' => 'My Library',
