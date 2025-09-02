@@ -364,9 +364,18 @@
                         <li><?= $profiledata->employee_count ?> employees</li>
                     </ul>
                     <br />
-                    <p class="bold">Availability</p>
-                    <p>Working Days</p>
-                    <p class="gray">Tue - Wed Fri - Sun</p>
+                    <p class="bold">Availability</p>                    
+                    <?php 
+                        $days = [];
+                        if(isset($profiledata->working_days)) {
+                            $schedules = unserialize($profiledata->working_days);
+                            $days = [];
+                            foreach ($schedules as $s) {
+                                $days[] = date('D', strtotime($s['day']));
+                            }
+                        }
+                    ?>
+                    <p class="gray"><?= count($days) ? implode(' - ', $days) : '---'; ?></p>
                     <hr />
                     <p class="bold mb-2">Share</p>
                     <div class="social-share">
