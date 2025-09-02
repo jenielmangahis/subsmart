@@ -428,8 +428,10 @@ class Employees extends MY_Controller
 
         $paySchedule = $this->users_model->getPaySchedule($empPayDetails->pay_schedule_id);
         $employee->pay_schedule = $paySchedule;
+        $employee->title = ($employee->user_type) ? ucfirst($this->roles_model->getById($employee->user_type)->title) : '-';
 
-        $employee->title = ($employee->role) ? ucfirst($this->roles_model->getById($employee->role)->title) : '-';
+        $rolesList = $this->users_model->userRolesList();
+        $employee->role_name  = $rolesList[$employee->role]['name'];
 
         $this->page_data['salary_rate'] = $salary_rate;
         $this->page_data['salary_type_label'] = $salary_type_label;
@@ -2869,7 +2871,7 @@ class Employees extends MY_Controller
                     }
                 }
 
-                $employee_title = ($employee->role) ? ucfirst($this->roles_model->getById($employee->role)->title) : '-';
+                $employee_title = ($employee->user_type) ? ucfirst($this->roles_model->getById($employee->user_type)->title) : '-';
                 $worker_company_class = $post['workers_comp_class'];
 
                 //Update pay method
