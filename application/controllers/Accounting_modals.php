@@ -1266,13 +1266,22 @@ class Accounting_modals extends MY_Controller
             $payscale = $this->users_model->get_payscale_by_id($emp->payscale_id);
             $payDetails = $this->users_model->getEmployeePayDetails($emp->id);
 
+
+            $payscale_amount = 0;
+            $emp_payscale    = $this->EmployeePayscaleSetting_model->getByEmployeeIdAndCompanyId($emp->id , logged('company_id'));
+            if($emp_payscale) {
+                $payscale_amount = $emp_payscale->payscale_amount;
+            }      
+
             $totalHrs = floatval(str_replace(',', '', $postData['reg_pay_hours'][$key]));
             if($payscale->pay_type === 'Hourly') {
-                $totalPay = floatval(str_replace(',', '', $emp->base_hourly)) * $totalHrs;
+                //$totalPay = floatval(str_replace(',', '', $emp->base_hourly)) * $totalHrs;
+                $totalPay = floatval(str_replace(',', '', $payscale_amount)) * $totalHrs;
             }
     
             if($payscale->pay_type === 'Daily') {
-                $dailyPay = floatval(str_replace(',', '', $emp->base_daily));
+                //$dailyPay = floatval(str_replace(',', '', $emp->base_daily));
+                $dailyPay = floatval(str_replace(',', '', $payscale_amount));
                 $hoursPerDay = 8.00;
                 $perHourPay = $dailyPay / $hoursPerDay;
     
@@ -1280,7 +1289,8 @@ class Accounting_modals extends MY_Controller
             }
     
             if($payscale->pay_type === 'Weekly') {
-                $weeklyPay = floatval(str_replace(',', '', $emp->base_weekly));
+                //$weeklyPay = floatval(str_replace(',', '', $emp->base_weekly));
+                $weeklyPay = floatval(str_replace(',', '', $payscale_amount));
                 $hoursPerWeek = 40.00;
                 $perHourPay = $weeklyPay / $hoursPerWeek;
     
@@ -1288,7 +1298,8 @@ class Accounting_modals extends MY_Controller
             }
     
             if($payscale->pay_type === 'Monthly') {
-                $monthlyPay = floatval(str_replace(',', '', $emp->base_monthly));
+                //$monthlyPay = floatval(str_replace(',', '', $emp->base_monthly));
+                $monthlyPay = floatval(str_replace(',', '', $payscale_amount));
                 $hoursPerWeek = 40.00;
                 $hoursPerMonth = $hoursPerWeek * 4;
                 $perHourPay = $monthlyPay / $hoursPerMonth;
@@ -1297,7 +1308,8 @@ class Accounting_modals extends MY_Controller
             }
     
             if($payscale->pay_type === 'Yearly') {
-                $yearlyPay = floatval(str_replace(',', '', $emp->base_yearly));
+                //$yearlyPay = floatval(str_replace(',', '', $emp->base_yearly));
+                $yearlyPay = floatval(str_replace(',', '', $payscale_amount));
                 $hoursPerWeek = 40.00;
                 $hoursPerMonth = $hoursPerWeek * 4;
                 $hoursPerYear = $hoursPerMonth * 12;
@@ -1334,6 +1346,10 @@ class Accounting_modals extends MY_Controller
               
             }
             $overall_total_dc += $total_dc;
+
+            if($total_dc > 0) {
+                $netPay = $netPay - $total_dc;
+            }   
 
             $employees[] = [
                 'id' => $emp->id,
