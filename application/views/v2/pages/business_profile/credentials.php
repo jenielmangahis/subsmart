@@ -79,9 +79,9 @@
                             </div>
                             <div class="col-12 col-md-3">
                                 <label class="content-subtitle fw-bold d-block mb-2">License Expiration Date</label>
-                                <input type="text" name="license_exp_date" class="nsm-field form-control datepicker"
+                                <input type="date" name="license_exp_date" class="nsm-field form-control"
                                     required
-                                    value="<?= $profiledata->license_expiry_date != '0000-00-00' ? date('m/d/Y', strtotime($profiledata->license_expiry_date)) : '' ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                    value="<?= $profiledata->license_expiry_date != '0000-00-00' ? date('Y-m-d', strtotime($profiledata->license_expiry_date)) : '' ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
                             </div>
                         </div>
                         <div class="row g-3 mt-1">
@@ -150,9 +150,9 @@
                             </div>
                             <div class="col-12 col-md-3">
                                 <label class="content-subtitle fw-bold d-block mb-2">Bond Expiration Date</label>
-                                <input type="text" name="bonded_exp_date"
-                                    class="nsm-field form-control datepicker" required
-                                    value="<?= $profiledata->bond_expiry_date != '0000-00-00' ? date('m/d/Y', strtotime($profiledata->bond_expiry_date)) : '' ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                <input type="date" name="bonded_exp_date"
+                                    class="nsm-field form-control" required
+                                    value="<?= $profiledata->bond_expiry_date != '0000-00-00' ? date('Y-m-d', strtotime($profiledata->bond_expiry_date)) : '' ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
                             </div>
                         </div>
                         <div class="row g-3 mt-1">
@@ -219,9 +219,9 @@
                             </div>
                             <div class="col-12 col-md-3">
                                 <label class="content-subtitle fw-bold d-block mb-2">Insurance Expiration Date</label>
-                                <input type="text" name="insured_exp_date"
-                                    class="nsm-field form-control datepicker" required
-                                    value="<?= $profiledata->insurance_expiry_date != '0000-00-00' ? date('m/d/Y', strtotime($profiledata->insurance_expiry_date)) : '' ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
+                                <input type="date" name="insured_exp_date"
+                                    class="nsm-field form-control" required
+                                    value="<?= $profiledata->insurance_expiry_date != '0000-00-00' ? date('Y-m-d', strtotime($profiledata->insurance_expiry_date)) : '' ?>" <?= !checkRoleCanAccessModule('company-my-credentials', 'write') ? 'disabled="disabled"' : ''; ?> />
                             </div>
                         </div>
                         <div class="row g-3 mt-1">
