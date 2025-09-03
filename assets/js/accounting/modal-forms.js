@@ -519,7 +519,7 @@ $(function () {
                             case 9:
                                 $(this).html(`<p class="m-0 text-end">${formatter.format(parseFloat(res.regular_hrs_pay_total))}</p>`);
                                 break;
-                            case 10:
+                            case 11:
                                 $(this).html(`<p class="m-0 text-end"><span class="total-pay">${formatter.format(parseFloat(res.total_pay))}</span></p>`);
                                 break;
                         }
@@ -10095,6 +10095,7 @@ const payrollTotal = () => {
     var perHourPay = 0.00;
     var commission = 0.00;
     var totalOvertime = 0.00;
+    var totalDeduction = 0.00;
 
     $('div#payrollModal table#payroll-table tbody tr').each(function () {
         if ($(this).find('.select-one').prop('checked')) {
@@ -10108,6 +10109,7 @@ const payrollTotal = () => {
             totalOvertime += parseFloat($(this).find('td:nth-child(8)').text().replace('$', '').replace(',', ''));
             perHourPay += parseFloat($(this).find('td:nth-child(9)').text().replace('$', '').replace(',', ''));
             totalHrsPay += parseFloat($(this).find('td:nth-child(10)').text().replace('$', '').replace(',', ''));
+            totalDeduction += parseFloat($(this).find('td:nth-child(11)').text().replace('$', '').replace(',', ''));
 
             hours = parseFloat(parseFloat(hours) + empTotalHours);
 
@@ -10137,7 +10139,7 @@ const payrollTotal = () => {
     $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(8)').html(parseFloat(totalOvertime).toFixed(2));
     $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(9)').html(formatter.format(parseFloat(perHourPay)));
     $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(10)').html(formatter.format(parseFloat(totalHrsPay)));
-
+    $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(11)').html(formatter.format(parseFloat(totalDeduction)));
     $('table#payroll-table tfoot tr:first-child td:nth-child(5)').html(formatter.format(parseFloat(commission)));
 
     $('div#payrollModal h2.total-pay').html(formatter.format(parseFloat(totalPay)));

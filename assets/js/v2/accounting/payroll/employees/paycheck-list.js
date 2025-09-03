@@ -253,7 +253,7 @@ $('#paycheck-table .delete-paycheck').on('click', function (e) {
     }).then((result) => {
         if (result.isConfirmed) {
             // Proceed with the delete action
-            $.get(`/accounting/delete-paycheck/${id}`, function (res) {
+            $.get(base_url + `accounting/delete-paycheck/${id}`, function (res) {
                 var result = JSON.parse(res);
                 Swal.fire({
                     title: result.success ? 'Delete Successful!' : 'Failed!',
