@@ -516,7 +516,7 @@ $(function () {
                                 $(this).html(`${parseFloat(res.total_hrs).toFixed(2)}`);
                                 break;
                             case 7:
-                                $(this).html(`<p class="m-0 text-end">${parseFloat(res.total_ot_hrs).toFixed(2)}</p>`);
+                                $(this).html(`${parseFloat(res.total_ot_hrs).toFixed(2)}`);
                                 break;
                             case 8:
                                 $(this).html(`<p class="m-0 text-end">${formatter.format(parseFloat(res.per_hour_pay))}</p>`);

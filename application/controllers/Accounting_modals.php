@@ -1309,7 +1309,7 @@ class Accounting_modals extends MY_Controller
         // $sui = 2.7;
 
         $this->page_data['payPeriod'] = str_replace('-', ' to ', $postData['pay_period']);
-        $this->page_data['payDate'] = date('l, M d', strtotime($postData['pay_date']));
+        $this->page_data['payDate'] = date('l, M d', strtotime($postData['pay_date']));    
 
         $employees = [];
         foreach ($postData['employees'] as $key => $empId) {
