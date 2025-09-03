@@ -215,6 +215,18 @@
         </div>
     </div>
 
+    <div class="modal fade nsm-modal fade" id="modal-view-leave-request" tabindex="-1" aria-labelledby="modal-view-leave-request_label" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">            
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">View Overtime Request</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="view-leave-request-container"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="modal-disapprove-overtime-request" role="dialog">
         <div class="modal-dialog modal-md modal-dialog-centered">
             <div class="modal-content">
@@ -291,10 +303,13 @@ $(function(){
         $('#modal-view-leave-request').modal('show');
         $.ajax({
             type: "POST",
-            url: base_url + "timesheet/_view_leave_request",
+            url: base_url + "timesheet/_view_overtime_request",
             data: {rid:rid},
             success: function(html) {  
                 $('#view-leave-request-container').html(html);
+            },
+            beforeSend: function() {
+                $('#view-leave-request-container').html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
     });
@@ -305,7 +320,7 @@ $(function(){
 
         Swal.fire({
             title: 'Delete Overtime Request',
-            html: 'Proceeed with <b>deleting</b> selected overtime request?',
+            html: 'Proceeed with <b>deleting</b> selected overtime request?<br /><br /><small>Deleted data can be restored via archived list.</small>',
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes',
