@@ -1089,8 +1089,31 @@ class Accounting_modals extends MY_Controller
 
             $totalPay += floatval(str_replace(',', '', $employees[$index]->commission));
 
-            $employees[$index]->total_pay = $totalPay;
+            $deductions_contribution = $this->deduction_contribution->getByUser($employee->id);
+
+            $total_deduction = 0;
+            foreach ($deductions_contribution as $dc) {
+                switch($dc->contribution_calculated_as){
+                    case 'Flat amount':
+                        $total_deduction += $dc->deductions_amount;
+                        break;
+                    case 'Percent of gross pay':
+                        $total_deduction += $dc->annual_maximum * ($dc->deductions_amount/100);
+                        break;
+                    case 'Per hour worked':
+                        $total_deduction += $dc->deductions_amount;
+                        break;
+                    default:
+                        break;
+                }
+              
+            }      
+            
+            $employees[$index]->deduction = $total_deduction;
+
+            $employees[$index]->total_pay = $totalPay - $total_deduction;
         }
+
         $this->page_data['employees'] = $employees;
 
         $this->page_data['payPeriods'] = $payPeriod;
@@ -1228,6 +1251,25 @@ class Accounting_modals extends MY_Controller
             $payRate = 'Commission only';
         }
 
+        $deductions_contribution = $this->deduction_contribution->getByUser($employee->id);
+
+        $total_deduction = 0;
+        foreach ($deductions_contribution as $dc) {
+            switch($dc->contribution_calculated_as){
+                case 'Flat amount':
+                    $total_deduction += $dc->deductions_amount;
+                    break;
+                case 'Percent of gross pay':
+                    $total_deduction += $dc->annual_maximum * ($dc->deductions_amount/100);
+                    break;
+                case 'Per hour worked':
+                    $total_deduction += $dc->deductions_amount;
+                    break;
+                default:
+                    break;
+            }
+            
+        }      
         $regularHrsPayTotal = $totalPay;
 
         $totalPay += floatval(str_replace(',', '', $commission_amount));
@@ -1242,7 +1284,8 @@ class Accounting_modals extends MY_Controller
             'total_hrs' => $totalHrs,
             'per_hour_pay' => $perHourPay,
             'regular_hrs_pay_total' => $regularHrsPayTotal,
-            'total_pay' => $totalPay
+            'deduction' => $total_deduction,
+            'total_pay' => $totalPay - $total_deduction
         ]);
     }
 
