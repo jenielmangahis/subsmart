@@ -48,7 +48,7 @@
                                 <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'delete')){ ?>  
                                 <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="delete">Delete</a></li>    
                                 <?php } ?>
-                                <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>                    
+                                 <?php if( logged('role') == 7 ){ ?>          
                                     <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="approve">Approve</a></li>                                
                                     <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="disapprove">Disapprove</a></li>                                
                                 <?php } ?>
@@ -102,11 +102,11 @@
                                     <div class="dropdown table-management">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                         <ul class="dropdown-menu dropdown-menu-end">
-                                            <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>    
+                                            <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write') && $or->status == 1){ ?>                                                
                                             <li><a class="dropdown-item btn-edit-overtime-request" href="javascript:void(0);" data-id="<?= $or->id; ?>">Edit</a></li>
                                             <?php } ?>
                                             <li><a class="dropdown-item btn-view-leave-request" href="javascript:void(0);" data-id="<?= $or->id; ?>">View</a></li>
-                                            <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>    
+                                            <?php if( logged('role') == 7 ){ ?>    
                                                 <li><a class="dropdown-item btn-approve-overtime-request" href="javascript:void(0);" data-status="<?= $or->status; ?>" data-id="<?= $or->id; ?>">Approve</a></li>
                                                 <li><a class="dropdown-item btn-disapprove-overtime-request" href="javascript:void(0);" data-status="<?= $or->status; ?>" data-id="<?= $or->id; ?>">Disapprove</a></li>
                                             <?php } ?>
@@ -130,7 +130,7 @@
             <div class="modal-content">
             <form id="frm-with-selected-disapprove" method="post">
                 <div class="modal-header">
-                    <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-x-circle'></i> <span id="modal-header-label">Disapprove Overtime Request</span></span>
+                    <span class="modal-title content-title"><span id="modal-header-label">Disapprove Overtime Request</span></span>
                     <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                 </div>
                 <div class="modal-body">
@@ -150,15 +150,15 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-create-overtime-request" role="dialog">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <form id="frm-create-overtime-request" method="post">
+    <div class="modal fade nsm-modal fade" id="modal-create-overtime-request" tabindex="-1" aria-labelledby="modal-create-overtime-request_label" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <form id="frm-create-overtime-request" method="post">
+                <div class="modal-content">
                     <div class="modal-header">
-                        <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-fw bx-plus'></i> <span id="modal-header-label">Create Overtime Request</span></span>
-                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+                        <span class="modal-title content-title">Add Overtime Request</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                     </div>
-                    <div class="modal-body"> 
+                    <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label class="content-subtitle fw-bold d-block mb-2">Date From</label>
@@ -167,7 +167,7 @@
                                         <input type="date" name="request_date_from" id="" class="form-control" value="<?= date("Y-m-d"); ?>" required>
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="text" name="request_time_from" value="<?= date("g:i A"); ?>" id="" class="nsm-field form-control timepicker" placeholder="" required>
+                                        <input type="time" name="request_time_from" value="<?= date("g:i A"); ?>" id="" class="nsm-field form-control" placeholder="" required>
                                     </div>
                                 </div>
                             </div>
@@ -178,7 +178,7 @@
                                         <input type="date" name="request_date_to" id="" class="form-control" value="<?= date("Y-m-d"); ?>" required>
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="text" name="request_time_to" value="<?= date("g:i A"); ?>" id="" class="nsm-field form-control timepicker" placeholder="" required>
+                                        <input type="time" name="request_time_to" value="<?= date("g:i A"); ?>" id="" class="nsm-field form-control" placeholder="" required>
                                     </div>
                                 </div>
                             </div>
@@ -186,43 +186,42 @@
                                 <label class="content-subtitle fw-bold d-block mb-2">Reason</label>
                                 <textarea name="request_reason" id="request-reason" class="nsm-field form-control" style="height:200px;" required></textarea>
                             </div>                            
-                        </div> 
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>                        
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="nsm-button primary" id="btn-save-overtime-request">Save</button>
-                    </div>                                       
-                </form>
-            </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
-    <div class="modal fade" id="modal-edit-overtime-request" role="dialog">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <form id="frm-update-overtime-request" method="post">
-                    <input type="hidden" name="rid" id="rid" value="0" />
+    <div class="modal fade nsm-modal fade" id="modal-edit-overtime-request" tabindex="-1" aria-labelledby="modal-edit-overtime-request_label" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <form id="frm-update-overtime-request" method="post">
+                <div class="modal-content">
                     <div class="modal-header">
-                        <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-fw bx-pencil'></i> <span id="modal-header-label">Edit Overtime Request</span></span>
-                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+                        <span class="modal-title content-title">Edit Overtime Request</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                     </div>
                     <div class="modal-body" id="edit-overtime-request-container"></div>
-                    <div class="modal-footer" id="footer-edit-overtime-request">
-                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>                        
+                    <div class="modal-footer">
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="nsm-button primary" id="btn-update-overtime-request">Save</button>
-                    </div>                                       
-                </form>
-            </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
     <div class="modal fade" id="modal-disapprove-overtime-request" role="dialog">
-        <div class="modal-dialog modal-md">
+        <div class="modal-dialog modal-md modal-dialog-centered">
             <div class="modal-content">
                 <form id="frm-disapprove-overtime-request" method="post">
                     <input type="hidden" name="rid" id="disapprove-rid" value="0" />
                     <div class="modal-header">
-                        <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-x-circle'></i> <span id="modal-header-label">Disapprove Overtime Request</span></span>
+                        <span class="modal-title content-title"><span id="modal-header-label">Disapprove Overtime Request</span></span>
                         <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                     </div>
                     <div class="modal-body">
@@ -278,6 +277,9 @@ $(function(){
             data: {rid:rid},
             success: function(html) {  
                 $('#edit-overtime-request-container').html(html);
+            },
+            beforeSend: function() {
+                $('#edit-overtime-request-container').html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
         
@@ -302,7 +304,7 @@ $(function(){
         var url = base_url + 'timesheet/_delete_overtime_request';
 
         Swal.fire({
-            title: 'Delete',
+            title: 'Delete Overtime Request',
             html: 'Proceeed with <b>deleting</b> selected overtime request?',
             icon: 'question',
             showCancelButton: true,
@@ -319,8 +321,8 @@ $(function(){
                         if( result.is_success == 1 ) {
                             Swal.fire({
                             icon: 'success',
-                            title: 'Success',
-                            text: 'Data was successfully deleted',
+                            title: 'Delete Overtime Request',
+                            text: 'Overtime request was successfully deleted',
                             }).then((result) => {
                                 window.location.reload();
                             });
@@ -344,7 +346,7 @@ $(function(){
 
         if( status == 1 || status == 3 ){
             Swal.fire({
-                title: 'Update Status',
+                title: 'Approve Request',
                 html: 'Are you sure you want to <b>approve</b> selected overtime request?',
                 icon: 'question',
                 showCancelButton: true,
@@ -361,8 +363,8 @@ $(function(){
                             if( result.is_success == 1 ) {
                                 Swal.fire({
                                 icon: 'success',
-                                title: 'Success',
-                                text: 'Data was successfully updated',
+                                title: 'Approve Request',
+                                text: 'Overtime request was successfully updated',
                                 }).then((result) => {
                                     window.location.reload();
                                 });
