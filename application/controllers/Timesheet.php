@@ -6293,6 +6293,27 @@ class Timesheet extends MY_Controller
         echo json_encode($return);
     }
 
+    public function ajax_view_overtime_request()
+    {
+        $this->load->model('OvertimeRequest_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $overtimeRequest = $this->OvertimeRequest_model->getByIdAndCompanyId($post['rid'], $cid);
+
+        if ($overtimeRequest) {
+            $is_valid = 1;
+            $err_msg  = '';
+        } else {
+            $err_msg = '<div class="alert alert-danger" role="alert">Cannot find data.</div>';
+        }
+
+        $this->page_data['is_valid'] = $is_valid;
+        $this->page_data['err_msg']  = $err_msg;
+        $this->page_data['overtimeRequest'] = $overtimeRequest;
+        $this->load->view('v2/pages/users/ajax_view_overtime_request', $this->page_data);
+    }
+
     public function ajax_view_leave_request()
     {
         $this->load->model('LeaveRequest_model');
@@ -6383,6 +6404,7 @@ class Timesheet extends MY_Controller
             $hrs_diff  = $diff->h;
 
             $data = [
+                'company_id' => $cid,
                 'user_id' => $uid,
                 'approver_id' => 0,
                 'date_from' => $post['request_date_from'],
@@ -6597,10 +6619,10 @@ class Timesheet extends MY_Controller
 
         $cid   = logged('company_id');
         $uid   = logged('id');
-        $utype = logged('user_type');
+        $role  = logged('role');
         $post  = $this->input->post();
 
-        if ($utype == 7) {
+        if ($role == 7) {
             $overtimeRequest = $this->OvertimeRequest_model->getByIdAndCompanyId($post['rid'], $cid);
             if ($overtimeRequest) {
                 $data = [
@@ -6620,7 +6642,7 @@ class Timesheet extends MY_Controller
                 createActivityLog($activity_name);
             }
         } else {
-            $msg = 'Only admin can approve request.';
+            $msg = 'Only admin can disapprove request.';
         }
 
         $return = [
@@ -6643,7 +6665,7 @@ class Timesheet extends MY_Controller
 
         $total_deleted = 0;
         $errors = [];
-        foreach ($post['row_selected'] as $rid) {
+        foreach ($post['requests'] as $rid) {
             $overtimeRequest =  $this->OvertimeRequest_model->getByIdAndCompanyId($rid, $cid);
             if ($overtimeRequest) {
                 $data = ['is_archived' => 1];
@@ -6844,6 +6866,173 @@ class Timesheet extends MY_Controller
 
         echo json_encode($return);
     }
+
+    public function ajax_archived_overtime_request_list()
+	{
+        $this->load->model('OvertimeRequest_model');
+
+        $post = $this->input->post();        
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $conditions[] = ['field' => 'timesheet_overtime_requests.is_archived', 'value' => 1];
+        if (logged('user_type') == 7) {
+            $overtimeRequests = $this->OvertimeRequest_model->getAllByCompanyId($cid, $conditions);
+        } else {
+            $overtimeRequests = $this->OvertimeRequest_model->getAllByUserId($uid, $conditions);
+        }
+
+        $this->page_data['overtimeRequests'] = $overtimeRequests;
+        $this->load->view('v2/pages/users/ajax_archived_overtime_requests', $this->page_data);
+	}
+
+    public function ajax_restore_selected_overtime_requests()
+	{
+        $this->load->model('OvertimeRequest_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['requests'] ){
+            $data     = ['is_archived' => 0, 'date_updated' => date("Y-m-d H:i:s")];
+            $total_updated = $this->OvertimeRequest_model->bulkUpdate($post['requests'], $data, []);
+
+			//Activity Logs
+			$activity_name = 'Overtime Request : Restored ' . $total_updated . ' request(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_permanently_delete_selected_overtime_requests()
+	{
+		$this->load->model('OvertimeRequest_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['requests'] ){
+			$filters[] = ['field' => 'is_archived', 'value' => 1];
+            $total_deleted = $this->OvertimeRequest_model->bulkDelete($post['requests'], $filters);
+
+			//Activity Logs
+			$activity_name = 'Overtime Request : Permanently deleted ' .$total_deleted. ' request(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_all_archived_overtime_requests()
+	{
+		$this->load->model('OvertimeRequest_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+		$total_archived = $this->OvertimeRequest_model->deleteAllArchived($filter);
+
+		//Activity Logs
+		$activity_name = 'Overtime Request : Permanently deleted ' .$total_archived. ' request(s)'; 
+		createActivityLog($activity_name);
+
+		$is_success = 1;
+		$msg    = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_restore_overtime_request()
+	{
+        $this->load->model('OvertimeRequest_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $request = $this->OvertimeRequest_model->getByIdAndCompanyId($post['rid'], $company_id);
+		if( $request  ){
+			$data     = ['is_archived' => 0, 'date_updated' => date("Y-m-d H:i:s")];
+			$this->OvertimeRequest_model->update($request->id, $data);
+
+			//Activity Logs
+			$activity_name = 'Overtime Request : Restored overtime request of ' . $request->employee . ' dated ' . date("m/d/Y",strtotime($request->date_from)); 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_archived_overtime_request()
+	{
+		$this->load->model('OvertimeRequest_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+		$request = $this->OvertimeRequest_model->getByIdAndCompanyId($post['rid'], $company_id);
+        if( $request ){
+			$this->OvertimeRequest_model->delete($request->id);
+
+			//Activity Logs
+			$activity_name = 'Overtime Request : Permanently deleted overtime request of ' . $request->employee . ' dated ' . date("m/d/Y",strtotime($request->date_from));
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
 }
 
 
