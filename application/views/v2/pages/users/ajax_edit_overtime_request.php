@@ -7,7 +7,7 @@
                     <input type="date" name="request_date_from" id="" class="form-control" value="<?= date("Y-m-d",strtotime($overtimeRequest->date_from)); ?>" required>
                 </div>
                 <div class="col-sm-6">
-                    <input type="text" name="request_time_from" value="<?= date("g:i A",strtotime($overtimeRequest->time_from)); ?>" id="" class="nsm-field form-control timepicker" placeholder="" required>
+                    <input type="time" name="request_time_from" value="<?= date("H:i:s",strtotime($overtimeRequest->time_from)); ?>" id="" class="nsm-field form-control" placeholder="" required>
                 </div>
             </div>
         </div>
@@ -18,7 +18,7 @@
                     <input type="date" name="request_date_to" id="" class="form-control" value="<?= date("Y-m-d",strtotime($overtimeRequest->date_to)); ?>" required>
                 </div>
                 <div class="col-sm-6">
-                    <input type="text" name="request_time_to" value="<?= date("g:i A",strtotime($overtimeRequest->time_to)); ?>" id="" class="nsm-field form-control timepicker" placeholder="" required>
+                    <input type="time" name="request_time_to" value="<?= date("H:i:s",strtotime($overtimeRequest->time_to)); ?>" id="" class="nsm-field form-control" placeholder="" required>
                 </div>
             </div>
         </div>
@@ -32,9 +32,6 @@
 <?php } ?>
 <script>
 $(function(){
-    $(".timepicker").datetimepicker({
-        format: 'hh:mm A'
-    });
     
     <?php if( $is_valid == 1 ){ ?>
         $('#footer-edit-overtime-request').show();
