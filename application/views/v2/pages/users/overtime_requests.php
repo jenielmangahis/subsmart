@@ -102,11 +102,11 @@
                                     <div class="dropdown table-management">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                         <ul class="dropdown-menu dropdown-menu-end">
-                                            <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>    
+                                            <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write') && $or->status == 1){ ?>                                                
                                             <li><a class="dropdown-item btn-edit-overtime-request" href="javascript:void(0);" data-id="<?= $or->id; ?>">Edit</a></li>
                                             <?php } ?>
                                             <li><a class="dropdown-item btn-view-leave-request" href="javascript:void(0);" data-id="<?= $or->id; ?>">View</a></li>
-                                            <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>    
+                                            <?php if( logged('role') == 7 ){ ?>    
                                                 <li><a class="dropdown-item btn-approve-overtime-request" href="javascript:void(0);" data-status="<?= $or->status; ?>" data-id="<?= $or->id; ?>">Approve</a></li>
                                                 <li><a class="dropdown-item btn-disapprove-overtime-request" href="javascript:void(0);" data-status="<?= $or->status; ?>" data-id="<?= $or->id; ?>">Disapprove</a></li>
                                             <?php } ?>
@@ -302,7 +302,7 @@ $(function(){
         var url = base_url + 'timesheet/_delete_overtime_request';
 
         Swal.fire({
-            title: 'Delete',
+            title: 'Delete Overtime Request',
             html: 'Proceeed with <b>deleting</b> selected overtime request?',
             icon: 'question',
             showCancelButton: true,
@@ -319,8 +319,8 @@ $(function(){
                         if( result.is_success == 1 ) {
                             Swal.fire({
                             icon: 'success',
-                            title: 'Success',
-                            text: 'Data was successfully deleted',
+                            title: 'Delete Overtime Request',
+                            text: 'Overtime request was successfully deleted',
                             }).then((result) => {
                                 window.location.reload();
                             });
@@ -344,7 +344,7 @@ $(function(){
 
         if( status == 1 || status == 3 ){
             Swal.fire({
-                title: 'Update Status',
+                title: 'Approve Request',
                 html: 'Are you sure you want to <b>approve</b> selected overtime request?',
                 icon: 'question',
                 showCancelButton: true,
@@ -361,8 +361,8 @@ $(function(){
                             if( result.is_success == 1 ) {
                                 Swal.fire({
                                 icon: 'success',
-                                title: 'Success',
-                                text: 'Data was successfully updated',
+                                title: 'Approve Request',
+                                text: 'Overtime request was successfully updated',
                                 }).then((result) => {
                                     window.location.reload();
                                 });
