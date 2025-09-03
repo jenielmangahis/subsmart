@@ -6541,7 +6541,7 @@ class Timesheet extends MY_Controller
 
         $cid   = logged('company_id');
         $uid   = logged('id');
-        $utype = logged('user_type');
+        $utype = logged('role');
         $post  = $this->input->post();
 
         if ($utype == 7) {
@@ -6554,7 +6554,7 @@ class Timesheet extends MY_Controller
                     'date_updated' => date("Y-m-d H:i:s")
                 ];
 
-                //$this->OvertimeRequest_model->update($overtimeRequest->id, $data);
+                $this->OvertimeRequest_model->update($overtimeRequest->id, $data);
 
                 //Add overtime in timesheet
                 $date_from = $overtimeRequest->date_from;
