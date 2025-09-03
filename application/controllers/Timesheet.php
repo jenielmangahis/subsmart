@@ -6335,7 +6335,7 @@ class Timesheet extends MY_Controller
 
         $cid = logged('company_id');
         $uid = logged('id');
-        $conditions[] = ['field' => 'is_archived', 'value' => 0];
+        $conditions[] = ['field' => 'timesheet_overtime_requests.is_archived', 'value' => 0];
         if (logged('user_type') == 7) {
             $overtimeRequests = $this->OvertimeRequest_model->getAllByCompanyId($cid, $conditions);
         } else {
