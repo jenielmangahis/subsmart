@@ -1070,9 +1070,9 @@ $('.checkEditForm').on('submit', function (e) {
                     confirmButtonText: "Okay",
                 }).then((result) => {
                     try {
+                        checkTable.draw(false);
                         recentAddCheckTable.draw(false);
                         recentEditCheckTable.draw(false);
-                        checkTable.draw(false);
                     } catch (error) {}
                     $('.checkEditNotificationDot').show();
                     $('.checkEditModal').modal('hide');

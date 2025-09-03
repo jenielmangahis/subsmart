@@ -44,6 +44,7 @@ class Vendors_model extends MY_Model {
 		$this->db->where_in('accounting_vendors.status', $status);
 		$this->db->where('accounting_purchase_order.status', 1);
 		$this->db->where('accounting_purchase_order.purchase_order_date >=', date("Y-m-d", strtotime("-365 days")));
+		$this->db->where('accounting_vendors.f_name !=', '');
 		$this->db->order_by('accounting_vendors.f_name', 'asc');
 		$this->db->group_by('accounting_vendors.id');
 		$this->db->from($this->table);

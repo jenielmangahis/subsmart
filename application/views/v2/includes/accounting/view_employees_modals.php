@@ -251,7 +251,7 @@
                                         </div>
 
                                         <div class="col-12 col-md-6">
-                                            <label class="content-subtitle fw-bold d-block mb-2">Hire date</label>
+                                            <label class="content-subtitle fw-bold d-block mb-2">Hired date</label>
                                             <div class="nsm-field-group calendar">
                                                 <input type="text" class="form-control nsm-field date" id="hire-date"
                                                     name="hire_date"
@@ -280,27 +280,36 @@
                                         </div><br />
                                         <div class="col-12 col-md-6">
                                             <label class="content-subtitle fw-bold d-block mb-2">Title</label>
-                                            <select class="nsm-field form-select" name="role" id="employee_role" required>
+                                            <select class="nsm-field form-select" name="user_type" id="user-type-id" required>
                                                 <?php foreach ($userTitles as $r) : ?>
                                                 <option value="<?= $r->id; ?>"
-                                                    <?= $r->id == $employee->role ? 'selected' : ''; ?>><?= $r->title; ?>
+                                                    <?= $r->id == $employee->user_type ? 'selected' : ''; ?>><?= $r->title; ?>
                                                 </option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
                                         <div class="col-12 col-md-6">
                                             <label class="content-subtitle fw-bold d-block mb-2">Role</label>
-                                            <select class="nsm-field form-select" name="role" id="role" required>
+                                            <select class="nsm-field form-select" name="role" id="role-id" required>
                                                 <?php foreach($roles as $key => $value){ ?>
-                                                <option value="<?= $key; ?>" <?= $employee->user_type == $key ? 'selected="selected"' : ''; ?>><?= $value['name']; ?></option>
+                                                <option value="<?= $key; ?>" <?= $employee->role == $key ? 'selected="selected"' : ''; ?>><?= $value['name']; ?></option>
                                                 <?php } ?>
                                             </select>
                                         </div> 
-                                        <div class="col-12 mt-2">
-                                            <label class="content-subtitle fw-bold d-block mb-2">Workers' comp class</label>
-                                            <input type="text" class="nsm-field form-control" id="workers-comp-class"
-                                                name="workers_comp_class"
-                                                value="<?= !empty($employmentDetails) ? $employmentDetails->workers_comp_class : '' ?>">
+                                        <div class="col-12 col-md-6 mt-2">
+                                            <label class="content-subtitle fw-bold d-block mb-2">Payment Method</label>
+                                            <select name="pay_method" id="" class="form-select">
+                                                <option value="direct-deposit">Direct Deposit</option>
+                                                <option value="paper-check">Paper check</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-md-6 mt-2">
+                                            <label class="content-subtitle fw-bold d-block mb-2">Employment Status</label>
+                                            <select name="workers_comp_class" id="workers-comp-class" class="form-select">
+                                                <?php foreach($optionEmploymentStatus as $key => $value){ ?>
+                                                    <option <?= $employmentDetails && $employmentDetails->workers_comp_class == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
+                                                <?php } ?>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -2200,7 +2209,6 @@ $(function() {
 
                     var employee_details = data.employee_details;
                     $.each(employee_details, function(index) {
-                        console.log(employee_details[index]);
                         var employee_number = employee_details[index]
                             .employee_number;
                         var hire_date = employee_details[index].hire_date;
@@ -2209,6 +2217,7 @@ $(function() {
                         var worker_company_class = employee_details[index]
                             .worker_company_class;
                         var employee_title = employee_details[index].employee_title;
+                        var employee_role  = employee_details[index].employee_role;
 
                         $(`#emp-details-worker-company-class`).text(
                             worker_company_class);
@@ -2216,6 +2225,7 @@ $(function() {
                         $(`#emp-details-status`).text(employee_status);
                         $(`#emp-hire-date`).text(hire_date);
                         $(`#emp-details-employee-number`).text(employee_number);
+                        $(`#emp-details-employee-role`).text(employee_role);
                     });
 
                     Swal.fire({

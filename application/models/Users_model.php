@@ -839,6 +839,18 @@ class Users_model extends MY_Model
     {
         $this->db->where('company_id', logged('company_id'));
         $this->db->where('payscale_id', $payscaleId);
+        $this->db->where('status', 1);
+        $this->db->where('is_archived', 'No');
+        $query = $this->db->get('users');
+        return $query->result();
+    }
+
+     public function getActiveEmployeeByIds($ids)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where_in('id', $ids);
+        $this->db->where('status', 1);
+        $this->db->where('is_archived', 'No');
         $query = $this->db->get('users');
         return $query->result();
     }

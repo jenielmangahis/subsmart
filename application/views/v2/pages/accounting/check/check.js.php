@@ -436,7 +436,7 @@
         });
     });
 
-    $(document).on('click', '.checkBatchPrint', function () {
+    $(document).on('click', '.checkBatchExport', function () {
         function fileID(length) {
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let result = '';

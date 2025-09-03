@@ -513,13 +513,13 @@ $(function () {
                             case 6:
                                 $(this).html(`<p class="m-0 text-end">${parseFloat(res.total_hrs).toFixed(2)}</p>`);
                                 break;
-                            case 7:
+                            case 8:
                                 $(this).html(`<p class="m-0 text-end">${formatter.format(parseFloat(res.per_hour_pay))}</p>`);
                                 break;
-                            case 8:
+                            case 9:
                                 $(this).html(`<p class="m-0 text-end">${formatter.format(parseFloat(res.regular_hrs_pay_total))}</p>`);
                                 break;
-                            case 9:
+                            case 10:
                                 $(this).html(`<p class="m-0 text-end"><span class="total-pay">${formatter.format(parseFloat(res.total_pay))}</span></p>`);
                                 break;
                         }

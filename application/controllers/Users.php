@@ -108,9 +108,15 @@ class Users extends MY_Controller
 		$comp_id = logged('company_id');
 		$profiledata = $this->business_model->getByCompanyId($comp_id);
 
-		// var_dump($profiledata);
-
-		// return;
+		$workingDays = unserialize($profiledata->working_days);
+		$timeOffDays = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'];
+		foreach($workingDays as $d){
+			$key = array_search(date('D', strtotime($d['day'])), $timeOffDays);
+			if ($key !== false) {
+				unset($timeOffDays[$key]);
+			}
+		}
+		$this->page_data['timeOffDays'] = $timeOffDays;
 
 		if ($profiledata->profile_slug == '') {
 			$profile_slug = createSlug($profiledata->business_name, '-');
@@ -123,7 +129,7 @@ class Users extends MY_Controller
 
 		$conditions[] = ['field' => 'deals_steals.status', 'value' => $this->DealsSteals_model->statusActive()];
 		$dealsSteals = $this->DealsSteals_model->getAllByCompanyId($comp_id, array(), $conditions);
-
+		
 		$this->page_data['selectedCategories'] = $selectedCategories;
 		$this->page_data['profiledata'] = $profiledata;
 		$this->page_data['dealsSteals'] = $dealsSteals;
