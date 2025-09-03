@@ -140,7 +140,7 @@ class Check extends MY_Controller
             $file_size = $attachments['size'][$i];
             $file_extension = strtolower(pathinfo($original_name, PATHINFO_EXTENSION));
             
-            $stored_name = ($is_update ? '' : "CHECK{$check_id}_") . substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 8) . '.' . $file_extension;
+            $stored_name = "CHECK{$check_id}_" . substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 8) . '.' . $file_extension;
             $target_path = $upload_dir . $stored_name;
 
             if (!move_uploaded_file($tmp_name, $target_path)) {
@@ -240,14 +240,36 @@ class Check extends MY_Controller
                     $memo .= " <small class='text-muted fst-italic'>&mdash; VOIDED</small>";
                     break;
             }
-            $attachments = "";
+            
+            $attachments = '';
+            if (!empty($getDatas->file)) {
+                $files = explode(',', $getDatas->file);
+                $attachments .= "<div style='white-space: nowrap; overflow-x: auto;'>";
+                foreach ($files as $file) {
+                    $file_number++;
+                    $file = trim($file);
+                    $ext = pathinfo($file, PATHINFO_EXTENSION);
+                    $url = base_url('uploads/accounting/expenses/') . $file;
+                    $attachments .= "
+                        <a href='$url' target='_blank' class='text-decoration-none d-inline-block me-1'>
+                            <div class='text-center border rounded px-1 py-0 bg-light' style='min-width:37px; display:inline-block;'>
+                                <small class='fw-semibold text-dark'>.$ext</small>
+                            </div>
+                        </a>
+                    ";
+                }
+                $attachments .= "</div>";
+            } else {
+                $attachments = '<small class="text-muted fst-italic">No Attachments</small>';
+            }
+
+
             $menuActions = "
                 <div class='dropdown'>
                     <button class='btn dropdown-toggle text-muted' type='button' id='checkMenuButton' data-bs-toggle='dropdown' aria-expanded='false'><i class='fas fa-ellipsis-v'></i></button>
                     <ul class='dropdown-menu' aria-labelledby='checkMenuButton'>
                         <li><a class='dropdown-item editCheck' href='javascript:void(0);' data-check_id='$getDatas->id'>Edit</a></li>
-                        <li><a class='dropdown-item copyCheck href='javascript:void(0);' data-check_id='$getDatas->id'>Create a Copy</a></li>
-                        <li><a class='dropdown-item attachmentsCheck' href='javascript:void(0);' data-check_id='$getDatas->id'>Attachments</a></li>
+                        <li><a class='dropdown-item copyCheck href='javascript:void(0);' data-check_id='$getDatas->id'>Copy</a></li>
                         <li><a class='dropdown-item voidCheck' href='javascript:void(0);' data-check_id='$getDatas->id'>Void</a></li>
                         <li><a class='dropdown-item deleteCheck' href='javascript:void(0);' data-check_id='$getDatas->id'>Delete</a></li>
                     </ul>

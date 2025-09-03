@@ -34,6 +34,7 @@
                                     Batch Actions&ensp;<i class="fas fa-caret-down text-muted"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="checkBatchActions">
+                                    <li><a class="dropdown-item checkBatchExport" href="javascript:void(0);">Export as .pdf</a></li>
                                     <li><a class="dropdown-item checkBatchPrint" href="javascript:void(0);">Print</a></li>
                                     <li><a class="dropdown-item checkBatchVoid" href="javascript:void(0);">Void</a></li>
                                     <li><a class="dropdown-item checkBatchDelete" href="javascript:void(0);">Delete</a></li>

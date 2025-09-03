@@ -45,6 +45,7 @@
     }
 
     .width0  { width: 0% !important; }
+    .width3 { width: 3%; }
     .width10 { width: 10%; }
     .width20 { width: 20%; }
     .width25 { width: 25%; }
