@@ -2136,6 +2136,12 @@ $route['timesheet/_disapprove_overtime_request'] = 'Timesheet/ajax_disapprove_ov
 $route['timesheet/_delete_selected_overtime_request'] = 'Timesheet/ajax_delete_selected_overtime_request';
 $route['timesheet/_approve_selected_overtime_request'] = 'Timesheet/ajax_approve_selected_overtime_request';
 $route['timesheet/_disapprove_selected_overtime_request'] = 'Timesheet/ajax_disapprove_selected_overtime_request';
+$route['timesheet/_archived_overtime_request_list'] = 'Timesheet/ajax_archived_overtime_request_list';
+$route['timesheet/_restore_selected_overtime_requests'] = 'Timesheet/ajax_restore_selected_overtime_requests';
+$route['timesheet/_permanently_delete_selected_overtime_requests'] = 'Timesheet/ajax_permanently_delete_selected_overtime_requests';
+$route['timesheet/_delete_all_archived_overtime_requests'] = 'Timesheet/ajax_delete_all_archived_overtime_requests';
+$route['timesheet/_restore_overtime_request'] = 'Timesheet/ajax_restore_overtime_request';
+$route['timesheet/_delete_archived_overtime_request'] = 'Timesheet/ajax_delete_archived_overtime_request';
 
 //Timesheet Settings
 $route['timesheet/_update_settings'] = 'Timesheet/ajax_update_settings';
