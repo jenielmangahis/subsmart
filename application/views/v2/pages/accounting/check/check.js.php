@@ -3,6 +3,8 @@
     var checkTable;
     var cachedCategoryData = null;
     var cachedOptgroupData = null;
+    let isCheckAddModalLoaded = false;
+    let isCheckEditModalLoaded = false;
 
     $(document).ready(function() {
         checkTable = $('.checkTable').DataTable({
@@ -207,18 +209,58 @@
             },
         });
 
-        const content = $('.checkAddModal').find('.checkAddModalContent').length;
-        if (content == 0) {
+        if (!isCheckAddModalLoaded) {
             $.ajax({
                 type: "POST",
                 url: `${window.origin}/accounting/v2/check/checkAddModal`,
                 success: function(response) {
-                    $('.checkAddModal').find('.modal-body').append(response);
+                    $('.checkAddModal .modal-body').append(response);
+                    isCheckAddModalLoaded = true;
                     setLastSettings();
                 },
+                error: function() {
+                    Swal.fire("Error", "Failed to load modal content.", "error");
+                }
             });
         } else {
+            checkAddResetForm();
             setLastSettings();
+        }
+    });
+
+    $(document).on('click', '.copyCheck', function() {
+        Swal.fire({
+            icon: "info",
+            title: "Fetching content!",
+            html: "Please wait while the process is running...",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
+
+        const check_id = $(this).attr('data-check_id');
+
+        if (!isCheckAddModalLoaded) {
+            $.ajax({
+                type: "POST",
+                url: `${window.origin}/accounting/v2/check/checkAddModal`,
+                success: function(response) {
+                    $('.checkAddModal .modal-body').append(response);
+                    $('.checkAddBadge').show();
+                    isCheckAddModalLoaded = true;
+                    setLastSettings();
+                    copyCheck(check_id);
+                },
+                error: function() {
+                    Swal.fire("Error", "Failed to load modal content.", "error");
+                }
+            });
+        } else {
+            $('.checkAddBadge').show();
+            setLastSettings();
+            copyCheck(check_id);
         }
     });
 
@@ -235,18 +277,20 @@
         });
 
         const check_id = $(this).attr('data-check_id');
-        const content = $('.checkEditModal').find('.checkEditModalContent').length;
-        if (content == 0) {
+
+        if (!isCheckEditModalLoaded) {
             $.ajax({
                 type: "POST",
-                data: {
-                    check_id: check_id,
-                },
+                data: { check_id },
                 url: `${window.origin}/accounting/v2/check/checkEditModal`,
                 success: function(response) {
-                    $('.checkEditModal').find('.modal-body').append(response);
+                    $('.checkEditModal .modal-body').append(response);
+                    isCheckEditModalLoaded = true;
                     getCheckDetails(check_id);
                 },
+                error: function() {
+                    Swal.fire("Error", "Failed to load edit modal content.", "error");
+                }
             });
         } else {
             getCheckDetails(check_id);

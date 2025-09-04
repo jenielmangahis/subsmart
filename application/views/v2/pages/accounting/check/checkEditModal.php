@@ -7,7 +7,7 @@
                 <div class="col-lg-9 position-relative">
                     <h4 class="fw-bold">Edit Check&ensp;<small class="text-muted fw-normal checkEditSequenceLabel"></small></h4>
                     <p>Edit the details of an existing check.</p> 
-                    <span class="badge bg-danger position-absolute checkEditBadge">THIS CHECK IS VOIDED!</span>
+                    <div class="badge bg-danger position-absolute checkEditBadge">THIS CHECK IS VOIDED!</div>
                 </div>
                 <div class="col-lg-3">
                     <div class="float-end">
@@ -193,7 +193,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <button type="submit" class="btn btn-primary fw-bold float-end"><i class="fas fa-file-import"></i>&ensp;Update</button>
+                                    <button type="submit" class="btn btn-primary fw-bold float-end checkEditSubmitButton"><i class="fas fa-file-import"></i>&ensp;Update</button>
                                 </div>
                             </div>
                         </form>
@@ -378,7 +378,7 @@
         <!-- <div class="col-lg-12 virtualCheckEditAttachmentSection"></div> -->
         <div class="col-lg-12">
             <div class="float-end">
-                <button type="submit" class="btn btn-primary fw-bold float-end"><i class="fas fa-file-import"></i>&ensp;Save</button>
+                <button type="submit" class="btn btn-primary fw-bold float-end checkEditSubmitButton"><i class="fas fa-file-import"></i>&ensp;Save</button>
             </div>
         </div>
     </div>
@@ -451,7 +451,7 @@
         }
     });
 
-    $(document).on('click', '#checkEditStandardTab, #checkEditVirtualTab', function() {
+    $(document).on('click', '#checkEditVirtualTab', function() {
         const checkEditPrintLater = $('.checkEditPrintLater').prop('checked');
         const checkEditNo = $('.checkEditNo').val();
         const checkEditNoMinimum = $('.checkEditNo').attr('min');
@@ -1032,336 +1032,85 @@
         }
     });
 
-$('.checkEditForm').on('submit', function (e) {
-    e.preventDefault();
-    const checkEditForm = $(this);
-    let checkEditFormData = new FormData(this);
-    
-    const pond = FilePond.find(document.querySelector('.checkEditAttachments'));
-    if (pond && pond.getFiles().length > 0) {
-        pond.getFiles().forEach((fileItem, index) => {
-            if (fileItem.file) {
-                checkEditFormData.append(`checkEditAttachments[]`, fileItem.file);
-            }
-        });
-    }
-
-    checkEditFormData.append('check_id', $('.checkEditID').val());
-
-    $.ajax({
-        type: "POST",
-        url: `${window.origin}/accounting/v2/check/editCheck`,
-        data: checkEditFormData,
-        processData: false,
-        contentType: false,
-        beforeSend: function () {
-            formDisabler(checkEditForm, true);
-        },
-        success: function (response) {
-            formDisabler($('.virtualCheckEditForm'), false);
-            formDisabler(checkEditForm, false);
-            
-            if (response == 1 || (typeof response === 'object' && response.status === 'success')) {
-                Swal.fire({
-                    icon: "success",
-                    title: "Entry Updated!",
-                    html: "Check has been updated successfully.",
-                    showConfirmButton: true,
-                    confirmButtonText: "Okay",
-                }).then((result) => {
-                    try {
-                        checkTable.draw(false);
-                        recentAddCheckTable.draw(false);
-                        recentEditCheckTable.draw(false);
-                    } catch (error) {}
-                    $('.checkEditNotificationDot').show();
-                    $('.checkEditModal').modal('hide');
-                });
-            } else if (typeof response === 'object' && response.status === 'partial') {
-                Swal.fire({
-                    icon: "warning",
-                    title: "Partial Success!",
-                    html: response.message + "<br><br>Errors: " + response.errors.join(', '),
-                    showConfirmButton: true,
-                    confirmButtonText: "Okay",
-                });
-            } else {
-                let errorMessage = "An error occurred while updating the entry.";
-                if (typeof response === 'object' && response.message) {
-                    errorMessage = response.message;
+    $('.checkEditForm').on('submit', function (e) {
+        e.preventDefault();
+        const checkEditForm = $(this);
+        let checkEditFormData = new FormData(this);
+        
+        const pond = FilePond.find(document.querySelector('.checkEditAttachments'));
+        if (pond && pond.getFiles().length > 0) {
+            pond.getFiles().forEach((fileItem, index) => {
+                if (fileItem.file) {
+                    checkEditFormData.append(`checkEditAttachments[]`, fileItem.file);
                 }
-                Swal.fire({
-                    icon: "error",
-                    title: "Update Failed!",
-                    html: errorMessage,
-                    showConfirmButton: true,
-                    confirmButtonText: "Okay",
-                });
-            }
-        },
-        error: function (xhr, status, error) {
-            formDisabler($('.virtualCheckEditForm'), false);
-            Swal.fire({
-                icon: "error",
-                title: "Error!",
-                html: "An unexpected error occurred: " + error,
-                showConfirmButton: true,
-                confirmButtonText: "Okay",
             });
-        },
-    });
-});
+        }
 
-    function getCheckDetails(check_id) {
+        checkEditFormData.append('check_id', $('.checkEditID').val());
+
         $.ajax({
             type: "POST",
-            data: { check_id: check_id },
-            url: `${window.origin}/accounting/v2/check/getCheckDetails`,
-            success: function(response) {
-                let check_data = JSON.parse(response).check;
-                let category_data = JSON.parse(response).category;
-                let items_data = JSON.parse(response).items;
-                let attachments_data = JSON.parse(response).attachments;
-
-                $('.checkEditAttachments').each(function() {
-                    const pond = FilePond.find(this);
-                    if (pond) {
-                        pond.removeFiles();
+            url: `${window.origin}/accounting/v2/check/editCheck`,
+            data: checkEditFormData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                formDisabler(checkEditForm, true);
+            },
+            success: function (response) {
+                formDisabler($('.virtualCheckEditForm'), false);
+                formDisabler(checkEditForm, false);
+                
+                if (response == 1 || (typeof response === 'object' && response.status === 'success')) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Entry Updated!",
+                        html: "Check has been updated successfully.",
+                        showConfirmButton: true,
+                        confirmButtonText: "Okay",
+                    }).then((result) => {
+                        try {
+                            checkTable.draw(false);
+                            recentAddCheckTable.draw(false);
+                            recentEditCheckTable.draw(false);
+                        } catch (error) {}
+                        $('.checkEditNotificationDot').show();
+                        $('.checkEditModal').modal('hide');
+                    });
+                } else if (typeof response === 'object' && response.status === 'partial') {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Partial Success!",
+                        html: response.message + "<br><br>Errors: " + response.errors.join(', '),
+                        showConfirmButton: true,
+                        confirmButtonText: "Okay",
+                    });
+                } else {
+                    let errorMessage = "An error occurred while updating the entry.";
+                    if (typeof response === 'object' && response.message) {
+                        errorMessage = response.message;
                     }
-                });
-
-                function populateFilePondAttachments(attachments_data) {
-                    const pond = FilePond.find(document.querySelector('.checkEditAttachments'));
-
-                    if (pond && attachments_data.length > 0) {
-                        attachments_data.forEach(attachment => {
-                            fetch(attachment.source).then(res => res.blob()).then(blob => {
-                                const file = new File([blob], attachment.options.file.stored_name, {
-                                    type: attachment.options.file.type
-                                });
-                                pond.addFile(file, {
-                                    type: 'local',
-                                    metadata: attachment.options.metadata
-                                });
-                            });
-                        });
-                    }
+                    Swal.fire({
+                        icon: "error",
+                        title: "Update Failed!",
+                        html: errorMessage,
+                        showConfirmButton: true,
+                        confirmButtonText: "Okay",
+                    });
                 }
-
-                function renderCheckCategoryAndItemRows(category_data, items_data) {
-                    const categoryContainer = $(".checkEditCategoryTable > tbody");
-                    const itemContainer = $(".checkEditItemTable > tbody");
-
-                    categoryContainer.empty();
-                    itemContainer.empty();
-
-                    if (category_data.length > 0) {
-                        category_data.forEach((cat, index) => {
-                            const $row = $(getCheckEditCategoryRowHtml());
-                            categoryContainer.append($row);
-
-                            initSelectizeWithCache({
-                                selector: $row.find('.checkEditCategoryOptionsRow'),
-                                url: `${window.origin}/accounting/v2/check/getAccountDetails/all`,
-                                valueField: 'value',
-                                labelField: 'text',
-                                searchField: 'text',
-                                optgroupField: 'optgroup',
-                                placeholder: 'Select Category...',
-                                renderOptionAttr: 'balance',
-                                onReady: function(selectize) {
-                                    if (cat.expense_account_id) {
-                                        selectize.setValue(cat.expense_account_id);
-                                    }
-                                }
-                            });
-
-                            initSelectizeWithCache({
-                                selector: $row.find('.checkEditCategoryCustomerRow'),
-                                url: `${window.origin}/accounting/v2/check/getPayeeDetails/customer`,
-                                valueField: 'id',
-                                labelField: 'payee_name',
-                                searchField: 'payee_name',
-                                optgroupField: 'payee_type',
-                                placeholder: 'Select Customer...',
-                                renderOptionAttr: 'payee_type',
-                                onReady: function(selectize) {
-                                    if (cat.customer_id) {
-                                        selectize.setValue(cat.customer_id);
-                                    }
-                                }
-                            });
-
-                            $row.find(".checkEditCategoryDescriptionRow").val(cat.description || "").change();
-                            $row.find(".checkEditCategoryAmountRow").val(cat.amount || "").change();
-                            $row.find(".checkEditCategoryBillableRow").prop("checked", cat.billable == "1").change();
-                            $row.find(".checkEditCategoryTaxRow").prop("checked", cat.tax == "1").change();
-                        });
-                    } else {
-                        const $newRow = $(getCheckEditCategoryRowHtml());
-                        categoryContainer.html($newRow);
-
-                        initSelectizeWithCache({
-                            selector: $newRow.find('.checkEditCategoryOptionsRow'),
-                            url: `${window.origin}/accounting/v2/check/getAccountDetails/all`,
-                            valueField: 'value',
-                            labelField: 'text',
-                            searchField: 'text',
-                            optgroupField: 'optgroup',
-                            placeholder: 'Select Category...',
-                            renderOptionAttr: 'balance',
-                        });
-
-                        initSelectizeWithCache({
-                            selector: $newRow.find('.checkEditCategoryCustomerRow'),
-                            url: `${window.origin}/accounting/v2/check/getPayeeDetails/customer`,
-                            valueField: 'id',
-                            labelField: 'payee_name',
-                            searchField: 'payee_name',
-                            optgroupField: 'payee_type',
-                            placeholder: 'Select Customer...',
-                            renderOptionAttr: 'payee_type',
-                        });
-                    }
-
-                    if (items_data.length > 0) {
-                        items_data.forEach((item, index) => {
-                            const $row = $(getCheckEditItemRowHtml());
-                            itemContainer.append($row);
-
-                            initSelectizeWithCache({
-                                selector: $row.find('.checkEditItemOptionsRow'),
-                                url: `${window.origin}/accounting/v2/check/getItemDetails/all`,
-                                valueField: 'id',
-                                labelField: 'item_name',
-                                searchField: 'item_name',
-                                optgroupField: 'item_type',
-                                placeholder: 'Select Product/Service...',
-                                renderOptionAttr: 'item_type',
-                                onReady: function(selectize) {
-                                    if (item.item_id) {
-                                        selectize.setValue(item.item_id);
-                                        $row.find(".checkEditItemQtyRow").val(item.quantity || "").change();
-                                        $row.find(".checkEditItemRateRow").val(item.rate || "").change();
-                                        $row.find(".checkEditItemAmountRow").val(item.total || "").change();
-                                    }
-                                }
-                            });
-
-                            initSelectizeWithCache({
-                                selector: $row.find('.checkEditItemCustomerRow'),
-                                url: `${window.origin}/accounting/v2/check/getPayeeDetails/customer`,
-                                valueField: 'id',
-                                labelField: 'payee_name',
-                                searchField: 'payee_name',
-                                optgroupField: 'payee_type',
-                                placeholder: 'Select Customer...',
-                                renderOptionAttr: 'payee_type',
-                                onReady: function(selectize) {
-                                    if (item.customer_id) {
-                                        selectize.setValue(item.customer_id);
-                                    }
-                                }
-                            });
-
-                            $row.find(".checkEditItemDescriptionRow").val(item.description || "").change();
-                            $row.find(".checkEditItemBillableRow").prop("checked", item.isBillable == "1").change();
-                            $row.find(".checkEditItemTaxRow").prop("checked", item.isTax == "1").change();
-                        });
-                    } else {
-                        const $newRow = $(getCheckEditItemRowHtml());
-                        itemContainer.html($newRow);
-
-                        initSelectizeWithCache({
-                            selector: $newRow.find('.checkEditItemOptionsRow'),
-                            url: `${window.origin}/accounting/v2/check/getItemDetails/all`,
-                            valueField: 'id',
-                            labelField: 'item_name',
-                            searchField: 'item_name',
-                            optgroupField: 'item_type',
-                            placeholder: 'Select Product/Service...',
-                            renderOptionAttr: 'item_type',
-                        });
-
-                        initSelectizeWithCache({
-                            selector: $newRow.find('.checkEditItemCustomerRow'),
-                            url: `${window.origin}/accounting/v2/check/getPayeeDetails/customer`,
-                            valueField: 'id',
-                            labelField: 'payee_name',
-                            searchField: 'payee_name',
-                            optgroupField: 'payee_type',
-                            placeholder: 'Select Customer...',
-                            renderOptionAttr: 'payee_type',
-                        });
-                    }
-
-                    console.log(`Rendered ${category_data.length || 1} category rows and ${items_data.length || 1} item rows.`);
-                }
-
-                function applyCheckData() {
-                    const selectizeReady =
-                        $(".checkEditPayee")[0]?.selectize &&
-                        $(".checkEditBankAccount")[0]?.selectize &&
-                        $(".checkEditTag")[0]?.selectize &&
-                        $(".checkEditCategoryOptionsRow")[0]?.selectize &&
-                        $(".checkEditCategoryCustomerRow")[0]?.selectize &&
-                        $(".checkEditItemOptionsRow")[0]?.selectize &&
-                        $(".checkEditItemCustomerRow")[0]?.selectize;
-
-                    const filepondReady = $(".filepond--root").length > 0;
-
-                    if (selectizeReady && filepondReady) {
-                        let check_no = (check_data.check_no !== null && check_data.check_no != 0) ? parseInt(check_data.check_no) : parseInt(check_data.last_check_no) + 1;
-                        let permit_no = (check_data.permit_no !== null && check_data.permit_no != 0) ? parseInt(check_data.permit_no) : parseInt(check_data.last_permit_no) + 1;
-                        let tags = (check_data.tags || '').split(',').filter(Boolean);
-                        let selectedTags = $(".checkEditTag")[0].selectize;
-                        selectedTags.setValue(null);
-                        tags.forEach(t => selectedTags.options[t] ? selectedTags.addItem(t, true) : selectedTags.createItem(t, false, true));
-
-                        $(".checkEditID").val(check_data.id).change();
-                        if (check_data.to_print == 1) {
-                            $(".checkEditNo").attr("min", check_no).val(check_no).change();
-                            $(".checkEditPrintLater").prop("checked", true).change();
-                        } else {
-                            $(".checkEditPrintLater").prop("checked", false).change();
-                            $(".checkEditNo").attr("min", check_no).val(check_no).change();
-                        }
-                        $(".checkEditPermitNo").attr("min", permit_no).val(permit_no).change();
-                        $(".checkEditPayee")[0].selectize.setValue(check_data.payee_id);
-                        $(".checkEditPayeeType").val(check_data.payee_type).change();
-                        $(".checkEditBankAccount")[0].selectize.setValue(check_data.bank_account_id);
-                        $(".checkEditPaymentDate").val(check_data.payment_date).change();
-                        $(".checkEditMemo").val(check_data.memo).change();
-
-                        populateFilePondAttachments(attachments_data);
-
-                        return true;
-                    }
-                    return false;
-                }
-
-                if (applyCheckData()) {
-                    renderCheckCategoryAndItemRows(category_data, items_data);
-                    $(".checkEditModalContent").fadeIn("fast");
-                    Swal.close();
-                    $('#checkEditStandardTab').click();
-                    $('.checkEditModal').modal('show');
-                    return;
-                }
-
-                const observer = new MutationObserver((mutations, obs) => {
-                    if (applyCheckData()) {
-                        obs.disconnect();
-                    }
-                });
-
-                observer.observe(document.querySelector(".checkEditModal .modal-body"), {
-                    childList: true,
-                    subtree: true,
+            },
+            error: function (xhr, status, error) {
+                formDisabler($('.virtualCheckEditForm'), false);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error!",
+                    html: "An unexpected error occurred: " + error,
+                    showConfirmButton: true,
+                    confirmButtonText: "Okay",
                 });
             },
         });
-    }
+    });
 </script>
 
     

@@ -244,14 +244,14 @@ class Check extends MY_Controller
             $attachments = '';
             if (!empty($getDatas->file)) {
                 $files = explode(',', $getDatas->file);
-                $attachments .= "<div style='white-space: nowrap; overflow-x: auto;'>";
+                $attachments .= "<div class='text-nowrap'>";
                 foreach ($files as $file) {
                     $file_number++;
                     $file = trim($file);
                     $ext = pathinfo($file, PATHINFO_EXTENSION);
                     $url = base_url('uploads/accounting/expenses/') . $file;
                     $attachments .= "
-                        <a href='$url' target='_blank' class='text-decoration-none d-inline-block me-1'>
+                        <a href='$url' target='_blank' class='text-decoration-none d-inline-block'>
                             <div class='text-center border rounded px-1 py-0 bg-light' style='min-width:37px; display:inline-block;'>
                                 <small class='fw-semibold text-dark'>.$ext</small>
                             </div>
@@ -260,7 +260,7 @@ class Check extends MY_Controller
                 }
                 $attachments .= "</div>";
             } else {
-                $attachments = '<small class="text-muted fst-italic">No Attachments</small>';
+                $attachments = '<small class="text-nowrap text-muted fst-italic">Not Specified</small>';
             }
 
 
