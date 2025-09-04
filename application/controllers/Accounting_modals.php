@@ -3109,7 +3109,7 @@ class Accounting_modals extends MY_Controller
 
             $company_id = logged('company_id');
             $payrollNo = $this->accounting_payroll_model->getCompanyLastPayrollNo($company_id);
-
+            
             $insertData = [
                 'payroll_no' => is_null($payrollNo) ? 1 : $payrollNo+1,
                 'pay_from_account' => $data['pay_from_account'],
@@ -3118,14 +3118,12 @@ class Accounting_modals extends MY_Controller
                 'pay_date' => date('Y-m-d', strtotime($data['pay_date'])),
                 'company_id' => $company_id,
                 'payscale_id' => $data['payscale'],
-                // 'pay_schedule_id' => $data['pay_schedule'],
                 'payroll_type' => $payType,
                 'created_by' => logged('id'),
                 'status' => 1
             ];
 
             $payrollId = $this->accounting_payroll_model->create($insertData);
-            // $payrollId = 1;
 
             $employees = [];
 
@@ -3135,48 +3133,80 @@ class Accounting_modals extends MY_Controller
                     foreach ($data['employees'] as $key => $value) {
                         $emp = $this->users_model->getUser($value);
                         $empPayDetails = $this->users_model->getEmployeePayDetails($emp->id);
+
                         $payscale = $this->users_model->get_payscale_by_id($emp->payscale_id);
 
+                        $payscale_amount = 0;
+                        $emp_payscale    = $this->EmployeePayscaleSetting_model->getByEmployeeIdAndCompanyId($emp->id , $company_id);
+                        if($emp_payscale) {
+                            $payscale_amount = $emp_payscale->payscale_amount;
+                        }                          
+
                         if($payscale->pay_type === 'Hourly') {
-                            $perHourPay = floatval(str_replace(',', '', $emp->base_hourly));
-                            $empTotalPay = floatval(str_replace(',', '', $emp->base_hourly)) * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]));
+                            ///$perHourPay = floatval(str_replace(',', '', $emp->base_hourly));
+                            //$empTotalPay = floatval(str_replace(',', '', $emp->base_hourly)) * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]));
+
+                            $perHourPay = floatval(str_replace(',', '', $payscale_amount));
+                            $empTotalPay = floatval(str_replace(',', '', $payscale_amount)) * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]));
                         }
                 
                         if($payscale->pay_type === 'Daily') {
-                
-                            $dailyPay = floatval(str_replace(',', '', $emp->base_daily));
+                            //$dailyPay = floatval(str_replace(',', '', $emp->base_daily));
+                            $dailyPay = floatval(str_replace(',', '', $payscale_amount));
                             $hoursPerDay = 8.00;
                             $perHourPay = $dailyPay / $hoursPerDay;
-                
-                            $empTotalPay = $perHourPay * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]));
+
+                            $perOTHoursPay = 0;
+                            if($data['ot_hours'][$key] > 0) {
+                                $perOTHoursPay = $perHourPay * floatval(str_replace(',', '', $data['ot_hours'][$key]));
+                            }
+
+                            $empTotalPay = $perHourPay * floatval(str_replace(',', '', $data['reg_pay_hours'][$key])) + $perOTHoursPay;
                         }
                 
                         if($payscale->pay_type === 'Weekly') {
-                            $weeklyPay = floatval(str_replace(',', '', $emp->base_weekly));
+                            //$weeklyPay = floatval(str_replace(',', '', $emp->base_weekly));
+                            $weeklyPay = floatval(str_replace(',', '', $payscale_amount));
                             $hoursPerWeek = 40.00;
                             $perHourPay = $weeklyPay / $hoursPerWeek;
-                
-                            $empTotalPay = $perHourPay * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]));
+
+                            $perOTHoursPay = 0;
+                            if($data['ot_hours'][$key] > 0) {
+                                $perOTHoursPay = $perHourPay * floatval(str_replace(',', '', $data['ot_hours'][$key]));
+                            }
+
+                            $empTotalPay = $perHourPay * floatval(str_replace(',', '', $data['reg_pay_hours'][$key])) + $perOTHoursPay;
                         }
                 
                         if($payscale->pay_type === 'Monthly') {
-                
-                            $monthlyPay = floatval(str_replace(',', '', $emp->base_monthly));
+                            //$monthlyPay = floatval(str_replace(',', '', $emp->base_monthly));
+                            $monthlyPay = floatval(str_replace(',', '', $payscale_amount));
                             $hoursPerWeek = 40.00;
                             $hoursPerMonth = $hoursPerWeek * 4;
                             $perHourPay = $monthlyPay / $hoursPerMonth;
+
+                            $perOTHoursPay = 0;
+                            if($data['ot_hours'][$key] > 0) {
+                                $perOTHoursPay = $perHourPay * floatval(str_replace(',', '', $data['ot_hours'][$key]));
+                            }
                 
-                            $empTotalPay = $perHourPay * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]));
+                            $empTotalPay = $perHourPay * floatval(str_replace(',', '', $data['reg_pay_hours'][$key])) + $perOTHoursPay;
                         }
                 
                         if($payscale->pay_type === 'Yearly') {
-                            $yearlyPay = floatval(str_replace(',', '', $emp->base_yearly));
+                            //$yearlyPay = floatval(str_replace(',', '', $emp->base_yearly));
+                            $yearlyPay = floatval(str_replace(',', '', $payscale_amount));
                             $hoursPerWeek = 40.00;
                             $hoursPerMonth = $hoursPerWeek * 4;
                             $hoursPerYear = $hoursPerMonth * 12;
                             $perHourPay = $yearlyPay / $hoursPerYear;
+
+                            $perOTHoursPay = 0;
+                            if($data['ot_hours'][$key] > 0) {
+                                $perOTHoursPay = $perHourPay * floatval(str_replace(',', '', $data['ot_hours'][$key]));
+                            }
                 
-                            $empTotalPay = $perHourPay * floatval(str_replace(',', '', $data['reg_pay_hours'][$key]));
+                            $empTotalPay = $perHourPay * floatval(str_replace(',', '', $data['reg_pay_hours'][$key])) + $perOTHoursPay;
                         }
         
                         $empTotalPay += floatval(str_replace(',', '', $data['commission'][$key]));

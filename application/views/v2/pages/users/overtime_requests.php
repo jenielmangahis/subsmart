@@ -14,9 +14,31 @@
 }
 </style>
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('email_campaigns/add_email_blast') ?>'">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
     </div>
+    <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>
+    <ul class="nsm-fab-options">        
+        <li data-bs-toggle="modal" data-bs-target="#modal-create-overtime-request">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-time'></i>
+            </div>
+            <span class="nsm-fab-label">Add Overtime Request</span>
+        </li>
+        <li class="btn-export-list">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-export"></i>
+            </div>
+            <span class="nsm-fab-label">Export List</span>
+        </li>
+        <li id="btn-mobile-archived">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-archive'></i>
+            </div>
+            <span class="nsm-fab-label">Archived</span>
+        </li>          
+    </ul>
+    <?php } ?>
 </div>
 
 <div class="row page-content g-0">
@@ -39,7 +61,7 @@
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search List">
                         </div>
                     </div>  
-                    <div class="col-8 grid-mb text-end">                        
+                    <div class="col-12 grid-mb text-end">                        
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
@@ -57,7 +79,7 @@
                         <div class="nsm-page-buttons page-button-container">                            
                             <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>
                             <div class="btn-group nsm-main-buttons">
-                                <button type="button" class="btn btn-nsm" id="btn-create-overtime-request"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Overtime</button>
+                                <button type="button" class="btn btn-nsm" id="btn-create-overtime-request"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Overtime Request</button>
                                 <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class=""><i class='bx bx-chevron-down'></i></span>
                                 </button>
@@ -96,10 +118,10 @@
                                     </td>
                                     <td>
                                         <div class="table-row-icon">
-                                            <i class='bx bx-calendar-event'></i>
+                                            <i class='bx bx-time'></i>
                                         </div>
                                     </td>
-                                    <td class="nsm-text-primary"><?= $or->employee; ?></td>
+                                    <td class="nsm-text-primary show"><?= $or->employee; ?></td>
                                     <td class="nsm-text-primary"><?= date("m/d/Y",strtotime($or->date_from)) . ' ' . date("g:i A", strtotime($or->time_from)); ?></td>
                                     <td class="nsm-text-primary"><?= date("m/d/Y",strtotime($or->date_to)) . ' ' . date("g:i A", strtotime($or->time_to)); ?></td>
                                     <td class="nsm-text-primary"><?= $or->total_hrs; ?></td>
@@ -345,6 +367,10 @@ $(function(){
 
     $('#btn-create-overtime-request').on('click', function(){
         $('#modal-create-overtime-request').modal('show');
+    });
+
+    $("#btn-export-list, .btn-export-list").on("click", function() {
+        location.href = base_url + 'timesheet/export_overtime_request_list';
     });
 
     $('.btn-edit-overtime-request').on('click', function(){
