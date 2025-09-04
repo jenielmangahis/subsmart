@@ -79,7 +79,7 @@
                         <div class="nsm-page-buttons page-button-container">                            
                             <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>
                             <div class="btn-group nsm-main-buttons">
-                                <button type="button" class="btn btn-nsm" id="btn-create-overtime-request"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Overtime</button>
+                                <button type="button" class="btn btn-nsm" id="btn-create-overtime-request"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Overtime Request</button>
                                 <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class=""><i class='bx bx-chevron-down'></i></span>
                                 </button>
@@ -118,7 +118,7 @@
                                     </td>
                                     <td>
                                         <div class="table-row-icon">
-                                            <i class='bx bx-calendar-event'></i>
+                                            <i class='bx bx-time'></i>
                                         </div>
                                     </td>
                                     <td class="nsm-text-primary show"><?= $or->employee; ?></td>

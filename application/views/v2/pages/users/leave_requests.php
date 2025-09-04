@@ -11,9 +11,31 @@
 }
 </style>
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('email_campaigns/add_email_blast') ?>'">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
     </div>
+    <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>
+    <ul class="nsm-fab-options">        
+        <li data-bs-toggle="modal" data-bs-target="#modal-create-overtime-request">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-calendar'></i>
+            </div>
+            <span class="nsm-fab-label">Add Leave Request</span>
+        </li>
+        <li class="btn-export-list">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-export"></i>
+            </div>
+            <span class="nsm-fab-label">Export List</span>
+        </li>
+        <li id="btn-mobile-archived">
+            <div class="nsm-fab-icon">
+                <i class='bx bx-archive'></i>
+            </div>
+            <span class="nsm-fab-label">Archived</span>
+        </li>          
+    </ul>
+    <?php } ?>
 </div>
 
 <div class="row page-content g-0">
@@ -50,34 +72,46 @@
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search List">
                         </div>
                     </div>  
-                    <div class="col-8 grid-mb text-end">                        
+                    <div class="col-8 grid-mb text-end">  
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end select-filter"> 
-                                <?php if(checkRoleCanAccessModule('user-settings-leave-requests', 'delete')){ ?>                            
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">                          
+                                <?php if(checkRoleCanAccessModule('user-settings-leave-requests', 'delete')){ ?>  
                                 <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="delete">Delete</a></li>    
                                 <?php } ?>
-                                <?php if(checkRoleCanAccessModule('user-settings-leave-requests', 'write')){ ?>                  
+                                 <?php if( logged('role') == 7 ){ ?>          
                                     <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="approve">Approve</a></li>                                
                                     <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="disapprove">Disapprove</a></li>                                
                                 <?php } ?>
                             </ul>
                         </div>
-                        <?php if(checkRoleCanAccessModule('user-settings-leave-requests', 'write')){ ?>    
-                        <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary" id="btn-create-leave-request" href="javascript:void(0);"><i class='bx bx-plus-medical'></i> Add New</a>                            
-                        </div>
-                        <?php } ?>
+                        <div class="nsm-page-buttons page-button-container">                            
+                            <?php if(checkRoleCanAccessModule('user-settings-leave-requests', 'write')){ ?>
+                            <div class="btn-group nsm-main-buttons">
+                                <button type="button" class="btn btn-nsm" id="btn-create-leave-request"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Leave Request</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down'></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                                                    
+                                    <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>                               
+                                    <li><a class="dropdown-item" id="btn-export-list" href="javascript:void(0);">Export</a></li>                               
+                                </ul>
+                            </div>
+                            <?php } ?>
+                        </div> 
                     </div>
                 </div>
                 <form id="frm-with-selected">   
                 <input type="hidden" name="disapprove_reason" id="dpr" value="" />        
-                <table class="nsm-table">
+                <table class="nsm-table" id="tbl-leave-list">
                     <thead>
                         <tr>
-                            <td style="width:3%;"><input type="checkbox" class="form-check-input" id="chk-all-row" /></td>
+                            <td class="table-icon text-center sorting_disabled">
+                                <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                            </td>
+                            <td class="table-icon show"></td>
                             <td data-name="Name" style="width:30%;">Employee Name</td>
                             <td data-name="Leave Type">Leave Type</td>
                             <td data-name="Date From">Date From</td>
@@ -90,8 +124,13 @@
                         <?php foreach($leaveRequests as $lr){ ?>
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="row_selected[]" class="form-check-input chk-row" value="<?= $lr->id; ?>" />
+                                    <input class="form-check-input row-select table-select" name="requests[]" type="checkbox" value="<?= $lr->id; ?>">
                                 </td>
+                                <td>
+                                        <div class="table-row-icon">
+                                            <i class='bx bx-calendar-event'></i>
+                                        </div>
+                                    </td>
                                 <td class="nsm-text-primary"><?= $lr->employee; ?></td>
                                 <td class="nsm-text-primary"><?= $lr->leave_type; ?></td>
                                 <td class="nsm-text-primary"><?= date("m/d/Y",strtotime($lr->date_from)); ?></td>
@@ -113,8 +152,8 @@
                                     <div class="dropdown table-management">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                         <ul class="dropdown-menu dropdown-menu-end">
-                                            <?php if(checkRoleCanAccessModule('user-settings-leave-requests', 'write')){ ?>          
-                                            <li><a class="dropdown-item btn-edit-leave-request" href="javascript:void(0);" data-id="<?= $lr->id; ?>">Edit</a></li>
+                                            <?php if(checkRoleCanAccessModule('user-settings-leave-requests', 'write') && $lr->status == 1){ ?>          
+                                                <li><a class="dropdown-item btn-edit-leave-request" href="javascript:void(0);" data-id="<?= $lr->id; ?>">Edit</a></li>
                                             <?php } ?>
                                             <li><a class="dropdown-item btn-view-leave-request" href="javascript:void(0);" data-id="<?= $lr->id; ?>">View</a></li>
                                             <?php if(checkRoleCanAccessModule('user-settings-leave-requests', 'write')){ ?>          
@@ -161,15 +200,15 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-create-leave-request" role="dialog">
-        <div class="modal-dialog modal-lg">
+    <div class="modal fade nsm-modal fade" id="modal-create-leave-request" tabindex="-1" aria-labelledby="modal-create-leave-request_label" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">        
             <div class="modal-content">
-                <form id="frm-create-leave-request" method="post">
-                    <div class="modal-header">
-                        <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-fw bx-plus'></i> <span id="modal-header-label">Create Leave Request</span></span>
-                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
-                    </div>
-                    <div class="modal-body">                        
+                <div class="modal-header">
+                    <span class="modal-title content-title">Add Leave Request</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <form id="frm-create-leave-request" method="post">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="content-subtitle fw-bold d-block mb-2">Leave Type</label>
@@ -194,32 +233,34 @@
                                 <textarea name="request_reason" id="request-reason" class="nsm-field form-control" required></textarea>
                             </div>                            
                         </div> 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>                        
-                        <button type="submit" class="nsm-button primary" id="btn-save-leave-request">Save</button>
-                    </div>                                       
-                </form>
+                    </form>
+                </div>  
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary" id="btn-save-leave-request" form="frm-create-leave-request">Save</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="modal-edit-leave-request" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <form id="frm-update-leave-request" method="post">
-                    <input type="hidden" name="rid" id="rid" value="0" />
+    <div class="modal fade nsm-modal fade" id="modal-edit-leave-request" tabindex="-1" aria-labelledby="modal-edit-leave-request_label" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">            
+                <div class="modal-content">
                     <div class="modal-header">
-                        <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-fw bx-pencil'></i> <span id="modal-header-label">Edit Leave Request</span></span>
-                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+                        <span class="modal-title content-title">Edit Leave Request</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                     </div>
-                    <div class="modal-body" id="edit-leave-request-container"></div>
-                    <div class="modal-footer" id="footer-edit-leave-request">
-                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>                        
-                        <button type="submit" class="nsm-button primary" id="btn-update-leave-request">Save</button>
-                    </div>                                       
-                </form>
-            </div>
+                    <div class="modal-body">
+                        <form id="frm-update-leave-request" method="post">
+                            <div id="edit-leave-request-container"></div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="nsm-button primary" id="btn-update-leave-request" form="frm-update-leave-request">Save</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -267,11 +308,22 @@
 $(function(){    
     $(".nsm-table").nsmPagination();
     
-    $('#chk-all-row').on('change', function(){
-        if( $(this).prop('checked') ){
-            $('.chk-row').prop('checked',true);
+    $(document).on('change', '#select-all', function(){
+        $('.row-select:checkbox').prop('checked', this.checked);  
+        let total= $('#tbl-leave-list input[name="requests[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
         }else{
-            $('.chk-row').prop('checked',false);
+            $('#num-checked').text('');
+        }
+    });
+
+    $(document).on('change', '.row-select', function(){
+        let total= $('#tbl-leave-list input[name="requests[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
         }
     });
 
@@ -627,6 +679,7 @@ $(function(){
                 if (data.is_success) {
                     $('#modal-create-leave-request').modal('hide');
                     Swal.fire({
+                        title: 'Create Leave Request',
                         text: "Leave request was successfully created",
                         icon: 'success',
                         showCancelButton: false,
