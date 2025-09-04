@@ -42,31 +42,43 @@
                     <div class="col-8 grid-mb text-end">                        
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">                          
                                 <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'delete')){ ?>  
                                 <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="delete">Delete</a></li>    
                                 <?php } ?>
-                                <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>                    
+                                 <?php if( logged('role') == 7 ){ ?>          
                                     <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="approve">Approve</a></li>                                
                                     <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="disapprove">Disapprove</a></li>                                
                                 <?php } ?>
                             </ul>
                         </div>
-                        <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>          
-                        <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary" id="btn-create-overtime-request" href="javascript:void(0);"><i class='bx bx-plus-medical'></i> Add New</a>                            
-                        </div>
-                        <?php } ?>
+                        <div class="nsm-page-buttons page-button-container">                            
+                            <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>
+                            <div class="btn-group nsm-main-buttons">
+                                <button type="button" class="btn btn-nsm" id="btn-create-overtime-request"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Overtime</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down'></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                                                    
+                                    <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>                               
+                                    <li><a class="dropdown-item" id="btn-export-list" href="javascript:void(0);">Export</a></li>                               
+                                </ul>
+                            </div>
+                            <?php } ?>
+                        </div> 
                     </div>
                 </div>
                 <form id="frm-with-selected">   
                 <input type="hidden" name="disapprove_reason" id="dpr" value="" />        
-                <table class="nsm-table">
+                <table class="nsm-table" id="tbl-overtime-list">
                     <thead>
                         <tr>
-                            <td style="width:3%;"><input type="checkbox" class="form-check-input" id="chk-all-row" /></td>
+                            <td class="table-icon text-center sorting_disabled">
+                                <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                            </td>
+                            <td class="table-icon show"></td>
                             <td data-name="Name" style="width:40%;">Employee Name</td>
                             <td data-name="Date From">From</td>
                             <td data-name="Date To">To</td>                            
@@ -76,44 +88,59 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($overtimeRequests as $or){ ?>
+                        <?php if( $overtimeRequests ){ ?>
+                            <?php foreach($overtimeRequests as $or){ ?>
+                                <tr>
+                                    <td>
+                                        <input class="form-check-input row-select table-select" name="requests[]" type="checkbox" value="<?= $or->id; ?>">
+                                    </td>
+                                    <td>
+                                        <div class="table-row-icon">
+                                            <i class='bx bx-calendar-event'></i>
+                                        </div>
+                                    </td>
+                                    <td class="nsm-text-primary"><?= $or->employee; ?></td>
+                                    <td class="nsm-text-primary"><?= date("m/d/Y",strtotime($or->date_from)) . ' ' . date("g:i A", strtotime($or->time_from)); ?></td>
+                                    <td class="nsm-text-primary"><?= date("m/d/Y",strtotime($or->date_to)) . ' ' . date("g:i A", strtotime($or->time_to)); ?></td>
+                                    <td class="nsm-text-primary"><?= $or->total_hrs; ?></td>
+                                    <td class="nsm-text-primary">
+                                            <?php if( $or->status == 1 ){ ?>
+                                                <span class="nsm-badge default">Pending</span>
+                                            <?php } ?>
+
+                                            <?php if( $or->status == 2 ){ ?>
+                                                <span class="nsm-badge success">Approved</span>
+                                            <?php } ?>
+
+                                            <?php if( $or->status == 3 ){ ?>
+                                                <span class="nsm-badge badge-danger">Disapproved</span>
+                                            <?php } ?>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown table-management">
+                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write') && $or->status == 1){ ?>                                                
+                                                <li><a class="dropdown-item btn-edit-overtime-request" href="javascript:void(0);" data-id="<?= $or->id; ?>">Edit</a></li>
+                                                <?php } ?>
+                                                <li><a class="dropdown-item btn-view-leave-request" href="javascript:void(0);" data-id="<?= $or->id; ?>">View</a></li>
+                                                <?php if( logged('role') == 7 ){ ?>    
+                                                    <li><a class="dropdown-item btn-approve-overtime-request" href="javascript:void(0);" data-status="<?= $or->status; ?>" data-id="<?= $or->id; ?>">Approve</a></li>
+                                                    <li><a class="dropdown-item btn-disapprove-overtime-request" href="javascript:void(0);" data-status="<?= $or->status; ?>" data-id="<?= $or->id; ?>">Disapprove</a></li>
+                                                <?php } ?>
+                                                <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'delete')){ ?>    
+                                                <li><a class="dropdown-item btn-delete-overtime-request" href="javascript:void(0);" data-id="<?= $or->id; ?>">Delete</a></li>
+                                                <?php } ?>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        <?php }else{ ?>
                             <tr>
-                                <td>
-                                    <input type="checkbox" name="row_selected[]" class="form-check-input chk-row" value="<?= $or->id; ?>" />
-                                </td>
-                                <td class="nsm-text-primary"><?= $or->employee; ?></td>
-                                <td class="nsm-text-primary"><?= date("m/d/Y",strtotime($or->date_from)) . ' ' . date("g:i A", strtotime($or->time_from)); ?></td>
-                                <td class="nsm-text-primary"><?= date("m/d/Y",strtotime($or->date_to)) . ' ' . date("g:i A", strtotime($or->time_to)); ?></td>
-                                <td class="nsm-text-primary"><?= $or->total_hrs; ?></td>
-                                <td class="nsm-text-primary">
-                                        <?php if( $or->status == 1 ){ ?>
-                                            <span class="nsm-badge default">Pending</span>
-                                        <?php } ?>
-
-                                        <?php if( $or->status == 2 ){ ?>
-                                            <span class="nsm-badge success">Approved</span>
-                                        <?php } ?>
-
-                                        <?php if( $or->status == 3 ){ ?>
-                                            <span class="nsm-badge badge-danger">Disapproved</span>
-                                        <?php } ?>
-                                </td>
-                                <td>
-                                    <div class="dropdown table-management">
-                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>    
-                                            <li><a class="dropdown-item btn-edit-overtime-request" href="javascript:void(0);" data-id="<?= $or->id; ?>">Edit</a></li>
-                                            <?php } ?>
-                                            <li><a class="dropdown-item btn-view-leave-request" href="javascript:void(0);" data-id="<?= $or->id; ?>">View</a></li>
-                                            <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>    
-                                                <li><a class="dropdown-item btn-approve-overtime-request" href="javascript:void(0);" data-status="<?= $or->status; ?>" data-id="<?= $or->id; ?>">Approve</a></li>
-                                                <li><a class="dropdown-item btn-disapprove-overtime-request" href="javascript:void(0);" data-status="<?= $or->status; ?>" data-id="<?= $or->id; ?>">Disapprove</a></li>
-                                            <?php } ?>
-                                            <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'delete')){ ?>    
-                                            <li><a class="dropdown-item btn-delete-overtime-request" href="javascript:void(0);" data-id="<?= $or->id; ?>">Delete</a></li>
-                                            <?php } ?>
-                                        </ul>
+                                <td colspan="8">
+                                    <div class="nsm-empty">
+                                        <span>No results found</span>
                                     </div>
                                 </td>
                             </tr>
@@ -125,104 +152,118 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-with-selected-disapprove-overtime-request" role="dialog">
-        <div class="modal-dialog modal-md">
+    <div class="modal fade nsm-modal fade" id="modal-with-selected-disapprove-overtime-request" tabindex="-1" aria-labelledby="modal-with-selected-disapprove-overtime-request_label" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">            
             <div class="modal-content">
-            <form id="frm-with-selected-disapprove" method="post">
                 <div class="modal-header">
-                    <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-x-circle'></i> <span id="modal-header-label">Disapprove Overtime Request</span></span>
-                    <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+                    <span class="modal-title content-title">Disapprove Overtime Request</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
+                    <form id="frm-with-selected-disapprove" method="post">
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <label class="content-subtitle fw-bold d-block mb-2">Reason</label>
                             <textarea class="form-control" id="with-selected-disapprove-reason" name="disapprove_reason" style="height:200px;" required></textarea>
                         </div>                   
                     </div> 
+                    </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>                        
-                    <button type="submit" class="nsm-button primary" id="btn-with-selected-disapprove-overtime-request">Save</button>
-                </div> 
-            </form>
-            </div>
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary" id="btn-with-selected-disapprove-overtime-request" form="frm-with-selected-disapprove">Save</button>
+                </div>
+            </div>            
         </div>
     </div>
 
-    <div class="modal fade" id="modal-create-overtime-request" role="dialog">
-        <div class="modal-dialog modal-md">
+    <div class="modal fade nsm-modal fade" id="modal-create-overtime-request" tabindex="-1" aria-labelledby="modal-create-overtime-request_label" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">            
             <div class="modal-content">
-                <form id="frm-create-overtime-request" method="post">
-                    <div class="modal-header">
-                        <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-fw bx-plus'></i> <span id="modal-header-label">Create Overtime Request</span></span>
-                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+                <div class="modal-header">
+                    <span class="modal-title content-title">Add Overtime Request</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <form id="frm-create-overtime-request" method="post">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="content-subtitle fw-bold d-block mb-2">Date From</label>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <input type="date" name="request_date_from" id="" class="form-control" value="<?= date("Y-m-d"); ?>" required>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="time" name="request_time_from" value="<?= date("g:i A"); ?>" id="" class="nsm-field form-control" placeholder="" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="content-subtitle fw-bold d-block mb-2">Date To</label>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <input type="date" name="request_date_to" id="" class="form-control" value="<?= date("Y-m-d"); ?>" required>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="time" name="request_time_to" value="<?= date("g:i A"); ?>" id="" class="nsm-field form-control" placeholder="" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="content-subtitle fw-bold d-block mb-2">Reason</label>
+                            <textarea name="request_reason" id="request-reason" class="nsm-field form-control" style="height:200px;" required></textarea>
+                        </div>                            
                     </div>
-                    <div class="modal-body"> 
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label class="content-subtitle fw-bold d-block mb-2">Date From</label>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <input type="date" name="request_date_from" id="" class="form-control" value="<?= date("Y-m-d"); ?>" required>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="text" name="request_time_from" value="<?= date("g:i A"); ?>" id="" class="nsm-field form-control timepicker" placeholder="" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12 mb-3">
-                                <label class="content-subtitle fw-bold d-block mb-2">Date To</label>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <input type="date" name="request_date_to" id="" class="form-control" value="<?= date("Y-m-d"); ?>" required>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="text" name="request_time_to" value="<?= date("g:i A"); ?>" id="" class="nsm-field form-control timepicker" placeholder="" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 mb-3">
-                                <label class="content-subtitle fw-bold d-block mb-2">Reason</label>
-                                <textarea name="request_reason" id="request-reason" class="nsm-field form-control" style="height:200px;" required></textarea>
-                            </div>                            
-                        </div> 
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary" id="btn-save-overtime-request" form="frm-create-overtime-request">Save</button>
+                </div>
+            </div>            
+        </div>
+    </div>
+
+    <div class="modal fade nsm-modal fade" id="modal-edit-overtime-request" tabindex="-1" aria-labelledby="modal-edit-overtime-request_label" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">            
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title">Edit Overtime Request</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="frm-update-overtime-request" method="post">
+                            <div id="edit-overtime-request-container"></div>
+                        </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>                        
-                        <button type="submit" class="nsm-button primary" id="btn-save-overtime-request">Save</button>
-                    </div>                                       
-                </form>
-            </div>
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="nsm-button primary" id="btn-update-overtime-request" form="frm-update-overtime-request">Save</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
-    <div class="modal fade" id="modal-edit-overtime-request" role="dialog">
-        <div class="modal-dialog modal-md">
+    <div class="modal fade nsm-modal fade" id="modal-view-leave-request" tabindex="-1" aria-labelledby="modal-view-leave-request_label" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">            
             <div class="modal-content">
-                <form id="frm-update-overtime-request" method="post">
-                    <input type="hidden" name="rid" id="rid" value="0" />
-                    <div class="modal-header">
-                        <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-fw bx-pencil'></i> <span id="modal-header-label">Edit Overtime Request</span></span>
-                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
-                    </div>
-                    <div class="modal-body" id="edit-overtime-request-container"></div>
-                    <div class="modal-footer" id="footer-edit-overtime-request">
-                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>                        
-                        <button type="submit" class="nsm-button primary" id="btn-update-overtime-request">Save</button>
-                    </div>                                       
-                </form>
+                <div class="modal-header">
+                    <span class="modal-title content-title">View Overtime Request</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="view-leave-request-container"></div>
             </div>
         </div>
     </div>
 
     <div class="modal fade" id="modal-disapprove-overtime-request" role="dialog">
-        <div class="modal-dialog modal-md">
+        <div class="modal-dialog modal-md modal-dialog-centered">
             <div class="modal-content">
                 <form id="frm-disapprove-overtime-request" method="post">
                     <input type="hidden" name="rid" id="disapprove-rid" value="0" />
                     <div class="modal-header">
-                        <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-x-circle'></i> <span id="modal-header-label">Disapprove Overtime Request</span></span>
+                        <span class="modal-title content-title"><span id="modal-header-label">Disapprove Overtime Request</span></span>
                         <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
                     </div>
                     <div class="modal-body">
@@ -242,6 +283,18 @@
         </div>
     </div>
 
+    <div class="modal fade nsm-modal fade" id="modal-view-archive" tabindex="-1" aria-labelledby="modal-view-archive_label" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">        
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Archived Overtime Requests</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="overtime-requests-archived-container"></div>  
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script type="text/javascript">
@@ -252,17 +305,43 @@ $(function(){
         format: 'hh:mm A'
     });
 
-    $('#chk-all-row').on('change', function(){
-        if( $(this).prop('checked') ){
-            $('.chk-row').prop('checked',true);
+    $(document).on('change', '#select-all', function(){
+        $('.row-select:checkbox').prop('checked', this.checked);  
+        let total= $('#tbl-overtime-list input[name="requests[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
         }else{
-            $('.chk-row').prop('checked',false);
+            $('#num-checked').text('');
+        }
+    });
+
+    $(document).on('change', '.row-select', function(){
+        let total= $('#tbl-overtime-list input[name="requests[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
+        }else{
+            $('#num-checked').text('');
         }
     });
 
     $("#search_field").on("input", debounce(function() {
         tableSearch($(this));
     }, 1000));
+
+    $('#btn-archived, #btn-mobile-archived').on('click', function(){
+        $('#modal-view-archive').modal('show');
+
+         $.ajax({
+            type: "POST",
+            url: base_url + "timesheet/_archived_overtime_request_list",
+            success: function(html) {    
+                $('#overtime-requests-archived-container').html(html);
+            },
+            beforeSend: function() {
+                $('#overtime-requests-archived-container').html('<div class="col"><span class="bx bx-loader bx-spin"></span></div>');
+            }
+        });
+    });
 
     $('#btn-create-overtime-request').on('click', function(){
         $('#modal-create-overtime-request').modal('show');
@@ -278,6 +357,9 @@ $(function(){
             data: {rid:rid},
             success: function(html) {  
                 $('#edit-overtime-request-container').html(html);
+            },
+            beforeSend: function() {
+                $('#edit-overtime-request-container').html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
         
@@ -289,10 +371,13 @@ $(function(){
         $('#modal-view-leave-request').modal('show');
         $.ajax({
             type: "POST",
-            url: base_url + "timesheet/_view_leave_request",
+            url: base_url + "timesheet/_view_overtime_request",
             data: {rid:rid},
             success: function(html) {  
                 $('#view-leave-request-container').html(html);
+            },
+            beforeSend: function() {
+                $('#view-leave-request-container').html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
     });
@@ -302,8 +387,8 @@ $(function(){
         var url = base_url + 'timesheet/_delete_overtime_request';
 
         Swal.fire({
-            title: 'Delete',
-            html: 'Proceeed with <b>deleting</b> selected overtime request?',
+            title: 'Delete Overtime Request',
+            html: 'Proceeed with <b>deleting</b> selected overtime request?<br /><br /><small>Deleted data can be restored via archived list.</small>',
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes',
@@ -319,8 +404,8 @@ $(function(){
                         if( result.is_success == 1 ) {
                             Swal.fire({
                             icon: 'success',
-                            title: 'Success',
-                            text: 'Data was successfully deleted',
+                            title: 'Delete Overtime Request',
+                            text: 'Overtime request was successfully deleted',
                             }).then((result) => {
                                 window.location.reload();
                             });
@@ -344,7 +429,7 @@ $(function(){
 
         if( status == 1 || status == 3 ){
             Swal.fire({
-                title: 'Update Status',
+                title: 'Approve Request',
                 html: 'Are you sure you want to <b>approve</b> selected overtime request?',
                 icon: 'question',
                 showCancelButton: true,
@@ -361,8 +446,8 @@ $(function(){
                             if( result.is_success == 1 ) {
                                 Swal.fire({
                                 icon: 'success',
-                                title: 'Success',
-                                text: 'Data was successfully updated',
+                                title: 'Approve Request',
+                                text: 'Overtime request was successfully updated',
                                 }).then((result) => {
                                     window.location.reload();
                                 });
@@ -415,13 +500,15 @@ $(function(){
     $('.btn-with-selected').on('click', function(){
         var action = $(this).attr('data-action');
 
-        var total_selected = $('input[name="row_selected[]"]:checked').length;
+        var total_selected = $('input[name="requests[]"]:checked').length;
         if( total_selected > 0 ){
             if( action == 'delete' ){
-                var msg = 'Proceed with <b>deleting</b> selected overtime requests?';
-                var url = base_url + 'timesheet/_delete_selected_overtime_request';
+                var title = 'Delete Overtime Requests';
+                var msg = 'Proceed with <b>deleting</b> selected overtime requests?<br /><br /><small>Deleted data can be restored via archived list.</small>';
+                var url = base_url + 'timesheet/_delete_selected_overtime_request';                
             }else if( action == 'approve' ){
-                var msg = 'Proceed with <b>approve</b> selected overtime requests?';
+                var title = 'Approve Overtime Requests';
+                var msg = 'Proceed with <b>approving</b> selected overtime requests?';
                 var url = base_url + 'timesheet/_approve_selected_overtime_request';
             }else if( action == 'disapprove' ){
                 $('#modal-with-selected-disapprove-overtime-request').modal('show');
@@ -429,7 +516,7 @@ $(function(){
             }
 
             Swal.fire({
-                title: 'With Selected Action',
+                title: title,
                 html: msg,
                 icon: 'question',
                 showCancelButton: true,
@@ -446,7 +533,7 @@ $(function(){
                             if( result.is_success == 1 ) {
                                 Swal.fire({
                                 icon: 'success',
-                                title: 'Success',
+                                title: title,
                                 text: result.msg,
                                 }).then((result) => {
                                     window.location.reload();
@@ -469,46 +556,6 @@ $(function(){
                 text: 'Please select row',
             });
         }        
-    });
-
-    $('.btn-delete-leave-type').on('click', function(){
-        var leave_type = $(this).attr('data-name');
-        var lid = $(this).attr('data-id');
-
-        Swal.fire({
-            title: 'Delete',
-            html: `Proceed with deleting leave type <b>${leave_type}</b>?`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: "POST",
-                    url: base_url + "leave_type/_delete_leave_type",
-                    data: {lid:lid},
-                    dataType:'json',
-                    success: function(result) {
-                        if( result.is_success == 1 ) {
-                            Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Data was successfully deleted.',
-                            }).then((result) => {
-                                window.location.reload();
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: result.msg,
-                            });
-                        }
-                    }
-                });
-            }
-        });
     });
 
     $('#frm-disapprove-overtime-request').on('submit', function(e){
@@ -607,6 +654,7 @@ $(function(){
                 if (data.is_success) {
                     $('#modal-create-overtime-request').modal('hide');
                     Swal.fire({
+                        title: 'Create Overtime Request',
                         text: "Overtime request was successfully created",
                         icon: 'success',
                         showCancelButton: false,
@@ -647,6 +695,7 @@ $(function(){
                 if (data.is_success) {
                     $('#modal-edit-overtime-request').modal('hide');
                     Swal.fire({
+                        title: 'Update Overtime Request',
                         text: "Overtime request was successfully updated",
                         icon: 'success',
                         showCancelButton: false,
@@ -670,6 +719,258 @@ $(function(){
             },
             beforeSend: function() {
                 $('#btn-update-overtime-request').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on('click', '#with-selected-restore', function(){
+        let total= $('#archived-overtime-requests input[name="requests[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Restore Overtime Requests',
+                html: `Are you sure you want to restore selected rows?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'timesheet/_restore_selected_overtime_requests',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Restore Overtime Requests',
+                                    text: "Data restored successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#with-selected-perma-delete', function(){
+        let total = $('#archived-overtime-requests input[name="requests[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Overtime Requests',
+                html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'timesheet/_permanently_delete_selected_overtime_requests',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Delete Overtime Requests',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#btn-empty-archives', function(){        
+        let total = $('#archived-overtime-requests input[name="requests[]"]').length;        
+        if( total > 0 ){
+            Swal.fire({
+                title: 'Empty Archived',
+                html: `Are you sure you want to <b>permanently delete</b> <b>${total}</b> archived overtime requests? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'timesheet/_delete_all_archived_overtime_requests',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Empty Archived',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }else{
+            Swal.fire({                
+                icon: 'error',
+                title: 'Error',              
+                html: 'Archived is empty',
+            });
+        }        
+    });
+
+    $(document).on('click', '.btn-restore-overtime-request', function(){
+        let rid   = $(this).attr('data-id');
+
+        Swal.fire({
+            title: 'Restore Overtime Request',
+            html: `Are you sure you want to restore selected overtime request?`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + 'timesheet/_restore_overtime_request',
+                    data: {
+                        rid: rid
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-view-archive').modal('hide');
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Restore Overtime Request',
+                                html: "Data updated successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.btn-permanently-delete-overtime-request', function(){
+        let rid = $(this).attr('data-id');
+
+        Swal.fire({
+            title: 'Delete Overtime Request',
+            html: `Are you sure you want to <b>permanently delete</b> selected overtime request? <br/><br/>Note : This cannot be undone.`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + 'timesheet/_delete_archived_overtime_request',
+                    data: {
+                        rid: rid
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-view-archive').modal('hide');
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Delete Overtime Request',
+                                html: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    //location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                });
             }
         });
     });

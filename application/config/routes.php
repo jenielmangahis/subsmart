@@ -751,7 +751,7 @@ $route['accounting/print-paycheck']['post'] = 'accounting_controllers/employees/
 $route['accounting/delete-paycheck/(:any)'] = 'accounting_controllers/employees/delete_paycheck/$1';
 $route['accounting/void-paycheck/(:any)'] = 'accounting_controllers/employees/void_paycheck/$1';
 $route['accounting/update-paycheck-num/(:any)']['post'] = 'accounting_controllers/employees/update_paycheck_num/$1';
-$route['accounting/print-multiple']['post'] = 'accounting_controllers/employees/print_multiple_paychecks';
+$route['accounting/print-multiple'] = 'accounting_controllers/employees/print_multiple_paychecks';
 $route['accounting/employees/add-work-location'] = 'accounting_controllers/employees/add_work_location';
 $route['accounting/employees/remove-profile-photo/(:any)']['DELETE'] = 'accounting_controllers/employees/remove_profile_photo/$1';
 $route['accounting/employees/update-profile-photo/(:any)']['post'] = 'accounting_controllers/employees/update_profile_photo/$1';
@@ -2126,6 +2126,7 @@ $route['accounting/employees/_update_leave_credits'] = 'accounting_controllers/E
 
 //Overtime Requests
 $route['timesheet/overtime_requests'] = 'Timesheet/overtime_requests';
+$route['timesheet/_view_overtime_request'] = 'Timesheet/ajax_view_overtime_request';
 $route['timesheet/_create_overtime_request'] = 'Timesheet/ajax_create_overtime_request';
 $route['timesheet/_edit_overtime_request'] = 'Timesheet/ajax_edit_overtime_request';
 $route['timesheet/_update_overtime_request'] = 'Timesheet/ajax_update_overtime_request';
@@ -2135,6 +2136,12 @@ $route['timesheet/_disapprove_overtime_request'] = 'Timesheet/ajax_disapprove_ov
 $route['timesheet/_delete_selected_overtime_request'] = 'Timesheet/ajax_delete_selected_overtime_request';
 $route['timesheet/_approve_selected_overtime_request'] = 'Timesheet/ajax_approve_selected_overtime_request';
 $route['timesheet/_disapprove_selected_overtime_request'] = 'Timesheet/ajax_disapprove_selected_overtime_request';
+$route['timesheet/_archived_overtime_request_list'] = 'Timesheet/ajax_archived_overtime_request_list';
+$route['timesheet/_restore_selected_overtime_requests'] = 'Timesheet/ajax_restore_selected_overtime_requests';
+$route['timesheet/_permanently_delete_selected_overtime_requests'] = 'Timesheet/ajax_permanently_delete_selected_overtime_requests';
+$route['timesheet/_delete_all_archived_overtime_requests'] = 'Timesheet/ajax_delete_all_archived_overtime_requests';
+$route['timesheet/_restore_overtime_request'] = 'Timesheet/ajax_restore_overtime_request';
+$route['timesheet/_delete_archived_overtime_request'] = 'Timesheet/ajax_delete_archived_overtime_request';
 
 //Timesheet Settings
 $route['timesheet/_update_settings'] = 'Timesheet/ajax_update_settings';

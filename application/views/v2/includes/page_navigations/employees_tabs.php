@@ -26,26 +26,22 @@
                     <i class='bx bx-fw bx-chevron-down dropdown-icon'></i>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/attendance') ?>">Attendance</a></li>                    
-                    <?php if (logged("role") < 5): ?>
-                        <li><a class="dropdown-item" href="<?php echo base_url('timesheet/attendance_logs') ?>">Time Logs</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('timesheet/notification') ?>">Notification</a></li>
+                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/attendance') ?>">Attendance</a></li>    
+                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/attendance_logs') ?>">Time Logs</a></li>
+                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/notification') ?>">Notification</a></li>
 
-                        <?php if (logged("user_type") == 7): ?>
-                            <li><a class="dropdown-item" href="<?php echo base_url('timesheet/schedule') ?>">Schedule</a></li>
-                        <?php else: ?>
-                            <li><a class="dropdown-item" href="<?php echo base_url('dashboard') ?>">Dashboard</a></li>
-                        <?php endif; ?>
-
-                        <li><a class="dropdown-item" href="<?php echo base_url('timesheet/leave_requests') ?>">Leave Requests</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('timesheet/overtime_requests') ?>">Overtime Requests</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('timesheet/my_schedule') ?>">My Schedule</a></li>
-                        <?php if( logged('user_type') == 7 ){ //Admin only ?>
-                            <li><a class="dropdown-item" href="<?php echo base_url('users/role_access_modules') ?>">Roles Access Modules</a></li>
-                            <li><a class="dropdown-item" href="<?php echo base_url('timesheet/settings') ?>">Timesheet Settings</a></li>
-                            <li><a class="dropdown-item" href="<?php echo base_url('leave_types') ?>">Leave Types</a></li>
-                        <?php } ?>
+                    <?php if (logged("user_type") == 7): ?>
+                        <li><a class="dropdown-item" href="<?php echo base_url('timesheet/schedule') ?>">Schedule</a></li>
                     <?php endif; ?>
+
+                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/leave_requests') ?>">Leave Requests</a></li>
+                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/overtime_requests') ?>">Overtime Requests</a></li>
+                    <li><a class="dropdown-item" href="<?php echo base_url('timesheet/my_schedule') ?>">My Schedule</a></li>
+                    <?php if( logged('user_type') == 7 ){ //Admin only ?>
+                        <li><a class="dropdown-item" href="<?php echo base_url('users/role_access_modules') ?>">Roles Access Modules</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('timesheet/settings') ?>">Timesheet Settings</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('leave_types') ?>">Leave Types</a></li>
+                    <?php } ?>
                 </ul>
             </div>
         </li>

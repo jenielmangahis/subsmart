@@ -982,9 +982,9 @@ class Accounting_modals extends MY_Controller
 
             $employees[$index]->commission = $commission_amount; //$commission;
 
-            $timeLogs = $this->timesheet_model->get_employee_attendance_with_date_range($employee->id, date("Y-m-d", strtotime($selectedPayperiod['first_day'])), date("Y-m-d", strtotime($selectedPayperiod['last_day'])));
-            
+            $timeLogs = $this->timesheet_model->get_employee_attendance_with_date_range($employee->id, date("Y-m-d", strtotime($selectedPayperiod['first_day'])), date("Y-m-d", strtotime($selectedPayperiod['last_day'])));            
             $totalHrs = 0.00;
+            $totalRegHrs = 0.00;
             $totalOVertimeHrs = 0.00;
             foreach($timeLogs as $timeLog)
             {
@@ -992,6 +992,7 @@ class Accounting_modals extends MY_Controller
 
                 if(count($timeLogPaid) < 1) {
                     if( $timeLog->shift_duration > 0 ){
+                        $totalRegHrs += floatval($timeLog->shift_duration);
                         $totalHrs += floatval($timeLog->shift_duration);
                     }else{
                         $date = date("Y-m-d",strtotime($timeLog->date_created));
@@ -1016,6 +1017,7 @@ class Accounting_modals extends MY_Controller
                 }
             }
 
+            $employees[$index]->total_reg_hrs = $totalRegHrs;
             $employees[$index]->total_hrs = $totalHrs;
             $employees[$index]->total_overtime = $totalOVertimeHrs;
 
@@ -1089,8 +1091,31 @@ class Accounting_modals extends MY_Controller
 
             $totalPay += floatval(str_replace(',', '', $employees[$index]->commission));
 
-            $employees[$index]->total_pay = $totalPay;
+            $deductions_contribution = $this->deduction_contribution->getByUser($employee->id);
+
+            $total_deduction = 0;
+            foreach ($deductions_contribution as $dc) {
+                switch($dc->contribution_calculated_as){
+                    case 'Flat amount':
+                        $total_deduction += $dc->deductions_amount;
+                        break;
+                    case 'Percent of gross pay':
+                        $total_deduction += $dc->annual_maximum * ($dc->deductions_amount/100);
+                        break;
+                    case 'Per hour worked':
+                        $total_deduction += $dc->deductions_amount;
+                        break;
+                    default:
+                        break;
+                }
+              
+            }      
+            
+            $employees[$index]->deduction = $total_deduction;
+
+            $employees[$index]->total_pay = $totalPay - $total_deduction;
         }
+
         $this->page_data['employees'] = $employees;
 
         $this->page_data['payPeriods'] = $payPeriod;
@@ -1149,15 +1174,19 @@ class Accounting_modals extends MY_Controller
         $timeLogs = $this->timesheet_model->get_employee_attendance_with_date_range($employee->id, date("Y-m-d", strtotime($selectedPayperiod[0])), date("Y-m-d", strtotime($selectedPayperiod[1])));
 
         $totalHrs = 0.00;
+        $totalRegHrs = 0.00;
+        $totalOVertimeHrs = 0.00;
         foreach($timeLogs as $timeLog)
         {
             $timeLogPaid = $this->accounting_payroll_model->check_if_attendance_paid($timeLog->id);
 
             if(count($timeLogPaid) < 1) {
                 $totalHrs += floatval($timeLog->shift_duration);
+                $totalRegHrs += floatval($timeLog->shift_duration);
 
                 if($timeLog->overtime_status === '2') {
                     $totalHrs += floatval($timeLog->overtime);
+                    $totalOVertimeHrs += floatval($timeLog->overtime);
                 }
             }
         }
@@ -1228,6 +1257,25 @@ class Accounting_modals extends MY_Controller
             $payRate = 'Commission only';
         }
 
+        $deductions_contribution = $this->deduction_contribution->getByUser($employee->id);
+
+        $total_deduction = 0;
+        foreach ($deductions_contribution as $dc) {
+            switch($dc->contribution_calculated_as){
+                case 'Flat amount':
+                    $total_deduction += $dc->deductions_amount;
+                    break;
+                case 'Percent of gross pay':
+                    $total_deduction += $dc->annual_maximum * ($dc->deductions_amount/100);
+                    break;
+                case 'Per hour worked':
+                    $total_deduction += $dc->deductions_amount;
+                    break;
+                default:
+                    break;
+            }
+            
+        }      
         $regularHrsPayTotal = $totalPay;
 
         $totalPay += floatval(str_replace(',', '', $commission_amount));
@@ -1240,9 +1288,12 @@ class Accounting_modals extends MY_Controller
             'pay_details' => $payDetails,
             'commission' => $commission_amount,
             'total_hrs' => $totalHrs,
+            'total_reg_hrs' => $totalRegHrs,
+            'total_ot_hrs' => $totalOVertimeHrs,
             'per_hour_pay' => $perHourPay,
             'regular_hrs_pay_total' => $regularHrsPayTotal,
-            'total_pay' => $totalPay
+            'deduction' => $total_deduction,
+            'total_pay' => $totalPay - $total_deduction
         ]);
     }
 
@@ -1258,7 +1309,7 @@ class Accounting_modals extends MY_Controller
         // $sui = 2.7;
 
         $this->page_data['payPeriod'] = str_replace('-', ' to ', $postData['pay_period']);
-        $this->page_data['payDate'] = date('l, M d', strtotime($postData['pay_date']));
+        $this->page_data['payDate'] = date('l, M d', strtotime($postData['pay_date']));    
 
         $employees = [];
         foreach ($postData['employees'] as $key => $empId) {
@@ -1274,6 +1325,12 @@ class Accounting_modals extends MY_Controller
             }      
 
             $totalHrs = floatval(str_replace(',', '', $postData['reg_pay_hours'][$key]));
+
+            $totalOTHrs = floatval(str_replace(',', '', $postData['ot_hours'][$key]));
+            if($totalOTHrs > 0) {
+                $totalHrs = $totalHrs + $totalOTHrs;
+            }      
+            
             if($payscale->pay_type === 'Hourly') {
                 //$totalPay = floatval(str_replace(',', '', $emp->base_hourly)) * $totalHrs;
                 $totalPay = floatval(str_replace(',', '', $payscale_amount)) * $totalHrs;
@@ -1351,11 +1408,18 @@ class Accounting_modals extends MY_Controller
                 $netPay = $netPay - $total_dc;
             }   
 
+            $reg_plus_ot_hrs = 0;
+            if($totalOTHrs > 0) {
+                $reg_plus_ot_hrs = str_replace(',', '', $postData['reg_pay_hours'][$key]) + $totalOTHrs;
+            } else {
+                $reg_plus_ot_hrs = str_replace(',', '', $postData['reg_pay_hours'][$key]);
+            }
+
             $employees[] = [
                 'id' => $emp->id,
                 'name' => $emp->LName . ', ' . $emp->FName,
                 'pay_method' => $payDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check',
-                'employee_hours' => str_replace(',', '', $postData['reg_pay_hours'][$key]),
+                'employee_hours' => $reg_plus_ot_hrs, //str_replace(',', '', $postData['reg_pay_hours'][$key]),
                 'employee_commission' => str_replace(',', '', $postData['commission'][$key]),
                 'total_pay' => $empTotalPay,
                 'employee_tax' => $empTax,

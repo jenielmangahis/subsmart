@@ -7,7 +7,7 @@
                 <div class="col-lg-9 position-relative">
                     <h4 class="fw-bold">Add Check&ensp;<small class="text-muted fw-normal checkAddSequenceLabel"></small></h4>
                     <p>Create a check by manually entering the details or by using the virtual check template.</p> 
-                    <span class="badge bg-secondary position-absolute checkAddBadge">THIS IS A COPY FROM CHECK #2032</span>
+                    <div class="badge bg-secondary position-absolute checkAddBadge"></div>
                 </div>
                 <div class="col-lg-3">
                     <div class="float-end">
@@ -457,7 +457,7 @@
         }
     });
 
-    $(document).on('click', '#checkAddStandardTab, #checkAddVirtualTab', function () {
+    $(document).on('click', '#checkAddVirtualTab', function () {
         const checkAddPrintLater = $('.checkAddPrintLater').prop('checked');
         const checkAddNo = $('.checkAddNo').val();
         const checkAddNoMinimum = $('.checkAddNo').attr('min');
@@ -1041,6 +1041,7 @@
     });
 
     function checkAddResetForm() {
+        $('.checkAddBadge').hide();
         $('.checkAddTag')[0].selectize.clear();
         $('.checkAddPayee')[0].selectize.clear();
         $('.checkAddMailingAddress').val('');
@@ -1104,14 +1105,6 @@
                 pond.removeFiles();
             }
         });
-        
-        $('#virtualCheckAddNumberInput').val(null);
-        $(".virtualCheckAddPayeeSelect")[0].selectize.setValue(null, true);
-        $(".virtualCheckAddBankNameSelect")[0].selectize.setValue(null, true);
-        $('#virtualCheckAddDateInput').val(null);
-        $('#virtualCheckAddMemoInput').val(null);
-        $(".virtualCheckAddCategorySelect")[0].selectize.setValue(null, true);
-        $('#virtualCheckAddAmountInput').val(null).change();
     }
 
     $('.checkAddForm').on('submit', function (e) {
@@ -1183,33 +1176,15 @@
         });
     });
  
-    function setLastSettings() {
-        $.ajax({
-            type: "POST",
-            url: `${window.origin}/accounting/v2/check/getLastSettings`,
-            dataType: "JSON",
-            success: function(response) {
-                let check_no = parseInt(response.last_check_no) + 1;
-                let permit_no = parseInt(response.last_permit_no) + 1;
-                let tags = (response.tags || '').split(',').filter(Boolean);
-                let selectedTags = $(".checkAddTag")[0].selectize;
-                selectedTags.setValue(null);
-                tags.forEach(t => selectedTags.options[t] ? selectedTags.addItem(t, true) : selectedTags.createItem(t, false, true));
+    
 
-                if (response.to_print == 1) {
-                    $(".checkAddNo").attr("min", check_no).val(check_no).change();
-                    $(".checkAddPrintLater").prop("checked", true).change();
-                } else {
-                    $(".checkAddPrintLater").prop("checked", false).change();
-                    $(".checkAddNo").attr("min", check_no).val(check_no).change();
-                }
-                $('.checkAddBankAccount')[0].selectize.setValue(response.bank_account_id);
-                $('.checkAddPermitNo').attr('min', permit_no).val(permit_no).change();
-                $('.checkAddModalContent').fadeIn('fast');
-                Swal.close();
-                $('#checkAddStandardTab').click();
-                $('.checkAddModal').modal('show');
-            }
-        });
-    }
+    // function copyCheck(check_id) {
+    //     $.ajax({
+    //         type: "POST",
+    //         data: { check_id: check_id },
+    //         url: `${window.origin}/accounting/v2/check/getCheckDetails`,
+    //         success: function(response) {
+    //         }
+    //     });
+    // }
 </script>

@@ -65,6 +65,7 @@
                     <td data-name="Total Overtime Hours" class="text-end">TOTAL OVERTIME HOURS</td>
                     <td data-name="Per Hour Pay" class="text-end">PER HOUR PAY</td>
                     <td data-name="Total Hours Pay" class="text-end">TOTAL HOURS PAY</td>
+                    <td data-name="DeductionS" class="text-end">DEDUCTIONS</td>
                     <td data-name="Total Pay" class="text-end">TOTAL PAY</td>
                 </tr>
             </thead>
@@ -82,15 +83,16 @@
                         <p class="m-0"><?=$employee->pay_rate?></p>
                     </td>
                     <td><?=$employee->pay_details->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check'?></td>
-                    <td class="text-end"><?=number_format(floatval(str_replace(',', '', $employee->total_hrs)), 2)?></td>
+                    <td class="text-end"><?=number_format(floatval(str_replace(',', '', $employee->total_reg_hrs)), 2)?></td>
                     <td class="text-end">$<?=number_format(floatval(str_replace(',', '', $employee->commission)), 2)?></td>
                     <td>
                         <input type="text" name="memo[]" class="form-control nsm-field">
                     </td>
-                    <td><p class="m-0 text-end"><?=number_format(floatval(str_replace(',', '', $employee->total_hrs)), 2)?></p></td>
-                    <td><p class="m-0 text-end"><?=number_format(floatval(str_replace(',', '', $employee->total_overtime)), 2)?></p></td>
+                    <td class="text-end"><?=number_format(floatval(str_replace(',', '', $employee->total_hrs)), 2)?></td>
+                    <td class="text-end"><?=number_format(floatval(str_replace(',', '', $employee->total_overtime)), 2)?></td>
                     <td><p class="m-0 text-end">$<?=number_format(floatval(str_replace(',', '', $employee->per_hour_pay)), 2)?></p></td>
                     <td><p class="m-0 text-end">$<?=number_format(floatval(str_replace(',', '', $employee->regular_hrs_pay_total)), 2)?></p></td>
+                    <td><p class="m-0 text-end">$<?=number_format(floatval(str_replace(',', '', $employee->deduction)), 2)?></p></td>
                     <td><p class="m-0 text-end"><span class="total-pay">$<?=number_format(floatval(str_replace(',', '', $employee->total_pay)), 2)?></span></p></td>
                 </tr>
                 <?php endforeach; ?>
@@ -106,6 +108,7 @@
                     <td></td>
                     <td>0.00</td>
                     <td>0.00</td>
+                    <td>$0.00</td>
                     <td>$0.00</td>
                     <td>$0.00</td>
                     <td>$0.00</td>
