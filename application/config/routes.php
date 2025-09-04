@@ -2142,6 +2142,7 @@ $route['timesheet/_permanently_delete_selected_overtime_requests'] = 'Timesheet/
 $route['timesheet/_delete_all_archived_overtime_requests'] = 'Timesheet/ajax_delete_all_archived_overtime_requests';
 $route['timesheet/_restore_overtime_request'] = 'Timesheet/ajax_restore_overtime_request';
 $route['timesheet/_delete_archived_overtime_request'] = 'Timesheet/ajax_delete_archived_overtime_request';
+$route['timesheet/export_overtime_request_list'] = 'Timesheet/export_overtime_request_list';
 
 //Timesheet Settings
 $route['timesheet/_update_settings'] = 'Timesheet/ajax_update_settings';
