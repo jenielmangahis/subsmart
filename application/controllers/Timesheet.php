@@ -5801,7 +5801,7 @@ class Timesheet extends MY_Controller
 
             //Activity Logs
             $leaveType = $this->LeaveType_model->getById($post['leave_type']);
-            $activity_name = 'Leave Request : Created leave request';
+            $activity_name = 'Leave Request : Created leave request dated ' . date("m/d/Y",strtotime($post['request_date_from'])) . ' with reason ' . $post['request_reason'];
             createActivityLog($activity_name);
         }
 
@@ -7032,6 +7032,68 @@ class Timesheet extends MY_Controller
         ];
 
         echo json_encode($return);
+	}
+
+    public function export_overtime_request_list()
+	{
+		$this->load->model('OvertimeRequest_model');
+
+		$role_id = logged('role');
+		$cid     = logged('company_id');
+        $uid     = logged('id');
+
+        $conditions[] = ['field' => 'timesheet_overtime_requests.is_archived', 'value' => 0];
+		if (logged('user_type') == 7) {
+            $overtimeRequests = $this->OvertimeRequest_model->getAllByCompanyId($cid, $conditions);
+        } else {
+            $overtimeRequests = $this->OvertimeRequest_model->getAllByUserId($uid, $conditions);
+        }
+
+		$delimiter = ",";
+		$time      = time();
+		$filename  = "overtime_request_list_" . $time . ".csv";
+
+		$f = fopen('php://memory', 'w');
+
+		$fields = array('Name', 'Date From', 'Date To', 'Reason', 'Status', 'Is Archived');
+		fputcsv($f, $fields, $delimiter);
+
+		if (!empty($overtimeRequests)) {
+			foreach ($overtimeRequests as $ot) {
+                $date_from = date("m/d/Y",strtotime($ot->date_from)) . ' ' . date("g:i A", strtotime($ot->time_from));
+                $date_to   = date("m/d/Y",strtotime($ot->date_to)) . ' ' . date("g:i A", strtotime($ot->time_to));
+                
+                if( $ot->status == 2 ){
+                    $status = 'Approved';
+                }elseif( $ot->status == 3 ){
+                    $status = 'Disapproved';
+                }else{
+                    $status = 'Pending';
+                }
+
+				$csvData = array(
+					$ot->employee,
+                    $date_from,
+                    $date_to,
+                    $ot->reason != '' ? $ot->reason : '---',
+                    $status,
+                    $ot->is_archived == 1 ? 'Yes' : 'No'
+
+				);
+
+				fputcsv($f, $csvData, $delimiter);
+			}
+		} else {
+			$csvData = array('');
+			fputcsv($f, $csvData, $delimiter);
+		}
+
+		fseek($f, 0);
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		fpassthru($f);
 	}
 }
 
