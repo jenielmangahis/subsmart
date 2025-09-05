@@ -932,7 +932,7 @@ $("#transactions-table .print-paycheck").on("click", function (e) {
 
     if ($("#print-paycheck-form").length < 1) {
         $("body").append(
-            `<form action="/accounting/print-paycheck" method="post" id="print-paycheck-form" target="_blank"></form>`
+            `<form action="`+ base_url +`accounting/print-paycheck" method="post" id="print-paycheck-form" target="_blank"></form>`
         );
     }
 
@@ -987,7 +987,6 @@ $("#transactions-table .delete-paycheck").on("click", function (e) {
 
 $("#transactions-table .void-paycheck").on("click", function (e) {
     e.preventDefault();
-
     var row = $(this).closest("tr");
     var id = row.find(".select-one").val();
 

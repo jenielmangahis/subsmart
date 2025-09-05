@@ -309,7 +309,7 @@
                                         disabled>Print</button>
                                 </span>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-12" style="min-height: 220px;">
                                 <table class="nsm-table" id="transactions-table">
                                     <thead>
                                         <tr>
@@ -352,17 +352,17 @@
                                                     </a>
                                                     <ul class="dropdown-menu dropdown-menu-end">
                                                         <li>
-                                                            <a class="dropdown-item print-paycheck" href="#">Print</a>
+                                                            <a class="dropdown-item print-paycheck" href="#">Print</a> 
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item delete-paycheck" href="#">Delete</a>
+                                                            <a class="dropdown-item delete-paycheck" href="#">Delete</a> 
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item void-paycheck" href="#">Void</a>
+                                                            <a class="dropdown-item void-paycheck" href="#">Void</a> 
                                                         </li>
-                                                        <li>
+                                                        <!-- <li>
                                                             <a class="dropdown-item edit-paycheck" href="#">Edit</a>
-                                                        </li>
+                                                        </li> -->
                                                     </ul>
                                                 </div>
                                             </td>
