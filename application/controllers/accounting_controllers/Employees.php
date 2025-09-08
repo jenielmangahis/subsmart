@@ -571,7 +571,7 @@ class Employees extends MY_Controller
         $this->page_data['pay_method'] = $pay_method;
         $this->page_data['paychecks'] = $paychecks;
         $this->load->view('v2/pages/accounting/payroll/employees/view', $this->page_data);
-    }
+    }  
 
     private function get_emp_paychecks($filter = [])
     {
@@ -581,9 +581,16 @@ class Employees extends MY_Controller
         foreach ($paychecks as $paycheck) {            
             $emp = $this->users_model->getUser($paycheck->employee_id);
 
+            $status = "--";
+
             $checkNo = $paycheck->check_no;
             if ($paycheck->status === '4') {
                 $checkNo = 'Void';
+                $status  = 'Void';
+            }
+
+            if ($paycheck->status === '1') {
+                $status = "Active";
             }
 
             if ($paycheck->pay_method === 'Adjustment' && $paycheck->status !== '4') {
@@ -598,7 +605,7 @@ class Employees extends MY_Controller
                 'net_pay' => number_format(floatval($paycheck->net_pay), 2),
                 'pay_method' => $paycheck->pay_method,
                 'check_number' => $checkNo,
-                'status' => '-'
+                'status' => $status
             ];
         }
 

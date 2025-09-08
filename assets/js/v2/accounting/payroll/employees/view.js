@@ -992,7 +992,7 @@ $("#transactions-table .void-paycheck").on("click", function (e) {
 
     Swal.fire({
         title: 'Void Paycheck',
-        html: `Are you sure you want to void selected paycheck? <br/><br/>Note : This cannot be undone.`,
+        html: `Are you sure you want to void selected paycheck? <br/><br/>Note : This cannot be undone.`, 
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Yes',

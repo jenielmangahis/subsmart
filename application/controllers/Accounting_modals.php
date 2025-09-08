@@ -1108,7 +1108,6 @@ class Accounting_modals extends MY_Controller
                     default:
                         break;
                 }
-              
             }      
             
             $employees[$index]->deduction = $total_deduction;
@@ -3136,6 +3135,24 @@ class Accounting_modals extends MY_Controller
 
                         $payscale = $this->users_model->get_payscale_by_id($emp->payscale_id);
 
+                        $deductions_contribution = $this->deduction_contribution->getByUser($emp->id);
+                        $total_deduction = 0;
+                        foreach ($deductions_contribution as $dc) {
+                            switch($dc->contribution_calculated_as){
+                                case 'Flat amount':
+                                    $total_deduction += $dc->deductions_amount;
+                                    break;
+                                case 'Percent of gross pay':
+                                    $total_deduction += $dc->annual_maximum * ($dc->deductions_amount/100);
+                                    break;
+                                case 'Per hour worked':
+                                    $total_deduction += $dc->deductions_amount;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }                             
+
                         $payscale_amount = 0;
                         $emp_payscale    = $this->EmployeePayscaleSetting_model->getByEmployeeIdAndCompanyId($emp->id , $company_id);
                         if($emp_payscale) {
@@ -3224,7 +3241,7 @@ class Accounting_modals extends MY_Controller
                             'employee_bonus' => $data['bonus'][$key],
                             'employee_total_pay' => floatval(str_replace(',', '', $empTotalPay)),
                             'employee_taxes' => floatval(str_replace(',', '', $empTax)),
-                            'employee_net_pay' => floatval(str_replace(',', '', $empTotalPay - $empTax)),
+                            'employee_net_pay' => floatval(str_replace(',', '', $empTotalPay - $empTax - $total_deduction)),
                             'employee_memo' => ($data['memo'][$key] === '') ? null : $data['memo'][$key],
                         ];
 
@@ -3236,7 +3253,7 @@ class Accounting_modals extends MY_Controller
                             'employee_id' => $value,
                             'pay_date' => date('Y-m-d', strtotime($data['pay_date'])),
                             'total_pay' => floatval(str_replace(',', '', $empTotalPay)),
-                            'net_pay' => floatval(str_replace(',', '', $empTotalPay - $empTax)),
+                            'net_pay' => floatval(str_replace(',', '', $empTotalPay - $empTax - $total_deduction)),
                             'pay_method' => 'Check',
                             'status' => 1
                         ];
