@@ -28,7 +28,8 @@
                         </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container">
+                        
+                        <!-- <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button" data-bs-toggle="dropdown">
                                 <i class="bx bx-fw bx-list-plus"></i> New
                                 <i class='bx bx-fw bx-chevron-down'></i>
@@ -40,7 +41,31 @@
                             <button type="button" class="nsm-button primary" id="delete-tags-button">
                                 <i class='bx bx-fw bx-trash'></i>
                             </button>
-                        </div>
+                        </div> -->
+
+                        <div class="nsm-page-buttons page-button-container">                 
+                            
+                            <div class="dropdown d-inline-block">
+                                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                    <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item btn-with-selected" id="delete-tags-button" href="javascript:void(0);">Delete</a></li>                              
+                                </ul>
+                            </div>                        
+           
+                            <div class="btn-group nsm-main-buttons" style="margin-bottom: 5px;">
+                                <button type="button" class="btn btn-nsm" id="btn-add-employee"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Tags</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                                                    
+                                    <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#tag-group-modal">Tag group</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#tag-modal">Tag</a></li>                                                                
+                                </ul>
+                            </div>
+                         
+                        </div>                        
                     </div>
                 </div>
                 <table class="nsm-table" id="tags-table">

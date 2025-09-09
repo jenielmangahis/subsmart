@@ -60,7 +60,7 @@ $(document).on('submit', '#tags-table .update_data-form', function(e) {
     var data = new FormData(this);
 
     $.ajax({
-        url:`/accounting/tags/update/${id}/${type}`,
+        url: base_url + `accounting/tags/update/${id}/${type}`,
         data: data,
         type: 'post',
         processData: false,
@@ -89,7 +89,7 @@ $(document).on('submit', '#tags-table .update_data-form', function(e) {
 
 $('#group').select2({
     ajax: {
-        url: '/accounting/tags/get-group-tags',
+        url: base_url + 'accounting/tags/get-group-tags',
         dataType: 'json'
     },
     dropdownParent: $('#tag-modal')
@@ -136,7 +136,7 @@ $(document).on('submit', '#update-group-form', function(e) {
     var data = new FormData(this);
 
     $.ajax({
-        url:`/accounting/tags/update/${data.get('group_id')}/group`,
+        url: base_url + `accounting/tags/update/${data.get('group_id')}/group`,
         data: {name: data.get('tags_group_name')},
         type:"POST",
         dataType: "json",
@@ -209,7 +209,7 @@ $(document).on('submit', 'table#group-tags tbody form', function(e) {
     var data = new FormData(this);
 
     $.ajax({
-        url:`/accounting/tags/update/${data.get('tag_id')}/tag`,
+        url:base_url + `accounting/tags/update/${data.get('tag_id')}/tag`,
         data: {name: data.get('update_tag_name')},
         type:"POST",
         dataType: "json",
@@ -264,7 +264,7 @@ $('#delete-tags-button').on('click', function() {
         }).then((result) => {
             if(result.isConfirmed) {
                 $.ajax({
-                    url: '/accounting/tags/delete-tags',
+                    url: base_url + 'accounting/tags/delete-tags',
                     data: data,
                     type: 'post',
                     processData: false,
@@ -302,7 +302,7 @@ $('#tags-table .delete-tag, #tags-table .delete-group').on('click', function(e) 
     }).then((result) => {
         if(result.isConfirmed) {
             $.ajax({
-                url:`/accounting/tags/delete/${id}/${type}`,
+                url: base_url + `accounting/tags/delete/${id}/${type}`,
                 type:"DELETE",
                 success:function () {
                     location.reload();
@@ -310,6 +310,11 @@ $('#tags-table .delete-tag, #tags-table .delete-group').on('click', function(e) 
             });
         }
     });
+});
+
+$('#done-tag-group, #btn-tag-group-modal-close').on('click', function(e) {
+    e.preventDefault();
+    location.reload();
 });
 
 $('#tags-table .add-tag').on('click', function(e) {
@@ -404,7 +409,7 @@ $(document).on('submit', '#tags-table .edit-form', function(e) {
     var data = new FormData(this);
 
     $.ajax({
-        url:`/accounting/tags/update/${id}/${type}`,
+        url: base_url + `accounting/tags/update/${id}/${type}`,
         data: data,
         type: 'post',
         processData: false,
@@ -431,3 +436,21 @@ $(document).on('submit', '#tags-table .edit-form', function(e) {
     });
 });
 
+let backdropClicked = false;
+
+const modalEl = document.getElementById('tag-group-modal');
+
+// Detect backdrop click
+modalEl.addEventListener('click', function (e) {
+if (e.target === modalEl) {
+    backdropClicked = true;
+}
+});
+
+// When modal is fully hidden
+modalEl.addEventListener('hidden.bs.modal', function () {
+if (backdropClicked) {
+    location.reload(); // Reload the page
+}
+backdropClicked = false; // Reset for next use
+});
