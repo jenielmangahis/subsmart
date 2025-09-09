@@ -5781,6 +5781,7 @@ class Timesheet extends MY_Controller
 
         if ($is_success == 1) {
             $data = [
+                'company_id' => $cid,
                 'user_id' => $uid,
                 'pto_id' => $post['leave_type'],
                 'date_from' => $post['request_date_from'],
@@ -5964,22 +5965,7 @@ class Timesheet extends MY_Controller
 
             //Activity Logs
             $activity_name = 'Leave Request : Deleted ' . $leaveRequest->employee . ' leave request ' . $leaveRequest->leave_type;
-            createActivityLog($activity_name);
-            // if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusPending() ){
-            //     $this->LeaveRequest_model->delete($leaveRequest->id);
-
-            //     $msg = '';
-            //     $is_success = 1;
-
-            //     //Activity Logs
-            //     $activity_name = 'Leave Request : Deleted leave request'; 
-            //     createActivityLog($activity_name);
-
-            // }else{
-            //     if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusApproved() ){
-            //         $msg = 'Cannot delete leave request. Status is already approved';
-            //     }
-            // }
+            createActivityLog($activity_name);            
         }
 
         $return = [
@@ -6158,7 +6144,7 @@ class Timesheet extends MY_Controller
 
         $total_deleted = 0;
         $errors = [];
-        foreach ($post['row_selected'] as $rid) {
+        foreach ($post['requests'] as $rid) {
             $leaveRequest =  $this->LeaveRequest_model->getByIdAndCompanyId($rid, $cid);
             if ($leaveRequest) {
                 $data = ['is_archived' => 1];
@@ -6199,7 +6185,7 @@ class Timesheet extends MY_Controller
 
         $total_updated = 0;
         $errors = [];
-        foreach ($post['row_selected'] as $rid) {
+        foreach ($post['requests'] as $rid) {
             $leaveRequest =  $this->LeaveRequest_model->getByIdAndCompanyId($rid, $cid);
             if ($leaveRequest) {
                 $data = [
@@ -6245,7 +6231,7 @@ class Timesheet extends MY_Controller
 
         $total_updated = 0;
         $errors = [];
-        foreach ($post['row_selected'] as $rid) {
+        foreach ($post['requests'] as $rid) {
             $leaveRequest =  $this->LeaveRequest_model->getByIdAndCompanyId($rid, $cid);
             if ($leaveRequest) {
                 $data = [
@@ -6885,6 +6871,24 @@ class Timesheet extends MY_Controller
         $this->load->view('v2/pages/users/ajax_archived_overtime_requests', $this->page_data);
 	}
 
+    public function ajax_archived_leave_request_list()
+	{
+        $this->load->model('LeaveRequest_model');
+
+        $post = $this->input->post();        
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $conditions[] = ['field' => 'timesheet_leave.is_archived', 'value' => 1];
+        if (logged('user_type') == 7) {
+            $leaveRequests = $this->LeaveRequest_model->getAllByCompanyId($cid, $conditions);
+        } else {
+            $leaveRequests = $this->LeaveRequest_model->getAllByUserId($uid, $conditions);
+        }
+
+        $this->page_data['leaveRequests'] = $leaveRequests;
+        $this->load->view('v2/pages/users/ajax_archived_leave_requests', $this->page_data);
+	}
+
     public function ajax_restore_selected_overtime_requests()
 	{
         $this->load->model('OvertimeRequest_model');
@@ -6915,6 +6919,36 @@ class Timesheet extends MY_Controller
         echo json_encode($return);
 	}
 
+    public function ajax_restore_selected_leave_requests()
+	{
+        $this->load->model('LeaveRequest_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['requests'] ){
+            $data     = ['is_archived' => 0, 'date_updated' => date("Y-m-d H:i:s")];
+            $total_updated = $this->LeaveRequest_model->bulkUpdate($post['requests'], $data, []);
+
+			//Activity Logs
+			$activity_name = 'Leave Request : Restored ' . $total_updated . ' request(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
     public function ajax_permanently_delete_selected_overtime_requests()
 	{
 		$this->load->model('OvertimeRequest_model');
@@ -6927,10 +6961,42 @@ class Timesheet extends MY_Controller
 
         if( $post['requests'] ){
 			$filters[] = ['field' => 'is_archived', 'value' => 1];
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
             $total_deleted = $this->OvertimeRequest_model->bulkDelete($post['requests'], $filters);
 
 			//Activity Logs
 			$activity_name = 'Overtime Request : Permanently deleted ' .$total_deleted. ' request(s)'; 
+			createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg    = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_permanently_delete_selected_leave_requests()
+	{
+		$this->load->model('LeaveRequest_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['requests'] ){
+			$filters[] = ['field' => 'is_archived', 'value' => 1];
+            $filters[] = ['field' => 'company_id', 'value' => $company_id];
+            $total_deleted = $this->LeaveRequest_model->bulkDelete($post['requests'], $filters);
+
+			//Activity Logs
+			$activity_name = 'Leave Request : Permanently deleted ' .$total_deleted. ' request(s)'; 
 			createActivityLog($activity_name);
 
             $is_success = 1;
@@ -6964,6 +7030,65 @@ class Timesheet extends MY_Controller
 
 		$is_success = 1;
 		$msg    = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_delete_all_archived_leave_requests()
+	{
+		$this->load->model('LeaveRequest_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $filter[] = ['field' => 'company_id', 'value' => $company_id];
+		$total_archived = $this->LeaveRequest_model->deleteAllArchived($filter);
+
+		//Activity Logs
+		$activity_name = 'Leave Request : Permanently deleted ' .$total_archived. ' request(s)'; 
+		createActivityLog($activity_name);
+
+		$is_success = 1;
+		$msg    = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
+    public function ajax_restore_leave_request()
+	{
+        $this->load->model('LeaveRequest_model');
+
+        $is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+        $request = $this->LeaveRequest_model->getByIdAndCompanyId($post['rid'], $company_id);
+		if( $request  ){
+			$data     = ['is_archived' => 0, 'date_updated' => date("Y-m-d H:i:s")];
+			$this->LeaveRequest_model->update($request->id, $data);
+
+			//Activity Logs
+			$activity_name = 'Leave Request : Restored leave request of ' . $request->employee . ' dated ' . date("m/d/Y",strtotime($request->date_from)); 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
 
         $return = [
             'is_success' => $is_success,
