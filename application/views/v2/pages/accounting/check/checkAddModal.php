@@ -1167,24 +1167,12 @@
                 formDisabler(checkAddForm, false);
                 Swal.fire({
                     icon: "error",
-                    title: "Error!",
-                    html: "An unexpected error occurred: " + error,
+                    title: "Network Error!",
+                    html: "An unexpected error occurred. Please try again!",
                     showConfirmButton: true,
                     confirmButtonText: "Okay",
                 });
             },
         });
     });
- 
-    
-
-    // function copyCheck(check_id) {
-    //     $.ajax({
-    //         type: "POST",
-    //         data: { check_id: check_id },
-    //         url: `${window.origin}/accounting/v2/check/getCheckDetails`,
-    //         success: function(response) {
-    //         }
-    //     });
-    // }
 </script>

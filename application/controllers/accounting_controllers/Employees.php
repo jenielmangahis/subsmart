@@ -3260,7 +3260,7 @@ class Employees extends MY_Controller
                         'status' => 1,
                         'created_at' => date("Y-m-d H:i:s")
                     ];
-                    $this->EmployeePayDetails_model->save($employee_pay_details);
+                    $this->EmployeePayDetails_model->create($employee_pay_details);
 
                 }
 
