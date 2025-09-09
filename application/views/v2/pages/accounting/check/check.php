@@ -81,14 +81,18 @@
 <div class="modal fade checkAddModal" data-bs-backdrop="static" data-bs-keyboard="false" aria-modal="true"  role="dialog">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
-            <div class="modal-body pt-3"></div>
+            <div class="modal-body pt-3">
+                <?php include viewPath('v2/pages/accounting/check/checkAddModal'); ?>
+            </div>
         </div>
     </div>
 </div>
 <div class="modal fade checkEditModal" data-bs-backdrop="static" data-bs-keyboard="false" aria-modal="true"  role="dialog">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
-            <div class="modal-body pt-3"></div>
+            <div class="modal-body pt-3">
+                <?php include viewPath('v2/pages/accounting/check/checkEditModal'); ?>
+            </div>
         </div>
     </div>
 </div>

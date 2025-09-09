@@ -3492,8 +3492,8 @@ SQL;
     }
 
     public function debugGeneratePDF(){    
-        $pdf = $this->debugGeneratePDFMaker(1895);
-        //$pdf = $this->generatePDF(1909);
+        //$pdf = $this->debugGeneratePDFMaker(1966);
+        $pdf = $this->generatePDF(1966);
         echo 'Finish';
     }
 
@@ -3593,13 +3593,13 @@ SQL;
                 $pdf->AddPage();
                 $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
 
-                if (!is_null($envelopId)) {
-                    $pdf->setY(5);
-                    $pdf->setX(5);
-                    $pdf->SetFont('Arial', '', 10);
-                    //$pdf->SetFillColor(255, 255, 255);
-                    $pdf->Cell(360, 10, $envelopId, 0, 0, 'L', 1);
-                }
+                // if (!is_null($envelopId)) {
+                //     $pdf->setY(5);
+                //     $pdf->setX(5);
+                //     $pdf->SetFont('Arial', '', 10);
+                //     //$pdf->SetFillColor(255, 255, 255);
+                //     $pdf->Cell(360, 10, $envelopId, 0, 0, 'L', 1);
+                // }
 
 
                 foreach ($fields as $field) {
@@ -3634,7 +3634,7 @@ SQL;
                         //$pdf->SetFont('Courier', '', 10);
                         //$pdf->Write(0, $value->name);
 
-                        $pdf->SetFont('Arial', '', 10);
+                        //$pdf->SetFont('Arial', '', 10);
                         $pdf->Cell(0, 0, $value->name, 0, 0, 'L');
                     }
 
@@ -3654,7 +3654,7 @@ SQL;
                         //$pdf->SetFont('Courier', '', 10);
                         //$pdf->Write(0, $value->email);
 
-                        $pdf->SetFont('Arial', '', 10);
+                        //$pdf->SetFont('Arial', '', 10);
                         $pdf->Cell(0, 0, $value->email, 0, 0, 'L');
                     }
 
@@ -3691,7 +3691,7 @@ SQL;
                                     //$pdf->SetFont('Courier', '', 10);
                                     //$pdf->Write(0, 'x');
 
-                                    $pdf->SetFont('Arial', '', 10);
+                                    //$pdf->SetFont('Arial', '', 10);
                                     $pdf->Cell(0, 0, 'x', 0, 0, 'L');
                                 }
                             }
@@ -3704,7 +3704,7 @@ SQL;
                             //$pdf->SetFont('Courier', '', 10);
                             //$pdf->Write(0, 'x');
 
-                            $pdf->SetFont('Arial', '', 10);
+                            //$pdf->SetFont('Arial', '', 10);
                             $pdf->Cell(0, 0, 'x', 0, 0, 'L');
                         }
                     }
@@ -3747,7 +3747,7 @@ SQL;
                                     // $pdf->Cell(140, 0, $formattedDate, 1, 0, 'L', true);
                                     //$pdf->Write(0, $formattedDate);
 
-                                    $pdf->SetFont('Arial', '', 10);
+                                    //$pdf->SetFont('Arial', '', 10);
                                     $pdf->Cell(0, 0, $formattedDate, 0, 0, 'L');
                                 }
                             }
@@ -3770,7 +3770,7 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
                         
-                        $pdf->SetFont('Arial', '', 10);                        
+                        //$pdf->SetFont('Arial', '', 10);                        
                         $pdf->Cell(0, 0, trim($value->value), 0, 0, 'L');
                         //$pdf->Write(0, $field_value);
                     }
@@ -3791,7 +3791,7 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
                         
-                        $pdf->SetFont('Arial', '', 10);                        
+                        //$pdf->SetFont('Arial', '', 10);                        
                         $pdf->Cell(0, 0, trim($value->value), 0, 0, 'L');
                     }
 
@@ -3830,7 +3830,7 @@ SQL;
                         //$pdf->SetFont('Courier', '', 10);
                         //$pdf->Write(0, $value->value);
 
-                        $pdf->SetFont('Arial', '', 10);
+                        //$pdf->SetFont('Arial', '', 10);
                         $pdf->Cell(0, 0, $value->value, 0, 0, 'L');
                     }
 
@@ -3850,7 +3850,7 @@ SQL;
                         //$pdf->SetFont('Courier', '', 10);
                         //$pdf->Write(0, $value->value);
 
-                        $pdf->SetFont('Arial', '', 10);
+                        //$pdf->SetFont('Arial', '', 10);
                         $pdf->Cell(0, 0, $value->value, 0, 0, 'L');
                     }
 
@@ -3873,7 +3873,7 @@ SQL;
                         //$pdf->SetFont('Courier', '', 10);
                         //$pdf->Write(0, trim($field_value));
 
-                        $pdf->SetFont('Arial', '', 10);
+                        //$pdf->SetFont('Arial', '', 10);
                         $pdf->Cell(0, 0, trim($value->value), 0, 0, 'L');
                     }
 
@@ -3893,7 +3893,7 @@ SQL;
                         //$pdf->SetFont('Courier', '', 10);
                         //$pdf->Write(0, $value->value);
 
-                        $pdf->SetFont('Arial', '', 10);
+                        //$pdf->SetFont('Arial', '', 10);
                         $pdf->Cell(0, 0, $value->value, 0, 0, 'L');
                     }
                 }
@@ -4056,7 +4056,7 @@ SQL;
                 if (!is_null($envelopId)) {
                     $pdf->setY(5);
                     $pdf->setX(5);
-                    $pdf->SetFont('Arial', '', 10);
+                    //$pdf->SetFont('Arial', '', 10);
                     //$pdf->SetFillColor(255, 255, 255);
                     $pdf->Cell(360, 10, $envelopId, 0, 0, 'L', 1);
                 }
@@ -4094,7 +4094,7 @@ SQL;
                         //$pdf->SetFont('Courier', '', 10);
                         //$pdf->Write(0, $value->name);
 
-                        $pdf->SetFont('Arial', '', 10);
+                        //$pdf->SetFont('Arial', '', 10);
                         $pdf->Cell(0, 0, $value->name, 0, 0, 'L');
                     }
 
@@ -4114,7 +4114,7 @@ SQL;
                         //$pdf->SetFont('Courier', '', 10);
                         //$pdf->Write(0, $value->email);
 
-                        $pdf->SetFont('Arial', '', 10);
+                        //$pdf->SetFont('Arial', '', 10);
                         $pdf->Cell(0, 0, $value->email, 0, 0, 'L');
                     }
 
@@ -4151,7 +4151,7 @@ SQL;
                                     //$pdf->SetFont('Courier', '', 10);
                                     //$pdf->Write(0, 'x');
 
-                                    $pdf->SetFont('Arial', '', 10);
+                                    //$pdf->SetFont('Arial', '', 10);
                                     $pdf->Cell(0, 0, 'x', 0, 0, 'L');
                                 }
                             }
@@ -4164,7 +4164,7 @@ SQL;
                             //$pdf->SetFont('Courier', '', 10);
                             //$pdf->Write(0, 'x');
 
-                            $pdf->SetFont('Arial', '', 10);
+                            //$pdf->SetFont('Arial', '', 10);
                             $pdf->Cell(0, 0, 'x', 0, 0, 'L');
                         }
                     }
@@ -4207,7 +4207,7 @@ SQL;
                                     // $pdf->Cell(140, 0, $formattedDate, 1, 0, 'L', true);
                                     //$pdf->Write(0, $formattedDate);
 
-                                    $pdf->SetFont('Arial', '', 10);
+                                    //$pdf->SetFont('Arial', '', 10);
                                     $pdf->Cell(0, 0, $formattedDate, 0, 0, 'L');
                                 }
                             }
@@ -4230,7 +4230,7 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
                         
-                        $pdf->SetFont('Arial', '', 10);                        
+                        //$pdf->SetFont('Arial', '', 10);                        
                         $pdf->Cell(0, 0, trim($value->value), 0, 0, 'L');
                         //$pdf->Write(0, $field_value);
                     }
@@ -4251,7 +4251,7 @@ SQL;
                         $pdf->setY($topAdjusted);
                         $pdf->setX($leftAdjusted);
                         
-                        $pdf->SetFont('Arial', '', 10);                        
+                        //$pdf->SetFont('Arial', '', 10);                        
                         $pdf->Cell(0, 0, trim($value->value), 0, 0, 'L');
                     }
 
@@ -4290,7 +4290,7 @@ SQL;
                         //$pdf->SetFont('Courier', '', 10);
                         //$pdf->Write(0, $value->value);
 
-                        $pdf->SetFont('Arial', '', 10);
+                        //$pdf->SetFont('Arial', '', 10);
                         $pdf->Cell(0, 0, $value->value, 0, 0, 'L');
                     }
 
@@ -4310,7 +4310,7 @@ SQL;
                         //$pdf->SetFont('Courier', '', 10);
                         //$pdf->Write(0, $value->value);
 
-                        $pdf->SetFont('Arial', '', 10);
+                        //$pdf->SetFont('Arial', '', 10);
                         $pdf->Cell(0, 0, $value->value, 0, 0, 'L');
                     }
 
@@ -4333,7 +4333,7 @@ SQL;
                         //$pdf->SetFont('Courier', '', 10);
                         //$pdf->Write(0, trim($field_value));
 
-                        $pdf->SetFont('Arial', '', 10);
+                        //$pdf->SetFont('Arial', '', 10);
                         $pdf->Cell(0, 0, trim($value->value), 0, 0, 'L');
                     }
 
@@ -4353,7 +4353,7 @@ SQL;
                         //$pdf->SetFont('Courier', '', 10);
                         //$pdf->Write(0, $value->value);
 
-                        $pdf->SetFont('Arial', '', 10);
+                        //$pdf->SetFont('Arial', '', 10);
                         $pdf->Cell(0, 0, $value->value, 0, 0, 'L');
                     }
                 }

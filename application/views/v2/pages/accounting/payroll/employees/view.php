@@ -233,7 +233,7 @@
                                         echo (!empty($taxWithholdingData->flsui_status)) ? "FL SUI" : "";
                                         echo "</p>";
                                     } else {
-                                        echo "<p class='text_value tax_exemptions_text'><i>Not specified</i></p>";
+                                        echo "<p class='text_value tax_exemptions_text'><i>Not specified</i></p>";  
                                     }
                                 ?>
                             </div>
@@ -309,7 +309,7 @@
                                         disabled>Print</button>
                                 </span>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-12" style="min-height: 220px;">
                                 <table class="nsm-table" id="transactions-table">
                                     <thead>
                                         <tr>
@@ -342,9 +342,10 @@
                                             <td><?php echo str_replace('$-', '-$', '$'.$paycheck['total_pay'])?></td>
                                             <td><?php echo str_replace('$-', '-$', '$'.$paycheck['net_pay'])?></td>
                                             <td><?php echo $paycheck['pay_method']?></td>
-                                            <td><?php echo !in_array($paycheck['check_number'], ['-', 'Void']) ? '<input type="text" name="check_number[]" class="form-control nsm-field" value="'.$paycheck['check_number'].'">' : $paycheck['check_number'] ?>
+                                            <td><?php echo !in_array($paycheck['check_number'], ['-', 'Void']) ? '<input type="text" name="check_number[]" class="form-control nsm-field" value="'.$paycheck['check_number'].'">' : '---' ?>
                                             </td>
-                                            <td><?php echo $paycheck['status']?></td>
+                                            <?php $status_badge = $paycheck['status'] == 'Active' ? 'bg-success' : 'bg-danger'; ?>
+                                            <td><span class='badge <?php echo $status_badge; ?>'><?= $paycheck['status'] ?></span></td>
                                             <td>
                                                 <div class="dropdown float-end">
                                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -352,17 +353,19 @@
                                                     </a>
                                                     <ul class="dropdown-menu dropdown-menu-end">
                                                         <li>
-                                                            <a class="dropdown-item print-paycheck" href="#">Print</a>
+                                                            <a class="dropdown-item print-paycheck" href="#">Print</a> 
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item delete-paycheck" href="#">Delete</a>
+                                                            <a class="dropdown-item delete-paycheck" href="#">Delete</a> 
                                                         </li>
-                                                        <li>
-                                                            <a class="dropdown-item void-paycheck" href="#">Void</a>
-                                                        </li>
-                                                        <li>
+                                                        <?php if($paycheck['status'] != 'Void') { ?>
+                                                            <li>
+                                                                <a class="dropdown-item void-paycheck" href="#">Void</a> 
+                                                            </li>
+                                                        <?php } ?>
+                                                        <!-- <li>
                                                             <a class="dropdown-item edit-paycheck" href="#">Edit</a>
-                                                        </li>
+                                                        </li> -->
                                                     </ul>
                                                 </div>
                                             </td>

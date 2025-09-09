@@ -1103,8 +1103,8 @@
                 formDisabler($('.virtualCheckEditForm'), false);
                 Swal.fire({
                     icon: "error",
-                    title: "Error!",
-                    html: "An unexpected error occurred: " + error,
+                    title: "Network Error!",
+                    html: "An unexpected error occurred. Please try again!",
                     showConfirmButton: true,
                     confirmButtonText: "Okay",
                 });
