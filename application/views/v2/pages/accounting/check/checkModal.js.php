@@ -207,11 +207,23 @@
                         $('.checkAddPermitNo').attr('min', permit_no).val(permit_no).change();
                         $("#checkAddStandardTab").click();
                         $('.checkAddModalContent').fadeIn('fast');
-                        Swal.close();
-                        $('.checkAddModal').modal('show');
+                        
+                        setTimeout(() => {
+                            Swal.close();
+                            $('.checkAddModal').modal('show');
+                        }, 500);
                     }
                 });
-            }
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Network Error!",
+                    html: "An unexpected error occurred. Please try again!",
+                    showConfirmButton: true,
+                    confirmButtonText: "Okay",
+                });
+            },
         });
     }
 
@@ -463,9 +475,21 @@
                         applyCheckData();
                         $("#checkEditStandardTab").click();
                         $(".checkEditModalContent").fadeIn("fast");
-                        Swal.close();
-                        $('.checkEditModal').modal('show');
+
+                        setTimeout(() => {
+                            Swal.close();
+                            $('.checkEditModal').modal('show');
+                        }, 500);
                     }
+                });
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Network Error!",
+                    html: "An unexpected error occurred. Please try again!",
+                    showConfirmButton: true,
+                    confirmButtonText: "Okay",
                 });
             },
         });
@@ -714,6 +738,15 @@
                     if (isReady) {
                         applyCheckData();
                     }
+                });
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Network Error!",
+                    html: "An unexpected error occurred. Please try again!",
+                    showConfirmButton: true,
+                    confirmButtonText: "Okay",
                 });
             },
         });

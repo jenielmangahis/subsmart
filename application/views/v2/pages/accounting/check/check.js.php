@@ -79,8 +79,8 @@
             error: function(xhr, status, error) {
                 Swal.fire({
                     icon: "error",
-                    title: "Error!",
-                    html: "An unexpected error occurred: " + error,
+                    title: "Network Error!",
+                    html: "An unexpected error occurred. Please try again!",
                     showConfirmButton: true,
                     confirmButtonText: "Okay",
                 });
@@ -209,23 +209,8 @@
             },
         });
 
-        if (!isCheckAddModalLoaded) {
-            $.ajax({
-                type: "POST",
-                url: `${window.origin}/accounting/v2/check/checkAddModal`,
-                success: function(response) {
-                    $('.checkAddModal .modal-body').append(response);
-                    isCheckAddModalLoaded = true;
-                    setLastSettings();
-                },
-                error: function() {
-                    Swal.fire("Error", "Failed to load modal content.", "error");
-                }
-            });
-        } else {
-            checkAddResetForm();
-            setLastSettings();
-        }
+        checkAddResetForm();
+        setLastSettings();
     });
 
     $(document).on('click', '.copyCheck', function() {
@@ -241,27 +226,9 @@
         });
 
         const check_id = $(this).attr('data-check_id');
-
-        if (!isCheckAddModalLoaded) {
-            $.ajax({
-                type: "POST",
-                url: `${window.origin}/accounting/v2/check/checkAddModal`,
-                success: function(response) {
-                    $('.checkAddModal .modal-body').append(response);
-                    $('.checkAddBadge').show();
-                    isCheckAddModalLoaded = true;
-                    setLastSettings();
-                    copyCheck(check_id);
-                },
-                error: function() {
-                    Swal.fire("Error", "Failed to load modal content.", "error");
-                }
-            });
-        } else {
-            $('.checkAddBadge').show();
-            setLastSettings();
-            copyCheck(check_id);
-        }
+        $('.checkAddBadge').show();
+        setLastSettings();
+        copyCheck(check_id);
     });
 
     $(document).on('click', '.editCheck', function() {
@@ -277,24 +244,7 @@
         });
 
         const check_id = $(this).attr('data-check_id');
-
-        if (!isCheckEditModalLoaded) {
-            $.ajax({
-                type: "POST",
-                data: { check_id },
-                url: `${window.origin}/accounting/v2/check/checkEditModal`,
-                success: function(response) {
-                    $('.checkEditModal .modal-body').append(response);
-                    isCheckEditModalLoaded = true;
-                    getCheckDetails(check_id);
-                },
-                error: function() {
-                    Swal.fire("Error", "Failed to load edit modal content.", "error");
-                }
-            });
-        } else {
-            getCheckDetails(check_id);
-        }
+        getCheckDetails(check_id);
     });
 
     $(document).on('click', '.voidCheck', function() {
