@@ -101,9 +101,9 @@
                                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
+                                        <!-- <li>
                                             <a class="dropdown-item" href="#">Run Report</a>
-                                        </li>
+                                        </li> -->
                                         <?php if($tag['type'] === 'group') : ?>
                                         <li>
                                             <a class="dropdown-item add-tag" href="#">Add tag</a>
