@@ -76,7 +76,7 @@
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search List">
                         </div>
                     </div>  
-                    <div class="col-8 grid-mb text-end">  
+                    <div class="col-12 grid-mb text-end">     
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
@@ -131,11 +131,11 @@
                                     <input class="form-check-input row-select table-select" name="requests[]" type="checkbox" value="<?= $lr->id; ?>">
                                 </td>
                                 <td>
-                                        <div class="table-row-icon">
-                                            <i class='bx bx-calendar-event'></i>
-                                        </div>
-                                    </td>
-                                <td class="nsm-text-primary"><?= $lr->employee; ?></td>
+                                    <div class="table-row-icon">
+                                        <i class='bx bx-calendar-event'></i>
+                                    </div>
+                                </td>
+                                <td class="nsm-text-primary show"><?= $lr->employee; ?></td>
                                 <td class="nsm-text-primary"><?= $lr->leave_type; ?></td>
                                 <td class="nsm-text-primary"><?= date("m/d/Y",strtotime($lr->date_from)); ?></td>
                                 <td class="nsm-text-primary"><?= date("m/d/Y",strtotime($lr->date_to)); ?></td>
@@ -268,41 +268,42 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-view-leave-request" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-search-alt-2'></i> <span id="modal-header-label">View Leave Request</span></span>
-                    <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+    <div class="modal fade nsm-modal fade" id="modal-view-leave-request" tabindex="-1" aria-labelledby="modal-view-leave-request_label" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">            
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title">View Leave Request</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body" id="view-leave-request-container"></div>
                 </div>
-                <div class="modal-body" id="view-leave-request-container"></div>
-            </div>
+            </form>
         </div>
     </div>
 
-    <div class="modal fade" id="modal-disapprove-leave-request" role="dialog">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <form id="frm-disapprove-leave-request" method="post">
-                    <input type="hidden" name="rid" id="disapprove-rid" value="0" />
+    <div class="modal fade nsm-modal fade" id="modal-disapprove-leave-request" tabindex="-1" aria-labelledby="modal-disapprove-leave-request_label" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">            
+                <div class="modal-content">
                     <div class="modal-header">
-                        <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-x-circle'></i> <span id="modal-header-label">Disapprove Leave Request</span></span>
-                        <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+                        <span class="modal-title content-title">Disapprove Leave Request</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                     </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label class="content-subtitle fw-bold d-block mb-2">Reason</label>
-                                <textarea class="form-control" id="disapprove-reason" name="disapprove_reason" style="height:200px;" required></textarea>
-                            </div>                   
-                        </div> 
+                    <div class="modal-body" id="view-leave-request-container">
+                        <form id="frm-disapprove-leave-request" method="post">
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label class="content-subtitle fw-bold d-block mb-2">Reason</label>
+                                    <textarea class="form-control" id="disapprove-reason" name="disapprove_reason" style="height:200px;" required></textarea>
+                                </div>                   
+                            </div> 
+                        </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>                        
-                        <button type="submit" class="nsm-button primary" id="btn-disapprove-leave-request">Save</button>
-                    </div>                                       
-                </form>
-            </div>
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="nsm-button primary" id="btn-disapprove-leave-request" form="frm-disapprove-leave-request">Save</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -320,7 +321,7 @@
 
 </div>
 
-<script type="text/javascript">
+<script>
 $(function(){    
     $(".nsm-table").nsmPagination();
     
@@ -351,7 +352,11 @@ $(function(){
         $('#modal-create-leave-request').modal('show');
     });
 
-    $('.btn-edit-leave-request').on('click', function(){
+    $("#btn-export-list, .btn-export-list").on("click", function() {
+        location.href = base_url + 'timesheet/export_leave_request_list';
+    });
+
+    $(document).on('click', '.btn-edit-leave-request', function(){
         var rid = $(this).attr('data-id');
         $('#rid').val(rid);
         $('#modal-edit-leave-request').modal('show');
@@ -363,7 +368,6 @@ $(function(){
                 $('#edit-leave-request-container').html(html);
             }
         });
-        
     });
 
     $('#btn-archived, #btn-mobile-archived').on('click', function(){
@@ -381,7 +385,7 @@ $(function(){
         });
     });
 
-    $('.btn-view-leave-request').on('click', function(){
+    $(document).on('click', '.btn-view-leave-request', function(){
         var rid = $(this).attr('data-id');
         $('#rid').val(rid);
         $('#modal-view-leave-request').modal('show');
@@ -395,7 +399,7 @@ $(function(){
         });
     });
 
-    $('.btn-delete-leave-request').on('click', function(){
+    $(document).on('click', '.btn-delete-leave-request', function(){
         var rid = $(this).attr('data-id');
         var url = base_url + 'timesheet/_delete_leave_request';
 
@@ -435,14 +439,14 @@ $(function(){
         });
     });
 
-    $('.btn-approve-leave-request').on('click', function(){
+    $(document).on('click', '.btn-approve-leave-request', function(){
         var rid = $(this).attr('data-id');
         var status = $(this).attr('data-status');
         var url = base_url + 'timesheet/_approve_leave_request';
 
         if( status == 1 || status == 3 ){
             Swal.fire({
-                title: 'Update Status',
+                title: 'Approve Leave Request',
                 html: 'Are you sure you want to <b>approve</b> selected leave request?',
                 icon: 'question',
                 showCancelButton: true,
@@ -459,8 +463,8 @@ $(function(){
                             if( result.is_success == 1 ) {
                                 Swal.fire({
                                 icon: 'success',
-                                title: 'Success',
-                                text: 'Data was successfully updated',
+                                title: 'Approve Leave Request',
+                                text: 'Leave request was successfully updated',
                                 }).then((result) => {
                                     window.location.reload();
                                 });
@@ -476,21 +480,16 @@ $(function(){
                 }
             });
         }else{
-            // if( status == 2 ){
-            //     var status_text = 'approved';
-            // }else{
-            //     var status_text = 'disapproved';
-            // }
             var status_text = 'approved';
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
                 html: `Cannot update leave request status. Leave request is already <b>${status_text}</b>`,
             });
-        }        
+        }
     });
 
-    $('.btn-disapprove-leave-request').on('click', function(){
+    $(document).on('click', '.btn-disapprove-leave-request', function(){
         var rid = $(this).attr('data-id');
         var status = $(this).attr('data-status');
 
@@ -499,20 +498,13 @@ $(function(){
             $('#disapprove-reason').val('');
             $('#modal-disapprove-leave-request').modal('show');
         }else{
-            // if( status == 2 ){
-            //     var status_text = 'approved';
-            // }else{
-            //     var status_text = 'disapproved';
-            // }
             var status_text = 'disapproved';
-
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
                 html: `Cannot update leave request status. Leave request is already <b>${status_text}</b>`,
             });
         }
-        
     });
 
     $('.btn-with-selected').on('click', function(){
@@ -969,6 +961,54 @@ $(function(){
                             }).then((result) => {
                                 //if (result.value) {
                                     location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.btn-permanently-delete-leave-request', function(){
+        let rid = $(this).attr('data-id');
+
+        Swal.fire({
+            title: 'Delete Leave Request',
+            html: `Are you sure you want to <b>permanently delete</b> selected leave request? <br/><br/>Note : This cannot be undone.`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + 'timesheet/_delete_archived_leave_request',
+                    data: {
+                        rid: rid
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-view-archive').modal('hide');
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Delete Leave Request',
+                                html: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    //location.reload();
                                 //}
                             });
                         } else {

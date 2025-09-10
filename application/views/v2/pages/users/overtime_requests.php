@@ -160,7 +160,7 @@
                             <?php } ?>
                         <?php }else{ ?>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="7">
                                     <div class="nsm-empty">
                                         <span>No results found</span>
                                     </div>
@@ -212,10 +212,10 @@
                         <div class="col-md-12 mb-3">
                             <label class="content-subtitle fw-bold d-block mb-2">Date From</label>
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 mt-2">
                                     <input type="date" name="request_date_from" id="" class="form-control" value="<?= date("Y-m-d"); ?>" required>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 mt-2">
                                     <input type="time" name="request_time_from" value="<?= date("g:i A"); ?>" id="" class="nsm-field form-control" placeholder="" required>
                                 </div>
                             </div>
@@ -223,10 +223,10 @@
                         <div class="col-md-12 mb-3">
                             <label class="content-subtitle fw-bold d-block mb-2">Date To</label>
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 mt-2">
                                     <input type="date" name="request_date_to" id="" class="form-control" value="<?= date("Y-m-d"); ?>" required>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 mt-2">
                                     <input type="time" name="request_time_to" value="<?= date("g:i A"); ?>" id="" class="nsm-field form-control" placeholder="" required>
                                 </div>
                             </div>
@@ -373,7 +373,7 @@ $(function(){
         location.href = base_url + 'timesheet/export_overtime_request_list';
     });
 
-    $('.btn-edit-overtime-request').on('click', function(){
+    $(document).on('click', '.btn-edit-overtime-request', function(){
         var rid = $(this).attr('data-id');
         $('#rid').val(rid);
         $('#modal-edit-overtime-request').modal('show');
@@ -388,10 +388,9 @@ $(function(){
                 $('#edit-overtime-request-container').html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
-        
     });
 
-    $('.btn-view-leave-request').on('click', function(){
+    $(document).on('click', '.btn-view-leave-request', function(){
         var rid = $(this).attr('data-id');
         $('#rid').val(rid);
         $('#modal-view-leave-request').modal('show');
@@ -408,7 +407,7 @@ $(function(){
         });
     });
 
-    $('.btn-delete-overtime-request').on('click', function(){
+    $(document).on('click', '.btn-delete-overtime-request', function(){
         var rid = $(this).attr('data-id');
         var url = base_url + 'timesheet/_delete_overtime_request';
 
@@ -448,7 +447,7 @@ $(function(){
         });
     });
 
-    $('.btn-approve-overtime-request').on('click', function(){
+    $(document).on('click', '.btn-approve-overtime-request', function(){
         var rid = $(this).attr('data-id');
         var status = $(this).attr('data-status');
         var url = base_url + 'timesheet/_approve_overtime_request';
@@ -488,22 +487,16 @@ $(function(){
                     });
                 }
             });
-        }else{
-            // if( status == 2 ){
-            //     var status_text = 'approved';
-            // }else{
-            //     var status_text = 'disapproved';
-            // }
-            var status_text = 'approved';
+        }else{            
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                html: `Cannot update leave request status. Leave request is already <b>${status_text}</b>`,
+                html: `Cannot update leave request status. Leave request is already <b>approved</b>`,
             });
-        }        
+        }  
     });
 
-    $('.btn-disapprove-overtime-request').on('click', function(){
+    $(document).on('click', '.btn-disapprove-overtime-request', function(){
         var rid = $(this).attr('data-id');
         var status = $(this).attr('data-status');
 
@@ -517,10 +510,9 @@ $(function(){
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                html: `Cannot update overtime request status. Overtime request is already <b>${status_text}</b>`,
+                html: `Cannot update overtime request status. Overtime request is already <b>disapproved</b>`,
             });
         }
-        
     });
 
     $('.btn-with-selected').on('click', function(){
