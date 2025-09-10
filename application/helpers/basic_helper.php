@@ -294,8 +294,9 @@ if (!function_exists('getPublicCompanyBusinessProfileImage')) {
 function createActivityLog($activity_name){
     $CI      = &get_instance();
     $user_id = logged('id');
+    $company_id = logged('company_id');
 
-    $CI->activity_model->add($activity_name,$user_id);
+    $CI->activity_model->add($activity_name,$user_id,$company_id);
 }
 
 if (!function_exists('licenseImage')) {
