@@ -3316,6 +3316,28 @@ class Debug extends MY_Controller {
 
         $token = crexendoAccessToken();
     }
+
+    public function fixActivityLogs()
+    {
+        $this->load->model('Activity_model');
+        $this->load->model('Users_model');
+
+        $conditions[] = ['field' => 'company_id', 'value' => 0];
+        $limit = 800;
+        $logs  = $this->Activity_model->getAll($conditions, $limit);
+
+        $total_updated = 0;
+        foreach($logs as $log){
+            $user = $this->Users_model->getUser($log->user_id);
+            $company_id = $user->company_id ?? 0;
+            if( $company_id > 0 ){
+                $this->Activity_model->update($log->id,['company_id' => $company_id]);
+                $total_updated++;
+            }            
+        }
+
+        echo $total_updated;
+    }
 }
 /* End of file Debug.php */
 
