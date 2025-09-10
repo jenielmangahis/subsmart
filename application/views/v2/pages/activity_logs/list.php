@@ -30,6 +30,19 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Sort by <?php echo $sort_by; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li>
+                                    <a class="dropdown-item" href="<?php echo base_url('activity_logs?sort=date_desc'); ?>">Newest First</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="<?php echo base_url('activity_logs?sort=date_asc'); ?>">Oldest First</a>
+                                </li>  
+                            </ul>
+                        </div>
                         <?php if(checkRoleCanAccessModule('activity-logs', 'delete')){ ?>
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
@@ -40,10 +53,16 @@
                             </ul>
                         </div>
                         <?php } ?>
-                        <div class="nsm-page-buttons page-button-container">                            
-                            <button type="button" name="btn_link" class="nsm-button primary" id="btn-export-list">
-                                <i class='bx bx-fw bx-export'></i> Export List
-                            </button>
+                        <div class="nsm-page-buttons page-button-container">
+                            <div class="btn-group nsm-main-buttons">
+                                <button type="button" class="btn btn-nsm" id="btn-export-list"><i class='bx bx-fw bx-export' style="position:relative;top:1px;"></i> Export</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                                                    
+                                    <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>                               
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -108,20 +127,34 @@
                 </table>
                 </form>
             </div>
+
+            <div class="modal fade nsm-modal fade" id="modal-view-archive" tabindex="-1" aria-labelledby="modal-view-archive_label" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">        
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title">Archived Logs</span>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <div class="modal-body" id="logs-archived-container"></div>   
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-  $(document).ready(function() {
-    $("#activity-logs").nsmPagination({itemsPerPage:5});
+$(document).ready(function() {
+    const numRowsPerPage = 10;
+
+    $("#activity-logs").nsmPagination({itemsPerPage:numRowsPerPage});
 
     $("#search_field").on("input", debounce(function() {
         tableSearch($(this));
     }, 1000));
 
     $(document).on('change', '#select-all', function(){
-        $('.row-select:checkbox').prop('checked', this.checked);  
+        $(`.row-select:checkbox:lt(${numRowsPerPage})`).prop('checked', this.checked);  
         let total= $('#activity-logs input[name="logs[]"]:checked').length;
         if( total > 0 ){
             $('#num-checked').text(`(${total})`);
@@ -163,13 +196,13 @@
                 if (result.value) {
                     $.ajax({
                         method: 'POST',
-                        url: base_url + 'users/_archive_selected_users',
+                        url: base_url + 'activity_logs/_archive_selected_activity_logs',
                         dataType: 'json',
                         data: $('#frm-with-selected').serialize(),
                         success: function(result) {                        
                             if( result.is_success == 1 ) {
                                 Swal.fire({
-                                    title: 'Delete Users',
+                                    title: 'Delete Activity Logs',
                                     text: "Data deleted successfully!",
                                     icon: 'success',
                                     showCancelButton: false,
@@ -193,6 +226,177 @@
             });
         }        
     });
-  });
+
+    $('#btn-archived, #btn-mobile-archived').on('click', function(){
+        $('#modal-view-archive').modal('show');
+
+         $.ajax({
+            type: "POST",
+            url: base_url + "activity_logs/_archived_list",
+            success: function(html) {    
+                $('#logs-archived-container').html(html);
+            },
+            beforeSend: function() {
+                $('#logs-archived-container').html('<div class="col"><span class="bx bx-loader bx-spin"></span></div>');
+            }
+        });
+    });
+
+    $(document).on('click', '#with-selected-restore', function(){
+        let total= $('#archived-logs input[name="logs[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Restore Logs',
+                html: `Are you sure you want to restore selected rows?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'activity_logs/_restore_selected_logs',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Restore Logs',
+                                    text: "Data restored successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#with-selected-perma-delete', function(){
+        let total = $('#archived-logs input[name="logs[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Logs',
+                html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'activity_logs/_permanently_delete_selected_logs',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Delete Logs',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#btn-empty-archives', function(){        
+        let total = $('#archived-logs input[name="logs[]"]').length;        
+        if( total > 0 ){
+            Swal.fire({
+                title: 'Empty Archived',
+                html: `Are you sure you want to <b>permanently delete</b> <b>${total}</b> archived logs? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'activity_logs/_delete_all_archived_logs',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Empty Archived',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }else{
+            Swal.fire({                
+                icon: 'error',
+                title: 'Error',              
+                html: 'Archived is empty',
+            });
+        }        
+    });
+});
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
