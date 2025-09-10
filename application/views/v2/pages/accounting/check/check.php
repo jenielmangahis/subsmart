@@ -34,8 +34,8 @@
                                     Batch Actions&ensp;<i class="fas fa-caret-down text-muted"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="checkBatchActions">
+                                <li><a class="dropdown-item checkBatchPrint" href="javascript:void(0);">Print</a></li>
                                     <li><a class="dropdown-item checkBatchExport" href="javascript:void(0);">Export as .pdf</a></li>
-                                    <li><a class="dropdown-item checkBatchPrint" href="javascript:void(0);">Print</a></li>
                                     <li><a class="dropdown-item checkBatchVoid" href="javascript:void(0);">Void</a></li>
                                     <li><a class="dropdown-item checkBatchDelete" href="javascript:void(0);">Delete</a></li>
                                 </ul>
@@ -92,6 +92,42 @@
         <div class="modal-content">
             <div class="modal-body pt-3">
                 <?php include viewPath('v2/pages/accounting/check/checkEditModal'); ?>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="checkPdfRenderContainer" style="position: absolute; left: -9999px; top: 0;"></div>
+<div class="modal fade checkPrintModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Preview check to Print</span>
+                <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12 mb-2">
+                        <ul class="nav nav-pills mb-3" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" data-bs-toggle="pill" data-bs-target=".voucherCheckTab" type="button" role="tab">Voucher</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="pill" data-bs-target=".standardCheckTab" type="button" role="tab">Standard</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="voucherCheckTab tab-pane fade show active" role="tabpanel">
+                                <iframe class="voucherPrintPreview border-0 w-100"></iframe>
+                            </div>
+                            <div class="standardCheckTab tab-pane fade" role="tabpanel">
+                                <iframe class="standardCheckPreview border-0 w-100"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <span class=" text-muted"><i class="fas fa-info"></i>&ensp;You can print or save a <strong>Voucher</strong> or <strong>Standard</strong>  check using the button on the top-right corner. Please review the check first before printing.</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

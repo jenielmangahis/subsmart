@@ -481,7 +481,6 @@
     $(document).on('submit', '.virtualCheckEditForm', function(e) {
         e.preventDefault();
         const virtualCheckEditForm = $(this);
-        formDisabler(virtualCheckEditForm, true);
         $('.checkEditForm').submit();
     });
 
@@ -1055,12 +1054,9 @@
             processData: false,
             contentType: false,
             beforeSend: function () {
-                formDisabler(checkEditForm, true);
+                // formDisabler(checkEditForm, true);
             },
             success: function (response) {
-                formDisabler($('.virtualCheckEditForm'), false);
-                formDisabler(checkEditForm, false);
-                
                 if (response == 1 || (typeof response === 'object' && response.status === 'success')) {
                     Swal.fire({
                         icon: "success",
@@ -1098,6 +1094,9 @@
                         confirmButtonText: "Okay",
                     });
                 }
+
+                // formDisabler($('.virtualCheckEditForm'), false);
+                // formDisabler(checkEditForm, false);
             },
             error: function (xhr, status, error) {
                 formDisabler($('.virtualCheckEditForm'), false);
