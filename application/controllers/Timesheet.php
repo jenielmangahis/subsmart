@@ -7159,6 +7159,36 @@ class Timesheet extends MY_Controller
         echo json_encode($return);
 	}
 
+    public function ajax_delete_archived_leave_request()
+	{
+		$this->load->model('LeaveRequest_model');
+
+		$is_success = 0;
+        $msg    = 'Please select data';
+
+        $company_id  = logged('company_id');
+        $post = $this->input->post();
+
+		$request = $this->LeaveRequest_model->getByIdAndCompanyId($post['rid'], $company_id);
+        if( $request ){
+			$this->LeaveRequest_model->delete($request->id);
+
+			//Activity Logs
+			$activity_name = 'Leave Request : Permanently deleted leave request of ' . $request->employee . ' dated ' . date("m/d/Y",strtotime($request->date_from));
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg    = '';
+		}
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+	}
+
     public function export_overtime_request_list()
 	{
 		$this->load->model('OvertimeRequest_model');
@@ -7167,7 +7197,7 @@ class Timesheet extends MY_Controller
 		$cid     = logged('company_id');
         $uid     = logged('id');
 
-        $conditions[] = ['field' => 'timesheet_overtime_requests.is_archived', 'value' => 0];
+        $conditions = [];
 		if (logged('user_type') == 7) {
             $overtimeRequests = $this->OvertimeRequest_model->getAllByCompanyId($cid, $conditions);
         } else {
@@ -7203,6 +7233,69 @@ class Timesheet extends MY_Controller
                     $ot->reason != '' ? $ot->reason : '---',
                     $status,
                     $ot->is_archived == 1 ? 'Yes' : 'No'
+
+				);
+
+				fputcsv($f, $csvData, $delimiter);
+			}
+		} else {
+			$csvData = array('');
+			fputcsv($f, $csvData, $delimiter);
+		}
+
+		fseek($f, 0);
+
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+		fpassthru($f);
+	}
+
+    public function export_leave_request_list()
+	{
+		$this->load->model('LeaveRequest_model');
+
+		$role_id = logged('role');
+		$cid     = logged('company_id');
+        $uid     = logged('id');
+
+        $conditions = [];
+		if (logged('user_type') == 7) {
+            $leaveRequests = $this->LeaveRequest_model->getAllByCompanyId($cid, $conditions);
+        } else {
+            $leaveRequests = $this->LeaveRequest_model->getAllByUserId($uid, $conditions);
+        }
+
+		$delimiter = ",";
+		$time      = time();
+		$filename  = "leave_request_list_" . $time . ".csv";
+
+		$f = fopen('php://memory', 'w');
+
+		$fields = array('Name', 'Leave Type', 'Date From', 'Date To', 'Reason', 'Status', 'Is Archived');
+		fputcsv($f, $fields, $delimiter);
+
+		if (!empty($leaveRequests)) {
+			foreach ($leaveRequests as $lr) {
+                $date_from = date("m/d/Y",strtotime($lr->date_from));
+                $date_to   = date("m/d/Y",strtotime($lr->date_to));
+                
+                if( $lr->status == 2 ){
+                    $status = 'Approved';
+                }elseif( $lr->status == 3 ){
+                    $status = 'Disapproved';
+                }else{
+                    $status = 'Pending';
+                }
+
+				$csvData = array(
+					$lr->employee,
+                    $lr->leave_type,
+                    $date_from,
+                    $date_to,
+                    $lr->reason != '' ? $lr->reason : '---',
+                    $status,
+                    $lr->is_archived == 1 ? 'Yes' : 'No'
 
 				);
 

@@ -24,8 +24,7 @@
             </td>
             <?php } ?>
             <td class="table-icon show"></td>
-            <td class="show" data-name="UserName" style="width:40%;">Name</td>      
-            <td data-name="Leave Type">Leave Type</td>   
+            <td class="show" data-name="UserName" style="width:40%;">Name</td>    
             <td data-name="Date From">From</td>
             <td data-name="Date To">To</td>                              
             <td class="show" data-name="Action" style="width:5%;"></td>                
@@ -41,8 +40,10 @@
                     </td>
                     <?php } ?>
                     <td class="show"><div class="table-row-icon"><i class="bx bx-box"></i></div></td>
-                    <td class="fw-bold nsm-text-primary show"><?= $request->employee; ?></td>
-                    <td class="fw-bold nsm-text-primary show"><?= $request->leave_type; ?></td>
+                    <td class="fw-bold nsm-text-primary show">
+                        <?= $request->employee; ?><br />
+                        <span class="text-muted"><?= $request->leave_type; ?></span>
+                    </td>
                     <td class="nsm-text-primary"><?= date("m/d/Y",strtotime($request->date_from)); ?></td>
                     <td class="nsm-text-primary"><?= date("m/d/Y",strtotime($request->date_to)); ?></td>
                     <td class="show" style="width:5%;">

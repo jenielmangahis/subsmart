@@ -2125,6 +2125,8 @@ $route['timesheet/_restore_selected_leave_requests'] = 'Timesheet/ajax_restore_s
 $route['timesheet/_permanently_delete_selected_leave_requests'] = 'Timesheet/ajax_permanently_delete_selected_leave_requests';
 $route['timesheet/_delete_all_archived_leave_requests'] = 'Timesheet/ajax_delete_all_archived_leave_requests';
 $route['timesheet/_restore_leave_request'] = 'Timesheet/ajax_restore_leave_request';
+$route['timesheet/_delete_archived_leave_request'] = 'Timesheet/ajax_delete_archived_leave_request';
+$route['timesheet/export_leave_request_list'] = 'Timesheet/export_leave_request_list';
 
 //Leave credits
 $route['accounting/employees/_update_leave_credits'] = 'accounting_controllers/Employees/ajax_update_leave_credits';
@@ -2394,3 +2396,8 @@ $route['accounting/v2/check/voidMultipleChecks']['POST'] = 'accounting_controlle
 $route['accounting/v2/check/deleteMultipleChecks']['POST'] = 'accounting_controllers/v2/Check/deleteMultipleChecks';
 
 $route['activity_logs/export'] = 'Activity_logs/exportData';
+$route['activity_logs/_archive_selected_activity_logs'] = 'Activity_logs/ajax_archive_selected_activity_logs';
+$route['activity_logs/_archived_list'] = 'Activity_logs/ajax_archived_list';
+$route['activity_logs/_restore_selected_logs'] = 'Activity_logs/ajax_restore_selected_logs';
+$route['activity_logs/_permanently_delete_selected_logs'] = 'Activity_logs/ajax_permanently_delete_selected_logs';
+$route['activity_logs/_delete_all_archived_logs'] = 'Activity_logs/ajax_delete_all_archived_logs';
