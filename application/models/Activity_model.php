@@ -31,6 +31,17 @@ class Activity_model extends MY_Model {
         $query = $this->db->get();
         return $query->result();
     }  
+
+    public function getById($id)
+    {
+        $this->db->select('activity_logs.*, users.FName AS first_name, users.LName AS last_name, users.email');
+        $this->db->from($this->table);
+        $this->db->join('users', 'activity_logs.user_id = users.id', 'LEFT');
+        $this->db->where('activity_logs.id', $id);        
+
+        $query = $this->db->get();        
+        return $query->row();
+    }
         
     public function getActivityLogs($company_id, $order_by = '', $limit = 0)
     {

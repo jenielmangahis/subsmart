@@ -79,6 +79,18 @@ $(document).ready(function() {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -148,6 +160,18 @@ $(document).ready(function() {
                                     text: result.msg,
                                 });
                             }
+                        },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
                         }
                     });
                 }
@@ -200,6 +224,18 @@ $(document).ready(function() {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -252,6 +288,18 @@ $(document).ready(function() {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -298,6 +346,18 @@ $(document).ready(function() {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -355,6 +415,18 @@ $(document).ready(function() {
                             });
                         }
                     },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
                 });
             }
         });
@@ -404,6 +476,18 @@ $(document).ready(function() {
                             });
                         }
                     },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
                 });
             }
         });
@@ -956,6 +1040,18 @@ $(document).ready(function() {
                             });
                         }
                     },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
                 });
             }
         });

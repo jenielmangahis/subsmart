@@ -191,7 +191,7 @@ $(document).ready(function() {
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
-                cancelButtonText: "Cancel"
+                cancelButtonText: "Cancel",
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
@@ -220,6 +220,18 @@ $(document).ready(function() {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -287,6 +299,18 @@ $(document).ready(function() {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -339,6 +363,18 @@ $(document).ready(function() {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -385,6 +421,18 @@ $(document).ready(function() {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -396,6 +444,128 @@ $(document).ready(function() {
                 html: 'Archived is empty',
             });
         }        
+    });
+
+    $(document).on('click', '.btn-restore-log', function(){
+        let log_id   = $(this).attr('data-id');
+        let log_name = $(this).attr('data-name');
+
+        Swal.fire({
+            title: 'Restore Log',
+            html: `Are you sure you want to restore selected activity log of <b>${log_name}</b>?`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + 'activity_logs/_restore_log',
+                    data: {
+                        log_id: log_id
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-view-archive').modal('hide');
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Restore Log',
+                                html: "Data updated successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.btn-permanently-delete-log', function(){
+        let log_id   = $(this).attr('data-id');
+        let log_name = $(this).attr('data-name');
+
+        Swal.fire({
+            title: 'Delete Log',
+            html: `Are you sure you want to <b>permanently delete</b> activity log of <b>${log_name}</b>? <br/><br/>Note : This cannot be undone.`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + 'activity_logs/_delete_archived_log',
+                    data: {
+                        log_id: log_id
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-view-archive').modal('hide');
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Delete Log',
+                                html: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    //location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
+                });
+            }
+        });
     });
 });
 </script>
