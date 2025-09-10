@@ -746,6 +746,37 @@ class Check extends MY_Controller
         echo json_encode($response);
     }
 
+    public function getCheckDetailsForPrint()
+    {
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        if (empty($post['check_id'])) {
+            echo json_encode(['status' => 'error', 'message' => 'No check_id provided']);
+            return;
+        }
+
+        $check_ids = is_array($post['check_id']) ? $post['check_id'] : explode(',', $post['check_id']);
+        $check_ids = array_map('intval', $check_ids); // sanitize
+        $check_ids_str = implode(',', $check_ids);
+
+        $sql = "
+            SELECT 
+                accounting_check_view.id,
+                accounting_check_view.payment_date,
+                accounting_check_view.total_amount,
+                accounting_check_view.payee_name,
+                accounting_check_view.chart_of_account_name
+            FROM accounting_check_view
+            WHERE accounting_check_view.company_id = {$company_id} 
+            AND accounting_check_view.id IN ({$check_ids_str})
+        ";
+
+        $check_data = $this->db->query($sql)->result_array();
+
+        echo json_encode($check_data);
+    }
+
     public function updateAccountCategory()
     {
         $post = $this->input->post();

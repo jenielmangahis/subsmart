@@ -2383,6 +2383,7 @@ $route['accounting/v2/check/getTagDetails']['POST'] = 'accounting_controllers/v2
 $route['accounting/v2/check/getItemDetails/(:any)']['POST'] = 'accounting_controllers/v2/check/getItemDetails/$1';
 $route['accounting/v2/check/getLastSettings']['POST'] = 'accounting_controllers/v2/Check/getLastSettings';
 $route['accounting/v2/check/getCheckDetails']['POST'] = 'accounting_controllers/v2/Check/getCheckDetails';
+$route['accounting/v2/check/getCheckDetailsForPrint']['POST'] = 'accounting_controllers/v2/Check/getCheckDetailsForPrint';
 $route['accounting/v2/check/checkAddModal']['POST'] = 'accounting_controllers/v2/Check/checkAddModal';
 $route['accounting/v2/check/checkEditModal']['POST'] = 'accounting_controllers/v2/Check/checkEditModal';
 $route['accounting/v2/check/addCheck']['POST'] = 'accounting_controllers/v2/Check/addCheck';

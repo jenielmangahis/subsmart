@@ -94,4 +94,155 @@
         margin-right: 5px;
         margin-bottom: 2px;
     }
+
+    .checkPrintModal .modal-body {
+        padding-top: 12px;
+    }
+
+    .standardCheckPreview, 
+    .voucherPrintPreview {
+        height: 600px;
+    }
+
+    .voucherCheckDiv {
+        font-family: Arial, sans-serif; 
+        font-size: 13px;
+        width: 8.5in;
+        height: 3in;
+        position: relative;
+        page-break-after: always;
+    }
+
+    .voucherCheckDiv > span,
+    .voucherCheckDiv > strong {
+        position: absolute;
+    }
+
+    .voucherCheckDate1 {
+        left: 665px;
+        top: 85px;
+    }
+
+    .voucherCheckPayee1 {
+        left: 100px;
+        top: 135px;
+    }
+
+    .voucherCheckAmountWords {
+        left: 56px;
+        top: 167px;
+    }
+
+    .voucherCheckAmountNum1 {
+        left: 665px;
+        top: 135px;
+    }
+
+    .voucherCheckDate2 {
+        left: 77px;
+        top: 373px;
+    }
+    
+    .voucherCheckPayee2 {
+        left: 190px;
+        top: 373px;
+    }
+    
+    .voucherCheckAmountNum2 {
+        left: 735px;
+        top: 395px;
+    }
+
+    .voucherCheckAccount1 {
+        left: 31px;
+        top: 645px;
+    }
+
+    .voucherCheckAmountNum3 {
+        left: 735px;
+        top: 645px;
+    }
+
+    .voucherCheckDate3 {
+        left: 77px;
+        top: 708px;
+    }
+    
+    .voucherCheckPayee3 {
+        left: 190px;
+        top: 708px;
+    }
+    
+    .voucherCheckAmountNum4 {
+        left: 735px;
+        top: 730px;
+    }
+    
+    .voucherCheckAccount2 {
+        left: 31px;
+        top: 980px;
+    }
+
+    .voucherCheckAmountNum5 {
+        left: 735px;
+        top: 980px;
+    }
+
+
+    .standardPageContainer {
+        position: relative;
+        width: 8.5in;
+        height: 11in;
+    }
+
+    .standardCheckDiv {
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        width: 8.5in;
+        height: 3in;
+        position: absolute;
+    }
+
+    .standardCheckDiv > span,
+    .standardCheckDiv > strong {
+        position: absolute;
+    }
+
+    .standardCheckDate1 {
+        left: 665px;
+        top: 85px;
+    }
+
+    .standardCheckPayee1 {
+        left: 100px;
+        top: 135px;
+    }
+
+    .standardCheckAmountWords1 {
+        left: 56px;
+        top: 167px;
+    }
+
+    .standardCheckAmountNum1 {
+        left: 665px;
+        top: 135px;
+    }
+
 </style>
+
+<!-- Date
+left: 643px;
+top: 123px;
+
+Amount
+left: 643px;
+top: 171px;
+
+Payee
+left: 94px;
+top: 171px;
+
+AmountInWord
+left: 53px;
+top: 204px;
+-->

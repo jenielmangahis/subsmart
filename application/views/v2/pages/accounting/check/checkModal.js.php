@@ -119,11 +119,11 @@
 
         const dollars = Math.floor(amount);
         const cents = Math.round((amount - dollars) * 100);
-        const dollarText = dollars > 0 ? numbersToWords(dollars) : "";
-        const centText = cents > 0 ? `${cents}/100` : "";
+        const dollarText = dollars > 0 ? numbersToWords(dollars) : "Zero";
 
-        return dollarText + (dollars > 0 && cents > 0 ? " and " : "") + centText;
+        return `${dollarText} and ${String(cents).padStart(2, '0')}/100`;
     }
+
 
     function observePluginInitialization(formSelector, onReady) {
         const form = document.querySelector(formSelector);

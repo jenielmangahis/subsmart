@@ -1,14 +1,23 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-bs5/1.13.1/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.bootstrap5.min.css" />
-<link rel="stylesheet" href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/filepond-plugin-get-file@latest/dist/filepond-plugin-get-file.min.css">
-<link rel="stylesheet" href="https://unpkg.com/filepond/dist/filepond.min.css">
-<script src="https://cdn.datatables.net/2.0.6/js/dataTables.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"></script>
-<script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.min.js"></script>
-<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.min.js"></script>
-<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/filepond-plugin-get-file@latest/dist/filepond-plugin-get-file.min.js"></script>
-<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- ✅ DataTables -->
+<link rel="stylesheet" href="<?php echo base_url('assets/datatables/datatables.min.css') ?>">
+<script src="<?php echo base_url('assets/datatables/datatables.min.js') ?>"></script>
+
+<!-- ✅ FilePond -->
+<link rel="stylesheet" href="<?php echo base_url('assets/filepond/filepond.min.css') ?>">
+<link rel="stylesheet" href="<?php echo base_url('assets/filepond/filepond-plugin-get-file.min.css') ?>">
+<link rel="stylesheet" href="<?php echo base_url('assets/filepond/filepond-plugin-image-preview.min.css') ?>">
+<script src="<?php echo base_url('assets/filepond/filepond.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/filepond/filepond-plugin-file-encode.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/filepond/filepond-plugin-file-validate-type.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/filepond/filepond-plugin-get-file.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/filepond/filepond-plugin-image-preview.min.js') ?>"></script>
+
+<!-- ✅ html2pdf -->
+<script src="<?php echo base_url('assets/html2pdf/html2pdf.bundle.min.js') ?>"></script>
+
+<!-- ✅ Selectize -->
+<link rel="stylesheet" href="<?php echo base_url('assets/selectize/selectize.min.css') ?>">
+<script src="<?php echo base_url('assets/selectize/selectize.min.js') ?>"></script>
+
+<!-- ✅ SheetJS -->
+<script src="<?php echo base_url('assets/sheetjs/sheetjs.min.js') ?>"></script>
