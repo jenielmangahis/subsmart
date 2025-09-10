@@ -14,9 +14,9 @@
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
     </div>
-    <?php if(checkRoleCanAccessModule('user-settings-overtime-requests', 'write')){ ?>
+    <?php if(checkRoleCanAccessModule('user-settings-leave-requests', 'write')){ ?>
     <ul class="nsm-fab-options">        
-        <li data-bs-toggle="modal" data-bs-target="#modal-create-overtime-request">
+        <li data-bs-toggle="modal" data-bs-target="#modal-create-leave-request">
             <div class="nsm-fab-icon">
                 <i class='bx bx-calendar'></i>
             </div>
@@ -53,18 +53,22 @@
                     </div>
                 </div>
                 <div class="row g-3 mb-3">
+                    <?php 
+                        $colorClasses = ['primary', 'success', 'error', 'secondary'];
+                        $index = 0;
+                    ?>
                     <?php foreach( $employeeLeaveCredits as $value ){ ?>
                         <div class="col-6 col-md-3 col-lg-2">
-                            <div class="nsm-counter success h-100 mb-2 ">
+                            <div class="nsm-counter <?php echo $colorClasses[$index % 4]; ?> h-100 mb-2 ">
                                 <div class="row h-100 w-auto">
                                     <div class=" w-100 col-md-8 text-start d-flex align-items-center  justify-content-between">
-                                        <span><i class='bx bx-cog'></i> <?= $value['leave_type']; ?></span>
+                                        <span><i class='bx bx-calendar'></i> <?= $value['leave_type']; ?></span>
                                         <h2><?= $value['leave_credits']; ?></h2>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    <?php } ?>
+                    <?php $index++;} ?>
                 </div>
                 <div class="row mt-4">
                     <div class="col-12 col-md-4 grid-mb">
@@ -175,27 +179,27 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-with-selected-disapprove-leave-request" role="dialog">
-        <div class="modal-dialog modal-md">
+    <div class="modal fade nsm-modal fade" id="modal-with-selected-disapprove-leave-request" tabindex="-1" aria-labelledby="modal-create-leave-request_label" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">        
             <div class="modal-content">
-            <form id="frm-with-selected-disapprove" method="post">
                 <div class="modal-header">
-                    <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-x-circle'></i> <span id="modal-header-label">Disapprove Leave Request</span></span>
-                    <button class="border-0 rounded mx-1" data-bs-dismiss="modal" style="cursor: pointer;"><i class="fas fa-times m-0 text-muted"></i></button>
+                    <span class="modal-title content-title">Disapprove Leave Request</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label class="content-subtitle fw-bold d-block mb-2">Reason</label>
-                            <textarea class="form-control" id="with-selected-disapprove-reason" name="disapprove_reason" style="height:200px;" required></textarea>
-                        </div>                   
-                    </div> 
-                </div>
+                    <form id="frm-with-selected-disapprove" method="post">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="content-subtitle fw-bold d-block mb-2">Reason</label>
+                                <textarea class="form-control" id="with-selected-disapprove-reason" name="disapprove_reason" style="height:200px;" required></textarea>
+                            </div>                   
+                        </div> 
+                    </form>
+                </div>  
                 <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>                        
-                    <button type="submit" class="nsm-button primary" id="btn-with-selected-disapprove-leave-request">Save</button>
-                </div> 
-            </form>
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary" id="btn-with-selected-disapprove-leave-request" form="frm-with-selected-disapprove">Save</button>
+                </div>
             </div>
         </div>
     </div>
@@ -302,6 +306,18 @@
         </div>
     </div>
 
+    <div class="modal fade nsm-modal fade" id="modal-view-archive" tabindex="-1" aria-labelledby="modal-view-archive_label" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">        
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Archived Leave Requests</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="leave-requests-archived-container"></div>  
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script type="text/javascript">
@@ -350,6 +366,21 @@ $(function(){
         
     });
 
+    $('#btn-archived, #btn-mobile-archived').on('click', function(){
+        $('#modal-view-archive').modal('show');
+
+         $.ajax({
+            type: "POST",
+            url: base_url + "timesheet/_archived_leave_request_list",
+            success: function(html) {    
+                $('#leave-requests-archived-container').html(html);
+            },
+            beforeSend: function() {
+                $('#leave-requests-archived-container').html('<div class="col"><span class="bx bx-loader bx-spin"></span></div>');
+            }
+        });
+    });
+
     $('.btn-view-leave-request').on('click', function(){
         var rid = $(this).attr('data-id');
         $('#rid').val(rid);
@@ -369,8 +400,8 @@ $(function(){
         var url = base_url + 'timesheet/_delete_leave_request';
 
         Swal.fire({
-            title: 'Delete',
-            html: 'Proceeed with <b>deleting</b> selected leave request?',
+            title: 'Delete Leave Request',
+            html: 'Proceeed with <b>deleting</b> selected leave request?<br /><br /><small>Deleted data can be restored via archived list.</small>',
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes',
@@ -386,8 +417,8 @@ $(function(){
                         if( result.is_success == 1 ) {
                             Swal.fire({
                             icon: 'success',
-                            title: 'Success',
-                            text: 'Data was successfully deleted',
+                            title: 'Delete Leave Request',
+                            text: 'Leave request was successfully deleted',
                             }).then((result) => {
                                 window.location.reload();
                             });
@@ -487,21 +518,24 @@ $(function(){
     $('.btn-with-selected').on('click', function(){
         var action = $(this).attr('data-action');
 
-        var total_selected = $('input[name="row_selected[]"]:checked').length;
+        var total_selected = $('input[name="requests[]"]:checked').length;
         if( total_selected > 0 ){
             if( action == 'delete' ){
-                var msg = 'Proceed with <b>deleting</b> selected leave requests?';
+                var title = 'Delete Leave Requests';
+                var msg = 'Proceed with <b>deleting</b> selected leave requests?<br /><br /><small>Deleted data can be restored via archived list.</small>';
                 var url = base_url + 'timesheet/_delete_selected_leave_request';
             }else if( action == 'approve' ){
-                var msg = 'Proceed with <b>approve</b> selected leave requests?';
+                var title = 'Approve Leave Requests';
+                var msg = 'Proceed with <b>approving</b> selected leave requests?';
                 var url = base_url + 'timesheet/_approve_selected_leave_request';
             }else if( action == 'disapprove' ){
+                var title = 'Disapprove Leave Requests';
                 $('#modal-with-selected-disapprove-leave-request').modal('show');
                 return false;
             }
 
             Swal.fire({
-                title: 'With Selected Action',
+                title: title,
                 html: msg,
                 icon: 'question',
                 showCancelButton: true,
@@ -518,7 +552,7 @@ $(function(){
                             if( result.is_success == 1 ) {
                                 Swal.fire({
                                 icon: 'success',
-                                title: 'Success',
+                                title: title,
                                 text: result.msg,
                                 }).then((result) => {
                                     window.location.reload();
@@ -639,6 +673,7 @@ $(function(){
                 if (data.is_success) {
                     $('#modal-with-selected-disapprove-leave-request').modal('hide');
                     Swal.fire({
+                        title: "Disapprove Leave Request",
                         text: "Leave request was successfully updated",
                         icon: 'success',
                         showCancelButton: false,
@@ -743,6 +778,210 @@ $(function(){
             },
             beforeSend: function() {
                 $('#btn-update-leave-request').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on('click', '#with-selected-restore', function(){
+        let total= $('#archived-leave-requests input[name="requests[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Restore Leave Requests',
+                html: `Are you sure you want to restore selected rows?`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'timesheet/_restore_selected_leave_requests',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Restore Leave Requests',
+                                    text: "Data restored successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#with-selected-perma-delete', function(){
+        let total = $('#archived-leave-requests input[name="requests[]"]:checked').length;
+        if( total <= 0 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select rows',
+            });
+        }else{
+            Swal.fire({
+                title: 'Delete Leave Requests',
+                html: `Are you sure you want to <b>permanently delete</b> selected rows? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'timesheet/_permanently_delete_selected_leave_requests',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Delete Leave Requests',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }        
+    });
+
+    $(document).on('click', '#btn-empty-archives', function(){        
+        let total = $('#archived-leave-requests input[name="requests[]"]').length;        
+        if( total > 0 ){
+            Swal.fire({
+                title: 'Empty Archived',
+                html: `Are you sure you want to <b>permanently delete</b> <b>${total}</b> archived leave requests? <br/><br/>Note : This cannot be undone.`,
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        method: 'POST',
+                        url: base_url + 'timesheet/_delete_all_archived_leave_requests',
+                        dataType: 'json',
+                        data: $('#frm-archive-with-selected').serialize(),
+                        success: function(result) {                        
+                            if( result.is_success == 1 ) {
+                                $('#modal-view-archive').modal('hide');
+                                Swal.fire({
+                                    title: 'Empty Archived',
+                                    text: "Data deleted successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        //location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        },
+                    });
+
+                }
+            });
+        }else{
+            Swal.fire({                
+                icon: 'error',
+                title: 'Error',              
+                html: 'Archived is empty',
+            });
+        }        
+    });
+
+    $(document).on('click', '.btn-restore-leave-request', function(){
+        let rid   = $(this).attr('data-id');
+
+        Swal.fire({
+            title: 'Restore Leave Request',
+            html: `Are you sure you want to restore selected leave request?`,
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + 'timesheet/_restore_leave_request',
+                    data: {
+                        rid: rid
+                    },
+                    dataType: "JSON",
+                    success: function(result) {
+                        $('#modal-view-archive').modal('hide');
+                        if (result.is_success) {
+                            Swal.fire({
+                                title: 'Restore Leave Request',
+                                html: "Data updated successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });
+                        }
+                    },
+                });
             }
         });
     });

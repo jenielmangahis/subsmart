@@ -2120,6 +2120,11 @@ $route['timesheet/_delete_selected_leave_request'] = 'Timesheet/ajax_delete_sele
 $route['timesheet/_approve_selected_leave_request'] = 'Timesheet/ajax_approve_selected_leave_request';
 $route['timesheet/_disapprove_selected_leave_request'] = 'Timesheet/ajax_disapprove_selected_leave_request';
 $route['timesheet/_view_leave_request'] = 'Timesheet/ajax_view_leave_request';
+$route['timesheet/_archived_leave_request_list'] = 'Timesheet/ajax_archived_leave_request_list';
+$route['timesheet/_restore_selected_leave_requests'] = 'Timesheet/ajax_restore_selected_leave_requests';
+$route['timesheet/_permanently_delete_selected_leave_requests'] = 'Timesheet/ajax_permanently_delete_selected_leave_requests';
+$route['timesheet/_delete_all_archived_leave_requests'] = 'Timesheet/ajax_delete_all_archived_leave_requests';
+$route['timesheet/_restore_leave_request'] = 'Timesheet/ajax_restore_leave_request';
 
 //Leave credits
 $route['accounting/employees/_update_leave_credits'] = 'accounting_controllers/Employees/ajax_update_leave_credits';

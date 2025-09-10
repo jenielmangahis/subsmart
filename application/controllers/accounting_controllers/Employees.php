@@ -2550,22 +2550,23 @@ class Employees extends MY_Controller
 
         $inc = 1;
         foreach ($deductions_contribution as $dc) {
+            $deduction_data[$inc]['title']  = $dc->description;
             switch($dc->contribution_calculated_as){
                 case 'Flat amount':
                     $total_deduction += $dc->deductions_amount;
+                    $deduction_data[$inc]['amount'] = $dc->deductions_amount;
                     break;
                 case 'Percent of gross pay':
                     $total_deduction += $dc->annual_maximum * ($dc->deductions_amount/100);
+                    $deduction_data[$inc]['amount'] = $dc->annual_maximum * ($dc->deductions_amount/100);
                     break;
                 case 'Per hour worked':
                     $total_deduction += $dc->deductions_amount;
+                    $deduction_data[$inc]['amount'] = $dc->deductions_amount;
                     break;
                 default:
                     break;
             }
-
-            $deduction_data[$inc]['title']  = $dc->description;
-            $deduction_data[$inc]['amount'] = $total_deduction;
         $inc++;
         }          
 
@@ -2661,7 +2662,7 @@ class Employees extends MY_Controller
                                 foreach($deduction_data as $dd) {
                                     $html .= '<tr>
                                         <td style="text-align: left">'. $dd['title'].'</td>
-                                        <td style="text-align: right">$'. $dd['amount'].'</td>
+                                        <td style="text-align: right">$'.number_format($dd['amount'],2).'</td>
                                     </tr>';
                                 }                                
                             } else {
