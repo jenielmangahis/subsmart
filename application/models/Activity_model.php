@@ -10,23 +10,75 @@ class Activity_model extends MY_Model {
 	{
 		parent::__construct();
 	}
-        
-    public function getActivityLogs($company_id, $limit = 0)
+
+    public function getAll($conditions = [], $limit = 0)
     {
-        $this->db->select('activity_logs.*, users.company_id, users.FName AS first_name, users.LName AS last_name, users.email');
+        $this->db->select('*');        
+        $this->db->from($this->table);
+
+        if ( !empty($conditions) ) {
+            foreach($conditions as $c){
+                $this->db->where($c['field'], $c['value']);
+            }
+        }
+
+        $this->db->order_by('activity_logs.id', 'ASC');
+
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        } 
+
+        $query = $this->db->get();
+        return $query->result();
+    }  
+        
+    public function getActivityLogs($company_id, $order_by = '', $limit = 0)
+    {
+        $this->db->select('activity_logs.*, users.FName AS first_name, users.LName AS last_name, users.email');
+        $this->db->from($this->table);
         $this->db->join('users', 'activity_logs.user_id = users.id', 'LEFT');
-        $this->db->where('users.company_id', $company_id);            
-        $this->db->order_by('activity_logs.id', 'DESC');
+        $this->db->where('activity_logs.company_id', $company_id);            
+        $this->db->where('activity_logs.is_archived', 'No');             
+
+        if( $order_by ){
+            $this->db->order_by($order_by['field'], $order_by['sort']);
+        }else{
+            $this->db->order_by('activity_logs.id', 'DESC');
+        }
+
         if( $limit > 0 ){
             $this->db->limit($limit);
         }            
 
-        return $this->db->get($this->table)->result();
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllArchivedActivityLogs($company_id, $order_by = [], $limit = 0)
+    {
+        $this->db->select('activity_logs.*, users.FName AS first_name, users.LName AS last_name, users.email');
+        $this->db->from($this->table);
+        $this->db->join('users', 'activity_logs.user_id = users.id', 'LEFT');
+        $this->db->where('activity_logs.company_id', $company_id);            
+        $this->db->where('activity_logs.is_archived', 'Yes');             
+
+        if( $order_by ){
+            $this->db->order_by($order_by['field'], $order_by['sort']);
+        }else{
+            $this->db->order_by('activity_logs.id', 'DESC');
+        }
+
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }            
+
+        $query = $this->db->get();
+        return $query->result();
     }
 
     public function getActivityLogsByUserId($user_id, $limit = 0)
     {
-        $this->db->select('activity_logs.*, users.company_id, users.FName AS first_name, users.LName AS last_name, users.email');
+        $this->db->select('activity_logs.*, users.FName AS first_name, users.LName AS last_name, users.email');
         $this->db->join('users', 'activity_logs.user_id = users.id', 'LEFT');
         $this->db->where('users.id', $user_id);            
         $this->db->order_by('activity_logs.id', 'DESC');
@@ -37,11 +89,12 @@ class Activity_model extends MY_Model {
         return $this->db->get($this->table)->result();
     }
 
-	public function add($message, $user_id = 0, $ip_address = false)
+	public function add($message, $user_id = 0, $company_id = 0, $ip_address = false)
 	{
 		return $this->create([
+            'company_id' => $company_id,
 			'activity_name' => $message,
-			'user_id' => ($user_id==0) ? logged('id') : $user_id,			
+			'user_id' => $user_id,			
 			'created_at' => date("Y-m-d H:i:s"),
 			'updated_at' => date("Y-m-d H:i:s")
 		]);
@@ -55,7 +108,7 @@ class Activity_model extends MY_Model {
 	public function getAllByCompanyId($company_id, $filters=array(), $conditions=array())
     {
 
-        $this->db->select('activity_logs.*, users.id AS uid, users.company_id');
+        $this->db->select('activity_logs.*, users.id AS uid');
         $this->db->from($this->table);
         $this->db->join('users', 'activity_logs.user_id = users.id', 'LEFT');
 
@@ -71,7 +124,7 @@ class Activity_model extends MY_Model {
             }
         }
 
-        $this->db->where('users.company_id', $company_id);
+        $this->db->where('activity_logs.company_id', $company_id);
         $this->db->order_by('activity_logs.id', 'DESC');
 
         $query = $this->db->get();
@@ -98,6 +151,51 @@ class Activity_model extends MY_Model {
             return false;
         }
 	}
+
+    public function bulkUpdate($ids = [], $data = [], $filters = [])
+    {
+        $this->db->where_in('id', $ids);
+        
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->update($this->table, $data);
+        return $this->db->affected_rows();
+    }
+
+    public function bulkDelete($ids = [], $filters = [])
+    {
+        if( count($ids) > 0 ){
+            $this->db->where_in('id', $ids);
+
+            if( $filters ){
+                foreach( $filters as $filter ){
+                    $this->db->where($filter['field'], $filter['value']);
+                }
+            }
+
+            $this->db->delete($this->table);
+        }        
+
+        return $this->db->affected_rows();
+    }
+
+    public function deleteAllArchived($filters = [])
+    {
+        $this->db->where('is_archived', 'Yes');
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->delete($this->table);
+        return $this->db->affected_rows();
+    }
 	
 }
 
