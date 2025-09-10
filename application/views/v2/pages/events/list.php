@@ -94,7 +94,7 @@ table.dataTable.no-footer {
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-12 col-md-3">
+                    <div class="col-12 col-md-2">
                         <div class="nsm-counter primary h-100 mb-2">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
