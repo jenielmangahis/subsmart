@@ -94,7 +94,6 @@
                                     <?=$tag['name']?>
                                 <?php endif; ?>
                             </td>
-                            <td></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -135,7 +134,6 @@
                                 </div>
                             </td>
                             <td class="fw-bold nsm-text-primary nsm-link default">&emsp;<?=$groupTag['name']?></td>
-                            <td></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="javascript:void(0);" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -160,7 +158,7 @@
                         <?php endforeach; ?>
 						<?php else : ?>
 						<tr>
-							<td colspan="14">
+							<td colspan="3">
 								<div class="nsm-empty">
 									<span>No results found.</span>
 								</div>

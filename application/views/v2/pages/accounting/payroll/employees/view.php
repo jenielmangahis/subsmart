@@ -282,7 +282,11 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="float-start fw-bold"><h4 class="float-start fw-bold">Deductions and Contributions</h4></h4>
-                                <a class="nsm-button border-0 float-end pointerCursor edit-deductions-and-contributions" data-bs-toggle="modal" data-bs-target="#edit-deductions-and-contributions" data-bs-backdrop="false">Edit</a>
+                                <?php if($dc_data) { ?>
+                                        <a class="nsm-button border-0 float-end pointerCursor deduction_contributions_lists" data-bs-toggle="modal" data-bs-target="#deduction_contributions_lists" data-bs-backdrop="false">Edit</a>
+                                <?php }else{ ?>
+                                        <a class="nsm-button border-0 float-end pointerCursor edit-deductions-and-contributions" data-bs-toggle="modal" data-bs-target="#edit-deductions-and-contributions" data-bs-backdrop="false">Edit</a>
+                                <?php } ?>
                             </div>      
                             <div class="col-md-12">
                                 <div class="row deductions_contributions_list_data" >
