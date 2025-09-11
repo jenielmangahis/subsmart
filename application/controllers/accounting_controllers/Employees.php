@@ -271,12 +271,10 @@ class Employees extends MY_Controller
                     $commission += floatval(str_replace(',', '', $comm->commission_amount));
                 }
 
-              
-              
-              $deductions_contribution = $this->deduction_contribution->getByUser($employee->id);
+                $deductions_contribution = $this->deduction_contribution->getByUser($employee->id);
                 $total_dc = 0;
                 foreach ($deductions_contribution as $dc) {
-                    switch($dc->contribution_calculated_as){
+                    switch($dc->deductions_calculated_as){
                         case 'Flat amount':
                             $total_dc += $dc->calculated_contribution_amount;
                             break;
@@ -2551,7 +2549,7 @@ class Employees extends MY_Controller
         $inc = 1;
         foreach ($deductions_contribution as $dc) {
             $deduction_data[$inc]['title']  = $dc->description;
-            switch($dc->contribution_calculated_as){
+            switch($dc->deductions_calculated_as){
                 case 'Flat amount':
                     $total_deduction += $dc->deductions_amount;
                     $deduction_data[$inc]['amount'] = $dc->deductions_amount;
