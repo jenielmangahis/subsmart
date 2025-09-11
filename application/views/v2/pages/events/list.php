@@ -94,7 +94,7 @@ table.dataTable.no-footer {
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-12 col-md-3">
+                    <div class="col-12 col-md-2">
                         <div class="nsm-counter primary h-100 mb-2">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
@@ -372,6 +372,18 @@ $(document).ready(function () {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -418,6 +430,18 @@ $(document).ready(function () {
                             });
                         }
                     },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
                 });
             }
         });
@@ -468,6 +492,18 @@ $(document).ready(function () {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -520,6 +556,18 @@ $(document).ready(function () {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -566,6 +614,18 @@ $(document).ready(function () {
                                 });
                             }
                         },
+                        beforeSend: function(){
+                            Swal.fire({
+                                icon: "info",
+                                title: "Processing",
+                                html: "Please wait while the process is running...",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        }
                     });
 
                 }
@@ -623,6 +683,18 @@ $(document).ready(function () {
                             });
                         }
                     },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
                 });
             }
         });
@@ -672,6 +744,18 @@ $(document).ready(function () {
                             });
                         }
                     },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
                 });
             }
         });

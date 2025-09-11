@@ -1125,4 +1125,18 @@ class Event_model extends MY_Model
 
         return $this->db->affected_rows();
     }
+
+    public function deleteAllArchived($filters = [])
+    {
+        $this->db->where('is_archived', 'Yes');
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
+            }
+        }
+
+        $this->db->delete($this->table);
+        return $this->db->affected_rows();
+    }
 }
