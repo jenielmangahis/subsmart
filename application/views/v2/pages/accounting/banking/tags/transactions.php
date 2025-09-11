@@ -224,25 +224,28 @@
                             <!-- <td class="row-hover"><?=$transaction['category']?></td>
                             <td class="row-hover"><?=$transaction['memo']?></td> -->
                             <td class="row-hover" data-type="<?=$transaction['type']?>"><?= isset($transaction['num_days']) ? $transaction['num_days'] : 0; ?></td>
-                            <td class="row-hover" data-type="<?=$transaction['type']?>">
                                 <?php 
+                                    $status = '--';
+                                    $badge_color = "";
                                     if( isset($transaction['status']) && ($transaction['status'] != '' || $transaction['status'] != NULL ) ){
                                         if( $transaction['type'] == 'Invoice' ){
                                             if( $transaction['status'] != 'Paid' ){
-                                                echo 'Unpaid';
+                                                $status = 'Unpaid';
+                                                $badge_color = "bg-danger";
                                             }else{
-                                                echo 'Paid';
+                                                $status = 'Paid';
+                                                $badge_color = "bg-success";
                                             }
                                         }else{
-                                            echo $transaction['status'];
+                                            $status = $transaction['status'];
+                                            $badge_color = "bg-primary";
                                         }
-                                        
-                                        
                                     }else{
-                                        echo 'NA';
+                                        $status = 'NA';
+                                        $badge_color = "bg-warning";
                                     }
-                                ?>
-                            </td>
+                                ?>                            
+                            <td class="row-hover" data-type="<?=$transaction['type']?>"><span class="badge <?= $badge_color; ?>"><?= $status; ?></span></td>
                             <td class="row-hover" data-type="<?=$transaction['type']?>"><?=$transaction['type']?></td>
                             <td class="row-hover" data-type="<?=$transaction['type']?>">
                                 <?php 

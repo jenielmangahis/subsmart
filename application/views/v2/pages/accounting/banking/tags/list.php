@@ -81,7 +81,8 @@
                     <tbody>
                         <?php if(count($tags) > 0) : ?>
 						<?php foreach($tags as $index => $tag) : ?>
-                        <tr data-id="<?=$tag['id']?>" data-type="<?=$tag['type']?>">
+                        <?php $bg_group = $tag['type'] === 'group' ? 'text-primary' : ''; ?>
+                        <tr data-id="<?=$tag['id']?>" data-type="<?=$tag['type']?>" class="<?= $bg_group; ?>">
                             <td>
                                 <div class="table-row-icon table-checkbox">
                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?=$tag['type']?>_<?=$tag['id']?>">
@@ -89,7 +90,7 @@
                             </td>
                             <td class="fw-bold nsm-text-primary nsm-link default" <?=$tag['type'] === 'group' ? 'data-bs-toggle="collapse" data-bs-target=".collapse-'.$index.'"' : ''?>>
                                 <?php if($tag['type'] === 'group') : ?>
-                                    <span><i class='bx bx-fw bx-chevron-down'></i> <?=$tag['name']?> (<?=count($tag['tags'])?>)</span>
+                                    <span><i class='bx bx-fw bx-chevron-down'></i> <?=$tag['name']?> (<?=count($tag['tags'])?> tags)</span>
                                 <?php else : ?>
                                     <?=$tag['name']?>
                                 <?php endif; ?>
@@ -133,7 +134,7 @@
                                     <input class="form-check-input select-one table-select" type="checkbox" value="group-tag_<?=$groupTag['id']?>">
                                 </div>
                             </td>
-                            <td class="fw-bold nsm-text-primary nsm-link default">&emsp;<?=$groupTag['name']?></td>
+                            <td class="fw-bold nsm-text-primary nsm-link default"><div class="text-secondary" style="margin-left: 30px;">-<?=$groupTag['name']?></div></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="javascript:void(0);" class="dropdown-toggle" data-bs-toggle="dropdown">
