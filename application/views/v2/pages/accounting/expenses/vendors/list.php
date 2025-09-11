@@ -338,7 +338,7 @@
                                 <?php if( $filter == 'Active' ){ ?>
                                     <li><a class="dropdown-item dropdown-update-status disabled" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>
                                 <?php }else{ ?>
-                                    <li><a class="dropdown-item dropdown-update-status disabled" href="javascript:void(0);" id="make-inactive">Make active</a></li>
+                                    <li><a class="dropdown-item dropdown-update-status disabled" href="javascript:void(0);" id="make-active">Make active</a></li>
                                 <?php } ?>
                                 <li><a class="dropdown-item dropdown-delete-vendor disabled" href="javascript:void(0);" id="delete-vendor">Delete</a></li>
                             </ul>
