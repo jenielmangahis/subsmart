@@ -674,35 +674,58 @@ $('#items-table .make-active').on('click', function (e) {
     });
 });
 
-// $('#items-table .make-inactive').on('click', function (e) {
-//     e.preventDefault();
+$('#items-table .make-inactive').on('click', function (e) {
+    e.preventDefault();
 
-//     var row = $(this).closest('tr');
-//     var name = row.find('td:nth-child(2)').html().trim();
-//     var type = row.find('td:nth-child(4)').html().trim();
+    var row = $(this).closest('tr');
+    var name = row.find('td:nth-child(2)').html().trim();
+    var type = row.find('td:nth-child(4)').html().trim();
 
-//     Swal.fire({
-//         title: 'Are you sure?',
-//         html: `You want to make <b>${name}</b> inactive?`,
-//         icon: 'question',
-//         showCloseButton: false,
-//         confirmButtonColor: '#6a4a86',
-//         confirmButtonText: 'Yes',
-//         showCancelButton: true,
-//         cancelButtonText: 'No',
-//         cancelButtonColor: '#d33'
-//     }).then((result) => {
-//         if (result.isConfirmed) {
-//             $.ajax({
-//                 url: `${base_url}/accounting/products-and-services/inactive/${type.toLowerCase()}/${row.find('.select-one').val()}`,
-//                 type: 'DELETE',
-//                 success: function (result) {
-//                     location.reload();
-//                 }
-//             });
-//         }
-//     });
-// });
+    Swal.fire({
+        title: 'Change to Inactive',
+        html: `You want to make <b>${name}</b> inactive?`,
+        icon: 'question',
+        showCloseButton: false,
+        confirmButtonColor: '#6a4a86',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `${base_url}/accounting/products-and-services/inactive/${type.toLowerCase()}/${row.find('.select-one').val()}`,
+                type: 'DELETE',
+                success: function (result) {
+                    Swal.fire({
+                        title: 'Change to Inactive',
+                        html: "Data was successfully updated!",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.reload();
+                        //}
+                    });                    
+                },
+                beforeSend: function(){
+                    Swal.fire({
+                        icon: "info",
+                        title: "Processing",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                }
+            });
+        }
+    });
+});
 
 $('#items-table .duplicate').on('click', function (e) {
     e.preventDefault();
