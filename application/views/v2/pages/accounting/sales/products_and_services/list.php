@@ -380,9 +380,7 @@
                         <div class="dropdown d-inline-block">
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>
-                                    Batch Actions
-                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span id="num-checked"></span> With Selected <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="assign-category">Assign category</a></li>
@@ -394,19 +392,6 @@
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-service">Change to Services</a></li>
                             </ul>
                         </div>
-
-                        <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>
-                                    More
-                                </span> <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item" href="/accounting/product-categories" id="manage-categories">Manage categories</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="run-report">Run report</a></li>
-                            </ul>
-                        </div>
-
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
@@ -472,18 +457,21 @@
                         </div>
 
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#import-items-modal">
-                                <i class='bx bx-fw bx-import'></i> Import
-                            </button>
-                            <button type="button" class="nsm-button" id="add-item-button">
-                                <i class='bx bx-fw bx-list-plus'></i> New
-                            </button>
-                            <button type="button" class="nsm-button export-items">
-                                <i class='bx bx-fw bx-export'></i> Export
-                            </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_items_modal">
-                                <i class='bx bx-fw bx-printer'></i>
-                            </button>
+                            <div class="btn-group nsm-main-buttons">
+                                <button type="button" class="btn btn-nsm" id="add-item-button"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Product</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                                    
+                                    <li><a class="dropdown-item" href="/accounting/product-categories" id="manage-categories">Manage categories</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);" id="run-report">Run report</a></li>                
+                                    <li><a class="dropdown-item" id="btn-archived" href="javascript:void(0);">Archived</a></li>                               
+                                    <li><a class="dropdown-item export-items" href="javascript:void(0);">Export</a></li>   
+                                    <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#import-items-modal">Import</a></li>                               
+                                    <li><a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#print_items_modal">Print</a></li>   
+                                </ul>
+                            </div>
+
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
                                 <i class="bx bx-fw bx-cog"></i>
                             </button>
@@ -549,6 +537,7 @@
                         </div>
                     </div>
                 </div>
+                <form id="frm-with-selected">
                 <table class="nsm-table" id="items-table">
                     <thead>
                         <tr>
@@ -621,7 +610,7 @@
                                                             <a class="dropdown-item edit-item" href="#">Edit</a>
                                                         </li>
                                                         <li>
-                                                            <a class="dropdown-item make-inactive" href="#">Make inactive</a>
+                                                            <a class="dropdown-item make-inactive" href="javascript:void(0);">Make inactive</a>
                                                         </li>
                                                         <?php if ($item['type'] !== 'Bundle') : ?>
                                                             <li>
@@ -656,6 +645,7 @@
                         <?php endif; ?>
                     </tbody>
                 </table>
+                </form>
             </div>
         </div>
     </div>
