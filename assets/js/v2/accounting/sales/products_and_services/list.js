@@ -157,6 +157,21 @@ $('#reset-button').on('click', function () {
 
 $('#items-table thead .select-all').on('change', function () {
     $('#items-table tbody tr:visible .select-one').prop('checked', $(this).prop('checked')).trigger('change');
+    let total= $('#items-table tbody tr:visible .table-select:checked').length;
+    if( total > 0 ){
+        $('#num-checked').text(`(${total})`);
+    }else{
+        $('#num-checked').text('');
+    }
+});
+
+$(document).on('change', '.table-select', function(){
+    let total= $('#items-table tbody tr:visible .table-select:checked').length;
+    if( total > 0 ){
+        $('#num-checked').text(`(${total})`);
+    }else{
+        $('#num-checked').text('');
+    }
 });
 
 // $(document).on('change', '#items-table tbody tr:visible .select-one', function () {
@@ -409,18 +424,23 @@ $('#make-non-inventory, #make-service, #make-inactive, #make-active').on('click'
 
     var action = $(this).attr('id');
     var actionText = '';
+    var actionTitle = '';
 
     switch (action) {
         case 'make-non-inventory':
+            actionTitle = 'Change to Non-Inventory';
             actionText = 'make non-inventory';
             break;
         case 'make-service':
+            actionTitle = 'Change to Services';
             actionText = 'make service';
             break;
         case 'make-inactive':
+            actionTitle = 'Change to Inactive';
             actionText = 'make inactive';
             break;
         case 'make-active':
+            actionTitle = 'Change to Active';
             actionText = 'make active';
             break;
     }
@@ -428,9 +448,9 @@ $('#make-non-inventory, #make-service, #make-inactive, #make-active').on('click'
     var checkedItems = $('#items-table tbody tr:visible .select-one:checked');
 
     Swal.fire({
-        title: 'Are you sure?',
+        title: actionTitle,
         text: `This action will ${actionText} for selected items.`,
-        icon: 'warning',
+        icon: 'question',
         showCancelButton: true,
         confirmButtonColor: '#6a4a86',
         confirmButtonText: `Yes, ${actionText}`
@@ -452,10 +472,33 @@ $('#make-non-inventory, #make-service, #make-inactive, #make-active').on('click'
                 processData: false,
                 contentType: false,
                 success: function (result) {
-                    location.reload();
+                    Swal.fire({
+                        title: actionTitle,
+                        text: "Data was successfully updated!",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.reload();
+                        //}
+                    });
                 },
                 error: function (xhr, status, error) {
                     console.error('Error:', error);
+                },
+                beforeSend: function(){
+                    Swal.fire({
+                        icon: "info",
+                        title: "Processing",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
                 }
             });
         }
