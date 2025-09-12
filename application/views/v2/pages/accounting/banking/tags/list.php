@@ -90,7 +90,7 @@
                             </td>
                             <td class="fw-bold nsm-text-primary nsm-link default" <?=$tag['type'] === 'group' ? 'data-bs-toggle="collapse" data-bs-target=".collapse-'.$index.'"' : ''?>>
                                 <?php if($tag['type'] === 'group') : ?>
-                                    <span><i class='bx bx-fw bx-chevron-down'></i> <?=$tag['name']?> (<?=count($tag['tags'])?> tags)</span>
+                                    <span onclick="javascript:toggleGroupTag(<?php echo $tag['id']; ?>);"><i class='bx bx-fw bx-chevron-down'></i> <?=$tag['name']?> (<?=count($tag['tags'])?> tags)</span>
                                 <?php else : ?>
                                     <?=$tag['name']?>
                                 <?php endif; ?>
@@ -128,7 +128,7 @@
                         </tr>
                         <?php if($tag['type'] === 'group') : ?>
                         <?php foreach($tag['tags'] as $groupTag) : ?>
-                        <tr class="collapse collapse-<?=$index?>" data-id="<?=$groupTag['id']?>" data-type="group-tag">
+                        <tr class="group-tag-id-<?= $groupTag['group_tag_id']; ?> collapse collapse-<?=$index?>" data-id="<?=$groupTag['id']?>" data-type="group-tag">
                             <td>
                                 <div class="table-row-icon table-checkbox">
                                     <input class="form-check-input select-one table-select" type="checkbox" value="group-tag_<?=$groupTag['id']?>">
@@ -173,6 +173,11 @@
     </div>
 </div>
 <script>
+
+function toggleGroupTag(group_id) {
+    $('.group-tag-id-' + group_id).toggle();
+}
+
 $(function(){
     $("#tags-table").nsmPagination();  
     

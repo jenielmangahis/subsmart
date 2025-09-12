@@ -88,6 +88,8 @@ $(document).on('submit', '#tags-table .update_data-form', function(e) {
 });
 
 $('#group').select2({
+      placeholder: "No group tag",
+      allowClear: true,    
     ajax: {
         url: base_url + 'accounting/tags/get-group-tags',
         dataType: 'json'
@@ -244,6 +246,7 @@ $('#tags-table .select-one').on('change', function() {
 });
 
 $('#delete-tags-button').on('click', function() {
+
     var data = new FormData();
     var total_checked = 0;
     $('#tags-table tbody tr input.select-one:checked').each(function() {
@@ -253,28 +256,57 @@ $('#delete-tags-button').on('click', function() {
 
     if( total_checked > 0 ){
         Swal.fire({
-            title: 'Are you sure you want to delete the selected tags?',
+            title: `Delete groups or tags`,
+            html: `Are you sure you want to delete the selected groups or tags?`,
             icon: 'question',
-            showCloseButton: false,
-            //confirmButtonColor: '#2ca01c',
-            confirmButtonText: 'Yes',
+            confirmButtonText: 'Proceed',
             showCancelButton: true,
-            cancelButtonText: 'No',
-            //cancelButtonColor: '#d33'
+            cancelButtonText: "Cancel"
         }).then((result) => {
-            if(result.isConfirmed) {
+            if (result.value) {
                 $.ajax({
-                    url: base_url + 'accounting/tags/delete-tags',
-                    data: data,
                     type: 'post',
+                    url: base_url + 'accounting/tags/delete-tags',
+                    dataType: 'json',
+                    data: data,
                     processData: false,
                     contentType: false,
-                    success: function(res) {
-                        location.reload();
+                    success: function(res) {                            
+                        if( res.success == true ) {
+                            Swal.fire({
+                                title: `Delete groups or tags`,
+                                text: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((res) => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: res.msg,
+                            });
+                        }
+                    },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
                     }
                 });
+
             }
-        });
+        });   
+
     }else{
         Swal.fire({
             icon: 'error',
@@ -291,25 +323,59 @@ $('#tags-table .delete-tag, #tags-table .delete-group').on('click', function(e) 
     var type = $(this).closest('tr').data('type');
 
     Swal.fire({
-        title: `Are you sure you want to delete the selected ${type.replace('group-', '')}?`,
+        title: `Delete ${type.replace('group-', '')}`,
+        html: `Are you sure you want to delete the selected ${type.replace('group-', '')}?`,
         icon: 'question',
-        showCloseButton: false,
-        //confirmButtonColor: '#2ca01c',
-        confirmButtonText: 'Yes',
+        confirmButtonText: 'Proceed',
         showCancelButton: true,
-        cancelButtonText: 'No',
-        //cancelButtonColor: '#d33'
+        cancelButtonText: "Cancel"
     }).then((result) => {
-        if(result.isConfirmed) {
+        if (result.value) {
             $.ajax({
-                url: base_url + `accounting/tags/delete/${id}/${type}`,
+                //method: 'DELETE',
                 type:"DELETE",
-                success:function () {
-                    location.reload();
+                url: base_url + `accounting/tags/delete/${id}/${type}`,
+                dataType: 'json',
+                success: function(result) {    
+                    
+                    console.log('delete log');
+                    console.log(result);
+                    
+                    if( result.success == true ) {
+                        Swal.fire({
+                            title: `Delete ${type.replace('group-', '')}`,
+                            text: "Data deleted successfully!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.msg,
+                        });
+                    }
+                },
+                beforeSend: function(){
+                    Swal.fire({
+                        icon: "info",
+                        title: "Processing",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
                 }
             });
+
         }
-    });
+    });    
+
 });
 
 $('#done-tag-group, #btn-tag-group-modal-close').on('click', function(e) {
