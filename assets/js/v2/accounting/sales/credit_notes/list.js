@@ -386,8 +386,46 @@ $("#credit-notes-table .void-credit-memo").on("click", function (e) {
       cancelButtonColor: "#d33",
     }).then((result) => {
       if (result.isConfirmed) {
-        $.get(base_url + "accounting/void-transaction/credit-memo/" + id, function (res) {
-          location.reload();
+        $.ajax({
+            type: 'GET',
+            url: base_url + 'accounting/void-transaction/credit-memo/' + id,
+            dataType: "JSON",
+            success: function(result) {
+                if (result.success) {
+                    Swal.fire({
+                        title: "Void Credit Memo",
+                        html: "Data was successfully updated!",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.reload();
+                        //}
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: result.message,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
+                }                
+            },
+            beforeSend: function(){
+                Swal.fire({
+                    icon: "info",
+                    title: "Processing",
+                    html: "Please wait while the process is running...",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    },
+                });
+            }
         });
       }
     });

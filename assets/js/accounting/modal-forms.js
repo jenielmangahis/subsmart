@@ -11166,6 +11166,7 @@ const submitModalForm = (event, el) => {
         processData: false,
         contentType: false,
         success: function(result) {
+            Swal.close();
             var res = JSON.parse(result);
             toast(res.success, removeDuplicateMessages(res.message));
 
@@ -11499,6 +11500,19 @@ const submitModalForm = (event, el) => {
             }
 
             submitType = '';
+        },
+        beforeSend: function(){
+            Swal.fire({
+                icon: "info",
+                title: "Processing",
+                html: "Please wait while the process is running...",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            });
         }
     });
 }

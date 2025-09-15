@@ -1095,7 +1095,7 @@ class Accounting_modals extends MY_Controller
 
             $total_deduction = 0;
             foreach ($deductions_contribution as $dc) {
-                switch($dc->contribution_calculated_as){
+                switch($dc->deductions_calculated_as){
                     case 'Flat amount':
                         $total_deduction += $dc->deductions_amount;
                         break;
@@ -1260,7 +1260,7 @@ class Accounting_modals extends MY_Controller
 
         $total_deduction = 0;
         foreach ($deductions_contribution as $dc) {
-            switch($dc->contribution_calculated_as){
+            switch($dc->deductions_calculated_as){
                 case 'Flat amount':
                     $total_deduction += $dc->deductions_amount;
                     break;
@@ -1386,7 +1386,7 @@ class Accounting_modals extends MY_Controller
             $deductions_contribution = $this->deduction_contribution->getByUser($empId);
             
             foreach ($deductions_contribution as $dc) {
-                switch($dc->contribution_calculated_as){
+                switch($dc->deductions_calculated_as){
                     case 'Flat amount':
                         $total_dc += $dc->deductions_amount;
                         break;
@@ -3138,7 +3138,7 @@ class Accounting_modals extends MY_Controller
                         $deductions_contribution = $this->deduction_contribution->getByUser($emp->id);
                         $total_deduction = 0;
                         foreach ($deductions_contribution as $dc) {
-                            switch($dc->contribution_calculated_as){
+                            switch($dc->deductions_calculated_as){
                                 case 'Flat amount':
                                     $total_deduction += $dc->deductions_amount;
                                     break;

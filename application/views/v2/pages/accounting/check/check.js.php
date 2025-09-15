@@ -156,12 +156,103 @@
     };
     initializeSelectize();
 
-    function getSelectedCheckIds() {
+    function getSelectedCheckIds(table) {
         let ids = [];
-        $('.checkEntryCheckbox:checked').each(function() {
-            ids.push($(this).data('check_id'));
+
+        switch (table) {
+            case "check_table":
+                $('.checkEntryCheckbox:checked').each(function() {
+                    ids.push($(this).data('check_id'));
+                });
+                break;
+            case "recent_check_add_table":
+                $('.recentAddEntryCheckbox:checked').each(function() {
+                    ids.push($(this).data('check_id'));
+                });
+                break;
+            case "recent_check_edit_table":
+                $('.recentEditEntryCheckbox:checked').each(function() {
+                    ids.push($(this).data('check_id'));
+                });
+                break;
+        }
+        
+        return ids.reverse(); 
+    }
+
+    function virtualNumberToWords(amount) {
+        const numbersToWords = (num) => {
+            const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+            const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+            const teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+
+            if (num < 10) return ones[num];
+            if (num < 20) return teens[num - 10];
+            if (num < 100) return tens[Math.floor(num / 10)] + (num % 10 !== 0 ? " " + ones[num % 10] : "");
+            if (num < 1000) return ones[Math.floor(num / 100)] + " Hundred" + (num % 100 !== 0 ? " " + numbersToWords(num % 100) : "");
+            if (num < 1000000) return numbersToWords(Math.floor(num / 1000)) + " Thousand" + (num % 1000 !== 0 ? " " + numbersToWords(num % 1000) : "");
+            if (num < 1000000000) return numbersToWords(Math.floor(num / 1000000)) + " Million" + (num % 1000000 !== 0 ? " " + numbersToWords(num % 1000000) : "");
+            if (num < 1000000000000) return numbersToWords(Math.floor(num / 1000000000)) + " Billion" + (num % 1000000000 !== 0 ? " " + numbersToWords(num % 1000000000) : "");
+            return "Amount Too Large";
+        };
+
+        const dollars = Math.floor(amount);
+        const cents = Math.round((amount - dollars) * 100);
+        const dollarText = dollars > 0 ? numbersToWords(dollars) : "Zero";
+
+        return `${dollarText} and ${String(cents).padStart(2, '0')}/100`;
+    }
+
+    function buildStandardCheckHtml(check, index) {
+        const amountFormatted = Number(check.total_amount).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
         });
-        return ids;
+        const amountInWords = virtualNumberToWords(check.total_amount);
+        const dateFormatted = `${String(new Date(check.payment_date).getMonth() + 1).padStart(2, '0')}/${String(new Date(check.payment_date).getDate()).padStart(2, '0')}/${new Date(check.payment_date).getFullYear()}`;
+
+        const offsetTop = index * 323;
+
+        return `
+            <div class="standardCheckDiv" style="top: ${offsetTop}px;">
+                <span class="standardCheckDate1">${dateFormatted}</span>
+                <span class="standardCheckPayee1">${check.payee_name}</span>
+                <span class="standardCheckAmountNum1">**${amountFormatted}</span>
+                <span class="standardCheckAmountWords1">${amountInWords}*********************</span>
+            </div>
+        `;
+    }
+
+    function buildVoucherCheckHtml(check) {
+        const amountFormatted = Number(check.total_amount).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        const amountInWords = virtualNumberToWords(check.total_amount);
+        const dateFormatted = `${String(new Date(check.payment_date).getMonth() + 1).padStart(2, '0')}/${String(new Date(check.payment_date).getDate()).padStart(2, '0')}/${new Date(check.payment_date).getFullYear()}`;
+
+        return `
+            <div class="voucherCheckDiv">
+                <span class="voucherCheckDate1">${dateFormatted}</span>
+                <span class="voucherCheckPayee1">${check.payee_name}</span>
+                <span class="voucherCheckAmountNum1">**${amountFormatted}</span>
+                <span class="voucherCheckAmountWords">${amountInWords}*******************************</span>
+
+                <strong class="voucherCheckDate2">${dateFormatted}</strong>
+                <strong class="voucherCheckPayee2">${check.payee_name}</strong>
+                <span class="voucherCheckAmountNum2">${amountFormatted}</span>
+
+                <strong class="voucherCheckAccount1">${check.chart_of_account_name}</strong>
+                <span class="voucherCheckAmountNum3">${amountFormatted}</span>
+
+                <strong class="voucherCheckDate3">${dateFormatted}</strong>
+                <strong class="voucherCheckPayee3">${check.payee_name}</strong>
+                <span class="voucherCheckAmountNum4">${amountFormatted}</span>
+
+                <strong class="voucherCheckAccount2">${check.chart_of_account_name}</strong>
+                <span class="voucherCheckAmountNum5">${amountFormatted}</span>
+            </div>
+        `;
     }
 
     $(document).on('focus', '.selectized + .selectize-control input', function() {
@@ -209,6 +300,7 @@
             },
         });
 
+        $('.checkSelectAll, .checkEntryCheckbox, .recentEditCheckAll, .recentEditEntryCheckbox').prop('checked', false).change();
         checkAddResetForm();
         setLastSettings();
     });
@@ -243,6 +335,7 @@
             },
         });
 
+        $('.checkSelectAll, .checkEntryCheckbox, .recentAddCheckAll, .recentAddEntryCheckbox').prop('checked', false).change();
         const check_id = $(this).attr('data-check_id');
         getCheckDetails(check_id);
     });
@@ -277,7 +370,7 @@
                         });
                     },
                     success: function(response) {
-                        checkTable.ajax.reload(null, false);
+                        checkTable.draw(false);
                         Swal.fire({
                             icon: "success",
                             title: "Entry Voided!",
@@ -321,7 +414,7 @@
                         });
                     },
                     success: function(response) {
-                        checkTable.ajax.reload(null, false);
+                        checkTable.draw(false);
                         Swal.fire({
                             icon: "success",
                             title: "Entry Deleted!",
@@ -335,7 +428,7 @@
     });
 
     $(document).on('click', '.checkBatchVoid', function() {
-        let ids = getSelectedCheckIds();
+        let ids = getSelectedCheckIds("check_table");
 
         if (ids.length === 0) return;
 
@@ -367,7 +460,7 @@
                         });
                     },
                     success: function(response) {
-                        checkTable.ajax.reload(null, false);
+                        checkTable.draw(false);
                         $('.checkSelectAll').prop('checked', false);
                         Swal.fire({
                             icon: "success",
@@ -384,7 +477,7 @@
     });
 
     $(document).on('click', '.checkBatchDelete', function() {
-        let ids = getSelectedCheckIds();
+        let ids = getSelectedCheckIds("check_table");
 
         if (ids.length === 0) return;
 
@@ -416,7 +509,7 @@
                         });
                     },
                     success: function(response) {
-                        checkTable.ajax.reload(null, false);
+                        checkTable.draw(false);
                         $('.checkSelectAll').prop('checked', false);
                         Swal.fire({
                             icon: "success",
@@ -511,87 +604,8 @@
         }, 500);
     });
 
-
-    function virtualNumberToWords(amount) {
-        const numbersToWords = (num) => {
-            const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
-            const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
-            const teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
-
-            if (num < 10) return ones[num];
-            if (num < 20) return teens[num - 10];
-            if (num < 100) return tens[Math.floor(num / 10)] + (num % 10 !== 0 ? " " + ones[num % 10] : "");
-            if (num < 1000) return ones[Math.floor(num / 100)] + " Hundred" + (num % 100 !== 0 ? " " + numbersToWords(num % 100) : "");
-            if (num < 1000000) return numbersToWords(Math.floor(num / 1000)) + " Thousand" + (num % 1000 !== 0 ? " " + numbersToWords(num % 1000) : "");
-            if (num < 1000000000) return numbersToWords(Math.floor(num / 1000000)) + " Million" + (num % 1000000 !== 0 ? " " + numbersToWords(num % 1000000) : "");
-            if (num < 1000000000000) return numbersToWords(Math.floor(num / 1000000000)) + " Billion" + (num % 1000000000 !== 0 ? " " + numbersToWords(num % 1000000000) : "");
-            return "Amount Too Large";
-        };
-
-        const dollars = Math.floor(amount);
-        const cents = Math.round((amount - dollars) * 100);
-        const dollarText = dollars > 0 ? numbersToWords(dollars) : "Zero";
-
-        return `${dollarText} and ${String(cents).padStart(2, '0')}/100`;
-    }
-
-
-    function buildStandardCheckHtml(check, index) {
-        const amountFormatted = Number(check.total_amount).toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-        const amountInWords = virtualNumberToWords(check.total_amount);
-        const dateFormatted = `${String(new Date(check.payment_date).getMonth() + 1).padStart(2, '0')}/${String(new Date(check.payment_date).getDate()).padStart(2, '0')}/${new Date(check.payment_date).getFullYear()}`;
-
-        const offsetTop = index * 323;
-
-        return `
-            <div class="standardCheckDiv" style="top: ${offsetTop}px;">
-                <span class="standardCheckDate1">${dateFormatted}</span>
-                <span class="standardCheckPayee1">${check.payee_name}</span>
-                <span class="standardCheckAmountNum1">**${amountFormatted}</span>
-                <span class="standardCheckAmountWords1">${amountInWords}*********************</span>
-            </div>
-        `;
-    }
-
-
-    function buildVoucherCheckHtml(check) {
-        const amountFormatted = Number(check.total_amount).toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-        const amountInWords = virtualNumberToWords(check.total_amount);
-        const dateFormatted = `${String(new Date(check.payment_date).getMonth() + 1).padStart(2, '0')}/${String(new Date(check.payment_date).getDate()).padStart(2, '0')}/${new Date(check.payment_date).getFullYear()}`;
-
-        return `
-            <div class="voucherCheckDiv">
-                <span class="voucherCheckDate1">${dateFormatted}</span>
-                <span class="voucherCheckPayee1">${check.payee_name}</span>
-                <span class="voucherCheckAmountNum1">**${amountFormatted}</span>
-                <span class="voucherCheckAmountWords">${amountInWords}*******************************</span>
-
-                <strong class="voucherCheckDate2">${dateFormatted}</strong>
-                <strong class="voucherCheckPayee2">${check.payee_name}</strong>
-                <span class="voucherCheckAmountNum2">${amountFormatted}</span>
-
-                <strong class="voucherCheckAccount1">${check.chart_of_account_name}</strong>
-                <span class="voucherCheckAmountNum3">${amountFormatted}</span>
-
-                <strong class="voucherCheckDate3">${dateFormatted}</strong>
-                <strong class="voucherCheckPayee3">${check.payee_name}</strong>
-                <span class="voucherCheckAmountNum4">${amountFormatted}</span>
-
-                <strong class="voucherCheckAccount2">${check.chart_of_account_name}</strong>
-                <span class="voucherCheckAmountNum5">${amountFormatted}</span>
-            </div>
-        `;
-    }
-
- 
     $(document).on('click', '.checkBatchPrint', function () {
-        let ids = getSelectedCheckIds();
+        let ids = getSelectedCheckIds("check_table");
 
         const pdfSettings = {
             margin: [0, 0, 0, 0],
@@ -671,8 +685,6 @@
             },
         });
     });
-
-
 
     $(document).on('click', '.checkExportPDF', function() {
         function fileID(length) {
@@ -798,11 +810,65 @@
         XLSX.writeFile(workbook, filename);
     });
 
+    $(document).on('hidden.bs.modal', '.checkPrintModal', function () {
+        $('.checkPrintFinishModal').modal('show');
+    });
 
+    $(document).on('click', '.checkYesButton', function() {
+        let ids = ["check_table", "recent_check_add_table", "recent_check_edit_table"].map(t => getSelectedCheckIds(t)).find(ids => ids.length > 0) || [];
 
+        $.ajax({
+            url: `${window.origin}/accounting/v2/check/assignNewCheckNumber`,
+            type: 'POST',
+            data: { check_id: ids },
+            dataType: 'json',
+            beforeSend: function() {
+                $('.checkPrintFinishModal').modal('hide');
+                Swal.fire({
+                    icon: "info",
+                    title: "Assigning Check no.",
+                    html: "Please wait while the process is running...",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => Swal.showLoading(),
+                });
+            },
+            success: function(response) {
+                if (response === true) {
+                    try {
+                        window.checkTable.draw(false);
+                        window.recentAddCheckTable.draw(false);
+                        window.recentEditCheckTable.draw(false);
+                    } catch (error) {}
+                    Swal.close();
+                } else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Failed!",
+                        html: "Some checks could not be updated. Please retry.",
+                        showConfirmButton: true,
+                        confirmButtonText: "Okay",
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Network Error!",
+                    html: "An unexpected error occurred. Please try again!",
+                    showConfirmButton: true,
+                    confirmButtonText: "Okay",
+                });
+            },
+        });
+    });
 
-
-
-
-
+    $(document).on('click', '.checkNoButton', function () {
+        $('.checkPrintFinishModal').modal('hide');
+        $('.checkPrintModal').modal('show');
+    });
+    
+    $(document).on('click', '.checkCancelButton', function () {
+        $('.checkPrintFinishModal').modal('hide');
+    });
 </script>

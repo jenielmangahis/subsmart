@@ -171,6 +171,7 @@ class Tags extends MY_Controller {
                 }
             }
         }
+
         $this->page_data['tags'] = $tags;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         // $this->load->view('accounting/tags/index', $this->page_data);
@@ -372,17 +373,29 @@ class Tags extends MY_Controller {
 
     public function delete_tags()
     {
-        $tags = $this->input->post('tags');
+        $result     = [];
+        $is_success = 0;
 
+        $tags = $this->input->post('tags');
         foreach($tags as $tag) {
             $explode = explode('_', $tag);
             $id = $explode[array_key_last($explode)];
             if(stripos($tag, 'tag') !== false) {
                 $this->tags_model->delete($id, 'tag');
+                $is_success++;
             } else {
                 $this->tags_model->delete($id, 'group');
+                $is_success++;
             }
         }
+
+        if($is_success > 0) {
+            $result['success'] = true;
+            $result['message'] = 'Delete successfull';            
+        }
+
+        echo json_encode($result);
+        exit;        
     }
     
     public function transactions()

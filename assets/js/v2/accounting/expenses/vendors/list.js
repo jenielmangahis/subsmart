@@ -118,6 +118,18 @@ $(document).on('click', '#with-selected-restore', function(){
                             });
                         }
                     },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
                 });
 
             }
@@ -170,6 +182,18 @@ $(document).on('click', '#with-selected-perma-delete', function(){
                             });
                         }
                     },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
                 });
 
             }
@@ -216,6 +240,18 @@ $(document).on('click', '#btn-empty-archives', function(){
                             });
                         }
                     },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    }
                 });
 
             }
@@ -273,6 +309,18 @@ $(document).on('click', '.btn-restore-vendor', function(){
                         });
                     }
                 },
+                beforeSend: function(){
+                    Swal.fire({
+                        icon: "info",
+                        title: "Processing",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                }
             });
         }
     });
@@ -322,6 +370,18 @@ $(document).on('click', '.btn-permanently-delete-vendor', function(){
                         });
                     }
                 },
+                beforeSend: function(){
+                    Swal.fire({
+                        icon: "info",
+                        title: "Processing",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                }
             });
         }
     });
@@ -524,7 +584,8 @@ $('#make-inactive').on('click', function() {
         data.append('vendors[]', $(this).val());
     });
 
-    Swal.fire({            
+    Swal.fire({   
+        title: "Change to Inactive",         
         html: "Change the selected vendor status to <b>inactive</b>?",
         icon: 'question',
         confirmButtonText: 'Proceed',
@@ -540,6 +601,60 @@ $('#make-inactive').on('click', function() {
                 contentType: false,
                 success: function(result) {
                     location.reload();
+                },
+                beforeSend: function(){
+                    Swal.fire({
+                        icon: "info",
+                        title: "Processing",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                }
+            });
+        }
+    });
+});
+
+$('#make-active').on('click', function() {
+    var data = new FormData();
+    
+    $('#vendors-table tbody input.select-one:checked').each(function() {
+        data.append('vendors[]', $(this).val());
+    });
+
+    Swal.fire({      
+        title: "Change to Active",      
+        html: "Change the selected vendor status to <b>active</b>?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: base_url + 'accounting/vendors/make-active',
+                data: data,
+                type: 'post',
+                processData: false,
+                contentType: false,
+                success: function(result) {
+                    location.reload();
+                },
+                beforeSend: function(){
+                    Swal.fire({
+                        icon: "info",
+                        title: "Processing",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
                 }
             });
         }
@@ -619,7 +734,7 @@ $('#delete-vendor').on('click', function(e) {
 
     Swal.fire({         
         title: 'Delete Vendors',   
-        html: `Are you sure you want to delete selected rows?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
+        html: `Are you sure you want to <b>delete</b> selected rows?<br /><br /><small>Deleted data can be restored via archived list.</small>`,
         icon: 'question',
         confirmButtonText: 'Proceed',
         showCancelButton: true,
@@ -659,6 +774,18 @@ $('#delete-vendor').on('click', function(e) {
                         html: o.msg
                         });
                     }
+                },
+                beforeSend: function(){
+                    Swal.fire({
+                        icon: "info",
+                        title: "Processing",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
                 }
             });
         }
@@ -715,6 +842,18 @@ $('#vendors-table .delete-vendor').on('click', function(e) {
                         html: result.msg
                         });
                     }
+                },
+                beforeSend: function(){
+                    Swal.fire({
+                        icon: "info",
+                        title: "Processing",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
                 }
             });
         }

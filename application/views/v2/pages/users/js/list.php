@@ -86,6 +86,7 @@ $(document).ready(function() {
                                 html: "Please wait while the process is running...",
                                 allowOutsideClick: false,
                                 allowEscapeKey: false,
+                                showConfirmButton: false,
                                 didOpen: () => {
                                     Swal.showLoading();
                                 },
@@ -168,6 +169,7 @@ $(document).ready(function() {
                                 html: "Please wait while the process is running...",
                                 allowOutsideClick: false,
                                 allowEscapeKey: false,
+                                showConfirmButton: false,
                                 didOpen: () => {
                                     Swal.showLoading();
                                 },
@@ -231,6 +233,7 @@ $(document).ready(function() {
                                 html: "Please wait while the process is running...",
                                 allowOutsideClick: false,
                                 allowEscapeKey: false,
+                                showConfirmButton: false,
                                 didOpen: () => {
                                     Swal.showLoading();
                                 },
@@ -295,6 +298,7 @@ $(document).ready(function() {
                                 html: "Please wait while the process is running...",
                                 allowOutsideClick: false,
                                 allowEscapeKey: false,
+                                showConfirmButton: false,
                                 didOpen: () => {
                                     Swal.showLoading();
                                 },
@@ -353,6 +357,7 @@ $(document).ready(function() {
                                 html: "Please wait while the process is running...",
                                 allowOutsideClick: false,
                                 allowEscapeKey: false,
+                                showConfirmButton: false,
                                 didOpen: () => {
                                     Swal.showLoading();
                                 },
@@ -422,6 +427,7 @@ $(document).ready(function() {
                             html: "Please wait while the process is running...",
                             allowOutsideClick: false,
                             allowEscapeKey: false,
+                            showConfirmButton: false,
                             didOpen: () => {
                                 Swal.showLoading();
                             },
@@ -483,6 +489,7 @@ $(document).ready(function() {
                             html: "Please wait while the process is running...",
                             allowOutsideClick: false,
                             allowEscapeKey: false,
+                            showConfirmButton: false,
                             didOpen: () => {
                                 Swal.showLoading();
                             },
@@ -1047,6 +1054,7 @@ $(document).ready(function() {
                             html: "Please wait while the process is running...",
                             allowOutsideClick: false,
                             allowEscapeKey: false,
+                            showConfirmButton: false,
                             didOpen: () => {
                                 Swal.showLoading();
                             },

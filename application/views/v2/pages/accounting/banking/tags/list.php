@@ -81,7 +81,8 @@
                     <tbody>
                         <?php if(count($tags) > 0) : ?>
 						<?php foreach($tags as $index => $tag) : ?>
-                        <tr data-id="<?=$tag['id']?>" data-type="<?=$tag['type']?>">
+                        <?php $bg_group = $tag['type'] === 'group' ? 'text-primary' : ''; ?>
+                        <tr data-id="<?=$tag['id']?>" data-type="<?=$tag['type']?>" class="<?= $bg_group; ?>">
                             <td>
                                 <div class="table-row-icon table-checkbox">
                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?=$tag['type']?>_<?=$tag['id']?>">
@@ -89,12 +90,11 @@
                             </td>
                             <td class="fw-bold nsm-text-primary nsm-link default" <?=$tag['type'] === 'group' ? 'data-bs-toggle="collapse" data-bs-target=".collapse-'.$index.'"' : ''?>>
                                 <?php if($tag['type'] === 'group') : ?>
-                                    <span><i class='bx bx-fw bx-chevron-down'></i> <?=$tag['name']?> (<?=count($tag['tags'])?>)</span>
+                                    <span onclick="javascript:toggleGroupTag(<?php echo $tag['id']; ?>);"><i class='bx bx-fw bx-chevron-down'></i> <?=$tag['name']?> (<?=count($tag['tags'])?> tags)</span>
                                 <?php else : ?>
                                     <?=$tag['name']?>
                                 <?php endif; ?>
                             </td>
-                            <td></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -128,14 +128,13 @@
                         </tr>
                         <?php if($tag['type'] === 'group') : ?>
                         <?php foreach($tag['tags'] as $groupTag) : ?>
-                        <tr class="collapse collapse-<?=$index?>" data-id="<?=$groupTag['id']?>" data-type="group-tag">
+                        <tr class="group-tag-id-<?= $groupTag['group_tag_id']; ?> collapse collapse-<?=$index?>" data-id="<?=$groupTag['id']?>" data-type="group-tag">
                             <td>
                                 <div class="table-row-icon table-checkbox">
                                     <input class="form-check-input select-one table-select" type="checkbox" value="group-tag_<?=$groupTag['id']?>">
                                 </div>
                             </td>
-                            <td class="fw-bold nsm-text-primary nsm-link default">&emsp;<?=$groupTag['name']?></td>
-                            <td></td>
+                            <td class="fw-bold nsm-text-primary nsm-link default"><div class="text-secondary" style="margin-left: 30px;">-<?=$groupTag['name']?></div></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="javascript:void(0);" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -160,7 +159,7 @@
                         <?php endforeach; ?>
 						<?php else : ?>
 						<tr>
-							<td colspan="14">
+							<td colspan="3">
 								<div class="nsm-empty">
 									<span>No results found.</span>
 								</div>
@@ -174,6 +173,11 @@
     </div>
 </div>
 <script>
+
+function toggleGroupTag(group_id) {
+    $('.group-tag-id-' + group_id).toggle();
+}
+
 $(function(){
     $("#tags-table").nsmPagination();  
     

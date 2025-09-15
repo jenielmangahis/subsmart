@@ -41,9 +41,7 @@
                         <div class="dropdown d-inline-block">
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>
-                                    With Selected
-                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span id="num-checked"></span> With Selected  <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">                                
                                 <li><a class="dropdown-item dropdown-delete-credit-notes disabled" href="javascript:void(0);" id="delete-credit-notes">Delete</a></li>
@@ -108,25 +106,19 @@
                                     </div>
                                 </div>
                             </ul>
-                        </div>
-                        <?php if(checkRoleCanAccessModule('accounting-credit-notes', 'write')){ ?>
-                        <div class="dropdown d-inline-block">
-                            <?php if(checkRoleCanAccessModule('accounting-credit-notes', 'write')){ ?>
-                            <button type="button" class="nsm-button export-transactions">
-                                <i class='bx bx-fw bx-export'></i> Export
-                            </button>
-                            <?php } ?>
-                            <button type="button" class="dropdown-toggle nsm-button primary" id="new-credit-note">
-                                <i class='bx bx-plus'></i> Add New
-                            </button>
-                        </div>
-                        <?php } ?>
-
+                        </div>                        
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_credit_notes_modal">
-                                <i class='bx bx-fw bx-printer'></i>
-                            </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
+                            <div class="btn-group nsm-main-buttons">
+                                <button type="button" class="btn btn-nsm" id="new-credit-note"><i class='bx bx-plus' style="position:relative;top:1px;"></i> Credit Notes</button>
+                                <button type="button" class="btn btn-nsm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class=""><i class='bx bx-chevron-down' ></i></span>
+                                </button>
+                                <ul class="dropdown-menu">                                                                    
+                                    <li><a class="dropdown-item export-transactions" href="javascript:void(0);">Export</a></li>  
+                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#print_credit_notes_modal" href="javascript:void(0);">Print</a></li>                               
+                                </ul>
+                            </div>
+                            <!-- <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
                                 <i class="bx bx-fw bx-cog"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
@@ -171,7 +163,7 @@
                                     <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
                                     <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
                                 </div>
-                            </ul>
+                            </ul> -->
                         </div>
                     </div>
                 </div>
@@ -245,25 +237,30 @@
 <script>
 $(function(){
     const companyName = "<?=$company->business_name?>";
-    $('#credit-notes-table').nsmPagination({itemsPerPage: 10});
+    const numRowsPerPage = 10;
+    $('#credit-notes-table').nsmPagination({itemsPerPage: numRowsPerPage});
     
     $(".select-all").click(function(){
-        var count_vendor_list_check = $('.select-all').filter(':checked').length;
-        if(count_vendor_list_check > 0) {
+        $(`.select-one:checkbox:lt(${numRowsPerPage})`).prop('checked', this.checked);  
+        let total= $('#credit-notes-table input[name="creditNotes[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
             $(".dropdown-delete-credit-notes").removeClass("disabled");
-        } else {
+        }else{
+            $('#num-checked').text('');
             $(".dropdown-delete-credit-notes").addClass("disabled");
-        }   
-        $('.select-one').not(this).prop('checked', this.checked);
+        }
     });
 
     $(".select-one").click(function(){
-        var count_vendor_list_check = $('.select-one').filter(':checked').length;
-        if(count_vendor_list_check > 0) {
+        let total= $('#credit-notes-table input[name="creditNotes[]"]:checked').length;
+        if( total > 0 ){
+            $('#num-checked').text(`(${total})`);
             $(".dropdown-delete-credit-notes").removeClass("disabled");
-        } else {
+        }else{
+            $('#num-checked').text('');
             $(".dropdown-delete-credit-notes").addClass("disabled");
-        }           
+        }       
     });
 
     $('#table-rows a').on('click', function(){
@@ -291,7 +288,8 @@ $(function(){
                         
                     },
                     success: function(data) {                                                
-                        Swal.fire({                        
+                        Swal.fire({    
+                            title: "Delete Credit Notes",                        
                             text: "Credit notes was successfully updated",
                             icon: 'success',
                             showCancelButton: false,
@@ -301,6 +299,18 @@ $(function(){
                                 location.reload();
                             //}
                         });                                         
+                    },
+                    beforeSend: function(){
+                        Swal.fire({
+                            icon: "info",
+                            title: "Processing",
+                            html: "Please wait while the process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
                     },
                     complete : function(){
                         
