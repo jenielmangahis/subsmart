@@ -301,9 +301,10 @@ class Check extends MY_Controller
         echo json_encode($output);
     }
 
-    public function getRecentChecksServerside()
+    public function getRecentChecksServerside($type)
     {
         $company_id = logged('company_id');
+        $recentType = ($type == "recentAddTable") ? "recentAddEntryCheckbox" : "recentEditEntryCheckbox" ;
 
         $this->serverside_table->initializeTable(
             "accounting_check_view",
@@ -323,12 +324,14 @@ class Check extends MY_Controller
         $i = $this->input->post('start');
 
         foreach ($getData as $getDatas) {
+            $checkboxSelection = "<input class='form-check-input verticalAlign $recentType' data-check_id='$getDatas->id' type='checkbox'>";
             $check_no = !empty($getDatas->check_no) ? $getDatas->check_no : '<small class="text-muted fst-italic">Print Later</small>';
             $payee_name = !empty($getDatas->payee_name) ? $getDatas->payee_name : '';
             $total_amount = isset($getDatas->total_amount) ? (($getDatas->total_amount < 0 ? '-$' : '$') . number_format(abs($getDatas->total_amount), 2)) : '<small class="text-muted fst-italic">Not Specified</small>';
             $date_created = !empty($getDatas->date_created) ? date('m/d/Y', strtotime($getDatas->date_created)) : '<small class="text-muted fst-italic">Not Specified</small>';
 
             $data[] = array(
+                $checkboxSelection,
                 $check_no,
                 $payee_name,
                 $total_amount,
@@ -757,7 +760,7 @@ class Check extends MY_Controller
         }
 
         $check_ids = is_array($post['check_id']) ? $post['check_id'] : explode(',', $post['check_id']);
-        $check_ids = array_map('intval', $check_ids); // sanitize
+        $check_ids = array_map('intval', $check_ids);
         $check_ids_str = implode(',', $check_ids);
 
         $sql = "
@@ -1009,6 +1012,53 @@ class Check extends MY_Controller
         $check_id = $post['check_id'] ?? null;
         $this->page_data['check_id'] = $check_id;
         $this->load->view('v2/pages/accounting/check/checkEditModal', $this->page_data);
+    }
+
+    public function assignNewCheckNumber()
+    {
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+
+        $check_ids = is_array($post['check_id']) ? $post['check_id'] : explode(',', $post['check_id']);
+        $check_ids = array_map('intval', $check_ids);
+
+        if (empty($check_ids)) {
+            echo json_encode(false);
+            return;
+        }
+
+        $sql = "
+            SELECT
+                COALESCE(NULLIF(
+                    (SELECT check_no
+                    FROM accounting_check
+                    WHERE company_id = {$company_id} AND check_no != ''
+                    ORDER BY created_at DESC
+                    LIMIT 1), ''), '0') AS last_check_no
+        ";
+
+        $query = $this->db->query($sql);
+        $row   = $query->row();
+        $last_check_no = intval($row->last_check_no);
+
+        $new_check_no = $last_check_no;
+        $allUpdated   = true;
+
+        foreach ($check_ids as $id) {
+            $new_check_no++;
+            $this->db->where('id', $id);
+            $this->db->where('company_id', $company_id);
+            $update = $this->db->update('accounting_check', [
+                'check_no' => $new_check_no,
+                'to_print' => 0
+            ]);
+
+            if (!$update) {
+                $allUpdated = false;
+            }
+        }
+
+        echo json_encode($allUpdated);
     }
 
 }   

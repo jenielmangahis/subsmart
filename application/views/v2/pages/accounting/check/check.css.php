@@ -95,8 +95,13 @@
         margin-bottom: 2px;
     }
 
-    .checkPrintModal .modal-body {
+    .checkPrintModal .modal-body,
+    .checkPrintFinishModal .modal-body {
         padding-top: 12px;
+    }
+
+    .checkPrintFinishModal > .modal-dialog {
+        max-width: 350px
     }
 
     .standardCheckPreview, 

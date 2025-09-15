@@ -96,7 +96,6 @@
         </div>
     </div>
 </div>
-<div id="checkPdfRenderContainer" style="position: absolute; left: -9999px; top: 0;"></div>
 <div class="modal fade checkPrintModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -126,6 +125,31 @@
                     </div>
                     <div class="col-lg-12">
                         <span class=" text-muted"><i class="fas fa-info"></i>&ensp;You can print or save a <strong>Voucher</strong> or <strong>Standard</strong>  check using the button on the top-right corner. Please review the check first before printing.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade checkPrintFinishModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Print Results</span>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12 mb-4">
+                        <span class="">Did the checks print successfully?</span>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="float-start">
+                            <button class="btn btn-primary checkYesButton" type="button"><i class="fas fa-check"></i>&ensp;Yes</button>
+                            <button class="btn btn-light checkNoButton" type="button"><i class="fas fa-redo text-muted"></i>&ensp;No</button>
+                        </div>
+                        <div class="float-end">
+                            <button class="btn btn-light checkCancelButton" type="button">Cancel</button>
+                        </div>
                     </div>
                 </div>
             </div>
