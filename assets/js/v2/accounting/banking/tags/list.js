@@ -18,30 +18,38 @@ $("#search_field").on("input", debounce(function() {
 
 $('#create-tag-form').on('submit', function(e) {
     e.preventDefault();
-
     var data = new FormData(this);
-
+    
     $.ajax({
+        type: 'POST',
         url: base_url + 'accounting/tags/add-tag',
         data: data,
-        type: 'post',
-        processData: false,
         contentType: false,
-        success: function(res) {
-            var result = JSON.parse(res);
-
-            if(result.success) {
-                location.reload();
+        processData: false,
+        cache: false,
+        dataType: "json",
+        success: function(result) {
+            //var result = JSON.parse(res);
+            console.log('Console Log: ');
+            console.log(result);
+            if(result.success == true) {
+                Swal.fire({
+                    title: `Create Tag/Group`,
+                    text: "Data has been created successfully",
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
+                    location.reload();
+                });
             } else {
                 Swal.fire({
                     html: result.message,
                     icon: 'error',
                     showCloseButton: false,
-                    //confirmButtonColor: '#2ca01c',
                     confirmButtonText: 'Yes',
                     showCancelButton: true,
                     cancelButtonText: 'No',
-                    //cancelButtonColor: '#d33',
                     timer: 2000
                 });
             }
@@ -100,22 +108,35 @@ $('#group').select2({
 $(document).on('submit', '#tags-group-form', function(e) {
     e.preventDefault();
 
-    var data = new FormData(this);
+    var formData = new FormData(this);
 
     $.ajax({
+        type: 'POST',
         url: base_url + 'accounting/tags/add-group-tag',
-        data: data,
-        type: 'post',
-        processData: false,
+        data: formData,
         contentType: false,
+        cache: false,
+        processData: false,
+        dataType: "json",
         success: function(res) {
-            var result = JSON.parse(res);
+            //var result = JSON.parse(res);
+            if (res.success == true) {
+                Swal.fire({
+                    title: 'Create Tag Group',
+                    text: "Group has been created successfully",
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((result) => {
 
+                });
+            }    
+            
             $('#tags-group-form').addClass('d-none');
-            $('table#tags-group tbody').append(`<tr><td><span>${data.get('tags_group_name')}</span><a href="#" class="float-end text-decoration-none">Edit</a></td></tr>`);
+            $('table#tags-group tbody').append(`<tr><td><span>${formData.get('tags_group_name')}</span><a href="#" class="float-end text-decoration-none">Edit</a></td></tr>`);
             $('table#tags-group').removeClass('d-none');
-            $('#tags-form').prepend(`<input type="hidden" name="group_id" value="${result.data}">`);
-            $('#tags-group-form').prepend(`<input type="hidden" name="group_id" value="${result.data}">`);
+            $('#tags-form').prepend(`<input type="hidden" name="group_id" value="${res.id}">`);
+            $('#tags-group-form').prepend(`<input type="hidden" name="group_id" value="${res.id}">`);
             $('#tags-form #tag_name, #tags-form button[type="submit"]').removeAttr('disabled');
             $('#tags-group-form').attr('id', 'update-group-form');
         }
